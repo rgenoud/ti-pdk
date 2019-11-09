@@ -153,7 +153,7 @@ typedef struct SemaphoreP_Params_s {
  *  @return A SemaphoreP_Handle on success or a NULL on an error
  */
 extern SemaphoreP_Handle SemaphoreP_create(uint32_t count,
-                                           const SemaphoreP_Params *semParams);
+                                           SemaphoreP_Params *semParams);
 
 /*!
  *  @brief  Function to delete a semaphore.

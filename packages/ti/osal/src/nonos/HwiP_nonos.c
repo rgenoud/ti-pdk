@@ -53,7 +53,7 @@ void HwiP_clearInterrupt(int32_t interruptNum)
  *  ======== HwiP_create ========
  */
 HwiP_Handle HwiP_create(int32_t interruptNum, HwiP_Fxn hwiFxn,
-                        const HwiP_Params *params)
+                        HwiP_Params *params)
 {
     HwiP_Handle handle;
     handle = OsalArch_HwiPCreate(interruptNum,hwiFxn,params);

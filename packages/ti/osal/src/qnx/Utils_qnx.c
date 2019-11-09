@@ -30,84 +30,23 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*
- *  ======== HwiP_linux.c ========
+ *  ======== HwiP_tirtos.c ========
  */
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include <ti/osal/HwiP.h>
-
-#ifndef NULL_PTR
-#define NULL_PTR ((void *)0x0)
-#endif
+#include <stdio.h>
 
 /*
- *  ======== HwiP_clearInterrupt ========
+ *  ======== Osal_DebugP_assert ========
  */
-void HwiP_clearInterrupt(int32_t interruptNum)
+void Osal_DebugP_assert(int32_t expression, const char *file, int32_t line);  /*for misra warnings*/
+void Osal_DebugP_assert(int32_t expression, const char *file, int32_t line)
 {
-    /* stub */
+    if (expression) {
+        while (1) {
+          printf("%s: assert in file/%s line:%d\n",__FUNCTION__, file, line);
+        }
+    }
 }
-
-/*
- *  ======== HwiP_create ========
- */
-HwiP_Handle HwiP_create(int32_t interruptNum, HwiP_Fxn hwiFxn,
-                        HwiP_Params *params)
-{
-    /* stub */
-    return ((HwiP_Handle)NULL_PTR);
-}
-
-/*
- *  ======== HwiP_delete ========
- */
-HwiP_Status HwiP_delete(HwiP_Handle handle)
-{
-    /* stub */
-    return (HwiP_OK);
-}
-
-/*
- *  ======== HwiP_disable ========
- */
-uintptr_t HwiP_disable(void)
-{
-    /* stub */
-    return (0);
-}
-
-/*
- *  ======== HwiP_disableInterrupt ========
- */
-void HwiP_disableInterrupt(int32_t interruptNum)
-{
-    /* stub */
-}
-
-/*
- *  ======== HwiP_enableInterrupt ========
- */
-void HwiP_enableInterrupt(int32_t interruptNum)
-{
-    /* stub */
-}
-
-/*
- *  ======== HwiP_Params_init ========
- */
-void HwiP_Params_init(HwiP_Params *params)
-{
-    /* stub */
-}
-
-/*
- *  ======== HwiP_restore ========
- */
-void HwiP_restore(uintptr_t key)
-{
-    /* stub */
-}
-
-/* Nothing past this point */

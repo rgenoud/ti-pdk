@@ -39,7 +39,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdlib.h>
-
+#include <stdio.h>
 #include <semaphore.h>
 #include <fcntl.h>
 #include <time.h>
@@ -52,11 +52,21 @@ SemaphoreP_Handle SemaphoreP_create(uint32_t count,
                                     SemaphoreP_Params *params)
 {
     sem_t *handle;
+    char sem_name[32];
+
+    /* Assign a name if one is not specified */
+    if(params->name == NULL)
+    {
+       static int counter = 0;
+       sprintf(sem_name,"qnx_sem_%d", counter++);
+       params->name = sem_name;
+    }
 
     /* Creates a COUNTING semaphore */
     handle = sem_open(params->name, O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH, count);
     if (handle == SEM_FAILED)
     {
+        printf("%s: for QNX Failed\n",__FUNCTION__);
         return NULL;
     }
     return ((SemaphoreP_Handle)handle);

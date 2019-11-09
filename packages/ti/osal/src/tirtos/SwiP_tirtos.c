@@ -48,7 +48,7 @@
 /*
  *  ======== SwiP_create ========
  */
-SwiP_Handle SwiP_create(SwiP_Fxn swiFxn, const SwiP_Params *params)
+SwiP_Handle SwiP_create(SwiP_Fxn swiFxn, SwiP_Params *params)
 {
     Error_Block eb;
     Swi_Params  swiParams;
@@ -111,7 +111,7 @@ SwiP_Status SwiP_post(SwiP_Handle handle)
     {
         status = SwiP_FAILURE;
     }
-    
+
     return (status);
 }
 

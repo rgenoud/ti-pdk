@@ -34,9 +34,6 @@
 #if nothing is defined, default to linux as in windows this variable is defined
 export OS ?= linux
 
-SDK_INSTALL_PATH ?= $(abspath ../../../../)
-TOOLS_INSTALL_PATH ?= $(SDK_INSTALL_PATH)
-
 #Default BUILD_OS_TYPE (tirtos/baremetal/qnx)
 export BUILD_OS_TYPE ?= tirtos
 
@@ -100,6 +97,15 @@ LIMIT_BOARDS_am57xx    = $(BOARD_LIST_am571x) $(BOARD_LIST_am572x) $(BOARD_LIST_
 export LIMIT_BOARDS ?= $(LIMIT_BOARDS_$(PDK_SOC))
 
 endif
+ifeq ($(BUILD_OS_TYPE), qnx)
+#PDK under different folder for QNX
+SDK_INSTALL_PATH ?= $(abspath ../../../../../)
+export PDK_INSTALL_PATH ?= $(SDK_INSTALL_PATH)/psdkqa/pdk$(PDK_VERSION_STR)/packages
+else
+SDK_INSTALL_PATH ?= $(abspath ../../../../)
+endif
+TOOLS_INSTALL_PATH ?= $(SDK_INSTALL_PATH)
+
 # Default board
 # Supported values are printed in "make -s help" option. Below are the list for reference.
 #                   evmDRA72x, evmDRA75x, evmDRA78x,

@@ -30,84 +30,50 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*
- *  ======== HwiP_linux.c ========
+ *  ======== TimerP_linux.c ========
  */
+
+#include <ti/osal/TimerP.h>
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include <ti/osal/HwiP.h>
+#include <stdio.h>
 
-#ifndef NULL_PTR
-#define NULL_PTR ((void *)0x0)
-#endif
-
-/*
- *  ======== HwiP_clearInterrupt ========
- */
-void HwiP_clearInterrupt(int32_t interruptNum)
+void TimerP_Params_init(TimerP_Params *params)
 {
     /* stub */
+    return;
+}
+
+TimerP_Handle TimerP_create(int32_t id,
+                            TimerP_Fxn tickFxn,
+                            TimerP_Params *params)
+{
+    /* stub */
+    return NULL;
 }
 
 /*
- *  ======== HwiP_create ========
+ *  ======== TimerP_delete ========
  */
-HwiP_Handle HwiP_create(int32_t interruptNum, HwiP_Fxn hwiFxn,
-                        HwiP_Params *params)
+TimerP_Status TimerP_delete(TimerP_Handle handle)
 {
     /* stub */
-    return ((HwiP_Handle)NULL_PTR);
+    return (TimerP_OK);
 }
 
-/*
- *  ======== HwiP_delete ========
- */
-HwiP_Status HwiP_delete(HwiP_Handle handle)
+
+TimerP_Status TimerP_start(TimerP_Handle timerHandle)
 {
     /* stub */
-    return (HwiP_OK);
+    return (TimerP_OK);
 }
 
-/*
- *  ======== HwiP_disable ========
- */
-uintptr_t HwiP_disable(void)
+TimerP_Status TimerP_stop(TimerP_Handle timerHandle)
 {
     /* stub */
-    return (0);
-}
-
-/*
- *  ======== HwiP_disableInterrupt ========
- */
-void HwiP_disableInterrupt(int32_t interruptNum)
-{
-    /* stub */
-}
-
-/*
- *  ======== HwiP_enableInterrupt ========
- */
-void HwiP_enableInterrupt(int32_t interruptNum)
-{
-    /* stub */
-}
-
-/*
- *  ======== HwiP_Params_init ========
- */
-void HwiP_Params_init(HwiP_Params *params)
-{
-    /* stub */
-}
-
-/*
- *  ======== HwiP_restore ========
- */
-void HwiP_restore(uintptr_t key)
-{
-    /* stub */
+    return (TimerP_OK);
 }
 
 /* Nothing past this point */

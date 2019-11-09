@@ -267,25 +267,60 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
     pUdmapRegs = &drvHandle->udmapRegs;
     if(UDMA_INST_ID_MCU_0 == instId)
     {
+        drvHandle->trigGemOffset    = CSL_NAVSS_GEM_MCU_UDMA_TRIGGER_OFFSET;
+#ifndef QNX_OS
         pUdmapRegs->pGenCfgRegs     = ((CSL_udmap_gcfgRegs *) UDMA_MCU_NAVSS0_UDMASS_UDMAP0_CFG_GCFG_BASE);
         pUdmapRegs->pRxFlowCfgRegs  = ((CSL_udmap_rxfcfgRegs *) UDMA_MCU_NAVSS0_UDMASS_UDMAP0_CFG_RFLOW_BASE);
         pUdmapRegs->pTxChanCfgRegs  = ((CSL_udmap_txccfgRegs *) UDMA_MCU_NAVSS0_UDMASS_UDMAP0_TCHAN_BASE);
         pUdmapRegs->pRxChanCfgRegs  = ((CSL_udmap_rxccfgRegs *) UDMA_MCU_NAVSS0_UDMASS_UDMAP0_RCHAN_BASE);
         pUdmapRegs->pTxChanRtRegs   = ((CSL_udmap_txcrtRegs *) UDMA_MCU_NAVSS0_UDMASS_UDMAP_TCHANRT_BASE);
         pUdmapRegs->pRxChanRtRegs   = ((CSL_udmap_rxcrtRegs *) UDMA_MCU_NAVSS0_UDMASS_UDMAP_RCHANRT_BASE);
-        drvHandle->trigGemOffset    = CSL_NAVSS_GEM_MCU_UDMA_TRIGGER_OFFSET;
+#else
+        pUdmapRegs->pGenCfgRegs     = ((CSL_udmap_gcfgRegs *) mmap_device_memory(0,
+              CSL_MCU_NAVSS0_UDMASS_UDMAP0_CFG_GCFG_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, UDMA_MCU_NAVSS0_UDMASS_UDMAP0_CFG_GCFG_BASE));
+        pUdmapRegs->pRxFlowCfgRegs  = ((CSL_udmap_rxfcfgRegs *) mmap_device_memory(0,
+              CSL_MCU_NAVSS0_UDMASS_UDMAP0_CFG_RFLOW_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, UDMA_MCU_NAVSS0_UDMASS_UDMAP0_CFG_RFLOW_BASE));
+        pUdmapRegs->pTxChanCfgRegs  = ((CSL_udmap_txccfgRegs *) mmap_device_memory(0,
+            CSL_MCU_NAVSS0_UDMASS_UDMAP0_TCHAN_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, UDMA_MCU_NAVSS0_UDMASS_UDMAP0_TCHAN_BASE));
+        pUdmapRegs->pRxChanCfgRegs  = ((CSL_udmap_rxccfgRegs *) mmap_device_memory(0,
+            CSL_MCU_NAVSS0_UDMASS_UDMAP0_RCHAN_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, UDMA_MCU_NAVSS0_UDMASS_UDMAP0_RCHAN_BASE));
+        pUdmapRegs->pTxChanRtRegs   = ((CSL_udmap_txcrtRegs *) mmap_device_memory(0,
+            CSL_MCU_NAVSS0_UDMASS_UDMAP_TCHANRT_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, UDMA_MCU_NAVSS0_UDMASS_UDMAP_TCHANRT_BASE));
+        pUdmapRegs->pRxChanRtRegs   = ((CSL_udmap_rxcrtRegs *) mmap_device_memory(0,
+            CSL_MCU_NAVSS0_UDMASS_UDMAP_RCHANRT_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, UDMA_MCU_NAVSS0_UDMASS_UDMAP_RCHANRT_BASE));
+#endif
     }
     else
     {
+        drvHandle->trigGemOffset    = CSL_NAVSS_GEM_MAIN_UDMA_TRIGGER_OFFSET;
+#ifndef QNX_OS
         pUdmapRegs->pGenCfgRegs     = ((CSL_udmap_gcfgRegs *) UDMA_NAVSS0_UDMASS_UDMAP0_CFG_BASE);
         pUdmapRegs->pRxFlowCfgRegs  = ((CSL_udmap_rxfcfgRegs *) UDMA_NAVSS0_UDMASS_UDMAP0_CFG_RFLOW_BASE);
         pUdmapRegs->pTxChanCfgRegs  = ((CSL_udmap_txccfgRegs *) UDMA_NAVSS0_UDMASS_UDMAP0_CFG_TCHAN_BASE);
         pUdmapRegs->pRxChanCfgRegs  = ((CSL_udmap_rxccfgRegs *) UDMA_NAVSS0_UDMASS_UDMAP0_CFG_RCHAN_BASE);
         pUdmapRegs->pTxChanRtRegs   = ((CSL_udmap_txcrtRegs *) UDMA_NAVSS0_UDMASS_UDMAP0_CFG_TCHANRT_BASE);
         pUdmapRegs->pRxChanRtRegs   = ((CSL_udmap_rxcrtRegs *) UDMA_NAVSS0_UDMASS_UDMAP0_CFG_RCHANRT_BASE);
-        drvHandle->trigGemOffset    = CSL_NAVSS_GEM_MAIN_UDMA_TRIGGER_OFFSET;
+#else
+        pUdmapRegs->pGenCfgRegs     = ((CSL_udmap_gcfgRegs *) mmap_device_memory(0,
+            CSL_NAVSS0_UDMASS_UDMAP0_CFG_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, UDMA_NAVSS0_UDMASS_UDMAP0_CFG_BASE));
+        pUdmapRegs->pRxFlowCfgRegs  = ((CSL_udmap_rxfcfgRegs *) mmap_device_memory(0,
+            CSL_NAVSS0_UDMASS_UDMAP0_CFG_RFLOW_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, UDMA_NAVSS0_UDMASS_UDMAP0_CFG_RFLOW_BASE));
+        pUdmapRegs->pTxChanCfgRegs  = ((CSL_udmap_txccfgRegs *) mmap_device_memory(0,
+            CSL_NAVSS0_UDMASS_UDMAP0_CFG_TCHAN_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, UDMA_NAVSS0_UDMASS_UDMAP0_CFG_TCHAN_BASE));
+        pUdmapRegs->pRxChanCfgRegs  = ((CSL_udmap_rxccfgRegs *) mmap_device_memory(0,
+            CSL_NAVSS0_UDMASS_UDMAP0_CFG_RCHAN_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, UDMA_NAVSS0_UDMASS_UDMAP0_CFG_RCHAN_BASE));
+        pUdmapRegs->pTxChanRtRegs   = ((CSL_udmap_txcrtRegs *) mmap_device_memory(0,
+            CSL_NAVSS0_UDMASS_UDMAP0_CFG_TCHANRT_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, UDMA_NAVSS0_UDMASS_UDMAP0_CFG_TCHANRT_BASE));
+        pUdmapRegs->pRxChanRtRegs   = ((CSL_udmap_rxcrtRegs *) mmap_device_memory(0,
+            CSL_NAVSS0_UDMASS_UDMAP0_CFG_RCHANRT_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, UDMA_NAVSS0_UDMASS_UDMAP0_CFG_RCHANRT_BASE));
+#endif
     }
+#ifndef QNX_OS
     drvHandle->clecRegs = (CSL_CLEC_EVTRegs *) UDMA_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
+#else
+    drvHandle->clecRegs = (CSL_CLEC_EVTRegs *) mmap_device_memory(0,
+            CSL_COMPUTE_CLUSTER0_CLEC_REGS_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, UDMA_COMPUTE_CLUSTER0_CLEC_REGS_BASE);;
+#endif
 /* UDMA not present in CC QT build. Only DRU is present */
 #ifndef CC_QT_BUILD
     /* Fill other SOC specific parameters by reading from UDMA config
@@ -299,23 +334,53 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
     pRaRegs = &drvHandle->raRegs;
     if(UDMA_INST_ID_MCU_0 == instId)
     {
+        pRaRegs->maxRings   = CSL_NAVSS_MCU_RINGACC_RING_CNT;
+#ifndef QNX_OS
         pRaRegs->pGlbRegs   = (CSL_ringacc_gcfgRegs *) UDMA_MCU_NAVSS0_UDMASS_RINGACC0_CFG_GCFG_BASE;
         pRaRegs->pCfgRegs   = (CSL_ringacc_cfgRegs *) UDMA_MCU_NAVSS0_UDMASS_RINGACC0_CFG_BASE;
         pRaRegs->pRtRegs    = (CSL_ringacc_rtRegs *) UDMA_MCU_NAVSS0_UDMASS_RINGACC0_CFG_RT_BASE;
         pRaRegs->pMonRegs   = (CSL_ringacc_monitorRegs *) UDMA_MCU_NAVSS0_UDMASS_RINGACC0_CFG_MON_BASE;
         pRaRegs->pFifoRegs  = (CSL_ringacc_fifosRegs *) UDMA_MCU_NAVSS0_UDMASS_RINGACC0_FIFOS_BASE;
         pRaRegs->pIscRegs   = (CSL_ringacc_iscRegs *) UDMA_MCU_NAVSS0_UDMASS_RINGACC0_ISC_ISC_BASE;
-        pRaRegs->maxRings   = CSL_NAVSS_MCU_RINGACC_RING_CNT;
+#else
+        pRaRegs->pGlbRegs   = (CSL_ringacc_gcfgRegs *) mmap_device_memory(0,
+            CSL_MCU_NAVSS0_UDMASS_RINGACC0_CFG_GCFG_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, UDMA_MCU_NAVSS0_UDMASS_RINGACC0_CFG_GCFG_BASE);
+        pRaRegs->pCfgRegs   = (CSL_ringacc_cfgRegs *) mmap_device_memory(0,
+            CSL_MCU_NAVSS0_UDMASS_RINGACC0_CFG_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, UDMA_MCU_NAVSS0_UDMASS_RINGACC0_CFG_BASE);
+        pRaRegs->pRtRegs    = (CSL_ringacc_rtRegs *) mmap_device_memory(0,
+            CSL_MCU_NAVSS0_UDMASS_RINGACC0_CFG_RT_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, UDMA_MCU_NAVSS0_UDMASS_RINGACC0_CFG_RT_BASE);
+        pRaRegs->pMonRegs   = (CSL_ringacc_monitorRegs *) mmap_device_memory(0,
+            CSL_MCU_NAVSS0_UDMASS_RINGACC0_CFG_MON_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, UDMA_MCU_NAVSS0_UDMASS_RINGACC0_CFG_MON_BASE);
+        pRaRegs->pFifoRegs  = (CSL_ringacc_fifosRegs *) mmap_device_memory(0,
+            CSL_MCU_NAVSS0_UDMASS_RINGACC0_FIFOS_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, UDMA_MCU_NAVSS0_UDMASS_RINGACC0_FIFOS_BASE);
+        pRaRegs->pIscRegs   = (CSL_ringacc_iscRegs *) mmap_device_memory(0,
+            CSL_MCU_NAVSS0_UDMASS_RINGACC0_ISC_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, UDMA_MCU_NAVSS0_UDMASS_RINGACC0_ISC_ISC_BASE);
+#endif
     }
     else
     {
+        pRaRegs->maxRings   = CSL_NAVSS_MAIN_RINGACC_RING_CNT;
+#ifndef QNX_OS
         pRaRegs->pGlbRegs   = (CSL_ringacc_gcfgRegs *) UDMA_NAVSS0_UDMASS_RINGACC0_GCFG_BASE;
         pRaRegs->pCfgRegs   = (CSL_ringacc_cfgRegs *) UDMA_NAVSS0_UDMASS_RINGACC0_CFG_BASE;
         pRaRegs->pRtRegs    = (CSL_ringacc_rtRegs *) UDMA_NAVSS0_UDMASS_RINGACC0_CFG_RT_BASE;
         pRaRegs->pMonRegs   = (CSL_ringacc_monitorRegs *) UDMA_NAVSS0_UDMASS_RINGACC0_CFG_MON_BASE;
         pRaRegs->pFifoRegs  = (CSL_ringacc_fifosRegs *) UDMA_NAVSS0_UDMASS_RINGACC0_SRC_FIFOS_BASE;
         pRaRegs->pIscRegs   = (CSL_ringacc_iscRegs *) UDMA_NAVSS0_UDMASS_RINGACC0_ISC_ISC_BASE;
-        pRaRegs->maxRings   = CSL_NAVSS_MAIN_RINGACC_RING_CNT;
+#else
+        pRaRegs->pGlbRegs   = (CSL_ringacc_gcfgRegs *) mmap_device_memory(0,
+            CSL_NAVSS0_UDMASS_RINGACC0_GCFG_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, CSL_NAVSS0_UDMASS_RINGACC0_GCFG_BASE);
+        pRaRegs->pCfgRegs   = (CSL_ringacc_cfgRegs *) mmap_device_memory(0,
+            CSL_NAVSS0_UDMASS_RINGACC0_CFG_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, CSL_NAVSS0_UDMASS_RINGACC0_CFG_BASE);
+        pRaRegs->pRtRegs    = (CSL_ringacc_rtRegs *) mmap_device_memory(0,
+            CSL_NAVSS0_UDMASS_RINGACC0_CFG_RT_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, CSL_NAVSS0_UDMASS_RINGACC0_CFG_RT_BASE);
+        pRaRegs->pMonRegs   = (CSL_ringacc_monitorRegs *) mmap_device_memory(0,
+            CSL_NAVSS0_UDMASS_RINGACC0_CFG_MON_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, CSL_NAVSS0_UDMASS_RINGACC0_CFG_MON_BASE);
+        pRaRegs->pFifoRegs  = (CSL_ringacc_fifosRegs *) mmap_device_memory(0,
+            CSL_NAVSS0_UDMASS_RINGACC0_SRC_FIFOS_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, CSL_NAVSS0_UDMASS_RINGACC0_SRC_FIFOS_BASE);
+        pRaRegs->pIscRegs   = (CSL_ringacc_iscRegs *) mmap_device_memory(0,
+            CSL_NAVSS0_UDMASS_RINGACC0_ISC_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, CSL_NAVSS0_UDMASS_RINGACC0_ISC_BASE);
+#endif
     }
     pRaRegs->maxMonitors     = CSL_RINGACC_MAX_MONITORS;
     pRaRegs->bTraceSupported = (bool)true;
@@ -327,6 +392,7 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
 #if defined (BUILD_MCU1_0) || defined (BUILD_MCU1_1)
     /* IA config init */
     pIaRegs = &drvHandle->iaRegs;
+#ifndef QNX_OS
     pIaRegs->pCfgRegs       = (CSL_intaggr_cfgRegs *) UDMA_MCU_NAVSS0_UDMASS_INTA0_CFG_BASE;
     pIaRegs->pImapRegs      = (CSL_intaggr_imapRegs *) UDMA_MCU_NAVSS0_UDMASS_INTA0_IMAP_BASE;
     pIaRegs->pIntrRegs      = (CSL_intaggr_intrRegs *) UDMA_MCU_NAVSS0_UDMASS_INTA0_INTR_BASE;
@@ -334,6 +400,22 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
     pIaRegs->pMcastRegs     = (CSL_intaggr_mcastRegs *) UDMA_MCU_NAVSS0_UDMASS_INTA0_MCAST_BASE;
     pIaRegs->pGcntCfgRegs   = (CSL_intaggr_gcntcfgRegs *) UDMA_MCU_NAVSS0_UDMASS_INTA0_GCNT_BASE;
     pIaRegs->pGcntRtiRegs   = (CSL_intaggr_gcntrtiRegs *) UDMA_MCU_NAVSS0_UDMASS_INTA0_GCNTRTI_BASE;
+#else
+    pIaRegs->pCfgRegs       = (CSL_intaggr_cfgRegs *) mmap_device_memory(0,
+      CSL_MCU_NAVSS0_UDMASS_INTA0_CFG_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0,  UDMA_MCU_NAVSS0_UDMASS_INTA0_CFG_BASE);
+    pIaRegs->pImapRegs      = (CSL_intaggr_imapRegs *) mmap_device_memory(0,
+      CSL_MCU_NAVSS0_UDMASS_INTA0_IMAP_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, UDMA_MCU_NAVSS0_UDMASS_INTA0_IMAP_BASE);
+    pIaRegs->pIntrRegs      = (CSL_intaggr_intrRegs *) mmap_device_memory(0,
+      CSL_MCU_NAVSS0_UDMASS_INTA0_INTR_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, UDMA_MCU_NAVSS0_UDMASS_INTA0_INTR_BASE);
+    pIaRegs->pL2gRegs       = (CSL_intaggr_l2gRegs *) mmap_device_memory(0,
+      CSL_MCU_NAVSS0_PAR_UDMASS_UDMASS_INTA0_CFG_L2G_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, UDMA_MCU_NAVSS0_PAR_UDMASS_UDMASS_INTA0_CFG_L2G_BASE);
+    pIaRegs->pMcastRegs     = (CSL_intaggr_mcastRegs *) mmap_device_memory(0,
+      CSL_MCU_NAVSS0_UDMASS_INTA0_MCAST_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, UDMA_MCU_NAVSS0_UDMASS_INTA0_MCAST_BASE);
+    pIaRegs->pGcntCfgRegs   = (CSL_intaggr_gcntcfgRegs *) mmap_device_memory(0,
+      CSL_MCU_NAVSS0_UDMASS_INTA0_GCNT_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, UDMA_MCU_NAVSS0_UDMASS_INTA0_GCNT_BASE);
+    pIaRegs->pGcntRtiRegs   = (CSL_intaggr_gcntrtiRegs *) mmap_device_memory(0,
+      CSL_MCU_NAVSS0_UDMASS_INTA0_GCNTRTI_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, UDMA_MCU_NAVSS0_UDMASS_INTA0_GCNTRTI_BASE);
+#endif
     CSL_intaggrGetCfg(pIaRegs);
 
     drvHandle->iaGemOffset  = CSL_NAVSS_GEM_MCU_UDMA_INTA0_SEVI_OFFSET;
@@ -348,6 +430,7 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
 #else
     /* IA config init */
     pIaRegs = &drvHandle->iaRegs;
+#ifndef QNX_OS
     pIaRegs->pCfgRegs       = (CSL_intaggr_cfgRegs *) UDMA_NAVSS0_UDMASS_INTA0_CFG_BASE;
     pIaRegs->pImapRegs      = (CSL_intaggr_imapRegs *) UDMA_NAVSS0_UDMASS_INTA0_IMAP_BASE;
     pIaRegs->pIntrRegs      = (CSL_intaggr_intrRegs *) UDMA_NAVSS0_UDMASS_INTA0_CFG_INTR_BASE;
@@ -355,6 +438,22 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
     pIaRegs->pMcastRegs     = (CSL_intaggr_mcastRegs *) UDMA_NAVSS0_UDMASS_INTA0_CFG_MCAST_BASE;
     pIaRegs->pGcntCfgRegs   = (CSL_intaggr_gcntcfgRegs *) UDMA_NAVSS0_UDMASS_INTA0_CFG_GCNTCFG_BASE;
     pIaRegs->pGcntRtiRegs   = (CSL_intaggr_gcntrtiRegs *) UDMA_NAVSS0_UDMASS_INTA0_CFG_GCNTRTI_BASE;
+#else
+    pIaRegs->pCfgRegs       = (CSL_intaggr_cfgRegs *) mmap_device_memory(0,
+      CSL_NAVSS0_UDMASS_INTA0_CFG_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0,  CSL_NAVSS0_UDMASS_INTA0_CFG_BASE);
+    pIaRegs->pImapRegs      = (CSL_intaggr_imapRegs *) mmap_device_memory(0,
+      CSL_NAVSS0_UDMASS_INTA0_IMAP_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, CSL_NAVSS0_UDMASS_INTA0_IMAP_BASE);
+    pIaRegs->pIntrRegs      = (CSL_intaggr_intrRegs *) mmap_device_memory(0,
+      CSL_NAVSS0_UDMASS_INTA0_CFG_INTR_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, CSL_NAVSS0_UDMASS_INTA0_CFG_INTR_BASE);
+    pIaRegs->pL2gRegs       = (CSL_intaggr_l2gRegs *) mmap_device_memory(0,
+      CSL_NAVSS0_UDMASS_INTA0_CFG_L2G_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, CSL_NAVSS0_UDMASS_INTA0_CFG_L2G_BASE);
+    pIaRegs->pMcastRegs     = (CSL_intaggr_mcastRegs *) mmap_device_memory(0,
+      CSL_NAVSS0_UDMASS_INTA0_CFG_MCAST_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, CSL_NAVSS0_UDMASS_INTA0_CFG_MCAST_BASE);
+    pIaRegs->pGcntCfgRegs   = (CSL_intaggr_gcntcfgRegs *) mmap_device_memory(0,
+      CSL_NAVSS0_UDMASS_INTA0_CFG_GCNTCFG_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, CSL_NAVSS0_UDMASS_INTA0_CFG_GCNTCFG_BASE);
+    pIaRegs->pGcntRtiRegs   = (CSL_intaggr_gcntrtiRegs *) mmap_device_memory(0,
+      CSL_NAVSS0_UDMASS_INTA0_CFG_GCNTRTI_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, CSL_NAVSS0_UDMASS_INTA0_CFG_GCNTRTI_BASE);
+#endif
     /* UDMA not present in CC QT build. Only DRU is present */
 #ifndef CC_QT_BUILD
     CSL_intaggrGetCfg(pIaRegs);
@@ -454,12 +553,24 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
     pProxyTargetRing    = &drvHandle->proxyTargetRing;
     if(UDMA_INST_ID_MCU_0 == instId)
     {
+#ifdef QNX_OS
+        pProxyTargetRing->pTargetRegs   = (CSL_proxy_target0Regs *) (CSL_proxyRegs *) mmap_device_memory(0,
+            CSL_MCU_NAVSS0_PROXY0_TARGET0_DATA_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0,  CSL_MCU_NAVSS0_PROXY0_TARGET0_DATA_BASE);
+#else
         pProxyTargetRing->pTargetRegs   = (CSL_proxy_target0Regs *) CSL_MCU_NAVSS0_PROXY0_TARGET0_DATA_BASE;
+#endif
         pProxyTargetRing->numChns       = CSL_NAVSS_MCU_PROXY_TARGET_RINGACC0_NUM_CHANNELS;
         pProxyTargetRing->chnSizeBytes  = CSL_NAVSS_MCU_PROXY_TARGET_RINGACC0_NUM_CHANNEL_SIZE_BYTES;
 
+#ifdef QNX_OS
+        pProxyCfg->pGlbRegs             = (CSL_proxyRegs *) mmap_device_memory(0,
+            CSL_MCU_NAVSS0_PROXY_CFG_GCFG_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0,  CSL_MCU_NAVSS0_PROXY_CFG_GCFG_BASE);
+        pProxyCfg->pCfgRegs             = (CSL_proxy_cfgRegs *) mmap_device_memory(0,
+            CSL_MCU_NAVSS0_PROXY0_BUF_CFG_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0,  CSL_MCU_NAVSS0_PROXY0_BUF_CFG_BASE);
+#else
         pProxyCfg->pGlbRegs             = (CSL_proxyRegs *) CSL_MCU_NAVSS0_PROXY_CFG_GCFG_BASE;
         pProxyCfg->pCfgRegs             = (CSL_proxy_cfgRegs *) CSL_MCU_NAVSS0_PROXY0_BUF_CFG_BASE;
+#endif
         pProxyCfg->bufferSizeBytes      = CSL_NAVSS_MCU_PROXY_BUFFER_SIZE_BYTES;
         pProxyCfg->numTargets           = 1U;
         pProxyCfg->pProxyTargetParams   = pProxyTargetRing;
@@ -468,12 +579,24 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
     }
     else
     {
+#ifdef QNX_OS
+        pProxyTargetRing->pTargetRegs   = (CSL_proxy_target0Regs *) (CSL_proxyRegs *) mmap_device_memory(0,
+            CSL_NAVSS0_PROXY_TARGET0_DATA_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0,  CSL_NAVSS0_PROXY_TARGET0_DATA_BASE);
+#else
         pProxyTargetRing->pTargetRegs   = (CSL_proxy_target0Regs *) CSL_NAVSS0_PROXY_TARGET0_DATA_BASE;
+#endif
         pProxyTargetRing->numChns       = CSL_NAVSS_MAIN_PROXY_TARGET_RINGACC0_NUM_CHANNELS;
         pProxyTargetRing->chnSizeBytes  = CSL_NAVSS_MAIN_PROXY_TARGET_RINGACC0_NUM_CHANNEL_SIZE_BYTES;
 
+#ifdef QNX_OS
+        pProxyCfg->pGlbRegs             = (CSL_proxyRegs *) mmap_device_memory(0,
+            CSL_NAVSS0_PROXY0_CFG_BUF_CFG_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0,  CSL_NAVSS0_PROXY0_CFG_BUF_CFG_BASE);
+        pProxyCfg->pCfgRegs             = (CSL_proxy_cfgRegs *) mmap_device_memory(0,
+            CSL_NAVSS0_PROXY0_BUF_CFG_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0,  CSL_NAVSS0_PROXY0_BUF_CFG_BASE);
+#else
         pProxyCfg->pGlbRegs             = (CSL_proxyRegs *) CSL_NAVSS0_PROXY0_CFG_BUF_CFG_BASE;
         pProxyCfg->pCfgRegs             = (CSL_proxy_cfgRegs *) CSL_NAVSS0_PROXY0_BUF_CFG_BASE;
+#endif
         pProxyCfg->bufferSizeBytes      = CSL_NAVSS_MAIN_PROXY_BUFFER_SIZE_BYTES;
         pProxyCfg->numTargets           = 1U;
         pProxyCfg->pProxyTargetParams   = pProxyTargetRing;

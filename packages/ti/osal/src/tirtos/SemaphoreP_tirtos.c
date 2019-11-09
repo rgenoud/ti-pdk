@@ -85,7 +85,7 @@ void SemaphoreP_compileTime_SizeChk(void)
  *  ======== SemaphoreP_create ========
  */
 SemaphoreP_Handle SemaphoreP_create(uint32_t count,
-                                    const SemaphoreP_Params *params)
+                                    SemaphoreP_Params *params)
 {
     SemaphoreP_Handle ret_handle;
     SemaphoreP_tiRtos *handle = (SemaphoreP_tiRtos *) NULL_PTR;
@@ -111,8 +111,8 @@ SemaphoreP_Handle SemaphoreP_create(uint32_t count,
         /* Pick up the internal static memory block */
         semPool        = (SemaphoreP_tiRtos *) &gOsalSemPTiRtosPool[0];
         maxSemaphores  = OSAL_TIRTOS_CONFIGNUM_SEMAPHORE;
-        
-        if(gOsalSemAllocCnt==0U) 
+
+        if(gOsalSemAllocCnt==0U)
         {
 			(void)memset( (void *)gOsalSemPTiRtosPool,0,sizeof(gOsalSemPTiRtosPool));
 		}
@@ -181,7 +181,7 @@ SemaphoreP_Status SemaphoreP_delete(SemaphoreP_Handle handle)
 
     if(semaphore != NULL_PTR)
     {
-   
+
       Semaphore_destruct(&semaphore->sem);
 
       key = HwiP_disable();
@@ -193,11 +193,11 @@ SemaphoreP_Status SemaphoreP_delete(SemaphoreP_Handle handle)
       }
       HwiP_restore(key);
       ret = SemaphoreP_OK;
-    } 
+    }
     else
     {
        ret = SemaphoreP_FAILURE;
-    }  
+    }
     return (ret);
 }
 
@@ -270,7 +270,7 @@ SemaphoreP_Status SemaphoreP_postFromISR(SemaphoreP_Handle handle)
 int32_t SemaphoreP_getCount(SemaphoreP_Handle handle)
 {
     SEMOSAL_Assert((handle == NULL_PTR));
-		
+
     SemaphoreP_tiRtos *semaphore = (SemaphoreP_tiRtos *)handle;
 
     return (Semaphore_getCount((Semaphore_Handle)&semaphore->sem));

@@ -92,7 +92,7 @@ static void semaphoreInit( Sem_Struct *semPool, uint32_t maxSemaphores)
  *  ======== SemaphoreP_create ========
  */
 SemaphoreP_Handle SemaphoreP_create(uint32_t count,
-                                    const SemaphoreP_Params *params)
+                                    SemaphoreP_Params *params)
 {
     uint32_t          i;
     uintptr_t         key;
@@ -124,7 +124,7 @@ SemaphoreP_Handle SemaphoreP_create(uint32_t count,
     {
        semaphoreInit(semPool,maxSemaphores);
 	}
-    
+
     for (i = 0; i < maxSemaphores; i++)
     {
         if (semPool[i].used == (bool)false)
@@ -170,8 +170,8 @@ SemaphoreP_Status SemaphoreP_delete(SemaphoreP_Handle handle)
     SemaphoreP_Status ret = SemaphoreP_OK;
     uintptr_t   key;
     Sem_Struct *semS = (Sem_Struct *)handle;
-    
-    if(semS != NULL_PTR) 
+
+    if(semS != NULL_PTR)
     {
       key = HwiP_disable();
       semS->used = (bool)false;
@@ -186,7 +186,7 @@ SemaphoreP_Status SemaphoreP_delete(SemaphoreP_Handle handle)
     else
     {
       ret = SemaphoreP_FAILURE;
-    }  
+    }
 
     return (ret);
 }
@@ -200,7 +200,7 @@ void SemaphoreP_Params_init(SemaphoreP_Params *params)
     if(params!=NULL_PTR) {
       params->mode = SemaphoreP_Mode_COUNTING;
       params->name = (char *) NULL_PTR;
-    }  
+    }
 }
 
 /*
@@ -215,7 +215,7 @@ SemaphoreP_Status SemaphoreP_pend(SemaphoreP_Handle handle, uint32_t timeout)
     uint32_t            semTimeout  = timeout;
     SemaphoreP_Status   ret_val     = SemaphoreP_OK;
     bool iterate = (bool)true;
-    
+
     if(semS!=NULL) {
       while ( (ret_val == SemaphoreP_OK) && (iterate== (bool)true))
       {
@@ -255,7 +255,7 @@ SemaphoreP_Status SemaphoreP_pend(SemaphoreP_Handle handle, uint32_t timeout)
    } else
    {
 	   ret_val = SemaphoreP_FAILURE;
-   }   
+   }
 
     return (ret_val);
 }
@@ -271,7 +271,7 @@ SemaphoreP_Status SemaphoreP_post(SemaphoreP_Handle handle)
     Sem_Struct *semS = (Sem_Struct *)handle;
     if(semS != NULL_PTR)
     {
-      
+
       key = HwiP_disable();
       if (semS->mode == SemaphoreP_Mode_BINARY)
       {
@@ -283,11 +283,11 @@ SemaphoreP_Status SemaphoreP_post(SemaphoreP_Handle handle)
       }
       HwiP_restore(key);
       ret = SemaphoreP_OK;
-    } 
+    }
     else
     {
       ret = SemaphoreP_FAILURE;
-    }   
+    }
 
     return (ret);
 }

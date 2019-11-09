@@ -147,6 +147,9 @@ typedef struct HwiP_Params_s {
                                         v2.0 specific implementations as @ref OSAL_armGicTrigType_t 
                                     */
 #endif
+#ifdef QNX_OS
+    uint32_t   autoEnable; /*!< Automatically enable the interrupt after calling ISR routine */
+#endif
 } HwiP_Params;
 
 /*!
@@ -170,7 +173,7 @@ extern void HwiP_clearInterrupt(int32_t interruptNum);
  *  @return 
  */
 extern HwiP_Handle HwiP_create(int32_t interruptNum, HwiP_Fxn hwiFxn,
-                               const HwiP_Params *hwipParams);
+                               HwiP_Params *hwipParams);
 
 /*!
  *  @brief  Function to delete an interrupt on CortexM devices

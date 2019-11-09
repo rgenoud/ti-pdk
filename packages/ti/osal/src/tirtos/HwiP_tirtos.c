@@ -120,7 +120,7 @@ void HwiP_clearInterrupt(int32_t interruptNum)
  *  ======== HwiP_create ========
  */
 HwiP_Handle HwiP_create(int32_t interruptNum, HwiP_Fxn hwiFxn,
-                        const HwiP_Params *params)
+                        HwiP_Params *params)
 {
     HwiP_tiRtos *handle = (HwiP_tiRtos *) NULL_PTR;
     Hwi_Params  hwiParams;
@@ -146,8 +146,8 @@ HwiP_Handle HwiP_create(int32_t interruptNum, HwiP_Fxn hwiFxn,
         /* Pick up the internal static memory block */
         hwiPool        = (HwiP_tiRtos *) &gOsalHwiPTiRtosPool[0];
         maxHwi         = OSAL_TIRTOS_CONFIGNUM_HWI;
-        
-        if(gOsalHwiAllocCnt==0U) 
+
+        if(gOsalHwiAllocCnt==0U)
         {
             (void)memset((void *)gOsalHwiPTiRtosPool,0,sizeof(gOsalHwiPTiRtosPool));
 		}
@@ -193,9 +193,9 @@ HwiP_Handle HwiP_create(int32_t interruptNum, HwiP_Fxn hwiFxn,
             hwiParams.instance->name = params->name;
             hwiParams.arg            = (xdc_UArg)(params->arg);
 
-            if (params->priority==0U) 
+            if (params->priority==0U)
             {
-               /* A priority of 0 is invalid for many targets. -1 forces 
+               /* A priority of 0 is invalid for many targets. -1 forces
                   sysbios to assign a default priority */
                hwiParams.priority       = -1;
             }
@@ -278,9 +278,9 @@ HwiP_Status HwiP_delete(HwiP_Handle handle)
 
     uintptr_t   key;
     HwiP_Status ret;
-    
+
     HwiP_tiRtos *hwi = (HwiP_tiRtos *)handle;
-    
+
     if(hwi!=NULL_PTR) {
       Hwi_destruct(&hwi->hwi);
       key = HwiP_disable();
@@ -297,7 +297,7 @@ HwiP_Status HwiP_delete(HwiP_Handle handle)
     else
     {
        ret = HwiP_FAILURE;
-    } 
+    }
     return (ret);
 }
 
@@ -363,8 +363,8 @@ void HwiP_Params_init(HwiP_Params *params)
 int32_t HwiP_post(uint32_t interruptNum)
 {
     Hwi_post(interruptNum);
-    
-    return osal_OK; 
+
+    return osal_OK;
     /* Please note that in future,for targets which do not support Hwi_Post,
        add #ifdefs appropriately to return osal_UNSUPPORTED */
 }

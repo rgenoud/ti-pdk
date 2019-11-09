@@ -331,12 +331,12 @@ static int32_t RPMessage_enqueMsg(RPMessage_EndptPool *pool, RPMessage_MsgHeader
             obj->payload.len = msg->dataLen;
             obj->payload.src = msg->srcAddr;
             obj->payload.procId = msg->srcProcId;
-
+#ifndef QNX_OS
             if (NULL != gIpcObject.initPrms.newMsgFxn)
             {
                 gIpcObject.initPrms.newMsgFxn(msg->srcAddr, msg->srcProcId);
             }
-
+#endif
             if (NULL != pOsalPrms->unlockMutex)
             {
                 pOsalPrms->unlockMutex(obj->semHandle);
@@ -361,11 +361,12 @@ static int32_t RPMessage_enqueMsg(RPMessage_EndptPool *pool, RPMessage_MsgHeader
                 IpcUtils_Qput(&obj->queue, &payload->elem);
 
                 pOsalPrms->restoreAllIntr(key);
-
+#ifndef QNX_OS
                 if (NULL != gIpcObject.initPrms.newMsgFxn)
                 {
                     gIpcObject.initPrms.newMsgFxn(msg->srcAddr, msg->srcProcId);
                 }
+#endif
 
                 if (NULL != pOsalPrms->unlockMutex)
                 {
@@ -756,9 +757,9 @@ static void RPMessage_checkForMessages(RPMessage_EndptPool *pool)
  *         received.
  *         This function runs in its own task.
  */
-static void RPMessage_ctrlMsgTask(uint32_t* arg0, uint32_t* arg1)
+static void RPMessage_ctrlMsgTask(void* arg0, void* arg1)
 {
-    RPMessage_Object *obj = (RPMessage_Object *)arg0;
+    RPMessage_Object *obj = (RPMessage_Object *)(uintptr_t)(*((uint64_t *)arg0));
     uint32_t      remoteEndpoint;
     uint32_t      remoteProcId;
     int32_t       status;

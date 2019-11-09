@@ -45,6 +45,7 @@
 #include <ti/drv/ipc/soc/ipc_soc.h>
 #include <ti/drv/ipc/src/ipc_priv.h>
 #include <ti/drv/ipc/src/ipc_mailbox.h>
+#include <ti/drv/ipc/src/ipc_utils.h>
 
 #include <ti/csl/csl_intr_router.h>
 #include <ti/csl/csl_clec.h>
@@ -63,6 +64,8 @@
 #define NAVSS_INTRTR_INPUT_MAILBOX9_USER0   (400U)
 #define NAVSS_INTRTR_INPUT_MAILBOX10_USER0  (396U)
 #define NAVSS_INTRTR_INPUT_MAILBOX11_USER0  (392U)
+
+#define MAILBOX_REG_SIZE                    (0x200)
 
 /**
  * \brief Main NavSS512 - Mailbox input line
@@ -102,7 +105,7 @@ static Ipc_ProcInfo g_Ipc_mp_procInfo[IPC_MAX_PROCS] =
 };
 
 /* Mailbox Cluster Base Address */
-static uint32_t  g_IPC_Mailbox_BaseAddr[IPC_MAILBOX_CLUSTER_CNT] =
+static uint32_t  g_IPC_Mailbox_BasePhyAddr[IPC_MAILBOX_CLUSTER_CNT] =
 {
     CSL_NAVSS_MAIN_MAILBOX_REGS_0_BASE,     /* Mailbox - cluster0   */
     CSL_NAVSS_MAIN_MAILBOX_REGS_1_BASE,     /* Mailbox - cluster1   */
@@ -117,6 +120,14 @@ static uint32_t  g_IPC_Mailbox_BaseAddr[IPC_MAILBOX_CLUSTER_CNT] =
     CSL_NAVSS_MAIN_MAILBOX_REGS_10_BASE,    /* Mailbox - cluster10  */
     CSL_NAVSS_MAIN_MAILBOX_REGS_11_BASE,    /* Mailbox - cluster11  */
 };
+
+#if defined(BUILD_MPU1_0) && defined(QNX_OS)
+/* Mailbox Cluster Base Address  - virtual address for HLOS */
+static uint32_t  g_IPC_Mailbox_BaseVirtAddr[IPC_MAILBOX_CLUSTER_CNT] =
+{
+    0
+};
+#endif
 
 static Ipc_MailboxInfo   g_IPC_MailboxInfo[IPC_MAX_PROCS][IPC_MAX_PROCS] =
 {
@@ -325,7 +336,16 @@ uint32_t Ipc_getMailboxBaseAddr(uint32_t custerId)
 
     if( custerId < IPC_MAX_PROCS)
     {
-        baseAddr = g_IPC_Mailbox_BaseAddr[custerId];
+        baseAddr = g_IPC_Mailbox_BasePhyAddr[custerId];
+
+#if defined(BUILD_MPU1_0) && defined(QNX_OS)
+        if(g_IPC_Mailbox_BaseVirtAddr[custerId] == 0)
+        {
+            g_IPC_Mailbox_BaseVirtAddr[custerId] =
+                IpcUtils_getMemoryAddress(baseAddr, MAILBOX_REG_SIZE);
+        }
+        baseAddr = g_IPC_Mailbox_BaseVirtAddr[custerId];
+#endif
     }
 
     return baseAddr;
@@ -563,7 +583,11 @@ static const uint16_t map_src_id[] =
 /* Indexed list of host ids */
 static const uint16_t map_host_id[] =
 {
+#ifndef QNX_OS
     TISCI_HOST_ID_A72_0,
+#else
+    TISCI_HOST_ID_A72_2,
+#endif
     TISCI_HOST_ID_R5_0,
     TISCI_HOST_ID_R5_2,
     TISCI_HOST_ID_MAIN_0_R5_0,

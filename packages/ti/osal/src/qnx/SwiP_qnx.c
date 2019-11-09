@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, Texas Instruments Incorporated
+ * Copyright (c) 2018, Texas Instruments Incorporated
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,84 +30,44 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*
- *  ======== HwiP_linux.c ========
+ *  ======== SwiP_qnx.c ========
  */
+
+#include <ti/osal/SwiP.h>
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include <ti/osal/HwiP.h>
-
-#ifndef NULL_PTR
-#define NULL_PTR ((void *)0x0)
-#endif
 
 /*
- *  ======== HwiP_clearInterrupt ========
+ *  ======== SwiP_create ========
  */
-void HwiP_clearInterrupt(int32_t interruptNum)
+SwiP_Handle SwiP_create(SwiP_Fxn swiFxn, SwiP_Params *params)
 {
-    /* stub */
+    return (NULL);
 }
 
 /*
- *  ======== HwiP_create ========
+ *  ======== SwiP_delete ========
  */
-HwiP_Handle HwiP_create(int32_t interruptNum, HwiP_Fxn hwiFxn,
-                        HwiP_Params *params)
+SwiP_Status SwiP_delete(SwiP_Handle *pHandle)
 {
-    /* stub */
-    return ((HwiP_Handle)NULL_PTR);
+    return (SwiP_OK);
 }
 
 /*
- *  ======== HwiP_delete ========
+ *  ======== SwiP_Params_init ========
  */
-HwiP_Status HwiP_delete(HwiP_Handle handle)
+void SwiP_Params_init(SwiP_Params *params)
 {
-    /* stub */
-    return (HwiP_OK);
+
 }
 
 /*
- *  ======== HwiP_disable ========
+ *  ======== SwiP_postInterrupt ========
  */
-uintptr_t HwiP_disable(void)
-{
-    /* stub */
-    return (0);
-}
 
-/*
- *  ======== HwiP_disableInterrupt ========
- */
-void HwiP_disableInterrupt(int32_t interruptNum)
+SwiP_Status SwiP_post(SwiP_Handle handle)
 {
-    /* stub */
+    return (SwiP_OK);
 }
-
-/*
- *  ======== HwiP_enableInterrupt ========
- */
-void HwiP_enableInterrupt(int32_t interruptNum)
-{
-    /* stub */
-}
-
-/*
- *  ======== HwiP_Params_init ========
- */
-void HwiP_Params_init(HwiP_Params *params)
-{
-    /* stub */
-}
-
-/*
- *  ======== HwiP_restore ========
- */
-void HwiP_restore(uintptr_t key)
-{
-    /* stub */
-}
-
-/* Nothing past this point */

@@ -48,6 +48,9 @@ extern "C" {
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
+#ifdef QNX_OS
+#include <pthread.h>
+#endif
 
 /*!
  *  @brief    Status codes for TaskP APIs
@@ -82,6 +85,9 @@ typedef  void *TaskP_Handle;
 typedef struct TaskP_Params_s
 {
     uint8_t *name;           /*!< Name of the task instance.                  */
+#ifdef QNX_OS
+    pthread_t tid; /* QNX thread ID */
+#endif
     void *pErrBlk; /*!< Pointer to the error block for task Create */
     int8_t priority;     /*!< The priority of the task                    */
     uint32_t stacksize;   /*!< The stack size of the task                  */
@@ -100,7 +106,7 @@ typedef struct TaskP_Params_s
  *  @return A TaskP_Handle on success or a NULL on an error
  */
 extern TaskP_Handle TaskP_create(void *taskfxn,
-                                 const TaskP_Params *params);
+                                 TaskP_Params *params);
 
 /*!
  *  @brief  Function to delete a task.

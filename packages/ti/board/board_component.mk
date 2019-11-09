@@ -92,6 +92,9 @@ board_lib_am65xx_CORELIST = mpu1_0 mcu1_0
 board_lib_j721e_CORELIST = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 c66xdsp_1 c66xdsp_2 c7x_1
 board_lib_j7200_CORELIST = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1
 
+ifeq ($(BUILD_OS_TYPE), qnx)
+board_lib_j721e_CORELIST += qnx_mpu1_0
+endif
 
 ############################
 # board package

@@ -42,7 +42,7 @@
 /*
  *  ======== SwiP_create ========
  */
-SwiP_Handle SwiP_create(SwiP_Fxn swiFxn, const SwiP_Params *params)
+SwiP_Handle SwiP_create(SwiP_Fxn swiFxn, SwiP_Params *params)
 {
     return (NULL_PTR);
 }

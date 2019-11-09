@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Texas Instruments Incorporated
+ * Copyright (c) 2019, Texas Instruments Incorporated
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,47 +30,48 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*
- *  ======== TaskP_tirtos.c ========
+ *  ======== TaskP_qnx.c ========
  */
-#include <ti/sysbios/knl/Task.h>
-#include <ti/sysbios/knl/Clock.h>
-#include "TaskP.h"
-#include <xdc/runtime/Memory.h>
-#include <xdc/runtime/Error.h>
-#include <ti/osal/src/tirtos/tirtos_config.h>
+
+#include <ti/osal/TaskP.h>
+
+#include <pthread.h>
+#include <unix.h>
+#include <sched.h>
+
 /*
  *  ======== TaskP_create ========
  */
 TaskP_Handle TaskP_create(void *taskfxn, TaskP_Params *params)
 {
-    Task_Handle taskHandle;
-    Task_Params taskParams;
-    Error_Block       *pErrBlk = (Error_Block *) NULL_PTR;
+    pthread_attr_t attr;
+    int            status;
+    uintptr_t      arg_array[2];
 
-    Task_Params_init(&taskParams);
+    pthread_attr_init(&attr);
 
-    if(params != NULL_PTR)
+    if(params != (TaskP_Params *)NULL)
     {
-        taskParams.stackSize = params->stacksize;
-        taskParams.priority = params->priority;
-        taskParams.arg0 = (UArg)(params->arg0);
-        taskParams.arg1 = (UArg)(params->arg1);
-        taskParams.instance->name = (char *)(params->name);
-        if(params->stack!=NULL_PTR)
+        pthread_attr_setstacksize(&attr, params->stacksize);
+        arg_array[0] = ((uintptr_t) params->arg0);
+        arg_array[1] = ((uintptr_t) params->arg1);
+        if(params->stack!=NULL)
         {
-            taskParams.stack = params->stack;
+            pthread_attr_setstackaddr(&attr, params->stack);
         }
-        pErrBlk = (Error_Block *) params->pErrBlk;
     }
 
-    if (pErrBlk !=  NULL_PTR)
+    status = pthread_create(&params->tid, &attr, taskfxn, (void *)arg_array);
+
+    if(status==EOK)
     {
-        Error_init(pErrBlk);
+        //printf("TaskP_create: Newly created thread id is %d\n", params->tid);
+        return ((TaskP_Handle) &params->tid);
     }
-
-    taskHandle = Task_create((Task_FuncPtr)taskfxn, &taskParams, pErrBlk);
-
-    return ((TaskP_Handle)taskHandle);
+    else
+    {
+	return ((TaskP_Handle) NULL);
+    }
 }
 
 /*
@@ -78,7 +79,8 @@ TaskP_Handle TaskP_create(void *taskfxn, TaskP_Params *params)
  */
 TaskP_Status TaskP_delete(TaskP_Handle *handle)
 {
-    Task_delete((Task_Handle *)handle);
+    TaskP_Handle temp = *handle;
+    pthread_cancel(*(pthread_t*)temp);
     return TaskP_OK;
 }
 
@@ -87,60 +89,56 @@ TaskP_Status TaskP_delete(TaskP_Handle *handle)
  */
 void TaskP_Params_init(TaskP_Params *params)
 {
-    Task_Params taskParams;
-    Task_Params_init(&taskParams);
-    params->priority = (int8_t)taskParams.priority;
-    params->stacksize = (uint32_t)taskParams.stackSize;
-    params->arg0 = (void *)(taskParams.arg0);
-    params->arg1 = (void *)(taskParams.arg1);
-    params->name = (uint8_t *)(taskParams.instance->name);
-    params->stack = NULL_PTR;
-    params->pErrBlk = NULL_PTR;
+    params->name = (uint8_t *) NULL;
+    params->pErrBlk = (void *) NULL;
+    params->priority = 0;
+    params->stacksize = 0;
+    params->arg0 = (void *) NULL;
+    params->arg1 = (void *) NULL;
+    params->stack = (void *) NULL;
 }
 
 void TaskP_sleep(uint32_t timeout)
 {
-    Task_sleep(timeout);
+    nap(timeout);
 }
 
 void TaskP_sleepInMsecs(uint32_t timeoutInMsecs)
 {
     uint32_t ticks;
+    uint32_t Clock_tickPeriod = 1000u;
 
     /* Clock_tickPeriod is in units of usecs */
-    ticks = (uint32_t)((uint64_t)timeoutInMsecs * 1000U) / Clock_tickPeriod;
+    ticks = ((uint64_t)timeoutInMsecs * 1000u) / Clock_tickPeriod;
 
     TaskP_sleep(ticks);
 }
 
 void TaskP_setPrio(TaskP_Handle handle, uint32_t priority)
 {
-    (void)Task_setPri((Task_Handle)handle, (int16_t)priority);
+    ;
 }
 
-TaskP_Handle TaskP_self(void)
+TaskP_Handle TaskP_self()
 {
-    return ((TaskP_Handle)Task_self());
-}
+    pthread_t taskHandle;
+    pthread_t *handle = (pthread_t *)calloc(1, sizeof(pthread_t));
 
-TaskP_Handle TaskP_selfmacro(void)
-{
-    return ((TaskP_Handle)Task_selfMacro());
+    taskHandle = pthread_self();
+    *handle = taskHandle;
+
+    return ((TaskP_Handle) handle);
 }
 
 void TaskP_yield(void) {
-    Task_yield();
+    sched_yield();
 }
 
 uint32_t TaskP_isTerminated(TaskP_Handle handle)
 {
     uint32_t isTaskTerminated = 0;
 
-    if(Task_getMode((Task_Handle)handle)!=Task_Mode_TERMINATED)
-    {
-        isTaskTerminated = 0;
-    }
-    else
+    if(pthread_cancel(*(pthread_t*)handle) == EOK)
     {
         isTaskTerminated = 1;
     }
