@@ -46,26 +46,22 @@ TaskP_Handle TaskP_create(void *taskfxn, TaskP_Params *params)
 {
     pthread_attr_t attr;
     int            status;
-    uintptr_t      arg_array[2];
 
     pthread_attr_init(&attr);
 
     if(params != (TaskP_Params *)NULL)
     {
         pthread_attr_setstacksize(&attr, params->stacksize);
-        arg_array[0] = ((uintptr_t) params->arg0);
-        arg_array[1] = ((uintptr_t) params->arg1);
         if(params->stack!=NULL)
         {
             pthread_attr_setstackaddr(&attr, params->stack);
         }
     }
 
-    status = pthread_create(&params->tid, &attr, taskfxn, (void *)arg_array);
+    status = pthread_create(&params->tid, &attr, taskfxn, (void *)(params->arg0));
 
     if(status==EOK)
     {
-        //printf("TaskP_create: Newly created thread id is %d\n", params->tid);
         return ((TaskP_Handle) &params->tid);
     }
     else
