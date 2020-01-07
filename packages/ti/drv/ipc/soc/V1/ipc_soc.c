@@ -290,6 +290,10 @@ static Ipc_MailboxInfo   g_IPC_MailboxInfo[IPC_MAX_PROCS][IPC_MAX_PROCS] =
 uint32_t Ipc_getNavss512MailboxInputIntr(uint32_t clusterId, uint32_t userId);
 int32_t Ipc_setCoreEventId(uint32_t selfId, Ipc_MbConfig* cfg, uint32_t intrCnt);
 
+#if 1
+int32_t Ipc_getIntNumRange(uint32_t coreIndex,uint16_t *rangeStartP, uint16_t *rangeNumP);
+#endif
+
 
 int32_t Ipc_getMailboxInfoTx(uint32_t selfId, uint32_t remoteId,
                  uint32_t *clusterId, uint32_t *userId, uint32_t *queueId)

@@ -112,9 +112,10 @@ void HwiP_clearInterrupt(int32_t interruptNum)
  *  ======== HwiP_create ========
  */
 HwiP_Handle HwiP_create(int32_t interruptNum, HwiP_Fxn hwiFxn,
-                        HwiP_Params *params)
+                        const HwiP_Params *params)
 {
     pthread_attr_t thread_attr;
+    uint32_t evtId;
 
     if(threadSpawned == 0)
     {
@@ -155,8 +156,8 @@ HwiP_Handle HwiP_create(int32_t interruptNum, HwiP_Fxn hwiFxn,
      * _NTO_INTR_FLAGS_NO_UNMASK - Start with interrupt masked
      */
 
-    params->evtId = InterruptAttachEvent (interruptNum, &isr_event[interruptNum],  0 /*_NTO_INTR_FLAGS_NO_UNMASK*/);
-    if(params->evtId == -1)
+    evtId = InterruptAttachEvent (interruptNum, &isr_event[interruptNum],  0 /*_NTO_INTR_FLAGS_NO_UNMASK*/);
+    if(evtId == -1)
     {
         printf("%s: InterruptAttachEvent failed\n",__FUNCTION__);
     }
@@ -165,7 +166,7 @@ HwiP_Handle HwiP_create(int32_t interruptNum, HwiP_Fxn hwiFxn,
 	//printf("%s: InterruptAttachEvent succeed irq/%d coid/%d event/%p\n",__FUNCTION__, interruptNum, isr_event[interruptNum].sigev_coid, &isr_event[interruptNum]);
     }
 
-    return ((HwiP_Handle) &params->evtId);
+    return ((HwiP_Handle) (long)evtId);
 }
 
 /*

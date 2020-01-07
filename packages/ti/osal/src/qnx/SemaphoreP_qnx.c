@@ -44,6 +44,7 @@
 #include <fcntl.h>
 #include <time.h>
 #include <errno.h>
+#include <string.h>
 
 /*
  *  ======== SemaphoreP_create ========
@@ -59,11 +60,15 @@ SemaphoreP_Handle SemaphoreP_create(uint32_t count,
     {
        static int counter = 0;
        sprintf(sem_name,"qnx_sem_%d", counter++);
-       params->name = sem_name;
     }
+    else
+    {
+        strcpy(sem_name, params->name);
+    }
+    
 
     /* Creates a COUNTING semaphore */
-    handle = sem_open(params->name, O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH, count);
+    handle = sem_open(sem_name, O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH, count);
     if (handle == SEM_FAILED)
     {
         printf("%s: for QNX Failed\n",__FUNCTION__);

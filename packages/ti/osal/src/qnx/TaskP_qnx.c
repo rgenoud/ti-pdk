@@ -42,10 +42,12 @@
 /*
  *  ======== TaskP_create ========
  */
-TaskP_Handle TaskP_create(void *taskfxn, TaskP_Params *params)
+TaskP_Handle TaskP_create(void *taskfxn, const TaskP_Params *params)
 {
     pthread_attr_t attr;
     int            status;
+    TaskP_Handle retVal = (TaskP_Handle)NULL;
+    pthread_t *tid = (pthread_t *)calloc(1, sizeof(pthread_t));
 
     pthread_attr_init(&attr);
 
@@ -58,16 +60,14 @@ TaskP_Handle TaskP_create(void *taskfxn, TaskP_Params *params)
         }
     }
 
-    status = pthread_create(&params->tid, &attr, taskfxn, (void *)(params->arg0));
+    status = pthread_create(tid, &attr, taskfxn, (void *)(&params->arg0));
 
     if(status==EOK)
     {
-        return ((TaskP_Handle) &params->tid);
+        retVal = ((TaskP_Handle) tid);
     }
-    else
-    {
-	return ((TaskP_Handle) NULL);
-    }
+    
+    return retVal;
 }
 
 /*
@@ -75,8 +75,12 @@ TaskP_Handle TaskP_create(void *taskfxn, TaskP_Params *params)
  */
 TaskP_Status TaskP_delete(TaskP_Handle *handle)
 {
-    TaskP_Handle temp = *handle;
-    pthread_cancel(*(pthread_t*)temp);
+    if (*handle != NULL)
+    {
+        pthread_cancel(*(pthread_t*)handle);
+        free(*handle);
+        *handle = NULL;
+    }
     return TaskP_OK;
 }
 
@@ -135,8 +139,12 @@ uint32_t TaskP_isTerminated(TaskP_Handle handle)
     uint32_t isTaskTerminated = 0;
 
     if(pthread_cancel(*(pthread_t*)handle) == EOK)
+    if (handle != NULL)
     {
-        isTaskTerminated = 1;
+        if(pthread_cancel((pthread_t)(long)handle) == EOK)
+        {
+            isTaskTerminated = 1;
+        }
     }
     return isTaskTerminated;
 }

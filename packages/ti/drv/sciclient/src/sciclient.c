@@ -765,7 +765,7 @@ int32_t Sciclient_service_rsmgr(const Sciclient_ReqPrm_t *pReqPrm,
     uint8_t           localSeqId = 0;
     uintptr_t         key = 0U;
     uint32_t          timeToWait = 0;
-    struct tisci_header header;
+    struct tisci_header *header;
     uint8_t *pSecHeader = NULL;
     struct tisci_sec_header secHeader;
     uint32_t numWords = 0U;

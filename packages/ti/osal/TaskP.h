@@ -101,7 +101,7 @@ typedef struct TaskP_Params_s
  *  @return A TaskP_Handle on success or a NULL on an error
  */
 extern TaskP_Handle TaskP_create(void *taskfxn,
-                                 TaskP_Params *params);
+                                 const TaskP_Params *params);
 
 /*!
  *  @brief  Function to delete a task.

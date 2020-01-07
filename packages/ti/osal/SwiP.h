@@ -101,7 +101,7 @@ typedef struct SwiP_Params_s {
  *
  *  @return SwiP_Handle
  */
-extern SwiP_Handle SwiP_create(SwiP_Fxn swiFxn, SwiP_Params *swiPparams);
+extern SwiP_Handle SwiP_create(SwiP_Fxn swiFxn, const SwiP_Params *swiPparams);
 
 /*!
  *  @brief  Function to delete an interrupt on CortexM devices

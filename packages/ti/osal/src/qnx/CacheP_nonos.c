@@ -39,79 +39,18 @@
 #include <stdlib.h>
 
 #include <ti/osal/CacheP.h>
-#include <ti/osal/src/nonos/Nonos_config.h>
-
-static uint32_t CacheP_getCacheSize(void);
-
-static uint32_t CacheP_getCacheSize(void)
-{
-    uint32_t  cacheLineSize;
-
-    cacheLineSize  = CSL_a53v8GetCurrentCacheSize();
-    /* Indicates the (log2 (number of words in cache line)) - 2 */
-    cacheLineSize &= (uint32_t) 7U;
-    cacheLineSize += 2;
-    /* Now get the actual size by left shift operation */
-    cacheLineSize = (1U << cacheLineSize);
-    return (cacheLineSize);
-}
 
 
 void CacheP_wb(const void * addr, int32_t size)
 {
-   uintptr_t i, firstAddr, lastAddr;
-   uint32_t cacheLineSize = CacheP_getCacheSize();
-
-   /* Calculate the last address */
-   lastAddr = (uintptr_t) addr + size;
-
-   /* find the first address for cache Wb */
-   firstAddr = (uintptr_t ) addr & ~(cacheLineSize -1U);
-
-   for (i = firstAddr; i < lastAddr; i+=cacheLineSize)
-   {
-      /* clean single entry in DCache to PoC */
-       CSL_a53v8CleanDcacheMvaPoC(i);
-   }
-
    return;
 }
 void CacheP_wbInv(const void * addr, int32_t size)
 {
-    uintptr_t i, firstAddr, lastAddr;
-    uint32_t cacheLineSize = CacheP_getCacheSize();
-
-    /* Calculate the last address */
-    lastAddr = (uintptr_t) addr + size;
-
-    /* find the first address for cache Wb */
-    firstAddr = (uintptr_t ) addr & ~(cacheLineSize -1U);
-
-    for (i = firstAddr; i < lastAddr; i+=cacheLineSize)
-    {
-        /* clean and invalidate single entry in DCache to PoC */
-        CSL_a53v8CleanInvalidateDcacheMvaPoC(i);
-    }
-
     return;
-
 }
 void CacheP_Inv(const void * addr, int32_t size)
 {
-    uintptr_t i, firstAddr, lastAddr;
-    uint32_t cacheLineSize = CacheP_getCacheSize();
-
-    /* Calculate the last address */
-    lastAddr = (uintptr_t) addr + size;
-
-    /* find the first address for cache Wb */
-    firstAddr = (uintptr_t ) addr & ~(cacheLineSize -1U);
-
-    for (i = firstAddr; i < lastAddr; i+=cacheLineSize)
-    {
-        /* invalidate single entry in DCache */
-        CSL_a53v8InvalidateDcacheMvaPoC(i);
-    }
     return;
 }
 

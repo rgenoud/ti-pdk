@@ -91,7 +91,7 @@ typedef enum HwiP_Status_e {
 /**
  *  @brief Enumerates the types different trigger types.
  *  Please refer to Section 4.3.13 Interrupt Configuration Registers, GICD_ICFGRn
- *  of ARM® Generic Interrupt Controller Architecture version 2.0
+ *  of ARMï¿½ Generic Interrupt Controller Architecture version 2.0
  *  Architecture Specification document for details.
  */
 typedef enum
@@ -173,7 +173,7 @@ extern void HwiP_clearInterrupt(int32_t interruptNum);
  *  @return 
  */
 extern HwiP_Handle HwiP_create(int32_t interruptNum, HwiP_Fxn hwiFxn,
-                               HwiP_Params *hwipParams);
+                               const HwiP_Params *hwipParams);
 
 /*!
  *  @brief  Function to delete an interrupt on CortexM devices
