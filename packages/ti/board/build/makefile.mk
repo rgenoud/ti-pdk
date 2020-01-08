@@ -38,7 +38,7 @@ MODULE_NAME = board
 SRCDIR = . src
 INCDIR = . src
 
-ifeq ($(BOARD),$(filter $(BOARD),evmAM335x icev2AM335x iceAMIC110 skAM335x bbbAM335x evmAM437x idkAM437x skAM437x evmAM572x idkAM571x idkAM572x evmK2H evmK2K evmK2E evmK2L evmK2G iceK2G evmC6678 evmC6657 evmOMAPL137 lcdkOMAPL138 idkAM574x am65xx_evm am65xx_idk))
+ifeq ($(BOARD),$(filter $(BOARD),evmAM335x icev2AM335x iceAMIC110 skAM335x bbbAM335x evmAM437x idkAM437x skAM437x evmAM572x idkAM571x idkAM572x evmK2H evmK2K evmK2E evmK2L evmK2G iceK2G evmC6678 evmC6657 evmOMAPL137 lcdkOMAPL138 idkAM574x am65xx_evm am65xx_idk am64x_evm))
 # Common source files across all platforms and cores
 SRCS_COMMON += board.c
 endif
@@ -134,6 +134,12 @@ endif
 ifeq ($(BOARD),$(filter $(BOARD), lcdkOMAPL138))
 include $(PDK_BOARD_COMP_PATH)/src/$(BOARD)/src_files_$(BOARD).mk
 CFLAGS_LOCAL_$(BOARD) += -D$(BOARD)=$(BOARD)
+endif
+
+ifeq ($(BOARD),$(filter $(BOARD), am64x_evm))
+CFLAGS_LOCAL_COMMON = $(PDK_CFLAGS)
+include $(PDK_BOARD_COMP_PATH)/src/$(BOARD)/src_files_$(BOARD).mk
+PACKAGE_SRCS_COMMON += src/$(BOARD)
 endif
 
 # List all the external components/interfaces, whose interface header files

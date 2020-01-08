@@ -56,7 +56,7 @@ LIMIT_CORES_k2g-hs    = $(CORE_LIST_k2g)
 LIMIT_CORES_c665x     = $(CORE_LIST_c6657)
 LIMIT_CORES_c667x     = $(CORE_LIST_c6678)
 LIMIT_CORES_am65xx    = $(CORE_LIST_am65xx)
-LIMIT_CORES_am64xx    = $(CORE_LIST_am64x)
+LIMIT_CORES_am64x     = $(CORE_LIST_am64x)
 LIMIT_CORES_am65xx-hs = $(CORE_LIST_am65xx)
 # Filter out c7x-hostemu as Processor SDK does not build use it
 LIMIT_CORES_j7        = $(filter-out c7x-hostemu,$(sort $(CORE_LIST_j721e) $(CORE_LIST_j7200)))
@@ -72,7 +72,7 @@ LIMIT_SOCS_am57xx    = am571x am572x am574x
 LIMIT_SOCS_am437x    = am437x
 LIMIT_SOCS_am335x    = am335x
 LIMIT_SOCS_am65xx    = am65xx
-LIMIT_SOCS_am64xx    = am64x
+LIMIT_SOCS_am64x     = am64x
 LIMIT_SOCS_am65xx-hs = am65xx
 LIMIT_SOCS_j7        = j721e j7200
 
@@ -94,7 +94,7 @@ LIMIT_BOARDS_k2g-hs    = $(BOARD_LIST_k2g)
 LIMIT_BOARDS_k2e       = $(BOARD_LIST_k2e)
 LIMIT_BOARDS_am65xx    = $(BOARD_LIST_am65xx)
 LIMIT_BOARDS_am65xx-hs = $(BOARD_LIST_am65xx)
-LIMIT_BOARDS_am64xx    = $(BOARD_LIST_am64x)
+LIMIT_BOARDS_am64x     = $(BOARD_LIST_am64x)
 LIMIT_BOARDS_c665x     = $(BOARD_LIST_c6657)
 LIMIT_BOARDS_c667x     = $(BOARD_LIST_c6678)
 LIMIT_BOARDS_omapl138  = $(BOARD_LIST_omapl138)
