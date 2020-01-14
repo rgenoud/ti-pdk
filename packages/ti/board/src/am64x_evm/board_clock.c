@@ -121,3 +121,8 @@ uint32_t Board_getNumMainPscCconfigs(void)
 {
     return (sizeof(mainPscConfigs) / sizeof(pscConfig));
 }
+
+Board_STATUS Board_moduleClockInit(void)
+{
+    return (BOARD_SOK);
+}

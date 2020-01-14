@@ -84,6 +84,8 @@
 #include <ti/osal/soc/j721e/osal_soc.h>
 #elif defined (SOC_J7200)
 #include <ti/osal/soc/j7200/osal_soc.h>
+#elif defined (SOC_AM64X)
+#include <ti/osal/soc/am64x/osal_soc.h>
 #else
 /* No known Soc is defined, have below defaults */
 /* Max number of semaphores for NonOs */

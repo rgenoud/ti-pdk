@@ -47,8 +47,11 @@ extern "C" {
 #endif
 
 #include <stdio.h>
-
+#if defined(SOC_AM64X)
+#undef UART_CONSOLE
+#else
 #define UART_CONSOLE
+#endif
 
 #if defined(UART_CONSOLE)
 #if defined(SOC_J721E)&&(defined(BUILD_C66X_1)||defined(BUILD_C66X_2)||defined(BUILD_C7X_1))

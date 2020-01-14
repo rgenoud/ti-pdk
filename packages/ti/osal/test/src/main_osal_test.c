@@ -331,6 +331,13 @@ UT_Timer_Type_t  timer_type =             UT_Timer_TIMER64;
     #define OSAL_TEST_TIMER_ID2               (5U)
     #define OSAL_TEST_TIMER_PERIOD            (5000U)
   #endif
+#elif defined(SOC_AM64X)
+  UT_Timer_Type_t  timer_type    =          UT_Timer_DMTIMER;
+  #if defined(BUILD_MCU)
+    #define OSAL_TEST_TIMER_ID                (1U)
+    #define OSAL_TEST_TIMER_ID2               (2U)
+    #define OSAL_TEST_TIMER_PERIOD            (5000U)
+  #endif
 #else
 UT_Timer_Type_t  timer_type   =           UT_Timer_DMTIMER;
   #if defined (__ARM_ARCH_7A__)
@@ -380,15 +387,20 @@ void timerIsr2(void *arg)
  */
 bool Osal_delay_test(void)
 {
+#if !defined(SOC_AM64X)
    int32_t i;
   /* This test assumes that Board init has been already
    * called outside this function
    */
    /* Notice a '.' on terminal for every 1 second */
+
    for (i=0; i<10;i++) {
+#endif
       Osal_delay(1000);
       OSAL_log(".");
+#if !defined(SOC_AM64X)
    }
+#endif
    OSAL_log("\n");
 
   return(true);
