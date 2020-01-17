@@ -333,7 +333,7 @@ OSAL_Baremetal_TestApp_$(SOC)_CORELIST = ipu1_0 c66x
 endif
 
 ifeq ($(SOC),$(filter $(SOC), am64x))
- OSAL_Baremetal_TestApp_$(SOC)_CORELIST = mcu1_0
+ OSAL_Baremetal_TestApp_$(SOC)_CORELIST = mcu1_0 mpu1_0
 endif
 
 ifeq ($(SOC),$(filter $(SOC), am65xx))

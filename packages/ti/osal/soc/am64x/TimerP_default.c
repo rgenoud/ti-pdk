@@ -78,56 +78,56 @@ TimerP_dmTimerDefault gDmTimerPInfoTbl[TimerP_numTimerDevices] = {
   {
     "DMTimer4",        /* Timer Name */
      CSL_TIMER4_CFG_BASE,  /* base address */
-     CSL_GIC0_INTR_TIMER4_BUS_INTR_PEND,     /* Interrupt Number */
+     CSLR_GICSS0_SPI_TIMER4_INTR_PEND_0,     /* Interrupt Number */
      TIMERP_EVENT_NOT_AVAILABLE              /* Event Id */
   },
   /* Timer ID 5 */
   {
     "DMTimer5",        /* Timer Name */
      CSL_TIMER5_CFG_BASE,                    /* base address */
-     CSL_GIC0_INTR_TIMER5_BUS_INTR_PEND,     /* Interrupt Number */
+     CSLR_GICSS0_SPI_TIMER5_INTR_PEND_0,     /* Interrupt Number */
      TIMERP_EVENT_NOT_AVAILABLE              /* Event Id */
   },  
   /* Timer ID 6 */
   {
     "DMTimer6",        /* Timer Name */
      CSL_TIMER6_CFG_BASE,                    /* base address */
-     CSL_GIC0_INTR_TIMER6_BUS_INTR_PEND,     /* Interrupt Number */
+     CSLR_GICSS0_SPI_TIMER6_INTR_PEND_0,     /* Interrupt Number */
      TIMERP_EVENT_NOT_AVAILABLE              /* Event Id */
   },  
    /* Timer ID 7 */
   {
     "DMTimer7",        /* Timer Name */
      CSL_TIMER7_CFG_BASE,                    /* base address */
-     CSL_GIC0_INTR_TIMER7_BUS_INTR_PEND,     /* Interrupt Number */
+     CSLR_GICSS0_SPI_TIMER7_INTR_PEND_0,     /* Interrupt Number */
      TIMERP_EVENT_NOT_AVAILABLE              /* Event Id */
   }, 
   /* Timer ID 8 */
   {
     "DMTimer8",        /* Timer Name */
      CSL_TIMER8_CFG_BASE,                    /* base address */
-     CSL_GIC0_INTR_TIMER8_BUS_INTR_PEND,     /* Interrupt Number */
+     CSLR_GICSS0_SPI_TIMER8_INTR_PEND_0,     /* Interrupt Number */
      TIMERP_EVENT_NOT_AVAILABLE              /* Event Id */
   },  
   /* Timer ID 9 */
   {
     "DMTimer9",        /* Timer Name */
      CSL_TIMER9_CFG_BASE,                    /* base address */
-     CSL_GIC0_INTR_TIMER9_BUS_INTR_PEND,     /* Interrupt Number */
+     CSLR_GICSS0_SPI_TIMER9_INTR_PEND_0,     /* Interrupt Number */
      TIMERP_EVENT_NOT_AVAILABLE              /* Event Id */
   },  
   /* Timer ID 10 */
   {
     "DMTimer10",        /* Timer Name */
      CSL_TIMER10_CFG_BASE,                   /* base address */
-     CSL_GIC0_INTR_TIMER10_BUS_INTR_PEND,    /* Interrupt Number */
+     CSLR_GICSS0_SPI_TIMER10_INTR_PEND_0,    /* Interrupt Number */
      TIMERP_EVENT_NOT_AVAILABLE              /* Event Id */
   },  
    /* Timer ID 11 */
   {
     "DMTimer11",        /* Timer Name */
      CSL_TIMER11_CFG_BASE,                   /* base address */
-     CSL_GIC0_INTR_TIMER11_BUS_INTR_PEND,    /* Interrupt Number */
+     CSLR_GICSS0_SPI_TIMER11_INTR_PEND_0,    /* Interrupt Number */
      TIMERP_EVENT_NOT_AVAILABLE              /* Event Id */
   }
 };

@@ -49,8 +49,12 @@ extern "C" {
 #include <stdio.h>
 #if defined(SOC_AM64X)
 #undef UART_CONSOLE
+#if defined(BUILD_MPU)
+#define EMPTY_OSAL_LOG
+#endif
 #else
 #define UART_CONSOLE
+#undef  EMPTY_OSAL_LOG
 #endif
 
 #if defined(UART_CONSOLE)
@@ -72,11 +76,18 @@ extern void ConsoleUtilsInit(void);
 #define OSAL_log                UART_printf
 #endif
 #else
+#if defined(EMPTY_OSAL_LOG)
+static void dummy_printf(const char *pcString, ...)
+{
+}
+#define OSAL_log                dummy_printf
+#else
 #if defined(BARE_METAL)
 #define OSAL_log                printf
 #else
 #define OSAL_log                System_printf
 #endif /* BARE_METAL */
+#endif /* EMPTY_OSAL_LOG */
 #endif /* UART_CONSOLE */
 
 #ifdef __cplusplus

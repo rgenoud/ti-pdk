@@ -146,7 +146,7 @@ void Board_initOSAL(void)
  */
 volatile   uint64_t gTestlocalTimeout = 0x300000U;
 
-#if defined (SOC_AM65XX) || (defined(SOC_J721E) || defined(SOC_J7200) &&(!defined(BUILD_C66X_1))&&(!defined(BUILD_C66X_2))&&(!defined(BUILD_C7X_1)))
+#if defined (SOC_AM65XX) || defined (SOC_AM64X) || (defined(SOC_J721E) || defined(SOC_J7200) &&(!defined(BUILD_C66X_1))&&(!defined(BUILD_C66X_2))&&(!defined(BUILD_C7X_1)))
 #define INT_NUM_IRQ 32
 #define LOOP_CNT    100
 volatile uint64_t gFlagIRQ = 0;
@@ -224,7 +224,7 @@ bool  OSAL_core_hwi_test()
 
 bool OSAL_hwi_test()
 {
-#if defined (SOC_AM65XX) || (defined(SOC_J721E)|| defined(SOC_J7200) &&(!defined(BUILD_C66X_1))&&(!defined(BUILD_C66X_2))&&(!defined(BUILD_C7X_1)))
+#if defined (SOC_AM65XX) || defined (SOC_AM64X) || (defined(SOC_J721E)|| defined(SOC_J7200) &&(!defined(BUILD_C66X_1))&&(!defined(BUILD_C66X_2))&&(!defined(BUILD_C7X_1)))
   OSAL_core_hwi_test();
 #endif
   return true;
@@ -338,6 +338,11 @@ UT_Timer_Type_t  timer_type =             UT_Timer_TIMER64;
     #define OSAL_TEST_TIMER_ID2               (2U)
     #define OSAL_TEST_TIMER_PERIOD            (5000U)
   #endif
+  #if defined(BUILD_MPU)
+    #define OSAL_TEST_TIMER_ID                (4U)
+    #define OSAL_TEST_TIMER_ID2               (2U)
+    #define OSAL_TEST_TIMER_PERIOD            (5000U)
+  #endif
 #else
 UT_Timer_Type_t  timer_type   =           UT_Timer_DMTIMER;
   #if defined (__ARM_ARCH_7A__)
@@ -396,7 +401,7 @@ bool Osal_delay_test(void)
 
    for (i=0; i<10;i++) {
 #endif
-      Osal_delay(1000);
+      Osal_delay(10);
       OSAL_log(".");
 #if !defined(SOC_AM64X)
    }
