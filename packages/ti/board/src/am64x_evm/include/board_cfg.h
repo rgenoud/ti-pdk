@@ -54,14 +54,20 @@ extern "C" {
 #define BOARD_DDR_SIZE                                  (2048 * 1024 * 1024UL)
 #define BOARD_DDR_END_ADDR                              (0xFFFFFFFFU)
 
+/* UART LLD instance number for MAIN UART0 port */
+#define BOARD_UART0_INSTANCE                            (0U)
+/* UART LLD instance number for MCU UART0 port */
+#define BOARD_MCU_UART0_INSTANCE                        (7U)
+
 /* UART LLD instance number for primary UART port */
-#define BOARD_UART_INSTANCE                             (0U)
-/* UART LLD instance number for MAIN UART1 port */
-#define BOARD_UART1_INSTANCE                            (1U)
-/* UART LLD instance number for MAIN UART2 port */
-#define BOARD_UART2_INSTANCE                            (2U)
-/* WKUP UART LLD instance number */
-#define BOARD_WKUP_UART_INSTANCE                        (0U)
+#if defined (BUILD_MPU) || defined (BUILD_MCU)
+/* default UART instance for A53 and R5 cores in the Main domain */ 
+#define BOARD_UART_INSTANCE                             (BOARD_UART0_INSTANCE)
+#else
+/* default UART instance for M4 core in the MCU domain */ 
+#define BOARD_UART_INSTANCE                             (BOARD_MCU_UART0_INSTANCE)
+#endif
+
 /* ICSSG UART instance number */
 #define BOARD_ICSSG_UART_INSTANCE                       (4U)
 
