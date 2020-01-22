@@ -194,6 +194,10 @@ static uint32_t gSciclient_maxMsgSizeBytes;
 
 /** \brief This structure contains configuration parameters for
 *       the sec_proxy IP */
+#if defined (SOC_AM64X)
+/* TBD */
+CSL_SecProxyCfg gSciclient_secProxyCfg = {0, };
+#else
 #if defined (BUILD_MCU1_0) || defined (BUILD_MCU1_1)
 CSL_SecProxyCfg gSciclient_secProxyCfg =
 {
@@ -221,6 +225,7 @@ CSL_SecProxyCfg gSciclient_secProxyCfg =
     /*< proxyTargetAddr */
     0                                          // maxMsgSize
 };
+#endif
 #endif
 
 /* ========================================================================== */

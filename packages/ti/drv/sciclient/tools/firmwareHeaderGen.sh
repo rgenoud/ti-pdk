@@ -97,6 +97,14 @@ export SYSFW_SE_INNER_CERT=$SCI_CLIENT_OUT_SOC_DIR/ti-sci-cert-j721e-$SOC_TYPE.b
 export SCICLIENT_FIRMWARE_HEADER=sciclient_firmware_V1.h
 fi
 
+if [ "$SOC" = "am64x" ]; then
+# TBD
+export SCI_CLIENT_OUT_SOC_DIR=$SCI_CLIENT_DIR/soc/V0
+export FIRMWARE_SILICON=$SCI_CLIENT_IN_SOC_DIR/ti-sci-firmware-am65x-$SOC_TYPE.bin
+export SYSFW_SE_INNER_CERT=$SCI_CLIENT_OUT_SOC_DIR/ti-sci-cert-am65x-$SOC_TYPE.bin
+export SCICLIENT_FIRMWARE_HEADER=sciclient_firmware_V0.h
+fi
+
 export SYSFW_SE_CUST_CERT=$SCI_CLIENT_OUT_SOC_DIR/sysfw_cert.bin
 export SYSFW_SE_SIGNED=$SCI_CLIENT_OUT_SOC_DIR/sysfw.bin
 
