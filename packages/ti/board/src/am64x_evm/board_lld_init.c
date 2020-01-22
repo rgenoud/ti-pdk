@@ -50,6 +50,8 @@
  */
 Board_STATUS Board_uartStdioInit(void)
 {
+    UART_stdioInit(BOARD_UART_INSTANCE);
+
     return BOARD_SOK;
 }
 
