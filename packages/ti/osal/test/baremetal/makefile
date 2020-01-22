@@ -21,11 +21,7 @@ INCDIR = ../src
 INCLUDE_EXTERNAL_INTERFACES = pdk csl_arch
 
 # List all the components required by the application
-ifeq ($(SOC),$(filter $(SOC), am64x))
-COMP_LIST_COMMON += board osal_nonos
-else
 COMP_LIST_COMMON += board uart osal_nonos i2c
-endif
 COMP_LIST_c66x = csl_intc
 COMP_LIST_c66xdsp_1 = csl_intc
 COMP_LIST_c66xdsp_2 = csl_intc
