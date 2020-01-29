@@ -86,7 +86,11 @@ __attribute__(( aligned(128), section(".boardcfg_data") )) =
         /* Host-ID allowed to send SCI-message for main isolation.
          * If mismatch, SCI message will be rejected with NAK.
          */
+#if defined (SOC_AM64X)
+        .main_isolation_hostid = TISCI_HOST_ID_MAIN_0_R5_0,
+#else
         .main_isolation_hostid = TISCI_HOST_ID_R5_1,
+#endif
     },
 
     /* tisci_boardcfg_sec_proxy */
@@ -181,7 +185,7 @@ void dmtimer0_enable()
 /* ========================================================================== */
 
 static int32_t App_getRevisionTest(void);
-#if !defined (SOC_J721E)
+#if defined (SOC_AM65XX)
 static int32_t setPLLClk(uint32_t modId, uint32_t clkId, uint64_t clkRate);
 #endif
 
@@ -390,7 +394,7 @@ static int32_t App_getRevisionTest(void)
     }
     /* Set DDR PLL to 400 Mhz. SYSFW default sets this to 333.33 Mhz */
     /* Comment this code if LPDDR is used */
-    #if !defined(SOC_J721E)
+    #if defined(SOC_AM65XX)
     if (status == CSL_PASS)
     {
         /* Set DDR PLL to 400 Mhz. SYSFW default sets this to 333.33 Mhz */
@@ -419,7 +423,7 @@ static int32_t App_getRevisionTest(void)
     return status;
 }
 
-#if !defined(SOC_J721E)
+#if defined(SOC_AM65XX)
 /**
  * \brief  PLL clock configuration
  *

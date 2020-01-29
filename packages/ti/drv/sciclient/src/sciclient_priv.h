@@ -63,8 +63,7 @@
 #endif
 
 #if defined (SOC_AM64X)
-/* TBD */
-#include <ti/drv/sciclient/soc/V0/sciclient_defaultBoardcfg.h>
+#include <ti/drv/sciclient/soc/V3/sciclient_defaultBoardcfg.h>
 #endif
 
 #ifdef __cplusplus

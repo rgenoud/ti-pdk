@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) 2018, Texas Instruments Incorporated
+# Copyright (c) 2018-2020, Texas Instruments Incorporated
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -34,6 +34,7 @@
 #         For AM65XX-HS : ./firmwareHeaderGen.sh am65xx-hs
 #         For J721E     : ./firmwareHeaderGen.sh j721e
 #         For J721E-HS  : ./firmwareHeaderGen.sh j721e-hs
+#         For AM64x     : ./firmwareHeaderGen.sh am64xx
 export RM=rm
 export MV=mv
 export MAKE=gcc
@@ -97,12 +98,10 @@ export SYSFW_SE_INNER_CERT=$SCI_CLIENT_OUT_SOC_DIR/ti-sci-cert-j721e-$SOC_TYPE.b
 export SCICLIENT_FIRMWARE_HEADER=sciclient_firmware_V1.h
 fi
 
-if [ "$SOC" = "am64x" ]; then
-# TBD
-export SCI_CLIENT_OUT_SOC_DIR=$SCI_CLIENT_DIR/soc/V0
-export FIRMWARE_SILICON=$SCI_CLIENT_IN_SOC_DIR/ti-sci-firmware-am65x-$SOC_TYPE.bin
-export SYSFW_SE_INNER_CERT=$SCI_CLIENT_OUT_SOC_DIR/ti-sci-cert-am65x-$SOC_TYPE.bin
-export SCICLIENT_FIRMWARE_HEADER=sciclient_firmware_V0.h
+if [ "$SOC" = "am64xx" ]; then
+export SCI_CLIENT_OUT_SOC_DIR=$SCI_CLIENT_DIR/soc/V3
+export FIRMWARE_SILICON=$SCI_CLIENT_IN_SOC_DIR/ti-sci-firmware-am64x-gp-vlab.bin
+export SCICLIENT_FIRMWARE_HEADER=sciclient_firmware_V3.h
 fi
 
 export SYSFW_SE_CUST_CERT=$SCI_CLIENT_OUT_SOC_DIR/sysfw_cert.bin

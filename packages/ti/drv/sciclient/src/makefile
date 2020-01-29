@@ -21,7 +21,7 @@ ifeq ($(SOC),$(filter $(SOC), j721e j7200))
   SCICLIENT_SOCVER = V1
 endif
 ifeq ($(SOC),$(filter $(SOC), am64x))
-  SCICLIENT_SOCVER = V0
+  SCICLIENT_SOCVER = V3
 endif
 
 SRCDIR += soc/$(SCICLIENT_SOCVER)
@@ -66,6 +66,7 @@ PACKAGE_SRCS_COMMON += soc/sysfw/binaries/system-firmware-public-documentation
 PACKAGE_SRCS_COMMON += soc/sysfw/include
 PACKAGE_SRCS_COMMON += soc/sysfw/binaries/ti-sci-firmware-am65x-gp.bin
 PACKAGE_SRCS_COMMON += soc/sysfw/binaries/ti-sci-firmware-j721e-gp.bin
+PACKAGE_SRCS_COMMON += soc/sysfw/binaries/ti-sci-firmware-am64x-gp-vlab.bin
 ifeq ($(BUILD_HS),yes)
 PACKAGE_SRCS_COMMON += soc/sysfw/binaries/ti-sci-firmware-am65x-hs.bin
 endif

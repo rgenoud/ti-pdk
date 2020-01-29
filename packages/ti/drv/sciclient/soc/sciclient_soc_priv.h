@@ -52,8 +52,7 @@
 #endif
 
 #if defined (SOC_AM64X)
-/* TBD */
-#include <ti/drv/sciclient/soc/V0/sciclient_soc_priv.h>
+#include <ti/drv/sciclient/soc/V3/sciclient_soc_priv.h>
 #endif
 
 #ifdef __cplusplus

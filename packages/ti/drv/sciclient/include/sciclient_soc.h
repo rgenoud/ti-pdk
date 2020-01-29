@@ -54,9 +54,8 @@
 #endif
 
 #if defined (SOC_AM64X)
-/* TBD */
-#include <ti/drv/sciclient/soc/sysfw/include/am65x/tisci_resasg_types.h>
-#include <ti/drv/sciclient/soc/V0/sciclient_fmwMsgParams.h>
+#include <ti/drv/sciclient/soc/sysfw/include/am64x/tisci_resasg_types.h>
+#include <ti/drv/sciclient/soc/V3/sciclient_fmwMsgParams.h>
 #endif
 
 

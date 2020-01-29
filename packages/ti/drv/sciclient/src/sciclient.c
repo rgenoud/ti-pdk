@@ -195,37 +195,46 @@ static uint32_t gSciclient_maxMsgSizeBytes;
 /** \brief This structure contains configuration parameters for
 *       the sec_proxy IP */
 #if defined (SOC_AM64X)
-/* TBD */
-CSL_SecProxyCfg gSciclient_secProxyCfg = {0, };
-#else
-#if defined (BUILD_MCU1_0) || defined (BUILD_MCU1_1)
 CSL_SecProxyCfg gSciclient_secProxyCfg =
 {
-    (CSL_sec_proxyRegs *)CSL_MCU_NAVSS0_SEC_PROXY0_CFG_BASE,
+    (CSL_sec_proxyRegs *)CSL_DMASS0_SEC_PROXY_MMRS_BASE,
     /*< pSecProxyRegs */
-    (CSL_sec_proxy_scfgRegs *)CSL_MCU_NAVSS0_SEC_PROXY0_CFG_SCFG_BASE,
+    (CSL_sec_proxy_scfgRegs *)CSL_DMASS0_SEC_PROXY_SCFG_BASE,
     /*< pSecProxyScfgRegs */
-    (CSL_sec_proxy_rtRegs *)CSL_MCU_NAVSS0_SEC_PROXY0_CFG_RT_BASE,
+    (CSL_sec_proxy_rtRegs *)CSL_DMASS0_SEC_PROXY_RT_BASE,
     /*< pSecProxyRtRegs */
-    (uint64_t)CSL_MCU_NAVSS0_SEC_PROXY0_TARGET_DATA_BASE,
+    (uint64_t)CSL_DMASS0_SEC_PROXY_SRC_TARGET_DATA_BASE,
     /*< proxyTargetAddr */
     0                                          // maxMsgSize
 };
-
 #else
-CSL_SecProxyCfg gSciclient_secProxyCfg =
-{
-    (CSL_sec_proxyRegs *)CSL_NAVSS0_SEC_PROXY0_CFG_MMRS_BASE,
-    /*< pSecProxyRegs */
-    (CSL_sec_proxy_scfgRegs *)CSL_NAVSS0_SEC_PROXY0_CFG_SCFG_BASE,
-    /*< pSecProxyScfgRegs */
-    (CSL_sec_proxy_rtRegs *)CSL_NAVSS0_SEC_PROXY0_CFG_RT_BASE,
-    /*< pSecProxyRtRegs */
-    (uint64_t)CSL_NAVSS0_SEC_PROXY0_SRC_TARGET_DATA_BASE,
-    /*< proxyTargetAddr */
-    0                                          // maxMsgSize
-};
-#endif
+    #if defined (BUILD_MCU1_0) || defined (BUILD_MCU1_1)
+    CSL_SecProxyCfg gSciclient_secProxyCfg =
+    {
+        (CSL_sec_proxyRegs *)CSL_MCU_NAVSS0_SEC_PROXY0_CFG_BASE,
+        /*< pSecProxyRegs */
+        (CSL_sec_proxy_scfgRegs *)CSL_MCU_NAVSS0_SEC_PROXY0_CFG_SCFG_BASE,
+        /*< pSecProxyScfgRegs */
+        (CSL_sec_proxy_rtRegs *)CSL_MCU_NAVSS0_SEC_PROXY0_CFG_RT_BASE,
+        /*< pSecProxyRtRegs */
+        (uint64_t)CSL_MCU_NAVSS0_SEC_PROXY0_TARGET_DATA_BASE,
+        /*< proxyTargetAddr */
+        0                                          // maxMsgSize
+    };
+    #else
+    CSL_SecProxyCfg gSciclient_secProxyCfg =
+    {
+        (CSL_sec_proxyRegs *)CSL_NAVSS0_SEC_PROXY0_CFG_MMRS_BASE,
+        /*< pSecProxyRegs */
+        (CSL_sec_proxy_scfgRegs *)CSL_NAVSS0_SEC_PROXY0_CFG_SCFG_BASE,
+        /*< pSecProxyScfgRegs */
+        (CSL_sec_proxy_rtRegs *)CSL_NAVSS0_SEC_PROXY0_CFG_RT_BASE,
+        /*< pSecProxyRtRegs */
+        (uint64_t)CSL_NAVSS0_SEC_PROXY0_SRC_TARGET_DATA_BASE,
+        /*< proxyTargetAddr */
+        0                                          // maxMsgSize
+    };
+    #endif
 #endif
 
 /* ========================================================================== */
@@ -251,7 +260,11 @@ int32_t Sciclient_loadFirmware(const uint32_t *pSciclient_firmware)
 
     /* Construct header */
     header.type = SCICLIENT_ROM_MSG_R5_TO_M3_M3FW;
+#if defined (SOC_AM64X)
+    header.host = TISCI_HOST_ID_MAIN_0_R5_0;
+#else
     header.host = TISCI_HOST_ID_R5_1;
+#endif
     /* ROM expects a sequence number of 0 */
     header.seq  = 0U;
     /* ROM doesn't check for flags */

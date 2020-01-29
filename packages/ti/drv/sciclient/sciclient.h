@@ -280,11 +280,10 @@ typedef uint8_t devgrp_t;
 #include <ti/drv/sciclient/soc/sysfw/include/j721e/tisci_boardcfg_constraints.h>
 #endif
 #if defined (SOC_AM64X)
- /* TBD */
-#include <ti/drv/sciclient/soc/sysfw/include/am65x/tisci_resasg_types.h>
-#include <ti/drv/sciclient/soc/sysfw/include/am65x/tisci_hosts.h>
-#include <ti/drv/sciclient/soc/sysfw/include/am65x/tisci_sec_proxy.h>
-#include <ti/drv/sciclient/soc/sysfw/include/am65x/tisci_boardcfg_constraints.h>
+#include <ti/drv/sciclient/soc/sysfw/include/am64x/tisci_resasg_types.h>
+#include <ti/drv/sciclient/soc/sysfw/include/am64x/tisci_hosts.h>
+#include <ti/drv/sciclient/soc/sysfw/include/am64x/tisci_sec_proxy.h>
+#include <ti/drv/sciclient/soc/sysfw/include/am64x/tisci_boardcfg_constraints.h>
 #endif
 #include <ti/drv/sciclient/soc/sysfw/include/tisci/security/tisci_sec_macros.h>
 #include <ti/drv/sciclient/soc/sysfw/include/tisci/security/tisci_firewall.h>

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2017-2019 Texas Instruments Incorporated
+ *  Copyright (C) 2017-2020 Texas Instruments Incorporated
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -63,6 +63,12 @@
 #include <am65x/tisci_sec_proxy.h>
 #include <am65x/tisci_boardcfg_constraints.h>
 #endif
+#if defined (SOC_AM6XX)
+#include <am65x_pg2/tisci_resasg_types.h>
+#include <am65x_pg2/tisci_hosts.h>
+#include <am65x_pg2/tisci_sec_proxy.h>
+#include <am65x_pg2/tisci_boardcfg_constraints.h>
+#endif
 #if defined (SOC_J721E)
 #include <j721e/tisci_resasg_types.h>
 #include <j721e/tisci_hosts.h>
@@ -70,16 +76,18 @@
 #include <j721e/tisci_boardcfg_constraints.h>
 #endif
 #if defined (SOC_AM64X)
-/* TBD */
-#include <am65x/tisci_resasg_types.h>
-#include <am65x/tisci_hosts.h>
-#include <am65x/tisci_sec_proxy.h>
-#include <am65x/tisci_boardcfg_constraints.h>
+#include <am64x/tisci_resasg_types.h>
+#include <am64x/tisci_hosts.h>
+#include <am64x/tisci_sec_proxy.h>
+#include <am64x/tisci_boardcfg_constraints.h>
 #endif
 #include <tisci/security/tisci_firewall.h>
 #include <tisci/security/tisci_procboot.h>
 #include <tisci/security/tisci_sec_macros.h>
+#include <tisci/security/tisci_soc_uid.h>
+#include <tisci/security/tisci_ext_otp.h>
 #include <tisci/security/tisci_keystore.h>
+#include <tisci/security/tisci_secure_jtag.h>
 #include <tisci/security/tisci_rng.h>
 #include <tisci/security/tisci_sa2ul_pka.h>
 #include <tisci/tisci_boardcfg.h>

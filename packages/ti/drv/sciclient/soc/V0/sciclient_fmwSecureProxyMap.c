@@ -93,11 +93,7 @@ const Sciclient_MapStruct_t gSciclientMap[SCICLIENT_CONTEXT_MAX_NUM] =
         TISCI_SEC_PROXY_R5_0_NOTIFY_READ_THREAD_ID,
 
         /** Notification Interrupt Number */
-#if defined (SOC_AM64X)
-        0 /* TBD */
-#else
         CSL_MCU0_INTR_NAVSS0_R5_0_PEND_1
-#endif
 
     },
 
@@ -124,11 +120,7 @@ const Sciclient_MapStruct_t gSciclientMap[SCICLIENT_CONTEXT_MAX_NUM] =
         TISCI_SEC_PROXY_R5_1_NOTIFY_READ_THREAD_ID,
 
         /** Notification Interrupt Number */
-#if defined (SOC_AM64X)
-        0 /* TBD */
-#else
         CSL_MCU0_INTR_NAVSS0_R5_0_PEND_3
-#endif
 
     },
     {
@@ -154,11 +146,7 @@ const Sciclient_MapStruct_t gSciclientMap[SCICLIENT_CONTEXT_MAX_NUM] =
         TISCI_SEC_PROXY_R5_2_NOTIFY_READ_THREAD_ID,
 
         /** Notification Interrupt Number */
-#if defined (SOC_AM64X)
-        0 /* TBD */
-#else
         CSL_MCU0_INTR_NAVSS0_R5_0_PEND_5
-#endif
 
     },
 
@@ -185,11 +173,7 @@ const Sciclient_MapStruct_t gSciclientMap[SCICLIENT_CONTEXT_MAX_NUM] =
         TISCI_SEC_PROXY_R5_3_NOTIFY_READ_THREAD_ID,
 
         /** Notification Interrupt Number */
-#if defined (SOC_AM64X)
-        0 /* TBD */
-#else
         CSL_MCU0_INTR_NAVSS0_R5_0_PEND_7
-#endif
 
     },
 
@@ -216,11 +200,7 @@ const Sciclient_MapStruct_t gSciclientMap[SCICLIENT_CONTEXT_MAX_NUM] =
         TISCI_SEC_PROXY_A53_0_NOTIFY_READ_THREAD_ID,
 
         /** Notification Interrupt Number */
-#if defined (SOC_AM64X)
-        0 /* TBD */
-#else
         CSL_GIC0_INTR_NAVSS0_BUS_A53_PEND_1
-#endif
 
     },
 
@@ -247,11 +227,7 @@ const Sciclient_MapStruct_t gSciclientMap[SCICLIENT_CONTEXT_MAX_NUM] =
         TISCI_SEC_PROXY_A53_1_NOTIFY_READ_THREAD_ID,
 
         /** Notification Interrupt Number */
-#if defined (SOC_AM64X)
-        0 /* TBD */
-#else
         CSL_GIC0_INTR_NAVSS0_BUS_A53_PEND_3
-#endif
 
     },
 
@@ -278,11 +254,7 @@ const Sciclient_MapStruct_t gSciclientMap[SCICLIENT_CONTEXT_MAX_NUM] =
         TISCI_SEC_PROXY_A53_2_NOTIFY_READ_THREAD_ID,
 
         /** Notification Interrupt Number */
-#if defined (SOC_AM64X)
-        0 /* TBD */
-#else
         CSL_GIC0_INTR_NAVSS0_BUS_A53_PEND_5
-#endif
 
     },
 
@@ -309,11 +281,7 @@ const Sciclient_MapStruct_t gSciclientMap[SCICLIENT_CONTEXT_MAX_NUM] =
         TISCI_SEC_PROXY_A53_3_NOTIFY_READ_THREAD_ID,
 
         /** Notification Interrupt Number */
-#if defined (SOC_AM64X)
-        0 /* TBD */
-#else
         CSL_GIC0_INTR_NAVSS0_BUS_A53_PEND_7
-#endif
 
     },
 
@@ -340,11 +308,7 @@ const Sciclient_MapStruct_t gSciclientMap[SCICLIENT_CONTEXT_MAX_NUM] =
         TISCI_SEC_PROXY_A53_4_NOTIFY_READ_THREAD_ID,
 
         /** Notification Interrupt Number */
-#if defined (SOC_AM64X)
-        0 /* TBD */
-#else
         CSL_GIC0_INTR_NAVSS0_BUS_A53_PEND_9
-#endif
 
     },
 
@@ -371,11 +335,7 @@ const Sciclient_MapStruct_t gSciclientMap[SCICLIENT_CONTEXT_MAX_NUM] =
         TISCI_SEC_PROXY_A53_5_NOTIFY_READ_THREAD_ID,
 
         /** Notification Interrupt Number */
-#if defined (SOC_AM64X)
-        0 /* TBD */
-#else
         CSL_GIC0_INTR_NAVSS0_BUS_A53_PEND_11
-#endif
 
     },
 
@@ -402,11 +362,7 @@ const Sciclient_MapStruct_t gSciclientMap[SCICLIENT_CONTEXT_MAX_NUM] =
         TISCI_SEC_PROXY_A53_6_NOTIFY_READ_THREAD_ID,
 
         /** Notification Interrupt Number */
-#if defined (SOC_AM64X)
-        0 /* TBD */
-#else
         CSL_GIC0_INTR_NAVSS0_BUS_A53_PEND_13
-#endif
 
     },
 
@@ -433,11 +389,7 @@ const Sciclient_MapStruct_t gSciclientMap[SCICLIENT_CONTEXT_MAX_NUM] =
         TISCI_SEC_PROXY_A53_7_NOTIFY_READ_THREAD_ID,
 
         /** Notification Interrupt Number */
-#if defined (SOC_AM64X)
-        0 /* TBD */
-#else
         CSL_GIC0_INTR_NAVSS0_BUS_A53_PEND_15
-#endif
 
     },
 
