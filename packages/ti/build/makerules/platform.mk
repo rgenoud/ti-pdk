@@ -316,7 +316,7 @@ endif
 ifeq ($(CORE),$(filter $(CORE), mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1))
  ISA = r5f
  ISA_EXT = r5f
- ARCH = armv7m
+ ARCH = armv7r
 endif
 
 # MPU

@@ -1,40 +1,81 @@
+/* Linker Settings */
+--retain="*(.bootCode)"
+--retain="*(.startupCode)"
+--retain="*(.startupData)"
+--retain="*(.intvecs)"
+--retain="*(.intc_text)"
+--retain="*(.rstvectors)"
+--retain="*(.irqStack)"
+--retain="*(.fiqStack)"
+--retain="*(.abortStack)"
+--retain="*(.undStack)"
+--retain="*(.svcStack)"
+--fill_value=0
+--stack_size=0x2000
+--heap_size=0x1000
 
+-stack  0x2000                              /* SOFTWARE STACK SIZE           */
+-heap   0x2000                              /* HEAP AREA SIZE                */
 
--stack  0x20000                            /* SOFTWARE STACK SIZE           */
--heap   0x20000                            /* HEAP AREA SIZE                */
+/* Stack Sizes for various modes */
+__IRQ_STACK_SIZE = 0x1000;
+__FIQ_STACK_SIZE = 0x1000;
+__ABORT_STACK_SIZE = 0x1000;
+__UND_STACK_SIZE = 0x1000;
+__SVC_STACK_SIZE = 0x1000;
 
-/* SPECIFY THE SYSTEM MEMORY MAP */
+/* Memory Map */
 MEMORY
 {
-    IRAM_M4F_VTBL (X)             : origin=0x70000100 length=0x1000
-    /*  Reset Vectors base address(RESET_VECTORS) should be 64 bytes aligned  */
-    RESET_VECTORS (X)       : origin=0x70000000 length=0x100
-    /* am64x MCMS3 locations */
-    IRAM_MEM   (RWIX)          : origin=0x70001100 length=0x100000-0x1100 /* 2MB - 0x1100 */
+    VECS_M4F_MEM:     org = 0x00000000 len = 0x040
+    IRAM_M4F_INTC_MEM:     org = 0x00000040 len = 0x400 - 0x040
+    /* Memory assigned to move vector table for M4F core */
+    IRAM_M4F_VTBL:   org = 0x00000400 len = 0x800
+    /* M4F internal memory locations */
+    IRAM_M4F_MEM   (RWIX)          : origin=0x0C00 length=0x30000 - 0xC00
+    DRAM_M4F_MEM   (RWIX)          : origin=0x30000  length=0x10000
 }
 
 /* SPECIFY THE SECTIONS ALLOCATION INTO MEMORY */
 
 SECTIONS
 {
-    .intvecs : load > IRAM_MEM
-    .intc_text : load > IRAM_MEM
+
+    .intvecs : load > VECS_M4F_MEM
+    .intc_text : load > IRAM_M4F_INTC_MEM
     .TI.noinit : load > IRAM_M4F_VTBL
 
-    .init    : load > IRAM_MEM
+    .bootCode      : {} palign(8)         > IRAM_M4F_MEM
+    .startupCode   : {} palign(8)      > IRAM_M4F_MEM
+    .startupData   : {} palign(8)      > DRAM_M4F_MEM, type = NOINIT
+    .text          : {} palign(8)      > IRAM_M4F_MEM
+    .const         : {} palign(8)      > DRAM_M4F_MEM
+    .cinit         : {} palign(8)      > DRAM_M4F_MEM
+    .pinit         : {} palign(8)      > IRAM_M4F_MEM
+    .bss           : {} align(4)       > DRAM_M4F_MEM
+    .far           : {} align(4)       > DRAM_M4F_MEM
+    .data          : {} palign(128)    > DRAM_M4F_MEM
+    .boardcfg_data : {} palign(128)    > DRAM_M4F_MEM
+    .sysmem        : {}                > DRAM_M4F_MEM
+    .data_buffer   : {} palign(128)    > DRAM_M4F_MEM
 
-    .text    : load > IRAM_MEM /* CODE                         */
-    .data    : load > IRAM_MEM /* INITIALIZED GLOBAL AND STATIC VARIABLES. */
-    .bss     : load > IRAM_MEM /* UNINITIALIZED OR ZERO INITIALIZED */
-                                            /* GLOBAL & STATIC VARIABLES.   */
-                    RUN_START(bss_start)
-                    RUN_END(bss_end)
-    .const   : load > IRAM_MEM              /* GLOBAL CONSTANTS             */
-    .cinit   : load > IRAM_MEM
-    .stack   : load > IRAM_MEM            /* SOFTWARE SYSTEM STACK        */
-    .plt     : load > IRAM_MEM
-    .sysmem  : load > IRAM_MEM
-	.my_sect_ddr : load > IRAM_MEM
+    /* USB or any other LLD buffer for benchmarking */
+    .benchmark_buffer (NOLOAD) {} ALIGN (8) > IRAM_M4F_MEM
 
+    .stack      : {} align(4)       > DRAM_M4F_MEM
+    .irqStack   : {. = . + __IRQ_STACK_SIZE;} align(4)      > DRAM_M4F_MEM
+    RUN_START(__IRQ_STACK_START)
+    RUN_END(__IRQ_STACK_END)
+    .fiqStack   : {. = . + __FIQ_STACK_SIZE;} align(4)      > DRAM_M4F_MEM
+    RUN_START(__FIQ_STACK_START)
+    RUN_END(__FIQ_STACK_END)
+    .abortStack : {. = . + __ABORT_STACK_SIZE;} align(4)    > DRAM_M4F_MEM
+    RUN_START(__ABORT_STACK_START)
+    RUN_END(__ABORT_STACK_END)
+    .undStack   : {. = . + __UND_STACK_SIZE;} align(4)      > DRAM_M4F_MEM
+    RUN_START(__UND_STACK_START)
+    RUN_END(__UND_STACK_END)
+    .svcStack   : {. = . + __SVC_STACK_SIZE;} align(4)      > DRAM_M4F_MEM
+    RUN_START(__SVC_STACK_START)
+    RUN_END(__SVC_STACK_END)
 }
-

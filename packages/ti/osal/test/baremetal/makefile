@@ -36,6 +36,7 @@ COMP_LIST_mcu2_0  = csl_init
 COMP_LIST_mcu2_1  = csl_init
 COMP_LIST_mcu3_0  = csl_init
 COMP_LIST_mcu3_1  = csl_init
+COMP_LIST_m4f_0   = csl_init
 
 ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200))
   COMP_LIST_COMMON += sciclient
@@ -120,6 +121,7 @@ LNKFLAGS_LOCAL_a15_0  += --entry Entry
 LNKFLAGS_LOCAL_a8host += --entry Entry
 LNKFLAGS_LOCAL_a9host += --entry Entry
 LNKFLAGS_LOCAL_mpu1_0 += --entry Entry
+
 
 # Core/SoC/platform specific source files and CFLAGS
 # Example:

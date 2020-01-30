@@ -41,6 +41,7 @@
 #include <ti/osal/src/nonos/Nonos_config.h>
 
 /* This information is derived from sysbios timer implmentation for multiple SoCs */
+/* Below defines are for R5 Cores */
 #if defined (BUILD_MCU)
 TimerP_dmTimerDefault gDmTimerPInfoTbl[TimerP_numTimerDevices] = {
   /* Timer ID 0 */
@@ -72,7 +73,7 @@ TimerP_dmTimerDefault gDmTimerPInfoTbl[TimerP_numTimerDevices] = {
      TIMERP_EVENT_NOT_AVAILABLE               /* Event Id */
   }
 };
-#else
+#elif defined (BUILD_MPU)
 TimerP_dmTimerDefault gDmTimerPInfoTbl[TimerP_numTimerDevices] = {
   /* Timer ID 4 */
   {
@@ -129,6 +130,37 @@ TimerP_dmTimerDefault gDmTimerPInfoTbl[TimerP_numTimerDevices] = {
      CSL_TIMER11_CFG_BASE,                   /* base address */
      CSLR_GICSS0_SPI_TIMER11_INTR_PEND_0,    /* Interrupt Number */
      TIMERP_EVENT_NOT_AVAILABLE              /* Event Id */
+  }
+};
+#else
+TimerP_dmTimerDefault gDmTimerPInfoTbl[TimerP_numTimerDevices] = {
+  /* Timer ID 0 */
+  {
+    "DMTimer0",        /* Timer Name */
+     CSL_MCU_TIMER0_CFG_BASE + 0x60000000UL,  /* base address */
+     CSLR_MCU_M4FSS0_CORE0_NVIC_MCU_TIMER0_INTR_PEND_0 + 16U,           /* Interrupt Number */
+     TIMERP_EVENT_NOT_AVAILABLE               /* Event Id */
+  },
+  /* Timer ID 1 */
+  {
+    "DMTimer1",        /* Timer Name */
+     CSL_MCU_TIMER1_CFG_BASE + 0x60000000UL,  /* base address */
+     CSLR_MCU_M4FSS0_CORE0_NVIC_MCU_TIMER1_INTR_PEND_0 + 16U,               /* Interrupt Number */
+     TIMERP_EVENT_NOT_AVAILABLE               /* Event Id */
+  },
+  /* Timer ID 3 */
+  {
+    "DMTimer2",        /* Timer Name */
+     CSL_MCU_TIMER2_CFG_BASE + 0x60000000UL,  /* base address */
+     CSLR_MCU_M4FSS0_CORE0_NVIC_MCU_TIMER2_INTR_PEND_0 + 16U,               /* Interrupt Number */
+     TIMERP_EVENT_NOT_AVAILABLE               /* Event Id */
+  },
+  /* Timer ID 4 */
+  {
+    "DMTimer3",        /* Timer Name */
+     CSL_MCU_TIMER3_CFG_BASE + 0x60000000UL,  /* base address */
+     CSLR_MCU_M4FSS0_CORE0_NVIC_MCU_TIMER3_INTR_PEND_0 + 16U,               /* Interrupt Number */
+     TIMERP_EVENT_NOT_AVAILABLE               /* Event Id */
   }
 };
 #endif

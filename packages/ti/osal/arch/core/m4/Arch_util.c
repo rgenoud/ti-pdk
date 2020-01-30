@@ -145,7 +145,7 @@ HwiP_Handle OsalArch_HwiPCreate(int32_t interruptNum, HwiP_Fxn hwiFxn,
     {
         /* pick up the external memory block configured */
         hwiPool        = (HwiP_nonOs *) gOsal_HwAttrs.extHwiPBlock.base;
-        temp           = ((uintptr_t) hwiPool) + gOsal_HwAttrs.extHwiPBlock.size;
+        temp           = (uintptr_t) gOsal_HwAttrs.extHwiPBlock.size;
         maxHwi         = (uint32_t)(temp/(sizeof(Hwi_Struct)));
     }
     else
