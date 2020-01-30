@@ -293,6 +293,11 @@ ifeq ($(BUILD_OS_TYPE),baremetal)
         CONFIG_BLD_LNK_a53   = $(pdk_PATH)/ti/build/$(SOC)/linker_a53.lds
     endif
   endif
+  ifeq ($(SOC),$(filter $(SOC), am64x))
+    ifeq ($(CONFIG_BLD_XDC_m4f),)
+        CONFIG_BLD_LNK_m4f   = $(pdk_PATH)/ti/build/$(SOC)/linker_m4f.lds
+    endif
+  endif
   ifeq ($(SOC),$(filter $(SOC), j721e am77x j7200))
     ifeq ($(CONFIG_BLD_XDC_a72),)
         CONFIG_BLD_LNK_a72   = $(pdk_PATH)/ti/build/$(SOC)/linker_a72_mpu1_0.lds

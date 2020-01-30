@@ -101,6 +101,12 @@ void OsalArch_disableInterrupt(uint32_t intNum)
     Intc_SystemDisable((uint16_t)intNum);
     return;
 }
+/* Below function posts the interrupt */
+int32_t OsalArch_postInterrupt(uint32_t intrNum)
+{
+    Intc_IntSetPend(intrNum);
+    return (CSL_PASS);
+}
 
 /* Below function clears interrupt in the chip level */
 void OsalArch_clearInterrupt(uint32_t intNum)

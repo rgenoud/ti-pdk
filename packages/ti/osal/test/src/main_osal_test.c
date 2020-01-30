@@ -343,6 +343,11 @@ UT_Timer_Type_t  timer_type =             UT_Timer_TIMER64;
     #define OSAL_TEST_TIMER_ID2               (2U)
     #define OSAL_TEST_TIMER_PERIOD            (5000U)
   #endif
+  #if defined(BUILD_M4F)
+    #define OSAL_TEST_TIMER_ID                (4U)
+    #define OSAL_TEST_TIMER_ID2               (2U)
+    #define OSAL_TEST_TIMER_PERIOD            (5000U)
+  #endif
 #else
 UT_Timer_Type_t  timer_type   =           UT_Timer_DMTIMER;
   #if defined (__ARM_ARCH_7A__)

@@ -85,7 +85,7 @@ CORE_LIST_omapl138 = arm9_0 c674x
 CORE_LIST_am65xx   = mpu1_0 mcu1_0 mcu1_1 mpu1_1 mpu2_0 mpu2_1
 CORE_LIST_j721e    = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 c66xdsp_1 c66xdsp_2 c7x_1 c7x-hostemu mpu1_1
 CORE_LIST_j7200    = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mpu1_1
-CORE_LIST_am64x    = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 ipu1_0
+CORE_LIST_am64x    = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 m4f_0
 CORE_LIST_k3_CORELIST = m3
 CORE_LIST_PRU = pru_0 pru_1
 
@@ -291,6 +291,13 @@ ifeq ($(CORE),$(filter $(CORE), ipu1_0 ipu1_1 ipu2_0 ipu2_1))
  ARCH = armv7m
 endif
 
+# m4f single core
+ifeq ($(CORE),$(filter $(CORE), m4f_0))
+ ISA = m4f
+ ISA_EXT = m4f
+ ARCH = armv7m
+endif
+
 # m3
 ifeq ($(CORE),$(filter $(CORE), m3))
  ISA = m3
@@ -422,7 +429,7 @@ ifeq ($(ISA),a15)
   ASMEXT = s$(FORMAT_EXT)$(ISA_EXT)$(ENDIAN_EXT)
 endif
 
-ifeq ($(ISA),m4)
+ifeq ($(ISA),$(filter $(ISA), m4 m4f))
   ifeq ($(FORMAT),ELF)
     TARGET_XDC = ti.targets.arm.elf.M4
     FORMAT_EXT = e

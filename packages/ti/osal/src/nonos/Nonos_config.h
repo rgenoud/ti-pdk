@@ -91,7 +91,7 @@ typedef struct hwi_struct {
 #elif defined (__TI_ARM_V7M4__) || defined(__TI_ARM_V5__)
 #include <ti/csl/arch/csl_arch.h>
 #include <ti/csl/soc.h>
-#if	defined(__TI_ARM_V7M4__)
+#if	defined(__TI_ARM_V7M4__) && !defined(BUILD_M4F)
 #include <ti/csl/cslr_unicache_cfg.h>
 #endif
 

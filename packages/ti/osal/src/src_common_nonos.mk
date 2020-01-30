@@ -14,6 +14,11 @@ ifeq ($(CORE),mpu1_0)
   SRCS_COMMON += CacheP_nonos.c Arch_util.c
 endif
 
+ifeq ($(CORE),m4f_0)
+  SRCDIR += arch/core/m4
+  SRCS_COMMON += Arch_util.c
+endif
+
 ifeq ($(CORE),$(filter $(CORE), mcu1_0 mcu2_0 mcu2_1))
   SRCDIR += arch/core/r5
   SRCS_COMMON += CacheP_nonos.c Arch_util.c

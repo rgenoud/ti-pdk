@@ -242,8 +242,10 @@ OSAL_Baremetal_TestApp_BOARDLIST = $(libosal_BOARDLIST)
 export OSAL_Baremetal_TestApp_BOARDLIST
 ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200))
 OSAL_Baremetal_TestApp_SBL_APPIMAGEGEN = yes
-export OSAL_Baremetal_TestApp_SBL_APPIMAGEGEN
+else
+OSAL_Baremetal_TestApp_SBL_APPIMAGEGEN = no
 endif
+export OSAL_Baremetal_TestApp_SBL_APPIMAGEGEN
 
 # OSAL sysbios unit test app
 OSAL_TestApp_COMP_LIST = OSAL_TestApp
@@ -264,8 +266,10 @@ OSAL_TestApp_$(SOC)_CORELIST = $(osal_$(SOC)_CORELIST)
 export OSAL_TestApp_$(SOC)_CORELIST
 ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200))
 OSAL_TestApp_SBL_APPIMAGEGEN = yes
-export OSAL_TestApp_SBL_APPIMAGEGEN
+else
+OSAL_TestApp_SBL_APPIMAGEGEN = no
 endif
+export OSAL_TestApp_SBL_APPIMAGEGEN
 
 #Default Core List
 OSAL_Baremetal_TestApp_$(SOC)_CORELIST = a15_0 c66x
@@ -333,7 +337,7 @@ OSAL_Baremetal_TestApp_$(SOC)_CORELIST = ipu1_0 c66x
 endif
 
 ifeq ($(SOC),$(filter $(SOC), am64x))
- OSAL_Baremetal_TestApp_$(SOC)_CORELIST = mcu1_0 mpu1_0
+ OSAL_Baremetal_TestApp_$(SOC)_CORELIST = mcu1_0 mpu1_0 m4f_0
 endif
 
 ifeq ($(SOC),$(filter $(SOC), am65xx))

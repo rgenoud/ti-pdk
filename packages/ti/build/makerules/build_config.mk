@@ -147,7 +147,7 @@ CFLAGS_GLOBAL_am64x          = -DSOC_AM64X
 #
 
 # MCU Cores
-ifeq ($(CORE),$(filter $(CORE), mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1))
+ifeq ($(CORE),$(filter $(CORE), mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 m4f_0))
   CFLAGS_GLOBAL_$(CORE) = -g -ms -DMAKEFILE_BUILD
   LNKFLAGS_GLOBAL_$(CORE) = -x --zero_init=on
 endif
