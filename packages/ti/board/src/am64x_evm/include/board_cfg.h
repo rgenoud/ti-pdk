@@ -245,8 +245,8 @@ extern "C" {
 #define BOARD_NOR_FLASH_IN //J7ES_TODO: need to update
 
 /* McSPI instance for master and slave test */
-#define BOARD_MCSPI_MASTER_INSTANCE                     (0) //J7ES_TODO: need to update
-#define BOARD_MCSPI_SLAVE_INSTANCE                      (0) //J7ES_TODO: need to update
+#define BOARD_MCSPI_MASTER_INSTANCE                     (1) //J7ES_TODO: need to update
+#define BOARD_MCSPI_SLAVE_INSTANCE                      (1) //J7ES_TODO: need to update
 
 /* Maximum possible buffer length */
 #define BOARD_EEPROM_MAX_BUFF_LENGTH                    (0) //J7ES_TODO: need to update
