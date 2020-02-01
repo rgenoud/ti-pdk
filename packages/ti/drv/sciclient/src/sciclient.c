@@ -575,7 +575,11 @@ int32_t Sciclient_service(const Sciclient_ReqPrm_t *pReqPrm,
         contextId = Sciclient_getCurrentContext(pReqPrm->messageType);
         if(contextId < SCICLIENT_CONTEXT_MAX_NUM)
         {
+#if defined (SOC_AM64X)
+            txThread = gSciclientMap[contextId].reqLowPrioThreadId;
+#else
             txThread = gSciclientMap[contextId].reqHighPrioThreadId;
+#endif
             rxThread = gSciclientMap[contextId].respThreadId;
             if(gSciclientMap[contextId].context == SCICLIENT_SECURE_CONTEXT)
             {
@@ -745,10 +749,17 @@ int32_t Sciclient_service(const Sciclient_ReqPrm_t *pReqPrm,
             timeToWait =  pReqPrm->timeout;
             while (timeToWait > 0U)
             {
+                uint32_t numCurrentMsgs = (HW_RD_REG32(Sciclient_threadStatusReg(rxThread)) &
+                        CSL_SEC_PROXY_RT_THREAD_STATUS_CUR_CNT_MASK) - initialCount;
                 if ((pLocalRespHdr->seq == (uint32_t) localSeqId))
                 {
                     status = CSL_PASS;
                     break;
+                }
+                if (numCurrentMsgs > 1U)
+                {
+                    (void) Sciclient_readThread32(rxThread,
+                                                (uint8_t)((gSciclient_maxMsgSizeBytes/4U) - 1U));
                 }
                 timeToWait--;
             }

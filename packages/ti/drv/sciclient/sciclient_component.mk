@@ -121,7 +121,7 @@ export sciclient_ccs_init_BOARD_DEPENDENCY
 export sciclient_ccs_init_CORE_DEPENDENCY
 sciclient_ccs_init_PKG_LIST = sciclient_ccs_init
 sciclient_ccs_init_INCLUDE = $(sciclient_ccs_init_PATH)
-sciclient_ccs_init_BOARDLIST = am65xx_evm j721e_sim j721e_evm
+sciclient_ccs_init_BOARDLIST = am65xx_evm j721e_sim j721e_evm am64x_evm
 export sciclient_ccs_init_BOARDLIST
 # This application is only for mcu1_0
 sciclient_ccs_init_$(SOC)_CORELIST = mcu1_0

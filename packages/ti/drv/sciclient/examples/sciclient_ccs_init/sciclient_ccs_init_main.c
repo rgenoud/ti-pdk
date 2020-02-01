@@ -234,6 +234,7 @@ static int32_t App_getRevisionTest(void)
 
     status = Sciclient_init(&config);
     dmtimer0_enable();
+#if !defined (SOC_AM64X)
     if (CSL_PASS == status)
     {
         Sciclient_BoardCfgPrms_t boardCfgPrms =
@@ -265,6 +266,7 @@ static int32_t App_getRevisionTest(void)
         dmtimer0_read();
         status = Sciclient_boardCfgPm(&boardCfgPrms_pm);
         dmtimer0_read();
+
         if (status == CSL_PASS)
         {
             Sciclient_BoardCfgPrms_t boardCfgPrms_rm =
@@ -364,6 +366,36 @@ static int32_t App_getRevisionTest(void)
     {
         printf("\nSciclient Devgrp_01 Board Configuration has failed \n");
     }
+#else
+    if (CSL_PASS == status)
+    {
+        printf(" \nDMSC Board Configuration with Debug enable \n");
+        dmtimer0_read();
+        status = Sciclient_boardCfg(NULL);
+        dmtimer0_read();
+    }
+    else
+    {
+        printf("\nSciclient Init Failed.\n");
+    }
+    if (CSL_PASS == status)
+    {
+        if (status == CSL_PASS)
+        {
+            dmtimer0_read();
+            status = Sciclient_boardCfgRm(NULL);
+            dmtimer0_read();
+        }
+    }
+    else
+    {
+        printf("\nSciclient Common Board Configuration has failed \n");
+    }
+    if (status != CSL_PASS) 
+    {
+        printf("\nSciclient RM Board Configuration has failed \n");
+    }
+#endif
     if (status == CSL_PASS)
     {
         status = Sciclient_service(&reqPrm, &respPrm);

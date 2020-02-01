@@ -32,7 +32,7 @@
  */
 
 /**
- *  \file   V3/sciclient_fmwMsgParams.h
+ *  \file   V0/sciclient_fmwMsgParams.h
  *
  *  \brief  This file contains the definition of all the parameter IDs for
  *          PM, RM, Security.
@@ -59,7 +59,7 @@ extern "C" {
 #define TISCI_PARAM_UNDEF                                        (0xFFFFFFFFU)
 
 /**
- *  \anchor Sciclient_FirmwareABI_V3
+ *  \anchor Sciclient_FirmwareABI_V0
  *  \name Sciclient Firmware ABI revisions
  *  @{
  *  ABI revisions for compatibility check.
@@ -71,71 +71,48 @@ extern "C" {
 *       indicate backward compatibility is maintained,
 *       however, new messages OR extensions to existing
 *       messages might have been adde */
-#define SCICLIENT_FIRMWARE_ABI_MINOR                     (4U)
+#define SCICLIENT_FIRMWARE_ABI_MINOR                     (9U)
 /* @} */
 
 /**
- *  \anchor Sciclient_ContextIds_V3
+ *  \anchor Sciclient_ContextIds_V0
  *  \name Sciclient Context Ids
  *  @{
  *  Context IDs for Sciclient_ConfigPrms_t .
  */
-/** r5(Non Secure): Cortex R5 Context 0 on MCU island */
-#define SCICLIENT_CONTEXT_R5_NONSEC_0                     (0U)
-/** r5(Secure): Cortex R5 Context 1 on MCU island(Boot) */
-#define SCICLIENT_CONTEXT_R5_SEC_0                        (1U)
-/** r5(Non Secure): Cortex R5 Context 2 on MCU island */
-#define SCICLIENT_CONTEXT_R5_NONSEC_1                     (2U)
-/** r5(Secure): Cortex R5 Context 3 on MCU island */
-#define SCICLIENT_CONTEXT_R5_SEC_1                        (3U)
-/** a53(Secure): Cortex A53 context 0 on Main island */
-#define SCICLIENT_CONTEXT_A53_SEC_0                       (4U)
-/** a53(Secure): Cortex A53 context 1 on Main island */
-#define SCICLIENT_CONTEXT_A53_SEC_1                       (5U)
-/** a53(Non Secure): Cortex A53 context 2 on Main island */
-#define SCICLIENT_CONTEXT_A53_NONSEC_0                    (6U)
-/** a53(Non Secure): Cortex A53 context 3 on Main island */
-#define SCICLIENT_CONTEXT_A53_NONSEC_1                    (7U)
-/** a53(Non Secure): Cortex A53 context 4 on Main island */
-#define SCICLIENT_CONTEXT_A53_NONSEC_2                    (8U)
-/** a53(Non Secure): Cortex A53 context 5 on Main island */
-#define SCICLIENT_CONTEXT_A53_NONSEC_3                    (9U)
-/** a53(Non Secure): Cortex A53 context 6 on Main island */
-#define SCICLIENT_CONTEXT_A53_NONSEC_4                    (10U)
-/** a53(Non Secure): Cortex A53 context 7 on Main island */
-#define SCICLIENT_CONTEXT_A53_NONSEC_5                    (11U)
-/** gpu(Non Secure): SGX544 Context 0 on Main island */
-#define SCICLIENT_CONTEXT_GPU_NONSEC_0                    (12U)
-/** gpu(Non Secure): SGX544 Context 1 on Main island */
-#define SCICLIENT_CONTEXT_GPU_NONSEC_1                    (13U)
-/** icssg(Non Secure): ICSS Context 0 on Main island */
-#define SCICLIENT_CONTEXT_ICSSG_NONSEC_0                  (14U)
-/** icssg(Non Secure): ICSS Context 1 on Main island */
-#define SCICLIENT_CONTEXT_ICSSG_NONSEC_1                  (15U)
-/** icssg(Non Secure): ICSS Context 2 on Main island */
-#define SCICLIENT_CONTEXT_ICSSG_NONSEC_2                  (16U)
-/** Total number of possible contexts for application. */
-#define SCICLIENT_CONTEXT_MAX_NUM                        (17U)
-/* @} */
+/** r5(Secure): Cortex R5 Context 0 */
+#define SCICLIENT_CONTEXT_R5_0_SEC_0                   (0U)
+/** r5(Non Secure): Cortex R5 Context 1 */
+#define SCICLIENT_CONTEXT_R5_0_NONSEC_0                (1U)
+/** r5(Secure): Cortex R5 Context 2 */
+#define SCICLIENT_CONTEXT_R5_0_SEC_1                   (2U)
+/** r5(Non Secure): Cortex R5 Context 3 */
+#define SCICLIENT_CONTEXT_R5_0_NONSEC_1                (3U)
+/** a53(Secure): Cortex A53 context 0 */
+#define SCICLIENT_CONTEXT_A53_SEC_0                    (4U)
+/** a53(Non Secure): Cortex A53 context 1 */
+#define SCICLIENT_CONTEXT_A53_NONSEC_0                 (5U)
+/** a53(Non Secure): Cortex A53 context 2 */
+#define SCICLIENT_CONTEXT_A53_NONSEC_1                 (6U)
+/** a53(Non Secure): Cortex A53 context 3 */
+#define SCICLIENT_CONTEXT_A53_NONSEC_2                 (7U)
+/** a53(Non Secure): Cortex A53 context 4 */
+#define SCICLIENT_CONTEXT_A53_NONSEC_3                 (8U)
+/** M4 (Non Secure): Cortex M4 context 1 */
+#define SCICLIENT_CONTEXT_M4_NONSEC_0                  (9U)
+/** r5(Secure): Cortex R5 Context 0 */
+#define SCICLIENT_CONTEXT_R5_1_SEC_0                   (10U)
+/** r5(Non Secure): Cortex R5 Context 1 */
+#define SCICLIENT_CONTEXT_R5_1_NONSEC_0                (11U)
+/** r5(Secure): Cortex R5 Context 2 */
+#define SCICLIENT_CONTEXT_R5_1_SEC_1                   (12U)
+/** r5(Non Secure): Cortex R5 Context 3 */
+#define SCICLIENT_CONTEXT_R5_1_NONSEC_1                (13U)
+/** ICSSG (Non Secure) : ICSSG Non Secure Context */
+#define SCICLIENT_CONTEXT_ICSSG_NONSEC_0               (14U)
 
-/**
- *  \anchor Sciclient_ProcessorIds_V3
- *  \name Sciclient Processor Ids
- *  @{
- *  Processor IDs for the Processor Boot Configuration APIs.
- */
-/** COMPUTE_CLUSTER_MSMC0: (Cluster 0 Processor 0) */
-#define SCICLIENT_PROCID_A53_CL0_C0                       (0x20U)
-/** COMPUTE_CLUSTER_MSMC0: (Cluster 0 Processor 1) */
-#define SCICLIENT_PROCID_A53_CL0_C1                       (0x21U)
-/** COMPUTE_CLUSTER_MSMC0: (Cluster 1 Processor 0) */
-#define SCICLIENT_PROCID_A53_CL1_C0                       (0x22U)
-/** COMPUTE_CLUSTER_MSMC0: (Cluster 1 Processor 1) */
-#define SCICLIENT_PROCID_A53_CL1_C1                       (0x23U)
-/** MCU_SEC_MMR0: (Cluster 0 Processor 0) */
-#define SCICLIENT_PROCID_R5_CL0_C0                        (0x01U)
-/** MCU_SEC_MMR0: (Cluster 0 Processor 1) */
-#define SCICLIENT_PROCID_R5_CL0_C1                        (0x02U)
+/** Total number of possible contexts for application. */
+#define SCICLIENT_CONTEXT_MAX_NUM                      (15U)
 /* @} */
 
 /** -------------------- Resource Management Parameters ---------------------*/
@@ -156,7 +133,7 @@ extern "C" {
 
 /** ------------ Power Management Messages Parameters -----------------------*/
 /**
- *  \anchor Sciclient_PmDeviceIds_V3
+ *  \anchor Sciclient_PmDeviceIds_V0
  *  \name Power Management Device IDs
  *  @{
  *  Power Management Module Device IDs
@@ -165,7 +142,7 @@ extern "C" {
 /* @} */
 
 /**
- *  \anchor Sciclient_PmModuleClockIds_V3
+ *  \anchor Sciclient_PmModuleClockIds_V0
  *  \name Power Management Clock IDs Module Wise
  *  @{
  *  Power Management Module Clock IDs for individual modules.
@@ -174,12 +151,7 @@ extern "C" {
 /* @} */
 
 /**
- * \brief Special ISC ID to refer to compute cluster privid registers
- */
-#define TISCI_ISC_CC_ID                (160U)
-
-/**
- *  \anchor Sciclient_IrqSrcIdxStart_V3
+ *  \anchor Sciclient_IrqSrcIdxStart_V0
  *  \name IRQ source index start
  *  @{
  *  Start offset of IRQ source index.
