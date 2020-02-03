@@ -70,7 +70,11 @@ extern "C" {
 #define EMAC_INCOHERENT
 #endif
 
-
+#ifdef SOC_AM65XX
+//Temporary hack for Maxwell PG1.0 EMAC lld build
+//FIXME: Comment below line for Maxwell PG2.0 builds
+#define EMAC_AM65XX_DUAL_ICSSG_CONFIG
+#endif
 
 #define EMAC_MAX_FREE_RINGS_PER_SUBCHAN ((uint32_t)9U)
 #define EMAC_MAX_RX_SUBCHAN_PER_CHAN ((uint32_t)16U)

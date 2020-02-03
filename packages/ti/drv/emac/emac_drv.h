@@ -62,7 +62,7 @@ extern "C" {
 #include <stdbool.h>
 #include <stddef.h>
 
-#if defined (SOC_AM65XX)
+#if defined (SOC_AM65XX) /* FIXME */
 #include <ti/utils/trace/trace.h>
 #endif
 

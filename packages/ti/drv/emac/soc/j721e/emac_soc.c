@@ -86,7 +86,7 @@ EMAC_HwAttrs_V5 EMACInitCfg[1] =
         {
             { /* EMAC_PER_PORT_CFG ICSSG-0 PORT 0 */
                 0, /* phy address */
-                1,/* number of TX channels */
+                4,/* number of TX channels */
                 EMAC_NOT_CONFIGURED,
                 CSL_PRU_ICSSG0_PR1_MDIO_V1P7_MDIO_BASE,
                 CSL_PRU_ICSSG0_RAM_SLV_RAM_BASE,
@@ -155,7 +155,7 @@ EMAC_HwAttrs_V5 EMACInitCfg[1] =
             },
             {
                 3,
-                1,
+                4,
                 EMAC_NOT_CONFIGURED,
                 CSL_PRU_ICSSG0_PR1_MDIO_V1P7_MDIO_BASE,
                 CSL_PRU_ICSSG0_RAM_SLV_RAM_BASE + EMAC_SLICE1_HANDSHAKE_OFFSET,
@@ -223,7 +223,7 @@ EMAC_HwAttrs_V5 EMACInitCfg[1] =
             },
             {
                 0xc,
-                1,
+                4,
                 EMAC_NOT_CONFIGURED,
                  CSL_PRU_ICSSG1_PR1_MDIO_V1P7_MDIO_BASE,
                  CSL_PRU_ICSSG1_RAM_SLV_RAM_BASE,
@@ -291,7 +291,7 @@ EMAC_HwAttrs_V5 EMACInitCfg[1] =
             },
             {
                 0xf,
-                1,
+                4,
                 EMAC_NOT_CONFIGURED,
                 CSL_PRU_ICSSG1_PR1_MDIO_V1P7_MDIO_BASE,
                 CSL_PRU_ICSSG1_RAM_SLV_RAM_BASE + EMAC_SLICE1_HANDSHAKE_OFFSET,
@@ -360,7 +360,7 @@ EMAC_HwAttrs_V5 EMACInitCfg[1] =
             },
             {
                 3,
-                1,
+                4,
                 EMAC_NOT_CONFIGURED,
                 CSL_PRU_ICSSG0_PR1_MDIO_V1P7_MDIO_BASE,
                 CSL_PRU_ICSSG0_RAM_SLV_RAM_BASE + EMAC_SLICE1_HANDSHAKE_OFFSET,

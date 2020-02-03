@@ -517,6 +517,19 @@ Board_STATUS Board_icssEthPhyConfig(void)
             phyAddr  = Board_gPruicssMdioInfo[index].phyAddrs;
 
             Board_mdioInit(baseAddr);
+	        /*
+	        PHY team suggested workaround for RX_ERRs seen with short cables
+	        Offset  Value   Description
+	        0x001F  0x8000  Hard Reset   
+	        0x0053  0x2054  Threshold for consecutive amount of Idle symbols for Viterbi Idle detector to assert Idle Mode set to 5                        
+	        0x012C  0x0E81  FFE Fix    
+	        0x001F  0x4000  Soft Reset   
+	        */
+	        Board_ethPhyExtendedRegWrite(baseAddr, phyAddr, 0x001F, 0x8000);
+	        Board_ethPhyExtendedRegWrite(baseAddr, phyAddr, 0x0053, 0x2054);
+	        Board_ethPhyExtendedRegWrite(baseAddr, phyAddr, 0x012C, 0x0E81);
+	        Board_ethPhyExtendedRegWrite(baseAddr, phyAddr, 0x001F, 0x4000);
+	            
 
             /* Enable the PHY delay configurations */
             Board_ethPhyExtendedRegWrite(baseAddr, phyAddr,
