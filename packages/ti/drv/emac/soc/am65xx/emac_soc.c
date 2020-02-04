@@ -105,7 +105,7 @@ EMAC_HwAttrs_V5 EMACInitCfg[1] =
                 /*  EMAC_PER_CHANNEL_CFG_RX for rxChannel */
                     NULL,
                     NULL,
-                    9U,
+                    6U,
                     {
                         EMAC_RX_SUB_CHANNEL_DEFAULT_CONFIG,
                         EMAC_RX_SUB_CHANNEL_DEFAULT_CONFIG,
@@ -173,7 +173,7 @@ EMAC_HwAttrs_V5 EMACInitCfg[1] =
                 {
                     NULL,
                     NULL,
-                    9U,
+                    6U,
                     {
                         EMAC_RX_SUB_CHANNEL_DEFAULT_CONFIG,
                         EMAC_RX_SUB_CHANNEL_DEFAULT_CONFIG,
@@ -241,7 +241,7 @@ EMAC_HwAttrs_V5 EMACInitCfg[1] =
                 {
                     NULL,
                     NULL,
-                    9U,
+                    6U,
                     {
                         EMAC_RX_SUB_CHANNEL_DEFAULT_CONFIG,
                         EMAC_RX_SUB_CHANNEL_DEFAULT_CONFIG,
@@ -310,7 +310,7 @@ EMAC_HwAttrs_V5 EMACInitCfg[1] =
                 {
                     NULL,
                     NULL,
-                    9U,
+                    6U,
                     {
                         EMAC_RX_SUB_CHANNEL_DEFAULT_CONFIG,
                         EMAC_RX_SUB_CHANNEL_DEFAULT_CONFIG,
@@ -378,7 +378,7 @@ EMAC_HwAttrs_V5 EMACInitCfg[1] =
                 {
                     NULL,
                     NULL,
-                    9U,
+                    6U,
                     {
                         EMAC_RX_SUB_CHANNEL_DEFAULT_CONFIG,
                         EMAC_RX_SUB_CHANNEL_DEFAULT_CONFIG,
