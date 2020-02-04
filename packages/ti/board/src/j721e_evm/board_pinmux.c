@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2019 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2019-2020 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -122,37 +122,6 @@ static uint32_t Board_pinmuxGetBaseAddr(uint8_t domain)
 
     return baseAddr;
 }
-
-#if defined (_TMS320C6X)
-/**
- *  \brief  Sets RAT configuration for C66x core
- *
- *  MAIN padconfig registers are not directly accessible for C66x core
- *  which requires RAT configuration for the access.
- *
- *  \return   None
- */
-static void Board_setC66xRATCfg(void)
-{
-    HW_WR_REG32((CSL_C66_COREPAC_C66_RATCFG_BASE + 0x24),
-                BOARD_PINMUX_C66X_RAT_OFFSET);
-    HW_WR_REG32((CSL_C66_COREPAC_C66_RATCFG_BASE + 0x28), 0);
-    HW_WR_REG32((CSL_C66_COREPAC_C66_RATCFG_BASE + 0x20), 
-                BOARD_PINMUX_C66X_RAT_CONFIG);
-}
-
-/**
- *  \brief  Clears RAT configuration for C66x core
- *
- *  \return   None
- */
-static void Board_clearC66xRATCfg(void)
-{
-    HW_WR_REG32((CSL_C66_COREPAC_C66_RATCFG_BASE + 0x20), 0);
-    HW_WR_REG32((CSL_C66_COREPAC_C66_RATCFG_BASE + 0x24), 0);
-    HW_WR_REG32((CSL_C66_COREPAC_C66_RATCFG_BASE + 0x28), 0);
-}
-#endif  /* #if defined (_TMS320C6X) */
 
 /**
  *  \brief  Sets pinmux mode for a pin in main domain

@@ -535,6 +535,39 @@ uint32_t Board_getSocDomain(void)
 }
 
 /**
+ *  \brief  Sets RAT configuration for C66x core
+ *
+ *  MAIN padconfig registers are not directly accessible for C66x core
+ *  which requires RAT configuration for the access.
+ *
+ *  \return   None
+ */
+void Board_setC66xRATCfg(void)
+{
+#if defined (_TMS320C6X)
+    HW_WR_REG32((CSL_C66_COREPAC_C66_RATCFG_BASE + 0x24),
+                BOARD_C66X_RAT_OFFSET);
+    HW_WR_REG32((CSL_C66_COREPAC_C66_RATCFG_BASE + 0x28), 0);
+    HW_WR_REG32((CSL_C66_COREPAC_C66_RATCFG_BASE + 0x20),
+                BOARD_C66X_RAT_CONFIG);
+#endif
+}
+
+/**
+ *  \brief  Clears RAT configuration for C66x core
+ *
+ *  \return   None
+ */
+void Board_clearC66xRATCfg(void)
+{
+#if defined (_TMS320C6X)
+    HW_WR_REG32((CSL_C66_COREPAC_C66_RATCFG_BASE + 0x20), 0);
+    HW_WR_REG32((CSL_C66_COREPAC_C66_RATCFG_BASE + 0x24), 0);
+    HW_WR_REG32((CSL_C66_COREPAC_C66_RATCFG_BASE + 0x28), 0);
+#endif
+}
+
+/**
  *  \brief    Function to generate delay in micro seconds
  *
  *  This function takes the delay parameters in usecs but the generated
