@@ -118,6 +118,7 @@ MAKE=gcc
 src/sciclient_boardcfg.c : $(GEN_FILE)
 
 $(GEN_FILE): soc/$(SCICLIENT_SOCVER)/sciclient_defaultBoardcfg.c soc/$(SCICLIENT_SOCVER)/sciclient_defaultBoardcfg_pm.c soc/$(SCICLIENT_SOCVER)/sciclient_defaultBoardcfg_rm.c soc/$(SCICLIENT_SOCVER)/sciclient_defaultBoardcfg_security.c
+ifeq ($(CORE), mcu1_0)
 	echo "Build Board Configuration Obj Files"
 	$(MKDIR) -p $(OBJDIR)
 	$(CC) $(_CFLAGS) $(INCLUDES) $(CFLAGS_DIROPTS) $(COMPILEMODE) soc/$(SCICLIENT_SOCVER)/sciclient_defaultBoardcfg.c
@@ -154,6 +155,9 @@ else
 	$(BIN2C_GEN) $(OBJDIR)/sciclient_defaultBoardcfg_rm.bin.signed sciclient_defaultBoardcfg_rm_hex.h SCICLIENT_RM_BOARDCFG > $(ROOTDIR)/ti/drv/sciclient/soc/$(SCICLIENT_SOCVER)/sciclient_defaultBoardcfg_rm_hex.h
 	$(BIN2C_GEN) $(OBJDIR)/sciclient_defaultBoardcfg_security.bin.signed sciclient_defaultBoardcfg_security_hex.h SCICLIENT_SECURITY_BOARDCFG > $(ROOTDIR)/ti/drv/sciclient/soc/$(SCICLIENT_SOCVER)/sciclient_defaultBoardcfg_security_hex.h
 endif
+else
+	echo "Board Configuration has changed. Please make sure you are building Sciclient for MCU1_0"
+endif #ifeq ($(CORE), mcu1_0)
 
 # OBJs and libraries are built by using rule defined in rules_<target>.mk
 #     and need not be explicitly specified here
