@@ -87,6 +87,9 @@
 #include <ti/build/unit-test/config/unity_config.h>
 #endif
 
+#ifdef EMAC_TEST_APP_ICSSG
+#define TSN_MAC
+#endif
 
 extern uint32_t portNum;
 extern uint32_t endPort;
@@ -148,12 +151,21 @@ uint32_t gPgVersion;
 
 
 /* PG2.0 firmware */
+#ifdef TSN_MAC
+#include <ti/drv/emac/firmware/icss_dualmac/bin_pg2/RX_PRU_SLICE0_bin.h>
+#include <ti/drv/emac/firmware/icss_dualmac/bin_pg2/RX_PRU_SLICE1_bin.h>
+#include <ti/drv/emac/firmware/icss_dualmac/bin_pg2/RTU0_SLICE0_bin.h>
+#include <ti/drv/emac/firmware/icss_dualmac/bin_pg2/RTU0_SLICE1_bin.h>
+#include <ti/drv/emac/firmware/icss_dualmac/bin_pg2/TX_PRU_SLICE0_bin.h>
+#include <ti/drv/emac/firmware/icss_dualmac/bin_pg2/TX_PRU_SLICE1_bin.h>
+#else
 #include <ti/drv/emac/firmware/icss_dualmac/bin_pg2/rxl2_rgmii0_bin.h>      /* PDSPcode */
 #include <ti/drv/emac/firmware/icss_dualmac/bin_pg2/rtu_test0_bin.h>        /* PDSP2code */
 #include <ti/drv/emac/firmware/icss_dualmac/bin_pg2/rxl2_rgmii1_bin.h>      /* PDSP3code */
 #include <ti/drv/emac/firmware/icss_dualmac/bin_pg2/rtu_test1_bin.h>        /* PDSP4code */
 #include <ti/drv/emac/firmware/icss_dualmac/bin_pg2/txl2_rgmii0_bin.h>      /* PDSP5code */
 #include <ti/drv/emac/firmware/icss_dualmac/bin_pg2/txl2_rgmii1_bin.h>      /* PDSP6code */
+#endif
 
 #if 0
 typedef struct {
@@ -194,11 +206,21 @@ app_test_pru_rtu_fw_t firmware_pg1[2] = {
     { PDSPcode_0, sizeof(PDSPcode_0), PDSP2code_0, sizeof(PDSP2code_0), NULL, 0},
     { PDSP3code_0, sizeof(PDSP3code_0), PDSP4code_0, sizeof(PDSP4code_0), NULL, 0}
 };
-
+#ifdef TSN_MAC
+app_test_pru_rtu_fw_t firmware_pg2[2] = {
+    {
+        RX_PRU_SLICE0_b00, sizeof(RX_PRU_SLICE0_b00), RTU0_SLICE0_b00, sizeof(RTU0_SLICE0_b00), TX_PRU_SLICE0_b00, sizeof(TX_PRU_SLICE0_b00)
+    },
+    {
+        RX_PRU_SLICE1_b00, sizeof(RX_PRU_SLICE1_b00), RTU0_SLICE1_b00, sizeof(RTU0_SLICE1_b00), TX_PRU_SLICE1_b00, sizeof(TX_PRU_SLICE1_b00)
+    }
+};
+#else
 app_test_pru_rtu_fw_t firmware_pg2[2] = {
     { PDSPcode_0_PG2, sizeof(PDSPcode_0_PG2), PDSP2code_0_PG2, sizeof(PDSP2code_0_PG2), PDSP5code_0_PG2, sizeof(PDSP5code_0_PG2)},
     { PDSP3code_0_PG2, sizeof(PDSP3code_0_PG2), PDSP4code_0_PG2, sizeof(PDSP4code_0_PG2),  PDSP6code_0_PG2, sizeof(PDSP6code_0_PG2)}
 };
+#endif // TSN_MAC
 #endif
 
 #endif
@@ -1679,6 +1701,53 @@ void test_EMAC_verify_ut_dual_mac_icssg(void)
     /* For standalone CPSW test, we use internal loopback at CPSW-SS */
     app_test_check_port_link(portNum, endPort);
 
+    EMAC_IOCTL_PARAMS params;
+    int32_t ret_val;
+    params.subCommand = EMAC_IOCTL_PORT_STATE_FORWARD;
+    emac_ioctl(portNum, EMAC_IOCTL_PORT_STATE_CTRL, &params);
+
+    params.subCommand =  EMAC_IOCTL_ACCEPTABLE_FRAME_CHECK_ALL_FRAMES;
+    //asynchronous IOCTL 
+    emac_ioctl(portNum, EMAC_IOCTL_ACCEPTABLE_FRAME_CHECK_CTRL, (void *)(&params));
+    Task_sleep (10); //Wait for 10 ms as this async IOCTL to complete
+
+
+    EMAC_IOCTL_VLAN_DEFAULT_ENTRY vlanDefaultEntry;
+    EMAC_IOCTL_VLAN_FID_ENTRY vlanEntry = {0};
+    EMAC_IOCTL_VLAN_FID_PARAMS vlanParams = {/*.fid = */100, /*.host_member =*/ 1, /*.p1_member =*/ 1,  /*.p2_member =*/ 1, \
+                                                        /*.host_tagged = */0, /*.p1_tagged = */0, /*.p2_tagged = */0, /*.stream_vid =*/ 0, /*.flood_to_host = */0
+                                            };
+    vlanDefaultEntry.pcp = 2;
+    vlanDefaultEntry.vlanId = (uint16_t)100;
+
+    /* Set default VLAN ID for the host port */
+    params.subCommand = EMAC_IOCTL_VLAN_SET_DEFAULT_VLAN_ID;
+    params.ioctlVal = (void *)&vlanDefaultEntry;
+    ret_val = emac_ioctl(EMAC_SWITCH_PORT0, EMAC_IOCTL_VLAN_CTRL, &params);
+
+    if(ret_val != EMAC_DRV_RESULT_OK)
+    {
+        UART_printf("setting VLAN for HOST FAILED\n");
+        ret_val = -1;
+    }
+
+    ret_val = -1;
+
+    /* Update table for default entry */
+    params.subCommand = EMAC_IOCTL_VLAN_SET_ENTRY;
+    params.ioctlVal = (void *)&vlanEntry;
+    memcpy(&vlanEntry.vlanFidPrams, &vlanParams,
+           sizeof(EMAC_IOCTL_VLAN_FID_PARAMS));
+
+    vlanEntry.vlanId = (uint16_t)100;
+    ret_val = emac_ioctl(EMAC_SWITCH_PORT, EMAC_IOCTL_VLAN_CTRL, &params);
+
+    if(ret_val != EMAC_DRV_RESULT_OK)
+    {
+        UART_printf("FID VLAN entry for HOST: FAILED\n");
+    }
+
+
     /* Test with PORT_MAC address */
     app_test_port_mac();
 
@@ -1701,7 +1770,7 @@ void test_EMAC_verify_ut_dual_mac_icssg(void)
     {
         while(1);
     }
-
+#if 0
     app_test_poll_mode();
 
 
@@ -1711,7 +1780,7 @@ void test_EMAC_verify_ut_dual_mac_icssg(void)
 
     app_test_config_promiscous_mode(1);
     app_test_promiscous_mode();
-
+#endif
     emac_test_get_icssg_stats();
 
     UART_printf("All tests have passed\n");
@@ -1922,6 +1991,155 @@ int32_t  app_test_task_init_pruicss(uint32_t portNum)
             return -1;
         }
     }
+#ifdef TSN_MAC
+    uint32_t reg_val;
+    //Need to do the following in emac_config_icssg_dual_mac_fw(port_num, hwAttrs);
+    //Need to be slice specific
+
+    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->prussCfgRegBase +
+          CSL_ICSSCFG_GPCFG0) = 0x8000003; //GPCFG0 mux sel MII_RT
+    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->prussCfgRegBase +
+          CSL_ICSSCFG_GPCFG1) = 0x8000003; //GPCFG1 mux sel MII_RT
+
+    //For reducing IEP latency. Enable OCP clock.
+    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->prussCfgRegBase +
+          CSL_ICSSCFG_IEPCLK) = 1;
+
+    //Delay after IEP Sync Config. Requires minimum 10 ICSS clock cycles before IEP register access
+    Osal_delay(100);
+
+    //Core sync will make ICSSG access to MSMC optimal
+    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->prussCfgRegBase +
+          CSL_ICSSCFG_CORE_SYNC_REG) = 1; //Enable coresync
+
+    //Enable PA_STAT block for diagnostic counters in ICSSG
+    reg_val = (uint32_t)(1 << 31) | 2;      //Enable stats block, 2 64-bit counters
+    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->prussPru0DramBase +
+          CSL_ICSS_G_PA_STAT_WRAP_PA_SLV_REGS_BASE + 8) = reg_val; 
+
+    //Program constant table pointer for C28 on all 6 PRUs
+    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->baseAddr +
+          CSL_ICSS_G_PR1_PDSP0_IRAM_REGS_BASE  +
+          0x28) = (0x100);
+    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->baseAddr +
+          CSL_ICSS_G_PR1_PDSP1_IRAM_REGS_BASE +
+          0x28) = (0x100);
+    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->baseAddr +
+          CSL_ICSS_G_PR1_RTU0_PR1_RTU0_IRAM_REGS_BASE +
+          0x28) = (0x100);
+    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->baseAddr +
+          CSL_ICSS_G_PR1_RTU1_PR1_RTU1_IRAM_REGS_BASE  +
+          0x28) = (0x100);
+    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->baseAddr +
+          CSL_ICSS_G_PR1_PDSP_TX0_IRAM_REGS_BASE +
+          0x28) = (0x100);
+    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->baseAddr +
+          CSL_ICSS_G_PR1_PDSP_TX1_IRAM_REGS_BASE +
+          0x28) = (0x100);
+    //Program task manager configurations for all 6 PRUs
+    /* RX tasks run on RX_PRU0 */
+    /*Configure RXBK1 Size = 20Bytes, RXBK2 Size = 12 Bytes, RXBKn Size = 32 Bytes. */
+    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->baseAddr  + CSL_ICSS_G_PR1_TASKS_MGR_PRU0_PR1_TASKS_MGR_PRU0_MMR_REGS_BASE +
+            CSL_ICSS_G_PR1_TASKS_MGR_PRU0_PR1_TASKS_MGR_PRU0_MMR_RX_CFG) =
+        (19 <<
+         CSL_ICSS_G_PR1_TASKS_MGR_PRU0_PR1_TASKS_MGR_PRU0_MMR_RX_CFG_BK1_SIZE_SHIFT)
+        | (11 <<
+           CSL_ICSS_G_PR1_TASKS_MGR_PRU0_PR1_TASKS_MGR_PRU0_MMR_RX_CFG_BK2_SIZE_SHIFT)
+        | (31 <<
+           CSL_ICSS_G_PR1_TASKS_MGR_PRU0_PR1_TASKS_MGR_PRU0_MMR_RX_CFG_BKN_SIZE_SHIFT);
+    /* RX FIFO WM configuration on RTU0 */ 
+    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->baseAddr  + CSL_ICSS_G_PR1_TASKS_MGR_RTU0_PR1_TASKS_MGR_RTU0_MMR_REGS_BASE +
+            CSL_ICSS_G_PR1_TASKS_MGR_RTU0_PR1_TASKS_MGR_RTU0_MMR_RX_CFG) =
+        (19 <<
+         CSL_ICSS_G_PR1_TASKS_MGR_RTU0_PR1_TASKS_MGR_RTU0_MMR_RX_CFG_BK1_SIZE_SHIFT)
+        | (11 <<
+           CSL_ICSS_G_PR1_TASKS_MGR_RTU0_PR1_TASKS_MGR_RTU0_MMR_RX_CFG_BK2_SIZE_SHIFT)
+        | (31 <<
+           CSL_ICSS_G_PR1_TASKS_MGR_RTU0_PR1_TASKS_MGR_RTU0_MMR_RX_CFG_BKN_SIZE_SHIFT);
+    /* RX tasks run on RX_PRU1 */
+    /*Configure RXBK1 Size = 20Bytes, RXBK2 Size = 12 Bytes, RXBKn Size = 32 Bytes. */
+    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->baseAddr  + CSL_ICSS_G_PR1_TASKS_MGR_PRU1_PR1_TASKS_MGR_PRU1_MMR_REGS_BASE +
+            CSL_ICSS_G_PR1_TASKS_MGR_PRU1_PR1_TASKS_MGR_PRU1_MMR_RX_CFG) =
+        (19 <<
+         CSL_ICSS_G_PR1_TASKS_MGR_PRU1_PR1_TASKS_MGR_PRU1_MMR_RX_CFG_BK1_SIZE_SHIFT)
+        | (11 <<
+           CSL_ICSS_G_PR1_TASKS_MGR_PRU1_PR1_TASKS_MGR_PRU1_MMR_RX_CFG_BK2_SIZE_SHIFT)
+        | (31 <<
+           CSL_ICSS_G_PR1_TASKS_MGR_PRU1_PR1_TASKS_MGR_PRU1_MMR_RX_CFG_BKN_SIZE_SHIFT);
+    /* RX FIFO WM configuration on RTU1 */ 
+    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->baseAddr  + CSL_ICSS_G_PR1_TASKS_MGR_RTU1_PR1_TASKS_MGR_RTU1_MMR_REGS_BASE +
+            CSL_ICSS_G_PR1_TASKS_MGR_RTU1_PR1_TASKS_MGR_RTU1_MMR_RX_CFG) =
+        (19 <<
+         CSL_ICSS_G_PR1_TASKS_MGR_RTU1_PR1_TASKS_MGR_RTU1_MMR_RX_CFG_BK1_SIZE_SHIFT)
+        | (11 <<
+           CSL_ICSS_G_PR1_TASKS_MGR_RTU1_PR1_TASKS_MGR_RTU1_MMR_RX_CFG_BK2_SIZE_SHIFT)
+        | (31 <<
+           CSL_ICSS_G_PR1_TASKS_MGR_RTU1_PR1_TASKS_MGR_RTU1_MMR_RX_CFG_BKN_SIZE_SHIFT);
+    //Configure TX WM to zero
+    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->prussPru0DramBase +
+          CSL_ICSS_G_PR1_TASKS_MGR_PRU_TX0_PR1_TASKS_MGR_PRU_TX0_MMR_REGS_BASE +
+          CSL_ICSS_G_PR1_TASKS_MGR_PRU_TX0_PR1_TASKS_MGR_PRU_TX0_MMR_TX_CFG) = 0;
+    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->prussPru0DramBase +
+          CSL_ICSS_G_PR1_TASKS_MGR_PRU_TX1_PR1_TASKS_MGR_PRU_TX1_MMR_REGS_BASE +
+          CSL_ICSS_G_PR1_TASKS_MGR_PRU_TX1_PR1_TASKS_MGR_PRU_TX1_MMR_TX_CFG) = 0;
+
+    //Enable task manager nesting for PRUs and RTUs for TS1 tasks only
+    reg_val = 0x1F;
+    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->prussPru0DramBase +
+          CSL_ICSS_G_PR1_TASKS_MGR_PRU0_PR1_TASKS_MGR_PRU0_MMR_REGS_BASE +
+          CSL_ICSS_G_PR1_TASKS_MGR_PRU0_PR1_TASKS_MGR_PRU0_MMR_CAP_EN_CFG) = reg_val;
+    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->prussPru0DramBase +
+          CSL_ICSS_G_PR1_TASKS_MGR_PRU1_PR1_TASKS_MGR_PRU1_MMR_REGS_BASE +
+          CSL_ICSS_G_PR1_TASKS_MGR_PRU1_PR1_TASKS_MGR_PRU1_MMR_CAP_EN_CFG) = reg_val;
+    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->prussPru0DramBase +
+          CSL_ICSS_G_PR1_TASKS_MGR_RTU0_PR1_TASKS_MGR_RTU0_MMR_REGS_BASE +
+          CSL_ICSS_G_PR1_TASKS_MGR_RTU0_PR1_TASKS_MGR_RTU0_MMR_CAP_EN_CFG) = reg_val;
+    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->prussPru0DramBase +
+          CSL_ICSS_G_PR1_TASKS_MGR_RTU1_PR1_TASKS_MGR_RTU1_MMR_REGS_BASE +
+          CSL_ICSS_G_PR1_TASKS_MGR_RTU1_PR1_TASKS_MGR_RTU1_MMR_CAP_EN_CFG) = reg_val;
+    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->prussPru0DramBase +
+          CSL_ICSS_G_PR1_TASKS_MGR_PRU_TX0_PR1_TASKS_MGR_PRU_TX0_MMR_REGS_BASE +
+          CSL_ICSS_G_PR1_TASKS_MGR_PRU_TX0_PR1_TASKS_MGR_PRU_TX0_MMR_CAP_EN_CFG) = reg_val;
+    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->prussPru0DramBase +
+          CSL_ICSS_G_PR1_TASKS_MGR_PRU_TX1_PR1_TASKS_MGR_PRU_TX1_MMR_REGS_BASE +
+          CSL_ICSS_G_PR1_TASKS_MGR_PRU_TX1_PR1_TASKS_MGR_PRU_TX1_MMR_CAP_EN_CFG) = reg_val;
+
+    //Program RXCFG0/1 and TXCFG0/1
+    HWREG ((((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->baseAddr)+0x32000) = 0x213;
+    HWREG ((((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->baseAddr)+0x32004) = 0x21B;
+    HWREG ((((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->baseAddr)+0x32010) = 0x1803;
+    HWREG ((((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->baseAddr)+0x32014) = 0x1903;
+    //Program TX_IPG0/IPG1
+    HWREG ((((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->baseAddr)+0x32030) = 0x1A;
+    HWREG ((((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->baseAddr)+0x32034) = 0x1A;
+    //Reset Max preamble count
+    HWREG ((((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->baseAddr)+0x32048) = 0x1;
+    HWREG ((((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->baseAddr)+0x3204C) = 0x1;
+    //Init RGMII config for ICSSG : TXL2, TXPRU enable etc
+    HWREG ((((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->baseAddr)+0x33000) = 0x1082F;
+    //Configure PSI flow info for firmware
+    //SMEM
+    //#define PSI_L_REGULAR_FLOW_ID_BASE_OFFSET                  0x000C
+    //#define PSI_L_MGMT_FLOW_ID_OFFSET                          0x000E
+    //Program 0x96 and 0x9b respectively as flowIDs
+    HWREG (((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->prussSharedDramBase + 0x000C) = 0x9B0096;
+    //#define SPL_PKT_DEFAULT_PRIORITY                           0x0010
+    //#define HOST_PORT_DF_VLAN_OFFSET                           0x0034    //default VLAN tag for Host Port
+    //#define P1_PORT_DF_VLAN_OFFSET                             0x0038    //default VLAN tag for P1 Port
+    //#define P2_PORT_DF_VLAN_OFFSET                             0x003C    //default VLAN tag for P2 Port
+    //#define P1_QUEUE_NUM_UNTAGGED                              0x00C0    //Port1 Default Queue number for untagged packets
+    //#define P2_QUEUE_NUM_UNTAGGED                              0x00C1    //Port2 Default Queue number for untagged packets
+
+    //DMEM0
+    //#define PORT_Q_PRIORITY_REGEN_OFFSET                       0x0000    //Stores the table used for priority regeneration. 4B per PCP/Queue. Only 1B is used
+    //#define PORT_Q_PRIORITY_MAPPING_OFFSET                     0x0058    //Stores the table used for priority mapping. 1B per PCP/Queue
+
+    //DMEM1
+    //#define FDB_AGEING_TIMEOUT_OFFSET                          0x0068    //Time after which FDB entries are checked for aged out values. Value in nanoseconds
+
+    //Program classifies - already handled by lld ?
+
+#endif
     if (PRUICSS_pruEnable(prussDrvHandle, pru_n) != 0)
     {
         UART_printf("PRUICSS_pruEnable for PRUICCSS_PRU%d failed\n", slice_n);

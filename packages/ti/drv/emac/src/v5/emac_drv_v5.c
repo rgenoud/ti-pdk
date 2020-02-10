@@ -1286,8 +1286,9 @@ static void emac_config_icssg_dual_mac_fw(uint32_t port_num, EMAC_HwAttrs_V5 *hw
     EMAC_ICSSG_DUALMAC_FW_CFG *pDmFwCfg;
     uint32_t regVal;
 
+
+#if 0 //ifdef SOC_J721E
     /*FIXME : work-around to use PG1.0 firmware on J7 for bringup */
-#ifdef SOC_J721E
     uintptr_t addr;
     uint32_t tempVal = 0;
 
@@ -1300,18 +1301,17 @@ static void emac_config_icssg_dual_mac_fw(uint32_t port_num, EMAC_HwAttrs_V5 *hw
     addr = CSL_PRU_ICSSG0_PR1_MII_RT_PR1_MII_RT_CFG_BASE + 0x4C;// 0xb03204c
     tempVal = 0x1;
     emac_hw_mem_write(addr, (void*) &tempVal, 1);
-    addr = CSL_PRU_ICSSG0_PR1_MII_RT_PR1_MII_RT_CFG_BASE + 0x48;// 0xb03204c
+    addr = CSL_PRU_ICSSG0_PR1_MII_RT_PR1_MII_RT_CFG_BASE + 0x48;// 0xb032048
     emac_hw_mem_write(addr, (void*) &tempVal, 1);
-    
 #endif
-    //FIXME: Check for duplicate init
+
     /* Set CORE_CLK as the source of CORE_IEP_CLK (sync mode)*/
     regVal = CSL_REG32_RD (emac_mcb.port_cb[port_num].icssDram0BaseAddr + CSL_ICSSCFG_REGS_BASE +CSL_ICSSCFG_IEPCLK);
     regVal |= 0x1U << CSL_ICSSCFG_IEPCLK_OCP_EN_SHIFT;
     CSL_REG32_WR (emac_mcb.port_cb[port_num].icssDram0BaseAddr +
                 CSL_ICSSCFG_REGS_BASE + CSL_ICSSCFG_IEPCLK,
                 regVal);
-
+    //FIXME: Need 10 ICSSG clock cycles delay here
     /* Set internal CORE_CLK to be ICSSGn_ICLK (250Mhz) */
     regVal = CSL_REG32_RD (emac_mcb.port_cb[port_num].icssDram0BaseAddr + CSL_ICSSCFG_REGS_BASE +CSL_ICSSCFG_CORE_SYNC_REG);
     regVal |= 0x1U << CSL_ICSSCFG_CORE_SYNC_REG_CORE_VBUSP_SYNC_EN_SHIFT;
@@ -2907,10 +2907,12 @@ void emac_icssg_switch_eth_setup (uint32_t portNum)
     CSL_REG32_WR ((icssgBaseAddr + CSL_ICSS_G_PR1_RTU1_PR1_RTU1_IRAM_REGS_BASE + 0x28), 0x100);    /* RTU1 */
     CSL_REG32_WR ((icssgBaseAddr + CSL_ICSS_G_PR1_PDSP1_IRAM_REGS_BASE + 0x28), 0x100);    /*PRU1 as TX_PRU */
 
+#if 0
     /* Program c24_pointer to 0x0, so that firmware can access 0x00000 via C24*/
     CSL_REG32_WR ((icssgBaseAddr + CSL_ICSS_G_PR1_PDSP0_IRAM_REGS_BASE + 0x24), 0x0);    /* RX_PRU */
     CSL_REG32_WR ((icssgBaseAddr + CSL_ICSS_G_PR1_RTU0_PR1_RTU0_IRAM_REGS_BASE + 0x24), 0x0);    /* RTU0 */
     CSL_REG32_WR ((icssgBaseAddr + CSL_ICSS_G_PR1_RTU1_PR1_RTU1_IRAM_REGS_BASE + 0x24), 0x0);    /*RTU1 */
+#endif
 
     /* MII mode (icss_wrap mux sel[29:26]=2), (MII GPI mode [1:0] =3) for RX_PRU/PRU0 */
     reg_val =

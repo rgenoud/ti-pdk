@@ -63,10 +63,12 @@
 #define FDB_BUCKET_OFFSET_SIZE                             0x4
 #define FDB_AGEING_LAST_USED_OFFSET                        0x0024    //Used internally by FW for learning
 #define FDB_AGEING_LAST_USED_OFFSET_SIZE                   0x4
-#define TX_SOF_TS_OFFSET                                   0x0028    //Used internally by FW to store Tx timestamp
-#define TX_SOF_TS_OFFSET_SIZE                              0x8
-#define TX_TS_COOKIE_OFFSET                                0x0030    //Used internally by FW to stash cookie
-#define TX_TS_COOKIE_OFFSET_SIZE                           0x4
+#define TX_TS_COOKIE0_OFFSET                               0x0028    //Used internally by FW to store Tx timestamp slice0
+#define TX_TS_COOKIE0_OFFSET_SIZE                          0x4
+#define TX_TS_SPARE0_OFFSET                                0x002C    //not used
+#define TX_TS_SPARE0_OFFSET_SIZE                           0x4
+#define TX_TS_COOKIE1_OFFSET                               0x0030    //Used internally by FW to stash cookie slice1
+#define TX_TS_COOKIE1_OFFSET_SIZE                          0x4
 #define HOST_PORT_DF_VLAN_OFFSET                           0x0034    //default VLAN tag for Host Port
 #define HOST_PORT_DF_VLAN_OFFSET_SIZE                      0x4
 #define EMAC_ICSSG_SWITCH_PORT0_DEFAULT_VLAN_OFFSET        HOST_PORT_DF_VLAN_OFFSET    //Same as HOST_PORT_DF_VLAN_OFFSET
@@ -136,10 +138,11 @@
 #define EMAC_ICSSG_SWITCH_HOST_QUEUE_READ_PTR_OFFSET       HOST_RX_PRE_RD_PTR_OFFSET    //Same as HOST_RX_PRE_RD_PTR_OFFSET
 #define HOST_RX_PRE_WR_PTR_OFFSET                          0x0144    //Host Egress Q MSMC Write pointer (for Pre-emptive queue) stored here
 #define HOST_RX_PRE_WR_PTR_OFFSET_SIZE                     0x4
-#define HOST_RX_EXP_RD_PTR_OFFSET                          0x0148    //Reserved for Future Use
-#define HOST_RX_EXP_RD_PTR_OFFSET_SIZE                     0x4
-#define HOST_RX_EXP_WR_PTR_OFFSET                          0x014C    //Reserved for Future Use
-#define HOST_RX_EXP_WR_PTR_OFFSET_SIZE                     0x4
+#define HOST_RX_PRE_RD_PTR_OFFSET_1                        0x0148    //Host Egress Q MSMC Read pointer (for Pre-emptive queue) stored here
+#define HOST_RX_PRE_RD_PTR_OFFSET_1_SIZE                   0x4
+#define EMAC_ICSSG_SWITCH_HOST_QUEUE_READ_PTR_OFFSET_1     HOST_RX_PRE_RD_PTR_OFFSET_1    //Same as HOST_RX_PRE_RD_PTR_OFFSET_1
+#define HOST_RX_PRE_WR_PTR_OFFSET_1                        0x014C    //Host Egress Q MSMC Write pointer (for Pre-emptive queue) stored here
+#define HOST_RX_PRE_WR_PTR_OFFSET_1_SIZE                   0x4
 #define PORT_Q0_DESC_RD_PTR_OFFSET                         0x0150    //Port Tx Q0 Desc Read pointer stored here
 #define PORT_Q0_DESC_RD_PTR_OFFSET_SIZE                    0x2
 #define PORT_Q0_DESC_WR_PTR_OFFSET                         0x0152    //Port Tx Q0 Desc Write pointer stored here
@@ -284,45 +287,45 @@
 #define HOST_RX_Q_PRE_DESC_CONTEXT_OFFSET_SIZE             (NRT_DESC_QUEUE_CONTEXT_SIZE) //0x10
 #define HOST_RX_Q_EXP_DESC_CONTEXT_OFFSET                  0x23C4    //16B for Host Egress Q (Express) Desc context. redundant
 #define HOST_RX_Q_EXP_DESC_CONTEXT_OFFSET_SIZE             (NRT_DESC_QUEUE_CONTEXT_SIZE) //0x10
-#define PORT_DESC_Q0_OFFSET                                0x23D4    //packet descriptor Q reserved memory
-#define PORT_DESC_Q0_OFFSET_SIZE                           (NRT_PORT_DESC_QUEUE_SIZE) //0x734
-#define PORT_DESC_Q1_OFFSET                                0x2B08    //packet descriptor Q reserved memory for Port Tx queues
-#define PORT_DESC_Q1_OFFSET_SIZE                           (NRT_PORT_DESC_QUEUE_SIZE) //0x734
-#define PORT_DESC_Q2_OFFSET                                0x323C    //packet descriptor Q reserved memory for Port Tx queues
-#define PORT_DESC_Q2_OFFSET_SIZE                           (NRT_PORT_DESC_QUEUE_SIZE) //0x734
-#define PORT_DESC_Q3_OFFSET                                0x3970    //packet descriptor Q reserved memory for Port Tx queues
-#define PORT_DESC_Q3_OFFSET_SIZE                           (NRT_PORT_DESC_QUEUE_SIZE) //0x734
-#define PORT_DESC_Q4_OFFSET                                0x40A4    //packet descriptor Q reserved memory for Port Tx queues
-#define PORT_DESC_Q4_OFFSET_SIZE                           (NRT_PORT_DESC_QUEUE_SIZE) //0x734
-#define PORT_DESC_Q5_OFFSET                                0x47D8    //packet descriptor Q reserved memory for Port Tx queues
-#define PORT_DESC_Q5_OFFSET_SIZE                           (NRT_PORT_DESC_QUEUE_SIZE) //0x734
-#define PORT_DESC_Q6_OFFSET                                0x4F0C    //packet descriptor Q reserved memory for Port Tx queues
-#define PORT_DESC_Q6_OFFSET_SIZE                           (NRT_PORT_DESC_QUEUE_SIZE) //0x734
-#define PORT_DESC_Q7_OFFSET                                0x5640    //packet descriptor Q reserved memory for Port Tx queues
-#define PORT_DESC_Q7_OFFSET_SIZE                           (NRT_PORT_DESC_QUEUE_SIZE) //0x734
-#define HOST_DESC_Q0_OFFSET                                0x5D74    //packet descriptor Q reserved memory for Host Tx queues
-#define HOST_DESC_Q0_OFFSET_SIZE                           (NRT_HOST_DESC_QUEUE_SIZE) //0x234
-#define HOST_DESC_Q1_OFFSET                                0x5FA8    //packet descriptor Q reserved memory for Host Tx queues
-#define HOST_DESC_Q1_OFFSET_SIZE                           (NRT_HOST_DESC_QUEUE_SIZE) //0x234
-#define HOST_DESC_Q2_OFFSET                                0x61DC    //packet descriptor Q reserved memory for Host Tx queues
-#define HOST_DESC_Q2_OFFSET_SIZE                           (NRT_HOST_DESC_QUEUE_SIZE) //0x234
-#define HOST_DESC_Q3_OFFSET                                0x6410    //packet descriptor Q reserved memory for Host Tx queues
-#define HOST_DESC_Q3_OFFSET_SIZE                           (NRT_HOST_DESC_QUEUE_SIZE) //0x234
-#define HOST_DESC_Q4_OFFSET                                0x6644    //packet descriptor Q reserved memory for Host Tx queues
-#define HOST_DESC_Q4_OFFSET_SIZE                           (NRT_HOST_DESC_QUEUE_SIZE) //0x234
-#define HOST_DESC_Q5_OFFSET                                0x6878    //packet descriptor Q reserved memory for Host Tx queues
-#define HOST_DESC_Q5_OFFSET_SIZE                           (NRT_HOST_DESC_QUEUE_SIZE) //0x234
-#define HOST_DESC_Q6_OFFSET                                0x6AAC    //packet descriptor Q reserved memory for Host Tx queues
-#define HOST_DESC_Q6_OFFSET_SIZE                           (NRT_HOST_DESC_QUEUE_SIZE) //0x234
-#define HOST_DESC_Q7_OFFSET                                0x6CE0    //packet descriptor Q reserved memory for Host Tx queues
-#define HOST_DESC_Q7_OFFSET_SIZE                           (NRT_HOST_DESC_QUEUE_SIZE) //0x234
+#define XXPD_DESC_START                                    0x23D4    //packet descriptor Q reserved memory start offset
+#define PORT_DESC0_HI                                      0x23D4    //packet descriptor Q reserved memory
+#define PORT_DESC0_HI_SIZE                                 (NRT_PORT_DESC_SMEM_SIZE) //0xe68
+#define PORT_DESC0_LO                                      0x323C    //packet descriptor Q reserved memory
+#define PORT_DESC0_LO_SIZE                                 (NRT_PORT_DESC_SMEM_SIZE) //0xe68
+#define PORT_DESC1_HI                                      0x40A4    //packet descriptor Q reserved memory
+#define PORT_DESC1_HI_SIZE                                 (NRT_PORT_DESC_SMEM_SIZE) //0xe68
+#define PORT_DESC1_LO                                      0x4F0C    //packet descriptor Q reserved memory
+#define PORT_DESC1_LO_SIZE                                 (NRT_PORT_DESC_SMEM_SIZE) //0xe68
+#define HOST_DESC0_HI                                      0x5D74    //packet descriptor Q reserved memory
+#define HOST_DESC0_HI_SIZE                                 (NRT_HOST_DESC_SMEM_SIZE) //0x468
+#define HOST_DESC0_LO                                      0x61DC    //packet descriptor Q reserved memory
+#define HOST_DESC0_LO_SIZE                                 (NRT_HOST_DESC_SMEM_SIZE) //0x468
+#define HOST_DESC1_HI                                      0x6644    //packet descriptor Q reserved memory
+#define HOST_DESC1_HI_SIZE                                 (NRT_HOST_DESC_SMEM_SIZE) //0x468
+#define HOST_DESC1_LO                                      0x6AAC    //packet descriptor Q reserved memory
+#define HOST_DESC1_LO_SIZE                                 (NRT_HOST_DESC_SMEM_SIZE) //0x468
+#define XXPD_DESC_END                                      0x6F14    //packet descriptor Q reserved memory end offset
 #define HOST_RX_DESC_Q_PRE_OFFSET                          0x6F14    //packet descriptor Q reserved memory for Host Egress (Pre-emptible) queues
 #define HOST_RX_DESC_Q_PRE_OFFSET_SIZE                     (NRT_PORT_DESC_QUEUE_SIZE) //0x734
 #define HOST_RX_DESC_Q_EXP_OFFSET                          0x7648    //packet descriptor Q reserved memory for Host Egress (Pre-emptible) queues. redundant
 #define HOST_RX_DESC_Q_EXP_OFFSET_SIZE                     (NRT_PORT_DESC_QUEUE_SIZE) //0x734
-#define SHARED_MEMORY_END_OFFSET                           0x7D7C
+#define SPPD_DESC_START                                    0x7D7C    //special packet descriptor Q reserved memory start offset
+#define HOST_SPPD0                                         0x7D7C    //special packet descriptor Q reserved memory
+#define HOST_SPPD0_SIZE                                    (NRT_SPECIAL_PD_SMEM_SIZE) //0x400
+#define HOST_SPPD1                                         0x817C    //special packet descriptor Q reserved memory
+#define HOST_SPPD1_SIZE                                    (NRT_SPECIAL_PD_SMEM_SIZE) //0x400
+#define SPPD_DESC_END                                      0x857C    //special packet descriptor Q reserved memory end offset
+#define HOST_RX_EXP_RD_PTR_OFFSET                          0x857C    //Reserved for Future Use
+#define HOST_RX_EXP_RD_PTR_OFFSET_SIZE                     0x4
+#define HOST_RX_EXP_WR_PTR_OFFSET                          0x8580    //Reserved for Future Use
+#define HOST_RX_EXP_WR_PTR_OFFSET_SIZE                     0x4
+#define NRT_DESC_SLICE0                                    0x8584    //FIMXE : REVIEW this offset. this is used in PG11 to save the descriptor
+#define NRT_DESC_SLICE0_SIZE                               0x200
+#define NRT_DESC_SLICE1                                    0x8784    //FIMXE : REVIEW this offset. this is used in PG11 to save the descriptor
+#define NRT_DESC_SLICE1_SIZE                               0x200
+#define SHARED_MEMORY_END_OFFSET                           0x8984
 
-// total SHARED_MEMORY memory usage : 31.37109375 KB from total of 64.0KB 
+// total SHARED_MEMORY memory usage : 34.37890625 KB from total of 64.0KB 
 
 //************************************************************************************
 //
@@ -425,8 +428,22 @@
 #define DEBUG_FDB_RESULTS_SIZE                             0xc
 #define FDB_AGEING_TIMEOUT_OFFSET                          0x0068    //Time after which FDB entries are checked for aged out values. Value in nanoseconds
 #define FDB_AGEING_TIMEOUT_OFFSET_SIZE                     0x8
-#define L2_2_L1_BYTES_SENT_COUNT_OFFSET                    0x0070    //Number of bytes sent by Tx L2 FIFO to L1 FIFO. Only 2 out of 4 bytes used.
-#define L2_2_L1_BYTES_SENT_COUNT_OFFSET_SIZE               0x4
+#define VERIFY_FRAME_RECEIVE_OFFSET                        0x0070    //Used Internally by FW. Memory updated by RX PRU when verify frame is received
+#define VERIFY_FRAME_RECEIVE_OFFSET_SIZE                   0x1
+//Padding of 3 bytes
+#define VERIFY_FRAME_SEND_OFFSET                           0x0074    //Used Internally by FW. Memory updated by TX PRU to inform the state machine that the verify frame has been sent
+#define VERIFY_FRAME_SEND_OFFSET_SIZE                      0x1
+//Padding of 3 bytes
+#define RESPOND_FRAME_RECEIVE_OFFSET                       0x0078    //Used Internally by FW.Memory updated by RX PRU when respond frame is received
+#define RESPOND_FRAME_RECEIVE_OFFSET_SIZE                  0x1
+//Padding of 3 bytes
+#define RESPOND_FRAME_SEND_OFFSET                          0x007C    //Used Internally by FW.Memory updated by TX PRU to inform the state machine that the respond frame has been sent
+#define RESPOND_FRAME_SEND_OFFSET_SIZE                     0x1
+//Padding of 3 bytes
+#define PRE_EMPTION_CONTEXT_SLICE0_OFFSET                  0x0080    //Backup of active Tx and Q context
+#define PRE_EMPTION_CONTEXT_SLICE0_OFFSET_SIZE             0x18
+#define PRE_EMPTION_CONTEXT_SLICE1_OFFSET                  0x0098    //Backup of active Tx and Q context
+#define PRE_EMPTION_CONTEXT_SLICE1_OFFSET_SIZE             0x18
 #define DMEM1_END_OFFSET                                   0x0100
 
 // total DMEM1 memory usage : 0.25 KB from total of 8.0KB 
@@ -577,9 +594,17 @@
 #define HOST_Q6_CONTEXT_SLOT_RTU0_SIZE                     0x1
 #define HOST_Q7_CONTEXT_SLOT_RTU0                          0x0010    //Combined context (MSMC + Desc) for Host Tx queue
 #define HOST_Q7_CONTEXT_SLOT_RTU0_SIZE                     0x1
-#define RTU0_BSRAM_END_OFFSET                              0x0011
+#define PSI_TXTS_INFO_SLOT_RTU0                            0x0011    //Store Info chunk for Tx TS PSI transaction
+#define PSI_TXTS_INFO_SLOT_RTU0_SIZE                       0x1
+#define PSI_DATA_THR0_SLOT_RTU0                            0x0012    //Stash li data for thread 0
+#define PSI_DATA_THR0_SLOT_RTU0_SIZE                       0x1
+#define PSI_DATA_THR1_SLOT_RTU0                            0x0013    //Stash li data for thread 1
+#define PSI_DATA_THR1_SLOT_RTU0_SIZE                       0x1
+#define PSI_DATA_THR2_SLOT_RTU0                            0x0014    //Stash li data for thread 2
+#define PSI_DATA_THR2_SLOT_RTU0_SIZE                       0x1
+#define RTU0_BSRAM_END_OFFSET                              0x0015
 
-// total RTU0_BSRAM memory usage : 0.53125 KB from total of 16.0KB 
+// total RTU0_BSRAM memory usage : 0.65625 KB from total of 16.0KB 
 
 //************************************************************************************
 //
@@ -708,9 +733,23 @@
 #define NRT_PREEMPT_DEBUG_EOF_MPKT_FRAG0_ERROR_PASTATID_SIZE 0x4
 #define NRT_PREEMPT_DEBUG_EOF_MPKT_FRAGX_ERROR_PASTATID    0x0148    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] Debug counter - Error in SMDCx
 #define NRT_PREEMPT_DEBUG_EOF_MPKT_FRAGX_ERROR_PASTATID_SIZE 0x4
-#define PA_STAT_END_OFFSET                                 0x014C
+#define NRT_RECYCLE_TXPRU_COUNTER_SLICE0_PASTATID          0x014C    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] Debug counter - TXPRU recycle counter Slice0
+#define NRT_RECYCLE_TXPRU_COUNTER_SLICE0_PASTATID_SIZE     0x4
+#define NRT_RECYCLE_TXPRU_COUNTER_SLICE1_PASTATID          0x0150    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] Debug counter - TXPRU recycle counter Slice1
+#define NRT_RECYCLE_TXPRU_COUNTER_SLICE1_PASTATID_SIZE     0x4
+#define NRT_RECYCLE_RXERR_RTU_COUNTER_SLICE0_PASTATID      0x0154    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] Debug counter - RTU recycle on RXERR counter Slice0
+#define NRT_RECYCLE_RXERR_RTU_COUNTER_SLICE0_PASTATID_SIZE 0x4
+#define NRT_RECYCLE_RXERR_RTU_COUNTER_SLICE1_PASTATID      0x0158    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] Debug counter - RTU recycle on RXERR counter Slice1
+#define NRT_RECYCLE_RXERR_RTU_COUNTER_SLICE1_PASTATID_SIZE 0x4
+#define NRT_RECYCLE_BG_RTU_COUNTER_SLICE0_PASTATID         0x015C    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] Debug counter - RTU recycle from BG task counter Slice0
+#define NRT_RECYCLE_BG_RTU_COUNTER_SLICE0_PASTATID_SIZE    0x4
+#define NRT_RECYCLE_BG_RTU_COUNTER_SLICE1_PASTATID         0x0160    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] Debug counter - RTU recycle from BG task counter Slice1
+#define NRT_RECYCLE_BG_RTU_COUNTER_SLICE1_PASTATID_SIZE    0x4
+#define RX_EOF_SHORT_FRAMEERR_PASTATID                     0x0164    //PRU diagnostic error counter which increments if EOF task is scheduled without seeing RX_B1
+#define RX_EOF_SHORT_FRAMEERR_PASTATID_SIZE                0x4
+#define PA_STAT_END_OFFSET                                 0x0168
 
-// total PA_STAT memory usage : 0.32421875 KB from total of 2.0KB 
+// total PA_STAT memory usage : 0.3515625 KB from total of 2.0KB 
 
 
 #endif // ____switch_mem_map_h

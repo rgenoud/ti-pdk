@@ -46,6 +46,7 @@
 #define NRT_PRE_EMPTION_SIZE_THRESHOLD          (64)
 
 #define R31_ERROR_BITS_MASK                     0x0188  //Mask for extracting CRC, Min/Max errors from R31 bits. Refer MII RT Spec
+#define MII_RT_ERROR_MINMAX_MASK                0xC  //Mask for extracting Min/Max errors from MII RT registers. Refer MII RT Spec
 
 #define RX_B0_QNUM_SPECIAL_VALUE                0xFF    //special pattern used to wait for IPC SPAD values from RTU0
 
@@ -83,6 +84,9 @@
 #define NRT_PORT_DESC_QUEUE_SIZE                (((NRT_PORT_QUEUE_SIZE + NRT_RESERVED_MEM)/64) + 29) * 4     // for 25kB queue size
 #define NRT_HOST_DESC_QUEUE_SIZE                (((NRT_HOST_QUEUE_SIZE + NRT_RESERVED_MEM)/64) + 9) * 4   // for ~6kB queue size
 
+#define NRT_PORT_DESC_SMEM_SIZE                 0xE68       //FIXME : Magic number?
+#define NRT_HOST_DESC_SMEM_SIZE                 0x468       //FIXME : Magic number?
+#define NRT_SPECIAL_PD_SMEM_SIZE                0x400       //FIXME : Magic number?
 
 //TAS sizes
 #define TAS_LIST_EXPIRY_SIZE                    (8 * 8 * 4)        //8 queues * 8 expiry values (each queue has 8 expiry values) * 4 (size of expiry in bytes) = 256B
@@ -129,7 +133,8 @@
 #define DATA_PKT_TYPE                           (0x14)       //Data packet type in R1 metadata. R1.b2
 
 //FIXME : Temporary. Need to align with EMAC
-#define NRT_PACKET_DROP_TS_ERROR_CODE               (0xBAADF00D)
+#define NRT_PACKET_DROP_TS_ERROR_CODE           (0xBAADF00D)
 
+#define DEFAULT_GUARD_BAND                      (0x4E2)     // 1.25 microseconds
 #endif //____switch_mmap_defines_h
 

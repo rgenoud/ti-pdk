@@ -114,7 +114,7 @@ uint32_t endPort = EMAC_PORT_CPSW;
 /* ICSSG case */
 #ifdef am65xx_idk
 uint32_t portNum = EMAC_PORT_ICSS;
-uint32_t endPort = EMAC_PORT_ICSS+5;
+uint32_t endPort = EMAC_PORT_ICSS+1; //5;
 #else
 uint32_t portNum = EMAC_PORT_ICSS + 4;
 uint32_t endPort = EMAC_PORT_ICSS + 5;
