@@ -123,6 +123,9 @@ PRUICSS_Handle prussHandle[EMAC_MAX_ICSS] = {NULL, NULL, NULL};
 int hs_index[EMAC_MAX_ICSS * EMAC_MAC_PORTS_PER_ICSS];    //one per icss slice
 #endif
 
+#ifdef TSN_MAC
+extern EMAC_MCB_V5_T      emac_mcb;
+#endif
 
 #define APP_TEST_AM65XX_PG1_0_VERSION (0x0BB5A02FU)
 
@@ -979,7 +982,7 @@ void app_test_task_poll_ctrl (UArg arg0, UArg arg1)
         if (pollModeEnabled == 1)
             emac_poll_ctrl(port, pktRings,mgmtRings,txRings);
         else
-            emac_poll_ctrl(port, 0,0,txRings);
+            emac_poll_ctrl(port, 0, 0, txRings);
         Task_sleep(2);
     }
 }
@@ -1553,6 +1556,31 @@ void app_test_check_port_link(uint32_t startP, uint32_t endP)
             if((pNum == 2) || (pNum == 3))
                 continue;
         }
+#ifdef TSN_MAC
+    EMAC_IOCTL_PARAMS params;
+    int32_t ret_val;
+    params.subCommand = EMAC_IOCTL_PORT_STATE_FORWARD;
+    emac_ioctl(portNum, EMAC_IOCTL_PORT_STATE_CTRL, &params);
+
+    params.subCommand =  EMAC_IOCTL_ACCEPTABLE_FRAME_CHECK_ALL_FRAMES;
+    //asynchronous IOCTL 
+    emac_ioctl(pNum, EMAC_IOCTL_ACCEPTABLE_FRAME_CHECK_CTRL, (void *)(&params));
+    Task_sleep (10); //Wait for 10 ms as this async IOCTL to complete
+    emac_mcb.switch_cb.ioctlCount = 0;
+
+    EMAC_IOCTL_VLAN_FID_PARAMS vlanParams = {/*.fid = */100, /*.host_member =*/ 1, /*.p1_member =*/ 0,  /*.p2_member =*/ 0, \
+                                                        /*.host_tagged = */0, /*.p1_tagged = */0, /*.p2_tagged = */0, /*.stream_vid =*/ 0, /*.flood_to_host = */0
+                                            };
+    /* send packet only to the host */
+
+    params.subCommand = EMAC_IOCTL_VLAN_SET_DEFAULT_TBL;
+    params.ioctlVal = (void *)&vlanParams;
+    ret_val = emac_ioctl(pNum, EMAC_IOCTL_VLAN_CTRL, &params);
+    if(ret_val != EMAC_DRV_RESULT_OK)
+    {
+        UART_printf("Set Default Table: FAILED :%d\n", ret_val);
+    }
+#endif
         memset(&linkInfo, 0, sizeof(EMAC_LINK_INFO_T));
         do
         {
@@ -1700,53 +1728,6 @@ void test_EMAC_verify_ut_dual_mac_icssg(void)
     /* Need to poll for link for ICSSG ports as they are port 2 port tests */
     /* For standalone CPSW test, we use internal loopback at CPSW-SS */
     app_test_check_port_link(portNum, endPort);
-
-    EMAC_IOCTL_PARAMS params;
-    int32_t ret_val;
-    params.subCommand = EMAC_IOCTL_PORT_STATE_FORWARD;
-    emac_ioctl(portNum, EMAC_IOCTL_PORT_STATE_CTRL, &params);
-
-    params.subCommand =  EMAC_IOCTL_ACCEPTABLE_FRAME_CHECK_ALL_FRAMES;
-    //asynchronous IOCTL 
-    emac_ioctl(portNum, EMAC_IOCTL_ACCEPTABLE_FRAME_CHECK_CTRL, (void *)(&params));
-    Task_sleep (10); //Wait for 10 ms as this async IOCTL to complete
-
-
-    EMAC_IOCTL_VLAN_DEFAULT_ENTRY vlanDefaultEntry;
-    EMAC_IOCTL_VLAN_FID_ENTRY vlanEntry = {0};
-    EMAC_IOCTL_VLAN_FID_PARAMS vlanParams = {/*.fid = */100, /*.host_member =*/ 1, /*.p1_member =*/ 1,  /*.p2_member =*/ 1, \
-                                                        /*.host_tagged = */0, /*.p1_tagged = */0, /*.p2_tagged = */0, /*.stream_vid =*/ 0, /*.flood_to_host = */0
-                                            };
-    vlanDefaultEntry.pcp = 2;
-    vlanDefaultEntry.vlanId = (uint16_t)100;
-
-    /* Set default VLAN ID for the host port */
-    params.subCommand = EMAC_IOCTL_VLAN_SET_DEFAULT_VLAN_ID;
-    params.ioctlVal = (void *)&vlanDefaultEntry;
-    ret_val = emac_ioctl(EMAC_SWITCH_PORT0, EMAC_IOCTL_VLAN_CTRL, &params);
-
-    if(ret_val != EMAC_DRV_RESULT_OK)
-    {
-        UART_printf("setting VLAN for HOST FAILED\n");
-        ret_val = -1;
-    }
-
-    ret_val = -1;
-
-    /* Update table for default entry */
-    params.subCommand = EMAC_IOCTL_VLAN_SET_ENTRY;
-    params.ioctlVal = (void *)&vlanEntry;
-    memcpy(&vlanEntry.vlanFidPrams, &vlanParams,
-           sizeof(EMAC_IOCTL_VLAN_FID_PARAMS));
-
-    vlanEntry.vlanId = (uint16_t)100;
-    ret_val = emac_ioctl(EMAC_SWITCH_PORT, EMAC_IOCTL_VLAN_CTRL, &params);
-
-    if(ret_val != EMAC_DRV_RESULT_OK)
-    {
-        UART_printf("FID VLAN entry for HOST: FAILED\n");
-    }
-
 
     /* Test with PORT_MAC address */
     app_test_port_mac();
@@ -2012,6 +1993,20 @@ int32_t  app_test_task_init_pruicss(uint32_t portNum)
     HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->prussCfgRegBase +
           CSL_ICSSCFG_CORE_SYNC_REG) = 1; //Enable coresync
 
+    /* Enable IEP0 counter and set default increment as 4 */
+    reg_val = (0x1 << CSL_ICSS_G_PR1_IEP0_SLV_GLOBAL_CFG_REG_CNT_ENABLE_SHIFT)
+              | (0x4 << CSL_ICSS_G_PR1_IEP0_SLV_GLOBAL_CFG_REG_DEFAULT_INC_SHIFT)
+              | (0x4 << CSL_ICSS_G_PR1_IEP0_SLV_GLOBAL_CFG_REG_CMP_INC_SHIFT);
+    CSL_REG32_WR ((((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->prussPru0DramBase 
+                    + CSL_ICSS_G_PR1_IEP0_SLV_REGS_BASE + CSL_ICSS_G_PR1_IEP0_SLV_GLOBAL_CFG_REG),
+                    reg_val);
+    /*Enable IEP1 counter and set default increment as 4 - Required for RX and TX time stamping*/
+    reg_val = (0x1 << CSL_ICSS_G_PR1_IEP1_SLV_GLOBAL_CFG_REG_CNT_ENABLE_SHIFT)
+              | (0x4 << CSL_ICSS_G_PR1_IEP1_SLV_GLOBAL_CFG_REG_DEFAULT_INC_SHIFT)
+              | (0x4 << CSL_ICSS_G_PR1_IEP1_SLV_GLOBAL_CFG_REG_CMP_INC_SHIFT);
+    CSL_REG32_WR ((((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->prussPru0DramBase
+                    + CSL_ICSS_G_PR1_IEP1_SLV_REGS_BASE + CSL_ICSS_G_PR1_IEP1_SLV_GLOBAL_CFG_REG),
+                    reg_val);
     //Enable PA_STAT block for diagnostic counters in ICSSG
     reg_val = (uint32_t)(1 << 31) | 2;      //Enable stats block, 2 64-bit counters
     HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->prussPru0DramBase +
@@ -2122,7 +2117,8 @@ int32_t  app_test_task_init_pruicss(uint32_t portNum)
     //#define PSI_L_REGULAR_FLOW_ID_BASE_OFFSET                  0x000C
     //#define PSI_L_MGMT_FLOW_ID_OFFSET                          0x000E
     //Program 0x96 and 0x9b respectively as flowIDs
-    HWREG (((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->prussSharedDramBase + 0x000C) = 0x9B0096;
+    if (!(portNum & 1))
+        HWREG (((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->prussSharedDramBase + 0x000C) = ((0x9b+portNum*14) << 16) | (0x96+portNum*14);
     //#define SPL_PKT_DEFAULT_PRIORITY                           0x0010
     //#define HOST_PORT_DF_VLAN_OFFSET                           0x0034    //default VLAN tag for Host Port
     //#define P1_PORT_DF_VLAN_OFFSET                             0x0038    //default VLAN tag for P1 Port
