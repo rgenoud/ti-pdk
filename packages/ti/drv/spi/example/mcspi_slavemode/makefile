@@ -19,7 +19,7 @@ ifeq ($(SOC),$(filter $(SOC), am65xx))
 XDC_CFG_FILE_mpu1_0 = ./am65xx/mcspiMasterSlaveTest_a53.cfg
 XDC_CFG_FILE_mcu1_0 = ./am65xx/mcspiMasterSlaveTest_r5.cfg
 else
-ifeq ($(SOC),$(filter $(SOC), j721e am64x))
+ifeq ($(SOC),$(filter $(SOC), j721e j7200 am64x))
 XDC_CFG_FILE_$(CORE) = $(PDK_INSTALL_PATH)/ti/build/$(SOC)/sysbios_$(ISA).cfg
 endif
 endif
@@ -56,7 +56,7 @@ else
 # Master running on mcu1_0 core, use the common linker command file in build
 CFLAGS_SPI_MS     = -DMCSPI_MASTER_TASK
 APP_MASTER_SLAVE  = Master
-ifeq ($(SOC),$(filter $(SOC), j721e))
+ifeq ($(SOC),$(filter $(SOC), j721e j7200))
 # Slave uses local linker command file to avoid code/data memory conflict with master application
 ifeq ($(IS_BAREMETAL),yes)
 EXTERNAL_LNKCMD_FILE_LOCAL =  $(PDK_INSTALL_PATH)/ti/drv/spi/example/mcspi_slavemode/j721e/linker_mcu.lds
@@ -98,7 +98,7 @@ endif
 
 # List all the components required by the application
 COMP_LIST_COMMON  += csl board uart
-ifeq ($(BOARD),$(filter $(BOARD), am65xx_evm am65xx_idk j721e_sim j721e_evm am64x_evm))
+ifeq ($(BOARD),$(filter $(BOARD), am65xx_evm am65xx_idk j721e_sim j721e_evm j7200_evm am64x_evm))
 CFLAGS_SPI_UT    = -DMCSPI_MULT_CHANNEL
 endif
 

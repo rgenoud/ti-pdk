@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) Texas Instruments Incorporated 2018
+ *  Copyright (c) Texas Instruments Incorporated 2018-2020
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -224,6 +224,7 @@ int32_t Ipc_setCoreEventId(uint32_t selfId, Ipc_MbConfig* cfg, uint32_t intrCnt)
      */
     static uint16_t   start    = 0U;
     static uint16_t   range    = 0U;
+    uint16_t   offset   = 0;
 
     /* Get available CorePack IRQ number from DMSC */
     if( (start == 0U) && (range == 0U))
@@ -233,7 +234,20 @@ int32_t Ipc_setCoreEventId(uint32_t selfId, Ipc_MbConfig* cfg, uint32_t intrCnt)
 
     if((start > 0U) && (range >= 1U))
     {
-        vimEventBaseNum = start;
+        /* Allocate the last 5 interrupts for IPC. Note that the IR allocation is
+         * static so this needs to be carefully set. Currently first interrupt is
+         * used by UDMA and middle one's are used by other modules like CPSW9G so
+         * we are using last 5 as a safe option.
+         */
+        if(range >= 5)
+        {
+            offset = 5;
+        }
+        else
+        {
+            offset = range;
+        }
+        vimEventBaseNum = (start + range) - offset;
     }
 
     switch(selfId)
@@ -324,18 +338,18 @@ int32_t Ipc_main2mcu_intRouter(Ipc_MbConfig *cfg)
 static const uint16_t req_type[] =
 {
     /* NOTE: This list should match the Core index */
-    TISCI_RESASG_TYPE_GIC_IRQ,
-    TISCI_RESASG_TYPE_PULSAR_C0_IRQ,
-    TISCI_RESASG_TYPE_PULSAR_C1_IRQ
+    TISCI_DEV_GIC0,
+    TISCI_DEV_MCU_ARMSS0_CPU0,
+    TISCI_DEV_MCU_ARMSS0_CPU1
 };
 
 /* Indexed list of req subtype */
 static const uint16_t req_subtype[] =
 {
     /* NOTE: This list should match the Core index */
-    TISCI_RESASG_SUBTYPE_GIC_IRQ_MAIN_NAV_SET1,
-    TISCI_RESASG_SUBTYPE_PULSAR_C0_IRQ_MAIN2MCU_LVL,
-    TISCI_RESASG_SUBTYPE_PULSAR_C1_IRQ_MAIN2MCU_LVL
+    TISCI_RESASG_SUBTYPE_GIC0_SPI_IRQ_GROUP0_FROM_NAVSS0_INTR_ROUTER_0,
+    TISCI_RESASG_SUBTYPE_MCU_ARMSS0_CPU0_INTR_IRQ_GROUP0_FROM_MAIN2MCU_LVL_INTRTR0,
+    TISCI_RESASG_SUBTYPE_MCU_ARMSS0_CPU1_INTR_IRQ_GROUP0_FROM_MAIN2MCU_LVL_INTRTR0
 };
 
 /* Indexed list of dst ids */
@@ -441,13 +455,24 @@ int32_t Ipc_getIntNumRange(uint32_t coreIndex,
 
     req.type           = req_type[coreIndex];
     req.subtype        = req_subtype[coreIndex];
-    req.secondary_host = TISCI_HOST_ID_ALL;
+    req.secondary_host = map_host_id[coreIndex];
 
     /* Get interrupt number range */
     retVal =  Sciclient_rmGetResourceRange(
                 &req,
                 &res,
                 IPC_SCICLIENT_TIMEOUT);
+    if (CSL_PASS != retVal || res.range_num == 0) {
+        /* Try with HOST_ID_ALL */
+        req.type           = req_type[coreIndex];
+        req.subtype        = req_subtype[coreIndex];
+        req.secondary_host = TISCI_HOST_ID_ALL;
+
+        retVal = Sciclient_rmGetResourceRange(
+                &req,
+                &res,
+                IPC_SCICLIENT_TIMEOUT);
+    }
     if (CSL_PASS == retVal)
     {
         *rangeStartP = res.range_start;

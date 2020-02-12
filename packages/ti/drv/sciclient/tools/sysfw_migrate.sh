@@ -53,6 +53,7 @@ else
 $ECHO "Usage : sysfw_migrate.sh <release tag>"
 fi
 
+if [ $RELEASE_TAG -ne 0 ]; then
 git reset --hard HEAD
 git fetch origin; git rebase origin/master
 $ECHO "Cloning the system-firmware-releases"
@@ -73,11 +74,10 @@ $RM binaries/*.png
 $RM binaries/*.svg
 $RM binaries/*.cmm
 $RM binaries/t32-qt-lsf
+$RM binaries/*hs.bin
 $RM -fr binaries/am6
 $RM -fr binaries/j721e
 $RM -fr binaries/memory
-# TODO: Support for HS binaries would be part of a separate package
-$RM binaries/*hs*
 $RM -fr scripts
 $RM .gitignore
 $RM .gitmodules
@@ -87,4 +87,13 @@ $RM binaries/SYSFW_Software_FMEA_Form.xls
 cd $SCRIPT_DIR
 git add $SCI_CLIENT_DIR/soc/sysfw
 git commit -m "Migratiing to SYSFW version $RELEASE_TAG"
+fi
+cd $ROOTDIR/ti/build
+make -j -s sciclient_ccs_init_clean BOARD=j721e_evm
+make -j -s sciclient_ccs_init BOARD=j721e_evm
+$COPY $ROOTDIR/ti/binary/sciclient_ccs_init/bin/j721e/sciclient_ccs_init_mcu1_0_release.xer5f $SCI_CLIENT_DIR/tools/ccsLoadDmsc/j721e/
+make -j -s sciclient_ccs_init_clean BOARD=am65xx_evm
+make -j -s sciclient_ccs_init BOARD=am65xx_evm
+$COPY $ROOTDIR/ti/binary/sciclient_ccs_init/bin/am65xx/sciclient_ccs_init_mcu1_0_release.xer5f $SCI_CLIENT_DIR/tools/ccsLoadDmsc/am65xx/
+cd -
 $ECHO "Done."

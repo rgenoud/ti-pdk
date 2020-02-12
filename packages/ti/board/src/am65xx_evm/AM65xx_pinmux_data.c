@@ -943,7 +943,7 @@ static pinmuxPerCfg_t gSystem0PinCfg[] =
 
 pinmuxModuleCfg_t gSystemPinCfg[] =
 {
-    {0, TRUE, gSystem0PinCfg},
+    {0, FALSE, gSystem0PinCfg},
     {PINMUX_END}
 };
 
@@ -1411,7 +1411,7 @@ static pinmuxPerCfg_t gWkup_system0PinCfg[] =
 
 pinmuxModuleCfg_t gWkup_systemPinCfg[] =
 {
-    {0, TRUE, gWkup_system0PinCfg},
+    {0, FALSE, gWkup_system0PinCfg},
     {PINMUX_END}
 };
 

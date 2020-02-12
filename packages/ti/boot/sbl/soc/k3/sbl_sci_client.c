@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2019 Texas Instruments Incorporated - http://www.ti.com/
+ * Copyright (C) 2018-2020 Texas Instruments Incorporated - http://www.ti.com/
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -50,7 +50,7 @@
 #endif
 uint32_t gSciclient_firmware[1];
 
-#if BINARY_FILE_SIZE_IN_BYTES > SBL_SYSFW_MAX_SIZE
+#if SCICLIENT_FIRMWARE_SIZE_IN_BYTES > SBL_SYSFW_MAX_SIZE
 #error "SYSFW too large...update SBL_SYSFW_MAX_SIZE"
 #endif
 
@@ -109,39 +109,73 @@ void SBL_SciClientInit(void)
     void *sysfw_ptr = gSciclient_firmware;
 
 #ifndef SBL_SKIP_SYSFW_INIT
-    /* Point to the constant global structure because we need to modify it */
-    struct tisci_boardcfg *pBoardConfigLow = (struct tisci_boardcfg *)&gBoardConfigLow;
-
     /* SYSFW board configurations */
     Sciclient_BoardCfgPrms_t sblBoardCfgPrms =
     {
-        .boardConfigLow = (uint32_t)&gBoardConfigLow,
+        .boardConfigLow = (uint32_t)gSciclient_boardCfgLow,
 	.boardConfigHigh = 0,
-	.boardConfigSize = sizeof(gBoardConfigLow),
+	.boardConfigSize = SCICLIENT_BOARDCFG_SIZE_IN_BYTES,
 	.devGrp = SBL_DEVGRP
     };
 
     Sciclient_BoardCfgPrms_t sblBoardCfgPmPrms =
     {
-        .boardConfigLow = (uint32_t)NULL,
+        .boardConfigLow = (uint32_t)gSciclient_boardCfgLow_pm,
 	.boardConfigHigh = 0,
-	.boardConfigSize = 0,
-	.devGrp = SBL_DEVGRP
-    };
-    
-    Sciclient_BoardCfgPrms_t sblBoardCfgRmPrms =
-    {
-        .boardConfigLow = (uint32_t)&gBoardConfigLow_rm,
-	.boardConfigHigh = 0,
-	.boardConfigSize = sizeof(gBoardConfigLow_rm),
+	.boardConfigSize = SCICLIENT_BOARDCFG_PM_SIZE_IN_BYTES,
 	.devGrp = SBL_DEVGRP
     };
 
+#if defined(SOC_AM65XX)
+    /* Configure RM based on Device ID */
+    /* Maxwell PG1 and PG2 must be configured differently */
+    uint32_t pBoardConfigLow_rm;
+    uint16_t boardConfigSize_rm;
+    uint32_t dev_id = HW_RD_REG32((CSL_WKUP_CTRL_MMR0_CFG0_BASE
+				   + CSL_WKUP_CTRL_MMR_CFG0_JTAGID));
+
+    SBL_log(SBL_LOG_ERR,"DEVICE ID 0x%x\n", dev_id);
+    if (dev_id == 0x0BB5A02F) /* PG1 */
+    {
+      /* RM */
+      pBoardConfigLow_rm = (uint32_t)gSciclient_boardCfgLow_rm;
+      boardConfigSize_rm = SCICLIENT_BOARDCFG_RM_SIZE_IN_BYTES;
+    }
+    else if (dev_id == 0x1BB5A02F) /* PG2 */
+    {
+      /* RM */
+      pBoardConfigLow_rm = (uint32_t)gSciclient_boardCfgLow_rm_pg2;
+      boardConfigSize_rm = SCICLIENT_BOARDCFG_RM_PG2_SIZE_IN_BYTES;
+    }
+    else
+    {
+      SBL_log(SBL_LOG_ERR,"Invalid device ID: 0x%x\n", dev_id);
+      SblErrLoop(__FILE__, __LINE__);
+    }
+    
+    Sciclient_BoardCfgPrms_t sblBoardCfgRmPrms =
+    {
+	.boardConfigLow = pBoardConfigLow_rm,
+	.boardConfigHigh = 0,
+	.boardConfigSize = boardConfigSize_rm,
+	.devGrp = SBL_DEVGRP
+    };
+#else
+    /* Non-Maxwell devices may configure as normal*/
+    Sciclient_BoardCfgPrms_t sblBoardCfgRmPrms =
+    {
+        .boardConfigLow = (uint32_t)gSciclient_boardCfgLow_rm,
+	.boardConfigHigh = 0,
+	.boardConfigSize = SCICLIENT_BOARDCFG_RM_SIZE_IN_BYTES,
+	.devGrp = SBL_DEVGRP
+    };
+#endif
+
     Sciclient_BoardCfgPrms_t sblBoardCfgSecPrms =
     {
-        .boardConfigLow = (uint32_t)&gBoardConfigLow_security,
+        .boardConfigLow = (uint32_t)gSciclient_boardCfgLow_sec,
 	.boardConfigHigh = 0,
-	.boardConfigSize = sizeof(gBoardConfigLow_security),
+	.boardConfigSize = SCICLIENT_BOARDCFG_SECURITY_SIZE_IN_BYTES,
 	.devGrp = SBL_DEVGRP
     };
 
@@ -184,28 +218,6 @@ void SBL_SciClientInit(void)
     }
 
 #ifndef SBL_SKIP_BRD_CFG_BOARD
-    if (SBL_LOG_LEVEL < SBL_LOG_MIN)
-    {
-        /* Redirect DMSC logs to memory */
-        pBoardConfigLow->debug_cfg.trace_dst_enables = TISCI_BOARDCFG_TRACE_DST_MEM;
-
-        /* Enable no logs */
-        pBoardConfigLow->debug_cfg.trace_src_enables = 0;
-    }
-    else if (SBL_LOG_LEVEL > SBL_LOG_MIN)
-    {
-        /* Redirect DMSC logs to WKUP UART */
-        pBoardConfigLow->debug_cfg.trace_dst_enables = TISCI_BOARDCFG_TRACE_DST_UART0;
-
-        /* Enable full logs */
-        pBoardConfigLow->debug_cfg.trace_src_enables = TISCI_BOARDCFG_TRACE_SRC_PM   |
-                                                      TISCI_BOARDCFG_TRACE_SRC_RM   |
-                                                      TISCI_BOARDCFG_TRACE_SRC_SEC  |
-                                                      TISCI_BOARDCFG_TRACE_SRC_BASE |
-                                                      TISCI_BOARDCFG_TRACE_SRC_USER |
-                                                      TISCI_BOARDCFG_TRACE_SRC_SUPR ;
-    }
-
     SBL_ADD_PROFILE_POINT;
     status = Sciclient_boardCfg(&sblBoardCfgPrms);
     if (status != CSL_PASS)
@@ -267,12 +279,13 @@ void SBL_SciClientInit(void)
 
     if (SBL_LOG_LEVEL > SBL_LOG_ERR)
     {
+        struct tisci_msg_version_req req = {0};
         const Sciclient_ReqPrm_t      reqPrm =
         {
             TISCI_MSG_VERSION,
             TISCI_MSG_FLAG_AOP,
-            (uint8_t *)NULL,
-            0,
+            (const uint8_t *)&req,
+            sizeof(req),
             SCICLIENT_SERVICE_WAIT_FOREVER
         };
 

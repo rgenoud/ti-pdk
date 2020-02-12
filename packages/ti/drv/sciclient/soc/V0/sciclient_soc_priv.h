@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2019 Texas Instruments Incorporated
+ *  Copyright (C) 2019-2020 Texas Instruments Incorporated
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -38,6 +38,20 @@
 
 #ifndef SCICLIENT_SOC_PRIV_H_
 #define SCICLIENT_SOC_PRIV_H_
+
+#if defined (BUILD_HS)
+#include <ti/drv/sciclient/soc/V0/sciclient_defaultBoardcfg_hexhs.h>
+#include <ti/drv/sciclient/soc/V0/sciclient_defaultBoardcfg_rm_hexhs.h>
+#include <ti/drv/sciclient/soc/V0/sciclient_defaultBoardcfg_rm_pg2_hexhs.h>
+#include <ti/drv/sciclient/soc/V0/sciclient_defaultBoardcfg_pm_hexhs.h>
+#include <ti/drv/sciclient/soc/V0/sciclient_defaultBoardcfg_security_hexhs.h>
+#else
+#include <ti/drv/sciclient/soc/V0/sciclient_defaultBoardcfg_hex.h>
+#include <ti/drv/sciclient/soc/V0/sciclient_defaultBoardcfg_rm_hex.h>
+#include <ti/drv/sciclient/soc/V0/sciclient_defaultBoardcfg_rm_pg2_hex.h>
+#include <ti/drv/sciclient/soc/V0/sciclient_defaultBoardcfg_pm_hex.h>
+#include <ti/drv/sciclient/soc/V0/sciclient_defaultBoardcfg_security_hex.h>
+#endif
 
 #if defined (BUILD_MCU1_0)
 #define SCICLIENT_CONTEXT_NONSEC    (SCICLIENT_CONTEXT_R5_NONSEC_0)

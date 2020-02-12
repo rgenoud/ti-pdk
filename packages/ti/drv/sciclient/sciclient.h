@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Texas Instruments Incorporated
+ * Copyright (c) 2018-2020, Texas Instruments Incorporated
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -218,6 +218,13 @@
 #include <stdint.h>
 #include <stddef.h>
 
+/* Windows Visual Studio build doesn't  __attribute__ indentifier, so forcing it be to dummy for getting build working */
+#ifdef _MSC_VER
+  #ifndef __attribute__
+    #define __attribute__()
+  #endif
+#endif
+
 /* TISCI Include */
 #define TISCI_BIT(n)  (1UL << (n))
 
@@ -268,10 +275,10 @@ typedef uint8_t devgrp_t;
 #include <ti/drv/sciclient/soc/sysfw/include/tisci/tisci_boardcfg.h>
 #include <ti/drv/sciclient/soc/sysfw/include/tisci/tisci_core.h>
 #if defined (SOC_AM65XX)
-#include <ti/drv/sciclient/soc/sysfw/include/am65x/tisci_resasg_types.h>
-#include <ti/drv/sciclient/soc/sysfw/include/am65x/tisci_hosts.h>
-#include <ti/drv/sciclient/soc/sysfw/include/am65x/tisci_sec_proxy.h>
-#include <ti/drv/sciclient/soc/sysfw/include/am65x/tisci_boardcfg_constraints.h>
+#include <ti/drv/sciclient/soc/sysfw/include/am65x_pg2/tisci_resasg_types.h>
+#include <ti/drv/sciclient/soc/sysfw/include/am65x_pg2/tisci_hosts.h>
+#include <ti/drv/sciclient/soc/sysfw/include/am65x_pg2/tisci_sec_proxy.h>
+#include <ti/drv/sciclient/soc/sysfw/include/am65x_pg2/tisci_boardcfg_constraints.h>
 #endif
 #if defined (SOC_J721E) || defined (SOC_J7200)
 #include <ti/drv/sciclient/soc/sysfw/include/j721e/tisci_resasg_types.h>
@@ -301,7 +308,6 @@ typedef uint8_t devgrp_t;
 #include <ti/drv/sciclient/soc/sysfw/include/tisci/rm/tisci_rm_shared.h>
 #include <ti/drv/sciclient/soc/sysfw/include/tisci/rm/tisci_rm_core.h>
 #include <ti/drv/sciclient/soc/sysfw/include/tisci/rm/tisci_rm_proxy.h>
-
 #include <ti/drv/sciclient/include/sciclient_soc.h>
 #include <ti/drv/sciclient/include/sciclient_pm.h>
 #include <ti/drv/sciclient/include/sciclient_rm.h>

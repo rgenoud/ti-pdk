@@ -39,6 +39,11 @@
 #ifndef SCICLIENT_SOC_PRIV_H_
 #define SCICLIENT_SOC_PRIV_H_
 
+#include <ti/drv/sciclient/soc/V3/sciclient_defaultBoardcfg_hex.h>
+#include <ti/drv/sciclient/soc/V3/sciclient_defaultBoardcfg_pm_hex.h>
+#include <ti/drv/sciclient/soc/V3/sciclient_defaultBoardcfg_rm_hex.h>
+#include <ti/drv/sciclient/soc/V3/sciclient_defaultBoardcfg_security_hex.h>
+
 #if defined (BUILD_MCU1_0)
 #define SCICLIENT_CONTEXT_NONSEC    (SCICLIENT_CONTEXT_R5_0_NONSEC_0)
 #define SCICLIENT_CONTEXT_SEC       (SCICLIENT_CONTEXT_R5_0_SEC_0)

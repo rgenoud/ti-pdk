@@ -40,7 +40,6 @@ SRCS_COMMON += sciclient_fmwSecureProxyMap.c
 SRCS_COMMON += sciclient_pm.c
 SRCS_COMMON += sciclient_rm.c 
 SRCS_COMMON += sciclient_boardcfg.c
-SRCS_COMMON += sciclient_defaultBoardcfg.c
 SRCS_COMMON += sciclient_procboot.c
 SRCS_COMMON += sciclient_genericMsgs.c
 endif
@@ -68,15 +67,9 @@ PACKAGE_SRCS_COMMON += soc/sysfw/binaries/ti-sci-firmware-am65x-gp.bin
 PACKAGE_SRCS_COMMON += soc/sysfw/binaries/ti-sci-firmware-j721e-gp.bin
 PACKAGE_SRCS_COMMON += soc/sysfw/binaries/ti-sci-firmware-am64x-gp-vlab.bin
 ifeq ($(BUILD_HS),yes)
-PACKAGE_SRCS_COMMON += soc/sysfw/binaries/ti-sci-firmware-am65x-hs.bin
-endif
-
-
-FIRMWARE_HEADER_GEN=tools/firmwareHeaderGen.sh
-ifeq ($(BUILD_HS),yes)
-	FIRMWARE_HEADER_GEN_SUFFIX=-hs
-else
-	FIRMWARE_HEADER_GEN_SUFFIX=
+PACKAGE_SRCS_COMMON += soc/sysfw/binaries/ti-sci-firmware-am65x-hs-cert.bin
+PACKAGE_SRCS_COMMON += soc/sysfw/binaries/ti-sci-firmware-am65x-hs-enc.bin
+CFLAGS_LOCAL_COMMON += -DBUILD_HS
 endif
 
 # Core/SoC/platform specific source files and CFLAGS
@@ -91,6 +84,99 @@ ifeq ($(MAKERULEDIR), )
   export MAKERULEDIR
 endif
 include $(MAKERULEDIR)/common.mk
+
+ifeq ($(OS),Windows_NT)
+  EXE_EXT=.exe
+endif
+ifneq ("$(wildcard $(TOOLCHAIN_PATH_GCC)/bin/arm-none-eabi-objcopy$(EXE_EXT))","")
+SCICLIENT_OBJCOPY?=$(TOOLCHAIN_PATH_GCC)/bin/arm-none-eabi-objcopy$(EXE_EXT)
+endif
+ifneq ("$(wildcard $(TOOLCHAIN_PATH_GCC_ARCH64)/bin/aarch64-elf-objcopy$(EXE_EXT))","")
+SCICLIENT_OBJCOPY?=$(TOOLCHAIN_PATH_GCC_ARCH64)/bin/aarch64-elf-objcopy$(EXE_EXT)
+endif
+ifneq ("$(wildcard $(PDK_SBL_AUTO_COMP_PATH)/tools)","")
+SBL_TOOLS_PATH=$(PDK_SBL_AUTO_COMP_PATH)/tools
+else
+SBL_TOOLS_PATH=$(PDK_SBL_COMP_PATH)/tools
+endif
+export SCICLIENT_OBJCOPY
+ifeq ($(OS),Windows_NT)
+  SCICLIENT_CERT_GEN=powershell -executionpolicy unrestricted -command $(ROOTDIR)/ti/build/makerules/x509CertificateGen.ps1
+  BIN2C_EXE=bin2c.exe
+else
+  SCICLIENT_CERT_GEN=$(ROOTDIR)/ti/build/makerules/x509CertificateGen.sh
+  BIN2C_EXE=bin2c.out
+endif
+BIN2C_GEN=$(ROOTDIR)/ti/drv/sciclient/tools/bin2c/$(BIN2C_EXE)
+ifeq ($(BUILD_HS),yes)
+SCICLIENT_CERT_KEY=$(ROOTDIR)/ti/build/makerules/k3_dev_mpk.pem
+else
+SCICLIENT_CERT_KEY=$(ROOTDIR)/ti/build/makerules/rom_degenerateKey.pem
+endif
+
+# For matching cfg files (purposely truncated to match main cfg file)
+BRD_CFG := sciclient_defaultBoard
+CFG_DIR := $(ROOTDIR)/ti/drv/sciclient/soc/$(SCICLIENT_SOCVER)
+
+# These will be used to distinguish between an HS configuration and
+# .. a GP configuration in the rules below.
+ifeq ($(BUILD_HS),yes)
+SGN_EXT := .hs.signed
+HEX_EXT := _hexhs.h
+else
+SGN_EXT := .signed
+HEX_EXT := _hex.h
+endif
+
+# We want to create an include-able header file with a hex representation of
+# .. each board configuration (signed according to SoC). Because each Board
+# .. Configuration will require one of these header files, we can simply parse
+# .. through the appropriate SOC directory and generate one of these hex header
+# .. files for each Board Configuration file.
+HEXFILES := $(foreach file, \
+		$(wildcard $(CFG_DIR)/$(BRD_CFG)*.c), \
+		$(subst .c,$(HEX_EXT),$(file)))
+
+# Append the proper hex-file targets to "all" to guarantee they are
+# .. generated if missing/a board configuration file has been changed
+all: $(HEXFILES)
+
+# Build the Board Configuration object files. A modified Configuration file
+# .. will trigger this chain for that particular configuration
+$(OBJDIR)/$(BRD_CFG)%.$(OBJEXT) : soc/$(SCICLIENT_SOCVER)/$(BRD_CFG)%.c
+	@echo "Build Board Configuration Obj Files"
+	$(MKDIR) -p $(OBJDIR)
+	$(CC) $(_CFLAGS) $(INCLUDES) $(CFLAGS_DIROPTS) $(COMPILEMODE) $<
+
+# Copy the raw binary into an intermediate file (will get deleted by make)
+$(OBJDIR)/$(BRD_CFG)%.bin.unsigned : $(OBJDIR)/$(BRD_CFG)%.$(OBJEXT)
+	@echo "Create unsigned Board Configuration binary"
+	$(SCICLIENT_OBJCOPY) -S -O binary $< $@
+
+# If an HS signature is required, sign it with the HS key (will get deleted by make)
+$(OBJDIR)/$(BRD_CFG)%.bin.hs.signed : $(OBJDIR)/$(BRD_CFG)%.bin.unsigned
+	@echo "Sign Board Configuration with HS key"
+ifneq ($(OS),Windows_NT)
+	$(CHMOD) a+x $(SCICLIENT_CERT_GEN)
+endif
+	$(SCICLIENT_CERT_GEN) -b $< -o $@ -k $(SCICLIENT_CERT_KEY) -f 1
+
+# If a GP signature is required, sign it with the GP key (will get deleted by make)
+$(OBJDIR)/$(BRD_CFG)%.bin.signed : $(OBJDIR)/$(BRD_CFG)%.bin.unsigned
+	@echo "Sign Board Configuration with GP key"
+	@echo "  (note: GP board configuration not ACTUALLY signed with anything)"
+	$(CP) $< $@
+
+# Generate the actual header file from the signed Board Configuration binary.
+# This rule determines the type of signature required in the previous rules.
+$(CFG_DIR)/%$(HEX_EXT) : $(OBJDIR)/%.bin$(SGN_EXT)
+	@echo "Generate include-able header file from signed Board Configuration"
+ifneq ($(OS),Windows_NT)
+	$(CHMOD) a+x $(BIN2C_GEN)
+endif
+	$(BIN2C_GEN) $< $*$(HEX_EXT) $(subst default,,$*) > $@
+
+
 
 # OBJs and libraries are built by using rule defined in rules_<target>.mk
 #     and need not be explicitly specified here

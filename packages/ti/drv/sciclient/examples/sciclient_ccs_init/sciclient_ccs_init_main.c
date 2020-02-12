@@ -158,19 +158,19 @@ uint32_t sciclientInitTimeCount = 0;
 
 void dmtimer0_read()
 {
-	sciclientInitTimeStamp[sciclientInitTimeCount] =  *(volatile uint32_t*)0x4413303C;
-	sciclientInitTimeCount = (sciclientInitTimeCount + 1)%30;
+        sciclientInitTimeStamp[sciclientInitTimeCount] =  *(volatile uint32_t*)0x4413303C;
+        sciclientInitTimeCount = (sciclientInitTimeCount + 1)%30;
 }
 void dmtimer0_enable()
 {
-	/* Unlock the the PM Ctrl registers */
-	*(volatile uint32_t *)0x44130020 = 0x8a6b7cda;
-	*(volatile uint32_t *)0x44130024 = 0x823caef9;
-	/* Set the DMTimer Source to be MOSC Clock - 25 MHz for AM65x */
-	*(volatile uint32_t *)0x44130200 = 0x2;
-	/* Start the timer */
-	*(volatile uint32_t *)0x44133038 = 0x3;
-	sciclientInitTimeCount = 0;
+        /* Unlock the the PM Ctrl registers */
+        *(volatile uint32_t *)0x44130020 = 0x8a6b7cda;
+        *(volatile uint32_t *)0x44130024 = 0x823caef9;
+        /* Set the DMTimer Source to be MOSC Clock - 25 MHz for AM65x */
+        *(volatile uint32_t *)0x44130200 = 0x2;
+        /* Start the timer */
+        *(volatile uint32_t *)0x44133038 = 0x3;
+        sciclientInitTimeCount = 0;
         dmtimer0_read();
 }
 
@@ -232,6 +232,11 @@ static int32_t App_getRevisionTest(void)
         sizeof (response)
     };
 
+#if defined(SOC_AM65XX)
+    uint32_t dev_id = HW_RD_REG32((CSL_WKUP_CTRL_MMR0_CFG0_BASE
+				   + CSL_WKUP_CTRL_MMR_CFG0_JTAGID));
+#endif
+
     status = Sciclient_init(&config);
     dmtimer0_enable();
 #if !defined (SOC_AM64X)
@@ -255,9 +260,10 @@ static int32_t App_getRevisionTest(void)
     }
     if (CSL_PASS == status)
     {
+        uint32_t boardCfgLow[] = SCICLIENT_BOARDCFG_PM;
         Sciclient_BoardCfgPrms_t boardCfgPrms_pm =
         {
-            .boardConfigLow = 0,
+            .boardConfigLow = (uint32_t)boardCfgLow,
             .boardConfigHigh = 0,
             .boardConfigSize = 0,
             .devGrp = DEVGRP_00
@@ -269,15 +275,44 @@ static int32_t App_getRevisionTest(void)
 
         if (status == CSL_PASS)
         {
+            uint32_t boardCfgLow[] = SCICLIENT_BOARDCFG_RM;
             Sciclient_BoardCfgPrms_t boardCfgPrms_rm =
             {
-                .boardConfigLow = (uint32_t) &gBoardConfigLow_rm,
+                .boardConfigLow = (uint32_t) boardCfgLow,
                 .boardConfigHigh = 0,
-                .boardConfigSize = sizeof(gBoardConfigLow_rm),
+                .boardConfigSize = SCICLIENT_BOARDCFG_RM_SIZE_IN_BYTES,
                 .devGrp = DEVGRP_00
             };
+
+#if defined(SOC_AM65XX)
+            uint32_t boardCfgLow_pg2[] = SCICLIENT_BOARDCFG_RM_PG2;
+            Sciclient_BoardCfgPrms_t boardCfgPrms_rm_pg2 =
+            {
+                .boardConfigLow = (uint32_t) boardCfgLow_pg2,
+                .boardConfigHigh = 0,
+                .boardConfigSize = SCICLIENT_BOARDCFG_RM_PG2_SIZE_IN_BYTES,
+                .devGrp = DEVGRP_00
+            };
+#endif
             dmtimer0_read();
+
+#if defined(SOC_AM65XX)
+            if (dev_id == 0x0BB5A02F) /* PG1 */
+            {
+                status = Sciclient_boardCfgRm(&boardCfgPrms_rm);
+            }
+            else if (dev_id == 0x1BB5A02F) /* PG2 */
+            {
+                status = Sciclient_boardCfgRm(&boardCfgPrms_rm_pg2);
+            }
+            else
+            {
+                printf("\nInvaid Device ID: 0x%x \n", dev_id);
+                status = CSL_EFAIL;
+            }
+#else
             status = Sciclient_boardCfgRm(&boardCfgPrms_rm);
+#endif
             dmtimer0_read();
         }
         else
@@ -286,11 +321,12 @@ static int32_t App_getRevisionTest(void)
         }
         if (status == CSL_PASS)
         {
+            uint32_t boardCfgLow[] = SCICLIENT_BOARDCFG_SECURITY;
             Sciclient_BoardCfgPrms_t boardCfgPrms_security =
             {
-                .boardConfigLow = (uint32_t) &gBoardConfigLow_security,
+                .boardConfigLow = (uint32_t) boardCfgLow,
                 .boardConfigHigh = 0,
-                .boardConfigSize = sizeof(gBoardConfigLow_security),
+                .boardConfigSize = SCICLIENT_BOARDCFG_SECURITY_SIZE_IN_BYTES,
                 .devGrp = DEVGRP_00
             };
             printf("\nSciclient PM Board Configuration has Passed \n");
@@ -323,9 +359,10 @@ static int32_t App_getRevisionTest(void)
     }
     if (CSL_PASS == status)
     {
+        uint32_t boardCfgLow[] = SCICLIENT_BOARDCFG_PM;
         Sciclient_BoardCfgPrms_t boardCfgPrms_pm =
         {
-            .boardConfigLow = 0,
+            .boardConfigLow = (uint32_t)boardCfgLow,
             .boardConfigHigh = 0,
             .boardConfigSize = 0,
             .devGrp = DEVGRP_01
@@ -333,14 +370,41 @@ static int32_t App_getRevisionTest(void)
         status = Sciclient_boardCfgPm(&boardCfgPrms_pm);
         if (status == CSL_PASS)
         {
+            uint32_t boardCfgLow[] = SCICLIENT_BOARDCFG_RM;
             Sciclient_BoardCfgPrms_t boardCfgPrms_rm =
             {
-                .boardConfigLow = (uint32_t) &gBoardConfigLow_rm,
+                .boardConfigLow = (uint32_t) boardCfgLow,
                 .boardConfigHigh = 0,
-                .boardConfigSize = sizeof(gBoardConfigLow_rm),
+                .boardConfigSize = SCICLIENT_BOARDCFG_RM_SIZE_IN_BYTES,
                 .devGrp = DEVGRP_01
             };
+
+#if defined(SOC_AM65XX)
+            uint32_t boardCfgLow_pg2[] = SCICLIENT_BOARDCFG_RM_PG2;
+            Sciclient_BoardCfgPrms_t boardCfgPrms_rm_pg2 =
+            {
+                .boardConfigLow = (uint32_t) boardCfgLow_pg2,
+                .boardConfigHigh = 0,
+                .boardConfigSize = SCICLIENT_BOARDCFG_RM_PG2_SIZE_IN_BYTES,
+                .devGrp = DEVGRP_01
+            };
+
+            if (dev_id == 0x0BB5A02F) /* PG1 */
+            {
+                status = Sciclient_boardCfgRm(&boardCfgPrms_rm);
+            }
+            else if (dev_id == 0x1BB5A02F) /* PG2 */
+            {
+                status = Sciclient_boardCfgRm(&boardCfgPrms_rm_pg2);
+            }
+            else
+            {
+                printf("\nInvaid Device ID: 0x%x \n", dev_id);
+                status = CSL_EFAIL;
+            }
+#else
             status = Sciclient_boardCfgRm(&boardCfgPrms_rm);
+#endif
         }
         else
         {
@@ -348,11 +412,12 @@ static int32_t App_getRevisionTest(void)
         }
         if (status == CSL_PASS)
         {
+            uint32_t boardCfgLow[] = SCICLIENT_BOARDCFG_SECURITY;
             Sciclient_BoardCfgPrms_t boardCfgPrms_security =
             {
-                .boardConfigLow = (uint32_t) &gBoardConfigLow_security,
+                .boardConfigLow = (uint32_t) boardCfgLow,
                 .boardConfigHigh = 0,
-                .boardConfigSize = sizeof(gBoardConfigLow_security),
+                .boardConfigSize = SCICLIENT_BOARDCFG_SECURITY_SIZE_IN_BYTES,
                 .devGrp = DEVGRP_01
             };
             status = Sciclient_boardCfgSec(&boardCfgPrms_security) ;

@@ -37,6 +37,7 @@
  */
 #include "util.h"
 #include <stdint.h>
+#include <ctype.h>
 
 #define MAX_BUFFER_SIZE (1*KB*KB)
 
@@ -47,6 +48,15 @@ STATUS bin2c( uint8_t *inName, uint8_t * filename, uint8_t * arrName) {
     uint32_t bytes=1, size, i, csize;
     FILE* fin;
     uint32_t  chunkSize = MAX_BUFFER_SIZE;
+
+    /* Ensure arrName is upper case */
+    char ch;
+    uint32_t j = 0;
+    while (arrName[j]) {
+        ch = arrName[j];
+        arrName[j] = (uint8_t)toupper(ch);
+        j++;
+    }
 
     fprintf(stderr, "\r\n Converting binary file [%s] to C array \r\n", inName );
 
@@ -110,7 +120,7 @@ STATUS bin2c( uint8_t *inName, uint8_t * filename, uint8_t * arrName) {
 \n/*                           Macros & Typedefs                                */\
 \n/* ========================================================================== */\
 \n\
-\n#define BINARY_FILE_SIZE_IN_BYTES (%dU)\
+\n#define %s_SIZE_IN_BYTES (%dU)\
 \n\
 \n/* ========================================================================== */\
 \n/*                         Structure Declarations                             */\
@@ -129,7 +139,7 @@ STATUS bin2c( uint8_t *inName, uint8_t * filename, uint8_t * arrName) {
 \n/* ========================================================================== */\
 \n\
 \n#define %s {",
-filename, ((csize + 3U)/4U) * 4U, arrName);
+filename, arrName, csize, arrName);
 
     size=0;
     csize=0;
