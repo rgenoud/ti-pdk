@@ -957,7 +957,14 @@ void app_test_task_poll_pkt (UArg arg0, UArg arg1)
         }
     }
 }
-
+/**
+*  @brief  This function is used to call back the network application when a
+*          config response packet is receive from ICSSG firmware.
+*/
+void app_test_rx_mgmt_response_cb(uint32_t port_num, EMAC_IOCTL_CMD_RESP_T* pCmdResp)
+{
+    UART_printf("app_test_rx_mgmt_response_cb: port %d: pCmdResp: 0x%x \n", port_num, pCmdResp);
+}
 void app_test_task_poll_ctrl (UArg arg0, UArg arg1)
 {
     uint32_t port = (uint32_t) arg0;
@@ -1012,7 +1019,7 @@ int32_t app_test_send(uint32_t pNum, uint8_t* pPkt, uint32_t pktChannel, uint32_
         if (pollModeEnabled)
         {
             /* PG2.0 test firmware does not currently support TX TS */
-            if ((pNum != EMAC_CPSW_PORT_NUM) && (gPgVersion == APP_TEST_AM65XX_PG1_0_VERSION))
+            if ((pNum != EMAC_CPSW_PORT_NUM))
             {
                 p_pkt_desc->Flags = EMAC_PKT_FLAG_TX_TS_REQ;
                 p_pkt_desc->TxtimestampId = pNum + i;
@@ -1318,6 +1325,7 @@ int32_t app_test_emac_open(uint32_t mode)
         open_cfg.free_pkt_cb = app_free_pkt;
         open_cfg.rx_pkt_cb = app_test_rx_pkt_cb;
         open_cfg.tx_ts_cb = app_test_ts_response_cb;
+        open_cfg.rx_mgmt_response_cb = app_test_rx_mgmt_response_cb;
         open_cfg.loop_back = 0U;
         /* Only need to enbale loopback for CPSW test application and when not doing benchmark testing */
 #ifndef EMAC_BENCHMARK
@@ -1719,7 +1727,12 @@ void test_EMAC_verify_ut_dual_mac_icssg(void)
 
     app_test_udma_init();
 
+#ifdef TSN_MAC
+    pollModeEnabled = 1;
+    if (app_test_emac_open(EMAC_MODE_POLL) != 0)
+#else
     if (app_test_emac_open(EMAC_MODE_INTERRUPT) != 0)
+#endif
     {
         while(1);
     }
@@ -2118,13 +2131,22 @@ int32_t  app_test_task_init_pruicss(uint32_t portNum)
     //#define PSI_L_MGMT_FLOW_ID_OFFSET                          0x000E
     //Program 0x96 and 0x9b respectively as flowIDs
     if (!(portNum & 1))
-        HWREG (((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->prussSharedDramBase + 0x000C) = ((0x9b+portNum*14) << 16) | (0x96+portNum*14);
+    {
+#if defined(SOC_J721E)
+        HWREG (((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->prussSharedDramBase + PSI_L_REGULAR_FLOW_ID_BASE_OFFSET) = ((0x9bU+portNum*14) << 16) | (0x96+portNum*14);
+#endif
+#if defined(SOC_AM65XX)
+        HWREG (((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->prussSharedDramBase + PSI_L_REGULAR_FLOW_ID_BASE_OFFSET) = ((0x9eU+portNum*20) << 16) | (0x96+portNum*20);
+#endif
+    }
     //#define SPL_PKT_DEFAULT_PRIORITY                           0x0010
     //#define HOST_PORT_DF_VLAN_OFFSET                           0x0034    //default VLAN tag for Host Port
     //#define P1_PORT_DF_VLAN_OFFSET                             0x0038    //default VLAN tag for P1 Port
     //#define P2_PORT_DF_VLAN_OFFSET                             0x003C    //default VLAN tag for P2 Port
     //#define P1_QUEUE_NUM_UNTAGGED                              0x00C0    //Port1 Default Queue number for untagged packets
     //#define P2_QUEUE_NUM_UNTAGGED                              0x00C1    //Port2 Default Queue number for untagged packets
+    HWREG (((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->prussSharedDramBase + SPL_PKT_DEFAULT_PRIORITY) = 0;
+    HWREG (((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->prussSharedDramBase + P1_QUEUE_NUM_UNTAGGED) = 0x404;
 
     //DMEM0
     //#define PORT_Q_PRIORITY_REGEN_OFFSET                       0x0000    //Stores the table used for priority regeneration. 4B per PCP/Queue. Only 1B is used
