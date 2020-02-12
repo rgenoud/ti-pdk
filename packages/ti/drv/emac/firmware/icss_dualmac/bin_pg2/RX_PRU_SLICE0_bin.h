@@ -157,7 +157,7 @@ const unsigned int RX_PRU_SLICE0_b00[]= {
 0x1f059e9e,
 0x240f00c9,
 0x24001189,
-0x243fff82,
+0x910c1c82,
 0x24001042,
 0x24003862,
 0x24013fc3,
