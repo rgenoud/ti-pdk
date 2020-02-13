@@ -86,6 +86,8 @@
 /* ========================================================================== */
 
 uint32_t vaOffset = 0;
+
+#if defined(AUDIO_DC_ANALOG_TEST)
 uint32_t gAudioDCAnlogRxSerIndx[RX_NUM_SERIALIZER] = {Mcasp_SerializerNum_4,
                                                       Mcasp_SerializerNum_5,
                                                       Mcasp_SerializerNum_6,
@@ -98,8 +100,8 @@ uint32_t gAudioDCAnlogTxSerIndx[TX_NUM_SERIALIZER] = {Mcasp_SerializerNum_0,
                                                       Mcasp_SerializerNum_7,
                                                       Mcasp_SerializerNum_8,
                                                       Mcasp_SerializerNum_9};
-
 extern Mcasp_ChanParams mcasp_chanparam[2];
+#endif /* #if defined(AUDIO_DC_ANALOG_TEST) */
 
 #if defined (SOC_J721E)
 #if defined (_TMS320C6X)
@@ -192,6 +194,7 @@ void configureAudio(void)
 	MCASP_log("\n Pinmux Config complete");
 }
 
+#if defined(AUDIO_DC_ANALOG_TEST)
 /* Configures the serializers for McASP audio daughter card Beta and above */
 void configureAudioDCSer(void)
 {
@@ -216,6 +219,7 @@ void configureAudioDCSer(void)
                                    TISCI_DEV_BOARD0_AUDIO_EXT_REFCLK0_IN_PARENT_MCASP_MAIN_0_MCASP_AHCLKX_POUT_0,
                                    SCICLIENT_SERVICE_WAIT_FOREVER);
 }
+#endif /* #if defined(AUDIO_DC_ANALOG_TEST) */
 
 void McASP_Enable(void)
 {
