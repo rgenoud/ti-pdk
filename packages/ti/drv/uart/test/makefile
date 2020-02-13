@@ -73,7 +73,7 @@ else
     endif
     COMP_LIST_COMMON   += uart
 
-    ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200))
+    ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200 am64x))
     COMP_LIST_COMMON += sciclient i2c
     endif
 

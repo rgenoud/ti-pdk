@@ -144,7 +144,9 @@ SemaphoreP_Handle callbackSem = NULL;
 
 uint32_t uartTestInstance;
 
-int16_t verifyLoopback = 0U;
+uint32_t verifyLoopback = FALSE;
+
+uint32_t verifyRS485 = FALSE;
 
 UART_PAR uartParity = UART_PAR_NONE;
 
@@ -272,6 +274,82 @@ int32_t UART_udma_deinit(void)
 #endif
 #endif /* #if defined(SOC_AM65XX) || defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_AM64X) */
 
+#if defined(SOC_AM64X)
+int32_t UART_configClk(uint32_t freq)
+{
+    int32_t retVal = CSL_PASS;
+#if 0 //TBD pm board config not supported in sciclient 
+    uint64_t uartClk;
+    uint32_t parentID;
+    uint32_t clkID[] = {
+                           TISCI_DEV_UART0_FCLK_CLK,
+                           TISCI_DEV_UART1_FCLK_CLK,
+                           TISCI_DEV_UART2_FCLK_CLK,
+                           TISCI_DEV_UART3_FCLK_CLK,
+                           TISCI_DEV_UART4_FCLK_CLK,
+                           TISCI_DEV_UART5_FCLK_CLK,
+                           TISCI_DEV_UART6_FCLK_CLK,
+                       };
+    uint32_t modID[] = {
+                           TISCI_DEV_UART0,
+                           TISCI_DEV_UART1,
+                           TISCI_DEV_UART2,
+                           TISCI_DEV_UART3,
+                           TISCI_DEV_UART4,
+                           TISCI_DEV_UART5,
+                           TISCI_DEV_UART6,
+                       };                           
+    
+    retVal = Sciclient_pmModuleClkRequest(modID[uartTestInstance],
+                                          clkID[uartTestInstance],
+                                          TISCI_MSG_VALUE_CLOCK_SW_STATE_REQ,
+                                          TISCI_MSG_FLAG_AOP,SCICLIENT_SERVICE_WAIT_FOREVER);    
+    if (retVal == CSL_PASS)
+    {
+        if (freq == UART_MODULE_CLK_48M)
+        {
+            parentID = TISCI_DEV_UART0_FCLK_CLK_PARENT_USART_PROGRAMMABLE_CLOCK_DIVIDER_OUT0; 
+        }
+        else
+        {
+            parentID = TISCI_DEV_UART0_FCLK_CLK_PARENT_HSDIV4_16FFT_MAIN_1_HSDIVOUT1_CLK;  
+        }      
+        retVal = Sciclient_pmSetModuleClkParent(modID[uartTestInstance],
+                                                clkID[uartTestInstance],
+                                                parentID,
+                                                SCICLIENT_SERVICE_WAIT_FOREVER);
+    }
+    
+    if (retVal == CSL_PASS)
+    {
+        uartClk = (uint64_t)freq;
+        retVal = Sciclient_pmSetModuleClkFreq(modID[uartTestInstance],
+                                              clkID[uartTestInstance],
+                                              uartClk,
+                                              TISCI_MSG_FLAG_AOP,
+                                              SCICLIENT_SERVICE_WAIT_FOREVER);
+    }
+
+    if (retVal == CSL_PASS)
+    {
+        uartClk = 0;
+        retVal = Sciclient_pmGetModuleClkFreq(modID[BOARD_OSPI_NOR_INSTANCE],
+                                              clkID[BOARD_OSPI_NOR_INSTANCE],
+                                              &uartClk,
+                                              SCICLIENT_SERVICE_WAIT_FOREVER);
+    } 
+
+    if (retVal == CSL_PASS)
+    {
+        if ((uint32_t)uartClk != freq)
+        {
+            retVal = CSL_EFAIL;
+        }
+    } 
+#endif
+    return (retVal);  
+}   
+#endif
 /*
  *  ======== UART init config ========
  */
@@ -299,14 +377,20 @@ static void UART_initConfig(bool dmaMode)
         uart_cfg.dmaMode    = FALSE;
     }
 
-    if(verifyLoopback)
+    uart_cfg.loopback   = verifyLoopback;
+#if defined(SOC_AM64X)
+    if (verifyRS485 == TRUE)
     {
-        uart_cfg.loopback   = TRUE;
+        uart_cfg.frequency = UART_MODULE_CLK_160M;
     }
     else
     {
-        uart_cfg.loopback   = FALSE;
+        uart_cfg.frequency = UART_MODULE_CLK_48M;
     }
+    uart_cfg.dirEnable = verifyRS485;
+    UART_configClk(uart_cfg.frequency);
+#endif
+
     /* Set the DMA enabled UART init configurations */
     UART_socSetInitCfg(uartTestInstance, &uart_cfg);
 }
@@ -1688,6 +1772,57 @@ Err:
     return (ret);
 }
 
+#if defined (SOC_AM64X)
+/* RS-485 Direction Enable loopback test */
+static bool UART_test_rs485(bool dmaMode)
+{
+    UART_Handle      uart = NULL;
+    UART_Params      uartParams;
+    int16_t          length = 0;
+    bool             ret = true;
+    uint8_t rBuff[UART_TEST_READ_LEN], tBuff[]="aaaabbbbccccddddeeee";
+
+    /* UART SoC init configuration */
+    verifyRS485    = TRUE;
+    verifyLoopback = TRUE;
+    UART_initConfig(dmaMode);
+    
+    UART_Params_init(&uartParams);
+    uart = UART_open(uartTestInstance, &uartParams);
+    if (uart == NULL)
+    {
+        goto Err;
+    }
+
+    if (UART_write(uart, (void *)&tBuff[0], UART_TEST_READ_LEN) == UART_ERROR)
+    {
+        goto Err;
+    }
+
+    memset(rBuff, 0, UART_TEST_READ_LEN);
+    UART_read(uart, (void *)&rBuff[0], UART_TEST_READ_LEN);
+    for(length=0; length<UART_TEST_READ_LEN; length++)
+    {
+        if(tBuff[length] != rBuff[length])
+        {
+            ret = false;
+            break;
+        }
+    }
+    UART_close(uart);
+
+Err:
+    if (uart != NULL)
+    {
+        UART_close(uart);
+    }
+
+    verifyRS485    = FALSE;
+    verifyLoopback = FALSE;
+    return (ret);
+}
+#endif
+
 /*
  *  ========== UART read API test ==========
  *
@@ -1702,7 +1837,7 @@ static bool UART_test_read_verify(bool dmaMode)
     bool             ret = false;
     uint8_t rBuff[UART_TEST_READ_LEN], tBuff[]="aaaabbbbccccddddeeee";
 
-    verifyLoopback = 1;
+    verifyLoopback = TRUE;
     /* UART SoC init configuration */
     UART_initConfig(dmaMode);
 
@@ -1821,15 +1956,19 @@ static bool UART_test_read_verify(bool dmaMode)
         }
     }
     UART_close(uart);
+    uart = NULL;
 
-Err:
-    if (uart == NULL)
+    if (UART_test_rs485(dmaMode) == false)
     {
-        verifyLoopback = 0;
+        ret = false;
+    }
+Err:
+    if (uart != NULL)
+    {
         UART_close(uart);
     }
 
-    verifyLoopback = 0;
+    verifyLoopback = FALSE;
     return (ret);
 }
 
@@ -2158,7 +2297,7 @@ static bool UART_test_multiple_instances(bool dmaMode)
     SemaphoreP_Params semParams;
 
     /* enable the loopback */
-    verifyLoopback = 1;
+    verifyLoopback = TRUE;
 
     /* Get the max number of instances for testing */
     numUartTestInstances = UART_getMaxNumInst(UART_TEST_NUM_INSTS);
@@ -2251,7 +2390,7 @@ Err:
         }
     }
 
-    verifyLoopback = 0;
+    verifyLoopback = FALSE;
     uartTestInstance = uartTestStartInst;
     return (ret);
 }

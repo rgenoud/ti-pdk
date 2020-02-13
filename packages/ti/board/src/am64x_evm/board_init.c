@@ -54,8 +54,41 @@
  */
 
 #include "board_internal.h"
+#include <ti/drv/sciclient/sciclient.h>
 
 Board_gblObj Board_obj = {NULL};
+
+static bool gBoardSysInitDone = 0;
+
+/**
+ * \brief  Board global initilizations
+ *
+ * \return  BOARD_SOK in case of success or appropriate error code
+ *
+ */
+static Board_STATUS Board_sysInit(void)
+{
+    Board_STATUS status = BOARD_SOK;
+    int32_t ret;
+    Sciclient_ConfigPrms_t config;
+
+    if(gBoardSysInitDone == 0)
+    {
+        Sciclient_configPrmsInit(&config);
+        ret = Sciclient_init(&config);
+        if(ret != 0)
+        {
+            status = BOARD_FAIL;
+        }
+
+        if(status == BOARD_SOK)
+        {
+            gBoardSysInitDone = 1;
+        }
+    }
+
+    return status;
+}
 
 /**
  * \brief  Board library initialization function
@@ -97,6 +130,11 @@ Board_gblObj Board_obj = {NULL};
 Board_STATUS Board_init(Board_initCfg cfg)
 {    
     Board_STATUS ret = BOARD_SOK;
+
+    ret = Board_sysInit();
+    if (ret != BOARD_SOK)
+        return ret;
+
     if (cfg & BOARD_INIT_UNLOCK_MMR)
         ret = Board_unlockMMR();
     if (ret != BOARD_SOK)

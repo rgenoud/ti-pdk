@@ -60,7 +60,7 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
         0U,  /* TBD, no UART0 interrupt routed to M4 core */
 #endif
         0U,                                 /* eventId, not used for am64x */
-        48000000U,                          /* frequency, default 48MHz */
+        UART_MODULE_CLOCK,                  /* frequency, default 48MHz */
         CSL_PDMA_CH_MAIN0_UART0_CH0_RX,     /* rxDmaEventNumber, used as UART PDMA RX
                                                thread # for the UART instance */
         CSL_PDMA_CH_MAIN0_UART0_CH0_TX,     /* txDmaEventNumber, used as UART PDMA TX
@@ -82,7 +82,9 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
 #endif
         UART16x_OPER_MODE,                  /* operMode, 16x over sampling mode by default */
         NULL,                               /* dmaInfo */
-        NULL                                /* configSocIntrPath */
+        NULL,                               /* configSocIntrPath */
+        FALSE,                              /* dirEnable, RS-485 External Transceiver Direction */
+        UART_MDR3_DIR_POL_0,                /* dirPol, RS-485 External Transceiver Direction Polarity */
     },
     {
         /* UART1 on the Main domain */
@@ -95,7 +97,7 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
         0U,
 #endif
         0U,
-        48000000U,
+        UART_MODULE_CLOCK,
         CSL_PDMA_CH_MAIN0_UART1_CH0_RX,
         CSL_PDMA_CH_MAIN0_UART1_CH0_TX,
         0,
@@ -115,7 +117,9 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
 #endif
         UART16x_OPER_MODE,
         NULL,
-        NULL
+        NULL,
+        FALSE,
+        UART_MDR3_DIR_POL_0,
     },
     {
         /* UART2 on the Main domain */
@@ -128,7 +132,7 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
         0U,
 #endif
         0U,
-        48000000U,
+        UART_MODULE_CLOCK,
         CSL_PDMA_CH_MAIN1_UART2_CH0_RX,
         CSL_PDMA_CH_MAIN1_UART2_CH0_TX,
         0,
@@ -148,7 +152,9 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
 #endif
         UART16x_OPER_MODE,
         NULL,
-        NULL
+        NULL,
+        FALSE,
+        UART_MDR3_DIR_POL_0,
     },
     {
         /* UART3 on the Main domain */
@@ -161,7 +167,7 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
         0U,
 #endif
         0U,
-        48000000U,
+        UART_MODULE_CLOCK,
         CSL_PDMA_CH_MAIN1_UART3_CH0_RX,
         CSL_PDMA_CH_MAIN1_UART3_CH0_TX,
         0,
@@ -181,7 +187,9 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
 #endif
         UART16x_OPER_MODE,
         NULL,
-        NULL
+        NULL,
+        FALSE,
+        UART_MDR3_DIR_POL_0,
     },
     {
         /* UART4 on the Main domain */
@@ -194,7 +202,7 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
         0U,
 #endif
         0U,
-        48000000U,
+        UART_MODULE_CLOCK,
         CSL_PDMA_CH_MAIN1_UART4_CH0_RX,
         CSL_PDMA_CH_MAIN1_UART4_CH0_TX,
         0,
@@ -214,7 +222,9 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
 #endif
         UART16x_OPER_MODE,
         NULL,
-        NULL
+        NULL,
+        FALSE,
+        UART_MDR3_DIR_POL_0,
     },
     {
         /* UART5 on the Main domain */
@@ -227,7 +237,7 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
         0U,
 #endif
         0U,
-        48000000U,
+        UART_MODULE_CLOCK,
         CSL_PDMA_CH_MAIN1_UART5_CH0_RX,
         CSL_PDMA_CH_MAIN1_UART5_CH0_TX,
         0,
@@ -247,7 +257,9 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
 #endif
         UART16x_OPER_MODE,
         NULL,
-        NULL
+        NULL,
+        FALSE,
+        UART_MDR3_DIR_POL_0,
     },
     {
         /* UART6 on the Main domain */
@@ -260,7 +272,7 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
         0U,
 #endif
         0U,
-        48000000U,
+        UART_MODULE_CLOCK,
         CSL_PDMA_CH_MAIN1_UART6_CH0_RX,
         CSL_PDMA_CH_MAIN1_UART6_CH0_TX,
         0,
@@ -280,7 +292,9 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
 #endif
         UART16x_OPER_MODE,
         NULL,
-        NULL
+        NULL,
+        FALSE,
+        UART_MDR3_DIR_POL_0,
     },
     {
         /* UART0 on the MCU channel */
@@ -293,7 +307,7 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
         CSLR_MCU_M4FSS0_CORE0_NVIC_MCU_UART0_USART_IRQ_0,
 #endif
         0U,
-        96000000U,
+        UART_MODULE_CLK_96M,
         0U,  /* TBD, no PDMA support for MCU_UART0 */
         0U,
         0,
@@ -313,7 +327,9 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
 #endif
         UART16x_OPER_MODE,
         NULL,
-        NULL
+        NULL,
+        FALSE,
+        UART_MDR3_DIR_POL_0,
     },
     {
         /* UART1 on the MCU channel */
@@ -326,7 +342,7 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
         CSLR_MCU_M4FSS0_CORE0_NVIC_MCU_UART1_USART_IRQ_0,
 #endif
         0U,
-        96000000U,
+        UART_MODULE_CLK_96M,
         0U,  /* TBD, no PDMA support for MCU_UART1 */
         0U,
         0,
@@ -346,7 +362,9 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
 #endif
         UART16x_OPER_MODE,
         NULL,
-        NULL
+        NULL,
+        FALSE,
+        UART_MDR3_DIR_POL_0,
     },
 };
 
