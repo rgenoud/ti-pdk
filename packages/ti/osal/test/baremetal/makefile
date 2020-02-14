@@ -38,7 +38,7 @@ COMP_LIST_mcu3_0  = csl_init
 COMP_LIST_mcu3_1  = csl_init
 COMP_LIST_m4f_0   = csl_init
 
-ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200))
+ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200 am64x))
   COMP_LIST_COMMON += sciclient
 endif
 

@@ -14,11 +14,6 @@ ifeq ($(CORE),mpu1_0)
   SRCS_COMMON += CacheP_nonos.c Arch_util.c
 endif
 
-ifeq ($(CORE),m4f_0)
-  SRCDIR += arch/core/m4
-  SRCS_COMMON += Arch_util.c
-endif
-
 ifeq ($(CORE),$(filter $(CORE), mcu1_0 mcu2_0 mcu2_1))
   SRCDIR += arch/core/r5
   SRCS_COMMON += CacheP_nonos.c Arch_util.c
@@ -46,10 +41,14 @@ ifeq ($(CORE),$(filter $(CORE), c7x_1 c7x-hostemu))
   SRCS_COMMON += CacheP_nonos.c Arch_util.c
 endif
 
-ifeq ($(CORE),ipu1_0)
-  ifeq ($(SOC),$(filter $(SOC),am571x am572x am574x dra72x dra75x dra78x))
+ifeq ($(CORE),$(filter $(CORE), ipu1_0 m4f_0))
+  ifeq ($(SOC),$(filter $(SOC),am571x am572x am574x dra72x dra75x dra78x am64x))
     SRCDIR += arch/core/m4
     SRCS_COMMON += CacheP_nonos.c Arch_util.c
+  endif
+
+  ifeq ($(SOC),$(filter $(SOC),am571x am572x am574x dra72x dra75x dra78x))
+    CFLAGS_LOCAL_COMMON += -DUNICACHE_ENABLED
   endif
 endif
 
