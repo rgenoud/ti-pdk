@@ -110,9 +110,11 @@ extern "C" {
 #define SCICLIENT_CONTEXT_R5_1_NONSEC_1                (13U)
 /** ICSSG (Non Secure) : ICSSG Non Secure Context */
 #define SCICLIENT_CONTEXT_ICSSG_NONSEC_0               (14U)
+/** M4 (Secure): Cortex M4 context 1 */
+#define SCICLIENT_CONTEXT_M4_SEC_0                     (15U) /* TBD */
 
 /** Total number of possible contexts for application. */
-#define SCICLIENT_CONTEXT_MAX_NUM                      (15U)
+#define SCICLIENT_CONTEXT_MAX_NUM                      (16U)
 /* @} */
 
 /** -------------------- Resource Management Parameters ---------------------*/
