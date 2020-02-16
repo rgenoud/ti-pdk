@@ -170,32 +170,7 @@ uint32_t gPgVersion;
 #include <ti/drv/emac/firmware/icss_dualmac/bin_pg2/txl2_rgmii1_bin.h>      /* PDSP6code */
 #endif
 
-#if 0
-typedef struct {
-    const uint32_t *pru;
-    uint32_t pru_size;
-} app_test_pru_rtu_fw2_t;
 
-static app_test_pru_rtu_fw2_t firmware_pg1[6] = 
-{
-     { PDSPcode_0,  sizeof(PDSPcode_0) },
-     { PDSP2code_0, sizeof(PDSP2code_0) },
-     { PDSP3code_0,  sizeof(PDSP3code_0) },
-     { PDSP4code_0, sizeof(PDSP4code_0) },
-     { NULL,        0},
-     { NULL,        0},
-};
-
-static app_test_pru_rtu_fw2_t firmware_pg2[6] =
-{
-     { PDSPcode_0,  sizeof(PDSPcode_0) },
-     { PDSP2code_0, sizeof(PDSP2code_0) },
-     { PDSP3code_0,  sizeof(PDSP3code_0) },
-     { PDSP4code_0, sizeof(PDSP4code_0) },
-     { NULL,        0},
-     { NULL,        0},
-};
-#else
 typedef struct {
     const uint32_t *pru;
     uint32_t pru_size;
@@ -224,7 +199,6 @@ app_test_pru_rtu_fw_t firmware_pg2[2] = {
     { PDSP3code_0_PG2, sizeof(PDSP3code_0_PG2), PDSP4code_0_PG2, sizeof(PDSP4code_0_PG2),  PDSP6code_0_PG2, sizeof(PDSP6code_0_PG2)}
 };
 #endif // TSN_MAC
-#endif
 
 #endif
 
@@ -1766,7 +1740,7 @@ void test_EMAC_verify_ut_dual_mac_icssg(void)
     {
         while(1);
     }
-#if 0
+
     app_test_poll_mode();
 
 
@@ -1776,7 +1750,7 @@ void test_EMAC_verify_ut_dual_mac_icssg(void)
 
     app_test_config_promiscous_mode(1);
     app_test_promiscous_mode();
-#endif
+
     emac_test_get_icssg_stats();
 
     UART_printf("All tests have passed\n");
