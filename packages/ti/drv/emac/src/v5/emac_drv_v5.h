@@ -293,8 +293,10 @@ struct EMAC_FW_PORT_CFG;
  * @brief ICSSG Switch firmware configuration structure 
  */
 typedef struct EMAC_ICSSG_SWITCH_FW_CFG_S {
+#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
 uint32_t queueContextOffset;                            /* SHARED MEM offset where we store TX queue context information for port/host Q context */
 uint32_t descQueueContextOffset;                        /* SHAREM MEM offset where we store TX desciptor queue context information fir port/host descQ context */
+#endif
 uint32_t txPortQueueSize[EMAC_NUM_TRANSMIT_FW_QUEUES];  /* Size of each TX port queue */
 uint32_t txHostQueueSize[EMAC_NUM_TRANSMIT_FW_QUEUES];  /* Size of each TX host queue */
 uint32_t descQueueOffset;                              /* SHAREM MEM offset of actual descriptor queues */
@@ -305,7 +307,9 @@ uint32_t mgmtFlowIdOffset;                              /* SHARED MEM offset to 
 uint32_t switchPort0DefaultVlanOffset;                  /* SHARED MEM OFFSET to switch port 0/host port default VLAN entry */
 uint32_t switchPort1DefaultVlanOffset;                  /* SHARED MEM OFFSET to switch port 1 default VLAN entry */
 uint32_t switchPort2DefaultVlanOffset;                  /* SHARED MEM OFFSET to switch port 2 default VLAN entry */
+#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
 uint32_t startOfPortQueueReadPtrsOffset;                /* SHARED MEM OFFSET to start of port queue read pointers */
+#endif
 uint32_t prioRegenTableOffset;                          /* DEM0 offset to priority regen tab */
 uint32_t txPortQueueDescSize;                           /* Size of each TX port descriptor queue */
 uint32_t txHostQueueDescSize;                           /* Size of each TX host descriptor queue */

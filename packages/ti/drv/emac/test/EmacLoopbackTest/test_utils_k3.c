@@ -1566,7 +1566,6 @@ void app_test_check_port_link(uint32_t startP, uint32_t endP)
         }
 #ifdef TSN_MAC
     EMAC_IOCTL_PARAMS params;
-    int32_t ret_val;
     params.subCommand = EMAC_IOCTL_PORT_STATE_FORWARD;
     emac_ioctl(portNum, EMAC_IOCTL_PORT_STATE_CTRL, &params);
 
@@ -1576,6 +1575,8 @@ void app_test_check_port_link(uint32_t startP, uint32_t endP)
     Task_sleep (10); //Wait for 10 ms as this async IOCTL to complete
     emac_mcb.switch_cb.ioctlCount = 0;
 
+#if 0
+    int32_t ret_val;
     EMAC_IOCTL_VLAN_FID_PARAMS vlanParams = {/*.fid = */100, /*.host_member =*/ 1, /*.p1_member =*/ 0,  /*.p2_member =*/ 0, \
                                                         /*.host_tagged = */0, /*.p1_tagged = */0, /*.p2_tagged = */0, /*.stream_vid =*/ 0, /*.flood_to_host = */0
                                             };
@@ -1588,6 +1589,7 @@ void app_test_check_port_link(uint32_t startP, uint32_t endP)
     {
         UART_printf("Set Default Table: FAILED :%d\n", ret_val);
     }
+#endif
 #endif
         memset(&linkInfo, 0, sizeof(EMAC_LINK_INFO_T));
         do
@@ -1986,68 +1988,69 @@ int32_t  app_test_task_init_pruicss(uint32_t portNum)
         }
     }
 #ifdef TSN_MAC
-    uint32_t reg_val;
+    uint32_t reg_val, hwQueueNum, i;
+    uint32_t icssgBaseAddr = (((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->baseAddr);
     //Need to do the following in emac_config_icssg_dual_mac_fw(port_num, hwAttrs);
     //Need to be slice specific
 
-    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->prussCfgRegBase +
+    HWREG(icssgBaseAddr + CSL_ICSSCFG_REGS_BASE +
           CSL_ICSSCFG_GPCFG0) = 0x8000003; //GPCFG0 mux sel MII_RT
-    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->prussCfgRegBase +
+    HWREG(icssgBaseAddr + CSL_ICSSCFG_REGS_BASE +
           CSL_ICSSCFG_GPCFG1) = 0x8000003; //GPCFG1 mux sel MII_RT
 
     //For reducing IEP latency. Enable OCP clock.
-    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->prussCfgRegBase +
+    HWREG(icssgBaseAddr + CSL_ICSSCFG_REGS_BASE +
           CSL_ICSSCFG_IEPCLK) = 1;
 
     //Delay after IEP Sync Config. Requires minimum 10 ICSS clock cycles before IEP register access
     Osal_delay(100);
 
     //Core sync will make ICSSG access to MSMC optimal
-    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->prussCfgRegBase +
+    HWREG(icssgBaseAddr + CSL_ICSSCFG_REGS_BASE +
           CSL_ICSSCFG_CORE_SYNC_REG) = 1; //Enable coresync
 
     /* Enable IEP0 counter and set default increment as 4 */
     reg_val = (0x1 << CSL_ICSS_G_PR1_IEP0_SLV_GLOBAL_CFG_REG_CNT_ENABLE_SHIFT)
               | (0x4 << CSL_ICSS_G_PR1_IEP0_SLV_GLOBAL_CFG_REG_DEFAULT_INC_SHIFT)
               | (0x4 << CSL_ICSS_G_PR1_IEP0_SLV_GLOBAL_CFG_REG_CMP_INC_SHIFT);
-    CSL_REG32_WR ((((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->prussPru0DramBase 
+    CSL_REG32_WR ((icssgBaseAddr 
                     + CSL_ICSS_G_PR1_IEP0_SLV_REGS_BASE + CSL_ICSS_G_PR1_IEP0_SLV_GLOBAL_CFG_REG),
                     reg_val);
     /*Enable IEP1 counter and set default increment as 4 - Required for RX and TX time stamping*/
     reg_val = (0x1 << CSL_ICSS_G_PR1_IEP1_SLV_GLOBAL_CFG_REG_CNT_ENABLE_SHIFT)
               | (0x4 << CSL_ICSS_G_PR1_IEP1_SLV_GLOBAL_CFG_REG_DEFAULT_INC_SHIFT)
               | (0x4 << CSL_ICSS_G_PR1_IEP1_SLV_GLOBAL_CFG_REG_CMP_INC_SHIFT);
-    CSL_REG32_WR ((((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->prussPru0DramBase
+    CSL_REG32_WR ((icssgBaseAddr
                     + CSL_ICSS_G_PR1_IEP1_SLV_REGS_BASE + CSL_ICSS_G_PR1_IEP1_SLV_GLOBAL_CFG_REG),
                     reg_val);
     //Enable PA_STAT block for diagnostic counters in ICSSG
     reg_val = (uint32_t)(1 << 31) | 2;      //Enable stats block, 2 64-bit counters
-    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->prussPru0DramBase +
+    HWREG(icssgBaseAddr +
           CSL_ICSS_G_PA_STAT_WRAP_PA_SLV_REGS_BASE + 8) = reg_val; 
 
     //Program constant table pointer for C28 on all 6 PRUs
-    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->baseAddr +
+    HWREG(icssgBaseAddr +
           CSL_ICSS_G_PR1_PDSP0_IRAM_REGS_BASE  +
-          0x28) = (0x100);
-    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->baseAddr +
+          CSL_ICSS_G_PR1_PDSP0_IRAM_CONSTANT_TABLE_PROG_PTR_0) = (0x100);
+    HWREG(icssgBaseAddr +
           CSL_ICSS_G_PR1_PDSP1_IRAM_REGS_BASE +
-          0x28) = (0x100);
-    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->baseAddr +
+          CSL_ICSS_G_PR1_PDSP0_IRAM_CONSTANT_TABLE_PROG_PTR_0) = (0x100);
+    HWREG(icssgBaseAddr +
           CSL_ICSS_G_PR1_RTU0_PR1_RTU0_IRAM_REGS_BASE +
-          0x28) = (0x100);
-    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->baseAddr +
+          CSL_ICSS_G_PR1_PDSP0_IRAM_CONSTANT_TABLE_PROG_PTR_0) = (0x100);
+    HWREG(icssgBaseAddr +
           CSL_ICSS_G_PR1_RTU1_PR1_RTU1_IRAM_REGS_BASE  +
-          0x28) = (0x100);
-    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->baseAddr +
+          CSL_ICSS_G_PR1_PDSP0_IRAM_CONSTANT_TABLE_PROG_PTR_0) = (0x100);
+    HWREG(icssgBaseAddr +
           CSL_ICSS_G_PR1_PDSP_TX0_IRAM_REGS_BASE +
-          0x28) = (0x100);
-    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->baseAddr +
+          CSL_ICSS_G_PR1_PDSP0_IRAM_CONSTANT_TABLE_PROG_PTR_0) = (0x100);
+    HWREG(icssgBaseAddr +
           CSL_ICSS_G_PR1_PDSP_TX1_IRAM_REGS_BASE +
-          0x28) = (0x100);
+          CSL_ICSS_G_PR1_PDSP0_IRAM_CONSTANT_TABLE_PROG_PTR_0) = (0x100);
     //Program task manager configurations for all 6 PRUs
     /* RX tasks run on RX_PRU0 */
     /*Configure RXBK1 Size = 20Bytes, RXBK2 Size = 12 Bytes, RXBKn Size = 32 Bytes. */
-    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->baseAddr  + CSL_ICSS_G_PR1_TASKS_MGR_PRU0_PR1_TASKS_MGR_PRU0_MMR_REGS_BASE +
+    HWREG(icssgBaseAddr + CSL_ICSS_G_PR1_TASKS_MGR_PRU0_PR1_TASKS_MGR_PRU0_MMR_REGS_BASE +
             CSL_ICSS_G_PR1_TASKS_MGR_PRU0_PR1_TASKS_MGR_PRU0_MMR_RX_CFG) =
         (19 <<
          CSL_ICSS_G_PR1_TASKS_MGR_PRU0_PR1_TASKS_MGR_PRU0_MMR_RX_CFG_BK1_SIZE_SHIFT)
@@ -2056,7 +2059,7 @@ int32_t  app_test_task_init_pruicss(uint32_t portNum)
         | (31 <<
            CSL_ICSS_G_PR1_TASKS_MGR_PRU0_PR1_TASKS_MGR_PRU0_MMR_RX_CFG_BKN_SIZE_SHIFT);
     /* RX FIFO WM configuration on RTU0 */ 
-    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->baseAddr  + CSL_ICSS_G_PR1_TASKS_MGR_RTU0_PR1_TASKS_MGR_RTU0_MMR_REGS_BASE +
+    HWREG(icssgBaseAddr + CSL_ICSS_G_PR1_TASKS_MGR_RTU0_PR1_TASKS_MGR_RTU0_MMR_REGS_BASE +
             CSL_ICSS_G_PR1_TASKS_MGR_RTU0_PR1_TASKS_MGR_RTU0_MMR_RX_CFG) =
         (19 <<
          CSL_ICSS_G_PR1_TASKS_MGR_RTU0_PR1_TASKS_MGR_RTU0_MMR_RX_CFG_BK1_SIZE_SHIFT)
@@ -2066,7 +2069,7 @@ int32_t  app_test_task_init_pruicss(uint32_t portNum)
            CSL_ICSS_G_PR1_TASKS_MGR_RTU0_PR1_TASKS_MGR_RTU0_MMR_RX_CFG_BKN_SIZE_SHIFT);
     /* RX tasks run on RX_PRU1 */
     /*Configure RXBK1 Size = 20Bytes, RXBK2 Size = 12 Bytes, RXBKn Size = 32 Bytes. */
-    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->baseAddr  + CSL_ICSS_G_PR1_TASKS_MGR_PRU1_PR1_TASKS_MGR_PRU1_MMR_REGS_BASE +
+    HWREG(icssgBaseAddr + CSL_ICSS_G_PR1_TASKS_MGR_PRU1_PR1_TASKS_MGR_PRU1_MMR_REGS_BASE +
             CSL_ICSS_G_PR1_TASKS_MGR_PRU1_PR1_TASKS_MGR_PRU1_MMR_RX_CFG) =
         (19 <<
          CSL_ICSS_G_PR1_TASKS_MGR_PRU1_PR1_TASKS_MGR_PRU1_MMR_RX_CFG_BK1_SIZE_SHIFT)
@@ -2075,7 +2078,7 @@ int32_t  app_test_task_init_pruicss(uint32_t portNum)
         | (31 <<
            CSL_ICSS_G_PR1_TASKS_MGR_PRU1_PR1_TASKS_MGR_PRU1_MMR_RX_CFG_BKN_SIZE_SHIFT);
     /* RX FIFO WM configuration on RTU1 */ 
-    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->baseAddr  + CSL_ICSS_G_PR1_TASKS_MGR_RTU1_PR1_TASKS_MGR_RTU1_MMR_REGS_BASE +
+    HWREG(icssgBaseAddr + CSL_ICSS_G_PR1_TASKS_MGR_RTU1_PR1_TASKS_MGR_RTU1_MMR_REGS_BASE +
             CSL_ICSS_G_PR1_TASKS_MGR_RTU1_PR1_TASKS_MGR_RTU1_MMR_RX_CFG) =
         (19 <<
          CSL_ICSS_G_PR1_TASKS_MGR_RTU1_PR1_TASKS_MGR_RTU1_MMR_RX_CFG_BK1_SIZE_SHIFT)
@@ -2084,80 +2087,334 @@ int32_t  app_test_task_init_pruicss(uint32_t portNum)
         | (31 <<
            CSL_ICSS_G_PR1_TASKS_MGR_RTU1_PR1_TASKS_MGR_RTU1_MMR_RX_CFG_BKN_SIZE_SHIFT);
     //Configure TX WM to zero
-    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->prussPru0DramBase +
+    HWREG(icssgBaseAddr +
           CSL_ICSS_G_PR1_TASKS_MGR_PRU_TX0_PR1_TASKS_MGR_PRU_TX0_MMR_REGS_BASE +
           CSL_ICSS_G_PR1_TASKS_MGR_PRU_TX0_PR1_TASKS_MGR_PRU_TX0_MMR_TX_CFG) = 0;
-    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->prussPru0DramBase +
+    HWREG(icssgBaseAddr +
           CSL_ICSS_G_PR1_TASKS_MGR_PRU_TX1_PR1_TASKS_MGR_PRU_TX1_MMR_REGS_BASE +
           CSL_ICSS_G_PR1_TASKS_MGR_PRU_TX1_PR1_TASKS_MGR_PRU_TX1_MMR_TX_CFG) = 0;
 
     //Enable task manager nesting for PRUs and RTUs for TS1 tasks only
     reg_val = 0x1F;
-    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->prussPru0DramBase +
+    HWREG(icssgBaseAddr +
           CSL_ICSS_G_PR1_TASKS_MGR_PRU0_PR1_TASKS_MGR_PRU0_MMR_REGS_BASE +
           CSL_ICSS_G_PR1_TASKS_MGR_PRU0_PR1_TASKS_MGR_PRU0_MMR_CAP_EN_CFG) = reg_val;
-    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->prussPru0DramBase +
+    HWREG(icssgBaseAddr +
           CSL_ICSS_G_PR1_TASKS_MGR_PRU1_PR1_TASKS_MGR_PRU1_MMR_REGS_BASE +
           CSL_ICSS_G_PR1_TASKS_MGR_PRU1_PR1_TASKS_MGR_PRU1_MMR_CAP_EN_CFG) = reg_val;
-    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->prussPru0DramBase +
+    HWREG(icssgBaseAddr +
           CSL_ICSS_G_PR1_TASKS_MGR_RTU0_PR1_TASKS_MGR_RTU0_MMR_REGS_BASE +
           CSL_ICSS_G_PR1_TASKS_MGR_RTU0_PR1_TASKS_MGR_RTU0_MMR_CAP_EN_CFG) = reg_val;
-    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->prussPru0DramBase +
+    HWREG(icssgBaseAddr +
           CSL_ICSS_G_PR1_TASKS_MGR_RTU1_PR1_TASKS_MGR_RTU1_MMR_REGS_BASE +
           CSL_ICSS_G_PR1_TASKS_MGR_RTU1_PR1_TASKS_MGR_RTU1_MMR_CAP_EN_CFG) = reg_val;
-    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->prussPru0DramBase +
+    HWREG(icssgBaseAddr +
           CSL_ICSS_G_PR1_TASKS_MGR_PRU_TX0_PR1_TASKS_MGR_PRU_TX0_MMR_REGS_BASE +
           CSL_ICSS_G_PR1_TASKS_MGR_PRU_TX0_PR1_TASKS_MGR_PRU_TX0_MMR_CAP_EN_CFG) = reg_val;
-    HWREG(((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->prussPru0DramBase +
+    HWREG(icssgBaseAddr +
           CSL_ICSS_G_PR1_TASKS_MGR_PRU_TX1_PR1_TASKS_MGR_PRU_TX1_MMR_REGS_BASE +
           CSL_ICSS_G_PR1_TASKS_MGR_PRU_TX1_PR1_TASKS_MGR_PRU_TX1_MMR_CAP_EN_CFG) = reg_val;
 
     //Program RXCFG0/1 and TXCFG0/1
-    HWREG ((((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->baseAddr)+0x32000) = 0x213;
-    HWREG ((((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->baseAddr)+0x32004) = 0x21B;
-    HWREG ((((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->baseAddr)+0x32010) = 0x1803;
-    HWREG ((((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->baseAddr)+0x32014) = 0x1903;
+    HWREG (icssgBaseAddr+CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_REGS_BASE+CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_RXCFG0) = 0x213;
+    HWREG (icssgBaseAddr+CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_REGS_BASE+CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_RXCFG1) = 0x21B;
+    HWREG (icssgBaseAddr+CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_REGS_BASE+CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_TXCFG0) = 0x1803;
+    HWREG (icssgBaseAddr+CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_REGS_BASE+CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_TXCFG1) = 0x1903;
     //Program TX_IPG0/IPG1
-    HWREG ((((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->baseAddr)+0x32030) = 0x1A;
-    HWREG ((((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->baseAddr)+0x32034) = 0x1A;
+    HWREG (icssgBaseAddr+CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_REGS_BASE+CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_TX_IPG0) = 0x1A;  
+    HWREG (icssgBaseAddr+CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_REGS_BASE+CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_TX_IPG1) = 0x1A;
     //Reset Max preamble count
-    HWREG ((((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->baseAddr)+0x32048) = 0x1;
-    HWREG ((((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->baseAddr)+0x3204C) = 0x1;
+    HWREG (icssgBaseAddr+CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_REGS_BASE+CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_RX_PCNT0) = 0x1; 
+    HWREG (icssgBaseAddr+CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_REGS_BASE+CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_RX_PCNT1) = 0x1;
     //Init RGMII config for ICSSG : TXL2, TXPRU enable etc
-    HWREG ((((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->baseAddr)+0x33000) = 0x1082F;
+    HWREG (icssgBaseAddr+CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_REGS_BASE+
+           CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_ICSS_G_CFG) = 0x1082F;
     //Configure PSI flow info for firmware
     //SMEM
-    //#define PSI_L_REGULAR_FLOW_ID_BASE_OFFSET                  0x000C
-    //#define PSI_L_MGMT_FLOW_ID_OFFSET                          0x000E
-    //Program 0x96 and 0x9b respectively as flowIDs
-    if (!(portNum & 1))
-    {
+    //#define PSI_L_REGULAR_FLOW_ID_BASE_OFFSET
+    //#define PSI_L_MGMT_FLOW_ID_OFFSET
+    //Program 0x96 and 0x9b respectively as flowIDs for Port 0 - this is hard coded for now
+     i = (portNum & 1) ? 4 : 0 ;
 #if defined(SOC_J721E)
-        HWREG (((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->prussSharedDramBase + PSI_L_REGULAR_FLOW_ID_BASE_OFFSET) = ((0x9bU+portNum*14) << 16) | (0x96+portNum*14);
+    //7 flows per slice
+    HWREG (icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE + PSI_L_REGULAR_FLOW_ID_BASE_SLICE0_OFFSET + i) = ((0x9bU+portNum*7) << 16) | (0x96+portNum*7);
 #endif
 #if defined(SOC_AM65XX)
-        HWREG (((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->prussSharedDramBase + PSI_L_REGULAR_FLOW_ID_BASE_OFFSET) = ((0x9eU+portNum*20) << 16) | (0x96+portNum*20);
+    //10 flows per slice
+    HWREG (icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE + PSI_L_REGULAR_FLOW_ID_BASE_SLICE0_OFFSET + i) = ((0x9eU+portNum*10) << 16) | (0x96+portNum*10);
 #endif
-    }
-    //#define SPL_PKT_DEFAULT_PRIORITY                           0x0010
-    //#define HOST_PORT_DF_VLAN_OFFSET                           0x0034    //default VLAN tag for Host Port
-    //#define P1_PORT_DF_VLAN_OFFSET                             0x0038    //default VLAN tag for P1 Port
-    //#define P2_PORT_DF_VLAN_OFFSET                             0x003C    //default VLAN tag for P2 Port
-    //#define P1_QUEUE_NUM_UNTAGGED                              0x00C0    //Port1 Default Queue number for untagged packets
-    //#define P2_QUEUE_NUM_UNTAGGED                              0x00C1    //Port2 Default Queue number for untagged packets
-    HWREG (((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->prussSharedDramBase + SPL_PKT_DEFAULT_PRIORITY) = 0;
-    HWREG (((PRUICSS_HwAttrs *)((prussDrvHandle)->hwAttrs))->prussSharedDramBase + P1_QUEUE_NUM_UNTAGGED) = 0x404;
+
+    //#define SPL_PKT_DEFAULT_PRIORITY 
+    //#define HOST_PORT_DF_VLAN_OFFSET 
+    //#define P1_PORT_DF_VLAN_OFFSET
+    //#define P2_PORT_DF_VLAN_OFFSET
+    //#define P1_QUEUE_NUM_UNTAGGED
+    //#define P2_QUEUE_NUM_UNTAGGED
+    HWREG (icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE + SPL_PKT_DEFAULT_PRIORITY) = 0;
+    HWREG (icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE + P1_QUEUE_NUM_UNTAGGED) = 0x404;
 
     //DMEM0
-    //#define PORT_Q_PRIORITY_REGEN_OFFSET                       0x0000    //Stores the table used for priority regeneration. 4B per PCP/Queue. Only 1B is used
-    //#define PORT_Q_PRIORITY_MAPPING_OFFSET                     0x0058    //Stores the table used for priority mapping. 1B per PCP/Queue
+    //#define PORT_Q_PRIORITY_REGEN_OFFSET
+    //#define PORT_Q_PRIORITY_MAPPING_OFFSET
 
     //DMEM1
-    //#define FDB_AGEING_TIMEOUT_OFFSET                          0x0068    //Time after which FDB entries are checked for aged out values. Value in nanoseconds
+    //#define FDB_AGEING_TIMEOUT_OFFSET
 
-    //Program classifies - already handled by lld ?
+    //Program classifiers - already handled by lld ?
+    
+    //Following shall come from switch_mmap_defines.h
+#define recycleQSlice0 16
+#define recycleQSlice1 17
+#define ourPortHfQSlice0 32
+#define ourPortHfQSlice1 36
+#define ourPortLfQSlice0 33
+#define ourPortLfQSlice1 37
+#define ourHostHfQSlice0 34
+#define ourHostHfQSlice1 38
+#define ourHostLfQSlice0 35
+#define ourHostLfQSlice1 39
+#define ourHostSfQSlice0 40
+#define ourHostSfQSlice1 41
+#define recycleQSlice0off 4*16
+#define recycleQSlice1off 4*17
+#define ourPortHfQSlice0off 4*32
+#define ourPortHfQSlice1off 4*36
+#define ourPortLfQSlice0off 4*33
+#define ourPortLfQSlice1off 4*37
+#define ourHostHfQSlice0off 4*34
+#define ourHostHfQSlice1off 4*38
+#define ourHostLfQSlice0off 4*35
+#define ourHostLfQSlice1off 4*39
+#define ourHostSfQSlice0off 4*40
+#define ourHostSfQSlice1off 4*41
 
-#endif
+#define NORMAL_PD_SIZE 8
+#define SPECIAL_PD_SIZE 20
+
+#define NUM_BUF_POOLS_PER_SLICE 24
+
+    uint32_t MaxNumNormalPDs = 64, MaxNumSpecialPDs = 16;
+    uint32_t pdWord[5], pdAddr;
+    struct bufPoolCfg_s {
+        uint32_t poolBase;
+        uint32_t poolLen;
+    } bufPoolCfg;
+    memset ((void*)&pdWord, 0, sizeof(pdWord));
+    //Reset Q0 to Q7
+    if (!(portNum & 1))
+    {
+        for (hwQueueNum = 0; hwQueueNum < 8; hwQueueNum++)
+        {
+           HWREG (icssgBaseAddr +
+                    CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_REGS_BASE +
+                    CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_QUEUE_RESET ) =  hwQueueNum;
+        }
+       HWREG (icssgBaseAddr +
+                CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_REGS_BASE+
+                CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_QUEUE_RESET ) =  recycleQSlice0;
+       HWREG (icssgBaseAddr +
+                CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_REGS_BASE +
+                CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_QUEUE_RESET ) =  ourPortHfQSlice0;
+       HWREG (icssgBaseAddr +
+                CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_REGS_BASE +
+                CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_QUEUE_RESET ) =  ourPortLfQSlice0;
+       HWREG (icssgBaseAddr +
+                CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_REGS_BASE +
+                CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_QUEUE_RESET ) =  ourHostHfQSlice0;
+       HWREG (icssgBaseAddr +
+                CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_REGS_BASE +
+                CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_QUEUE_RESET ) =  ourHostLfQSlice0;
+       HWREG (icssgBaseAddr +
+                CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_REGS_BASE +
+                CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_QUEUE_RESET ) =  ourHostSfQSlice0;
+        //Now do PDs PORTQ LOW & HI, HOSTQ LOW & HI
+        for (i = 0; i < MaxNumNormalPDs; i++)
+        {
+            pdWord[0] = pdWord[0] & 0xFF00FFFFU; //Clear flags
+            pdWord[0] = pdWord[0] | 0x000000U; //Set Pool, Slice ID
+            pdAddr = PORT_DESC0_LO + i*NORMAL_PD_SIZE;
+            //Init PD Word
+            memcpy ((void*)(icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE +
+                   pdAddr), pdWord, NORMAL_PD_SIZE);
+            //Push to ourPortLfQSlice0off
+            HWREG (icssgBaseAddr+
+                    CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_REGS_BASE +
+                    CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_QUEUE0 +
+                    ourPortLfQSlice0off ) = pdAddr;
+
+            pdWord[0] = pdWord[0] & 0xFF00FFFFU; //Clear flags
+            pdWord[0] = pdWord[0] | 0x200000U; //Set Pool, Slice ID
+            pdAddr = PORT_DESC0_HI + i*NORMAL_PD_SIZE;
+            //Init PD Word
+            memcpy ((void*)(icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE +
+                   pdAddr), pdWord, NORMAL_PD_SIZE);
+            //Push to ourPortHfQSlice0off
+            HWREG (icssgBaseAddr+
+                    CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_REGS_BASE +
+                    CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_QUEUE0 +
+                    ourPortHfQSlice0off ) = pdAddr;
+
+            pdWord[0] = pdWord[0] & 0xFF00FFFFU; //Clear flags
+            pdWord[0] = pdWord[0] | 0x000000U; //Set Pool, Slice ID
+            pdAddr = HOST_DESC0_LO + i*NORMAL_PD_SIZE;
+            //Init PD Word
+            memcpy ((void*)(icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE +
+                   pdAddr), pdWord, NORMAL_PD_SIZE);
+            //Push to ourHostLfQSlice0off
+            HWREG (icssgBaseAddr+
+                    CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_REGS_BASE +
+                    CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_QUEUE0 +
+                    ourHostLfQSlice0off ) = pdAddr;
+
+            pdWord[0] = pdWord[0] & 0xFF00FFFFU; //Clear flags
+            pdWord[0] = pdWord[0] | 0x200000U; //Set Pool, Slice ID
+            pdAddr = HOST_DESC0_HI + i*NORMAL_PD_SIZE;
+            //Init PD Word
+            memcpy ((void*)(icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE +
+                   pdAddr), pdWord, NORMAL_PD_SIZE);
+            //Push to ourHostHfQSlice0off
+            HWREG (icssgBaseAddr+
+                    CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_REGS_BASE +
+                    CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_QUEUE0 +
+                    ourHostHfQSlice0off ) = pdAddr;
+        }
+        //Create special PD pools
+        for (i = 0; i < MaxNumSpecialPDs; i++)
+        {
+            pdWord[0] = pdWord[0] & 0xFF00FFFFU; //Clear flags
+            pdWord[0] = pdWord[0] | 0x400000U; //Set Pool, Slice ID
+            pdAddr = HOST_SPPD0 + i*SPECIAL_PD_SIZE;
+            //Init PD Word
+            memcpy ((void*)(icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE +
+                   pdAddr), pdWord, SPECIAL_PD_SIZE);
+            //Push to ourHostSfQSlice0off
+            HWREG (icssgBaseAddr+
+                    CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_REGS_BASE +
+                    CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_QUEUE0 +
+                    ourHostSfQSlice0off ) = pdAddr;
+        }
+        //Initialize 24 Buffer Pools per slice
+        bufPoolCfg.poolBase = 0x70000000;
+        bufPoolCfg.poolLen = 0x2000;
+        for (i = 0; i < NUM_BUF_POOLS_PER_SLICE ; i++)
+        {
+            memcpy ((void*)(icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE +
+                BUFFER_POOL_0_ADDR_SLICE0_OFFSET + i*8), &bufPoolCfg, 8);
+            bufPoolCfg.poolBase += bufPoolCfg.poolLen;
+        }
+        HWREG (icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE + HOST_RX_Q_PRE_CONTEXT_SLICE0_OFFSET) = 0x701B7800;
+        HWREG (icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE + HOST_RX_Q_PRE_CONTEXT_SLICE0_OFFSET + 4) = 0x701B7800;
+        HWREG (icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE + HOST_RX_Q_PRE_CONTEXT_SLICE0_OFFSET + 8) = 0x701B7800;
+        HWREG (icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE + HOST_RX_Q_PRE_CONTEXT_SLICE0_OFFSET + 12) = 0x701B9800;
+    }
+    if ((portNum & 1))
+    {
+        for (hwQueueNum = 8; hwQueueNum < 16; hwQueueNum++)
+        {
+           HWREG (icssgBaseAddr+
+                    CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_REGS_BASE+
+                    CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_QUEUE_RESET ) =  hwQueueNum;
+        }
+       HWREG (icssgBaseAddr+
+                CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_REGS_BASE+
+                CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_QUEUE_RESET ) =  recycleQSlice1;
+       HWREG (icssgBaseAddr+
+                CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_REGS_BASE+
+                CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_QUEUE_RESET ) =  ourPortHfQSlice1;
+       HWREG (icssgBaseAddr+
+                CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_REGS_BASE+
+                CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_QUEUE_RESET ) =  ourPortLfQSlice1;
+       HWREG (icssgBaseAddr+
+                CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_REGS_BASE+
+                CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_QUEUE_RESET ) =  ourHostHfQSlice1;
+       HWREG (icssgBaseAddr+
+                CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_REGS_BASE+
+                CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_QUEUE_RESET ) =  ourHostLfQSlice1;
+       HWREG (icssgBaseAddr+
+                CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_REGS_BASE+
+                CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_QUEUE_RESET ) =  ourHostSfQSlice1;
+        //Now do PDs PORTQ LOW & HI, HOSTQ LOW & HI
+        for (i = 0; i < MaxNumNormalPDs; i++)
+        {
+            pdWord[0] = pdWord[0] & 0xFF00FFFFU; //Clear flags
+            pdWord[0] = pdWord[0] | 0x800000U; //Set Pool, Slice ID
+            pdAddr = PORT_DESC1_LO + i*NORMAL_PD_SIZE;
+            //Init PD Word
+            memcpy ((void*)(icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE +
+                   pdAddr), pdWord, NORMAL_PD_SIZE);
+            //Push to ourPortLfQSlice1off
+            HWREG (icssgBaseAddr+
+                    CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_REGS_BASE +
+                    CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_QUEUE0 +
+                    ourPortLfQSlice1off ) = pdAddr;
+
+            pdWord[0] = pdWord[0] & 0xFF00FFFFU; //Clear flags
+            pdWord[0] = pdWord[0] | 0xA00000U; //Set Pool, Slice ID
+            pdAddr = PORT_DESC1_HI + i*NORMAL_PD_SIZE;
+            //Init PD Word
+            memcpy ((void*)(icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE +
+                   pdAddr), pdWord, NORMAL_PD_SIZE);
+            //Push to ourPortHfQSlice1off
+            HWREG (icssgBaseAddr+
+                    CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_REGS_BASE +
+                    CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_QUEUE0 +
+                    ourPortHfQSlice1off ) = pdAddr;
+
+            pdWord[0] = pdWord[0] & 0xFF00FFFFU; //Clear flags
+            pdWord[0] = pdWord[0] | 0x800000U; //Set Pool, Slice ID
+            pdAddr = HOST_DESC1_LO + i*NORMAL_PD_SIZE;
+            //Init PD Word
+            memcpy ((void*)(icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE +
+                   pdAddr), pdWord, NORMAL_PD_SIZE);
+            //Push to ourHostLfQSlice1off
+            HWREG (icssgBaseAddr+
+                    CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_REGS_BASE +
+                    CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_QUEUE0 +
+                    ourHostLfQSlice1off ) = pdAddr;
+
+            pdWord[0] = pdWord[0] & 0xFF00FFFFU; //Clear flags
+            pdWord[0] = pdWord[0] | 0xA00000U; //Set Pool, Slice ID
+            pdAddr = HOST_DESC1_HI + i*NORMAL_PD_SIZE;
+            //Init PD Word
+            memcpy ((void*)(icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE +
+                   pdAddr), pdWord, NORMAL_PD_SIZE);
+            //Push to ourHostHfQSlice1off
+            HWREG (icssgBaseAddr+
+                    CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_REGS_BASE +
+                    CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_QUEUE0 +           
+                    ourHostHfQSlice1off ) = pdAddr;
+        }
+        //Create special PD pools
+        for (i = 0; i < MaxNumSpecialPDs; i++)
+        {
+            pdWord[0] = pdWord[0] & 0xFF00FFFFU; //Clear flags
+            pdWord[0] = pdWord[0] | 0xC00000U; //Set Pool, Slice ID
+            pdAddr = HOST_SPPD1 + i*SPECIAL_PD_SIZE;
+            //Init PD Word
+            memcpy ((void*)(icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE +
+                   pdAddr), pdWord, SPECIAL_PD_SIZE);
+            //Push to ourHostSfQSlice1off
+            HWREG (icssgBaseAddr+
+                    CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_REGS_BASE +
+                    CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_QUEUE0 +
+                    ourHostSfQSlice1off ) = pdAddr;
+        }
+        //Initialize 24 Buffer Pools per slice
+        bufPoolCfg.poolBase = 0x70030000;
+        bufPoolCfg.poolLen = 0x2000;
+        for (i = 0; i < NUM_BUF_POOLS_PER_SLICE ; i++)
+        {
+            memcpy ((void*)(icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE +
+                BUFFER_POOL_0_ADDR_SLICE1_OFFSET + i*8), &bufPoolCfg, 8);
+            bufPoolCfg.poolBase += bufPoolCfg.poolLen;
+        }
+        HWREG (icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE + HOST_RX_Q_PRE_CONTEXT_SLICE1_OFFSET) = 0x701BB800;
+        HWREG (icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE + HOST_RX_Q_PRE_CONTEXT_SLICE1_OFFSET + 4) = 0x701BB800;
+        HWREG (icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE + HOST_RX_Q_PRE_CONTEXT_SLICE1_OFFSET + 8) = 0x701BB800;
+        HWREG (icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE + HOST_RX_Q_PRE_CONTEXT_SLICE1_OFFSET + 12) = 0x701BD800;
+    }
+
+#endif //TSN_MAC
     if (PRUICSS_pruEnable(prussDrvHandle, pru_n) != 0)
     {
         UART_printf("PRUICSS_pruEnable for PRUICCSS_PRU%d failed\n", slice_n);
