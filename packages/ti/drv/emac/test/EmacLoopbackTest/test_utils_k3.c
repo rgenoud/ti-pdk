@@ -1009,6 +1009,8 @@ int32_t app_test_send(uint32_t pNum, uint8_t* pPkt, uint32_t pktChannel, uint32_
         p_pkt_desc->pPrev = NULL;
         p_pkt_desc->PktChannel     = pktChannel;
         p_pkt_desc->PktLength      = pktSize;
+        if (pkt_send_count == 0)
+            Task_sleep (2000);
         sentRetVal = emac_send(pNum, p_pkt_desc);
         if(sentRetVal != EMAC_DRV_RESULT_OK)
         {
