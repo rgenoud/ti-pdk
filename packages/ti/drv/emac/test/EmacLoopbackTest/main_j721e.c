@@ -115,7 +115,7 @@ uint32_t endPort = EMAC_PORT_CPSW;
 #else
 /* ICSSG case */
 uint32_t portNum = EMAC_PORT_ICSS;
-uint32_t endPort = EMAC_PORT_ICSS+3;
+uint32_t endPort = EMAC_PORT_ICSS+1; //3;
 #endif
 
 

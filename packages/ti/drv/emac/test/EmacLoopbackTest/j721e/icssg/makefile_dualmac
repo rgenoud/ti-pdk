@@ -21,7 +21,7 @@ INCLUDE_EXTERNAL_INTERFACES = bios xdc pdk
 # List all the components required by the application
 COMP_LIST_COMMON = emac uart uart_console osal_tirtos csl pruss board udma sciclient i2c
 
-XDC_CFG_FILE_$(CORE) = $(PDK_INSTALL_PATH)/ti/build/$(SOC)/sysbios_$(ISA).cfg
+XDC_CFG_FILE_$(CORE) = ./j721e/emacUnitTest_r5.cfg
 
 PACKAGE_SRCS_COMMON = .
 CFLAGS_LOCAL_COMMON = $(PDK_CFLAGS) -DEMAC_TEST_APP_ICSSG -DUNITY_INCLUDE_CONFIG_H

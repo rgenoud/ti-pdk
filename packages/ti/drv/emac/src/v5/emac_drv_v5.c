@@ -1304,7 +1304,7 @@ static void emac_config_icssg_dual_mac_fw(uint32_t port_num, EMAC_HwAttrs_V5 *hw
     addr = CSL_PRU_ICSSG0_PR1_MII_RT_PR1_MII_RT_CFG_BASE + 0x48;// 0xb032048
     emac_hw_mem_write(addr, (void*) &tempVal, 1);
 #endif
-
+    //FIXME: Check for duplicate init
     /* Set CORE_CLK as the source of CORE_IEP_CLK (sync mode)*/
     regVal = CSL_REG32_RD (emac_mcb.port_cb[port_num].icssDram0BaseAddr + CSL_ICSSCFG_REGS_BASE +CSL_ICSSCFG_IEPCLK);
     regVal |= 0x1U << CSL_ICSSCFG_IEPCLK_OCP_EN_SHIFT;
@@ -1354,8 +1354,9 @@ static void emac_config_icssg_dual_mac_fw(uint32_t port_num, EMAC_HwAttrs_V5 *hw
         {
             pruCfg.tx_bs[bufferPoolNum] = pDmFwCfg->txHostQueueSize[bufferPoolNum-8U];
         }
-    
+#ifdef LEGACY_DUAL_MAC
         emac_hw_mem_write(hwAttrs->portCfg[port_num].icssSharedRamBaseAddr, &(pruCfg),(sizeof(EMAC_PRU_CFG_T)/4));
+#endif
     }
 }
 
@@ -1372,6 +1373,7 @@ EMAC_TX_QUEUE_CONTEXT host_egress_q_desc_context[EMAC_NUM_HOST_EGRESS_FW_QUEUES]
  */
 static EMAC_DRV_ERR_E emac_config_icssg_switch_fw(uint32_t port_num, EMAC_HwAttrs_V5 *hwAttrs)
 {
+#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
     uint8_t queue_num;
     uint32_t smem_offset;
     uint32_t start_of_host_Q_offset;
@@ -1392,11 +1394,13 @@ static EMAC_DRV_ERR_E emac_config_icssg_switch_fw(uint32_t port_num, EMAC_HwAttr
     Udma_ChHandle chHandle;
     uint32_t flowIdBase;
     uint32_t descQueueSize;
+#endif
     EMAC_DRV_ERR_E retVal = EMAC_DRV_RESULT_OK;
     UTILS_trace(UTIL_TRACE_LEVEL_INFO, emac_mcb.drv_trace_cb, "port: %d: ENTER",port_num);
 
     emac_icssg_switch_eth_setup(port_num);
 
+#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
     hwAttrs->portCfg[port_num].getFwCfg(port_num,&pEmacFwCfg);
 
     pSwitchFwCfg = (EMAC_ICSSG_SWITCH_FW_CFG*)pEmacFwCfg->pFwPortCfg;
@@ -1528,6 +1532,7 @@ static EMAC_DRV_ERR_E emac_config_icssg_switch_fw(uint32_t port_num, EMAC_HwAttr
             emac_hw_mem_write (smem_offset, &(flowIdBase), 1);
         }
     }
+#endif 
     UTILS_trace(UTIL_TRACE_LEVEL_INFO, emac_mcb.drv_trace_cb, "port: %d: EXIT with status: %d",
                                             port_num, retVal);
     return retVal;
