@@ -2270,7 +2270,12 @@ int32_t  app_test_task_init_pruicss(uint32_t portNum)
                     ourHostSfQSlice0off ) = pdAddr;
         }
         //Initialize 24 Buffer Pools per slice
+#if defined (SOC_AM65XX)
         bufPoolCfg.poolBase = 0x70000000;
+#endif
+#if defined (SOC_J721E)
+        bufPoolCfg.poolBase = 0x03600000;
+#endif
         bufPoolCfg.poolLen = 0x2000;
         for (i = 0; i < NUM_BUF_POOLS_PER_SLICE ; i++)
         {
@@ -2376,7 +2381,12 @@ int32_t  app_test_task_init_pruicss(uint32_t portNum)
                     ourHostSfQSlice1off ) = pdAddr;
         }
         //Initialize 24 Buffer Pools per slice
+#if defined (SOC_AM65XX)
         bufPoolCfg.poolBase = 0x70030000;
+#endif
+#if defined (SOC_J721E)
+        bufPoolCfg.poolBase = 0x03630000;
+#endif
         bufPoolCfg.poolLen = 0x2000;
         for (i = 0; i < NUM_BUF_POOLS_PER_SLICE ; i++)
         {

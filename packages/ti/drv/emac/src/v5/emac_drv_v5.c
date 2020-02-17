@@ -1304,7 +1304,7 @@ static void emac_config_icssg_dual_mac_fw(uint32_t port_num, EMAC_HwAttrs_V5 *hw
     addr = CSL_PRU_ICSSG0_PR1_MII_RT_PR1_MII_RT_CFG_BASE + 0x48;// 0xb032048
     emac_hw_mem_write(addr, (void*) &tempVal, 1);
 #endif
-
+    //FIXME: Check for duplicate init
     /* Set CORE_CLK as the source of CORE_IEP_CLK (sync mode)*/
     regVal = CSL_REG32_RD (emac_mcb.port_cb[port_num].icssDram0BaseAddr + CSL_ICSSCFG_REGS_BASE +CSL_ICSSCFG_IEPCLK);
     regVal |= 0x1U << CSL_ICSSCFG_IEPCLK_OCP_EN_SHIFT;
