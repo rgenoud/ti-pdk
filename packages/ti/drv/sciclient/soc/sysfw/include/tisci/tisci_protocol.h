@@ -91,12 +91,7 @@ struct tisci_header {
     uint8_t    host;
     uint8_t    seq;
     uint32_t    flags;
-/* Windows Visual Studio build has issues with  payload[], changing it only for visual studio build */
-#ifdef _MSC_VER	
-    uint8_t    *payload;
-#else
-	uint8_t    payload[0];
-#endif	
+    uint8_t    payload[];
 };
 
 /*
@@ -291,10 +286,8 @@ struct tisci_sec_header {
  * RM TISCI message to configure a Navigator Subsystem ring
  */
 #define TISCI_MSG_RM_RING_CFG                   (0x1110U)
-/**
- * RM TISCI message to get the register cfg for a Navigator Subsystem ring
- */
-#define TISCI_MSG_RM_RING_GET_CFG               (0x1111U)
+/* Reserved ID not for (re)use */
+#define TISCI_MSG_RM_RESERVED_1111              (0x1111U)
 /**
  * RM TISCI message to configure a Navigator Subsystem ring monitor
  */
@@ -307,11 +300,8 @@ struct tisci_sec_header {
  * RM TISCI message to configure a Navigator Subsystem UDMAP transmit channel
  */
 #define TISCI_MSG_RM_UDMAP_TX_CH_CFG            (0x1205U)
-/**
- * RM TISCI message to get the register cfg for a Navigator Subsystem UDMAP
- * transmit channel
- */
-#define TISCI_MSG_RM_UDMAP_TX_CH_GET_CFG        (0x1206U)
+/* Reserved ID not for (re)use */
+#define TISCI_MSG_RM_RESERVED_1206              (0x1206U)
 /* Reserved ID not for (re)use */
 #define TISCI_MSG_RM_RESERVED_1210              (0x1210U)
 /* Reserved ID not for (re)use */
@@ -320,11 +310,7 @@ struct tisci_sec_header {
  * RM TISCI message to configure a Navigator Subsystem UDMAP receive channel
  */
 #define TISCI_MSG_RM_UDMAP_RX_CH_CFG            (0x1215U)
-/**
- * RM TISCI message to get the register cfg for a Navigator Subsystem UDMAP
- * receive channel
- */
-#define TISCI_MSG_RM_UDMAP_RX_CH_GET_CFG        (0x1216U)
+#define TISCI_MSG_RM_RESERVED_1216              (0x1216U)
 /* Reserved ID not for (re)use */
 #define TISCI_MSG_RM_RESERVED_1220              (0x1220U)
 /* Reserved ID not for (re)use */
@@ -338,26 +324,17 @@ struct tisci_sec_header {
  * optional, size based free descriptor queue registers
  */
 #define TISCI_MSG_RM_UDMAP_FLOW_SIZE_THRESH_CFG (0x1231U)
-/**
- * RM TISCI message to get the register cfg for a Navigator Subsystem UDMAP
- * receive flow's standard registers
- */
-#define TISCI_MSG_RM_UDMAP_FLOW_GET_CFG         (0x1232U)
-/**
- * RM TISCI message to get the register cfg for a Navigator Subsystem UDMAP
- * receive flow's size based free descriptor queue registers
- */
-#define TISCI_MSG_RM_UDMAP_FLOW_SIZE_THRESH_GET_CFG (0x1233U)
+/* Reserved ID not for (re)use */
+#define TISCI_MSG_RM_RESERVED_1232              (0x1232U)
+/* Reserved ID not for (re)use */
+#define TISCI_MSG_RM_RESERVED_1233              (0x1233U)
 /**
  * RM TISCI message to configure a Navigator Subsystem UDMAP global
  * configuration
  */
 #define TISCI_MSG_RM_UDMAP_GCFG_CFG             (0x1240U)
-/**
- * RM TISCI message to get the register cfg for a Navigator Subsystem UDMAP
- * global configuration
- */
-#define TISCI_MSG_RM_UDMAP_GCFG_GET_CFG         (0x1241U)
+/* Reserved ID not for (re)use */
+#define TISCI_MSG_RM_RESERVED_1241              (0x1241U)
 /**
  * RM TISCI message to pair PSI-L source and destination threads
  */
