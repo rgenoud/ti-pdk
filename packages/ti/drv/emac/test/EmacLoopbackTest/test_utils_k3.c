@@ -145,13 +145,13 @@ uint32_t gPgVersion;
 /* EMAC firmware header files */
 
 
-
+#if defined (SOC_AM65XX)
 /* PG 1.0 Firmware */
 #include <ti/drv/emac/firmware/icss_dualmac/bin/rxl2_txl2_rgmii0_bin.h>      /* PDSPcode */
 #include <ti/drv/emac/firmware/icss_dualmac/bin/rtu_test0_bin.h>             /* PDSP2code */
 #include <ti/drv/emac/firmware/icss_dualmac/bin/rxl2_txl2_rgmii1_bin.h>      /* PDSP3code */
 #include <ti/drv/emac/firmware/icss_dualmac/bin/rtu_test1_bin.h>             /* PDSP4code */
-
+#endif
 
 /* PG2.0 firmware */
 #ifdef TSN_MAC
@@ -181,8 +181,10 @@ typedef struct {
 } app_test_pru_rtu_fw_t;
 
 app_test_pru_rtu_fw_t firmware_pg1[2] = {
+#if defined (SOC_AM65XX)
     { PDSPcode_0, sizeof(PDSPcode_0), PDSP2code_0, sizeof(PDSP2code_0), NULL, 0},
     { PDSP3code_0, sizeof(PDSP3code_0), PDSP4code_0, sizeof(PDSP4code_0), NULL, 0}
+#endif
 };
 #ifdef TSN_MAC
 app_test_pru_rtu_fw_t firmware_pg2[2] = {
@@ -1020,10 +1022,14 @@ int32_t app_test_send(uint32_t pNum, uint8_t* pPkt, uint32_t pktChannel, uint32_
         }
         
 #if !defined(EMAC_BENCHMARK)
-
-    while((pkt_received == 0) || (timestamp_received == 0))
+    uint32_t timeout_count = 100;
+    while(((pkt_received == 0) || (timestamp_received == 0)) && (timeout_count-- > 0))
     {
         Task_sleep(100);
+    }
+    if (timeout_count == 0)
+    {
+        UART_printf ("app_test_send: receive packet failed with timeout :%d\n", pkt_send_count);
     }
 #endif
 
@@ -1660,7 +1666,7 @@ void test_EMAC_verify_ut_dual_mac_icssg(void)
 #ifdef EMAC_TEST_APP_WITHOUT_DDR
         Task_sleep(2000);
 #endif
-    Board_initCfg cfg = BOARD_INIT_UART_STDIO | BOARD_INIT_PINMUX_CONFIG | BOARD_INIT_MODULE_CLOCK | BOARD_INIT_ICSS_ETH_PHY | BOARD_INIT_ETH_PHY;
+    Board_initCfg cfg = BOARD_INIT_UART_STDIO | BOARD_INIT_PINMUX_CONFIG | BOARD_INIT_MODULE_CLOCK | BOARD_INIT_ICSS_ETH_PHY | BOARD_INIT_ETH_PHY | BOARD_INIT_ENETCTRL_ICSS;
 
 #if defined(SOC_J721E)
     /* PINMUX config of GESI for ICSSG */
@@ -2109,16 +2115,10 @@ int32_t  app_test_task_init_pruicss(uint32_t portNum)
     //SMEM
     //#define PSI_L_REGULAR_FLOW_ID_BASE_OFFSET
     //#define PSI_L_MGMT_FLOW_ID_OFFSET
-    //Program 0x96 and 0x9b respectively as flowIDs for Port 0 - this is hard coded for now
-     i = (portNum & 1) ? 4 : 0 ;
-#if defined(SOC_J721E)
-    //7 flows per slice
-    HWREG (icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE + PSI_L_REGULAR_FLOW_ID_BASE_SLICE0_OFFSET + i) = ((0x9bU+portNum*7) << 16) | (0x96+portNum*7);
-#endif
-#if defined(SOC_AM65XX)
+    i = (portNum & 1) ? 4 : 0 ;
     //10 flows per slice
-    HWREG (icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE + PSI_L_REGULAR_FLOW_ID_BASE_SLICE0_OFFSET + i) = ((0x9eU+portNum*10) << 16) | (0x96+portNum*10);
-#endif
+    HWREG (icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE + PSI_L_REGULAR_FLOW_ID_BASE_SLICE0_OFFSET + i) = ((emac_mcb.port_cb[0].rxMgmtCh.flowHandle->flowStart+portNum*10) << 16) |
+            (emac_mcb.port_cb[0].rxPktCh.flowHandle->flowStart+portNum*10);
 
     //#define SPL_PKT_DEFAULT_PRIORITY 
     //#define HOST_PORT_DF_VLAN_OFFSET 
