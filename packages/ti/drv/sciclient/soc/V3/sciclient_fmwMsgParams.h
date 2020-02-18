@@ -117,6 +117,26 @@ extern "C" {
 #define SCICLIENT_CONTEXT_MAX_NUM                      (16U)
 /* @} */
 
+/**
+ *  \anchor Sciclient_ProcessorIds_V0
+ *  \name Sciclient Processor Ids
+ *  @{
+ *  Processor IDs for the Processor Boot Configuration APIs.
+ */
+/** COMPUTE_CLUSTER_MSMC0: (Cluster 0 Processor 0) */
+#define SCICLIENT_PROCID_A53_CL0_C0                       (0x20U)
+/** COMPUTE_CLUSTER_MSMC0: (Cluster 0 Processor 1) */
+#define SCICLIENT_PROCID_A53_CL0_C1                       (0x21U)
+/** COMPUTE_CLUSTER_MSMC0: (Cluster 1 Processor 0) */
+#define SCICLIENT_PROCID_A53_CL1_C0                       (0x22U)
+/** COMPUTE_CLUSTER_MSMC0: (Cluster 1 Processor 1) */
+#define SCICLIENT_PROCID_A53_CL1_C1                       (0x23U)
+/** MCU_SEC_MMR0: (Cluster 0 Processor 0) */
+#define SCICLIENT_PROCID_R5_CL0_C0                        (0x01U)
+/** MCU_SEC_MMR0: (Cluster 0 Processor 1) */
+#define SCICLIENT_PROCID_R5_CL0_C1                        (0x02U)
+/* @} */
+
 /** -------------------- Resource Management Parameters ---------------------*/
 #define TISCI_MSG_VALUE_RM_NULL_RING_TYPE     (0xFFFFu)
 #define TISCI_MSG_VALUE_RM_NULL_RING_INDEX    (0xFFFFFFFFu)
