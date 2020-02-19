@@ -933,6 +933,20 @@ void emac_switch_config_ft3_priority_tag(uint32_t port_num)
 /*
  *  ======== emac_ioctl_port_state_ctrl ========
  */
+static void ioctl_port_state_hlp(int idx, uint32_t port)
+{
+    memcpy((void*)(emac_mcb.switch_cb.pCmd1Icssg->spare),
+           (void*)(emac_util_get_R30_info(idx, port, EMAC_ICSSG_0)),
+           sizeof(emac_mcb.switch_cb.pCmd1Icssg->spare)
+           );
+#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
+    memcpy((void*)(emac_mcb.switch_cb.pCmd2Icssg->spare),
+           (void*)(emac_util_get_R30_info(idx, portLoc, EMAC_ICSSG_1)),
+           sizeof(emac_mcb.switch_cb.pCmd1Icssg->spare)
+           );
+#endif
+}
+
 EMAC_DRV_ERR_E emac_ioctl_port_state_ctrl(uint32_t port_num, void* p_params)
 {
     EMAC_IOCTL_PARAMS *pParams = (EMAC_IOCTL_PARAMS*) p_params;
@@ -972,52 +986,28 @@ EMAC_DRV_ERR_E emac_ioctl_port_state_ctrl(uint32_t port_num, void* p_params)
         switch (pParams->subCommand)
         {
             case EMAC_IOCTL_PORT_STATE_DISABLE:
-                memcpy((void*)(emac_mcb.switch_cb.pCmd1Icssg->spare),(void*)(emac_util_get_R30_info(EMAC_PORT_DISABLE, portLoc, EMAC_ICSSG_0)), sizeof(emac_mcb.switch_cb.pCmd1Icssg->spare));
-#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
-                memcpy((void*)(emac_mcb.switch_cb.pCmd2Icssg->spare),(void*)(emac_util_get_R30_info(EMAC_PORT_DISABLE, portLoc, EMAC_ICSSG_1)), sizeof(emac_mcb.switch_cb.pCmd1Icssg->spare));
-#endif
+                ioctl_port_state_hlp(EMAC_PORT_DISABLE, portLoc);
                 break;
             case EMAC_IOCTL_PORT_STATE_BLOCKING:
-                memcpy((void*)(emac_mcb.switch_cb.pCmd1Icssg->spare),(void*)(emac_util_get_R30_info(EMAC_PORT_BLOCK, portLoc, EMAC_ICSSG_0)), sizeof(emac_mcb.switch_cb.pCmd1Icssg->spare));
-#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
-                memcpy((void*)(emac_mcb.switch_cb.pCmd2Icssg->spare),(void*)(emac_util_get_R30_info(EMAC_PORT_BLOCK, portLoc,EMAC_ICSSG_1)), sizeof(emac_mcb.switch_cb.pCmd1Icssg->spare));
-#endif
+                ioctl_port_state_hlp(EMAC_PORT_BLOCK, portLoc);
                 break;
             case EMAC_IOCTL_PORT_STATE_FORWARD:
-                memcpy((void*)(emac_mcb.switch_cb.pCmd1Icssg->spare),(void*)(emac_util_get_R30_info(EMAC_PORT_FORWARD, portLoc, EMAC_ICSSG_0)), sizeof(emac_mcb.switch_cb.pCmd1Icssg->spare));
-#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
-                memcpy((void*)(emac_mcb.switch_cb.pCmd2Icssg->spare),(void*)(emac_util_get_R30_info(EMAC_PORT_FORWARD, portLoc, EMAC_ICSSG_1)), sizeof(emac_mcb.switch_cb.pCmd1Icssg->spare));
-#endif
+                ioctl_port_state_hlp(EMAC_PORT_FORWARD, portLoc);
                 break;
             case EMAC_IOCTL_PORT_STATE_FORWARD_WO_LEARNING:
-                memcpy((void*)(emac_mcb.switch_cb.pCmd1Icssg->spare),(void*)(emac_util_get_R30_info(EMAC_PORT_FORWARD_WO_LEARNING, portLoc, EMAC_ICSSG_0)), sizeof(emac_mcb.switch_cb.pCmd1Icssg->spare));
-#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
-                memcpy((void*)(emac_mcb.switch_cb.pCmd2Icssg->spare),(void*)(emac_util_get_R30_info(EMAC_PORT_FORWARD_WO_LEARNING, portLoc, EMAC_ICSSG_1)), sizeof(emac_mcb.switch_cb.pCmd1Icssg->spare));
-#endif
+                ioctl_port_state_hlp(EMAC_PORT_FORWARD_WO_LEARNING, portLoc);
                 break;
             case EMAC_IOCTL_PORT_STATE_TAS_TRIGGER:
-                memcpy((void*)(emac_mcb.switch_cb.pCmd1Icssg->spare),(void*)(emac_util_get_R30_info(EMAC_PORT_TAS_TRIGGER, portLoc, EMAC_ICSSG_0)), sizeof(emac_mcb.switch_cb.pCmd1Icssg->spare));
-#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
-                memcpy((void*)(emac_mcb.switch_cb.pCmd2Icssg->spare),(void*)(emac_util_get_R30_info(EMAC_PORT_TAS_TRIGGER, portLoc, EMAC_ICSSG_1)), sizeof(emac_mcb.switch_cb.pCmd1Icssg->spare));
-#endif
+                ioctl_port_state_hlp(EMAC_PORT_TAS_TRIGGER, portLoc);
                 break;
             case EMAC_IOCTL_PORT_STATE_TAS_ENABLE:
-                memcpy((void*)(emac_mcb.switch_cb.pCmd1Icssg->spare),(void*)(emac_util_get_R30_info(EMAC_PORT_TAS_ENABLE, portLoc, EMAC_ICSSG_0)), sizeof(emac_mcb.switch_cb.pCmd1Icssg->spare));
-#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
-                memcpy((void*)(emac_mcb.switch_cb.pCmd2Icssg->spare),(void*)(emac_util_get_R30_info(EMAC_PORT_TAS_ENABLE, portLoc, EMAC_ICSSG_1)), sizeof(emac_mcb.switch_cb.pCmd1Icssg->spare));
-#endif
+                ioctl_port_state_hlp(EMAC_PORT_TAS_ENABLE, portLoc);
                 break;
             case EMAC_IOCTL_PORT_STATE_TAS_RESET:
-                memcpy((void*)(emac_mcb.switch_cb.pCmd1Icssg->spare),(void*)(emac_util_get_R30_info(EMAC_PORT_TAS_RESET, portLoc, EMAC_ICSSG_0)), sizeof(emac_mcb.switch_cb.pCmd1Icssg->spare));
-#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
-                memcpy((void*)(emac_mcb.switch_cb.pCmd2Icssg->spare),(void*)(emac_util_get_R30_info(EMAC_PORT_TAS_RESET, portLoc, EMAC_ICSSG_1)), sizeof(emac_mcb.switch_cb.pCmd1Icssg->spare));
-#endif
+                ioctl_port_state_hlp(EMAC_PORT_TAS_RESET, portLoc);
                 break;
             case EMAC_IOCTL_PORT_STATE_TAS_DISABLE:
-                memcpy((void*)(emac_mcb.switch_cb.pCmd1Icssg->spare),(void*)(emac_util_get_R30_info(EMAC_PORT_TAS_DISABLE, portLoc, EMAC_ICSSG_0)), sizeof(emac_mcb.switch_cb.pCmd1Icssg->spare));
-#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
-                memcpy((void*)(emac_mcb.switch_cb.pCmd2Icssg->spare),(void*)(emac_util_get_R30_info(EMAC_PORT_TAS_DISABLE, portLoc, EMAC_ICSSG_1)), sizeof(emac_mcb.switch_cb.pCmd1Icssg->spare));
-#endif
+                ioctl_port_state_hlp(EMAC_PORT_TAS_DISABLE, portLoc);
                 break;
              default:
                 break;
