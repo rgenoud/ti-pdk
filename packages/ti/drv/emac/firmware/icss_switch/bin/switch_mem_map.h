@@ -86,21 +86,38 @@
 #define RX_TS_STASHED_SLICE0_SIZE                          0x8
 #define RX_TS_STASHED_SLICE1                               0x004C    //Used internally by FW for stashed Rx timestamp
 #define RX_TS_STASHED_SLICE1_SIZE                          0x8
-#define MGR_CMD_OFFSET                                     0x0054    //Management command from Host to RTU0
-#define MGR_CMD_OFFSET_SIZE                                0x20
-#define MGR_CMD_RET                                        0x0074    //Management reply to Host from RTU0
-#define MGR_CMD_RET_SIZE                                   0xc
-#define MGR_CMD_STATE                                      0x0080    //0 - idle; 1 - todo; 2 - executing
-#define MGR_CMD_STATE_SIZE                                 0x1
+#define MGR_CMD_SLICE0_OFFSET                              0x0054    //Management command from Host to RTU0
+#define MGR_CMD_SLICE0_OFFSET_SIZE                         0x20
+#define MGR_CMD_RET_SLICE0                                 0x0074    //Management reply to Host from RTU0
+#define MGR_CMD_RET_SLICE0_SIZE                            0xc
+#define MGR_CMD_STATE_SLICE0                               0x0080    //0 - idle; 1 - todo; 2 - executing
+#define MGR_CMD_STATE_SLICE0_SIZE                          0x1
 //Padding of 3 bytes
-#define MGR_CMD_PRU0_STATUS                                0x0084    //Used internally by FW to communicate from RTU0 to PRU0
-#define MGR_CMD_PRU0_STATUS_SIZE                           0x2
-#define MGR_CMD_PRU1_STATUS                                0x0086    //Used internally by FW to communicate from RTU0 to PRU1
-#define MGR_CMD_PRU1_STATUS_SIZE                           0x2
-#define MGR_CMD_RTU0_STATUS                                0x0088    //Used internally by FW to communicate from RTU0 to RTU0
-#define MGR_CMD_RTU0_STATUS_SIZE                           0x2
-#define MGR_CMD_RTU1_STATUS                                0x008A    //Used internally by FW to for management state machine
-#define MGR_CMD_RTU1_STATUS_SIZE                           0x42
+#define MGR_CMD_RXPRU_STATUS_SLICE0                        0x0084    //Used internally by FW to communicate from RTU0 to PRU0
+#define MGR_CMD_RXPRU_STATUS_SLICE0_SIZE                   0x2
+#define MGR_CMD_TXPRU_STATUS_SLICE0                        0x0086    //Used internally by FW to communicate from RTU0 to PRU1
+#define MGR_CMD_TXPRU_STATUS_SLICE0_SIZE                   0x2
+#define MGR_CMD_RTU_STATUS_SLICE0                          0x0088    //Used internally by FW to communicate from RTU0 to RTU0
+#define MGR_CMD_RTU_STATUS_SLICE0_SIZE                     0x2
+//Padding of 2 bytes
+#define MGR_CMD_BUFF_PTR_SLICE0                            0x008C    //Used for storing buffer pointers
+#define MGR_CMD_BUFF_PTR_SLICE0_SIZE                       0x4
+#define MGR_CMD_SLICE1_OFFSET                              0x0090    //Management command from Host to RTU0
+#define MGR_CMD_SLICE1_OFFSET_SIZE                         0x20
+#define MGR_CMD_RET_SLICE1                                 0x00B0    //Management reply to Host from RTU0
+#define MGR_CMD_RET_SLICE1_SIZE                            0xc
+#define MGR_CMD_STATE_SLICE1                               0x00BC    //0 - idle; 1 - todo; 2 - executing
+#define MGR_CMD_STATE_SLICE1_SIZE                          0x1
+//Padding of 3 bytes
+#define MGR_CMD_RXPRU_STATUS_SLICE1                        0x00C0    //Used internally by FW to communicate from RTU0 to PRU0
+#define MGR_CMD_RXPRU_STATUS_SLICE1_SIZE                   0x2
+#define MGR_CMD_TXPRU_STATUS_SLICE1                        0x00C2    //Used internally by FW to communicate from RTU0 to PRU1
+#define MGR_CMD_TXPRU_STATUS_SLICE1_SIZE                   0x2
+#define MGR_CMD_RTU_STATUS_SLICE1                          0x00C4    //Used internally by FW to communicate from RTU0 to RTU0
+#define MGR_CMD_RTU_STATUS_SLICE1_SIZE                     0x2
+//Padding of 2 bytes
+#define MGR_CMD_BUFF_PTR_SLICE1                            0x00C8    //Used for storing buffer pointers
+#define MGR_CMD_BUFF_PTR_SLICE1_SIZE                       0x4
 #define MGR_CMD_END_OFFSET                                 0x00CC    //End of Management command region
 #define P1_QUEUE_NUM_UNTAGGED                              0x00CC    //Port1 Default Queue number for untagged packets
 #define P1_QUEUE_NUM_UNTAGGED_SIZE                         0x1
@@ -503,9 +520,13 @@
 #define HOST_RX_EXP_CONTEXT_WR_SLOT_PRU0_SIZE              0x1
 #define P0_FIRST_32B_PACKET_DATA                           0x0006    //Used to store 32B at the start of SOF
 #define P0_FIRST_32B_PACKET_DATA_SIZE                      0x1
-#define PRU0_BSRAM_END_OFFSET                              0x0007
+#define MGR_PKT_PULL_SLICE0                                0x0007    //Command buffers for slice0 
+#define MGR_PKT_PULL_SLICE0_SIZE                           0xa0
+#define MGR_PKT_PULL_SLICE1                                0x00A7    //Command buffers for slice0 
+#define MGR_PKT_PULL_SLICE1_SIZE                           0xa0
+#define PRU0_BSRAM_END_OFFSET                              0x0147
 
-// total PRU0_BSRAM memory usage : 0.21875 KB from total of 4.0KB 
+// total PRU0_BSRAM memory usage : 10.21875 KB from total of 4.0KB 
 
 //************************************************************************************
 //
