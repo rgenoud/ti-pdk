@@ -48,9 +48,9 @@ typedef struct hwq_ip_tag{
 static uint32_t smem_start[3] = { 0x0b010000, 0x0b110000, 0xb210000 };
 
 static hwq_ip_t *hwq_a[3] = {
-    (hwq_ip_t*) 0x0b033400, //TODO: replace with macro from CSL 
-    (hwq_ip_t*) 0x0b133400,
-    (hwq_ip_t*) 0x0b233400,
+    (hwq_ip_t*) 0x0b033d00, //TODO: replace with macro from CSL 
+    (hwq_ip_t*) 0x0b133d00,
+    (hwq_ip_t*) 0x0b233d00,
 };
 
 void *hwq_pop(int icssg, int qn)
