@@ -119,7 +119,7 @@ drvspi_FIRM_LIST = $(spi_FIRM_LIST)
 # List below all examples for allowed values
 ############################
 #spi_EXAMPLE_LIST = drv_mcspi_loopback_app MCSPI_Baremetal_MasterSlave_TestApp MCSPI_Baremetal_MasterSlave_Dma_TestApp MCSPI_MasterSlave_TestApp MCSPI_MasterSlave_Dma_TestApp  OSPI_Baremetal_Flash_TestApp  OSPI_Baremetal_Flash_Dma_TestApp OSPI_Flash_TestApp OSPI_Flash_SMP_TestApp OSPI_Flash_Dma_TestApp OSPI_Flash_Dma_SMP_TestApp
-spi_EXAMPLE_LIST = MCSPI_Baremetal_MasterSlave_TestApp
+spi_EXAMPLE_LIST = MCSPI_Baremetal_MasterSlave_TestApp OSPI_Baremetal_Flash_TestApp
 drvspi_EXAMPLE_LIST = $(spi_EXAMPLE_LIST)
 
 #

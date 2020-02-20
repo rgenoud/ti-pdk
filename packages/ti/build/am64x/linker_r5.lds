@@ -33,6 +33,8 @@ MEMORY
     RESET_VECTORS (X)       : origin=0x70000000 length=0x100
     /* am64x MCMS3 locations */
     MSMC3   (RWIX)          : origin=0x70001100 length=0x100000-0x1100 /* 2MB - 0x1100 */
+
+    DDR0    (RWIX)          : origin=0x80000000 length=0x80000000      /* 2GB */
 }
 
 /* Section Configuration */
@@ -58,7 +60,7 @@ SECTIONS
     .data_buffer   : {} palign(128)    > MSMC3
 
     /* USB or any other LLD buffer for benchmarking */
-    .benchmark_buffer (NOLOAD) {} ALIGN (8) > MSMC3
+    .benchmark_buffer (NOLOAD) {} ALIGN (8) > DDR0
 
     .stack      : {} align(4)       > MSMC3  (HIGH)
     .irqStack   : {. = . + __IRQ_STACK_SIZE;} align(4)      > MSMC3  (HIGH)

@@ -34,6 +34,7 @@ MEMORY
     /* M4F internal memory locations */
     IRAM_M4F_MEM   (RWIX)          : origin=0x0C00 length=0x30000 - 0xC00
     DRAM_M4F_MEM   (RWIX)          : origin=0x30000  length=0x10000
+    DDR0           (RWIX)          : origin=0x80000000 length=0x80000000      /* 2GB */
 }
 
 /* SPECIFY THE SECTIONS ALLOCATION INTO MEMORY */
@@ -60,7 +61,7 @@ SECTIONS
     .data_buffer   : {} palign(128)    > DRAM_M4F_MEM
 
     /* USB or any other LLD buffer for benchmarking */
-    .benchmark_buffer (NOLOAD) {} ALIGN (8) > IRAM_M4F_MEM
+    .benchmark_buffer (NOLOAD) {} ALIGN (8) > DDR0
 
     .stack      : {} align(4)       > DRAM_M4F_MEM
     .irqStack   : {. = . + __IRQ_STACK_SIZE;} align(4)      > DRAM_M4F_MEM
