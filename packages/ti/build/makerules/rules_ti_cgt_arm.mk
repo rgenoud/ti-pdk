@@ -45,9 +45,16 @@
 CODEGEN_INCLUDE = $(TOOLCHAIN_PATH_$(CGT_ISA))/include
 CC = $(TOOLCHAIN_PATH_$(CGT_ISA))/bin/armcl
 AR = $(TOOLCHAIN_PATH_$(CGT_ISA))/bin/armar
-LNK = $(TOOLCHAIN_PATH_$(CGT_ISA))/bin/armlnk
+LNK = $(TOOLCHAIN_PATH_$(CGT_ISA))/bin/armcl
 STRP = $(TOOLCHAIN_PATH_$(CGT_ISA))/bin/armstrip
 SIZE = $(TOOLCHAIN_PATH_$(CGT_ISA))/bin/armofd
+
+MKLIB=$(CGT_PATH)/lib/mklib
+ifeq ($(OS),Windows_NT)
+  MKLIB_EXE_EXT=.exe
+else
+  MKLIB_EXE_EXT=
+endif
 
 # Derive a part of RTS Library name based on ENDIAN: little/big
 ifeq ($(ENDIAN),little)
@@ -70,7 +77,7 @@ endif
 ifeq ($(CGT_ISA),$(filter $(CGT_ISA), M4 R5 M3))
   CFLAGS_INTERNAL = -c -qq -pdsw225 --endian=$(ENDIAN) -mv7$(CGT_ISA) --abi=$(CSWITCH_FORMAT) -eo.$(OBJEXT) -ea.$(ASMEXT) --symdebug:dwarf --embed_inline_assembly
   ifeq ($(CGT_ISA),$(filter $(CGT_ISA), R5))
-    CFLAGS_INTERNAL += --float_support=vfpv3d16
+    CFLAGS_INTERNAL += --float_support=vfpv3d16  --code_state=16
   else
     CFLAGS_INTERNAL += --float_support=vfplib
   endif
@@ -79,7 +86,6 @@ else ifeq ($(CGT_ISA), Arm9)
 endif
 ifeq ($(TREAT_WARNINGS_AS_ERROR), yes)
   CFLAGS_INTERNAL += --emit_warnings_as_errors
-  LNKFLAGS_INTERNAL_COMMON += --emit_warnings_as_errors
 endif
 CFLAGS_DIROPTS = -fr=$(OBJDIR) -fs=$(OBJDIR)
 
@@ -111,12 +117,13 @@ endif
 ifeq ($(BUILD_PROFILE_$(CORE)), release)
  ifeq ($(CGT_ISA),$(filter $(CGT_ISA), M4 R5 M3))
    ifeq ($(CGT_ISA),$(filter $(CGT_ISA), R5))
-     LNKFLAGS_INTERNAL_BUILD_PROFILE = --opt='--float_support=vfpv3d16 --endian=$(ENDIAN) -mv7$(CGT_ISA) --abi=$(CSWITCH_FORMAT) -qq -pdsw225 $(CFLAGS_GLOBAL_$(CORE)) -ms -op2 -O4 -s --diag_suppress=23000' --strict_compatibility=on
+     LNKFLAGS_INTERNAL_BUILD_PROFILE =  --strict_compatibility=on
    else
      LNKFLAGS_INTERNAL_BUILD_PROFILE = --opt='--float_support=vfplib   --endian=$(ENDIAN) -mv7$(CGT_ISA) --abi=$(CSWITCH_FORMAT) -qq -pdsw225 $(CFLAGS_GLOBAL_$(CORE)) -oe --symdebug:dwarf -ms -op2 -O3 -os --optimize_with_debug --inline_recursion_limit=20 --diag_suppress=23000' --strict_compatibility=on
    endif
    ifeq ($(CGT_ISA),$(filter $(CGT_ISA), R5))
-     CFLAGS_INTERNAL += -ms -O4 -s
+     CFLAGS_INTERNAL += -ms -O4 --opt_for_speed=1 --opt_for_cache -s
+     LNKFLAGS_PRELINKER = 	 
    else
      CFLAGS_INTERNAL += -ms -oe -O3 -op0 -os --optimize_with_debug --inline_recursion_limit=20
    endif
@@ -169,7 +176,7 @@ $(OBJ_PATHS): $(OBJDIR)/%.$(OBJEXT): %.c $(GEN_FILE) | $(OBJDIR) $(DEPDIR)
 	$(CC) $(_CFLAGS) $(INCLUDES) $(CFLAGS_DIROPTS) $(COMPILEMODE) $<
 
 #TODO: Check ASMFLAGS if really required
-ASMFLAGS = -me -g --code_state=32 --diag_warning=225
+ASMFLAGS = -me -g --code_state=16 --diag_warning=225
 
 # Object file creation
 $(OBJ_PATHS_ASM): $(OBJDIR)/%.$(OBJEXT): %.asm $(GEN_FILE) | $(OBJDIR) $(DEPDIR)
@@ -201,7 +208,10 @@ $(LIBDIR)/$(LIBNAME).$(LIBEXT)_size: $(LIBDIR)/$(LIBNAME).$(LIBEXT)
 	$(RM)   $@temp
 
 # Linker options and rules
-LNKFLAGS_INTERNAL_COMMON += -w -q -u _c_int00
+LNKFLAGS_INTERNAL_COMMON = --run_linker -w -q -u _c_int00 -c
+ifeq ($(TREAT_WARNINGS_AS_ERROR), yes)
+  LNKFLAGS_INTERNAL_COMMON += --emit_warnings_as_errors
+endif
 
 ifeq ($(BOARD),$(filter $(BOARD), qtJ7))
   LNKFLAGS_INTERNAL_COMMON += -cr --ram_model
@@ -222,11 +232,12 @@ endif
 endif
 
 # Assemble Linker flags from all other LNKFLAGS definitions
-_LNKFLAGS = $(LNKFLAGS_INTERNAL_COMMON) $(LNKFLAGS_INTERNAL_BUILD_PROFILE) $(LNKFLAGS_GLOBAL_$(CORE)) $(LNKFLAGS_LOCAL_COMMON) $(LNKFLAGS_LOCAL_$(CORE))
+_LNKFLAGS = $(LNKFLAGS_PRELINKER) $(LNKFLAGS_INTERNAL_COMMON) $(LNKFLAGS_INTERNAL_BUILD_PROFILE) $(LNKFLAGS_GLOBAL_$(CORE)) $(LNKFLAGS_LOCAL_COMMON) $(LNKFLAGS_LOCAL_$(CORE))
+
 
 # Path of the RTS library - normally doesn't change for a given tool-chain
 #Let the linker choose the required library
-RTSLIB_PATH = $(CGT_PATH)/lib/libc.a
+RTSLIB_PATH = $(CGT_PATH)/lib/rtsv7R4_T_le_v3D16_eabi.lib
 
 LNK_LIBS = $(addprefix -l,$(LIB_PATHS))
 LNK_LIBS += $(addprefix -l,$(EXT_LIB_PATHS))
@@ -249,10 +260,10 @@ else
 endif
 
 ifneq ($(findstring mcu,$(CORE)),)
-BUILD_LIB_ONCE = $(CGT_PATH)/lib/rtsv7R4_A_le_v3D16_eabi.lib
+BUILD_LIB_ONCE = $(CGT_PATH)/lib/rtsv7R4_T_le_v3D16_eabi.lib
 $(BUILD_LIB_ONCE):
 	$(ECHO) \# $@ not found, building  $@ ...
-	$(CGT_PATH)/lib/mklib --pattern=rtsv7R4_A_le_v3D16_eabi.lib --parallel=$(NUM_PROCS) --compiler_bin_dir=$(CGT_PATH)/bin
+	$(CGT_PATH)/lib/mklib --pattern=rtsv7R4_T_le_v3D16_eabi.lib --index=$(CGT_PATH)/lib/src --parallel=$(NUM_PROCS) --compiler_bin_dir=$(CGT_PATH)/bin
 endif
 
 ifneq ($(XDC_CFG_FILE_$(CORE)),)
@@ -264,7 +275,7 @@ endif
 	$(ECHO) \# Linking into $(EXE_NAME)...
 	$(ECHO) \#
 ifneq ($(XDC_CFG_FILE_$(CORE)),)
-	$(CP) $(OBJDIR)/$(CFG_COBJ_XDC) $(CONFIGURO_DIR)/package/cfg
+	$(CP) $(OBJDIR)/$(CFG_COBJ_XDC)t $(CONFIGURO_DIR)/package/cfg
   ifeq ($(BUILD_PROFILE_$(CORE)),whole_program_debug)
 	$(LNK) $(_LNKFLAGS) $(OBJ_PATHS_ASM) $(OBJ_PATHS) $(OBJDIR)/$(CFG_COBJ_XDC) $(LNKCMD_FILE) $(EXTERNAL_LNKCMD_FILE) -o $@ -m $@.map $(LNK_LIBS) $(RTSLIB_PATH)
   else
@@ -324,7 +335,7 @@ ifneq ($(XDC_CFG_FILE_$(CORE)),)
 $(OBJDIR)/$(CFG_COBJ_XDC) : $(CFG_C_XDC)
 	$(ECHO) \# Compiling generated $(CFG_COBJ_XDC)
 	$(CC) -ppd=$(DEPFILE).P $(_CFLAGS) $(INCLUDES) $(CFLAGS_DIROPTS) -fc $(CFG_C_XDC)
-	$(CC) $(_CFLAGS) $(INCLUDES) $(CFLAGS_DIROPTS) -fc $(CFG_C_XDC)
+	$(CC) $(subst -eo.oer5f,-eo.oer5ft,$(_CFLAGS)) $(INCLUDES) $(CFLAGS_DIROPTS) -fc $(CFG_C_XDC)
   endif
 endif
 

@@ -334,7 +334,7 @@ EXT_LIB_PATHS = $(EXT_LIB_LIST)
 
 # XDC Specific defines
 ifneq ($(XDC_CFG_FILE_$(CORE)),)
-  CFG_CFILENAMEPART_XDC =p$(FORMAT_EXT)$(ISA_EXT)$(ENDIAN_EXT)
+  CFG_CFILENAMEPART_XDC =p$(FORMAT_EXT)$(ISA_EXT)t$(ENDIAN_EXT)
   ifneq ($(PEXT_BIOS),)
     #for cases where BIOS extension is different
     CFG_CFILENAMEPART_XDC =$(PEXT_BIOS)
