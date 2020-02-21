@@ -427,7 +427,7 @@ endif
 
 ifeq ($(ISA),r5f)
   ifeq ($(FORMAT),ELF)
-    TARGET_XDC = ti.targets.arm.elf.R5Ft
+    TARGET_XDC = ti.targets.arm.elf.R5F
     FORMAT_EXT = e
   else
     TARGET_XDC = ti.targets.arm.R5F

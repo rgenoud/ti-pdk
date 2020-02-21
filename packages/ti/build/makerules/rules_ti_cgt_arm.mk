@@ -123,7 +123,7 @@ ifeq ($(BUILD_PROFILE_$(CORE)), release)
    endif
    ifeq ($(CGT_ISA),$(filter $(CGT_ISA), R5))
      CFLAGS_INTERNAL += -ms -O4 --opt_for_speed=1 --opt_for_cache -s
-     LNKFLAGS_PRELINKER = 	 
+     LNKFLAGS_PRELINKER = -O4
    else
      CFLAGS_INTERNAL += -ms -oe -O3 -op0 -os --optimize_with_debug --inline_recursion_limit=20
    endif
@@ -275,7 +275,7 @@ endif
 	$(ECHO) \# Linking into $(EXE_NAME)...
 	$(ECHO) \#
 ifneq ($(XDC_CFG_FILE_$(CORE)),)
-	$(CP) $(OBJDIR)/$(CFG_COBJ_XDC)t $(CONFIGURO_DIR)/package/cfg
+	$(CP) $(OBJDIR)/$(CFG_COBJ_XDC) $(CONFIGURO_DIR)/package/cfg
   ifeq ($(BUILD_PROFILE_$(CORE)),whole_program_debug)
 	$(LNK) $(_LNKFLAGS) $(OBJ_PATHS_ASM) $(OBJ_PATHS) $(OBJDIR)/$(CFG_COBJ_XDC) $(LNKCMD_FILE) $(EXTERNAL_LNKCMD_FILE) -o $@ -m $@.map $(LNK_LIBS) $(RTSLIB_PATH)
   else
@@ -335,7 +335,7 @@ ifneq ($(XDC_CFG_FILE_$(CORE)),)
 $(OBJDIR)/$(CFG_COBJ_XDC) : $(CFG_C_XDC)
 	$(ECHO) \# Compiling generated $(CFG_COBJ_XDC)
 	$(CC) -ppd=$(DEPFILE).P $(_CFLAGS) $(INCLUDES) $(CFLAGS_DIROPTS) -fc $(CFG_C_XDC)
-	$(CC) $(subst -eo.oer5f,-eo.oer5ft,$(_CFLAGS)) $(INCLUDES) $(CFLAGS_DIROPTS) -fc $(CFG_C_XDC)
+	$(CC) $(_CFLAGS) $(INCLUDES) $(CFLAGS_DIROPTS) -fc $(CFG_C_XDC)
   endif
 endif
 
