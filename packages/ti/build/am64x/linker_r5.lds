@@ -32,7 +32,10 @@ MEMORY
     /*  Reset Vectors base address(RESET_VECTORS) should be 64 bytes aligned  */
     RESET_VECTORS (X)       : origin=0x70000000 length=0x100
     /* am64x MCMS3 locations */
-    MSMC3   (RWIX)          : origin=0x70001100 length=0x100000-0x1100 /* 2MB - 0x1100 */
+    MSMC3   (RWIX)          : origin=0x70001100 length=0x170000-0x1100 /* ~(1.5MB - 0x1100) */
+
+    /* Reserved for SYSFW Secure Proxy */
+    MSMC3_H (RWIX)          : origin=0x70170000 length=0x90000         /* ~0.5MB */
 
     DDR0    (RWIX)          : origin=0x80000000 length=0x80000000      /* 2GB */
 }
