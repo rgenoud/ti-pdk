@@ -55,6 +55,8 @@
 #include "ti/drv/emac/src/v5/emac_drv_v5.h"
 #include <ti/drv/emac/emac_ioctl.h>
 #include <ti/drv/emac/src/v5/emac_hwq.h>
+#include <ti/drv/uart/UART.h>
+#include <ti/drv/uart/UART_stdio.h>
 
 extern EMAC_MCB_V5_T      emac_mcb;
 
@@ -1694,17 +1696,13 @@ EMAC_DRV_ERR_E emac_ioctl_configure_special_frame_prio_ctrl(uint32_t port_num, u
 /*
  *  ======== emac_ioctl_send_mgmt_msg ========
  */
-struct mgr_pkt_t {
-    uint32_t            link;
-    EMAC_IOCTL_CMD_T    payload;
-};    
-
 EMAC_DRV_ERR_E  emac_ioctl_send_mgmt_msg(uint32_t port_num, EMAC_IOCTL_CMD_T* p_cmd)
 {
     EMAC_DRV_ERR_E retVal = EMAC_DRV_RESULT_IOCTL_IN_PROGRESS;
     struct mgr_pkt_t *mpkt;
 
     mpkt = hwq_pop(0 /*ICSSG instance*/, 56);
+    UART_printf(">>>> got mgr buffer @ %p\n", mpkt);
     if (!mpkt){
         UTILS_trace(UTIL_TRACE_LEVEL_ERR, emac_mcb.drv_trace_cb,
                     "port: %d, NO free buffers availalble for sending MGMT message", port_num);

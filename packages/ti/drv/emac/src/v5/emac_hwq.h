@@ -47,6 +47,11 @@ void hwq_push(int icssg, int qn, void *p);
 void *hwq_peek(int icssg, int qn);
 int hwq_level(int icssg, int qn);
 
+struct mgr_pkt_t {
+    uint32_t            link;
+    EMAC_IOCTL_CMD_T    payload;
+};    
+
 #ifdef __cplusplus
 }
 #endif

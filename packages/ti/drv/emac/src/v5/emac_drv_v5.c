@@ -57,6 +57,9 @@
 #include <ti/drv/emac/src/v5/emac_mdio.h>
 #include <ti/drv/emac/src/emac_osal.h>
 #include "ti/drv/emac/emac_ioctl.h"
+#include <ti/drv/emac/src/v5/emac_hwq.h>
+#include <ti/drv/uart/UART.h>
+#include <ti/drv/uart/UART_stdio.h>
 
 uint32_t gRxDropCounter = 0;
 uint32_t gRxDropCounterNoRxAppAllocFail = 0;
@@ -2417,39 +2420,46 @@ static void emac_poll_tx_complete(uint32_t port_num, Udma_RingHandle compRingHan
  */
 static void emac_poll_mgmt_pkts(uint32_t port_num, Udma_RingHandle compRingHandle, Udma_RingHandle freeRingHandle, uint32_t ringNum)
 {
+//    EMAC_IOCTL_CMD_RESP_T cmdResponse;
+//    EMAC_IOCTL_CMD_T *pIoctlData;
+//    struct mgr_pkt_t *mpkt;
+    uint32_t *mpkt;
 
-    EMAC_CPPI_DESC_T *pCppiDesc = NULL;
-    EMAC_IOCTL_CMD_RESP_T cmdResponse;
-    EMAC_IOCTL_CMD_T *pIoctlData;
-    do
+    while (1)
     {
-        if ((emac_udma_ring_dequeue(compRingHandle, &pCppiDesc)) == 0)
+        if (hwq_level(0, 58) == 0)
+            break;
+
+        mpkt = hwq_pop(0, 58);
+        UART_printf(">>> got cmpl buffer @ %p\n", mpkt);
+
+//FIXME: ioctlCount is broken anyway fix it later      
+#if 0
+        if (emac_mcb.switch_cb.ioctlCount)
         {
-            if(pCppiDesc != NULL)
+            if (--emac_mcb.switch_cb.ioctlCount == 0)
             {
-                if (emac_mcb.switch_cb.ioctlCount)
+                pIoctlData = (EMAC_IOCTL_CMD_T*)pCppiDesc->appPtr->pDataBuffer;
+                cmdResponse.status = pIoctlData->commandParam;
+                cmdResponse.seqNumber = pIoctlData->seqNumber;
+                cmdResponse.respParamsLength = 0;
+                /* for command response with status 0x3, its cmd response for ADD FDB entry.
+                   if adding entry results in removing aged-out FDB entry, that is returned to caller
+                   in response Params*/
+                if (cmdResponse.status == 0x3)
                 {
-                    if (--emac_mcb.switch_cb.ioctlCount == 0)
-                    {
-                        pIoctlData = (EMAC_IOCTL_CMD_T*)pCppiDesc->appPtr->pDataBuffer;
-                        cmdResponse.status = pIoctlData->commandParam;
-                        cmdResponse.seqNumber = pIoctlData->seqNumber;
-                        cmdResponse.respParamsLength = 0;
-                        /* for command response with status 0x3, its cmd response for ADD FDB entry.
-                           if adding entry results in removing aged-out FDB entry, that is returned to caller
-                           in response Params*/
-                        if (cmdResponse.status == 0x3)
-                        {
-                            cmdResponse.respParamsLength = 2;
-                            memcpy(&cmdResponse.respParams, pIoctlData->spare, 2);
-                        }
-                        emac_mcb.port_cb[port_num].rx_mgmt_response_cb(port_num, &cmdResponse);
-                    }
+                    cmdResponse.respParamsLength = 2;
+                    memcpy(&cmdResponse.respParams, pIoctlData->spare, 2);
                 }
-                emac_udma_ring_enqueue(freeRingHandle,pCppiDesc, pCppiDesc->hostDesc.orgBufLen);
+                emac_mcb.port_cb[port_num].rx_mgmt_response_cb(port_num, &cmdResponse);
             }
         }
-    } while (pCppiDesc != 0);
+#else
+    UART_printf(">>>> Got management response %d %08x %08x\n", port_num, mpkt[0], mpkt[1]);
+#endif        
+
+        hwq_push(0, 56, mpkt); // return buffer to the free queue; TODO: don't use hardcoded values
+    }
 }
 
 /*
