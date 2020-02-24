@@ -54,6 +54,7 @@
 #include <ti/drv/emac/soc/emac_soc_v5.h>
 #include "ti/drv/emac/src/v5/emac_drv_v5.h"
 #include <ti/drv/emac/emac_ioctl.h>
+#include <ti/drv/emac/src/v5/emac_hwq.h>
 
 extern EMAC_MCB_V5_T      emac_mcb;
 
@@ -158,7 +159,7 @@ void emac_ioctl_get_fw_config(uint32_t port_num, EMAC_PER_PORT_ICSSG_FW_CFG **pE
     emac_mcb.port_cb[port_num].getFwCfg(port_num,pEmacFwCfg);
 }
 
-EMAC_DRV_ERR_E  emac_ioctl_send_mgmt_msg(uint32_t port_num, EMAC_IOCTL_CMD_T* p_cmd, EMAC_CPPI_DESC_T* p_tx_cppi_desc);
+EMAC_DRV_ERR_E  emac_ioctl_send_mgmt_msg(uint32_t port_num, EMAC_IOCTL_CMD_T* p_cmd);
 
 /*
  *  ======== emac_ioctl_icss_add_mac ========
@@ -933,19 +934,28 @@ void emac_switch_config_ft3_priority_tag(uint32_t port_num)
 /*
  *  ======== emac_ioctl_port_state_ctrl ========
  */
-static void ioctl_port_state_hlp(int idx, uint32_t port)
+static void ioctl_port_state_hlp(EMAC_IOctlR30Cmd cmd, uint32_t port)
 {
     memcpy((void*)(emac_mcb.switch_cb.pCmd1Icssg->spare),
-           (void*)(emac_util_get_R30_info(idx, port, EMAC_ICSSG_0)),
+           (void*)(emac_util_get_R30_info(cmd, port, (EMAC_IcssgInstance)EMAC_ICSSG_0)),
            sizeof(emac_mcb.switch_cb.pCmd1Icssg->spare)
            );
 #ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
     memcpy((void*)(emac_mcb.switch_cb.pCmd2Icssg->spare),
-           (void*)(emac_util_get_R30_info(idx, portLoc, EMAC_ICSSG_1)),
+           (void*)(emac_util_get_R30_info(cmd, port, (EMAC_IcssgInstance)EMAC_ICSSG_1)),
            sizeof(emac_mcb.switch_cb.pCmd1Icssg->spare)
            );
 #endif
 }
+
+static void ioctl_port_state_hlp_A(EMAC_IOctlR30Cmd cmd, uint32_t port, int icssg)
+{
+    memcpy((void*)(emac_mcb.switch_cb.pCmd1Icssg->spare),
+           (void*)(emac_util_get_R30_info(cmd, port, (EMAC_IcssgInstance) icssg)),
+           sizeof(emac_mcb.switch_cb.pCmd1Icssg->spare)
+           );
+}
+
 
 EMAC_DRV_ERR_E emac_ioctl_port_state_ctrl(uint32_t port_num, void* p_params)
 {
@@ -953,7 +963,6 @@ EMAC_DRV_ERR_E emac_ioctl_port_state_ctrl(uint32_t port_num, void* p_params)
     EMAC_DRV_ERR_E retVal = EMAC_DRV_RESULT_IOCTL_IN_PROGRESS;
     int32_t currentState;
     uint32_t portLoc = 0;
-    EMAC_CPPI_DESC_T *pCppiDescTx1, *pCppiDescTx2;
 
     UTILS_trace(UTIL_TRACE_LEVEL_INFO, emac_mcb.drv_trace_cb, "port: %d: ENTER",port_num);
     emac_update_cmd(0, EMAC_IOCTL_PORT_STATE_CTRL, emac_mcb.switch_cb.pCmd1Icssg, pParams, NULL, EMAC_FW_MGMT_CMD_TYPE, 0, 0);
@@ -1013,30 +1022,22 @@ EMAC_DRV_ERR_E emac_ioctl_port_state_ctrl(uint32_t port_num, void* p_params)
                 break;
         }
     
-        /* make sure there is hw descriptor for boths ICSSG instances */
-#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG        
-        if (emac_get_hw_cppi_tx_descs(0, 0,2U, 0, &pCppiDescTx1, &pCppiDescTx2))
-#else
-        if (emac_get_hw_cppi_tx_descs(0, 0,1U, 0, &pCppiDescTx1, &pCppiDescTx2))
-#endif  
         {
 #ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
             emac_mcb.switch_cb.ioctlCount = 2;
 #else
             emac_mcb.switch_cb.ioctlCount = 1;
 #endif
-            retVal = emac_ioctl_send_mgmt_msg(0, emac_mcb.switch_cb.pCmd1Icssg, pCppiDescTx1);
+            retVal = emac_ioctl_send_mgmt_msg(0, emac_mcb.switch_cb.pCmd1Icssg);
             if (retVal != EMAC_DRV_RESULT_IOCTL_IN_PROGRESS)
             {
-                emac_free_hw_cppi_tx_desc(2U, 0, pCppiDescTx2);
-                /* restore current state for the port */
                 emac_mcb.port_cb[port_num].emacState = currentState;
                 emac_mcb.switch_cb.ioctlCount = 0;
             }
             else
             {
 #ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
-                retVal = emac_ioctl_send_mgmt_msg(2, emac_mcb.switch_cb.pCmd2Icssg, pCppiDescTx2);
+                retVal = emac_ioctl_send_mgmt_msg(2, emac_mcb.switch_cb.pCmd2Icssg);
                 if (retVal != EMAC_DRV_RESULT_IOCTL_IN_PROGRESS)
                 {
                     UTILS_trace(UTIL_TRACE_LEVEL_UNEXPECTED, emac_mcb.drv_trace_cb, "port: %d, un-expected error, unable to sending MGMT message",port_num);
@@ -1046,11 +1047,6 @@ EMAC_DRV_ERR_E emac_ioctl_port_state_ctrl(uint32_t port_num, void* p_params)
                 }
 #endif
             }
-        }
-        else
-        {
-            UTILS_trace(UTIL_TRACE_LEVEL_WARN, emac_mcb.drv_trace_cb, "port: %d, no tx free descriptors available",port_num);
-            retVal = EMAC_DRV_RESULT_ERR_NO_FREE_DESC;
         }
     }
 
@@ -1065,23 +1061,16 @@ EMAC_DRV_ERR_E emac_ioctl_fdb_del_all(uint32_t port_num, void* p_params)
 {
     EMAC_DRV_ERR_E retVal = EMAC_DRV_RESULT_IOCTL_IN_PROGRESS;
     EMAC_IOCTL_PARAMS *pParams = (EMAC_IOCTL_PARAMS*) p_params;
-    EMAC_CPPI_DESC_T *pCppiDescTx1, *pCppiDescTx2;
     UTILS_trace(UTIL_TRACE_LEVEL_INFO, emac_mcb.drv_trace_cb, "port: %d: ENTER",port_num);
     /* make sure there is hw descriptor for boths ICSSG instances */
-#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG    
-    if (emac_get_hw_cppi_tx_descs(0, 0,2U, 0,  &pCppiDescTx1, &pCppiDescTx2))
-#else
-    if (emac_get_hw_cppi_tx_descs(0, 0,1U, 0,  &pCppiDescTx1, &pCppiDescTx2))
-#endif
     {
 #ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
         emac_mcb.switch_cb.ioctlCount = 2;
 #endif
         emac_update_cmd(0, EMAC_IOCTL_FDB_ENTRY_CTRL, emac_mcb.switch_cb.pCmd1Icssg, pParams, NULL, EMAC_FW_MGMT_FDB_CMD_TYPE, 0, 0);
-        retVal = emac_ioctl_send_mgmt_msg(0, emac_mcb.switch_cb.pCmd1Icssg, pCppiDescTx1);
+        retVal = emac_ioctl_send_mgmt_msg(0, emac_mcb.switch_cb.pCmd1Icssg);
         if (retVal != EMAC_DRV_RESULT_IOCTL_IN_PROGRESS)
         {
-            emac_free_hw_cppi_tx_desc(2U, 0, pCppiDescTx2);
             /* restore current state for the port */
             emac_mcb.switch_cb.ioctlCount = 0;
         }
@@ -1089,7 +1078,7 @@ EMAC_DRV_ERR_E emac_ioctl_fdb_del_all(uint32_t port_num, void* p_params)
         {
 #ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
             emac_update_cmd(2, EMAC_IOCTL_FDB_ENTRY_CTRL,  emac_mcb.switch_cb.pCmd2Icssg, pParams, NULL, EMAC_FW_MGMT_FDB_CMD_TYPE, 0, 0);
-            retVal = emac_ioctl_send_mgmt_msg(2, emac_mcb.switch_cb.pCmd2Icssg, pCppiDescTx2);
+            retVal = emac_ioctl_send_mgmt_msg(2, emac_mcb.switch_cb.pCmd2Icssg);
             if (retVal != EMAC_DRV_RESULT_IOCTL_IN_PROGRESS)
             {
                 UTILS_trace(UTIL_TRACE_LEVEL_UNEXPECTED, emac_mcb.drv_trace_cb, "port: %d, un-expected error when sending MGMT message",port_num);
@@ -1097,11 +1086,6 @@ EMAC_DRV_ERR_E emac_ioctl_fdb_del_all(uint32_t port_num, void* p_params)
             }
 #endif
         }
-    }
-    else
-    {
-        UTILS_trace(UTIL_TRACE_LEVEL_WARN, emac_mcb.drv_trace_cb, "port: %d, no tx free descriptors available error",port_num);
-        retVal = EMAC_DRV_RESULT_ERR_NO_FREE_DESC;
     }
     
     UTILS_trace(UTIL_TRACE_LEVEL_INFO, emac_mcb.drv_trace_cb, "port: %d: EXIT with status: %d",port_num, retVal);
@@ -1115,8 +1099,6 @@ EMAC_DRV_ERR_E emac_ioctl_fdb_entry_ctrl(uint32_t port_num, void* p_params)
 {
     EMAC_DRV_ERR_E retVal = EMAC_DRV_RESULT_IOCTL_ERR_INVALID_VLAN_ID;
     EMAC_IOCTL_PARAMS *pParams = (EMAC_IOCTL_PARAMS*) p_params;
-    EMAC_CPPI_DESC_T *pCppiDescTx1, *pCppiDescTx2;
-
     EMAC_IOCTL_FDB_ENTRY *entry = (EMAC_IOCTL_FDB_ENTRY*)pParams->ioctlVal;
     uintptr_t vlanDefaultTblAddr;
     uint8_t fid;
@@ -1131,21 +1113,15 @@ EMAC_DRV_ERR_E emac_ioctl_fdb_entry_ctrl(uint32_t port_num, void* p_params)
         emac_update_cmd(0, EMAC_IOCTL_FDB_ENTRY_CTRL, emac_mcb.switch_cb.pCmd1Icssg, pParams, entry, EMAC_FW_MGMT_FDB_CMD_TYPE, broadSideSlot, fid);
 
         /* make sure there is hw descriptor for boths ICSSG instances */
-#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
-        if (emac_get_hw_cppi_tx_descs(0, 0, 2U, 0, &pCppiDescTx1, &pCppiDescTx2))
-#else
-        if (emac_get_hw_cppi_tx_descs(0, 0, 1U, 0, &pCppiDescTx1, &pCppiDescTx2))
-#endif
         {
 #ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
             emac_mcb.switch_cb.ioctlCount = 2;
 #else
             emac_mcb.switch_cb.ioctlCount = 1;
 #endif
-            retVal = emac_ioctl_send_mgmt_msg(0, emac_mcb.switch_cb.pCmd1Icssg, pCppiDescTx1);
+            retVal = emac_ioctl_send_mgmt_msg(0, emac_mcb.switch_cb.pCmd1Icssg);
             if (retVal != EMAC_DRV_RESULT_IOCTL_IN_PROGRESS)
             {
-                emac_free_hw_cppi_tx_desc(2U, 0, pCppiDescTx2);
                 /* restore current state for the port */
                 emac_mcb.switch_cb.ioctlCount = 0;
             }
@@ -1157,7 +1133,7 @@ EMAC_DRV_ERR_E emac_ioctl_fdb_entry_ctrl(uint32_t port_num, void* p_params)
                 broadSideSlot = emac_util_fdb_helper( vlanDefaultTblAddr, entry->vlanId, entry->mac, &fid);
                 emac_update_cmd(2, EMAC_IOCTL_FDB_ENTRY_CTRL, emac_mcb.switch_cb.pCmd2Icssg, pParams, entry, EMAC_FW_MGMT_FDB_CMD_TYPE, broadSideSlot, fid);
 
-                retVal = emac_ioctl_send_mgmt_msg(2, emac_mcb.switch_cb.pCmd2Icssg, pCppiDescTx2);
+                retVal = emac_ioctl_send_mgmt_msg(2, emac_mcb.switch_cb.pCmd2Icssg);
                 if (retVal != EMAC_DRV_RESULT_IOCTL_IN_PROGRESS)
                 {
                     /* restore current state for the port */
@@ -1165,11 +1141,6 @@ EMAC_DRV_ERR_E emac_ioctl_fdb_entry_ctrl(uint32_t port_num, void* p_params)
                 }
 #endif
             }
-        }
-        else
-        {
-            UTILS_trace(UTIL_TRACE_LEVEL_WARN, emac_mcb.drv_trace_cb, "port: %d, no tx free descriptors available error",port_num);
-            retVal = EMAC_DRV_RESULT_ERR_NO_FREE_DESC;
         }
     }
     else
@@ -1222,20 +1193,19 @@ EMAC_DRV_ERR_E emac_ioctl_accept_frame_check_ctrl(uint32_t port_num, void* p_par
         switch (pParams->subCommand)
         {
             case EMAC_IOCTL_ACCEPTABLE_FRAME_CHECK_ONLY_VLAN_TAGGED:
-                memcpy((void*)(emac_mcb.switch_cb.pCmd1Icssg->spare),(void*)(emac_util_get_R30_info(EMAC_PORT_ACCEPT_TAGGED, portLoc, (EMAC_IcssgInstance)icssgInstance)), sizeof(emac_mcb.switch_cb.pCmd1Icssg->spare));
+                ioctl_port_state_hlp_A(EMAC_PORT_ACCEPT_TAGGED, portLoc, icssgInstance);
                 break;
             case EMAC_IOCTL_ACCEPTABLE_FRAME_CHECK_ONLY_UN_TAGGED_PRIO_TAGGED:
-                memcpy((void*)(emac_mcb.switch_cb.pCmd1Icssg->spare),(void*)(emac_util_get_R30_info(EMAC_PORT_ACCEPT_UNTAGGED_N_PRIO, portLoc, (EMAC_IcssgInstance)icssgInstance)), sizeof(emac_mcb.switch_cb.pCmd1Icssg->spare));
-    
+                ioctl_port_state_hlp_A(EMAC_PORT_ACCEPT_UNTAGGED_N_PRIO, portLoc, icssgInstance);
                 break;
             case EMAC_IOCTL_ACCEPTABLE_FRAME_CHECK_ALL_FRAMES:
-                memcpy((void*)(emac_mcb.switch_cb.pCmd1Icssg->spare),(void*)(emac_util_get_R30_info(EMAC_PORT_ACCEPT_ALL, portLoc, (EMAC_IcssgInstance)icssgInstance)), sizeof(emac_mcb.switch_cb.pCmd1Icssg->spare));
+                ioctl_port_state_hlp_A(EMAC_PORT_ACCEPT_ALL, portLoc, icssgInstance);
                 break;
              default:
                 break;
         }
         emac_mcb.switch_cb.ioctlCount = 1;
-        retVal = emac_ioctl_send_mgmt_msg(port_num, emac_mcb.switch_cb.pCmd1Icssg, NULL);
+        retVal = emac_ioctl_send_mgmt_msg(port_num, emac_mcb.switch_cb.pCmd1Icssg);
 
         if (retVal != EMAC_DRV_RESULT_IOCTL_IN_PROGRESS)
         {
@@ -1390,7 +1360,6 @@ EMAC_DRV_ERR_E emac_ioctl_uc_flooding_ctrl(uint32_t port_num, uint32_t switch_po
 
     if (switch_port == EMAC_SWITCH_PORT1)
     {
-        portLoc = 0;
         icssgInstance = EMAC_ICSSG_0;
     }
     else if (switch_port == EMAC_SWITCH_PORT2)
@@ -1413,10 +1382,10 @@ EMAC_DRV_ERR_E emac_ioctl_uc_flooding_ctrl(uint32_t port_num, uint32_t switch_po
         switch (pParams->subCommand)
         {
             case EMAC_IOCTL_PORT_UC_FLOODING_ENABLE:
-                memcpy((void*)(emac_mcb.switch_cb.pCmd1Icssg->spare),(void*)(emac_util_get_R30_info(EMAC_PORT_UC_FLOODING_ENABLE, portLoc, (EMAC_IcssgInstance)icssgInstance)), sizeof(emac_mcb.switch_cb.pCmd1Icssg->spare));
+                ioctl_port_state_hlp_A(EMAC_PORT_UC_FLOODING_ENABLE, portLoc, icssgInstance);
                 break;
             case EMAC_IOCTL_PORT_UC_FLOODING_DISABLE:
-                memcpy((void*)(emac_mcb.switch_cb.pCmd1Icssg->spare),(void*)(emac_util_get_R30_info(EMAC_PORT_UC_FLOODING_DISABLE, portLoc, (EMAC_IcssgInstance)icssgInstance)), sizeof(emac_mcb.switch_cb.pCmd1Icssg->spare));
+                ioctl_port_state_hlp_A(EMAC_PORT_UC_FLOODING_DISABLE, portLoc, icssgInstance);
                 break;
              default:
                 break;
@@ -1425,11 +1394,11 @@ EMAC_DRV_ERR_E emac_ioctl_uc_flooding_ctrl(uint32_t port_num, uint32_t switch_po
         if(portLoc == 0)
 #endif
         {
-            retVal = emac_ioctl_send_mgmt_msg(0, emac_mcb.switch_cb.pCmd1Icssg, NULL);
+            retVal = emac_ioctl_send_mgmt_msg(0, emac_mcb.switch_cb.pCmd1Icssg);
 #ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
         }else
         {
-            retVal = emac_ioctl_send_mgmt_msg(2, emac_mcb.switch_cb.pCmd1Icssg, NULL);
+            retVal = emac_ioctl_send_mgmt_msg(2, emac_mcb.switch_cb.pCmd1Icssg);
 #endif
         }
         
@@ -1603,13 +1572,13 @@ EMAC_DRV_ERR_E emac_ioctl_frame_premption_ctrl(uint32_t port_num, uint32_t switc
 #endif
                 {
                     memcpy((void*)(emac_mcb.switch_cb.pCmd1Icssg->spare),(void*)(emac_util_get_R30_info(EMAC_PORT_PREMPT_TX_ENABLE, portLoc, EMAC_ICSSG_0)), sizeof(emac_mcb.switch_cb.pCmd1Icssg->spare));
-                    retVal = emac_ioctl_send_mgmt_msg(0, emac_mcb.switch_cb.pCmd1Icssg, NULL);
+                    retVal = emac_ioctl_send_mgmt_msg(0, emac_mcb.switch_cb.pCmd1Icssg);
                 }
 #ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
                 else
                 {
                     memcpy((void*)(emac_mcb.switch_cb.pCmd1Icssg->spare),(void*)(emac_util_get_R30_info(EMAC_PORT_PREMPT_TX_ENABLE, portLoc, EMAC_ICSSG_1)), sizeof(emac_mcb.switch_cb.pCmd1Icssg->spare));
-                    retVal = emac_ioctl_send_mgmt_msg(2, emac_mcb.switch_cb.pCmd1Icssg, NULL);
+                    retVal = emac_ioctl_send_mgmt_msg(2, emac_mcb.switch_cb.pCmd1Icssg);
                 }
 #endif
                 if (retVal != EMAC_DRV_RESULT_IOCTL_IN_PROGRESS)
@@ -1629,13 +1598,13 @@ EMAC_DRV_ERR_E emac_ioctl_frame_premption_ctrl(uint32_t port_num, uint32_t switc
 #endif
                 {
                     memcpy((void*)(emac_mcb.switch_cb.pCmd1Icssg->spare),(void*)(emac_util_get_R30_info(EMAC_PORT_PREMPT_TX_DISABLE, portLoc, EMAC_ICSSG_0)), sizeof(emac_mcb.switch_cb.pCmd1Icssg->spare));
-                    retVal = emac_ioctl_send_mgmt_msg(0, emac_mcb.switch_cb.pCmd1Icssg, NULL);
+                    retVal = emac_ioctl_send_mgmt_msg(0, emac_mcb.switch_cb.pCmd1Icssg);
                 }
 #ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
                 else
                 {
                     memcpy((void*)(emac_mcb.switch_cb.pCmd1Icssg->spare),(void*)(emac_util_get_R30_info(EMAC_PORT_PREMPT_TX_DISABLE, portLoc, EMAC_ICSSG_1)), sizeof(emac_mcb.switch_cb.pCmd1Icssg->spare));
-                    retVal = emac_ioctl_send_mgmt_msg(2, emac_mcb.switch_cb.pCmd1Icssg, NULL);
+                    retVal = emac_ioctl_send_mgmt_msg(2, emac_mcb.switch_cb.pCmd1Icssg);
                 }
 #endif
                 if (retVal != EMAC_DRV_RESULT_IOCTL_IN_PROGRESS)
@@ -1725,51 +1694,28 @@ EMAC_DRV_ERR_E emac_ioctl_configure_special_frame_prio_ctrl(uint32_t port_num, u
 /*
  *  ======== emac_ioctl_send_mgmt_msg ========
  */
-EMAC_DRV_ERR_E  emac_ioctl_send_mgmt_msg(uint32_t port_num, EMAC_IOCTL_CMD_T* p_cmd, EMAC_CPPI_DESC_T* p_tx_cppi_desc)
+struct mgr_pkt_t {
+    uint32_t            link;
+    EMAC_IOCTL_CMD_T    payload;
+};    
+
+EMAC_DRV_ERR_E  emac_ioctl_send_mgmt_msg(uint32_t port_num, EMAC_IOCTL_CMD_T* p_cmd)
 {
     EMAC_DRV_ERR_E retVal = EMAC_DRV_RESULT_IOCTL_IN_PROGRESS;
-    EMAC_CPPI_DESC_T *pCppiDesc = NULL;
-    Udma_ChHandle txChHandle;
-    uint32_t ringNum =0;
-    uint32_t cmdLen = sizeof(EMAC_IOCTL_CMD_T);
-    txChHandle = emac_mcb.port_cb[port_num].txChHandle[0];
-    uint32_t key;
-    if (p_tx_cppi_desc != NULL)
-    {
-        pCppiDesc = p_tx_cppi_desc;
-    }
-    else
-    {
-        emac_get_hw_cppi_tx_desc(port_num, ringNum, &pCppiDesc);
-    }
-    if (pCppiDesc != NULL)
-    {
-        uint64_t bufPtr = (uint64_t) p_cmd;
-        pCppiDesc->hostDesc.bufPtr    = bufPtr;
-        pCppiDesc->hostDesc.orgBufPtr = bufPtr;
-        pCppiDesc->hostDesc.orgBufLen = cmdLen;
-        pCppiDesc->hostDesc.bufInfo1  = cmdLen;
-        pCppiDesc->appPtr = NULL;
+    struct mgr_pkt_t *mpkt;
 
-        /* set packet type to MGMT */
-        pCppiDesc->hostDesc.pktInfo2 |= EMAC_FW_MGMT_PKT;
-        CSL_FINS (pCppiDesc->hostDesc.descInfo, UDMAP_CPPI5_PD_DESCINFO_PKTLEN, cmdLen);
-
-        if (emac_udma_ring_enqueue (Udma_chGetFqRingHandle(txChHandle), pCppiDesc, cmdLen) != EMAC_DRV_RESULT_OK)
-        {
-            key = EMAC_osalHardwareIntDisable();
-            pCppiDesc->nextPtr = emac_mcb.port_cb[port_num].txReadyDescs[ringNum];
-            emac_mcb.port_cb[port_num].txReadyDescs[ringNum] = pCppiDesc;
-            EMAC_osalHardwareIntRestore(key);
-            retVal = EMAC_DRV_RESULT_ERR_UDMA_RING_ENQUEUE;
-            UTILS_trace(UTIL_TRACE_LEVEL_ERR, emac_mcb.drv_trace_cb, "port: %d, UDMA ring enqueue failure for sending MGMT message",port_num);
-        }
-    }
-    else
-    {
-        UTILS_trace(UTIL_TRACE_LEVEL_ERR, emac_mcb.drv_trace_cb, "port: %d, NO TX free descriptor availalble for sending MGMT message",port_num);
+    mpkt = hwq_pop(0 /*ICSSG instance*/, 56);
+    if (!mpkt){
+        UTILS_trace(UTIL_TRACE_LEVEL_ERR, emac_mcb.drv_trace_cb,
+                    "port: %d, NO free buffers availalble for sending MGMT message", port_num);
         retVal = EMAC_DRV_RESULT_ERR_NO_FREE_DESC;
     }
+    else
+    {    
+        memcpy(&(mpkt->payload), p_cmd, sizeof(EMAC_IOCTL_CMD_T));
+        hwq_push(0, 57, mpkt);
+    }
+
     return retVal;
 } /* emac_ioctl_send_mgmt_msg */
 
