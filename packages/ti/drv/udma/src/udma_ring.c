@@ -534,6 +534,31 @@ void Udma_ringPrime(Udma_RingHandle ringHandle, uint64_t phyDescMem)
     return;
 }
 
+void Udma_ringPrimeRead(Udma_RingHandle ringHandle, uint64_t *phyDescMem)
+{
+    volatile uint64_t        *ringPtr;
+    CSL_RingAccRingCfg       *pRing;
+    uintptr_t                 tempPtr;
+
+    pRing = &ringHandle->cfg;
+    tempPtr = (uintptr_t)(pRing->rwIdx * pRing->elSz) +
+              (uintptr_t)pRing->virtBase;
+    ringPtr = (volatile uint64_t *)(tempPtr);
+    *phyDescMem = *ringPtr;
+
+    if (*phyDescMem != 0U)
+    {
+        /* Book keeping */
+        pRing->waiting++;
+        pRing->rwIdx++;
+        if(pRing->rwIdx >= pRing->elCnt)
+        {
+            pRing->rwIdx = 0U;
+        }
+        pRing->occ++;
+    }
+}
+
 void Udma_ringSetDoorBell(Udma_RingHandle ringHandle, int32_t count)
 {
     uint32_t    regVal;
@@ -542,21 +567,44 @@ void Udma_ringSetDoorBell(Udma_RingHandle ringHandle, int32_t count)
 
     pRing = &ringHandle->cfg;
     dbRingCnt = count;
-    while(dbRingCnt != 0)
+
+    if (dbRingCnt >= 0)
     {
-        if(dbRingCnt < UDMA_RING_MAX_DB_RING_CNT)
+        while(dbRingCnt != 0)
         {
-            thisDbRingCnt = dbRingCnt;
-            regVal = CSL_FMK(RINGACC_RT_RINGRT_DB_CNT, thisDbRingCnt);
+            if(dbRingCnt < UDMA_RING_MAX_DB_RING_CNT)
+            {
+                thisDbRingCnt = dbRingCnt;
+                regVal = CSL_FMK(RINGACC_RT_RINGRT_DB_CNT, thisDbRingCnt);
+            }
+            else
+            {
+                thisDbRingCnt = UDMA_RING_MAX_DB_RING_CNT;
+                regVal = CSL_FMK(RINGACC_RT_RINGRT_DB_CNT, thisDbRingCnt);
+            }
+            CSL_REG32_WR(&ringHandle->pRtRegs->DB, regVal);
+            pRing->waiting -= thisDbRingCnt;
+            dbRingCnt -= thisDbRingCnt;
         }
-        else
+    }
+    else
+    {
+        while(dbRingCnt != 0)
         {
-            thisDbRingCnt = UDMA_RING_MAX_DB_RING_CNT;
-            regVal = CSL_FMK(RINGACC_RT_RINGRT_DB_CNT, thisDbRingCnt);
+            if(dbRingCnt > (-1 * (int32_t)UDMA_RING_MAX_DB_RING_CNT))
+            {
+                thisDbRingCnt = dbRingCnt;
+                regVal = CSL_FMK(RINGACC_RT_RINGRT_DB_CNT, thisDbRingCnt);
+            }
+            else
+            {
+                thisDbRingCnt = (-1 * (int32_t)UDMA_RING_MAX_DB_RING_CNT);
+                regVal = CSL_FMK(RINGACC_RT_RINGRT_DB_CNT, thisDbRingCnt);
+            }
+            CSL_REG32_WR(&ringHandle->pRtRegs->DB, regVal);
+            pRing->waiting += thisDbRingCnt;
+            dbRingCnt -= thisDbRingCnt;
         }
-        CSL_REG32_WR(&ringHandle->pRtRegs->DB, regVal);
-        pRing->waiting -= thisDbRingCnt;
-        dbRingCnt -= thisDbRingCnt;
     }
 
     return;
@@ -584,6 +632,54 @@ void *Udma_ringGetMemPtr(Udma_RingHandle ringHandle)
     }
 
     return (ringMem);
+}
+
+uint32_t Udma_ringGetMode(Udma_RingHandle ringHandle)
+{
+    uint32_t ringMode = CSL_RINGACC_RING_MODE_INVALID;
+
+    if((NULL_PTR != ringHandle) && (UDMA_INIT_DONE == ringHandle->ringInitDone))
+    {
+        ringMode = ringHandle->cfg.mode;
+    }
+
+    return (ringMode);
+}
+
+uint32_t Udma_ringGetElementCnt(Udma_RingHandle ringHandle)
+{
+    uint32_t size = 0U;
+
+    if((NULL_PTR != ringHandle) && (UDMA_INIT_DONE == ringHandle->ringInitDone))
+    {
+        size = ringHandle->cfg.elCnt;
+    }
+
+    return (size);
+}
+
+uint32_t Udma_ringGetRingOcc(Udma_RingHandle ringHandle)
+{
+    uint32_t occ = 0U;
+
+    if((NULL_PTR != ringHandle) && (UDMA_INIT_DONE == ringHandle->ringInitDone))
+    {
+        occ = ringHandle->pRtRegs->OCC ;
+    }
+
+    return (occ);
+}
+
+uint32_t Udma_ringGetRwIdx(Udma_RingHandle ringHandle)
+{
+    uint32_t idx = 0U;
+
+    if((NULL_PTR != ringHandle) && (UDMA_INIT_DONE == ringHandle->ringInitDone))
+    {
+        idx = ringHandle->cfg.rwIdx;
+    }
+
+    return (idx);
 }
 
 int32_t Udma_ringMonAlloc(Udma_DrvHandle drvHandle,

@@ -427,6 +427,7 @@ int32_t Udma_ringFlushRaw(Udma_RingHandle ringHandle, uint64_t *phyDescMem);
  *                           ring.
  */
 void Udma_ringPrime(Udma_RingHandle ringHandle, uint64_t phyDescMem);
+void Udma_ringPrimeRead(Udma_RingHandle ringHandle, uint64_t *phyDescMem);
 
 /**
  *  \brief UDMA ring API to set the doorbell in exposed/"RING" mode ring.
@@ -470,6 +471,14 @@ uint16_t Udma_ringGetNum(Udma_RingHandle ringHandle);
  *  \return Ring memory pointer on success or NULL on error
  */
 void *Udma_ringGetMemPtr(Udma_RingHandle ringHandle);
+
+uint32_t Udma_ringGetMode(Udma_RingHandle ringHandle);
+
+uint32_t Udma_ringGetElementCnt(Udma_RingHandle ringHandle);
+
+uint32_t Udma_ringGetRingOcc(Udma_RingHandle ringHandle);
+
+uint32_t Udma_ringGetRwIdx(Udma_RingHandle ringHandle);
 
 /**
  *  \brief UDMA ring monitor allocation API.
