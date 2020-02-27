@@ -2425,13 +2425,16 @@ static void emac_poll_mgmt_pkts(uint32_t port_num, Udma_RingHandle compRingHandl
 //    struct mgr_pkt_t *mpkt;
     uint32_t *mpkt;
 
+    if (port_num >= 2) // TODO: just temporarily guard
+        return;  
+
     while (1)
     {
-        if (hwq_level(0, 58) == 0)
+        if (hwq_level(0, (port_num == 0) ? 58 : 62) == 0)
             break;
 
-        mpkt = hwq_pop(0, 58);
-        UART_printf(">>> got cmpl buffer @ %p\n", mpkt);
+        mpkt = hwq_pop(0, (port_num == 0) ? 58 : 62);
+        UART_printf(">>> got cmpl buffer @ %p on port %d\n", mpkt, port_num);
 
 //FIXME: ioctlCount is broken anyway fix it later      
 #if 0
@@ -2458,7 +2461,7 @@ static void emac_poll_mgmt_pkts(uint32_t port_num, Udma_RingHandle compRingHandl
     UART_printf(">>>> Got management response %d %08x %08x\n", port_num, mpkt[0], mpkt[1]);
 #endif        
 
-        hwq_push(0, 56, mpkt); // return buffer to the free queue; TODO: don't use hardcoded values
+        hwq_push(0, (port_num == 0) ? 56 : 60, mpkt); // return buffer to the free queue; TODO: don't use hardcoded values
     }
 }
 

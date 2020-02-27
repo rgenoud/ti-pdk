@@ -968,87 +968,55 @@ EMAC_DRV_ERR_E emac_ioctl_port_state_ctrl(uint32_t port_num, void* p_params)
 
     UTILS_trace(UTIL_TRACE_LEVEL_INFO, emac_mcb.drv_trace_cb, "port: %d: ENTER",port_num);
     emac_update_cmd(0, EMAC_IOCTL_PORT_STATE_CTRL, emac_mcb.switch_cb.pCmd1Icssg, pParams, NULL, EMAC_FW_MGMT_CMD_TYPE, 0, 0);
-#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
-    emac_update_cmd(2, EMAC_IOCTL_PORT_STATE_CTRL, emac_mcb.switch_cb.pCmd2Icssg, pParams, NULL, EMAC_FW_MGMT_CMD_TYPE, 0, 0);
-#endif
 
     currentState = emac_mcb.port_cb[port_num].emacState;
 
-    if (port_num == 0)
-    {
-        portLoc = 0;
-    }
-#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
-    else if (port_num == 2)
-#else
-    else if(port_num == 1)
-#endif
-    {
-        portLoc =1;
-    }
-    else
+    if (port_num >= 2)
     {
         UTILS_trace(UTIL_TRACE_LEVEL_ERR, emac_mcb.drv_trace_cb, "invalid port number specified: %d, ",port_num);
         retVal = EMAC_DRV_RESULT_INVALID_PORT;
+    } else {
+        portLoc = port_num;
     }
 
     if (retVal == EMAC_DRV_RESULT_IOCTL_IN_PROGRESS)
     {
         switch (pParams->subCommand)
         {
-            case EMAC_IOCTL_PORT_STATE_DISABLE:
-                ioctl_port_state_hlp(EMAC_PORT_DISABLE, portLoc);
-                break;
-            case EMAC_IOCTL_PORT_STATE_BLOCKING:
-                ioctl_port_state_hlp(EMAC_PORT_BLOCK, portLoc);
-                break;
-            case EMAC_IOCTL_PORT_STATE_FORWARD:
-                ioctl_port_state_hlp(EMAC_PORT_FORWARD, portLoc);
-                break;
-            case EMAC_IOCTL_PORT_STATE_FORWARD_WO_LEARNING:
-                ioctl_port_state_hlp(EMAC_PORT_FORWARD_WO_LEARNING, portLoc);
-                break;
-            case EMAC_IOCTL_PORT_STATE_TAS_TRIGGER:
-                ioctl_port_state_hlp(EMAC_PORT_TAS_TRIGGER, portLoc);
-                break;
-            case EMAC_IOCTL_PORT_STATE_TAS_ENABLE:
-                ioctl_port_state_hlp(EMAC_PORT_TAS_ENABLE, portLoc);
-                break;
-            case EMAC_IOCTL_PORT_STATE_TAS_RESET:
-                ioctl_port_state_hlp(EMAC_PORT_TAS_RESET, portLoc);
-                break;
-            case EMAC_IOCTL_PORT_STATE_TAS_DISABLE:
-                ioctl_port_state_hlp(EMAC_PORT_TAS_DISABLE, portLoc);
-                break;
-             default:
-                break;
+        case EMAC_IOCTL_PORT_STATE_DISABLE:
+            ioctl_port_state_hlp(EMAC_PORT_DISABLE, portLoc);
+            break;
+        case EMAC_IOCTL_PORT_STATE_BLOCKING:
+            ioctl_port_state_hlp(EMAC_PORT_BLOCK, portLoc);
+            break;
+        case EMAC_IOCTL_PORT_STATE_FORWARD:
+            ioctl_port_state_hlp(EMAC_PORT_FORWARD, portLoc);
+            break;
+        case EMAC_IOCTL_PORT_STATE_FORWARD_WO_LEARNING:
+            ioctl_port_state_hlp(EMAC_PORT_FORWARD_WO_LEARNING, portLoc);
+            break;
+        case EMAC_IOCTL_PORT_STATE_TAS_TRIGGER:
+            ioctl_port_state_hlp(EMAC_PORT_TAS_TRIGGER, portLoc);
+            break;
+        case EMAC_IOCTL_PORT_STATE_TAS_ENABLE:
+            ioctl_port_state_hlp(EMAC_PORT_TAS_ENABLE, portLoc);
+            break;
+        case EMAC_IOCTL_PORT_STATE_TAS_RESET:
+            ioctl_port_state_hlp(EMAC_PORT_TAS_RESET, portLoc);
+            break;
+        case EMAC_IOCTL_PORT_STATE_TAS_DISABLE:
+            ioctl_port_state_hlp(EMAC_PORT_TAS_DISABLE, portLoc);
+            break;
+        default:
+            break;
         }
-    
+
+        emac_mcb.switch_cb.ioctlCount = 1;
+        retVal = emac_ioctl_send_mgmt_msg(portLoc, emac_mcb.switch_cb.pCmd1Icssg);
+        if (retVal != EMAC_DRV_RESULT_IOCTL_IN_PROGRESS)
         {
-#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
-            emac_mcb.switch_cb.ioctlCount = 2;
-#else
-            emac_mcb.switch_cb.ioctlCount = 1;
-#endif
-            retVal = emac_ioctl_send_mgmt_msg(0, emac_mcb.switch_cb.pCmd1Icssg);
-            if (retVal != EMAC_DRV_RESULT_IOCTL_IN_PROGRESS)
-            {
-                emac_mcb.port_cb[port_num].emacState = currentState;
-                emac_mcb.switch_cb.ioctlCount = 0;
-            }
-            else
-            {
-#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
-                retVal = emac_ioctl_send_mgmt_msg(2, emac_mcb.switch_cb.pCmd2Icssg);
-                if (retVal != EMAC_DRV_RESULT_IOCTL_IN_PROGRESS)
-                {
-                    UTILS_trace(UTIL_TRACE_LEVEL_UNEXPECTED, emac_mcb.drv_trace_cb, "port: %d, un-expected error, unable to sending MGMT message",port_num);
-                    /* restore current state for the port */
-                    emac_mcb.port_cb[port_num].emacState = currentState;
-                    emac_mcb.switch_cb.ioctlCount = 0;
-                }
-#endif
-            }
+            emac_mcb.port_cb[port_num].emacState = currentState;
+            emac_mcb.switch_cb.ioctlCount = 0;
         }
     }
 
@@ -1064,32 +1032,19 @@ EMAC_DRV_ERR_E emac_ioctl_fdb_del_all(uint32_t port_num, void* p_params)
     EMAC_DRV_ERR_E retVal = EMAC_DRV_RESULT_IOCTL_IN_PROGRESS;
     EMAC_IOCTL_PARAMS *pParams = (EMAC_IOCTL_PARAMS*) p_params;
     UTILS_trace(UTIL_TRACE_LEVEL_INFO, emac_mcb.drv_trace_cb, "port: %d: ENTER",port_num);
+
+    if (port_num >= 2)
+        return retVal;
+
     /* make sure there is hw descriptor for boths ICSSG instances */
+    emac_update_cmd(0, EMAC_IOCTL_FDB_ENTRY_CTRL, emac_mcb.switch_cb.pCmd1Icssg, pParams, NULL, EMAC_FW_MGMT_FDB_CMD_TYPE, 0, 0);
+    retVal = emac_ioctl_send_mgmt_msg(port_num, emac_mcb.switch_cb.pCmd1Icssg);
+    if (retVal != EMAC_DRV_RESULT_IOCTL_IN_PROGRESS)
     {
-#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
-        emac_mcb.switch_cb.ioctlCount = 2;
-#endif
-        emac_update_cmd(0, EMAC_IOCTL_FDB_ENTRY_CTRL, emac_mcb.switch_cb.pCmd1Icssg, pParams, NULL, EMAC_FW_MGMT_FDB_CMD_TYPE, 0, 0);
-        retVal = emac_ioctl_send_mgmt_msg(0, emac_mcb.switch_cb.pCmd1Icssg);
-        if (retVal != EMAC_DRV_RESULT_IOCTL_IN_PROGRESS)
-        {
-            /* restore current state for the port */
-            emac_mcb.switch_cb.ioctlCount = 0;
-        }
-        else
-        {
-#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
-            emac_update_cmd(2, EMAC_IOCTL_FDB_ENTRY_CTRL,  emac_mcb.switch_cb.pCmd2Icssg, pParams, NULL, EMAC_FW_MGMT_FDB_CMD_TYPE, 0, 0);
-            retVal = emac_ioctl_send_mgmt_msg(2, emac_mcb.switch_cb.pCmd2Icssg);
-            if (retVal != EMAC_DRV_RESULT_IOCTL_IN_PROGRESS)
-            {
-                UTILS_trace(UTIL_TRACE_LEVEL_UNEXPECTED, emac_mcb.drv_trace_cb, "port: %d, un-expected error when sending MGMT message",port_num);
-                emac_mcb.switch_cb.ioctlCount = 0;
-            }
-#endif
-        }
+        /* restore current state for the port */
+        emac_mcb.switch_cb.ioctlCount = 0;
     }
-    
+
     UTILS_trace(UTIL_TRACE_LEVEL_INFO, emac_mcb.drv_trace_cb, "port: %d: EXIT with status: %d",port_num, retVal);
     return retVal;
 }
@@ -1701,7 +1656,7 @@ EMAC_DRV_ERR_E  emac_ioctl_send_mgmt_msg(uint32_t port_num, EMAC_IOCTL_CMD_T* p_
     EMAC_DRV_ERR_E retVal = EMAC_DRV_RESULT_IOCTL_IN_PROGRESS;
     struct mgr_pkt_t *mpkt;
 
-    mpkt = hwq_pop(0 /*ICSSG instance*/, 56);
+    mpkt = hwq_pop(0 /*ICSSG instance*/, (port_num == 0) ? 56 : 60);
     UART_printf(">>>> got mgr buffer @ %p\n", mpkt);
     if (!mpkt){
         UTILS_trace(UTIL_TRACE_LEVEL_ERR, emac_mcb.drv_trace_cb,
@@ -1711,7 +1666,7 @@ EMAC_DRV_ERR_E  emac_ioctl_send_mgmt_msg(uint32_t port_num, EMAC_IOCTL_CMD_T* p_
     else
     {    
         memcpy(&(mpkt->payload), p_cmd, sizeof(EMAC_IOCTL_CMD_T));
-        hwq_push(0, 57, mpkt);
+        hwq_push(0, (port_num == 0) ? 57 : 61, mpkt);
     }
 
     return retVal;

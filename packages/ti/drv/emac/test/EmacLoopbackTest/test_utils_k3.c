@@ -1552,7 +1552,7 @@ void app_test_check_port_link(uint32_t startP, uint32_t endP)
 #ifdef TSN_MAC
     EMAC_IOCTL_PARAMS params;
     params.subCommand = EMAC_IOCTL_PORT_STATE_FORWARD;
-    emac_ioctl(portNum, EMAC_IOCTL_PORT_STATE_CTRL, &params);
+    emac_ioctl(pNum, EMAC_IOCTL_PORT_STATE_CTRL, &params);
 
     params.subCommand =  EMAC_IOCTL_ACCEPTABLE_FRAME_CHECK_ALL_FRAMES;
     //asynchronous IOCTL 
