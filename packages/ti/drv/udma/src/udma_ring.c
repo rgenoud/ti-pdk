@@ -612,72 +612,95 @@ void Udma_ringSetDoorBell(Udma_RingHandle ringHandle, int32_t count)
 
 uint16_t Udma_ringGetNum(Udma_RingHandle ringHandle)
 {
-    uint16_t        ringNum = UDMA_RING_INVALID;
+    uint16_t        ringNum;
 
+#ifdef DEV_ERROR_DETECT
     if((NULL_PTR != ringHandle) && (UDMA_INIT_DONE == ringHandle->ringInitDone))
     {
-        ringNum = ringHandle->ringNum;
+        ringNum = UDMA_RING_INVALID;
     }
+#else
+    ringNum = ringHandle->ringNum;
+#endif
 
     return (ringNum);
 }
 
 void *Udma_ringGetMemPtr(Udma_RingHandle ringHandle)
 {
-    void   *ringMem = NULL_PTR;
+    void   *ringMem;
 
+#ifdef DEV_ERROR_DETECT
     if((NULL_PTR != ringHandle) && (UDMA_INIT_DONE == ringHandle->ringInitDone))
     {
-        ringMem = ringHandle->cfg.virtBase;
+        ringMem = NULL_PTR;
     }
-
+#else
+    ringMem = ringHandle->cfg.virtBase;
+#endif
     return (ringMem);
 }
 
 uint32_t Udma_ringGetMode(Udma_RingHandle ringHandle)
 {
-    uint32_t ringMode = CSL_RINGACC_RING_MODE_INVALID;
+    uint32_t ringMode;
 
+#ifdef DEV_ERROR_DETECT
     if((NULL_PTR != ringHandle) && (UDMA_INIT_DONE == ringHandle->ringInitDone))
     {
-        ringMode = ringHandle->cfg.mode;
+        ringMode = CSL_RINGACC_RING_MODE_INVALID;
     }
+#else
+    ringMode = ringHandle->cfg.mode;
+#endif
 
     return (ringMode);
 }
 
 uint32_t Udma_ringGetElementCnt(Udma_RingHandle ringHandle)
 {
-    uint32_t size = 0U;
+    uint32_t size;
 
+#ifdef DEV_ERROR_DETECT
     if((NULL_PTR != ringHandle) && (UDMA_INIT_DONE == ringHandle->ringInitDone))
     {
-        size = ringHandle->cfg.elCnt;
+        size = 0U;
     }
+#else
+    size = ringHandle->cfg.elCnt;
+#endif
 
     return (size);
 }
 
 uint32_t Udma_ringGetRingOcc(Udma_RingHandle ringHandle)
 {
-    uint32_t occ = 0U;
+    uint32_t occ;
 
+#ifdef DEV_ERROR_DETECT
     if((NULL_PTR != ringHandle) && (UDMA_INIT_DONE == ringHandle->ringInitDone))
     {
-        occ = ringHandle->pRtRegs->OCC ;
+        occ = 0U;
     }
+#else
+    occ = ringHandle->pRtRegs->OCC ;
+#endif
 
     return (occ);
 }
 
 uint32_t Udma_ringGetRwIdx(Udma_RingHandle ringHandle)
 {
-    uint32_t idx = 0U;
+    uint32_t idx;
 
+#ifdef DEV_ERROR_DETECT
     if((NULL_PTR != ringHandle) && (UDMA_INIT_DONE == ringHandle->ringInitDone))
     {
-        idx = ringHandle->cfg.rwIdx;
+        idx = 0U;
     }
+#else
+    idx = ringHandle->cfg.rwIdx;
+#endif
 
     return (idx);
 }
