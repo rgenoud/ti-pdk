@@ -243,6 +243,31 @@ uint32_t *emac_util_get_R30_info(EMAC_IOctlR30Cmd cmd, uint32_t port, EMAC_Icssg
     return emac_R30_bitmask[cmd][port][icssg];
 }
 
+/* commands to program ICSSG R30 registers */
+static uint32_t emac_R30_bitmask_v2[EMAC_PORT_MAX_COMMANDS][3] =
+{
+    { 0xffff0004, 0xffff0100, 0xffff0100 }, /* EMAC_PORT_DISABLE */
+    { 0xfffb0040, 0xfeff0200, 0xfeff0200 }, /* EMAC_PORT_BLOCK */
+    { 0xffbb0000, 0xfcff0000, 0xdcff0000 }, /* EMAC_PORT_FORWARD */
+    { 0xffbb0000, 0xfcff0000, 0xfcff2000 }, /*EMAC_PORT_FORWARD_WO_LEARNING */
+    { 0xffff0001, EMAC_NONE,  EMAC_NONE  }, /* ACCEPT ALL */
+    { 0xfffe0002, EMAC_NONE,  EMAC_NONE  }, /* ACCEPT TAGGED */
+    { 0xfffc0000, EMAC_NONE,  EMAC_NONE  }, /*ACCEPT UNTAGGED and PRIO */
+    { EMAC_NONE,  0xffff0020, EMAC_NONE  }, /*TAS Trigger List change */
+    { EMAC_NONE,  0xdfff1000, EMAC_NONE  }, /*TAS set state ENABLE*/
+    { EMAC_NONE,  0xefff2000, EMAC_NONE  }, /*TAS set state RESET*/
+    { EMAC_NONE,  0xcfff0000, EMAC_NONE  }, /*TAS set state DISABLE*/
+    { EMAC_NONE,  EMAC_NONE,  0xffff0400 }, /*UC flooding ENABLE*/
+    { EMAC_NONE,  EMAC_NONE,  0xfbff0000 }, /*UC flooding DISABLE*/
+    { EMAC_NONE,  0xffff4000, EMAC_NONE  }, /*Premption on Tx ENABLE*/
+    { EMAC_NONE,  0xbfff0000, EMAC_NONE  }, /*Premption on Tx DISABLE*/
+};
+
+uint32_t *emac_util_get_R30_info_v2(EMAC_IOctlR30Cmd cmd)
+{
+    return emac_R30_bitmask_v2[cmd];
+}
+
 /*
  *  ======== emac_hw_mem_write ========
  */

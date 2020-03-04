@@ -61,23 +61,18 @@
 extern EMAC_MCB_V5_T      emac_mcb;
 
 extern void emac_hw_mem_write(uint32_t addr, const void *ptr, uint32_t element_count);
-extern uint32_t *emac_util_get_R30_info(EMAC_IOctlR30Cmd cmd, uint32_t port, EMAC_IcssgInstance icssg);
 
-extern int32_t
-emac_udma_ring_dequeue
-(
-    Udma_RingHandle ringHandle,
-    EMAC_CPPI_DESC_T     **pHostDescriptor
-);
+extern uint32_t *emac_util_get_R30_info(EMAC_IOctlR30Cmd cmd, uint32_t port,
+                                        EMAC_IcssgInstance icssg);
 
+uint32_t *emac_util_get_R30_info_v2(EMAC_IOctlR30Cmd cmd);
 
-extern EMAC_DRV_ERR_E
-emac_udma_ring_enqueue
-(
-    Udma_RingHandle ringHandle,
-    EMAC_CPPI_DESC_T *pHostDescriptor,
-    uint32_t            packetSize
-);
+extern int32_t emac_udma_ring_dequeue(Udma_RingHandle ringHandle,
+                                      EMAC_CPPI_DESC_T **pHostDescriptor); 
+
+extern EMAC_DRV_ERR_E emac_udma_ring_enqueue(Udma_RingHandle ringHandle,
+                                             EMAC_CPPI_DESC_T *pHostDescriptor,
+                                             uint32_t            packetSize);
 
 extern uint16_t emac_util_fdb_helper(uintptr_t vlan_table, uint16_t vlan_id,  uint8_t mac[], uint8_t * p_fid);
 
