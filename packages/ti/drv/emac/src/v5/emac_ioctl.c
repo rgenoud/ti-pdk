@@ -934,15 +934,9 @@ void emac_switch_config_ft3_priority_tag(uint32_t port_num)
 static void ioctl_port_state_hlp(EMAC_IOctlR30Cmd cmd, uint32_t port)
 {
     memcpy((void*)(emac_mcb.switch_cb.pCmd1Icssg->spare),
-           (void*)(emac_util_get_R30_info(cmd, port, (EMAC_IcssgInstance)EMAC_ICSSG_0)),
+           (void*)(emac_util_get_R30_info_v2(cmd)), 
            sizeof(emac_mcb.switch_cb.pCmd1Icssg->spare)
            );
-#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
-    memcpy((void*)(emac_mcb.switch_cb.pCmd2Icssg->spare),
-           (void*)(emac_util_get_R30_info(cmd, port, (EMAC_IcssgInstance)EMAC_ICSSG_1)),
-           sizeof(emac_mcb.switch_cb.pCmd1Icssg->spare)
-           );
-#endif
 }
 
 static void ioctl_port_state_hlp_A(EMAC_IOctlR30Cmd cmd, uint32_t port, int icssg)
