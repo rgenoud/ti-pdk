@@ -120,7 +120,11 @@ drvi2c_FIRM_LIST = $(i2c_FIRM_LIST)
 # All the tests mentioned in list are built when test target is called
 # List below all examples for allowed values
 ############################
+ifeq ($(SOC),$(filter $(SOC), am64x))
+i2c_EXAMPLE_LIST = I2C_Baremetal_Eeprom_TestApp
+else
 i2c_EXAMPLE_LIST = drv_i2c_led_blink_test I2C_Baremetal_Eeprom_TestApp I2C_Eeprom_TestApp I2C_Eeprom_SMP_TestApp drv_i2c_utility
+endif
 drvi2c_EXAMPLE_LIST = $(i2c_EXAMPLE_LIST)
 
 #
@@ -360,7 +364,7 @@ export I2C_Baremetal_Eeprom_TestApp_CORE_DEPENDENCY
 export I2C_Baremetal_Eeprom_TestApp_MAKEFILE
 I2C_Baremetal_Eeprom_TestApp_PKG_LIST = I2C_Baremetal_Eeprom_TestApp
 I2C_Baremetal_Eeprom_TestApp_INCLUDE = $(I2C_Baremetal_Eeprom_TestApp_PATH)
-I2C_Baremetal_Eeprom_TestApp_BOARDLIST = am65xx_evm am65xx_idk j721e_evm am64x_evm
+I2C_Baremetal_Eeprom_TestApp_BOARDLIST = am65xx_evm am65xx_idk j721e_evm
 export I2C_Baremetal_Eeprom_TestApp_BOARDLIST
 ifeq ($(SOC),$(filter $(SOC), j721e))
 I2C_Baremetal_Eeprom_TestApp_$(SOC)_CORELIST = $(drvi2c_j721e_CORELISTARM)
@@ -405,7 +409,7 @@ export I2C_Eeprom_SMP_TestApp_XDC_CONFIGURO
 export I2C_Eeprom_SMP_TestApp_MAKEFILE
 I2C_Eeprom_SMP_TestApp_PKG_LIST = I2C_Eeprom_SMP_TestApp
 I2C_Eeprom_SMP_TestApp_INCLUDE = $(I2C_Eeprom_SMP_TestApp_PATH)
-I2C_Eeprom_SMP_TestApp_BOARDLIST = $(drvi2c_BOARDLISTLIM)
+I2C_Eeprom_SMP_TestApp_BOARDLIST = am65xx_evm am65xx_idk j721e_evm
 export I2C_Eeprom_SMP_TestApp_BOARDLIST
 I2C_Eeprom_SMP_TestApp_$(SOC)_CORELIST = mpu1_0
 export I2C_Eeprom_SMP_TestApp_$(SOC)_CORELIST

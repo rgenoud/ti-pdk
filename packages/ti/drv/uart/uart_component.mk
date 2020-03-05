@@ -378,8 +378,11 @@ endif
 export UART_Baremetal_TestApp_$(SOC)_CORELIST
 ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200))
 UART_Baremetal_TestApp_SBL_APPIMAGEGEN = yes
-export UART_Baremetal_TestApp_SBL_APPIMAGEGEN
+else
+UART_Baremetal_TestApp_SBL_APPIMAGEGEN = no
 endif
+export UART_Baremetal_TestApp_SBL_APPIMAGEGEN
+
 
 # UART unit test baremetal dma app
 UART_Baremetal_DMA_TestApp_COMP_LIST = UART_Baremetal_DMA_TestApp
