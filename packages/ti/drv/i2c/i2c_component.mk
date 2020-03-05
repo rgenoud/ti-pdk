@@ -360,7 +360,7 @@ export I2C_Baremetal_Eeprom_TestApp_CORE_DEPENDENCY
 export I2C_Baremetal_Eeprom_TestApp_MAKEFILE
 I2C_Baremetal_Eeprom_TestApp_PKG_LIST = I2C_Baremetal_Eeprom_TestApp
 I2C_Baremetal_Eeprom_TestApp_INCLUDE = $(I2C_Baremetal_Eeprom_TestApp_PATH)
-I2C_Baremetal_Eeprom_TestApp_BOARDLIST = am65xx_evm am65xx_idk j721e_evm
+I2C_Baremetal_Eeprom_TestApp_BOARDLIST = am65xx_evm am65xx_idk j721e_evm am64x_evm
 export I2C_Baremetal_Eeprom_TestApp_BOARDLIST
 ifeq ($(SOC),$(filter $(SOC), j721e))
 I2C_Baremetal_Eeprom_TestApp_$(SOC)_CORELIST = $(drvi2c_j721e_CORELISTARM)
