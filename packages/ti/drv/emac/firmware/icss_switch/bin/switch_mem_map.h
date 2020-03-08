@@ -372,9 +372,13 @@
 #define NRT_DESC_SLICE0_SIZE                               0x200
 #define NRT_DESC_SLICE1                                    0x8664    //FIMXE : REVIEW this offset. this is used in PG11 to save the descriptor
 #define NRT_DESC_SLICE1_SIZE                               0x200
-#define SHARED_MEMORY_END_OFFSET                           0x8864
+#define MGR_PKT_PULL_SLICE0                                0x8864    //Command buffers for slice0 
+#define MGR_PKT_PULL_SLICE0_SIZE                           0xa0
+#define MGR_PKT_PULL_SLICE1                                0x8904    //Command buffers for slice0 
+#define MGR_PKT_PULL_SLICE1_SIZE                           0xa0
+#define SHARED_MEMORY_END_OFFSET                           0x89A4
 
-// total SHARED_MEMORY memory usage : 34.09765625 KB from total of 64.0KB 
+// total SHARED_MEMORY memory usage : 34.41015625 KB from total of 64.0KB 
 
 //************************************************************************************
 //
@@ -413,40 +417,36 @@
 #define TAS_CONFIG_CHANGE_CYCLE_COUNT_SIZE                 0x4
 #define PORT_Q_PRIORITY_MAPPING_OFFSET                     0x0058    //Stores the table used for priority mapping. 1B per PCP/Queue
 #define PORT_Q_PRIORITY_MAPPING_OFFSET_SIZE                0x8
-#define TAS_SHADOW_EXPIRY_LIST_GATE0                       0x0100    //TAS gate expiry list for gate0
-#define TAS_SHADOW_EXPIRY_LIST_GATE0_SIZE                  0x20
-#define TAS_SHADOW_EXPIRY_LIST_GATE1                       0x0120    //TAS gate expiry list for gate1
-#define TAS_SHADOW_EXPIRY_LIST_GATE1_SIZE                  0x20
-#define TAS_SHADOW_EXPIRY_LIST_GATE2                       0x0140    //TAS gate expiry list for gate2
-#define TAS_SHADOW_EXPIRY_LIST_GATE2_SIZE                  0x20
-#define TAS_SHADOW_EXPIRY_LIST_GATE3                       0x0160    //TAS gate expiry list for gate3
-#define TAS_SHADOW_EXPIRY_LIST_GATE3_SIZE                  0x20
-#define TAS_SHADOW_EXPIRY_LIST_GATE4                       0x0180    //TAS gate expiry list for gate4
-#define TAS_SHADOW_EXPIRY_LIST_GATE4_SIZE                  0x20
-#define TAS_SHADOW_EXPIRY_LIST_GATE5                       0x01A0    //TAS gate expiry list for gate5
-#define TAS_SHADOW_EXPIRY_LIST_GATE5_SIZE                  0x20
-#define TAS_SHADOW_EXPIRY_LIST_GATE6                       0x01C0    //TAS gate expiry list for gate6
-#define TAS_SHADOW_EXPIRY_LIST_GATE6_SIZE                  0x20
-#define TAS_SHADOW_EXPIRY_LIST_GATE7                       0x01E0    //TAS gate expiry list for gate7
-#define TAS_SHADOW_EXPIRY_LIST_GATE7_SIZE                  0x20
-#define PRE_EMPTION_ENABLE_TX                              0x0200    //Memory to Enable/Disable Preemption on TX side
+#define PRE_EMPTION_ENABLE_TX                              0x0060    //Memory to Enable/Disable Preemption on TX side
 #define PRE_EMPTION_ENABLE_TX_SIZE                         0x1
-#define PRE_EMPTION_ACTIVE_TX                              0x0201    //Active State of Preemption on TX side
+#define PRE_EMPTION_ACTIVE_TX                              0x0061    //Active State of Preemption on TX side
 #define PRE_EMPTION_ACTIVE_TX_SIZE                         0x1
-#define PRE_EMPTION_ENABLE_VERIFY                          0x0202    //Memory to Enable/Disable Verify State Machine Preemption
+#define PRE_EMPTION_ENABLE_VERIFY                          0x0062    //Memory to Enable/Disable Verify State Machine Preemption
 #define PRE_EMPTION_ENABLE_VERIFY_SIZE                     0x1
-#define PRE_EMPTION_VERIFY_STATUS                          0x0203    //Verify Status of State Machine
+#define PRE_EMPTION_VERIFY_STATUS                          0x0063    //Verify Status of State Machine
 #define PRE_EMPTION_VERIFY_STATUS_SIZE                     0x1
-#define PRE_EMPTION_ADD_FRAG_SIZE_REMOTE                   0x0204    //Non Final Fragment Size supported by Link Partner
+#define PRE_EMPTION_ADD_FRAG_SIZE_REMOTE                   0x0064    //Non Final Fragment Size supported by Link Partner
 #define PRE_EMPTION_ADD_FRAG_SIZE_REMOTE_SIZE              0x2
-#define PRE_EMPTION_ADD_FRAG_SIZE_LOCAL                    0x0206    //Non Final Fragment Size supported by Firmware
+#define PRE_EMPTION_ADD_FRAG_SIZE_LOCAL                    0x0066    //Non Final Fragment Size supported by Firmware
 #define PRE_EMPTION_ADD_FRAG_SIZE_LOCAL_SIZE               0x1
 //Padding of 1 bytes
-#define PRE_EMPTION_VERIFY_TIME                            0x0208    //Time in ms the State machine waits for respond packet
+#define PRE_EMPTION_VERIFY_TIME                            0x0068    //Time in ms the State machine waits for respond packet
 #define PRE_EMPTION_VERIFY_TIME_SIZE                       0x2
-#define DMEM0_END_OFFSET                                   0x020A
+#define TAS_GATE_MASK_LIST0                                0x0100    //TAS gate mask for windows list0
+#define TAS_GATE_MASK_LIST0_SIZE                           (TAS_NUM_WINDOWS) //0x10
+#define TAS_WINDOW_END_TIME_LIST0                          0x0110    //TAS window end time list0
+#define TAS_WINDOW_END_TIME_LIST0_SIZE                     (TAS_NUM_WINDOWS*4) //0x40
+#define TAS_GATE_CLOSE_TIME_LIST0                          0x0150    //TAS gate close time[window][queue] list0
+#define TAS_GATE_CLOSE_TIME_LIST0_SIZE                     (TAS_NUM_WINDOWS*TAS_NUM_QUEUES*4) //0x200
+#define TAS_GATE_MASK_LIST1                                0x0350    //TAS gate mask for windows list1
+#define TAS_GATE_MASK_LIST1_SIZE                           (TAS_NUM_WINDOWS) //0x10
+#define TAS_WINDOW_END_TIME_LIST1                          0x0360    //TAS window end time list1
+#define TAS_WINDOW_END_TIME_LIST1_SIZE                     (TAS_NUM_WINDOWS*4) //0x40
+#define TAS_GATE_CLOSE_TIME_LIST1                          0x03A0    //TAS gate close time[window][queue] list1
+#define TAS_GATE_CLOSE_TIME_LIST1_SIZE                     (TAS_NUM_WINDOWS*TAS_NUM_QUEUES*4) //0x200
+#define DMEM0_END_OFFSET                                   0x05A0
 
-// total DMEM0 memory usage : 0.509765625 KB from total of 8.0KB 
+// total DMEM0 memory usage : 1.40625 KB from total of 8.0KB 
 
 //************************************************************************************
 //
@@ -495,9 +495,21 @@
 #define PRE_EMPTION_CONTEXT_SLICE0_OFFSET_SIZE             0x18
 #define PRE_EMPTION_CONTEXT_SLICE1_OFFSET                  0x00BC    //Backup of active Tx and Q context
 #define PRE_EMPTION_CONTEXT_SLICE1_OFFSET_SIZE             0x18
-#define DMEM1_END_OFFSET                                   0x0100
+#define TAS_GATE_MASK_LIST0                                0x0100    //TAS gate mask for windows list0
+#define TAS_GATE_MASK_LIST0_SIZE                           (TAS_NUM_WINDOWS) //0x10
+#define TAS_WINDOW_END_TIME_LIST0                          0x0110    //TAS window end time list0
+#define TAS_WINDOW_END_TIME_LIST0_SIZE                     (TAS_NUM_WINDOWS*4) //0x40
+#define TAS_GATE_CLOSE_TIME_LIST0                          0x0150    //TAS gate close time[window][queue] list0
+#define TAS_GATE_CLOSE_TIME_LIST0_SIZE                     (TAS_NUM_WINDOWS*TAS_NUM_QUEUES*4) //0x200
+#define TAS_GATE_MASK_LIST1                                0x0350    //TAS gate mask for windows list1
+#define TAS_GATE_MASK_LIST1_SIZE                           (TAS_NUM_WINDOWS) //0x10
+#define TAS_WINDOW_END_TIME_LIST1                          0x0360    //TAS window end time list1
+#define TAS_WINDOW_END_TIME_LIST1_SIZE                     (TAS_NUM_WINDOWS*4) //0x40
+#define TAS_GATE_CLOSE_TIME_LIST1                          0x03A0    //TAS gate close time[window][queue] list1
+#define TAS_GATE_CLOSE_TIME_LIST1_SIZE                     (TAS_NUM_WINDOWS*TAS_NUM_QUEUES*4) //0x200
+#define DMEM1_END_OFFSET                                   0x05A0
 
-// total DMEM1 memory usage : 0.25 KB from total of 8.0KB 
+// total DMEM1 memory usage : 1.40625 KB from total of 8.0KB 
 
 //************************************************************************************
 //
@@ -520,13 +532,9 @@
 #define HOST_RX_EXP_CONTEXT_WR_SLOT_PRU0_SIZE              0x1
 #define P0_FIRST_32B_PACKET_DATA                           0x0006    //Used to store 32B at the start of SOF
 #define P0_FIRST_32B_PACKET_DATA_SIZE                      0x1
-#define MGR_PKT_PULL_SLICE0                                0x0007    //Command buffers for slice0 
-#define MGR_PKT_PULL_SLICE0_SIZE                           0xa0
-#define MGR_PKT_PULL_SLICE1                                0x00A7    //Command buffers for slice0 
-#define MGR_PKT_PULL_SLICE1_SIZE                           0xa0
-#define PRU0_BSRAM_END_OFFSET                              0x0147
+#define PRU0_BSRAM_END_OFFSET                              0x0007
 
-// total PRU0_BSRAM memory usage : 10.21875 KB from total of 4.0KB 
+// total PRU0_BSRAM memory usage : 0.21875 KB from total of 2.0KB 
 
 //************************************************************************************
 //
@@ -535,78 +543,23 @@
 //************************************************************************************
 
 #define PRU1_BSRAM_START_OFFSET                            0x0000
-#define P1_FIRST_32B_PACKET_DATA                           0x0000    //redundant
-#define P1_FIRST_32B_PACKET_DATA_SIZE                      0x1
-#define TAS_BSRAM_EXPIRY_LIST0_GATE0                       0x0001    //32B total for one gate.
-#define TAS_BSRAM_EXPIRY_LIST0_GATE0_SIZE                  0x1
-#define TAS_BSRAM_EXPIRY_LIST0_GATE1                       0x0002    //32B total for one gate.
-#define TAS_BSRAM_EXPIRY_LIST0_GATE1_SIZE                  0x1
-#define TAS_BSRAM_EXPIRY_LIST0_GATE2                       0x0003    //32B total for one gate.
-#define TAS_BSRAM_EXPIRY_LIST0_GATE2_SIZE                  0x1
-#define TAS_BSRAM_EXPIRY_LIST0_GATE3                       0x0004    //32B total for one gate.
-#define TAS_BSRAM_EXPIRY_LIST0_GATE3_SIZE                  0x1
-#define TAS_BSRAM_EXPIRY_LIST0_GATE4                       0x0005    //32B total for one gate.
-#define TAS_BSRAM_EXPIRY_LIST0_GATE4_SIZE                  0x1
-#define TAS_BSRAM_EXPIRY_LIST0_GATE5                       0x0006    //32B total for one gate.
-#define TAS_BSRAM_EXPIRY_LIST0_GATE5_SIZE                  0x1
-#define TAS_BSRAM_EXPIRY_LIST0_GATE6                       0x0007    //32B total for one gate.
-#define TAS_BSRAM_EXPIRY_LIST0_GATE6_SIZE                  0x1
-#define TAS_BSRAM_EXPIRY_LIST0_GATE7                       0x0008    //32B total for one gate.
-#define TAS_BSRAM_EXPIRY_LIST0_GATE7_SIZE                  0x1
-#define TAS_BSRAM_EXPIRY_LIST1_GATE0                       0x0009    //32B total for one gate.
-#define TAS_BSRAM_EXPIRY_LIST1_GATE0_SIZE                  0x1
-#define TAS_BSRAM_EXPIRY_LIST1_GATE1                       0x000A    //32B total for one gate.
-#define TAS_BSRAM_EXPIRY_LIST1_GATE1_SIZE                  0x1
-#define TAS_BSRAM_EXPIRY_LIST1_GATE2                       0x000B    //32B total for one gate.
-#define TAS_BSRAM_EXPIRY_LIST1_GATE2_SIZE                  0x1
-#define TAS_BSRAM_EXPIRY_LIST1_GATE3                       0x000C    //32B total for one gate.
-#define TAS_BSRAM_EXPIRY_LIST1_GATE3_SIZE                  0x1
-#define TAS_BSRAM_EXPIRY_LIST1_GATE4                       0x000D    //32B total for one gate.
-#define TAS_BSRAM_EXPIRY_LIST1_GATE4_SIZE                  0x1
-#define TAS_BSRAM_EXPIRY_LIST1_GATE5                       0x000E    //32B total for one gate.
-#define TAS_BSRAM_EXPIRY_LIST1_GATE5_SIZE                  0x1
-#define TAS_BSRAM_EXPIRY_LIST1_GATE6                       0x000F    //32B total for one gate.
-#define TAS_BSRAM_EXPIRY_LIST1_GATE6_SIZE                  0x1
-#define TAS_BSRAM_EXPIRY_LIST1_GATE7                       0x0010    //32B total for one gate.
-#define TAS_BSRAM_EXPIRY_LIST1_GATE7_SIZE                  0x1
-#define PORT_Q0_CONTEXT_SLOT_PRU1                          0x0011    //Combined context (MSMC + Desc) for Port Tx queue
-#define PORT_Q0_CONTEXT_SLOT_PRU1_SIZE                     0x1
-#define PORT_Q1_CONTEXT_SLOT_PRU1                          0x0012    //Combined context (MSMC + Desc) for Port Tx queue
-#define PORT_Q1_CONTEXT_SLOT_PRU1_SIZE                     0x1
-#define PORT_Q2_CONTEXT_SLOT_PRU1                          0x0013    //Combined context (MSMC + Desc) for Port Tx queue
-#define PORT_Q2_CONTEXT_SLOT_PRU1_SIZE                     0x1
-#define PORT_Q3_CONTEXT_SLOT_PRU1                          0x0014    //Combined context (MSMC + Desc) for Port Tx queue
-#define PORT_Q3_CONTEXT_SLOT_PRU1_SIZE                     0x1
-#define PORT_Q4_CONTEXT_SLOT_PRU1                          0x0015    //Combined context (MSMC + Desc) for Port Tx queue
-#define PORT_Q4_CONTEXT_SLOT_PRU1_SIZE                     0x1
-#define PORT_Q5_CONTEXT_SLOT_PRU1                          0x0016    //Combined context (MSMC + Desc) for Port Tx queue
-#define PORT_Q5_CONTEXT_SLOT_PRU1_SIZE                     0x1
-#define PORT_Q6_CONTEXT_SLOT_PRU1                          0x0017    //Combined context (MSMC + Desc) for Port Tx queue
-#define PORT_Q6_CONTEXT_SLOT_PRU1_SIZE                     0x1
-#define PORT_Q7_CONTEXT_SLOT_PRU1                          0x0018    //Combined context (MSMC + Desc) for Port Tx queue
-#define PORT_Q7_CONTEXT_SLOT_PRU1_SIZE                     0x1
-#define HOST_Q0_CONTEXT_SLOT_PRU1                          0x0019    //Combined context (MSMC + Desc) for Port Tx queue
-#define HOST_Q0_CONTEXT_SLOT_PRU1_SIZE                     0x1
-#define HOST_Q1_CONTEXT_SLOT_PRU1                          0x001A    //Combined context (MSMC + Desc) for Host Tx queue
-#define HOST_Q1_CONTEXT_SLOT_PRU1_SIZE                     0x1
-#define HOST_Q2_CONTEXT_SLOT_PRU1                          0x001B    //Combined context (MSMC + Desc) for Host Tx queue
-#define HOST_Q2_CONTEXT_SLOT_PRU1_SIZE                     0x1
-#define HOST_Q3_CONTEXT_SLOT_PRU1                          0x001C    //Combined context (MSMC + Desc) for Host Tx queue
-#define HOST_Q3_CONTEXT_SLOT_PRU1_SIZE                     0x1
-#define HOST_Q4_CONTEXT_SLOT_PRU1                          0x001D    //Combined context (MSMC + Desc) for Host Tx queue
-#define HOST_Q4_CONTEXT_SLOT_PRU1_SIZE                     0x1
-#define HOST_Q5_CONTEXT_SLOT_PRU1                          0x001E    //Combined context (MSMC + Desc) for Host Tx queue
-#define HOST_Q5_CONTEXT_SLOT_PRU1_SIZE                     0x1
-#define HOST_Q6_CONTEXT_SLOT_PRU1                          0x001F    //Combined context (MSMC + Desc) for Host Tx queue
-#define HOST_Q6_CONTEXT_SLOT_PRU1_SIZE                     0x1
-#define HOST_Q7_CONTEXT_SLOT_PRU1                          0x0020    //Combined context (MSMC + Desc) for Host Tx queue
-#define HOST_Q7_CONTEXT_SLOT_PRU1_SIZE                     0x1
-#define PSI_TXTS_INFO_SLOT_PRU1                            0x0021    //Store Info chunk for Tx TS PSI transaction
-#define PSI_TXTS_INFO_SLOT_PRU1_SIZE                       0x1
-#define PRU1_BS_OFFSETS_END                                0x0022    //_Small_Description_
-#define PRU1_BSRAM_END_OFFSET                              0x0022
+#define PSI_TX_INFO_SLOT_PRU0                              0x0000    //Store PSI template for INFO chunk
+#define PSI_TX_INFO_SLOT_PRU0_SIZE                         0x1
+#define HOST_RX_PACKET_DESC_SLOT_PRU0                      0x0001    //Stores the PSI descriptor for packet being sent to Host
+#define HOST_RX_PACKET_DESC_SLOT_PRU0_SIZE                 0x1
+#define HOST_RX_PRE_CONTEXT_RD_SLOT_PRU0                   0x0002    //Contains context info for Host Egress Queue (pre-emptible). Used by read task
+#define HOST_RX_PRE_CONTEXT_RD_SLOT_PRU0_SIZE              0x1
+#define HOST_RX_PRE_CONTEXT_WR_SLOT_PRU0                   0x0003    //Contains context info for Host Egress Queue (pre-emptible). Used by write task
+#define HOST_RX_PRE_CONTEXT_WR_SLOT_PRU0_SIZE              0x1
+#define HOST_RX_EXP_CONTEXT_RD_SLOT_PRU0                   0x0004    //Contains context info for Host Egress Queue (express). redundant
+#define HOST_RX_EXP_CONTEXT_RD_SLOT_PRU0_SIZE              0x1
+#define HOST_RX_EXP_CONTEXT_WR_SLOT_PRU0                   0x0005    //Contains context info for Host Egress Queue (express). redundant
+#define HOST_RX_EXP_CONTEXT_WR_SLOT_PRU0_SIZE              0x1
+#define P0_FIRST_32B_PACKET_DATA                           0x0006    //Used to store 32B at the start of SOF
+#define P0_FIRST_32B_PACKET_DATA_SIZE                      0x1
+#define PRU1_BSRAM_END_OFFSET                              0x0007
 
-// total PRU1_BSRAM memory usage : 1.0625 KB from total of 4.0KB 
+// total PRU1_BSRAM memory usage : 0.21875 KB from total of 2.0KB 
 
 //************************************************************************************
 //
@@ -659,7 +612,7 @@
 #define PSI_DATA_THR2_SLOT_RTU0_SIZE                       0x1
 #define RTU0_BSRAM_END_OFFSET                              0x0015
 
-// total RTU0_BSRAM memory usage : 0.65625 KB from total of 16.0KB 
+// total RTU0_BSRAM memory usage : 0.65625 KB from total of 2.0KB 
 
 //************************************************************************************
 //
@@ -668,10 +621,161 @@
 //************************************************************************************
 
 #define RTU1_BSRAM_START_OFFSET                            0x0000
-#define RTU1_BS_OFFSETS_END                                0x0000    //_Small_Description_
-#define RTU1_BSRAM_END_OFFSET                              0x0000
+#define PSI_MGR_INFO_SLOT_RTU0                             0x0000    //Stores Management Frame PSI Info chunk
+#define PSI_MGR_INFO_SLOT_RTU0_SIZE                        0x1
+#define PORT_Q0_CONTEXT_SLOT_RTU0                          0x0001    //Combined context (MSMC + Desc) for Port Tx queue
+#define PORT_Q0_CONTEXT_SLOT_RTU0_SIZE                     0x1
+#define PORT_Q1_CONTEXT_SLOT_RTU0                          0x0002    //Combined context (MSMC + Desc) for Port Tx queue
+#define PORT_Q1_CONTEXT_SLOT_RTU0_SIZE                     0x1
+#define PORT_Q2_CONTEXT_SLOT_RTU0                          0x0003    //Combined context (MSMC + Desc) for Port Tx queue
+#define PORT_Q2_CONTEXT_SLOT_RTU0_SIZE                     0x1
+#define PORT_Q3_CONTEXT_SLOT_RTU0                          0x0004    //Combined context (MSMC + Desc) for Port Tx queue
+#define PORT_Q3_CONTEXT_SLOT_RTU0_SIZE                     0x1
+#define PORT_Q4_CONTEXT_SLOT_RTU0                          0x0005    //Combined context (MSMC + Desc) for Port Tx queue
+#define PORT_Q4_CONTEXT_SLOT_RTU0_SIZE                     0x1
+#define PORT_Q5_CONTEXT_SLOT_RTU0                          0x0006    //Combined context (MSMC + Desc) for Port Tx queue
+#define PORT_Q5_CONTEXT_SLOT_RTU0_SIZE                     0x1
+#define PORT_Q6_CONTEXT_SLOT_RTU0                          0x0007    //Combined context (MSMC + Desc) for Port Tx queue
+#define PORT_Q6_CONTEXT_SLOT_RTU0_SIZE                     0x1
+#define PORT_Q7_CONTEXT_SLOT_RTU0                          0x0008    //Combined context (MSMC + Desc) for Port Tx queue
+#define PORT_Q7_CONTEXT_SLOT_RTU0_SIZE                     0x1
+#define HOST_Q0_CONTEXT_SLOT_RTU0                          0x0009    //Combined context (MSMC + Desc) for Host Tx queue
+#define HOST_Q0_CONTEXT_SLOT_RTU0_SIZE                     0x1
+#define HOST_Q1_CONTEXT_SLOT_RTU0                          0x000A    //Combined context (MSMC + Desc) for Host Tx queue
+#define HOST_Q1_CONTEXT_SLOT_RTU0_SIZE                     0x1
+#define HOST_Q2_CONTEXT_SLOT_RTU0                          0x000B    //Combined context (MSMC + Desc) for Host Tx queue
+#define HOST_Q2_CONTEXT_SLOT_RTU0_SIZE                     0x1
+#define HOST_Q3_CONTEXT_SLOT_RTU0                          0x000C    //Combined context (MSMC + Desc) for Host Tx queue
+#define HOST_Q3_CONTEXT_SLOT_RTU0_SIZE                     0x1
+#define HOST_Q4_CONTEXT_SLOT_RTU0                          0x000D    //Combined context (MSMC + Desc) for Host Tx queue
+#define HOST_Q4_CONTEXT_SLOT_RTU0_SIZE                     0x1
+#define HOST_Q5_CONTEXT_SLOT_RTU0                          0x000E    //Combined context (MSMC + Desc) for Host Tx queue
+#define HOST_Q5_CONTEXT_SLOT_RTU0_SIZE                     0x1
+#define HOST_Q6_CONTEXT_SLOT_RTU0                          0x000F    //Combined context (MSMC + Desc) for Host Tx queue
+#define HOST_Q6_CONTEXT_SLOT_RTU0_SIZE                     0x1
+#define HOST_Q7_CONTEXT_SLOT_RTU0                          0x0010    //Combined context (MSMC + Desc) for Host Tx queue
+#define HOST_Q7_CONTEXT_SLOT_RTU0_SIZE                     0x1
+#define PSI_TXTS_INFO_SLOT_RTU0                            0x0011    //Store Info chunk for Tx TS PSI transaction
+#define PSI_TXTS_INFO_SLOT_RTU0_SIZE                       0x1
+#define PSI_DATA_THR0_SLOT_RTU0                            0x0012    //Stash local injection data for thread 0
+#define PSI_DATA_THR0_SLOT_RTU0_SIZE                       0x1
+#define PSI_DATA_THR1_SLOT_RTU0                            0x0013    //Stash local injection data for thread 1
+#define PSI_DATA_THR1_SLOT_RTU0_SIZE                       0x1
+#define PSI_DATA_THR2_SLOT_RTU0                            0x0014    //Stash local injection data for thread 2
+#define PSI_DATA_THR2_SLOT_RTU0_SIZE                       0x1
+#define PSI_DATA_THR3_SLOT_RTU0                            0x0015    //Stash local injection data for thread 3
+#define PSI_DATA_THR3_SLOT_RTU0_SIZE                       0x1
+#define PSI_CTX_THR0_SLOT_RTU0                             0x0016    //Stash local injection context for thread 0
+#define PSI_CTX_THR0_SLOT_RTU0_SIZE                        0x1
+#define PSI_CTX_THR1_SLOT_RTU0                             0x0017    //Stash local injection context for thread 1
+#define PSI_CTX_THR1_SLOT_RTU0_SIZE                        0x1
+#define PSI_CTX_THR2_SLOT_RTU0                             0x0018    //Stash local injection context for thread 2
+#define PSI_CTX_THR2_SLOT_RTU0_SIZE                        0x1
+#define PSI_CTX_THR3_SLOT_RTU0                             0x0019    //Stash local injection context for thread 3
+#define PSI_CTX_THR3_SLOT_RTU0_SIZE                        0x1
+#define RTU1_BSRAM_END_OFFSET                              0x001A
 
-// total RTU1_BSRAM memory usage : 0.0 KB from total of 16.0KB 
+// total RTU1_BSRAM memory usage : 0.8125 KB from total of 2.0KB 
+
+//************************************************************************************
+//
+// Memory Usage of : TXPRU0_BSRAM
+//
+//************************************************************************************
+
+#define TXPRU0_BSRAM_START_OFFSET                          0x0000
+#define P1_FIRST_32B_PACKET_DATA                           0x0000    //redundant
+#define P1_FIRST_32B_PACKET_DATA_SIZE                      0x1
+#define TAS_PERSISTENT_CONTEXT_OFFSET                      0x0001    //TAS persistent registers
+#define TAS_PERSISTENT_CONTEXT_OFFSET_SIZE                 0x1
+#define PORT_Q0_CONTEXT_SLOT_PRU1                          0x0002    //Combined context (MSMC + Desc) for Port Tx queue
+#define PORT_Q0_CONTEXT_SLOT_PRU1_SIZE                     0x1
+#define PORT_Q1_CONTEXT_SLOT_PRU1                          0x0003    //Combined context (MSMC + Desc) for Port Tx queue
+#define PORT_Q1_CONTEXT_SLOT_PRU1_SIZE                     0x1
+#define PORT_Q2_CONTEXT_SLOT_PRU1                          0x0004    //Combined context (MSMC + Desc) for Port Tx queue
+#define PORT_Q2_CONTEXT_SLOT_PRU1_SIZE                     0x1
+#define PORT_Q3_CONTEXT_SLOT_PRU1                          0x0005    //Combined context (MSMC + Desc) for Port Tx queue
+#define PORT_Q3_CONTEXT_SLOT_PRU1_SIZE                     0x1
+#define PORT_Q4_CONTEXT_SLOT_PRU1                          0x0006    //Combined context (MSMC + Desc) for Port Tx queue
+#define PORT_Q4_CONTEXT_SLOT_PRU1_SIZE                     0x1
+#define PORT_Q5_CONTEXT_SLOT_PRU1                          0x0007    //Combined context (MSMC + Desc) for Port Tx queue
+#define PORT_Q5_CONTEXT_SLOT_PRU1_SIZE                     0x1
+#define PORT_Q6_CONTEXT_SLOT_PRU1                          0x0008    //Combined context (MSMC + Desc) for Port Tx queue
+#define PORT_Q6_CONTEXT_SLOT_PRU1_SIZE                     0x1
+#define PORT_Q7_CONTEXT_SLOT_PRU1                          0x0009    //Combined context (MSMC + Desc) for Port Tx queue
+#define PORT_Q7_CONTEXT_SLOT_PRU1_SIZE                     0x1
+#define HOST_Q0_CONTEXT_SLOT_PRU1                          0x000A    //Combined context (MSMC + Desc) for Port Tx queue
+#define HOST_Q0_CONTEXT_SLOT_PRU1_SIZE                     0x1
+#define HOST_Q1_CONTEXT_SLOT_PRU1                          0x000B    //Combined context (MSMC + Desc) for Host Tx queue
+#define HOST_Q1_CONTEXT_SLOT_PRU1_SIZE                     0x1
+#define HOST_Q2_CONTEXT_SLOT_PRU1                          0x000C    //Combined context (MSMC + Desc) for Host Tx queue
+#define HOST_Q2_CONTEXT_SLOT_PRU1_SIZE                     0x1
+#define HOST_Q3_CONTEXT_SLOT_PRU1                          0x000D    //Combined context (MSMC + Desc) for Host Tx queue
+#define HOST_Q3_CONTEXT_SLOT_PRU1_SIZE                     0x1
+#define HOST_Q4_CONTEXT_SLOT_PRU1                          0x000E    //Combined context (MSMC + Desc) for Host Tx queue
+#define HOST_Q4_CONTEXT_SLOT_PRU1_SIZE                     0x1
+#define HOST_Q5_CONTEXT_SLOT_PRU1                          0x000F    //Combined context (MSMC + Desc) for Host Tx queue
+#define HOST_Q5_CONTEXT_SLOT_PRU1_SIZE                     0x1
+#define HOST_Q6_CONTEXT_SLOT_PRU1                          0x0010    //Combined context (MSMC + Desc) for Host Tx queue
+#define HOST_Q6_CONTEXT_SLOT_PRU1_SIZE                     0x1
+#define HOST_Q7_CONTEXT_SLOT_PRU1                          0x0011    //Combined context (MSMC + Desc) for Host Tx queue
+#define HOST_Q7_CONTEXT_SLOT_PRU1_SIZE                     0x1
+#define PSI_TXTS_INFO_SLOT_PRU1                            0x0012    //Store Info chunk for Tx TS PSI transaction
+#define PSI_TXTS_INFO_SLOT_PRU1_SIZE                       0x1
+#define PRU1_BS_OFFSETS_END                                0x0013    //_Small_Description_
+#define TXPRU0_BSRAM_END_OFFSET                            0x0013
+
+// total TXPRU0_BSRAM memory usage : 0.59375 KB from total of 2.0KB 
+
+//************************************************************************************
+//
+// Memory Usage of : TXPRU1_BSRAM
+//
+//************************************************************************************
+
+#define TXPRU1_BSRAM_START_OFFSET                          0x0000
+#define P1_FIRST_32B_PACKET_DATA                           0x0000    //redundant
+#define P1_FIRST_32B_PACKET_DATA_SIZE                      0x1
+#define TAS_PERSISTENT_CONTEXT_OFFSET                      0x0001    //TAS persistent registers
+#define TAS_PERSISTENT_CONTEXT_OFFSET_SIZE                 0x1
+#define PORT_Q0_CONTEXT_SLOT_PRU1                          0x0002    //Combined context (MSMC + Desc) for Port Tx queue
+#define PORT_Q0_CONTEXT_SLOT_PRU1_SIZE                     0x1
+#define PORT_Q1_CONTEXT_SLOT_PRU1                          0x0003    //Combined context (MSMC + Desc) for Port Tx queue
+#define PORT_Q1_CONTEXT_SLOT_PRU1_SIZE                     0x1
+#define PORT_Q2_CONTEXT_SLOT_PRU1                          0x0004    //Combined context (MSMC + Desc) for Port Tx queue
+#define PORT_Q2_CONTEXT_SLOT_PRU1_SIZE                     0x1
+#define PORT_Q3_CONTEXT_SLOT_PRU1                          0x0005    //Combined context (MSMC + Desc) for Port Tx queue
+#define PORT_Q3_CONTEXT_SLOT_PRU1_SIZE                     0x1
+#define PORT_Q4_CONTEXT_SLOT_PRU1                          0x0006    //Combined context (MSMC + Desc) for Port Tx queue
+#define PORT_Q4_CONTEXT_SLOT_PRU1_SIZE                     0x1
+#define PORT_Q5_CONTEXT_SLOT_PRU1                          0x0007    //Combined context (MSMC + Desc) for Port Tx queue
+#define PORT_Q5_CONTEXT_SLOT_PRU1_SIZE                     0x1
+#define PORT_Q6_CONTEXT_SLOT_PRU1                          0x0008    //Combined context (MSMC + Desc) for Port Tx queue
+#define PORT_Q6_CONTEXT_SLOT_PRU1_SIZE                     0x1
+#define PORT_Q7_CONTEXT_SLOT_PRU1                          0x0009    //Combined context (MSMC + Desc) for Port Tx queue
+#define PORT_Q7_CONTEXT_SLOT_PRU1_SIZE                     0x1
+#define HOST_Q0_CONTEXT_SLOT_PRU1                          0x000A    //Combined context (MSMC + Desc) for Port Tx queue
+#define HOST_Q0_CONTEXT_SLOT_PRU1_SIZE                     0x1
+#define HOST_Q1_CONTEXT_SLOT_PRU1                          0x000B    //Combined context (MSMC + Desc) for Host Tx queue
+#define HOST_Q1_CONTEXT_SLOT_PRU1_SIZE                     0x1
+#define HOST_Q2_CONTEXT_SLOT_PRU1                          0x000C    //Combined context (MSMC + Desc) for Host Tx queue
+#define HOST_Q2_CONTEXT_SLOT_PRU1_SIZE                     0x1
+#define HOST_Q3_CONTEXT_SLOT_PRU1                          0x000D    //Combined context (MSMC + Desc) for Host Tx queue
+#define HOST_Q3_CONTEXT_SLOT_PRU1_SIZE                     0x1
+#define HOST_Q4_CONTEXT_SLOT_PRU1                          0x000E    //Combined context (MSMC + Desc) for Host Tx queue
+#define HOST_Q4_CONTEXT_SLOT_PRU1_SIZE                     0x1
+#define HOST_Q5_CONTEXT_SLOT_PRU1                          0x000F    //Combined context (MSMC + Desc) for Host Tx queue
+#define HOST_Q5_CONTEXT_SLOT_PRU1_SIZE                     0x1
+#define HOST_Q6_CONTEXT_SLOT_PRU1                          0x0010    //Combined context (MSMC + Desc) for Host Tx queue
+#define HOST_Q6_CONTEXT_SLOT_PRU1_SIZE                     0x1
+#define HOST_Q7_CONTEXT_SLOT_PRU1                          0x0011    //Combined context (MSMC + Desc) for Host Tx queue
+#define HOST_Q7_CONTEXT_SLOT_PRU1_SIZE                     0x1
+#define PSI_TXTS_INFO_SLOT_PRU1                            0x0012    //Store Info chunk for Tx TS PSI transaction
+#define PSI_TXTS_INFO_SLOT_PRU1_SIZE                       0x1
+#define PRU1_BS_OFFSETS_END                                0x0013    //_Small_Description_
+#define TXPRU1_BSRAM_END_OFFSET                            0x0013
+
+// total TXPRU1_BSRAM memory usage : 0.59375 KB from total of 2.0KB 
 
 //************************************************************************************
 //

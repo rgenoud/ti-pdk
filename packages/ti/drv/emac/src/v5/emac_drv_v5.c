@@ -3247,8 +3247,11 @@ void emac_icssg_update_rgmii_cfg_fd1000(uint32_t port_num, uintptr_t icssgRgmiiC
     CSL_REG32_WR (icssgRgmiiCfgBaseAddr, regVal);
 }
 
-
+#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
 #define EMAC_ICSSG_CONFIG_TX_IPG_104_NS ((uint32_t)(0x1A)) /* configure 104 nano-second TX IPG */
+#else
+#define EMAC_ICSSG_CONFIG_TX_IPG_104_NS ((uint32_t)(0xB)) /* configure 104 nano-second TX IPG */
+#endif
 /*
  *  ======== emac_icssg_update_link_speed_fd1000 ========
  */

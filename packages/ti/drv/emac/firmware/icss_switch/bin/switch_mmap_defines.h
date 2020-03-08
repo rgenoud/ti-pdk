@@ -89,7 +89,8 @@
 #define NRT_SPECIAL_PD_SMEM_SIZE                0x400       //FIXME : Magic number?
 
 //TAS sizes
-#define TAS_LIST_EXPIRY_SIZE                    (8 * 8 * 4)        //8 queues * 8 expiry values (each queue has 8 expiry values) * 4 (size of expiry in bytes) = 256B
+#define TAS_NUM_WINDOWS                         (16)
+#define TAS_NUM_QUEUES                          (8)
 
 #define MTU_SIZE                                (2048)
 

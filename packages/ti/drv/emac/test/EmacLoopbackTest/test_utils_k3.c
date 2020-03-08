@@ -1025,7 +1025,7 @@ int32_t app_test_send(uint32_t pNum, uint8_t* pPkt, uint32_t pktChannel, uint32_
     uint32_t timeout_count = 100;
     while(((pkt_received == 0) || (timestamp_received == 0)) && (timeout_count-- > 0))
     {
-        Task_sleep(100);
+        Task_sleep(10);
     }
     if (timeout_count == 0)
     {
@@ -2071,10 +2071,10 @@ int32_t  app_test_task_init_pruicss(uint32_t portNum)
     //Configure TX WM to zero
     HWREG(icssgBaseAddr +
           CSL_ICSS_G_PR1_TASKS_MGR_PRU_TX0_PR1_TASKS_MGR_PRU_TX0_MMR_REGS_BASE +
-          CSL_ICSS_G_PR1_TASKS_MGR_PRU_TX0_PR1_TASKS_MGR_PRU_TX0_MMR_TX_CFG) = 0;
+          CSL_ICSS_G_PR1_TASKS_MGR_PRU_TX0_PR1_TASKS_MGR_PRU_TX0_MMR_TX_CFG) = 30;
     HWREG(icssgBaseAddr +
           CSL_ICSS_G_PR1_TASKS_MGR_PRU_TX1_PR1_TASKS_MGR_PRU_TX1_MMR_REGS_BASE +
-          CSL_ICSS_G_PR1_TASKS_MGR_PRU_TX1_PR1_TASKS_MGR_PRU_TX1_MMR_TX_CFG) = 0;
+          CSL_ICSS_G_PR1_TASKS_MGR_PRU_TX1_PR1_TASKS_MGR_PRU_TX1_MMR_TX_CFG) = 30;
 
     //Enable task manager nesting for PRUs and RTUs for TS1 tasks only
     reg_val = 0x1F;
@@ -2103,8 +2103,9 @@ int32_t  app_test_task_init_pruicss(uint32_t portNum)
     HWREG (icssgBaseAddr+CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_REGS_BASE+CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_TXCFG0) = 0x1803;
     HWREG (icssgBaseAddr+CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_REGS_BASE+CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_TXCFG1) = 0x1903;
     //Program TX_IPG0/IPG1
-    HWREG (icssgBaseAddr+CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_REGS_BASE+CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_TX_IPG0) = 0x1A;  
-    HWREG (icssgBaseAddr+CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_REGS_BASE+CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_TX_IPG1) = 0x1A;
+    HWREG (icssgBaseAddr+CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_REGS_BASE+CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_TX_IPG1) = 0xB;
+    HWREG (icssgBaseAddr+CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_REGS_BASE+CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_TX_IPG0) = 0xB;  
+
     //Reset Max preamble count
     HWREG (icssgBaseAddr+CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_REGS_BASE+CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_RX_PCNT0) = 0x1; 
     HWREG (icssgBaseAddr+CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_REGS_BASE+CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_RX_PCNT1) = 0x1;
