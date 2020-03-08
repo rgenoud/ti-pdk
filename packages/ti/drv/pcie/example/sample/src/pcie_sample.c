@@ -157,7 +157,7 @@ typedef struct dstBuf_s {
 #endif
 } dstBuf_t;
 dstBuf_t dstBuf
-#ifdef __ARM_ARCH_7A__
+#if defined(BUILD_MPU) || defined(__ARM_ARCH_7A__)
 #ifdef SOC_J721E
 __attribute__((aligned(0x1000), section(".bss:dstBufSec"))) /* GCC way of aligning */
 #else
@@ -485,6 +485,31 @@ pcieRet_e pcieCfgDbi(Pcie_Handle handle, uint8_t enable)
 } /* pcieCfgDbi */
 
 /*****************************************************************************
+ * Function: Enable/Disable DBI_RO_WR_EN writes
+ ****************************************************************************/
+pcieRet_e pcieCfgDbiRWE(Pcie_Handle handle, uint8_t enable)
+{
+  pcieRet_e              retVal = pcie_RET_OK;
+#if defined(PCIE_REV2_HW)
+  pcieRegisters_t        regs;
+  pciePlconfDbiRoWrEnReg_t dbiRo;
+
+  memset (&dbiRo, 0, sizeof(dbiRo));
+  memset (&regs, 0, sizeof(regs));
+
+  dbiRo.cxDbiRoWrEn = enable;
+  regs.plconfDbiRoWrEn = &dbiRo;
+
+  if ((retVal = Pcie_writeRegs (handle, pcie_LOCATION_LOCAL, &regs)) != pcie_RET_OK) 
+  {
+    PCIE_logPrintf ("SET MISC_CONTROL register failed!\n");
+    return retVal;
+  }
+#endif
+  return retVal;
+} /* pcieCfgDbiRWE */
+
+/*****************************************************************************
  * Function: Power domain configuration
  ****************************************************************************/
 pcieRet_e pciePowerCfg(void)
@@ -578,7 +603,9 @@ pcieRet_e pcieSerdesCfg(void)
 #elif defined(SOC_AM65XX)
 #ifdef am65xx_idk
   PlatformPCIESSSerdesConfig(0, 0);
+#ifndef PCIE0_SERDES0
   PlatformPCIESSSerdesConfig(1, 0);
+#endif
 #else
   PlatformPCIESSSerdesConfig(1, 1);
 #endif
@@ -831,6 +858,7 @@ pcieRet_e pcieSetGen2(Pcie_Handle handle)
 
   pcieRegisters_t        regs;
   pcieLinkCapReg_t       linkCap;
+  pcieLinkCtrl2Reg_t	 linkCtrl2;
   pcieGen2Reg_t          gen2;
 
   uint8_t                targetGen, dirSpd;
@@ -848,6 +876,7 @@ pcieRet_e pcieSetGen2(Pcie_Handle handle)
 
   memset (&gen2,             0, sizeof(gen2));
   memset (&linkCap,          0, sizeof(linkCap));
+  memset (&linkCtrl2,        0, sizeof(linkCtrl2));
   memset (&regs,             0, sizeof(regs));
 
   /* Set gen1/gen2 in link cap */
@@ -867,11 +896,34 @@ pcieRet_e pcieSetGen2(Pcie_Handle handle)
   {
     regs.linkCap = NULL; /* Nothing to write back */
   }
+#if defined(SOC_AM65XX)  
+  /* Set gen2/gen3 in link ctrl2 */
+  regs.linkCtrl2 = &linkCtrl2;
+  if ((retVal = Pcie_readRegs (handle, pcie_LOCATION_LOCAL, &regs)) != pcie_RET_OK)
+  {
+    PCIE_logPrintf ("GET linkCtrl2 register failed!\n");
+    return retVal;
+  }
+
+  if (linkCtrl2.tgtSpeed != targetGen)
+  {
+    PCIE_logPrintf ("PowerUP linkCtrl2 gen=%d change to %d\n", linkCtrl2.tgtSpeed, targetGen);
+    linkCtrl2.tgtSpeed = targetGen;
+  }
+  else
+  {
+    regs.linkCtrl2 = NULL; /* Nothing to write back */
+  }
+#endif
 
   /* Setting PL_GEN2 */
   gen2.numFts = 0xF;
   gen2.dirSpd = dirSpd;
+#ifdef am65xx_idk
+  gen2.lnEn   = 2;
+#else
   gen2.lnEn   = 1;
+#endif
 #ifdef PCIESS1_X2
   gen2.lnEn = 2;
 #endif
@@ -932,10 +984,18 @@ pcieRet_e pcieCfgRC(Pcie_Handle handle)
 #endif
 
 #if !defined(SOC_J721E) /* for J721E move to Pciev3_setInterfaceMode */
+  if ((retVal = pcieCfgDbiRWE (handle, 1)) != pcie_RET_OK)
+  {
+    return retVal;
+  }
   /* Set gen2/link cap */
   if ((retVal = pcieSetGen2(handle)) != pcie_RET_OK)
   {
     PCIE_logPrintf ("pcieSetGen2 failed!\n");
+    return retVal;
+  }
+  if ((retVal = pcieCfgDbiRWE (handle, 0)) != pcie_RET_OK)
+  {
     return retVal;
   }
 #endif
@@ -1090,11 +1150,19 @@ pcieRet_e pcieCfgEP(Pcie_Handle handle)
   }
 #endif
 
-#if !defined(SOC_J721E)  /* for J721E move to Pciev3_setInterfaceMode */
+  #if !defined(SOC_J721E)  /* for J721E move to Pciev3_setInterfaceMode */
+  if ((retVal = pcieCfgDbiRWE (handle, 1)) != pcie_RET_OK)
+  {
+    return retVal;
+  }
   /* Set gen2/link cap */
   if ((retVal = pcieSetGen2(handle)) != pcie_RET_OK)
   {
     PCIE_logPrintf ("pcieSetGen2 failed!\n");
+    return retVal;
+  }
+  if ((retVal = pcieCfgDbiRWE (handle, 0)) != pcie_RET_OK)
+  {
     return retVal;
   }
 #endif
@@ -1642,6 +1710,46 @@ pcieRet_e pcieCheckLinkParams(Pcie_Handle handle)
   PCIE_logPrintf ("Expect gen %d speed, found gen %d speed Pass\n",
            (int)expSpeed, (int)linkStatCtrl.linkSpeed);
 #endif /* defined(SOC_J721E) */
+#if defined(SOC_AM65XX)
+  pcieRet_e retVal = pcie_RET_OK;
+  pcieRegisters_t regs;
+  pcieLinkStatCtrlReg_t linkStatCtrl;
+  int32_t expLanes = 1, expSpeed = 1;
+
+#ifdef GEN2
+  expSpeed = 2; /* expected GEN2 */
+#endif  
+#ifdef GEN3
+  expSpeed = 3; /* expected GEN3 */
+#endif
+
+#ifdef am65xx_evm
+  expLanes = 1;  /* expected 1 lane case */
+#else
+#ifdef PCIE0_SERDES0
+  expLanes = 1;  /* expected 1 lane case */
+#else
+  expLanes = 2;  /* expected 2 lane case */
+#endif
+#endif	
+  /* Get link status */
+  memset (&regs, 0, sizeof(regs));
+  regs.linkStatCtrl = &linkStatCtrl;
+
+  
+  PCIE_logPrintf ("Checking link speed and # of lanes\n");
+  do 
+  {
+     retVal = Pcie_readRegs (handle, pcie_LOCATION_LOCAL, &regs);
+     if (retVal != pcie_RET_OK) {
+        PCIE_logPrintf ("Failed to read linkStatCtrl: %d\n", retVal);
+     }
+  }while ((expLanes != linkStatCtrl.negotiatedLinkWd)||(expSpeed != linkStatCtrl.linkSpeed));
+  PCIE_logPrintf ("Expect %d lanes, found %d lanes Pass\n",
+             (int)expLanes, (int)linkStatCtrl.negotiatedLinkWd);
+  PCIE_logPrintf ("Expect gen %d speed, found gen %d speed Pass\n",
+           (int)expSpeed, (int)linkStatCtrl.linkSpeed);
+#endif /* defined(SOC_AM65XX) */
   return pcie_RET_OK;
 #endif
 }
@@ -1986,7 +2094,11 @@ void pcieSetLanes (Pcie_Handle handle)
   }
   origLanes = lnkCtrlReg.lnkMode;
 #ifdef am65xx_idk
+#ifdef PCIE0_SERDES0
+  lnkCtrlReg.lnkMode = 1; /* bitfield enabling one lane case */
+#else
   lnkCtrlReg.lnkMode = 3; /* bitfield enabling both lanes */
+#endif
 #else
   lnkCtrlReg.lnkMode = 1;
 #endif
@@ -2029,7 +2141,13 @@ void pcieSetLanes (Pcie_Handle handle)
  * Function: pcie main task 
  ****************************************************************************/
 uint32_t OFFSET = 0;
+#if defined (SOC_AM65XX)
+#ifdef am65xx_evm
+uint32_t base_address = 0x5600000;
+#else
 uint32_t base_address = 0x5500000;
+#endif
+#endif
 int i;
 void pcie (void)
 {

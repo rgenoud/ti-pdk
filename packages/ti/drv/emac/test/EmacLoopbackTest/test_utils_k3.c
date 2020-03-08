@@ -114,8 +114,6 @@ uint8_t icss_tx_port_queue[3][100352] __attribute__ ((aligned (UDMA_CACHELINE_AL
 #endif
 #endif
 
-uint8_t sequenceNumber = 0;
-
 uint32_t interposerCardPresent = 0;
 
 #ifdef EMAC_TEST_APP_ICSSG
@@ -965,7 +963,7 @@ void app_test_task_poll_ctrl (UArg arg0, UArg arg1)
         if (pollModeEnabled == 1)
             emac_poll_ctrl(port, pktRings,mgmtRings,txRings);
         else
-            emac_poll_ctrl(port, 0, 0, txRings);
+            emac_poll_ctrl(port, 0,EMAC_POLL_RX_MGMT_RING2,txRings);
         Task_sleep(2);
     }
 }
@@ -1501,10 +1499,8 @@ void app_test_udma_init(void)
 #if defined (EMAC_TEST_APP_CPSW)
 #if defined (BUILD_MPU1_0)
     instId = UDMA_INST_ID_MAIN_0;
-#elif defined (BUILD_MCU1_0)
-    instId = UDMA_INST_ID_MCU_0;
 #else
-    instId = UDMA_INST_ID_MAIN_0;
+    instId = UDMA_INST_ID_MCU_0;
 #endif
 #else
     /* icssg use case */

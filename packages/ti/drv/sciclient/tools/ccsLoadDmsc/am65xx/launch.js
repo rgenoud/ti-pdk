@@ -51,15 +51,15 @@
 
 //<!!!!!! EDIT THIS !!!!!>
 // Set this to 1 to allow loading the GEL files directly from the ccxml file.
-disableGelLoad = 0;
+disableGelLoad = 1;
 if (disableGelLoad == 0)
 {
     //Path to GEL files
-    gelFilePath = "/home/brandon/ti/ccs930/ccs/ccs_base/emulation/boards/am65x/gel";
+    gelFilePath = "/ti/ccs910/ccs/ccs_base/emulation/boards/am65x/gel";
 }
 // Path to the directory in which this file would be residing. CCS expects
 // absolute paths to load the binaries.
-thisJsFileDirectory = "/home/brandon/ti/pdk/packages/ti/drv/sciclient/tools/ccsLoadDmsc/am65xx/";
+thisJsFileDirectory = "/ti/j7presi/workarea/pdk/packages/ti/drv/sciclient/tools/ccsLoadDmsc/am65xx/";
 //<!!!!!! EDIT THIS !!!!!>
 
 // Import the DSS packages into our namespace to save on typing
@@ -104,12 +104,12 @@ function connectTargets()
     print("Loading DMSC Firmware...");
     // Load the DMSC firmware
     if (dev_id == 0x0BB5A02F) {
-	dsDMSC_0.memory.loadRaw(0, 0x40000, thisJsFileDirectory +"/../../../soc/sysfw/binaries/ti-sci-firmware-am65x-gp.bin", 32, false);
+        dsDMSC_0.memory.loadRaw(0, 0x40000, thisJsFileDirectory +"/../../../soc/sysfw/binaries/ti-sci-firmware-am65x-gp.bin", 32, false);
     } else if (dev_id == 0x1BB5A02F) {
-	dsDMSC_0.memory.loadRaw(0, 0x40000, thisJsFileDirectory +"/../../../soc/sysfw/binaries/ti-sci-firmware-am65x_pg2-gp.bin", 32, false);
+        dsDMSC_0.memory.loadRaw(0, 0x40000, thisJsFileDirectory +"/../../../soc/sysfw/binaries/ti-sci-firmware-am65x_pg2-gp.bin", 32, false);
     } else {
-	print("Invalid Device ID!");
-	return;
+        print("Invalid Device ID!");
+        return;
     }
 
     print("DMSC Firmware Load Done...");

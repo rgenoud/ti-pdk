@@ -127,33 +127,25 @@ void SBL_SciClientInit(void)
     };
 
 #if defined(SOC_AM65XX)
-    /* Configure RM and SEC based on Device ID */
-    /* Maxwell PG1 and PG2 must be configured differently */
-    uint32_t pBoardConfigLow_rm, pBoardConfigLow_security;
-    uint16_t boardConfigSize_rm, boardConfigSize_security;
+    /* Configure RM based on Device ID */
+    /* Maxwell SR1 and SR2 must be configured differently */
+    uint32_t pBoardConfigLow_rm;
+    uint16_t boardConfigSize_rm;
     uint32_t dev_id = HW_RD_REG32((CSL_WKUP_CTRL_MMR0_CFG0_BASE
 				   + CSL_WKUP_CTRL_MMR_CFG0_JTAGID));
 
     SBL_log(SBL_LOG_ERR,"DEVICE ID 0x%x\n", dev_id);
-    if (dev_id == 0x0BB5A02F) /* PG1 */
+    if (dev_id == 0x0BB5A02F) /* SR1 */
     {
       /* RM */
       pBoardConfigLow_rm = (uint32_t)gSciclient_boardCfgLow_rm;
       boardConfigSize_rm = SCICLIENT_BOARDCFG_RM_SIZE_IN_BYTES;
-
-      /* SEC */
-      pBoardConfigLow_security = (uint32_t)gSciclient_boardCfgLow_sec;
-      boardConfigSize_security = SCICLIENT_BOARDCFG_SECURITY_SIZE_IN_BYTES;
     }
-    else if (dev_id == 0x1BB5A02F) /* PG2 */
+    else if (dev_id == 0x1BB5A02F) /* SR2 */
     {
       /* RM */
-      pBoardConfigLow_rm = (uint32_t)gSciclient_boardCfgLow_rm_pg2;
-      boardConfigSize_rm = SCICLIENT_BOARDCFG_RM_PG2_SIZE_IN_BYTES;
-
-      /* SEC */
-      pBoardConfigLow_security = (uint32_t)gSciclient_boardCfgLow_sec_pg2;
-      boardConfigSize_security = SCICLIENT_BOARDCFG_SECURITY_PG2_SIZE_IN_BYTES;
+      pBoardConfigLow_rm = (uint32_t)gSciclient_boardCfgLow_rm_sr2;
+      boardConfigSize_rm = SCICLIENT_BOARDCFG_RM_SR2_SIZE_IN_BYTES;
     }
     else
     {
@@ -168,14 +160,6 @@ void SBL_SciClientInit(void)
 	.boardConfigSize = boardConfigSize_rm,
 	.devGrp = SBL_DEVGRP
     };
-
-    Sciclient_BoardCfgPrms_t sblBoardCfgSecPrms =
-    {
-        .boardConfigLow = pBoardConfigLow_security,
-	.boardConfigHigh = 0,
-	.boardConfigSize = boardConfigSize_security,
-	.devGrp = SBL_DEVGRP
-    };
 #else
     /* Non-Maxwell devices may configure as normal*/
     Sciclient_BoardCfgPrms_t sblBoardCfgRmPrms =
@@ -185,6 +169,7 @@ void SBL_SciClientInit(void)
 	.boardConfigSize = SCICLIENT_BOARDCFG_RM_SIZE_IN_BYTES,
 	.devGrp = SBL_DEVGRP
     };
+#endif
 
     Sciclient_BoardCfgPrms_t sblBoardCfgSecPrms =
     {
@@ -193,7 +178,6 @@ void SBL_SciClientInit(void)
 	.boardConfigSize = SCICLIENT_BOARDCFG_SECURITY_SIZE_IN_BYTES,
 	.devGrp = SBL_DEVGRP
     };
-#endif
 
     Sciclient_ConfigPrms_t        config =
     {

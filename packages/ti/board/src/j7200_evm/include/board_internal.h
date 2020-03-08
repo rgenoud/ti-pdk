@@ -71,7 +71,7 @@ extern "C" {
 /*****************************************************************************
  * Internal Objects                                                          *
  *****************************************************************************/
-extern const I2C_Config I2C_config[];
+extern I2C_config_list I2C_config;
 
 typedef struct
 {
@@ -428,12 +428,13 @@ Board_STATUS Board_PLLInit(uint32_t modId, uint32_t clkId, uint64_t clkRate);
  *
  * Initializes the DDR timing parameters. Sets the DDR timing parameters
  * based in the DDR PLL controller configuration done by the board library.
- * Any changes to DDR PLL requires change to DDR timing.
+ * Any changes to DDR PLL requires change to DDR timing. Also supports
+ * enabling ECC
  *
  * \return  BOARD_SOK in case of success or appropriate error code
  *
  */
-Board_STATUS Board_DDRInit(void);
+Board_STATUS Board_DDRInit(Bool eccEnable);
 
 /**
  * \brief clock Initialization function for MCU domain
