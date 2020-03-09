@@ -1551,7 +1551,7 @@ void app_test_check_port_link(uint32_t startP, uint32_t endP)
     //asynchronous IOCTL 
     emac_ioctl(pNum, EMAC_IOCTL_ACCEPTABLE_FRAME_CHECK_CTRL, (void *)(&params));
     Task_sleep (10); //Wait for 10 ms as this async IOCTL to complete
-    emac_mcb.switch_cb.ioctlCount = 0;
+    emac_mcb.ioctl_cb.ioctlCount = 0;
 
 #if 0
     int32_t ret_val;
