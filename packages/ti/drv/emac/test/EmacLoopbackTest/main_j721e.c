@@ -237,3 +237,10 @@ void InitMmu(void)
 }
 #endif
 
+void app_output_log(Char* str, UInt numChar)
+{
+    if (numChar > 0)
+    { 
+        UART_printf(str);
+    } 
+}
