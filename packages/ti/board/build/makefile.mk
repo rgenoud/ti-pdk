@@ -68,6 +68,7 @@ ifeq ($(BOARD),$(filter $(BOARD), j721e_sim j721e_qt))
 include $(PDK_BOARD_COMP_PATH)/src/j721e_sim/src_files_j721e_sim.mk
 include $(PDK_BOARD_COMP_PATH)/src/flash/src_files_flash.mk
 PACKAGE_SRCS_COMMON += src/j721e_sim
+CFLAGS_LOCAL_COMMON += -DVLAB_SIM
 endif
 
 ifeq ($(BOARD),$(filter $(BOARD), j721e_evm))
