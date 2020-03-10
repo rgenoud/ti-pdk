@@ -72,6 +72,10 @@ ifeq ($(FORMAT),ELF)
   RTSLIB_FORMAT = eabi
 endif
 
+LNKFLAGS_INTERNAL_COMMON += -O4
+LNKFLAGS_INTERNAL_COMMON += --run_linker
+
+
 # Internal CFLAGS - normally doesn't change
 ifeq ($(CGT_ISA),$(filter $(CGT_ISA), M4 R5 M3))
   CFLAGS_INTERNAL = -c -qq -pdsw225 --endian=$(ENDIAN) -mv7$(CGT_ISA) --abi=$(CSWITCH_FORMAT) -eo.$(OBJEXT) -ea.$(ASMEXT) --symdebug:dwarf --embed_inline_assembly
@@ -132,15 +136,11 @@ ifeq ($(BUILD_PROFILE_$(CORE)), debug)
 endif
 ifeq ($(BUILD_PROFILE_$(CORE)), release)
  ifeq ($(CGT_ISA),$(filter $(CGT_ISA), M4 R5 M3))
-   ifeq ($(CGT_ISA),$(filter $(CGT_ISA), R5))
-     LNKFLAGS_INTERNAL_BUILD_PROFILE = --opt='--float_support=vfpv3d16 --endian=$(ENDIAN) -mv7$(CGT_ISA) --abi=$(CSWITCH_FORMAT) -qq -pdsw225 $(CFLAGS_GLOBAL_$(CORE)) -ms -op2 -O4 -s --diag_suppress=23000' --strict_compatibility=on
-   else
-     LNKFLAGS_INTERNAL_BUILD_PROFILE = --opt='--float_support=vfplib   --endian=$(ENDIAN) -mv7$(CGT_ISA) --abi=$(CSWITCH_FORMAT) -qq -pdsw225 $(CFLAGS_GLOBAL_$(CORE)) -oe --symdebug:dwarf -ms -op2 -O3 -os --optimize_with_debug --inline_recursion_limit=20 --diag_suppress=23000' --strict_compatibility=on
-   endif
+   LNKFLAGS_INTERNAL_BUILD_PROFILE = -qq --diag_warning=225 --diag_suppress=23000 $(LNKFLAGS_GLOBAL_$(CORE))
    ifeq ($(CGT_ISA),$(filter $(CGT_ISA), R5))
      CFLAGS_INTERNAL += -ms -O4 -s
    else
-     CFLAGS_INTERNAL += -ms -oe -O3 -op0 -os --optimize_with_debug --inline_recursion_limit=20
+     CFLAGS_INTERNAL += -ms -O4 -op0 -os --optimize_with_debug --inline_recursion_limit=20
    endif
    CFLAGS_XDCINTERNAL = -Dxdc_target_name__=$(XDC_TARGET_NAME) -Dxdc_target_types__=ti/targets/arm/elf/std.h -Dxdc_bld__profile_release
    ifndef MODULE_NAME
@@ -148,12 +148,11 @@ ifeq ($(BUILD_PROFILE_$(CORE)), release)
    endif
  endif
  ifeq ($(CGT_ISA), Arm9)
-	 LNKFLAGS_INTERNAL_BUILD_PROFILE = --opt='--endian=$(ENDIAN) -mv5e --float_support=vfplib --abi=$(CSWITCH_FORMAT) -qq -pdsw225 $(CFLAGS_GLOBAL_$(CORE)) -oe --symdebug:dwarf -ms -op2 -O3 -os --optimize_with_debug --inline_recursion_limit=20 --diag_suppress=23000' --strict_compatibility=on
-	 CFLAGS_INTERNAL += -ms -oe -O3 -op0 -os --optimize_with_debug --inline_recursion_limit=20
-	 CFLAGS_XDCINTERNAL = -Dxdc_target_name__=$(XDC_TARGET_NAME) -Dxdc_target_types__=ti/targets/arm/elf/std.h -Dxdc_bld__profile_release
-	 ifndef MODULE_NAME
+        LNKFLAGS_INTERNAL_BUILD_PROFILE = -qq --diag_warning=225 --diag_suppress=23000 $(LNKFLAGS_GLOBAL_$(CORE))
+	CFLAGS_XDCINTERNAL = -Dxdc_target_name__=$(XDC_TARGET_NAME) -Dxdc_target_types__=ti/targets/arm/elf/std.h -Dxdc_bld__profile_release
+	ifndef MODULE_NAME
 	  CFLAGS_XDCINTERNAL += -Dxdc_cfg__header__='$(CONFIGURO_DIR)/package/cfg/$(XDC_HFILE_NAME)_pe$(CGT_EXT).h'
-	 endif
+	endif
  endif
  ifeq ($(CGT_ISA),$(filter $(CGT_ISA), M4F))
 	 LNKFLAGS_INTERNAL_BUILD_PROFILE = --opt='--float_support=FPv4SPD16 --endian=$(ENDIAN) -mv7M4 --abi=$(CSWITCH_FORMAT) -qq -pdsw225 $(CFLAGS_GLOBAL_$(CORE)) -oe --symdebug:dwarf -ms -op2 -O3 -os --optimize_with_debug --inline_recursion_limit=20 --diag_suppress=23000' --strict_compatibility=on
@@ -178,6 +177,11 @@ else
   ifneq ($(findstring xdc, $(INCLUDE_EXTERNAL_INTERFACES)),)
       _CFLAGS += $(CFLAGS_XDCINTERNAL)
   endif
+endif
+
+# For TPR12, fore enum type to int to be compatible with DSP
+ifeq ($(SOC),$(filter $(SOC), tpr12))
+  _CFLAGS += --enum_type=int
 endif
 
 # Decide the compile mode

@@ -39,7 +39,7 @@
  */
 #ifndef ti_osal_soc_top_include
 #define ti_osal_soc_top_include
-   
+
 #ifdef __cplusplus
    extern "C" {
 #endif
@@ -86,6 +86,8 @@
 #include <ti/osal/soc/j7200/osal_soc.h>
 #elif defined (SOC_AM64X)
 #include <ti/osal/soc/am64x/osal_soc.h>
+#elif defined (SOC_TPR12)
+#include <ti/osal/soc/tpr12/osal_soc.h>
 #else
 /* No known Soc is defined, have below defaults */
 /* Max number of semaphores for NonOs */
@@ -104,7 +106,7 @@
 /*********************************************************************
  * @def OSAL_TIRTOS_CONFIGNUM_HWI
  * To satisfy AMIC110 out of box needs, defaults are reduced to 10 as below
- * If the need is more than the defaults, application would need to 
+ * If the need is more than the defaults, application would need to
  * suppliment the additional memory for OSAL using @ref Osal_setHwAttrs
  * API calls by setting the extended memory block for HwiP
  *********************************************************************
@@ -128,7 +130,7 @@
 /*********************************************************************
  * @def OSAL_TIRTOS_CONFIGNUM_SEMAPHORE
  * To satisfy AMIC110 out of box needs, defaults are reduced to 20 as below
- * If the need is more than the defaults, application would need to 
+ * If the need is more than the defaults, application would need to
  * suppliment the additional memory for OSAL using @ref Osal_setHwAttrs
  * API calls by setting the extended memory block for semaphores
  *********************************************************************/
@@ -141,7 +143,7 @@
 /*********************************************************************
  * @def OSAL_NONOS_CONFIGNUM_HWI
  * To satisfy AMIC110 out of box needs, defaults are reduced to 10 as below
- * If the need is more than the defaults, application would need to 
+ * If the need is more than the defaults, application would need to
  * suppliment the additional memory for OSAL using @ref Osal_setHwAttrs
  * API calls by setting the extended memory block for HwiP
  *********************************************************************
@@ -159,7 +161,7 @@
 /*********************************************************************
  * @def OSAL_NONOS_CONFIGNUM_SEMAPHORE
  * To satisfy AMIC110 out of box needs, defaults are reduced to 20 as below
- * If the need is more than the defaults, application would need to 
+ * If the need is more than the defaults, application would need to
  * suppliment the additional memory for OSAL using @ref Osal_setHwAttrs
  * API calls by setting the extended memory block for semaphores
  *********************************************************************/
