@@ -58,6 +58,9 @@
 
 #include <ti/drv/emac/src/emac_osal.h>
 #include <ti/drv/emac/emac_ioctl.h>
+
+#include <ti/drv/emac/src/v5/emac_hwq.h>
+
 /* SOC Include Files. */
 #include <ti/drv/emac/soc/emac_soc_v5.h>
 
@@ -1545,7 +1548,7 @@ void app_test_check_port_link(uint32_t startP, uint32_t endP)
 #ifdef TSN_MAC
     EMAC_IOCTL_PARAMS params;
     params.subCommand = EMAC_IOCTL_PORT_STATE_FORWARD;
-    emac_ioctl(portNum, EMAC_IOCTL_PORT_STATE_CTRL, &params);
+    emac_ioctl(pNum, EMAC_IOCTL_PORT_STATE_CTRL, &params);
 
     params.subCommand =  EMAC_IOCTL_ACCEPTABLE_FRAME_CHECK_ALL_FRAMES;
     //asynchronous IOCTL 
@@ -1646,6 +1649,17 @@ void app_test_task_benchmark(UArg arg0, UArg arg1)
 
 
 #ifdef EMAC_TEST_APP_ICSSG
+
+void dump_hwq(int icssg)
+{
+    int j;
+
+    UART_printf("HWQ dump queue levels\n");
+    for(j = 0; j < 64; j++)
+        UART_printf("HWQ %d - %d\n", j, hwq_level(icssg, j));
+    UART_printf("========================================\n\n");
+}
+
 void test_EMAC_verify_ut_dual_mac_icssg(void)
 {
     /* @description:Unit test for ICSSG dual mac use case
