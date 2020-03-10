@@ -51,7 +51,7 @@ endif
 CODEGEN_INCLUDE = $(TOOLCHAIN_PATH_$(CGT_ISA_PATH_PRFX))/include
 CC = $(TOOLCHAIN_PATH_$(CGT_ISA_PATH_PRFX))/bin/armcl
 AR = $(TOOLCHAIN_PATH_$(CGT_ISA_PATH_PRFX))/bin/armar
-LNK = $(TOOLCHAIN_PATH_$(CGT_ISA_PATH_PRFX))/bin/armlnk
+LNK = $(TOOLCHAIN_PATH_$(CGT_ISA_PATH_PRFX))/bin/armcl
 STRP = $(TOOLCHAIN_PATH_$(CGT_ISA_PATH_PRFX))/bin/armstrip
 SIZE = $(TOOLCHAIN_PATH_$(CGT_ISA_PATH_PRFX))/bin/armofd
 
@@ -155,7 +155,8 @@ ifeq ($(BUILD_PROFILE_$(CORE)), release)
 	endif
  endif
  ifeq ($(CGT_ISA),$(filter $(CGT_ISA), M4F))
-	 LNKFLAGS_INTERNAL_BUILD_PROFILE = --opt='--float_support=FPv4SPD16 --endian=$(ENDIAN) -mv7M4 --abi=$(CSWITCH_FORMAT) -qq -pdsw225 $(CFLAGS_GLOBAL_$(CORE)) -oe --symdebug:dwarf -ms -op2 -O3 -os --optimize_with_debug --inline_recursion_limit=20 --diag_suppress=23000' --strict_compatibility=on
+	# LNKFLAGS_INTERNAL_BUILD_PROFILE = --opt='--float_support=FPv4SPD16 --endian=$(ENDIAN) -mv7M4 --abi=$(CSWITCH_FORMAT) -qq -pdsw225 $(CFLAGS_GLOBAL_$(CORE)) -oe --symdebug:dwarf -ms -op2 -O3 -os --optimize_with_debug --inline_recursion_limit=20 --diag_suppress=23000' --strict_compatibility=on
+     LNKFLAGS_INTERNAL_BUILD_PROFILE = -qq --diag_warning=225 --diag_suppress=23000 $(LNKFLAGS_GLOBAL_$(CORE))
 	 CFLAGS_INTERNAL += -ms -oe -O3 -op0 -os --optimize_with_debug --inline_recursion_limit=20
  endif
 endif
@@ -245,7 +246,7 @@ ifeq ($(CGT_ISA), R5)
   LNKFLAGS_INTERNAL_COMMON += --diag_suppress=10063
 else
 ifeq ($(CGT_ISA), M4F)
-  LNKFLAGS_INTERNAL_COMMON += --silicon_version=7M4
+  LNKFLAGS_INTERNAL_COMMON +=
 else
 ifeq ($(CGT_ISA), Arm9)
   LNKFLAGS_INTERNAL_COMMON +=

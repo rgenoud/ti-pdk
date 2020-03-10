@@ -165,6 +165,10 @@ endif
 CFLAGS_GLOBAL_ipu1_0 = -g -ms -DMAKEFILE_BUILD
 LNKFLAGS_GLOBAL_ipu1_0 = -x --zero_init=on
 
+# m4f_0 - Cortex M4F
+CFLAGS_GLOBAL_m4f_0 = -g -ms -DMAKEFILE_BUILD
+LNKFLAGS_GLOBAL_m4f_0 = -x --zero_init=on
+
 # ipu1_1 - Benneli - Core 0 (Cortex-M4)
 CFLAGS_GLOBAL_ipu1_1 = -g -ms -DMAKEFILE_BUILD
 LNKFLAGS_GLOBAL_ipu1_1 = -x --zero_init=on
