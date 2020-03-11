@@ -72,6 +72,8 @@
  ************************** Internal functions ************************
  **********************************************************************/
 #define TWO_TIMER_INTERRUPT_TEST 0
+//#define QT_BUILD
+
 #include <ti/csl/soc.h>
 
 #include <ti/csl/csl_clec.h>
@@ -234,7 +236,8 @@ bool OSAL_hwi_test()
 
 typedef enum UT_Timer_Type_s {
     UT_Timer_DMTIMER = 0,
-    UT_Timer_TIMER64 = 1
+    UT_Timer_TIMER64 = 1,
+    UT_Timer_RTITIMER = 2
 } UT_Timer_Type_t;
 
 
@@ -350,6 +353,14 @@ UT_Timer_Type_t  timer_type =             UT_Timer_TIMER64;
     #define OSAL_TEST_TIMER_ID2               (2U)
     #define OSAL_TEST_TIMER_PERIOD            (5000U)
   #endif
+#elif defined(SOC_TPR12)
+    UT_Timer_Type_t  timer_type =           UT_Timer_RTITIMER;
+#define OSAL_TEST_TIMER_ID                    (TimerP_ANY)
+#if defined(QT_BUILD)
+#define OSAL_TEST_TIMER_PERIOD                (500U)
+#else
+#define OSAL_TEST_TIMER_PERIOD                (5000U)
+#endif
 #else
 UT_Timer_Type_t  timer_type   =           UT_Timer_DMTIMER;
   #if defined (__ARM_ARCH_7A__)
@@ -364,10 +375,20 @@ UT_Timer_Type_t  timer_type   =           UT_Timer_DMTIMER;
   #endif
 #endif
 
+#if defined(QT_BUILD)
+#define      OSAL_GET_TIME_MAX_SAMPLES  (10U)
+#else
 #define      OSAL_GET_TIME_MAX_SAMPLES  (20U)
+#endif
 volatile uint32_t timerIsrCount = 0;
 volatile uint32_t timerIsr2Count = 0;
-#define      OSAL_TIMER_TEST_MAX_INTERRUPTS (5U)
+
+#if defined(QT_BUILD)
+#define OSAL_TIMER_TEST_MAX_INTERRUPTS      (10U)
+#else
+#define OSAL_TIMER_TEST_MAX_INTERRUPTS      (100U)
+#endif
+
 
 #if defined (ENABLE_GET_TIME_TEST)
 uint64_t     gTestTimeRd[OSAL_GET_TIME_MAX_SAMPLES];
@@ -399,6 +420,11 @@ void timerIsr2(void *arg)
 /*
  * ========= Osal Delay Test function =========
  */
+#if defined(QT_BUILD)
+#define OSAL_DELAY_TIME         1
+#else
+#define OSAL_DELAY_TIME         10
+#endif
 bool Osal_delay_test(void)
 {
 #if !defined(SOC_AM64X)
@@ -410,7 +436,7 @@ bool Osal_delay_test(void)
 
    for (i=0; i<10;i++) {
 #endif
-      Osal_delay(10);
+      Osal_delay(OSAL_DELAY_TIME);
       OSAL_log(".");
 #if !defined(SOC_AM64X)
    }
@@ -1178,6 +1204,8 @@ void osal_test(UArg arg0, UArg arg1)
         testFail = true;
     }
 
+#ifdef ENABLE_EXT_BLOCK_TEST
+
     if(OSAL_ExtBlock_test() == true)
     {
         OSAL_log("\n Extended Memory Block tests for HwiP/SwiP have passed. \n");
@@ -1187,6 +1215,7 @@ void osal_test(UArg arg0, UArg arg1)
         OSAL_log("\n Extended Memory Block tests for HwiP/SwiP have failed. \n");
         testFail = true;
     }
+#endif
 
     #ifdef MANUAL_CACHE_TEST
     /* This test is valid only for MANUAL testing */
@@ -1381,10 +1410,10 @@ int main(void)
 #else
     /* All other platforms have the task created under RTSC cfg file
      * hence not needed to be created again as below
-     * For AM65XX and J7 the common RTSC cfg file is used and hence there is
+     * For AM65XX TPR12 and J7 the common RTSC cfg file is used and hence there is
      * no test application specific task is created in teh RTSC cfg file
      */
-#if defined (SOC_AM65XX) || defined (SOC_J721E) || defined(SOC_J7200)
+#if defined (SOC_AM65XX) || defined (SOC_J721E) || defined(SOC_J7200) || defined(SOC_TPR12)
     TaskP_Params taskParams;
     Error_Block  eb;
     TaskP_Params_init(&taskParams);

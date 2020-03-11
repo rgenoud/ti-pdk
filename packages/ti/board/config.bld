@@ -364,6 +364,11 @@ var am64x_evm = {
     name: "am64x_evm",
     ccOpts: "-Dam64x_evm -DSOC_AM64X",
     targets: [A53LE],
+
+var tpr12_evm = {
+    name: "tpr12_evm",
+    ccOpts: "-Dtpr12_evm -DSOC_TPR12",
+    targets: [C66LE],
 }
 
 /* List all the build targets here. */
