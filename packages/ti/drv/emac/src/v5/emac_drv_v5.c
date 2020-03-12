@@ -2429,6 +2429,8 @@ static void emac_poll_tx_complete(uint32_t port_num, Udma_RingHandle compRingHan
  */
 static void emac_poll_mgmt_pkts(uint32_t port_num, Udma_RingHandle compRingHandle, Udma_RingHandle freeRingHandle, uint32_t ringNum)
 {
+    EMAC_IOCTL_CMD_RESP_T cmdResponse;
+    EMAC_IOCTL_CMD_T *pIoctlData;
 
     uint32_t *mpkt;
 
@@ -2443,13 +2445,12 @@ static void emac_poll_mgmt_pkts(uint32_t port_num, Udma_RingHandle compRingHandl
         mpkt = hwq_pop(0, (port_num == 0) ? 58 : 62);
         UART_printf(">>> got cmpl buffer @ %p on port %d\n", mpkt, port_num);
 
-//FIXME: ioctlCount is broken anyway fix it later      
-#if 0
+#if 1
         if (emac_mcb.ioctl_cb.ioctlCount)
         {
             if (--emac_mcb.ioctl_cb.ioctlCount == 0)
             {
-                pIoctlData = (EMAC_IOCTL_CMD_T*)pCppiDesc->appPtr->pDataBuffer;
+                pIoctlData = (EMAC_IOCTL_CMD_T*)&mpkt[1];
                 cmdResponse.status = pIoctlData->commandParam;
                 cmdResponse.seqNumber = pIoctlData->seqNumber;
                 cmdResponse.respParamsLength = 0;
