@@ -2443,7 +2443,7 @@ static void emac_poll_mgmt_pkts(uint32_t port_num, Udma_RingHandle compRingHandl
             break;
 
         mpkt = hwq_pop(0, (port_num == 0) ? 58 : 62);
-        UART_printf(">>> got cmpl buffer @ %p on port %d\n", mpkt, port_num);
+        //UART_printf(">>> got cmpl buffer @ %p on port %d\n", mpkt, port_num);
 
 #if 1
         if (emac_mcb.ioctl_cb.ioctlCount)
@@ -2466,7 +2466,7 @@ static void emac_poll_mgmt_pkts(uint32_t port_num, Udma_RingHandle compRingHandl
             }
         }
 #else
-    UART_printf(">>>> Got management response %d %08x %08x\n", port_num, mpkt[0], mpkt[1]);
+    //UART_printf(">>>> Got management response %d %08x %08x\n", port_num, mpkt[0], mpkt[1]);
 #endif
 
         hwq_push(0, (port_num == 0) ? 56 : 60, mpkt); // return buffer to the free queue; TODO: don't use hardcoded values
@@ -2493,7 +2493,7 @@ static void emac_poll_tx_ts_resp(uint32_t port_num, Udma_RingHandle compRingHand
                 break;
 
             mpkt = hwq_pop(0, (lport == 0) ? 59 : 63);
-            UART_printf(">>> got txts buffer @ %p on port %d\n", mpkt, lport);
+            //UART_printf(">>> got txts buffer @ %p on port %d\n", mpkt, lport);
 
             tx_timestamp = mpkt[4];
             tx_timestamp = tx_timestamp << 32 | mpkt[3];
