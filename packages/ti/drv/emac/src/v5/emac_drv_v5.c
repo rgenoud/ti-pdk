@@ -2478,6 +2478,33 @@ static void emac_poll_mgmt_pkts(uint32_t port_num, Udma_RingHandle compRingHandl
  */
 static void emac_poll_tx_ts_resp(uint32_t port_num, Udma_RingHandle compRingHandle, Udma_RingHandle freeRingHandle, uint32_t ringNum)
 {
+#if 1
+    uint32_t *mpkt;
+    uint64_t tx_timestamp;
+    uint32_t lport;
+    if (port_num >= 2) // TODO: just temporarily guard
+        return;  
+
+    for (lport = 0; lport < 2; lport++)
+    {
+        while (1)
+        {
+            if (hwq_level(0, (lport == 0) ? 59 : 63) == 0)
+                break;
+
+            mpkt = hwq_pop(0, (lport == 0) ? 59 : 63);
+            UART_printf(">>> got txts buffer @ %p on port %d\n", mpkt, lport);
+
+            tx_timestamp = mpkt[4];
+            tx_timestamp = tx_timestamp << 32 | mpkt[3];
+            if(emac_mcb.port_cb[lport].tx_ts_cb)
+                emac_mcb.port_cb[lport].tx_ts_cb(lport, mpkt[2], tx_timestamp, 1);
+
+            //bit 23 is bit 7 of byte 2 
+            hwq_push(0, ((mpkt[0] & (1 << 23)) == 0) ? 40 : 41, mpkt);
+        }
+    }
+#else
     EMAC_CPPI_DESC_T *pCppiDesc = NULL;
     EMAC_TX_TS_RESPONSE *tx_ts;
     uint64_t tx_timestamp;
@@ -2500,6 +2527,7 @@ static void emac_poll_tx_ts_resp(uint32_t port_num, Udma_RingHandle compRingHand
            }
         }
     } while (pCppiDesc != 0);
+#endif
 }
 
 /*
