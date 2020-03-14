@@ -435,10 +435,15 @@ endif
 
 ifeq ($(ISA),r5f)
   ifeq ($(FORMAT),ELF)
-    TARGET_XDC = ti.targets.arm.elf.R5F
+    # If XDC thumb mode is disabled,choose the non-thumb target of XDC
+    ifeq ($(XDC_DISABLE_THUMB_MODE),yes)
+     TARGET_XDC = ti.targets.arm.elf.R5F
+    else
+     TARGET_XDC = ti.targets.arm.elf.R5Ft
+    endif    
     FORMAT_EXT = e
   else
-    TARGET_XDC = ti.targets.arm.R5F
+    TARGET_XDC = ti.targets.arm.R5Ft
   endif
 
   ifeq ($(BOARD),$(filter $(BOARD), am65xx_evm am65xx_idk am65xx_sim))
@@ -482,6 +487,15 @@ ifeq ($(ISA),r5f)
 
   # Define the file extensions
   OBJEXT = o$(FORMAT_EXT)$(ISA_EXT)$(ENDIAN_EXT)
+  # When thumb2 mode is used(default), the BIOS obj files have r5f't' extension
+  ifeq ($(XDC_DISABLE_THUMB_MODE),yes)
+    OBJEXT_BIOS = o$(FORMAT_EXT)r5f$(ENDIAN_EXT)
+    PEXT_BIOS   = p$(FORMAT_EXT)r5f$(ENDIAN_EXT)
+  else
+    OBJEXT_BIOS = o$(FORMAT_EXT)r5ft$(ENDIAN_EXT)
+    PEXT_BIOS   = p$(FORMAT_EXT)r5ft$(ENDIAN_EXT)
+  endif  
+  # Retaining the r5f extension for backward compatibility 
   LIBEXT = a$(FORMAT_EXT)$(ISA_EXT)$(ENDIAN_EXT)
   EXEEXT = x$(FORMAT_EXT)$(ISA_EXT)$(ENDIAN_EXT)
   ASMEXT = s$(FORMAT_EXT)$(ISA_EXT)$(ENDIAN_EXT)

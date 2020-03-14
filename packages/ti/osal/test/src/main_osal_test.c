@@ -76,14 +76,15 @@
 
 #include <ti/csl/soc.h>
 
-#include <ti/csl/csl_clec.h>
-
 #if defined (__C7100__)
+#include <ti/csl/csl_clec.h>
 #include <ti/csl/arch/csl_arch.h>
 #endif
 #include <ti/csl/tistdtypes.h>
 #ifdef BARE_METAL
+#if !defined(SOC_TPR12)
 #include <ti/csl/csl_timer.h>
+#endif
 #include <ti/csl/arch/csl_arch.h>
 
 #if   defined (SOC_AM571x) || defined (SOC_AM572x) || defined (SOC_AM574x)
@@ -102,7 +103,7 @@ void ErrorHandler(Error_Block *eb)
 void Osal_appC7xPreInit(void);
 
 #undef  ENABLE_GET_TIME_TEST
-#if defined(SOC_AM65XX) || defined(SOC_J721E) || defined(SOC_AM572x) || defined(SOC_K2G) || defined(SOC_AM335x) || defined(SOC_AM437x) || defined(SOC_J7200)
+#if defined(SOC_AM65XX) || defined(SOC_J721E) || defined(SOC_AM572x) || defined(SOC_K2G) || defined(SOC_AM335x) || defined(SOC_AM437x) || defined(SOC_J7200)|| defined(SOC_TPR12)
 #define ENABLE_GET_TIME_TEST     1
 #endif
 
