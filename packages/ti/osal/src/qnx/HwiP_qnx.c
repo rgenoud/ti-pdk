@@ -43,15 +43,11 @@
 #include <pthread.h>
 #include <string.h>
 
-#define QNX_DEBUG_PRINT(f_, ...) printf((f_), ##__VA_ARGS__);
-#define QNX_TRACE_PRINT printf("-> %s: entered\n", __func__);
-#define QNX_TRACE_PRINT_DONE printf("<- %s: exit\n", __func__);
+#include <ti/osal/osal.h>
 
 static int hwip_chid = -1; // Channel ID per process
 
 static int threadSpawned = 0;
-
-intrspin_t spinlock;
 
 #define ISR_PULSE		_PULSE_CODE_MINAVAIL
 
@@ -181,7 +177,6 @@ HwiP_Status HwiP_delete(HwiP_Handle handle)
     return (HwiP_OK);
 }
 
-static uint32_t g_lockCount = 0;
 /*
  *  ======== HwiP_disable ========
  */
@@ -189,12 +184,16 @@ uintptr_t HwiP_disable(void)
 {
     //QNX_DEBUG_PRINT("%s: InterruptLock \n",__FUNCTION__);
 
-    if (g_lockCount == 0) {
-        InterruptLock(&spinlock);
-    }
-    g_lockCount++;
+    intrspin_t *spinlock_ptr = NULL;
 
-    return (0);
+    /* Create a spinLock and lock interrupts */
+    spinlock_ptr = malloc(sizeof(intrspin_t));
+    OSAL_Assert(spinlock_ptr  == NULL);
+    memset( (void *) spinlock_ptr, 0, sizeof(intrspin_t) );
+
+    InterruptLock(spinlock_ptr);
+
+    return ((uintptr_t) spinlock_ptr);
 }
 
 /*
@@ -245,10 +244,9 @@ void HwiP_restore(uintptr_t key)
     /* Enable interrupts */
     //QNX_DEBUG_PRINT("%s: InterruptUnlock \n",__FUNCTION__);
 
-    g_lockCount--;
-    if (g_lockCount == 0) {
-        InterruptUnlock(&spinlock);
-    }
+    OSAL_Assert((intrspin_t *) key == NULL);
+    InterruptUnlock((intrspin_t *) key);
+    free((void *) key);
 }
 
 /* Nothing past this point */
