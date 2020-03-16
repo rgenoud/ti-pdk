@@ -43,6 +43,7 @@
 /* ========================================================================== */
 #include <ti/drv/ipc/ipc.h>
 #include <string.h>
+#include <stdio.h>
 
 #ifndef IPC_EXCLUDE_CTRL_TASKS
 #include <ti/osal/osal.h>
@@ -304,7 +305,7 @@ RPMessage_Object*  RPMessage_allocObject(void)
 static int32_t RPMessage_enqueMsg(RPMessage_EndptPool *pool, RPMessage_MsgHeader *msg)
 {
     int32_t             status = IPC_SOK;
-    int32_t             key;
+
     uint32_t            size;
     RPMessage_MsgElem  *payload;
     RPMessage_Object   *obj = NULL;
@@ -316,9 +317,9 @@ static int32_t RPMessage_enqueMsg(RPMessage_EndptPool *pool, RPMessage_MsgHeader
         if ((NULL != pOsalPrms->lockHIsrGate) &&
             (NULL != pOsalPrms->unLockHIsrGate))
         {
-            key = pOsalPrms->lockHIsrGate(module.gateSwi);
+
             obj = RPMessage_lookupEndpt(pool, msg->dstAddr);
-            pOsalPrms->unLockHIsrGate(module.gateSwi, key);
+
         }
     }
 
@@ -348,7 +349,7 @@ static int32_t RPMessage_enqueMsg(RPMessage_EndptPool *pool, RPMessage_MsgHeader
             size = msg->dataLen + sizeof(RPMessage_MsgElem);
 
             /* HeapBuf_alloc() is non-blocking, so needs protection: */
-            key = pOsalPrms->disableAllIntr();
+
             payload = (RPMessage_MsgElem *)IpcUtils_HeapAlloc(&obj->heap, size, 0);
 
             if (payload != NULL)
@@ -360,7 +361,6 @@ static int32_t RPMessage_enqueMsg(RPMessage_EndptPool *pool, RPMessage_MsgHeader
 
                 IpcUtils_Qput(&obj->queue, &payload->elem);
 
-                pOsalPrms->restoreAllIntr(key);
 #ifndef QNX_OS
                 if (NULL != gIpcObject.initPrms.newMsgFxn)
                 {
@@ -375,7 +375,7 @@ static int32_t RPMessage_enqueMsg(RPMessage_EndptPool *pool, RPMessage_MsgHeader
             }
             else
             {
-                pOsalPrms->restoreAllIntr(key);
+
                 status = IPC_EFAIL;
             }
         }
@@ -394,6 +394,9 @@ static void RPMessage_swiLinuxFxn(uintptr_t arg0, uintptr_t arg1)
     Int16                  token;
     int32_t                len;
     uint8_t                usedBufAdded = FALSE;
+    int32_t   key;
+
+    key = gIpcObject.initPrms.osalPrms.lockHIsrGate(module.gateSwi);
 
     /* Process all available buffers: */
     while ((token = Virtio_getAvailBuf(cbdata->vq, (void **)&msg, &len)) >= 0)
@@ -410,6 +413,8 @@ static void RPMessage_swiLinuxFxn(uintptr_t arg0, uintptr_t arg1)
        /* Tell host we've processed the buffers: */
        Virtio_kick(cbdata->vq);
     }
+
+    gIpcObject.initPrms.osalPrms.unLockHIsrGate(module.gateSwi, key);
 }
 
 /**
@@ -419,6 +424,9 @@ static void RPMessage_swiFxn(uintptr_t arg0, uintptr_t arg1)
 {
     RPMessage_CallbackData *cbdata = (RPMessage_CallbackData*)arg0;
     RPMessage_MsgHeader    *msg;
+    int32_t   key;
+
+    key = gIpcObject.initPrms.osalPrms.lockHIsrGate(module.gateSwi);
 
     /* Process all available buffers: */
     while ((msg = (RPMessage_MsgHeader *) Virtio_getUsedBuf(cbdata->vq)) != NULL)
@@ -428,6 +436,8 @@ static void RPMessage_swiFxn(uintptr_t arg0, uintptr_t arg1)
 
         Virtio_addAvailBuf(cbdata->vq, msg);
     }
+
+    gIpcObject.initPrms.osalPrms.unLockHIsrGate(module.gateSwi, key);
 }
 
 /**
@@ -577,7 +587,7 @@ static void RPMessage_processAnnounceMsg(RPMessage_Announcement *amsg, uint32_t 
                 do
                 {
                     w = (RPMessage_Waiter*)elem;
-                    if( (NULL != w) && 
+                    if( (NULL != w) &&
                             (strncmp(w->name, amsg->name, SERVICENAMELEN-1) == 0) &&
                             (w->procId == procId || w->procId == RPMESSAGE_ANY))
                     {
@@ -687,14 +697,14 @@ int32_t RPMessage_getRemoteEndPt(uint32_t selfProcId, const char* name, uint32_t
          * not be an unprotected time between calling
          * RPMessage_lookupName() and the IpcUtils_Qput().
          */
-        key = pOsalPrms->disableAllIntr();
+        key = pOsalPrms->lockHIsrGate(module.gateSwi);
         lookupStatus = RPMessage_lookupName(selfProcId, name,
                                             remoteProcId, remoteEndPt);
         if(FALSE == lookupStatus)
         {
             IpcUtils_Qput(&module.waitingTasks, &taskWaiter.elem);
         }
-        pOsalPrms->restoreAllIntr(key);
+        pOsalPrms->unLockHIsrGate(module.gateSwi, key);
 
         if(FALSE == lookupStatus)
         {
@@ -731,7 +741,6 @@ int32_t RPMessage_getRemoteEndPt(uint32_t selfProcId, const char* name, uint32_t
 static void RPMessage_checkForMessages(RPMessage_EndptPool *pool)
 {
     uint32_t   c;
-    int32_t   key;
 
     for(c = 0; c < module.numCallbacks; c++)
     {
@@ -740,9 +749,9 @@ static void RPMessage_checkForMessages(RPMessage_EndptPool *pool)
         {
             if(TRUE == Virtio_isReady(module.VQ_callbacks[c].vq))
             {
-                key = gIpcObject.initPrms.osalPrms.lockHIsrGate(module.gateSwi);
+
                 RPMessage_swiFxn((uintptr_t)&module.VQ_callbacks[c], 0);
-                gIpcObject.initPrms.osalPrms.unLockHIsrGate(module.gateSwi, key);
+
             }
         }
     }
@@ -865,10 +874,10 @@ static RPMessage_Object* RPMessage_rawCreate(
         status = IPC_EFAIL;
     }
 
+    key = pOsalPrms->lockHIsrGate(module.gateSwi);
+
     if(IPC_SOK == status)
     {
-        key = pOsalPrms->lockHIsrGate(module.gateSwi);
-
         /* Allocate the endPt */
         if (params->requestedEndpt == RPMESSAGE_ANY)
         {
@@ -894,7 +903,7 @@ static RPMessage_Object* RPMessage_rawCreate(
         }
     }
 
-    if ((FALSE == found) || 
+    if ((FALSE == found) ||
         (params->numBufs < 1) ||
         (params->bufSize < ((params->numBufs * MSGBUFFERSIZE) + objSize)))
     {
@@ -937,10 +946,10 @@ static RPMessage_Object* RPMessage_rawCreate(
             {
                 obj = NULL;
             }
-
-            pOsalPrms->unLockHIsrGate(module.gateSwi, key);
         }
     }
+
+    pOsalPrms->unLockHIsrGate(module.gateSwi, key);
 
     return (obj);
 }
@@ -1160,7 +1169,7 @@ int32_t RPMessage_delete(RPMessage_Handle *handlePtr)
             pOsalPrms->deleteMutex(obj->semHandle);
        }
 
-       key = gIpcObject.initPrms.osalPrms.disableAllIntr();
+       key = pOsalPrms->lockHIsrGate(module.gateSwi);
 
        /* Free/discard all queued message buffers: */
        while (0U == IpcUtils_QisEmpty(&obj->queue))
@@ -1172,7 +1181,7 @@ int32_t RPMessage_delete(RPMessage_Handle *handlePtr)
             }
        }
 
-       gIpcObject.initPrms.osalPrms.restoreAllIntr(key);
+       pOsalPrms->unLockHIsrGate(module.gateSwi, key);
 
        IpcUtils_HeapDelete(&obj->heap);
 
@@ -1201,6 +1210,7 @@ int32_t RPMessage_recv(RPMessage_Handle handle, void* data, uint16_t *len,
         handling would require an overhaul */
     Ipc_OsalPrms *pOsalPrms = &gIpcObject.initPrms.osalPrms;
 
+    #if 0
     key = pOsalPrms->lockHIsrGate(module.gateSwi);
     if (TRUE == IpcUtils_QisEmpty(&obj->queue))
     {
@@ -1208,6 +1218,7 @@ int32_t RPMessage_recv(RPMessage_Handle handle, void* data, uint16_t *len,
         skiplist = TRUE;
     }
     pOsalPrms->unLockHIsrGate(module.gateSwi, key);
+    #endif
 
     /*  Block until notified. */
     semStatus = IPC_SOK;
@@ -1229,7 +1240,7 @@ int32_t RPMessage_recv(RPMessage_Handle handle, void* data, uint16_t *len,
     }
     else
     {
-        key = gIpcObject.initPrms.osalPrms.disableAllIntr();
+        key = pOsalPrms->lockHIsrGate(module.gateSwi);
 
         payload = (RPMessage_MsgElem *)IpcUtils_QgetHead(&obj->queue);
         if ( (NULL == payload) ||
@@ -1247,8 +1258,9 @@ int32_t RPMessage_recv(RPMessage_Handle handle, void* data, uint16_t *len,
             *rplyProcId = payload->procId;
             IpcUtils_HeapFree(&obj->heap, (void *)payload,
                     (payload->len + sizeof(RPMessage_MsgElem)));
-            gIpcObject.initPrms.osalPrms.restoreAllIntr(key);
         }
+
+        pOsalPrms->unLockHIsrGate(module.gateSwi, key);
     }
 
     return (status);
