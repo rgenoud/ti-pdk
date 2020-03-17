@@ -96,7 +96,7 @@ drvuart_j721e_CORELIST = $(DEFAULT_j721e_CORELIST)
 drvuart_j721e_CORELISTARM = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1
 drvuart_j7200_CORELIST = $(DEFAULT_j7200_CORELIST)
 drvuart_j7200_CORELISTARM = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1
-drvuart_am64x_CORELIST = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 m4f_0
+drvuart_am64x_CORELIST = $(DEFAULT_am64x_CORELIST)
 
 ############################
 # uart package
@@ -122,7 +122,7 @@ drvuart_FIRM_LIST = $(uart_FIRM_LIST)
 ############################
 #uart_EXAMPLE_LIST = drv_uart_unit_test drv_uart_polling_mode_app drv_uart_intr_mode_app
 ifeq ($(SOC),$(filter $(SOC), am64x))
-uart_EXAMPLE_LIST = UART_Baremetal_TestApp
+uart_EXAMPLE_LIST = UART_Baremetal_TestApp UART_TestApp
 else
 uart_EXAMPLE_LIST = UART_Baremetal_TestApp UART_Baremetal_DMA_TestApp UART_TestApp UART_SMP_TestApp UART_DMA_TestApp UART_DMA_SMP_TestApp
 endif
@@ -426,7 +426,11 @@ UART_TestApp_PKG_LIST = UART_TestApp
 UART_TestApp_INCLUDE = $(UART_TestApp_PATH)
 UART_TestApp_BOARDLIST = $(drvuart_BOARDLIST)
 export UART_TestApp_BOARDLIST
+ifeq ($(SOC),$(filter $(SOC), am64x))
+UART_TestApp_$(SOC)_CORELIST = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1
+else
 UART_TestApp_$(SOC)_CORELIST = $(drvuart_$(SOC)_CORELIST)
+endif
 export UART_TestApp_$(SOC)_CORELIST
 ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200))
 UART_TestApp_SBL_APPIMAGEGEN = yes

@@ -497,8 +497,8 @@ ifeq ($(BUILD_OS_TYPE),tirtos)
   endif
   ifeq ($(SOC),$(filter $(SOC), am65xx am64x))
     ifeq ($(CONFIG_BLD_XDC_a53),)
-        CONFIG_BLD_XDC_a53   = $(pdk_PATH)/ti/build/am65xx/config_$(SOC)_a53.bld
-        CONFIG_BLD_LNK_a53   = $(pdk_PATH)/ti/build/am65xx/linker_a53.lds
+        CONFIG_BLD_XDC_a53   = $(pdk_PATH)/ti/build/$(SOC)/config_$(SOC)_a53.bld
+        CONFIG_BLD_LNK_a53   = $(pdk_PATH)/ti/build/$(SOC)/linker_a53.lds
     endif
   endif
 

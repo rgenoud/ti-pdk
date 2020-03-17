@@ -425,6 +425,10 @@ ifeq ($(ISA),$(filter $(ISA), m4 m4f))
         PLATFORM_XDC = "ti.platforms.evmTDA3XX:IPU_1_1"
       endif
     endif
+
+    ifeq ($(BOARD),$(filter $(SOC), am64x_evm))
+      PLATFORM_XDC = "ti.platforms.cortexM:AM64X_M4F"
+    endif
   endif
 
   # If ENDIAN is set to "big", set ENDIAN_EXT to "e", that would be used in
@@ -469,11 +473,7 @@ ifeq ($(ISA),r5f)
   endif
 
   ifeq ($(BOARD),$(filter $(BOARD), am64x_evm))
-    ifeq ($(CORE),$(filter $(CORE), mcu1_0 mcu1_1))
-      PLATFORM_XDC = "ti.platforms.cortexR:AM64X_MCU"
-    else
-      PLATFORM_XDC = "ti.platforms.cortexR:AM64X_MAIN"
-    endif
+      PLATFORM_XDC = "ti.platforms.cortexR:AM64X"
   endif
 
   ifeq ($(SOC),$(filter $(SOC), tpr12))
@@ -509,6 +509,10 @@ ifeq ($(ISA),a53)
     PLATFORM_XDC = "ti.platforms.cortexA:SIMMAXWELL"
   endif
 
+  ifeq ($(BOARD),$(filter $(BOARD), am64x_evm))
+    PLATFORM_XDC = "ti.platforms.cortexA:AM64X"
+  endif
+
   ENDIAN_EXT = fg
   FORMAT_EXT =
 
@@ -538,10 +542,6 @@ ifeq ($(ISA),a72)
 
   ifeq ($(BOARD),$(filter $(BOARD), j7200_sim j7200_evm))
     PLATFORM_XDC = "ti.platforms.cortexA:J7200"
-  endif
-
-  ifeq ($(BOARD),$(filter $(BOARD), am64x_evm))
-    PLATFORM_XDC = "ti.platforms.cortexA:AM64X"
   endif
 
   ENDIAN_EXT = fg
