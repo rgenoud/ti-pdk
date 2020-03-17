@@ -288,6 +288,19 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
             CSL_MCU_NAVSS0_UDMASS_UDMAP_TCHANRT_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, UDMA_MCU_NAVSS0_UDMASS_UDMAP_TCHANRT_BASE));
         pUdmapRegs->pRxChanRtRegs   = ((CSL_udmap_rxcrtRegs *) mmap_device_memory(0,
             CSL_MCU_NAVSS0_UDMASS_UDMAP_RCHANRT_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, UDMA_MCU_NAVSS0_UDMASS_UDMAP_RCHANRT_BASE));
+
+        printf( "%s: pUdmapRegs->pGenCfgRegs phys/0x%lx virt/0x%p size/%ld",__FUNCTION__,
+            UDMA_MCU_NAVSS0_UDMASS_UDMAP0_CFG_GCFG_BASE, pUdmapRegs->pGenCfgRegs, CSL_MCU_NAVSS0_UDMASS_UDMAP0_CFG_GCFG_SIZE);
+        printf( "%s: pUdmapRegs->pRxFlowCfgRegs phys/0x%lx virt/0x%p size/%ld",__FUNCTION__,
+            UDMA_MCU_NAVSS0_UDMASS_UDMAP0_CFG_RFLOW_BASE, pUdmapRegs->pRxFlowCfgRegs, CSL_MCU_NAVSS0_UDMASS_UDMAP0_CFG_RFLOW_SIZE);
+        printf( "%s: pUdmapRegs->pTxChanCfgRegs phys/0x%lx virt/0x%p size/%ld",__FUNCTION__,
+            UDMA_MCU_NAVSS0_UDMASS_UDMAP0_TCHAN_BASE, pUdmapRegs->pTxChanCfgRegs, CSL_MCU_NAVSS0_UDMASS_UDMAP0_TCHAN_SIZE);
+        printf( "%s: pUdmapRegs->pRxChanCfgRegs phys/0x%lx virt/0x%p size/%ld",__FUNCTION__,
+            UDMA_MCU_NAVSS0_UDMASS_UDMAP0_RCHAN_BASE, pUdmapRegs->pRxChanCfgRegs, CSL_MCU_NAVSS0_UDMASS_UDMAP0_RCHAN_SIZE);
+        printf( "%s: pUdmapRegs->pTxChanRtRegs phys/0x%lx virt/0x%p size/%ld",__FUNCTION__,
+            UDMA_MCU_NAVSS0_UDMASS_UDMAP_TCHANRT_BASE, pUdmapRegs->pTxChanRtRegs, CSL_MCU_NAVSS0_UDMASS_UDMAP_TCHANRT_SIZE);
+        printf( "%s: pUdmapRegs->pRxChanRtRegs phys/0x%lx virt/0x%p size/%ld",__FUNCTION__,
+            UDMA_MCU_NAVSS0_UDMASS_UDMAP_RCHANRT_BASE, pUdmapRegs->pRxChanRtRegs, CSL_MCU_NAVSS0_UDMASS_UDMAP_RCHANRT_SIZE);
 #endif
     }
     else
@@ -313,13 +326,29 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
             CSL_NAVSS0_UDMASS_UDMAP0_CFG_TCHANRT_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, UDMA_NAVSS0_UDMASS_UDMAP0_CFG_TCHANRT_BASE));
         pUdmapRegs->pRxChanRtRegs   = ((CSL_udmap_rxcrtRegs *) mmap_device_memory(0,
             CSL_NAVSS0_UDMASS_UDMAP0_CFG_RCHANRT_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, UDMA_NAVSS0_UDMASS_UDMAP0_CFG_RCHANRT_BASE));
+
+        printf( "%s: pUdmapRegs->pGenCfgRegs phys/0x%lx virt/0x%p size/%ld",__FUNCTION__,
+            CSL_NAVSS0_UDMASS_UDMAP0_CFG_BASE, pUdmapRegs->pGenCfgRegs, CSL_NAVSS0_UDMASS_UDMAP0_CFG_SIZE);
+        printf( "%s: pUdmapRegs->pRxFlowCfgRegs phys/0x%lx virt/0x%p size/%ld",__FUNCTION__,
+            UDMA_NAVSS0_UDMASS_UDMAP0_CFG_RFLOW_BASE, pUdmapRegs->pRxFlowCfgRegs, CSL_NAVSS0_UDMASS_UDMAP0_CFG_RFLOW_SIZE);
+        printf( "%s: pUdmapRegs->pTxChanCfgRegs phys/0x%lx virt/0x%p size/%ld",__FUNCTION__,
+            UDMA_NAVSS0_UDMASS_UDMAP0_CFG_TCHAN_BASE, pUdmapRegs->pTxChanCfgRegs, CSL_NAVSS0_UDMASS_UDMAP0_CFG_TCHAN_SIZE);
+        printf( "%s: pUdmapRegs->pRxChanCfgRegs phys/0x%lx virt/0x%p size/%ld",__FUNCTION__,
+            UDMA_NAVSS0_UDMASS_UDMAP0_CFG_RCHAN_BASE, pUdmapRegs->pRxChanCfgRegs, CSL_NAVSS0_UDMASS_UDMAP0_CFG_RCHAN_SIZE);
+        printf( "%s: pUdmapRegs->pTxChanRtRegs phys/0x%lx virt/0x%p size/%ld",__FUNCTION__,
+            UDMA_NAVSS0_UDMASS_UDMAP0_CFG_TCHANRT_BASE, pUdmapRegs->pTxChanRtRegs, CSL_NAVSS0_UDMASS_UDMAP0_CFG_TCHANRT_SIZE);
+        printf( "%s: pUdmapRegs->pRxChanRtRegs phys/0x%lx virt/0x%p size/%ld",__FUNCTION__,
+            UDMA_NAVSS0_UDMASS_UDMAP0_CFG_RCHANRT_BASE, pUdmapRegs->pRxChanRtRegs, CSL_NAVSS0_UDMASS_UDMAP0_CFG_RCHANRT_SIZE);
 #endif
     }
 #ifndef QNX_OS
     drvHandle->clecRegs = (CSL_CLEC_EVTRegs *) UDMA_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
 #else
     drvHandle->clecRegs = (CSL_CLEC_EVTRegs *) mmap_device_memory(0,
-            CSL_COMPUTE_CLUSTER0_CLEC_REGS_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, UDMA_COMPUTE_CLUSTER0_CLEC_REGS_BASE);;
+            CSL_COMPUTE_CLUSTER0_CLEC_REGS_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, UDMA_COMPUTE_CLUSTER0_CLEC_REGS_BASE);
+
+    printf( "%s: clecRegs phys/0x%lx virt/0x%p size/%ld\n",__FUNCTION__,
+            UDMA_COMPUTE_CLUSTER0_CLEC_REGS_BASE, drvHandle->clecRegs, CSL_COMPUTE_CLUSTER0_CLEC_REGS_SIZE);
 #endif
 /* UDMA not present in CC QT build. Only DRU is present */
 #ifndef CC_QT_BUILD
@@ -355,6 +384,20 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
             CSL_MCU_NAVSS0_UDMASS_RINGACC0_FIFOS_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, UDMA_MCU_NAVSS0_UDMASS_RINGACC0_FIFOS_BASE);
         pRaRegs->pIscRegs   = (CSL_ringacc_iscRegs *) mmap_device_memory(0,
             CSL_MCU_NAVSS0_UDMASS_RINGACC0_ISC_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, UDMA_MCU_NAVSS0_UDMASS_RINGACC0_ISC_ISC_BASE);
+
+        printf( "%s: pRaRegs->pGlbRegs phys/0x%lx virt/0x%p size/%ld",__FUNCTION__,
+            UDMA_MCU_NAVSS0_UDMASS_RINGACC0_CFG_GCFG_BASE, pRaRegs->pGlbRegs, CSL_MCU_NAVSS0_UDMASS_RINGACC0_CFG_GCFG_SIZE);
+        printf( "%s: pRaRegs->pCfgRegs phys/0x%lx virt/0x%p size/%ld",__FUNCTION__,
+            UDMA_MCU_NAVSS0_UDMASS_RINGACC0_CFG_BASE, pRaRegs->pCfgRegs, CSL_MCU_NAVSS0_UDMASS_RINGACC0_CFG_SIZE);
+        printf( "%s: pRaRegs->pRtRegs phys/0x%lx virt/0x%p size/%ld",__FUNCTION__,
+            UDMA_MCU_NAVSS0_UDMASS_RINGACC0_CFG_RT_BASE, pRaRegs->pRtRegs, CSL_MCU_NAVSS0_UDMASS_RINGACC0_CFG_RT_SIZE);
+        printf( "%s: pRaRegs->pMonRegs phys/0x%lx virt/0x%p size/%ld",__FUNCTION__,
+            UDMA_MCU_NAVSS0_UDMASS_RINGACC0_CFG_MON_BASE, pRaRegs->pMonRegs, CSL_MCU_NAVSS0_UDMASS_RINGACC0_CFG_MON_SIZE);
+        printf( "%s: pRaRegs->pFifoRegs phys/0x%lx virt/0x%p size/%ld",__FUNCTION__,
+            UDMA_MCU_NAVSS0_UDMASS_RINGACC0_FIFOS_BASE, pRaRegs->pFifoRegs, CSL_MCU_NAVSS0_UDMASS_RINGACC0_FIFOS_SIZE);
+        printf( "%s: pRaRegs->pIscRegs phys/0x%lx virt/0x%p size/%ld",__FUNCTION__,
+            UDMA_MCU_NAVSS0_UDMASS_RINGACC0_ISC_ISC_BASE, pRaRegs->pIscRegs, CSL_MCU_NAVSS0_UDMASS_RINGACC0_ISC_SIZE);
+
 #endif
     }
     else
@@ -380,6 +423,19 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
             CSL_NAVSS0_UDMASS_RINGACC0_SRC_FIFOS_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, CSL_NAVSS0_UDMASS_RINGACC0_SRC_FIFOS_BASE);
         pRaRegs->pIscRegs   = (CSL_ringacc_iscRegs *) mmap_device_memory(0,
             CSL_NAVSS0_UDMASS_RINGACC0_ISC_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, CSL_NAVSS0_UDMASS_RINGACC0_ISC_BASE);
+
+        printf( "%s: pRaRegs->pGlbRegs phys/0x%lx virt/0x%p size/%ld",__FUNCTION__,
+            UDMA_NAVSS0_UDMASS_RINGACC0_GCFG_BASE, pRaRegs->pGlbRegs, CSL_NAVSS0_UDMASS_RINGACC0_GCFG_SIZE);
+        printf( "%s: pRaRegs->pCfgRegs phys/0x%lx virt/0x%p size/%ld",__FUNCTION__,
+            UDMA_NAVSS0_UDMASS_RINGACC0_CFG_BASE, pRaRegs->pCfgRegs, CSL_NAVSS0_UDMASS_RINGACC0_CFG_SIZE);
+        printf( "%s: pRaRegs->pRtRegs phys/0x%lx virt/0x%p size/%ld",__FUNCTION__,
+            UDMA_NAVSS0_UDMASS_RINGACC0_CFG_RT_BASE, pRaRegs->pRtRegs, CSL_NAVSS0_UDMASS_RINGACC0_CFG_RT_SIZE);
+        printf( "%s: pRaRegs->pMonRegs phys/0x%lx virt/0x%p size/%ld",__FUNCTION__,
+            UDMA_NAVSS0_UDMASS_RINGACC0_CFG_MON_BASE, pRaRegs->pMonRegs, CSL_NAVSS0_UDMASS_RINGACC0_CFG_MON_SIZE);
+        printf( "%s: pRaRegs->pFifoRegs phys/0x%lx virt/0x%p size/%ld",__FUNCTION__,
+            CSL_NAVSS0_UDMASS_RINGACC0_SRC_FIFOS_BASE, pRaRegs->pFifoRegs, CSL_NAVSS0_UDMASS_RINGACC0_SRC_FIFOS_SIZE);
+        printf( "%s: pRaRegs->pIscRegs phys/0x%lx virt/0x%p size/%ld",__FUNCTION__,
+            UDMA_NAVSS0_UDMASS_RINGACC0_ISC_ISC_BASE, pRaRegs->pIscRegs, CSL_NAVSS0_UDMASS_RINGACC0_ISC_SIZE);
 #endif
     }
     pRaRegs->maxMonitors     = CSL_RINGACC_MAX_MONITORS;
@@ -415,6 +471,22 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
       CSL_MCU_NAVSS0_UDMASS_INTA0_GCNT_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, UDMA_MCU_NAVSS0_UDMASS_INTA0_GCNT_BASE);
     pIaRegs->pGcntRtiRegs   = (CSL_intaggr_gcntrtiRegs *) mmap_device_memory(0,
       CSL_MCU_NAVSS0_UDMASS_INTA0_GCNTRTI_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, UDMA_MCU_NAVSS0_UDMASS_INTA0_GCNTRTI_BASE);
+
+    printf( "%s: pIaRegs->pCfgRegs phys/0x%lx virt/0x%p size/%ld",__FUNCTION__,
+        UDMA_MCU_NAVSS0_UDMASS_INTA0_CFG_BASE, pIaRegs->pCfgRegs, CSL_MCU_NAVSS0_UDMASS_INTA0_CFG_SIZE);
+    printf( "%s: pIaRegs->pImapRegs phys/0x%lx virt/0x%p size/%ld",__FUNCTION__,
+        UDMA_MCU_NAVSS0_UDMASS_INTA0_IMAP_BASE, pIaRegs->pImapRegs, CSL_MCU_NAVSS0_UDMASS_INTA0_IMAP_SIZE);
+    printf( "%s: pIaRegs->pIntrRegs phys/0x%lx virt/0x%p size/%ld",__FUNCTION__,
+        UDMA_MCU_NAVSS0_UDMASS_INTA0_INTR_BASE, pIaRegs->pIntrRegs, CSL_MCU_NAVSS0_UDMASS_INTA0_INTR_SIZE);
+    printf( "%s: pIaRegs->pL2gRegs phys/0x%lx virt/0x%p size/%ld",__FUNCTION__,
+        UDMA_MCU_NAVSS0_PAR_UDMASS_UDMASS_INTA0_CFG_L2G_BASE, pIaRegs->pL2gRegs, CSL_MCU_NAVSS0_PAR_UDMASS_UDMASS_INTA0_CFG_L2G_SIZE);
+    printf( "%s: pIaRegs->pMcastRegs phys/0x%lx virt/0x%p size/%ld",__FUNCTION__,
+        UDMA_MCU_NAVSS0_UDMASS_INTA0_MCAST_BASE, pIaRegs->pMcastRegs, CSL_MCU_NAVSS0_UDMASS_INTA0_MCAST_SIZE);
+    printf( "%s: pIaRegs->pGcntCfgRegs phys/0x%lx virt/0x%p size/%ld",__FUNCTION__,
+        UDMA_MCU_NAVSS0_UDMASS_INTA0_GCNT_BASE, pIaRegs->pGcntCfgRegs, CSL_MCU_NAVSS0_UDMASS_INTA0_GCNT_SIZE);
+    printf( "%s: pIaRegs->pGcntRtiRegs phys/0x%lx virt/0x%p size/%ld",__FUNCTION__,
+        UDMA_MCU_NAVSS0_UDMASS_INTA0_GCNTRTI_BASE, pIaRegs->pGcntRtiRegs, CSL_MCU_NAVSS0_UDMASS_INTA0_GCNTRTI_SIZE);
+
 #endif
     CSL_intaggrGetCfg(pIaRegs);
 
@@ -453,6 +525,21 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
       CSL_NAVSS0_UDMASS_INTA0_CFG_GCNTCFG_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, CSL_NAVSS0_UDMASS_INTA0_CFG_GCNTCFG_BASE);
     pIaRegs->pGcntRtiRegs   = (CSL_intaggr_gcntrtiRegs *) mmap_device_memory(0,
       CSL_NAVSS0_UDMASS_INTA0_CFG_GCNTRTI_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, CSL_NAVSS0_UDMASS_INTA0_CFG_GCNTRTI_BASE);
+
+    printf( "%s: pIaRegs->pCfgRegs phys/0x%lx virt/0x%p size/%ld",__FUNCTION__,
+        CSL_NAVSS0_UDMASS_INTA0_CFG_BASE, pIaRegs->pCfgRegs, CSL_NAVSS0_UDMASS_INTA0_CFG_SIZE);
+    printf( "%s: pIaRegs->pImapRegs phys/0x%lx virt/0x%p size/%ld",__FUNCTION__,
+        CSL_NAVSS0_UDMASS_INTA0_IMAP_BASE, pIaRegs->pImapRegs, CSL_NAVSS0_UDMASS_INTA0_IMAP_SIZE);
+    printf( "%s: pIaRegs->pIntrRegs phys/0x%lx virt/0x%p size/%ld",__FUNCTION__,
+        CSL_NAVSS0_UDMASS_INTA0_CFG_INTR_BASE, pIaRegs->pIntrRegs, CSL_NAVSS0_UDMASS_INTA0_CFG_INTR_SIZE);
+    printf( "%s: pIaRegs->pL2gRegs phys/0x%lx virt/0x%p size/%ld",__FUNCTION__,
+        CSL_NAVSS0_UDMASS_INTA0_CFG_L2G_BASE, pIaRegs->pL2gRegs, CSL_NAVSS0_UDMASS_INTA0_CFG_L2G_SIZE);
+    printf( "%s: pIaRegs->pMcastRegs phys/0x%lx virt/0x%p size/%ld",__FUNCTION__,
+        CSL_NAVSS0_UDMASS_INTA0_CFG_MCAST_BASE, pIaRegs->pMcastRegs, CSL_NAVSS0_UDMASS_INTA0_CFG_MCAST_SIZE);
+    printf( "%s: pIaRegs->pGcntCfgRegs phys/0x%lx virt/0x%p size/%ld",__FUNCTION__,
+        CSL_NAVSS0_UDMASS_INTA0_CFG_GCNTCFG_BASE, pIaRegs->pGcntCfgRegs, CSL_NAVSS0_UDMASS_INTA0_CFG_GCNTCFG_SIZE);
+    printf( "%s: pIaRegs->pGcntRtiRegs phys/0x%lx virt/0x%p size/%ld",__FUNCTION__,
+        CSL_NAVSS0_UDMASS_INTA0_CFG_GCNTRTI_BASE, pIaRegs->pGcntRtiRegs, CSL_NAVSS0_UDMASS_INTA0_CFG_GCNTRTI_SIZE);
 #endif
     /* UDMA not present in CC QT build. Only DRU is present */
 #ifndef CC_QT_BUILD
@@ -556,6 +643,9 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
 #ifdef QNX_OS
         pProxyTargetRing->pTargetRegs   = (CSL_proxy_target0Regs *) (CSL_proxyRegs *) mmap_device_memory(0,
             CSL_MCU_NAVSS0_PROXY0_TARGET0_DATA_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0,  CSL_MCU_NAVSS0_PROXY0_TARGET0_DATA_BASE);
+
+        printf( "%s: pTargetRegs phys/0x%lx virt/0x%p size/%ld",__FUNCTION__,
+            CSL_MCU_NAVSS0_PROXY0_TARGET0_DATA_BASE, pProxyTargetRing->pTargetRegs, CSL_MCU_NAVSS0_PROXY0_TARGET0_DATA_SIZE);
 #else
         pProxyTargetRing->pTargetRegs   = (CSL_proxy_target0Regs *) CSL_MCU_NAVSS0_PROXY0_TARGET0_DATA_BASE;
 #endif
@@ -567,6 +657,11 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
             CSL_MCU_NAVSS0_PROXY_CFG_GCFG_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0,  CSL_MCU_NAVSS0_PROXY_CFG_GCFG_BASE);
         pProxyCfg->pCfgRegs             = (CSL_proxy_cfgRegs *) mmap_device_memory(0,
             CSL_MCU_NAVSS0_PROXY0_BUF_CFG_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0,  CSL_MCU_NAVSS0_PROXY0_BUF_CFG_BASE);
+
+        printf( "%s: pProxyCfg->pGlbRegs phys/0x%lx virt/0x%p size/%ld",__FUNCTION__,
+            CSL_MCU_NAVSS0_PROXY_CFG_GCFG_BASE, pProxyCfg->pGlbRegs, CSL_MCU_NAVSS0_PROXY_CFG_GCFG_SIZE);
+        printf( "%s: pProxyCfg->pCfgRegs phys/0x%lx virt/0x%p size/%ld",__FUNCTION__,
+            CSL_MCU_NAVSS0_PROXY0_BUF_CFG_BASE, pProxyCfg->pCfgRegs, CSL_MCU_NAVSS0_PROXY0_BUF_CFG_SIZE);
 #else
         pProxyCfg->pGlbRegs             = (CSL_proxyRegs *) CSL_MCU_NAVSS0_PROXY_CFG_GCFG_BASE;
         pProxyCfg->pCfgRegs             = (CSL_proxy_cfgRegs *) CSL_MCU_NAVSS0_PROXY0_BUF_CFG_BASE;
@@ -582,6 +677,9 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
 #ifdef QNX_OS
         pProxyTargetRing->pTargetRegs   = (CSL_proxy_target0Regs *) (CSL_proxyRegs *) mmap_device_memory(0,
             CSL_NAVSS0_PROXY_TARGET0_DATA_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0,  CSL_NAVSS0_PROXY_TARGET0_DATA_BASE);
+
+        printf( "%s: pTargetRegs phys/0x%lx virt/0x%p size/%ld",__FUNCTION__,
+            CSL_NAVSS0_PROXY_TARGET0_DATA_BASE, pProxyTargetRing->pTargetRegs, CSL_NAVSS0_PROXY_TARGET0_DATA_SIZE);
 #else
         pProxyTargetRing->pTargetRegs   = (CSL_proxy_target0Regs *) CSL_NAVSS0_PROXY_TARGET0_DATA_BASE;
 #endif
@@ -593,6 +691,11 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
             CSL_NAVSS0_PROXY0_CFG_BUF_CFG_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0,  CSL_NAVSS0_PROXY0_CFG_BUF_CFG_BASE);
         pProxyCfg->pCfgRegs             = (CSL_proxy_cfgRegs *) mmap_device_memory(0,
             CSL_NAVSS0_PROXY0_BUF_CFG_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0,  CSL_NAVSS0_PROXY0_BUF_CFG_BASE);
+
+        printf( "%s: pProxyCfg->pGlbRegs phys/0x%lx virt/0x%p size/%ld",__FUNCTION__,
+            CSL_NAVSS0_PROXY0_CFG_BUF_CFG_BASE, pProxyCfg->pGlbRegs, CSL_NAVSS0_PROXY0_CFG_BUF_CFG_SIZE);
+        printf( "%s: pProxyCfg->pCfgRegs phys/0x%lx virt/0x%p size/%ld",__FUNCTION__,
+            CSL_NAVSS0_PROXY0_BUF_CFG_BASE, pProxyCfg->pCfgRegs, CSL_NAVSS0_PROXY0_BUF_CFG_SIZE);
 #else
         pProxyCfg->pGlbRegs             = (CSL_proxyRegs *) CSL_NAVSS0_PROXY0_CFG_BUF_CFG_BASE;
         pProxyCfg->pCfgRegs             = (CSL_proxy_cfgRegs *) CSL_NAVSS0_PROXY0_BUF_CFG_BASE;
