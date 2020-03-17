@@ -101,8 +101,13 @@ void emac_get_vlan_id(uint32_t port_num, EMAC_IOCTL_FDB_ENTRY *pEntry)
     if (pEntry->vlanId == EMAC_VLAN_UNTAGGED)
     {
         /* if EMAC_VLAN_UNTAGGED, get default vlanId */
+#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
         regAddr = emac_mcb.port_cb[port_num].icssgCfgRegBaseAddr + CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_FDB_DF_VLAN;
         pEntry->vlanId = CSL_REG32_RD (regAddr);
+#else
+        regAddr = emac_mcb.port_cb[port_num].icssgCfgRegBaseAddr + CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_FDB_DF_VLAN + 2*port_num;
+        pEntry->vlanId = CSL_REG16_RD (regAddr);
+#endif
     }
 }
 
@@ -135,7 +140,11 @@ void emac_update_cmd(uint32_t port_num, uint32_t ioctlCmd, EMAC_IOCTL_CMD_T *pCm
                     memcpy((void*)(&pCmd->spare[1]), (void*)(&pEntry->mac[4]), 2);
                     pCmd->spare[2] = broadSideSlot;
                     pCmd->spare[1] = pCmd->spare[1] | (fid << 16);
+#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
                     pCmd->spare[1] = pCmd->spare[1] | (pEntry->fdbEntry[port_num >> 1]<< 24);
+#else
+                    pCmd->spare[1] = pCmd->spare[1] | (pEntry->fdbEntry[port_num]<< 24);
+#endif
                 }
                 break;
             case EMAC_IOCTL_FDB_ENTRY_DELETE_ALL:
@@ -687,8 +696,13 @@ EMAC_DRV_ERR_E emac_ioctl_vlan_ctrl_set_default_vlan_id(uint32_t port_num, void*
         emac_mcb.port_cb[port_num].getFwCfg(port_num,&pEmacFwCfg);
         pSwitchFwCfg = (EMAC_ICSSG_SWITCH_FW_CFG*) pEmacFwCfg->pFwPortCfg;
         /* Program Port VLAN in HW MMR, SW1 and SW2 for both ICSSG instances*/
+#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
         regAddr = emac_mcb.port_cb[port_num].icssgCfgRegBaseAddr + CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_FDB_DF_VLAN;
         CSL_REG32_WR (regAddr, vlanDefaultEntry->vlanId);
+#else
+        regAddr = emac_mcb.port_cb[port_num].icssgCfgRegBaseAddr + CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_FDB_DF_VLAN + 2*port_num;
+        CSL_REG16_WR (regAddr, vlanDefaultEntry->vlanId);
+#endif
 
         /*Populate first byte which contains 3 bits of PCP + 1 bit of DEI and 4 bits of VLAN*/
         tempByte1 = (uint8_t)(vlanDefaultEntry->pcp << 5) | (uint8_t)((uint16_t)vlanDefaultEntry->vlanId >> 8);
