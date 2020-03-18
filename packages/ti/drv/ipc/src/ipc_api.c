@@ -345,6 +345,11 @@ static int32_t RPMessage_enqueMsg(RPMessage_EndptPool *pool, RPMessage_MsgHeader
         }
         else
         {
+            if( obj->endPt != msg->dstAddr)
+            {
+                SystemP_printf("WARNING: %d != %d\n", obj->endPt, msg->dstAddr);
+            }
+
             /* Allocate a buffer to copy the payload: */
             size = msg->dataLen + sizeof(RPMessage_MsgElem);
 
@@ -375,7 +380,9 @@ static int32_t RPMessage_enqueMsg(RPMessage_EndptPool *pool, RPMessage_MsgHeader
             }
             else
             {
-                SystemP_printf("IpcUtils_HeapAlloc failed: Failed to allocate buffer for payload.\n");
+                SystemP_printf("IpcUtils_HeapAlloc failed: Failed to allocate buffer for payload. (%d %d %d %d %d)\n",
+                    msg->srcProcId, msg->srcAddr, msg->dstAddr, msg->dataLen, obj->endPt);
+
                 status = IPC_EFAIL;
             }
         }
@@ -1226,6 +1233,7 @@ int32_t RPMessage_recv(RPMessage_Handle handle, void* data, uint16_t *len,
 
     if (semStatus == IPC_ETIMEOUT)
     {
+        SystemP_printf(" ERROR: RPMessage_recv: IPC_ETIMEOUT\n");
         status = IPC_ETIMEOUT;
     }
     else if (TRUE == obj->unblocked)
@@ -1242,11 +1250,16 @@ int32_t RPMessage_recv(RPMessage_Handle handle, void* data, uint16_t *len,
     {
         key = pOsalPrms->lockHIsrGate(module.gateSwi);
 
-        payload = (RPMessage_MsgElem *)IpcUtils_QgetHead(&obj->queue);
-        if ( (NULL == payload) ||
-             (payload == (RPMessage_MsgElem *)&obj->queue))
+
+        if(IpcUtils_QisEmpty(&obj->queue)==TRUE)
         {
+            SystemP_printf(" ERROR: RPMessage_recv: IpcUtils_QisEmpty(&obj->queue)==TRUE\n");
             status = IPC_EFAIL;
+        }
+
+        if(status == IPC_SOK)
+        {
+            payload = (RPMessage_MsgElem *)IpcUtils_QgetHead(&obj->queue);
         }
 
         if(status != IPC_EFAIL)
@@ -1329,7 +1342,7 @@ static int32_t RPMessage_rawSend(Virtio_Handle vq,
 {
     int32_t               status = IPC_SOK;
     int32_t               token = 0;
-    int32_t               key;
+    int32_t               key = 0;
     int32_t               length = 0;
     uint32_t              bufSize;
     RPMessage_MsgHeader*  msg = NULL;
@@ -1344,10 +1357,10 @@ static int32_t RPMessage_rawSend(Virtio_Handle vq,
         {
             /* Send to remote processor: */
             key = pOsalPrms->lockHIsrGate(module.gateSwi);
-            token = Virtio_getAvailBuf(vq, (void **)&msg, &length);
-            pOsalPrms->unLockHIsrGate(module.gateSwi, key);
         }
     }
+
+    token = Virtio_getAvailBuf(vq, (void **)&msg, &length);
     if(!msg)
     {
         SystemP_printf("RPMessage_rawSend ...NULL MsgHdr\n");
@@ -1370,10 +1383,8 @@ static int32_t RPMessage_rawSend(Virtio_Handle vq,
             msg->flags = 0;
             msg->srcProcId = Ipc_mpGetSelfId();
 
-            key = pOsalPrms->lockHIsrGate(module.gateSwi);
             Virtio_addUsedBuf(vq, token, bufSize);
             Virtio_kick(vq);
-            pOsalPrms->unLockHIsrGate(module.gateSwi, key);
         }
         else
         {
@@ -1382,6 +1393,14 @@ static int32_t RPMessage_rawSend(Virtio_Handle vq,
         }
     }
 
+    if (NULL != pOsalPrms)
+    {
+        if ((NULL != pOsalPrms->lockHIsrGate) &&
+            (NULL != pOsalPrms->unLockHIsrGate))
+        {
+            pOsalPrms->unLockHIsrGate(module.gateSwi, key);
+        }
+    }
     return (status);
 }
 
