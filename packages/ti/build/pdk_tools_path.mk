@@ -27,7 +27,7 @@ ifeq ($(BOARD),$(filter $(BOARD), tpr12_evm))
   XDC_VERSION=3_61_00_10_core_eng
 else
 ifeq ($(BOARD),$(filter $(BOARD), am64x_evm))
-  BIOS_VERSION=6_82_00_16
+  BIOS_VERSION=6_83_00_01_eng
   XDC_VERSION=3_61_00_16_core
 else
   BIOS_VERSION=6_76_03_01
