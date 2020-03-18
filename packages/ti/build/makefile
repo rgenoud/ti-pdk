@@ -8,9 +8,9 @@ XDC = $(XDC_INSTALL_PATH)/xdc
 ifeq ($(LIMIT_BOARDS),)
 BOARD_LIST_ALL = evmDRA72x evmDRA75x evmDRA78x evmAM572x idkAM572x idkAM571x idkAM574x
 BOARD_LIST_ALL += $(BOARD_LIST_J6_TDA)
-BOARD_LIST_ALL += am65xx_sim
 BOARD_LIST_ALL += $(BOARD_LIST_J7_TDA)
 BOARD_LIST_ALL += $(BOARD_LIST_TPR12)
+BOARD_LIST_ALL += am64x_evm
 else
   # If LIMIT_BOARDS is defined use it
   BOARD_LIST_ALL = $(LIMIT_BOARDS)
@@ -30,7 +30,10 @@ ifeq ($(BOARD),$(filter $(BOARD), $(BOARD_LIST_J6_TDA)))
   CORE_LIST_ALL += mcu1_0 mcu1_1 mpu1_0 mpu1_1
 endif
 ifeq ($(BOARD),$(filter $(BOARD), $(BOARD_LIST_TPR12)))
-  CORE_LIST_ALL = mcu1_0 mcu1_1 c66xdsp_1
+  CORE_LIST_ALL = $(CORE_LIST_tpr12)
+endif
+ifeq ($(BOARD),$(filter $(BOARD), am64x_evm))
+  CORE_LIST_ALL = $(CORE_LIST_am64x)
 endif
 else
   # If LIMIT_CORES is defined use it
@@ -296,7 +299,7 @@ lib: pdk_libs
 apps: examples
 app_libs: pdk_app_libs
 
-xdc_meta: 
+xdc_meta:
 	$(XDC) XDCBUILDCFG=config_mk.bld
 
 xdc_meta_clean:
@@ -320,7 +323,7 @@ endif
 
 tar: lib firm xdc_meta doxygen
 	$(ECHO) Creating the Release Tar ball for $(COMP)...
-	$(XDC) clean   XDCBUILDCFG=config_mk.bld	
+	$(XDC) clean   XDCBUILDCFG=config_mk.bld
 	$(XDC) release XDCBUILDCFG=config_mk.bld
 	$(ECHO) please check $(COMP)/packages folder for the release tarball
 
