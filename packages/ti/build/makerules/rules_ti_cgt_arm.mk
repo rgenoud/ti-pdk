@@ -81,6 +81,8 @@ ifeq ($(CGT_ISA),$(filter $(CGT_ISA), M4 R5 M3))
   CFLAGS_INTERNAL = -c -qq -pdsw225 --endian=$(ENDIAN) -mv7$(CGT_ISA) --abi=$(CSWITCH_FORMAT) -eo.$(OBJEXT) -ea.$(ASMEXT) --symdebug:dwarf --embed_inline_assembly
   ifeq ($(CGT_ISA),$(filter $(CGT_ISA), R5))
     CFLAGS_INTERNAL += --float_support=vfpv3d16
+    # Enabling thumb2 mode 
+    CFLAGS_INTERNAL += --code_state=16
   else
     CFLAGS_INTERNAL += --float_support=vfplib
   endif
@@ -101,7 +103,12 @@ endif
 CFLAGS_DIROPTS = -fr=$(OBJDIR) -fs=$(OBJDIR)
 
 ifeq ($(CGT_ISA),$(filter $(CGT_ISA),R5))
+
+ifeq ($(XDC_DISABLE_THUMB_MODE),yes)
  XDC_TARGET_NAME=$(CGT_ISA)F
+else
+ XDC_TARGET_NAME=$(CGT_ISA)Ft
+endif
 
  ifneq ($(EXTERNAL_LNKCMD_FILE_LOCAL),)
  EXTERNAL_LNKCMD_FILE = $(EXTERNAL_LNKCMD_FILE_LOCAL)
@@ -124,13 +131,20 @@ ifeq ($(CGT_ISA),$(filter $(CGT_ISA),M4F))
 endif
 
 XDC_HFILE_NAME = $(basename $(notdir $(XDC_CFG_FILE_$(CORE))))
+
+ifneq ($(PEXT_BIOS),)
+XDC_HFILE_EXT = $(PEXT_BIOS)
+else
+XDC_HFILE_EXT = p$(FORMAT_EXT)$(CGT_EXT)
+endif
+
 # CFLAGS based on profile selected
 ifeq ($(BUILD_PROFILE_$(CORE)), debug)
  LNKFLAGS_INTERNAL_BUILD_PROFILE =
  CFLAGS_XDCINTERNAL = -Dxdc_target_name__=$(XDC_TARGET_NAME) -Dxdc_target_types__=ti/targets/arm/elf/std.h -Dxdc_bld__profile_debug
  CFLAGS_INTERNAL += -D_DEBUG_=1
  ifndef MODULE_NAME
-  CFLAGS_XDCINTERNAL += -Dxdc_cfg__header__='$(CONFIGURO_DIR)/package/cfg/$(XDC_HFILE_NAME)_pe$(CGT_EXT).h'
+  CFLAGS_XDCINTERNAL += -Dxdc_cfg__header__='$(CONFIGURO_DIR)/package/cfg/$(XDC_HFILE_NAME)_$(XDC_HFILE_EXT).h'
  endif
 
 endif
@@ -144,14 +158,14 @@ ifeq ($(BUILD_PROFILE_$(CORE)), release)
    endif
    CFLAGS_XDCINTERNAL = -Dxdc_target_name__=$(XDC_TARGET_NAME) -Dxdc_target_types__=ti/targets/arm/elf/std.h -Dxdc_bld__profile_release
    ifndef MODULE_NAME
-     CFLAGS_XDCINTERNAL += -Dxdc_cfg__header__='$(CONFIGURO_DIR)/package/cfg/$(XDC_HFILE_NAME)_pe$(CGT_EXT).h'
+     CFLAGS_XDCINTERNAL += -Dxdc_cfg__header__='$(CONFIGURO_DIR)/package/cfg/$(XDC_HFILE_NAME)_$(XDC_HFILE_EXT).h'
    endif
  endif
  ifeq ($(CGT_ISA), Arm9)
         LNKFLAGS_INTERNAL_BUILD_PROFILE = -qq --diag_warning=225 --diag_suppress=23000 $(LNKFLAGS_GLOBAL_$(CORE))
 	CFLAGS_XDCINTERNAL = -Dxdc_target_name__=$(XDC_TARGET_NAME) -Dxdc_target_types__=ti/targets/arm/elf/std.h -Dxdc_bld__profile_release
 	ifndef MODULE_NAME
-	  CFLAGS_XDCINTERNAL += -Dxdc_cfg__header__='$(CONFIGURO_DIR)/package/cfg/$(XDC_HFILE_NAME)_pe$(CGT_EXT).h'
+	  CFLAGS_XDCINTERNAL += -Dxdc_cfg__header__='$(CONFIGURO_DIR)/package/cfg/$(XDC_HFILE_NAME)_$(XDC_HFILE_EXT).h'
 	endif
  endif
  ifeq ($(CGT_ISA),$(filter $(CGT_ISA), M4F))
@@ -200,7 +214,7 @@ $(OBJ_PATHS): $(OBJDIR)/%.$(OBJEXT): %.c $(GEN_FILE) | $(OBJDIR) $(DEPDIR)
 	$(CC) $(_CFLAGS) $(INCLUDES) $(CFLAGS_DIROPTS) $(COMPILEMODE) $<
 
 #TODO: Check ASMFLAGS if really required
-ASMFLAGS = -me -g --code_state=32 --diag_warning=225
+ASMFLAGS = -me -g --code_state=16 --diag_warning=225
 
 # Object file creation
 $(OBJ_PATHS_ASM): $(OBJDIR)/%.$(OBJEXT): %.asm $(GEN_FILE) | $(OBJDIR) $(DEPDIR)
@@ -284,10 +298,11 @@ else
 endif
 
 ifneq ($(findstring mcu,$(CORE)),)
-BUILD_LIB_ONCE = $(CGT_PATH)/lib/rtsv7R4_A_le_v3D16_eabi.lib
+RTSLIB_NAME = rtsv7R4_T_le_v3D16_eabi.lib
+BUILD_LIB_ONCE = $(CGT_PATH)/lib/$(RTSLIB_NAME)
 $(BUILD_LIB_ONCE):
 	$(ECHO) \# $@ not found, building  $@ ...
-	$(CGT_PATH)/lib/mklib --pattern=rtsv7R4_A_le_v3D16_eabi.lib --parallel=$(NUM_PROCS) --compiler_bin_dir=$(CGT_PATH)/bin
+	$(CGT_PATH)/lib/mklib --pattern=$(RTSLIB_NAME) --parallel=$(NUM_PROCS) --compiler_bin_dir=$(CGT_PATH)/bin
 endif
 
 ifneq ($(XDC_CFG_FILE_$(CORE)),)
@@ -347,6 +362,13 @@ else
   XDC_BUILD_ROOT = $(DEST_ROOT)
 endif
 
+ifneq ($(OBJEXT_BIOS),)
+# if BIOS' obj extensions are different, xdc generated files's objfiles need to have different extensions as well
+CFG_C_XDC_CFLAGS = $(subst -eo.$(OBJEXT),-eo.$(OBJEXT_BIOS),$(_CFLAGS))
+else
+CFG_C_XDC_CFLAGS = $(_CFLAGS)
+endif
+
 $(CFG_C_XDC) $(LNKCMD_FILE) : $(XDC_CFG_FILE_NAME) $(XDC_CFG_UPDATE)
 	$(ECHO) \# Invoking configuro...
 	$(MKDIR) -p $(XDC_BUILD_ROOT)
@@ -358,8 +380,8 @@ ifneq ($(XDC_CFG_FILE_$(CORE)),)
   ifndef MODULE_NAME
 $(OBJDIR)/$(CFG_COBJ_XDC) : $(CFG_C_XDC)
 	$(ECHO) \# Compiling generated $(CFG_COBJ_XDC)
-	$(CC) -ppd=$(DEPFILE).P $(_CFLAGS) $(INCLUDES) $(CFLAGS_DIROPTS) -fc $(CFG_C_XDC)
-	$(CC) $(_CFLAGS) $(INCLUDES) $(CFLAGS_DIROPTS) -fc $(CFG_C_XDC)
+	$(CC) -ppd=$(DEPFILE).P $(CFG_C_XDC_CFLAGS) $(INCLUDES) $(CFLAGS_DIROPTS) -fc $(CFG_C_XDC)
+	$(CC) $(CFG_C_XDC_CFLAGS) $(INCLUDES) $(CFLAGS_DIROPTS) -fc $(CFG_C_XDC)
   endif
 endif
 

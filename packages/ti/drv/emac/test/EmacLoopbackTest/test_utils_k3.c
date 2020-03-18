@@ -1703,7 +1703,7 @@ void test_EMAC_verify_ut_cpsw(void)
 #ifdef EMAC_TEST_APP_WITHOUT_DDR
         Task_sleep(2000);
 #endif
-        Board_initCfg cfg = BOARD_INIT_UART_STDIO | BOARD_INIT_PINMUX_CONFIG | BOARD_INIT_MODULE_CLOCK | BOARD_INIT_ETH_PHY;
+        Board_initCfg cfg = BOARD_INIT_UART_STDIO | BOARD_INIT_PINMUX_CONFIG | BOARD_INIT_MODULE_CLOCK | BOARD_INIT_ETH_PHY | BOARD_INIT_ENETCTRL_CPSW2G;
 
     boardInitStatus = Board_init(cfg);
     if (boardInitStatus !=BOARD_SOK)
@@ -1913,4 +1913,12 @@ int32_t  app_test_task_init_pruicss(uint32_t portNum)
     return 0;
 }
 #endif
+
+void app_output_log(Char* str, UInt numChar)
+{
+    if (numChar > 0)
+    {
+        UART_printf(str);
+    }
+}
 

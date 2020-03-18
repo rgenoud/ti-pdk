@@ -67,7 +67,7 @@
 #include <ti/osal/osal.h>
 #include "OSAL_log.h"
 
- #include "OSAL_board.h"
+#include "OSAL_board.h"
 /**********************************************************************
  ************************** Internal functions ************************
  **********************************************************************/
@@ -76,14 +76,15 @@
 
 #include <ti/csl/soc.h>
 
-#include <ti/csl/csl_clec.h>
-
 #if defined (__C7100__)
+#include <ti/csl/csl_clec.h>
 #include <ti/csl/arch/csl_arch.h>
 #endif
 #include <ti/csl/tistdtypes.h>
 #ifdef BARE_METAL
+#if !defined(SOC_TPR12)
 #include <ti/csl/csl_timer.h>
+#endif
 #include <ti/csl/arch/csl_arch.h>
 
 #if   defined (SOC_AM571x) || defined (SOC_AM572x) || defined (SOC_AM574x)
@@ -102,7 +103,7 @@ void ErrorHandler(Error_Block *eb)
 void Osal_appC7xPreInit(void);
 
 #undef  ENABLE_GET_TIME_TEST
-#if defined(SOC_AM65XX) || defined(SOC_J721E) || defined(SOC_AM572x) || defined(SOC_K2G) || defined(SOC_AM335x) || defined(SOC_AM437x) || defined(SOC_J7200)
+#if defined(SOC_AM65XX) || defined(SOC_J721E) || defined(SOC_AM572x) || defined(SOC_K2G) || defined(SOC_AM335x) || defined(SOC_AM437x) || defined(SOC_J7200)|| defined(SOC_TPR12)
 #define ENABLE_GET_TIME_TEST     1
 #endif
 
@@ -150,7 +151,7 @@ void Board_initOSAL(void)
  */
 volatile   uint64_t gTestlocalTimeout = 0x300000U;
 
-#if defined (SOC_AM65XX) || defined (SOC_AM572x) || defined (SOC_AM64X) || (defined(SOC_J721E) || defined(SOC_J7200) &&(!defined(BUILD_C66X_1))&&(!defined(BUILD_C66X_2))&&(!defined(BUILD_C7X_1)))
+#if (defined (SOC_AM65XX) || defined (SOC_AM64X) || defined(SOC_J721E) || defined(SOC_J7200) || defined (SOC_TPR12)) && (!defined(BUILD_C66X_1))&&(!defined(BUILD_C66X_2))&&(!defined(BUILD_C7X_1))
 #define INT_NUM_IRQ 32
 #define LOOP_CNT    100
 volatile uint64_t gFlagIRQ = 0;
@@ -162,6 +163,7 @@ void myIsrIRQ(uintptr_t arg)
 }
 bool  OSAL_core_hwi_test()
 {
+
     HwiP_Params hwiParams;
     HwiP_Handle handle;
     volatile int intCount = 0;
@@ -228,7 +230,7 @@ bool  OSAL_core_hwi_test()
 
 bool OSAL_hwi_test()
 {
-#if defined (SOC_AM65XX) || defined (SOC_AM572x) || defined (SOC_AM64X) || (defined(SOC_J721E)|| defined(SOC_J7200) &&(!defined(BUILD_C66X_1))&&(!defined(BUILD_C66X_2))&&(!defined(BUILD_C7X_1)))
+#if (defined (SOC_AM65XX) || defined (SOC_AM64X) || defined(SOC_J721E) || defined(SOC_J7200) || defined (SOC_TPR12)) && (!defined(BUILD_C66X_1))&&(!defined(BUILD_C66X_2))&&(!defined(BUILD_C7X_1))
   OSAL_core_hwi_test();
 #endif
   return true;
