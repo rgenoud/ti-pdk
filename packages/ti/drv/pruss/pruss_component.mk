@@ -129,7 +129,7 @@ export pruss_$(SOC)_CORELIST
 pruss_indp_COMP_LIST = pruss_indp
 pruss_indp_RELPATH = ti/drv/pruss
 pruss_indp_PATH = $(PDK_PRUSS_COMP_PATH)
-pruss_indp_LIBNAME = ti.drv.pruss
+pruss_indp_LIBNAME = ti.drv.pruss.indp
 export pruss_indp_LIBNAME
 pruss_indp_LIBPATH = $(pruss_indp_PATH)/lib
 export pruss_indp_LIBPATH
@@ -349,7 +349,6 @@ pruss_app_sorte_master_$(SOC)_CORELIST = a15_0
 endif
 
 export pruss_app_sorte_master_$(SOC)_CORELIST
-
 
 export drvpruss_LIB_LIST
 export pruss_LIB_LIST

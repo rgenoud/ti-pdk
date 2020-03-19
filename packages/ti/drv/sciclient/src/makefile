@@ -63,13 +63,26 @@ PACKAGE_SRCS_COMMON += Settings.xdc.xdt sciclientver.h sciclientver.h.xdt
 # Selectively package sysfw components
 PACKAGE_SRCS_COMMON += soc/sysfw/binaries/system-firmware-public-documentation
 PACKAGE_SRCS_COMMON += soc/sysfw/include
+
+ifeq ($(SOC),$(filter $(SOC), am65xx))
 PACKAGE_SRCS_COMMON += soc/sysfw/binaries/ti-sci-firmware-am65x-gp.bin
-PACKAGE_SRCS_COMMON += soc/sysfw/binaries/ti-sci-firmware-j721e-gp.bin
-PACKAGE_SRCS_COMMON += soc/sysfw/binaries/ti-sci-firmware-am64x-gp-vlab.bin
+PACKAGE_SRCS_COMMON += soc/sysfw/binaries/ti-sci-firmware-am65x_sr2-gp.bin
+PACKAGE_SRCS_COMMON += soc/sysfw/binaries/am65x_sr2
+
 ifeq ($(BUILD_HS),yes)
 PACKAGE_SRCS_COMMON += soc/sysfw/binaries/ti-sci-firmware-am65x-hs-cert.bin
 PACKAGE_SRCS_COMMON += soc/sysfw/binaries/ti-sci-firmware-am65x-hs-enc.bin
 CFLAGS_LOCAL_COMMON += -DBUILD_HS
+endif
+
+endif
+
+ifeq ($(SOC),$(filter $(SOC), j721e))
+PACKAGE_SRCS_COMMON += soc/sysfw/binaries/ti-sci-firmware-j721e-gp.bin
+endif
+
+ifeq ($(SOC),$(filter $(SOC), am64x))
+PACKAGE_SRCS_COMMON += soc/sysfw/binaries/ti-sci-firmware-am64x-gp-vlab.bin
 endif
 
 # Core/SoC/platform specific source files and CFLAGS
@@ -158,7 +171,7 @@ $(OBJDIR)/$(BRD_CFG)%.$(OBJEXT) : soc/$(SCICLIENT_SOCVER)/$(BRD_CFG)%.c
 ifeq ($(CORE), mcu1_0)
 	@echo "Build Board Configuration Obj Files"
 	$(MKDIR) -p $(OBJDIR)
-	$(CC) $(_CFLAGS) $(INCLUDES) $(CFLAGS_DIROPTS) $(COMPILEMODE) $<
+	$(CC) $(_CFLAGS) $(INCLUDES) $(CFLAGS_DIROPTS) -fc $<
 endif
 
 # Copy the raw binary into an intermediate file (will get deleted by make)

@@ -41,7 +41,6 @@
 #include <ti/osal/TimerP.h>
 #include <ti/csl/hw_types.h>
 #include <ti/csl/soc.h>
-#include <ti/csl/csl_timer.h>
 #include <ti/csl/cslr_rti.h>
 #include <ti/csl/arch/csl_arch.h>
 #include <ti/osal/src/nonos/Nonos_config.h>
@@ -53,7 +52,7 @@ extern void Osal_DebugP_assert(int32_t expression, const char *file, int32_t lin
 
 /* Local defines for the rti timer */
 #define TIMERP_RTI_MAX_PERIOD                (0xffffffffU)
-
+#define TIMERP_PRESCALE_DEF                  (1U)
 /* Local Timer Struct */
 typedef struct TimerP_Struct_s
 {
@@ -185,13 +184,15 @@ static bool TimerP_rtiTimerCheckOverflow(uint32_t a, uint32_t b)
 static bool TimerP_rtiTimerSetMicroSeconds(TimerP_Struct *timer, uint32_t period)
 {
   uint64_t  counts;
-  uint32_t  prdCounts;
   uint32_t  freqKHz;
   uint32_t  baseAddr = TimerP_getTimerBaseAddr(timer->id);
 
   (void)TimerP_stop(timer);
 
-  freqKHz = (timer->freqLo + 500)/ 1000U;
+  /*
+   * The frequency of FRC is equal to the clock rate divided by (prescale + 1)
+   */
+  freqKHz = (timer->freqLo/(TIMERP_PRESCALE_DEF+1) + 500)/ 1000U;
   if (TimerP_rtiTimerCheckOverflow(freqKHz, period/1000U)) {
     return (FALSE);
   }
@@ -200,10 +201,9 @@ static bool TimerP_rtiTimerSetMicroSeconds(TimerP_Struct *timer, uint32_t period
   if (counts > 0xffffffffU) {
     return (FALSE);
   }
-  prdCounts = (uint32_t)(counts - (uint32_t) 1u);
-  timer->period = prdCounts;
+  timer->period = (uint32_t)counts;
   timer->periodType = (uint32_t)TimerP_PeriodType_COUNTS;
-  timer->prescale = 1;
+  timer->prescale = TIMERP_PRESCALE_DEF;
 
   return(TRUE);
 }

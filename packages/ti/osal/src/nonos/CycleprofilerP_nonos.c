@@ -46,7 +46,7 @@ void CycleprofilerP_init(void)
 {
     TSCL = 0;
 }
-uint32_t Cycleprofiler_getTimeStamp(void)
+uint32_t CycleprofilerP_getTimeStamp(void)
 {
     return(TSCL);
 }
@@ -55,7 +55,6 @@ uint32_t Cycleprofiler_getTimeStamp(void)
 #if defined(__ARM_ARCH_7A__) || defined(__TI_ARM_V7R4__)
 #include <ti/csl/soc.h>
 #include <ti/osal/soc/osal_soc.h>
-#include <ti/csl/csl_timer.h>
 #include <ti/csl/arch/csl_arch.h>
 #include <ti/osal/src/nonos/Nonos_config.h>
 
