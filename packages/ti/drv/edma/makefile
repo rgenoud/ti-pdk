@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016, Texas Instruments Incorporated
+# Copyright (c) 2020, Texas Instruments Incorporated
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -30,30 +30,16 @@
 # EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
+ifeq ($(RULES_MAKE), )
 include $(PDK_INSTALL_PATH)/ti/build/Rules.make
-include $(PDK_PRUSS_COMP_PATH)/src/src_files_common.mk
-
-MODULE_NAME = pruss
-
-ifeq ($(SOC),$(filter $(SOC), am571x am572x am437x am335x k2g am574x am65xx j721e))
-SRCDIR += soc/$(SOC)
-INCDIR += soc
-# Common source files across all platforms and cores
-SRCS_COMMON += pruicss_soc.c
+else
+include $(RULES_MAKE)
 endif
 
-# List all the external components/interfaces, whose interface header files
-#  need to be included for this component
-INCLUDE_EXTERNAL_INTERFACES = pdk edma
+COMP = drvedma
 
-CFLAGS_LOCAL_COMMON = $(PDK_CFLAGS)
+lib_$(COMP)_BUILD_DEPENDENCY = soc
 
-# Include common make files
-ifeq ($(MAKERULEDIR), )
-#Makerule path not defined, define this and assume relative path from ROOTDIR
-  MAKERULEDIR := $(ROOTDIR)/ti/build/makerules
-  export MAKERULEDIR
-endif
-include $(MAKERULEDIR)/common.mk
+$(COMP)_DOXYGEN_SUPPORT = yes
 
-# Nothing beyond this point
+include $(PDK_INSTALL_PATH)/ti/build/comp_top.mk

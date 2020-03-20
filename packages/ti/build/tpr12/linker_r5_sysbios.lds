@@ -56,11 +56,12 @@ SECTIONS{
 
     .boot:{
        *.*(*ti_sysbios_family_arm_MPU*)
-       boot.aer5f(*.text)
+       boot.aer5f*(*.text)
        *.*(*startup*)
        *.*(*Startup*)
        *.*(*Cache*)
      } > TCMA_RAM | TCMB_RAM
+    .l3ram   : {} > L3_RAM
 }
 /*----------------------------------------------------------------------------*/
 
