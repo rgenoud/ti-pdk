@@ -17,21 +17,23 @@ else
 endif
 
 ifeq ($(LIMIT_CORES),)
-#Limit core list based on board
-ifeq ($(BOARD),$(filter $(BOARD), $(BOARD_LIST_J7_TDA)))
-  CORE_LIST_ALL = mpu1_0
-  CORE_LIST_ALL += mcu1_0 mcu1_1
-  CORE_LIST_ALL += mcu2_0 mcu2_1 mcu3_0 mcu3_1
-  CORE_LIST_ALL += c7x_1
-  CORE_LIST_ALL += c66xdsp_1 c66xdsp_2
-endif
-ifeq ($(BOARD),$(filter $(BOARD), $(BOARD_LIST_J6_TDA)))
-  CORE_LIST_ALL = a15_0 ipu1_0 ipu1_1 ipu2_0 ipu2_1 c66x c66xdsp_1 c66xdsp_2 arp32_1 arp32_2 arp32_3 arp32_4 arm9_0 c674x
-  CORE_LIST_ALL += mcu1_0 mcu1_1 mpu1_0 mpu1_1
-endif
-ifeq ($(BOARD),$(filter $(BOARD), $(BOARD_LIST_TPR12)))
-  CORE_LIST_ALL = $(CORE_LIST_tpr12)
-endif
+  #Limit core list based on board
+  ifeq ($(BOARD),$(filter $(BOARD), j721e_evm))
+    CORE_LIST_ALL = $(CORE_LIST_j721e)
+  endif
+  ifeq ($(BOARD),$(filter $(BOARD), j7200_evm))
+    CORE_LIST_ALL = $(CORE_LIST_j7200)
+  endif
+  ifeq ($(BOARD),$(filter $(BOARD), am65xx_evm am65xx_idk))
+    CORE_LIST_ALL = $(CORE_LIST_am65xx)
+  endif
+  ifeq ($(BOARD),$(filter $(BOARD), $(BOARD_LIST_J6_TDA)))
+    CORE_LIST_ALL = a15_0 ipu1_0 ipu1_1 ipu2_0 ipu2_1 c66x c66xdsp_1 c66xdsp_2 arp32_1 arp32_2 arp32_3 arp32_4 arm9_0 c674x
+    CORE_LIST_ALL += mcu1_0 mcu1_1 mpu1_0 mpu1_1
+  endif
+  ifeq ($(BOARD),$(filter $(BOARD), tpr12_evm))
+    CORE_LIST_ALL = $(CORE_LIST_tpr12)
+  endif
 ifeq ($(BOARD),$(filter $(BOARD), am64x_evm))
   CORE_LIST_ALL = $(CORE_LIST_am64x)
 endif
@@ -74,6 +76,7 @@ FINAL_APP_LIB_LIST_CLEAN = $(addsuffix _clean, $(FINAL_APP_LIB_LIST))
 FINAL_EXAMPLE_LIST_CLEAN = $(addsuffix _clean, $(FINAL_EXAMPLE_LIST))
 FINAL_FIRM_LIST_CLEAN = $(addsuffix _clean, $(FINAL_FIRM_LIST))
 FINAL_DUP_EXAMPLE_LIST_CLEAN = $(addsuffix _clean, $(FINAL_DUP_EXAMPLE_LIST))
+FINAL_DUP_EXAMPLE_LIST_PACKAGE = $(addsuffix _package, $(FINAL_DUP_EXAMPLE_LIST))
 FINAL_PKG_LIST_PACKAGE = $(addsuffix _package, $(FINAL_PKG_LIST_ALL))
 FINAL_PKG_LIST_ALL_CLEAN = $(addsuffix _clean, $(FINAL_PKG_LIST_ALL))
 
@@ -127,7 +130,8 @@ all_apps: all_libs
 
 all_libs: pdk_libs pdk_app_libs firm
 
-all_apps_core: pdk_examples pdk_dup_apps
+all_apps_core: pdk_examples
+	$(MAKE) pdk_dup_apps
 
 version:
 	$(ECHO) ------------------------------------------------------
@@ -172,7 +176,7 @@ all_libs_clean:
 	$(RM) -rf ../*/*/*/lib
 	$(RM) -rf ../*/*/*/*/lib
 
-package: $(FINAL_PKG_LIST_PACKAGE)
+package: $(FINAL_PKG_LIST_PACKAGE) $(FINAL_DUP_EXAMPLE_LIST_PACKAGE)
 
 help:
 	$(ECHO) ------------------------------------------------------
@@ -222,6 +226,11 @@ allcores:
 allcores_clean:
 	$(foreach current_core, $(CORE_LIST_ALL),\
 	$(MAKE) clean CORE=$(current_core) BOARD=$(BOARD) BUILD_PROFILE_$(current_core)=$(BUILD_PROFILE);\
+	)
+
+allcores_package:
+	$(foreach current_core, $(CORE_LIST_ALL),\
+	$(MAKE) package CORE=$(current_core) BOARD=$(BOARD) BUILD_PROFILE_$(current_core)=$(BUILD_PROFILE);\
 	)
 
 allboards:
@@ -367,7 +376,7 @@ $(FINAL_PKG_LIST_ALL_CLEAN) $(FINAL_DUP_EXAMPLE_LIST_CLEAN):
 	$(if $(filter $(BOARD), $(subst emptyreplacement,,$($(subst _clean,,$@)_BOARDLIST))),\
 	        $(MAKE) -C $($(subst _clean,,$@)_PATH) $($(subst _clean,,$@)_MAKEFILE) clean,))
 
-$(FINAL_PKG_LIST_PACKAGE):
+$(FINAL_PKG_LIST_PACKAGE) $(FINAL_DUP_EXAMPLE_LIST_PACKAGE):
 	$(if $(filter $(SOC), $(subst emptyreplacement,,$($(subst _package,,$@)_SOCLIST))),\
 	        $(MAKE) -C $($(subst _package,,$@)_PATH) $($(subst _package,,$@)_MAKEFILE) package,\
 	$(if $(filter $(BOARD), $(subst emptyreplacement,,$($(subst _package,,$@)_BOARDLIST))),\
