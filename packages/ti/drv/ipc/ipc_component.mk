@@ -45,7 +45,7 @@ drvipc_SOCLIST         = am65xx j721e
 drvipc_BOARDLIST       = am65xx_evm am65xx_idk j721e_sim j721e_qt j721e_evm
 drvipc_am65xx_CORELIST = mpu1_0 mcu1_0 mcu1_1
 drvipc_am65xx_LASTCORE := $(word $(words $(drvipc_am65xx_CORELIST)), $(drvipc_am65xx_CORELIST))
-drvipc_j721e_CORELIST  = mpu1_0 mcu1_0 mcu2_0 mcu3_0 mcu1_1 mcu2_1 mcu3_1 c66xdsp_1 c66xdsp_2 c7x_1
+drvipc_j721e_CORELIST  = mpu1_0 mcu1_0 mcu2_0 mcu3_0 mcu1_1 mcu2_1 mcu3_1 c66xdsp_1 c66xdsp_2 c7x_1 c7x-hostemu
 drvipc_j721e_LASTCORE := $(word $(words $(drvipc_j721e_CORELIST)), $(drvipc_j721e_CORELIST))
 drvipc_DISABLE_PARALLEL_MAKE = yes
 
@@ -56,6 +56,9 @@ drvipc_DISABLE_PARALLEL_MAKE = yes
 # List below all examples for allowed values
 ############################
 ipc_EXAMPLE_LIST =
+
+# IPC dependent examples which should be built after all examples are completed
+ipc_DUP_EXAMPLE_LIST =
 
 #
 # IPC Modules
@@ -259,8 +262,7 @@ export ipc_perf_test_BOARDLIST
 ipc_perf_test_$(SOC)_CORELIST = $(drvipc_$(SOC)_CORELIST)
 export ipc_perf_test_$(SOC)_CORELIST
 ipc_EXAMPLE_LIST += ipc_perf_test
-ipc_perf_test_SBL_APPIMAGEGEN = yes
-export ipc_per_test_SBL_APPIMAGEGEN
+export ipc_perf_test_SBL_APPIMAGEGEN = yes
 
 # Multicore IPC performance test
 ipc_multicore_perf_test_COMP_LIST = ipc_multicore_perf_test
@@ -285,7 +287,7 @@ ipc_multicore_perf_test_BOARDLIST = $(drvipc_BOARDLIST)
 export ipc_multicore_perf_test_BOARDLIST
 ipc_multicore_perf_test_$(SOC)_CORELIST := $(drvipc_$(SOC)_LASTCORE)
 export ipc_multicore_perf_test_$(SOC)_CORELIST
-ipc_EXAMPLE_LIST += ipc_multicore_perf_test
+ipc_DUP_EXAMPLE_LIST += ipc_multicore_perf_test
 ipc_multicore_perf_test_SBL_APPIMAGEGEN = no
 export ipc_multicore_perf_test_SBL_APPIMAGEGEN
 
@@ -310,8 +312,10 @@ ipc_EXAMPLE_LIST += ex04_linux_baremetal_2core_echo_test
 
 export ipc_LIB_LIST
 export ipc_EXAMPLE_LIST
+export ipc_DUP_EXAMPLE_LIST
 export drvipc_LIB_LIST = $(ipc_LIB_LIST)
 export drvipc_EXAMPLE_LIST  = $(ipc_EXAMPLE_LIST)
+export drvipc_DUP_EXAMPLE_LIST  = $(ipc_DUP_EXAMPLE_LIST)
 
 IPC_CFLAGS =
 
