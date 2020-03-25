@@ -45,7 +45,7 @@
 #define BD_CUT_THROUGH_MAGIC_VALUE              (0xBB8)     //used to indicate cut-through. This is an illegal packet size and does not overlap
 #define NRT_PRE_EMPTION_SIZE_THRESHOLD          (64)
 
-#define R31_ERROR_BITS_MASK                     0x0188  //Mask for extracting CRC, Min/Max errors from R31 bits. Refer MII RT Spec
+#define R31_ERROR_BITS_MASK                     0x0110  //Mask for extracting CRC & EOF. Refer MII RT Spec
 #define MII_RT_ERROR_MINMAX_MASK                0xC  //Mask for extracting Min/Max errors from MII RT registers. Refer MII RT Spec
 
 #define RX_B0_QNUM_SPECIAL_VALUE                0xFF    //special pattern used to wait for IPC SPAD values from RTU0
