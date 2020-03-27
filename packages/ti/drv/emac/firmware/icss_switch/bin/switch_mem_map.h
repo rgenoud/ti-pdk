@@ -398,40 +398,30 @@
 //************************************************************************************
 
 #define DMEM0_START_OFFSET                                 0x0000
-#define PORT_Q_PRIORITY_REGEN_OFFSET                       0x0000    //Stores the table used for priority regeneration. 4B per PCP/Queue. Only 1B is used
-#define PORT_Q_PRIORITY_REGEN_OFFSET_SIZE                  0x20
-#define EXPRESS_PRE_EMPTIVE_Q_MAP                          0x0020    //For marking packet as priority/express (this feature is disabled) or cut-through/S&F. One per slice
-#define EXPRESS_PRE_EMPTIVE_Q_MAP_SIZE                     0x20
-#define TAS_CONFIG_CHANGE_TIME                             0x0040    //New list is copied at this time
+#define ICSS_FIRMWARE_VERSION_OFFSET                       0x0000    //ICSSG Firmware version details
+#define ICSS_FIRMWARE_VERSION_OFFSET_SIZE                  0xc
+#define TAS_CONFIG_CHANGE_TIME                             0x000C    //New list is copied at this time
 #define TAS_CONFIG_CHANGE_TIME_SIZE                        0x8
-#define TAS_CONFIG_CHANGE_ERROR_COUNTER                    0x0048    //config change error counter
+#define TAS_CONFIG_CHANGE_ERROR_COUNTER                    0x0014    //config change error counter
 #define TAS_CONFIG_CHANGE_ERROR_COUNTER_SIZE               0x4
-#define TAS_CONFIG_PENDING                                 0x004C    //TAS List update pending flag
+#define TAS_CONFIG_PENDING                                 0x0018    //TAS List update pending flag
 #define TAS_CONFIG_PENDING_SIZE                            0x1
-#define TAS_CONFIG_CHANGE                                  0x004D    //TAS list update trigger flag
+#define TAS_CONFIG_CHANGE                                  0x0019    //TAS list update trigger flag
 #define TAS_CONFIG_CHANGE_SIZE                             0x1
-//Padding of 2 bytes
-#define TAS_ADMIN_CYCLE_TIME                               0x0050    //Cycle time for the new TAS schedule
+#define TAS_ADMIN_LIST_LENGTH                              0x001A    //List length for new TAS schedule
+#define TAS_ADMIN_LIST_LENGTH_SIZE                         0x1
+#define TAS_ACTIVE_LIST_INDEX                              0x001B    //Currently active TAS list index
+#define TAS_ACTIVE_LIST_INDEX_SIZE                         0x1
+#define TAS_ADMIN_CYCLE_TIME                               0x001C    //Cycle time for the new TAS schedule
 #define TAS_ADMIN_CYCLE_TIME_SIZE                          0x4
-#define TAS_CONFIG_CHANGE_CYCLE_COUNT                      0x0054    //Cycle counts remaining till the TAS list update
+#define TAS_CONFIG_CHANGE_CYCLE_COUNT                      0x0020    //Cycle counts remaining till the TAS list update
 #define TAS_CONFIG_CHANGE_CYCLE_COUNT_SIZE                 0x4
-#define PORT_Q_PRIORITY_MAPPING_OFFSET                     0x0058    //Stores the table used for priority mapping. 1B per PCP/Queue
+#define PORT_Q_PRIORITY_REGEN_OFFSET                       0x0024    //Stores the table used for priority regeneration. 4B per PCP/Queue. Only 1B is used
+#define PORT_Q_PRIORITY_REGEN_OFFSET_SIZE                  0x20
+#define EXPRESS_PRE_EMPTIVE_Q_MAP                          0x0044    //For marking packet as priority/express (this feature is disabled) or cut-through/S&F. One per slice
+#define EXPRESS_PRE_EMPTIVE_Q_MAP_SIZE                     0x20
+#define PORT_Q_PRIORITY_MAPPING_OFFSET                     0x0064    //Stores the table used for priority mapping. 1B per PCP/Queue
 #define PORT_Q_PRIORITY_MAPPING_OFFSET_SIZE                0x8
-#define PRE_EMPTION_ENABLE_TX                              0x0060    //Memory to Enable/Disable Preemption on TX side
-#define PRE_EMPTION_ENABLE_TX_SIZE                         0x1
-#define PRE_EMPTION_ACTIVE_TX                              0x0061    //Active State of Preemption on TX side
-#define PRE_EMPTION_ACTIVE_TX_SIZE                         0x1
-#define PRE_EMPTION_ENABLE_VERIFY                          0x0062    //Memory to Enable/Disable Verify State Machine Preemption
-#define PRE_EMPTION_ENABLE_VERIFY_SIZE                     0x1
-#define PRE_EMPTION_VERIFY_STATUS                          0x0063    //Verify Status of State Machine
-#define PRE_EMPTION_VERIFY_STATUS_SIZE                     0x1
-#define PRE_EMPTION_ADD_FRAG_SIZE_REMOTE                   0x0064    //Non Final Fragment Size supported by Link Partner
-#define PRE_EMPTION_ADD_FRAG_SIZE_REMOTE_SIZE              0x2
-#define PRE_EMPTION_ADD_FRAG_SIZE_LOCAL                    0x0066    //Non Final Fragment Size supported by Firmware
-#define PRE_EMPTION_ADD_FRAG_SIZE_LOCAL_SIZE               0x1
-//Padding of 1 bytes
-#define PRE_EMPTION_VERIFY_TIME                            0x0068    //Time in ms the State machine waits for respond packet
-#define PRE_EMPTION_VERIFY_TIME_SIZE                       0x2
 #define TAS_GATE_MASK_LIST0                                0x0100    //TAS gate mask for windows list0
 #define TAS_GATE_MASK_LIST0_SIZE                           (TAS_NUM_WINDOWS) //0x10
 #define TAS_WINDOW_END_TIME_LIST0                          0x0110    //TAS window end time list0
@@ -444,9 +434,24 @@
 #define TAS_WINDOW_END_TIME_LIST1_SIZE                     (TAS_NUM_WINDOWS*4) //0x40
 #define TAS_GATE_CLOSE_TIME_LIST1                          0x03A0    //TAS gate close time[window][queue] list1
 #define TAS_GATE_CLOSE_TIME_LIST1_SIZE                     (TAS_NUM_WINDOWS*TAS_NUM_QUEUES*4) //0x200
-#define DMEM0_END_OFFSET                                   0x05A0
+#define PRE_EMPTION_ENABLE_TX                              0x05A0    //Memory to Enable/Disable Preemption on TX side
+#define PRE_EMPTION_ENABLE_TX_SIZE                         0x1
+#define PRE_EMPTION_ACTIVE_TX                              0x05A1    //Active State of Preemption on TX side
+#define PRE_EMPTION_ACTIVE_TX_SIZE                         0x1
+#define PRE_EMPTION_ENABLE_VERIFY                          0x05A2    //Memory to Enable/Disable Verify State Machine Preemption
+#define PRE_EMPTION_ENABLE_VERIFY_SIZE                     0x1
+#define PRE_EMPTION_VERIFY_STATUS                          0x05A3    //Verify Status of State Machine
+#define PRE_EMPTION_VERIFY_STATUS_SIZE                     0x1
+#define PRE_EMPTION_ADD_FRAG_SIZE_REMOTE                   0x05A4    //Non Final Fragment Size supported by Link Partner
+#define PRE_EMPTION_ADD_FRAG_SIZE_REMOTE_SIZE              0x2
+#define PRE_EMPTION_ADD_FRAG_SIZE_LOCAL                    0x05A6    //Non Final Fragment Size supported by Firmware
+#define PRE_EMPTION_ADD_FRAG_SIZE_LOCAL_SIZE               0x1
+//Padding of 1 bytes
+#define PRE_EMPTION_VERIFY_TIME                            0x05A8    //Time in ms the State machine waits for respond packet
+#define PRE_EMPTION_VERIFY_TIME_SIZE                       0x2
+#define DMEM0_END_OFFSET                                   0x05AA
 
-// total DMEM0 memory usage : 1.40625 KB from total of 8.0KB 
+// total DMEM0 memory usage : 1.416015625 KB from total of 8.0KB 
 
 //************************************************************************************
 //
@@ -457,43 +462,59 @@
 #define DMEM1_START_OFFSET                                 0x0000
 #define ICSS_FIRMWARE_VERSION_OFFSET                       0x0000    //ICSSG Firmware version details
 #define ICSS_FIRMWARE_VERSION_OFFSET_SIZE                  0xc
-#define NRT_FRAME_PREEMPTION_ENABLE_OFFSET                 0x000C    //Memory used for Global enable and disable Frame Preemption
+#define TAS_CONFIG_CHANGE_TIME                             0x000C    //New list is copied at this time
+#define TAS_CONFIG_CHANGE_TIME_SIZE                        0x8
+#define TAS_CONFIG_CHANGE_ERROR_COUNTER                    0x0014    //config change error counter
+#define TAS_CONFIG_CHANGE_ERROR_COUNTER_SIZE               0x4
+#define TAS_CONFIG_PENDING                                 0x0018    //TAS List update pending flag
+#define TAS_CONFIG_PENDING_SIZE                            0x1
+#define TAS_CONFIG_CHANGE                                  0x0019    //TAS list update trigger flag
+#define TAS_CONFIG_CHANGE_SIZE                             0x1
+#define TAS_ADMIN_LIST_LENGTH                              0x001A    //List length for new TAS schedule
+#define TAS_ADMIN_LIST_LENGTH_SIZE                         0x1
+#define TAS_ACTIVE_LIST_INDEX                              0x001B    //Currently active TAS list index
+#define TAS_ACTIVE_LIST_INDEX_SIZE                         0x1
+#define TAS_ADMIN_CYCLE_TIME                               0x001C    //Cycle time for the new TAS schedule
+#define TAS_ADMIN_CYCLE_TIME_SIZE                          0x4
+#define TAS_CONFIG_CHANGE_CYCLE_COUNT                      0x0020    //Cycle counts remaining till the TAS list update
+#define TAS_CONFIG_CHANGE_CYCLE_COUNT_SIZE                 0x4
+#define NRT_FRAME_PREEMPTION_ENABLE_OFFSET                 0x0024    //Memory used for Global enable and disable Frame Preemption
 #define NRT_FRAME_PREEMPTION_ENABLE_OFFSET_SIZE            0x4
-#define NRT_STASHED_Q_NUM_OFFSET                           0x0010    //Memory used for Stashing queue number during Host Egress in BG Task
+#define NRT_STASHED_Q_NUM_OFFSET                           0x0028    //Memory used for Stashing queue number during Host Egress in BG Task
 #define NRT_STASHED_Q_NUM_OFFSET_SIZE                      0x4
-#define PSI_TX_PKT_DATA_OFFSET_SLICE0                      0x0014    //Used Internally by FW. 
+#define PSI_TX_PKT_DATA_OFFSET_SLICE0                      0x002C    //Used Internally by FW. 
 #define PSI_TX_PKT_DATA_OFFSET_SLICE0_SIZE                 0x24
-#define PSI_TX_PKT_DATA_OFFSET_SLICE1                      0x0038    //Used Internally by FW. 
+#define PSI_TX_PKT_DATA_OFFSET_SLICE1                      0x0050    //Used Internally by FW. 
 #define PSI_TX_PKT_DATA_OFFSET_SLICE1_SIZE                 0x24
-#define LEARNING_WR_RD_COUNT_OFFSET                        0x005C    //Used Internally by FW to synchronize FDB Learning between RTU0 and PRU0 
+#define LEARNING_WR_RD_COUNT_OFFSET                        0x0074    //Used Internally by FW to synchronize FDB Learning between RTU0 and PRU0 
 #define LEARNING_WR_RD_COUNT_OFFSET_SIZE                   0x4
-#define FDB_G0_M_G1_SLV_OFFSET                             0x0060    //Used Internally by FW to synchronize FDB Learning between two ICSSG's 
+#define FDB_G0_M_G1_SLV_OFFSET                             0x0078    //Used Internally by FW to synchronize FDB Learning between two ICSSG's 
 #define FDB_G0_M_G1_SLV_OFFSET_SIZE                        0x4
-#define FDB_G1_M_G0_SLV_OFFSET                             0x0064    //Used Internally by FW to synchronize FDB Learning between two ICSSG's 
+#define FDB_G1_M_G0_SLV_OFFSET                             0x007C    //Used Internally by FW to synchronize FDB Learning between two ICSSG's 
 #define FDB_G1_M_G0_SLV_OFFSET_SIZE                        0x4
-#define FDB_SYNC_ENTRY                                     0x0068    //Used to store the FDB entry one ICSSG learnt and one that needs to be communicated to other ICSSG 
+#define FDB_SYNC_ENTRY                                     0x0080    //Used to store the FDB entry one ICSSG learnt and one that needs to be communicated to other ICSSG 
 #define FDB_SYNC_ENTRY_SIZE                                0x10
-#define DEBUG_FDB_COMPARISON_MAC_VLAN                      0x0078    //Used for debugging FDB lookups, write the MAC and VLAN combination that is suspect. Currently disabled
+#define DEBUG_FDB_COMPARISON_MAC_VLAN                      0x0090    //Used for debugging FDB lookups, write the MAC and VLAN combination that is suspect. Currently disabled
 #define DEBUG_FDB_COMPARISON_MAC_VLAN_SIZE                 0x8
-#define DEBUG_FDB_RESULTS                                  0x0080    //The results of FBD lookup for Local injection are dumped here
+#define DEBUG_FDB_RESULTS                                  0x0098    //The results of FBD lookup for Local injection are dumped here
 #define DEBUG_FDB_RESULTS_SIZE                             0xc
-#define FDB_AGEING_TIMEOUT_OFFSET                          0x008C    //Time after which FDB entries are checked for aged out values. Value in nanoseconds
+#define FDB_AGEING_TIMEOUT_OFFSET                          0x00A4    //Time after which FDB entries are checked for aged out values. Value in nanoseconds
 #define FDB_AGEING_TIMEOUT_OFFSET_SIZE                     0x8
-#define VERIFY_FRAME_RECEIVE_OFFSET                        0x0094    //Used Internally by FW. Memory updated by RX PRU when verify frame is received
+#define VERIFY_FRAME_RECEIVE_OFFSET                        0x00AC    //Used Internally by FW. Memory updated by RX PRU when verify frame is received
 #define VERIFY_FRAME_RECEIVE_OFFSET_SIZE                   0x1
 //Padding of 3 bytes
-#define VERIFY_FRAME_SEND_OFFSET                           0x0098    //Used Internally by FW. Memory updated by TX PRU to inform the state machine that the verify frame has been sent
+#define VERIFY_FRAME_SEND_OFFSET                           0x00B0    //Used Internally by FW. Memory updated by TX PRU to inform the state machine that the verify frame has been sent
 #define VERIFY_FRAME_SEND_OFFSET_SIZE                      0x1
 //Padding of 3 bytes
-#define RESPOND_FRAME_RECEIVE_OFFSET                       0x009C    //Used Internally by FW.Memory updated by RX PRU when respond frame is received
+#define RESPOND_FRAME_RECEIVE_OFFSET                       0x00B4    //Used Internally by FW.Memory updated by RX PRU when respond frame is received
 #define RESPOND_FRAME_RECEIVE_OFFSET_SIZE                  0x1
 //Padding of 3 bytes
-#define RESPOND_FRAME_SEND_OFFSET                          0x00A0    //Used Internally by FW.Memory updated by TX PRU to inform the state machine that the respond frame has been sent
+#define RESPOND_FRAME_SEND_OFFSET                          0x00B8    //Used Internally by FW.Memory updated by TX PRU to inform the state machine that the respond frame has been sent
 #define RESPOND_FRAME_SEND_OFFSET_SIZE                     0x1
 //Padding of 3 bytes
-#define PRE_EMPTION_CONTEXT_SLICE0_OFFSET                  0x00A4    //Backup of active Tx and Q context
+#define PRE_EMPTION_CONTEXT_SLICE0_OFFSET                  0x00BC    //Backup of active Tx and Q context
 #define PRE_EMPTION_CONTEXT_SLICE0_OFFSET_SIZE             0x18
-#define PRE_EMPTION_CONTEXT_SLICE1_OFFSET                  0x00BC    //Backup of active Tx and Q context
+#define PRE_EMPTION_CONTEXT_SLICE1_OFFSET                  0x00D4    //Backup of active Tx and Q context
 #define PRE_EMPTION_CONTEXT_SLICE1_OFFSET_SIZE             0x18
 #define TAS_GATE_MASK_LIST0                                0x0100    //TAS gate mask for windows list0
 #define TAS_GATE_MASK_LIST0_SIZE                           (TAS_NUM_WINDOWS) //0x10
