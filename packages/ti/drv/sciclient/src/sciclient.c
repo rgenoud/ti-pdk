@@ -173,6 +173,8 @@ static void Sciclient_flush(uint32_t thread);
  */
 static void Sciclient_ISR(uintptr_t arg);
 
+/* This utility function is to be used to take care of  all non-aligned c66x accesses */
+void sciclient_util_byte_copy(uint8_t *src, uint8_t *dest,uint32_t num_bytes);
 /* ========================================================================== */
 /*                            Global Variables                                */
 /* ========================================================================== */
@@ -223,6 +225,17 @@ CSL_SecProxyCfg gSciclient_secProxyCfg =
 };
 #endif
 
+/* This utility function is to be used to take care of  all non-aligned c66x accesses */
+void sciclient_util_byte_copy(uint8_t *src, uint8_t *dest,uint32_t num_bytes)
+{
+  int32_t i;
+  uint8_t *srcP=src;
+  uint8_t *destP=dest;
+  
+  for(i=0;i<num_bytes;i++) { 
+	 *destP++ = *srcP++;
+  }  
+}	
 /* ========================================================================== */
 /*                          Function Definitions                              */
 /* ========================================================================== */
@@ -533,7 +546,7 @@ int32_t Sciclient_service(const Sciclient_ReqPrm_t *pReqPrm,
     uint32_t          txPayloadSize =0U;
     /* size of response payload in bytes */
     uint32_t          rxPayloadSize =0U;
-    uint32_t         *pLocalRespPayload = NULL;
+    uint8_t           *pLocalRespPayload = NULL;
     volatile Sciclient_RomFirmwareLoadHdr_t *pLocalRespHdr;
     uint32_t          contextId = SCICLIENT_CONTEXT_MAX_NUM;
     uint32_t          txThread;
@@ -611,7 +624,7 @@ int32_t Sciclient_service(const Sciclient_ReqPrm_t *pReqPrm,
             }
             else
             {
-                pLocalRespPayload = (uint32_t *)(pRespPrm->pRespPayload + sizeof(struct tisci_header));
+                pLocalRespPayload = (uint8_t *)(pRespPrm->pRespPayload + sizeof(struct tisci_header));
             }
         }
         else
@@ -646,7 +659,8 @@ int32_t Sciclient_service(const Sciclient_ReqPrm_t *pReqPrm,
             Sciclient_flush(rxThread);
         }
         header = &dummyHdr->hdr;
-        header->type = pReqPrm->messageType;
+        sciclient_util_byte_copy((uint8_t *)&(pReqPrm->messageType),(uint8_t *)&(header->type),sizeof(pReqPrm->messageType));
+        
         header->host = (uint8_t) gSciclientMap[contextId].hostId;
         localSeqId = (uint8_t) gSciclientHandle.currSeqId;
         header->seq = localSeqId;
@@ -757,10 +771,18 @@ int32_t Sciclient_service(const Sciclient_ReqPrm_t *pReqPrm,
         /*We do not need to read the header*/
         for (i = 0; i < numWords; i++)
         {
-            *(pLocalRespPayload + i) = Sciclient_readThread32(
+            uint32_t tempWord = Sciclient_readThread32(
                 rxThread,
                 ((uint8_t) i +
                  SCICLIENT_HEADER_SIZE_IN_WORDS+gSecHeaderSizeWords));
+            uint8_t * tempWordPtr = (uint8_t*) & tempWord;
+            uint32_t j = 0U;
+            for (j = 0U; j < 4U; j++)
+            {
+                *(pLocalRespPayload + i * 4 + j) = *tempWordPtr;
+                tempWordPtr++;
+            }
+
         }
 
         if (trailBytes > 0U)
