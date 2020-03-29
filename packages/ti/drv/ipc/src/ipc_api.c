@@ -119,6 +119,9 @@ typedef struct RPMessage_Waiter_s
     uint32_t           procId;
     uint32_t           endPt;
     char               name[SERVICENAMELEN];
+#ifdef QNX_OS
+    uint32_t           token;
+#endif
 } RPMessage_Waiter;
 /**
  *  \brief Element to hold payload copied onto receiver's queue.
@@ -660,8 +663,13 @@ static uint8_t RPMessage_lookupName(uint32_t procId, const char* name, uint32_t 
 /**
  *  \brief RPMessage_waitForProc
  */
+#ifdef QNX_OS
+int32_t RPMessage_getRemoteEndPtToken(uint32_t selfProcId, const char* name, uint32_t *remoteProcId,
+                             uint32_t *remoteEndPt, uint32_t timeout, uint32_t token)
+#else
 int32_t RPMessage_getRemoteEndPt(uint32_t selfProcId, const char* name, uint32_t *remoteProcId,
                              uint32_t *remoteEndPt, uint32_t timeout)
+#endif
 {
     int32_t            key;
     uint8_t            lookupStatus = FALSE;
@@ -700,7 +708,9 @@ int32_t RPMessage_getRemoteEndPt(uint32_t selfProcId, const char* name, uint32_t
         taskWaiter.name[SERVICENAMELEN-1] = '\0';
         taskWaiter.procId = selfProcId;
         taskWaiter.endPt  = 0;
-
+#ifdef QNX_OS
+        taskWaiter.token = token;
+#endif
         /* The order of steps is critical here.  There must
          * not be an unprotected time between calling
          * RPMessage_lookupName() and the IpcUtils_Qput().
@@ -736,6 +746,72 @@ int32_t RPMessage_getRemoteEndPt(uint32_t selfProcId, const char* name, uint32_t
 
     return rtnVal;
 }
+
+#ifdef QNX_OS
+int32_t RPMessage_getRemoteEndPt(uint32_t selfProcId, const char* name, uint32_t *remoteProcId,
+                             uint32_t *remoteEndPt, uint32_t timeout)
+{
+    return RPMessage_getRemoteEndPtToken(selfProcId, name, remoteProcId, remoteEndPt, timeout, 0);
+}
+
+void RPMessage_unblockGetRemoteEndPt(uint32_t token)
+{
+    int32_t key;
+    RPMessage_Waiter *w;
+    IpcUtils_QElem *elem, *head;
+    int32_t rtnVal = IPC_SOK;
+    Ipc_OsalPrms *pOsalPrms = &gIpcObject.initPrms.osalPrms;
+
+#if DEBUG_PRINT
+    SystemP_printf("RPMessage_unblockGetRemoteEpt : unblocking for token %d\n",
+             token);
+#endif
+
+    if (NULL != pOsalPrms)
+    {
+        if (((NULL == pOsalPrms->lockHIsrGate) ||
+             (NULL == pOsalPrms->unLockHIsrGate)) ||
+            (NULL == pOsalPrms->unlockMutex))
+        {
+            rtnVal = IPC_EFAIL;
+        }
+    }
+
+    if (IPC_SOK == rtnVal)
+    {
+        key = pOsalPrms->lockHIsrGate(module.gateSwi);
+
+        /* Wakeup the specified task that is waiting on the */
+        /* announced name.                              */
+        if (!IpcUtils_QisEmpty(&module.waitingTasks))
+        {
+            /* No interrupt / SWI protection, required here again.
+               We are already in SWI protected region */
+            elem = head = (IpcUtils_QElem *) IpcUtils_QgetHeadNode(&module.waitingTasks);
+            do
+            {
+                w = (RPMessage_Waiter*)elem;
+                if( (NULL != w) && (w->token == token) )
+                {
+                    /* Update the waiter's entry with actual */
+                    /* announcement values.                   */
+                    w->procId = IPC_MP_INVALID_ID;
+                    w->endPt = RPMESSAGE_ANY;
+#if DEBUG_PRINT
+                    SystemP_printf("RPMessage_unblockGetRemoteEpt :Semphore Handle 0x%x\n",
+                            (uint32_t)w->semHandle);
+#endif
+
+                    pOsalPrms->unlockMutex(w->semHandle);
+                    break;
+                }
+                elem = (IpcUtils_QElem *) IpcUtils_Qnext(elem);
+            } while (elem != head);
+        }
+        pOsalPrms->unLockHIsrGate(module.gateSwi, key);
+    }
+}
+#endif
 
 #ifndef IPC_EXCLUDE_CTRL_TASKS
 
