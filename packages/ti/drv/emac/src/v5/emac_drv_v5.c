@@ -3125,6 +3125,13 @@ void emac_icssg_switch_eth_setup (uint32_t portNum)
     reg_val |= 0x1F;       /*Configure 31 to detect 64 as min size*/
     CSL_REG32_WR ((icssgBaseAddr + CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_REGS_BASE +
                       CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_RX_FRMS0), reg_val);
+#else
+    reg_val = 0x7CF << 16; /*Configure 1999 to detect 2000 as max size*/
+    reg_val |= 0x3F;       /*Configure 63 to detect 64 as min size*/
+    CSL_REG32_WR ((icssgBaseAddr + CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_REGS_BASE +
+                  CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_RX_FRMS0), reg_val);
+    CSL_REG32_WR ((icssgBaseAddr + CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_REGS_BASE +
+                  CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_RX_FRMS1), reg_val);
 #endif
 
     /* Configure Default Ageing value for firmware to use*/
