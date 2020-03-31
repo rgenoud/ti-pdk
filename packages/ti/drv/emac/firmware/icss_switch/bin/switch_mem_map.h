@@ -416,8 +416,13 @@
 #define TAS_ADMIN_CYCLE_TIME_SIZE                          0x4
 #define TAS_CONFIG_CHANGE_CYCLE_COUNT                      0x0020    //Cycle counts remaining till the TAS list update
 #define TAS_CONFIG_CHANGE_CYCLE_COUNT_SIZE                 0x4
-#define PORT_Q_PRIORITY_REGEN_OFFSET                       0x0024    //Stores the table used for priority regeneration. 4B per PCP/Queue. Only 1B is used
-#define PORT_Q_PRIORITY_REGEN_OFFSET_SIZE                  0x20
+#define PORT_Q_PRIORITY_REGEN_SLICE0_OFFSET                0x0024    //Stores the table used for priority regeneration. 1B per PCP/Queue
+#define PORT_Q_PRIORITY_REGEN_SLICE0_OFFSET_SIZE           0x8
+#define PORT_Q_PRIORITY_REGEN_OFFSET                       PORT_Q_PRIORITY_REGEN_SLICE0_OFFSET    //Same as PORT_Q_PRIORITY_REGEN_SLICE0_OFFSET
+#define PORT_Q_PRIORITY_REGEN_SLICE1_OFFSET                0x002C    //Stores the table used for priority regeneration. 1B per PCP/Queue
+#define PORT_Q_PRIORITY_REGEN_SLICE1_OFFSET_SIZE           0x8
+#define RESERVED                                           0x0034    //Reserved for future use
+#define RESERVED_SIZE                                      0x10
 #define EXPRESS_PRE_EMPTIVE_Q_MAP                          0x0044    //For marking packet as priority/express (this feature is disabled) or cut-through/S&F. One per slice
 #define EXPRESS_PRE_EMPTIVE_Q_MAP_SIZE                     0x20
 #define PORT_Q_PRIORITY_MAPPING_OFFSET                     0x0064    //Stores the table used for priority mapping. 1B per PCP/Queue

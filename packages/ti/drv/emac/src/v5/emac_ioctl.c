@@ -1297,8 +1297,12 @@ EMAC_DRV_ERR_E emac_ioctl_prio_regen_mapping_ctrl(uint32_t port_num, void*  ctrl
         {
             tempVal = (uint32_t)pPrioRegenMap->prioRegenMap[index];
             /*Shift PCP value by 5 so HW can save a cycle*/
-            tempVal = tempVal << 5; 
+            tempVal = tempVal << 5;
+#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
             emac_hw_mem_write(icssgBaseAddr +prioRegenMapOffset + (index*4),(void*)&tempVal,1);
+#else
+            HWREGB(icssgBaseAddr +prioRegenMapOffset + port_num*8 + index) = tempVal;
+#endif
         }
         retVal = EMAC_DRV_RESULT_OK;
     }
