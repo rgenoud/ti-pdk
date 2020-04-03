@@ -133,8 +133,7 @@
                                                              
 #define DATA_PKT_TYPE                           (0x14)       //Data packet type in R1 metadata. R1.b2
 
-//FIXME : Temporary. Need to align with EMAC
-#define NRT_PACKET_DROP_TS_ERROR_CODE           (0xBAADF00D)
+#define NRT_PACKET_DROP_TS_ERROR_CODE           (0xFFFFFFFFFFFFFFFF)
 
 #define DEFAULT_GUARD_BAND                      (0x4E2)     // 1.25 microseconds
 #endif //____switch_mmap_defines_h

@@ -2482,6 +2482,7 @@ static void emac_poll_tx_ts_resp(uint32_t port_num, Udma_RingHandle compRingHand
     uint32_t *mpkt;
     uint64_t tx_timestamp;
     uint32_t lport;
+    bool is_valid = 1;
     if (port_num >= 2) // TODO: just temporarily guard
         return;  
 
@@ -2497,8 +2498,11 @@ static void emac_poll_tx_ts_resp(uint32_t port_num, Udma_RingHandle compRingHand
 
             tx_timestamp = mpkt[4];
             tx_timestamp = tx_timestamp << 32 | mpkt[3];
+            if(tx_timestamp == 0xFFFFFFFFFFFFFFFF)      //FIXME : use NRT_PACKET_DROP_TS_ERROR_CODE
+                is_valid = 0;
+            
             if(emac_mcb.port_cb[lport].tx_ts_cb)
-                emac_mcb.port_cb[lport].tx_ts_cb(lport, mpkt[2], tx_timestamp, 1);
+                emac_mcb.port_cb[lport].tx_ts_cb(lport, mpkt[2], tx_timestamp, is_valid);
 
             //bit 23 is bit 7 of byte 2 
             hwq_push(0, ((mpkt[0] & (1 << 23)) == 0) ? 40 : 41, mpkt);
