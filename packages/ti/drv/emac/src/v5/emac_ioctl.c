@@ -1539,17 +1539,18 @@ EMAC_DRV_ERR_E emac_ioctl_frame_premption_ctrl(uint32_t port_num, uint32_t switc
                 emac_mcb.ioctl_cb.ioctlCount = 1;
 #ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
                 if(portLoc == 1)
-#endif
                 {
                     memcpy((void*)(emac_mcb.ioctl_cb.pCmd1Icssg->spare),(void*)(emac_util_get_R30_info(EMAC_PORT_PREMPT_TX_ENABLE, portLoc, EMAC_ICSSG_0)), sizeof(emac_mcb.ioctl_cb.pCmd1Icssg->spare));
                     retVal = emac_ioctl_send_mgmt_msg(0, emac_mcb.ioctl_cb.pCmd1Icssg);
                 }
-#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
                 else
                 {
                     memcpy((void*)(emac_mcb.ioctl_cb.pCmd1Icssg->spare),(void*)(emac_util_get_R30_info(EMAC_PORT_PREMPT_TX_ENABLE, portLoc, EMAC_ICSSG_1)), sizeof(emac_mcb.ioctl_cb.pCmd1Icssg->spare));
                     retVal = emac_ioctl_send_mgmt_msg(2, emac_mcb.ioctl_cb.pCmd1Icssg);
                 }
+#else
+                ioctl_port_state_hlp(EMAC_PORT_PREMPT_TX_ENABLE, portLoc);
+                retVal = emac_ioctl_send_mgmt_msg(portLoc, emac_mcb.ioctl_cb.pCmd1Icssg);
 #endif
                 if (retVal != EMAC_DRV_RESULT_IOCTL_IN_PROGRESS)
                 {
@@ -1565,17 +1566,18 @@ EMAC_DRV_ERR_E emac_ioctl_frame_premption_ctrl(uint32_t port_num, uint32_t switc
                 emac_mcb.ioctl_cb.ioctlCount = 1;
 #ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
                 if(portLoc == 1)
-#endif
                 {
                     memcpy((void*)(emac_mcb.ioctl_cb.pCmd1Icssg->spare),(void*)(emac_util_get_R30_info(EMAC_PORT_PREMPT_TX_DISABLE, portLoc, EMAC_ICSSG_0)), sizeof(emac_mcb.ioctl_cb.pCmd1Icssg->spare));
                     retVal = emac_ioctl_send_mgmt_msg(0, emac_mcb.ioctl_cb.pCmd1Icssg);
                 }
-#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
                 else
                 {
                     memcpy((void*)(emac_mcb.ioctl_cb.pCmd1Icssg->spare),(void*)(emac_util_get_R30_info(EMAC_PORT_PREMPT_TX_DISABLE, portLoc, EMAC_ICSSG_1)), sizeof(emac_mcb.ioctl_cb.pCmd1Icssg->spare));
                     retVal = emac_ioctl_send_mgmt_msg(2, emac_mcb.ioctl_cb.pCmd1Icssg);
                 }
+#else
+                ioctl_port_state_hlp(EMAC_PORT_PREMPT_TX_DISABLE, portLoc);
+                retVal = emac_ioctl_send_mgmt_msg(portLoc, emac_mcb.ioctl_cb.pCmd1Icssg);
 #endif
                 if (retVal != EMAC_DRV_RESULT_IOCTL_IN_PROGRESS)
                 {
