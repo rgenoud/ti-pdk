@@ -838,127 +838,201 @@
 #define NRT_HOST_RX_PKT_COUNT_PASTATID_SIZE                0x4
 #define NRT_HOST_TX_PKT_COUNT_PASTATID                     0x0084    //Number of valid packets copied by RTU0 to Tx queues
 #define NRT_HOST_TX_PKT_COUNT_PASTATID_SIZE                0x4
-#define NRT_RTU0_PACKET_DROPPED_PASTATID                   0x0088    //PRU diagnostic error counter which increments when RTU0 drops a locally injected packet due to port disabled or rule violation
-#define NRT_RTU0_PACKET_DROPPED_PASTATID_SIZE              0x4
-#define NRT_PORT_Q0_OVERFLOW_PASTATID                      0x008C    //Port Tx Q Overflow Counters
-#define NRT_PORT_Q0_OVERFLOW_PASTATID_SIZE                 0x4
-#define NRT_PORT_Q1_OVERFLOW_PASTATID                      0x0090    //Port Tx Q Overflow Counters
-#define NRT_PORT_Q1_OVERFLOW_PASTATID_SIZE                 0x4
-#define NRT_PORT_Q2_OVERFLOW_PASTATID                      0x0094    //Port Tx Q Overflow Counters
-#define NRT_PORT_Q2_OVERFLOW_PASTATID_SIZE                 0x4
-#define NRT_PORT_Q3_OVERFLOW_PASTATID                      0x0098    //Port Tx Q Overflow Counters
-#define NRT_PORT_Q3_OVERFLOW_PASTATID_SIZE                 0x4
-#define NRT_PORT_Q4_OVERFLOW_PASTATID                      0x009C    //Port Tx Q Overflow Counters
-#define NRT_PORT_Q4_OVERFLOW_PASTATID_SIZE                 0x4
-#define NRT_PORT_Q5_OVERFLOW_PASTATID                      0x00A0    //Port Tx Q Overflow Counters
-#define NRT_PORT_Q5_OVERFLOW_PASTATID_SIZE                 0x4
-#define NRT_PORT_Q6_OVERFLOW_PASTATID                      0x00A4    //Port Tx Q Overflow Counters
-#define NRT_PORT_Q6_OVERFLOW_PASTATID_SIZE                 0x4
-#define NRT_PORT_Q7_OVERFLOW_PASTATID                      0x00A8    //Port Tx Q Overflow Counters
-#define NRT_PORT_Q7_OVERFLOW_PASTATID_SIZE                 0x4
-#define NRT_HOST_Q0_OVERFLOW_PASTATID                      0x00AC    //Host Tx Q Overflow Counters
+#define NRT_RTU0_PACKET_DROPPED_SLICE0_PASTATID            0x0088    //PRU diagnostic error counter which increments when RTU0 drops a locally injected packet due to port disabled or rule violation
+#define NRT_RTU0_PACKET_DROPPED_SLICE0_PASTATID_SIZE       0x4
+#define NRT_RTU0_PACKET_DROPPED_SLICE1_PASTATID            0x008C    //PRU diagnostic error counter which increments when RTU1 drops a locally injected packet due to port disabled or rule violation
+#define NRT_RTU0_PACKET_DROPPED_SLICE1_PASTATID_SIZE       0x4
+#define NRT_PORT1_Q0_OVERFLOW_PASTATID                     0x0090    //Port1 Tx Q Overflow Counters
+#define NRT_PORT1_Q0_OVERFLOW_PASTATID_SIZE                0x4
+#define NRT_PORT2_Q0_OVERFLOW_PASTATID                     0x0094    //Port2 Tx Q Overflow Counters
+#define NRT_PORT2_Q0_OVERFLOW_PASTATID_SIZE                0x4
+#define NRT_PORT1_Q1_OVERFLOW_PASTATID                     0x0098    //Port1 Tx Q Overflow Counters
+#define NRT_PORT1_Q1_OVERFLOW_PASTATID_SIZE                0x4
+#define NRT_PORT2_Q1_OVERFLOW_PASTATID                     0x009C    //Port2 Tx Q Overflow Counters
+#define NRT_PORT2_Q1_OVERFLOW_PASTATID_SIZE                0x4
+#define NRT_PORT1_Q2_OVERFLOW_PASTATID                     0x00A0    //Port1 Tx Q Overflow Counters
+#define NRT_PORT1_Q2_OVERFLOW_PASTATID_SIZE                0x4
+#define NRT_PORT2_Q2_OVERFLOW_PASTATID                     0x00A4    //Port2 Tx Q Overflow Counters
+#define NRT_PORT2_Q2_OVERFLOW_PASTATID_SIZE                0x4
+#define NRT_PORT1_Q3_OVERFLOW_PASTATID                     0x00A8    //Port1 Tx Q Overflow Counters
+#define NRT_PORT1_Q3_OVERFLOW_PASTATID_SIZE                0x4
+#define NRT_PORT2_Q3_OVERFLOW_PASTATID                     0x00AC    //Port2 Tx Q Overflow Counters
+#define NRT_PORT2_Q3_OVERFLOW_PASTATID_SIZE                0x4
+#define NRT_PORT1_Q4_OVERFLOW_PASTATID                     0x00B0    //Port1 Tx Q Overflow Counters
+#define NRT_PORT1_Q4_OVERFLOW_PASTATID_SIZE                0x4
+#define NRT_PORT2_Q4_OVERFLOW_PASTATID                     0x00B4    //Port2 Tx Q Overflow Counters
+#define NRT_PORT2_Q4_OVERFLOW_PASTATID_SIZE                0x4
+#define NRT_PORT1_Q5_OVERFLOW_PASTATID                     0x00B8    //Port1 Tx Q Overflow Counters
+#define NRT_PORT1_Q5_OVERFLOW_PASTATID_SIZE                0x4
+#define NRT_PORT2_Q5_OVERFLOW_PASTATID                     0x00BC    //Port2 Tx Q Overflow Counters
+#define NRT_PORT2_Q5_OVERFLOW_PASTATID_SIZE                0x4
+#define NRT_PORT1_Q6_OVERFLOW_PASTATID                     0x00C0    //Port1 Tx Q Overflow Counters
+#define NRT_PORT1_Q6_OVERFLOW_PASTATID_SIZE                0x4
+#define NRT_PORT2_Q6_OVERFLOW_PASTATID                     0x00C4    //Port2 Tx Q Overflow Counters
+#define NRT_PORT2_Q6_OVERFLOW_PASTATID_SIZE                0x4
+#define NRT_PORT1_Q7_OVERFLOW_PASTATID                     0x00C8    //Port1 Tx Q Overflow Counters
+#define NRT_PORT1_Q7_OVERFLOW_PASTATID_SIZE                0x4
+#define NRT_PORT2_Q7_OVERFLOW_PASTATID                     0x00CC    //Port2 Tx Q Overflow Counters
+#define NRT_PORT2_Q7_OVERFLOW_PASTATID_SIZE                0x4
+#define NRT_HOST_Q0_OVERFLOW_PASTATID                      0x00D0    //Host Tx Q Overflow Counters
 #define NRT_HOST_Q0_OVERFLOW_PASTATID_SIZE                 0x4
-#define NRT_HOST_Q1_OVERFLOW_PASTATID                      0x00B0    //Host Tx Q Overflow Counters
+#define NRT_HOST_Q1_OVERFLOW_PASTATID                      0x00D4    //Host Tx Q Overflow Counters
 #define NRT_HOST_Q1_OVERFLOW_PASTATID_SIZE                 0x4
-#define NRT_HOST_Q2_OVERFLOW_PASTATID                      0x00B4    //Host Tx Q Overflow Counters
+#define NRT_HOST_Q2_OVERFLOW_PASTATID                      0x00D8    //Host Tx Q Overflow Counters
 #define NRT_HOST_Q2_OVERFLOW_PASTATID_SIZE                 0x4
-#define NRT_HOST_Q3_OVERFLOW_PASTATID                      0x00B8    //Host Tx Q Overflow Counters
+#define NRT_HOST_Q3_OVERFLOW_PASTATID                      0x00DC    //Host Tx Q Overflow Counters
 #define NRT_HOST_Q3_OVERFLOW_PASTATID_SIZE                 0x4
-#define NRT_HOST_Q4_OVERFLOW_PASTATID                      0x00BC    //Host Tx Q Overflow Counters
+#define NRT_HOST_Q4_OVERFLOW_PASTATID                      0x00E0    //Host Tx Q Overflow Counters
 #define NRT_HOST_Q4_OVERFLOW_PASTATID_SIZE                 0x4
-#define NRT_HOST_Q5_OVERFLOW_PASTATID                      0x00C0    //Host Tx Q Overflow Counters
+#define NRT_HOST_Q5_OVERFLOW_PASTATID                      0x00E4    //Host Tx Q Overflow Counters
 #define NRT_HOST_Q5_OVERFLOW_PASTATID_SIZE                 0x4
-#define NRT_HOST_Q6_OVERFLOW_PASTATID                      0x00C4    //Host Tx Q Overflow Counters
+#define NRT_HOST_Q6_OVERFLOW_PASTATID                      0x00E8    //Host Tx Q Overflow Counters
 #define NRT_HOST_Q6_OVERFLOW_PASTATID_SIZE                 0x4
-#define NRT_HOST_Q7_OVERFLOW_PASTATID                      0x00C8    //Host Tx Q Overflow Counters
+#define NRT_HOST_Q7_OVERFLOW_PASTATID                      0x00EC    //Host Tx Q Overflow Counters
 #define NRT_HOST_Q7_OVERFLOW_PASTATID_SIZE                 0x4
-#define NRT_HOST_EGRESS_Q_PRE_OVERFLOW_PASTATID            0x00CC    //Host Egress Q (Pre-emptible) Overflow Counter
+#define NRT_HOST_EGRESS_Q_PRE_OVERFLOW_PASTATID            0x00F0    //Host Egress Q (Pre-emptible) Overflow Counter
 #define NRT_HOST_EGRESS_Q_PRE_OVERFLOW_PASTATID_SIZE       0x4
-#define NRT_HOST_EGRESS_Q_EXP_OVERFLOW_PASTATID            0x00D0    //Host Egress Q (Express) Overflow Counter. redundant
+#define NRT_HOST_EGRESS_Q_EXP_OVERFLOW_PASTATID            0x00F4    //Host Egress Q (Express) Overflow Counter. redundant
 #define NRT_HOST_EGRESS_Q_EXP_OVERFLOW_PASTATID_SIZE       0x4
-#define NRT_PSI_ABORT_CNT_PASTATID                         0x00D4    //_Small_Description_
-#define NRT_PSI_ABORT_CNT_PASTATID_SIZE                    0x4
-#define NRT_WRONG_Q_STATUS_PASTATID                        0x00D8    //Not Used, will be removed
-#define NRT_WRONG_Q_STATUS_PASTATID_SIZE                   0x4
-#define NRT_DROPPED_PKT_PASTATID                           0x00DC    //Incremented if a packet is dropped because of a rule violation
-#define NRT_DROPPED_PKT_PASTATID_SIZE                      0x4
-#define NRT_RX_ERROR_PASTATID                              0x00E0    //Incremented if there was a CRC error or Min/Max frame error
-#define NRT_RX_ERROR_PASTATID_SIZE                         0x4
-#define RX_EOF_RTU_DS_INVALID_PASTATID                     0x00E4    //RTU diagnostic counter increments when RTU detects Data Status invalid condition
-#define RX_EOF_RTU_DS_INVALID_PASTATID_SIZE                0x4
-#define RX_B1_NRT_ENTRY_PASTATID                           0x00E8    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] PRU diagnostic counter which increments when NRT path of RX_B1 handling is invoked
-#define RX_B1_NRT_ENTRY_PASTATID_SIZE                      0x4
-#define RX_Bn_NRT_ENTRY_PASTATID                           0x00EC    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] PRU diagnostic counter which increments when NRT path of RX_Bn handling is invoked
-#define RX_Bn_NRT_ENTRY_PASTATID_SIZE                      0x4
-#define RX_EOF_NRT_ENTRY_PASTATID                          0x00F0    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] PRU diagnostic counter which increments when NRT path of RX_EOF handling is invoked
-#define RX_EOF_NRT_ENTRY_PASTATID_SIZE                     0x4
-#define NRT_TX_DROPPED_PACKET_PASTATID                     0x00F4    //Counter for packets dropped via NRT TX path
-#define NRT_TX_DROPPED_PACKET_PASTATID_SIZE                0x4
-#define NRT_TX_TS_DROPPED_PACKET_PASTATID                  0x00F8    //Counter for packets with TS flag dropped via NRT TX path
-#define NRT_TX_TS_DROPPED_PACKET_PASTATID_SIZE             0x4
-#define NRT_INF_PORT_DISABLED_PASTATID                     0x00FC    //PRU diagnostic error counter which increments when RX frame is dropped due to port is disabled
-#define NRT_INF_PORT_DISABLED_PASTATID_SIZE                0x4
-#define NRT_INF_SAV_PASTATID                               0x0100    //PRU diagnostic error counter which increments when RX frame is dropped due to SA violation
-#define NRT_INF_SAV_PASTATID_SIZE                          0x4
-#define NRT_INF_SA_BL_PASTATID                             0x0104    //PRU diagnostic error counter which increments when RX frame is dropped due to SA black listed
-#define NRT_INF_SA_BL_PASTATID_SIZE                        0x4
-#define NRT_INF_PORT_BLOCKED_PASTATID                      0x0108    //PRU diagnostic error counter which increments when RX frame is dropped due to port blocked and not a special frame
-#define NRT_INF_PORT_BLOCKED_PASTATID_SIZE                 0x4
-#define NRT_INF_AFT_DROP_TAGGED_PASTATID                   0x010C    //PRU diagnostic error counter which increments when RX frame is dropped due to tagged
-#define NRT_INF_AFT_DROP_TAGGED_PASTATID_SIZE              0x4
-#define NRT_INF_AFT_DROP_PRIOTAGGED_PASTATID               0x0110    //PRU diagnostic error counter which increments when RX frame is dropped due to priority tagged
-#define NRT_INF_AFT_DROP_PRIOTAGGED_PASTATID_SIZE          0x4
-#define NRT_INF_AFT_DROP_NOTAG_PASTATID                    0x0114    //PRU diagnostic error counter which increments when RX frame is dropped due to untagged
-#define NRT_INF_AFT_DROP_NOTAG_PASTATID_SIZE               0x4
-#define NRT_INF_AFT_DROP_NOTMEMBER_PASTATID                0x0118    //PRU diagnostic error counter which increments when RX frame is dropped due to port not member of VLAN
-#define NRT_INF_AFT_DROP_NOTMEMBER_PASTATID_SIZE           0x4
-#define NRT_FDB_NO_SPACE_TO_LEARN                          0x011C    //PRU diagnostic error counter which increments when an entry couldn't be learned
+#define NRT_DROPPED_PKT_SLICE0_PASTATID                    0x00F8    //Incremented if a packet is dropped at PRU0 because of a rule violation
+#define NRT_DROPPED_PKT_SLICE0_PASTATID_SIZE               0x4
+#define NRT_DROPPED_PKT_SLICE1_PASTATID                    0x00FC    //Incremented if a packet is dropped at PRU1 because of a rule violation
+#define NRT_DROPPED_PKT_SLICE1_PASTATID_SIZE               0x4
+#define NRT_RX_ERROR_SLICE0_PASTATID                       0x0100    //Incremented if there was a CRC error or Min/Max frame error at PRU0
+#define NRT_RX_ERROR_SLICE0_PASTATID_SIZE                  0x4
+#define NRT_RX_ERROR_SLICE1_PASTATID                       0x0104    //Incremented if there was a CRC error or Min/Max frame error at PRU1
+#define NRT_RX_ERROR_SLICE1_PASTATID_SIZE                  0x4
+#define RX_EOF_RTU_DS_INVALID_SLICE0_PASTATID              0x0108    //RTU0 diagnostic counter increments when RTU detects Data Status invalid condition
+#define RX_EOF_RTU_DS_INVALID_SLICE0_PASTATID_SIZE         0x4
+#define RX_EOF_RTU_DS_INVALID_SLICE1_PASTATID              0x010C    //RTU1 diagnostic counter increments when RTU detects Data Status invalid condition
+#define RX_EOF_RTU_DS_INVALID_SLICE1_PASTATID_SIZE         0x4
+#define RX_B1_NRT_ENTRY_SLICE0_PASTATID                    0x0110    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] PRU0 diagnostic counter which increments when NRT path of RX_B1 handling is invoked
+#define RX_B1_NRT_ENTRY_SLICE0_PASTATID_SIZE               0x4
+#define RX_B1_NRT_ENTRY_SLICE1_PASTATID                    0x0114    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] PRU1 diagnostic counter which increments when NRT path of RX_B1 handling is invoked
+#define RX_B1_NRT_ENTRY_SLICE1_PASTATID_SIZE               0x4
+#define RX_Bn_NRT_ENTRY_SLICE0_PASTATID                    0x0118    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] PRU0 diagnostic counter which increments when NRT path of RX_Bn handling is invoked
+#define RX_Bn_NRT_ENTRY_SLICE0_PASTATID_SIZE               0x4
+#define RX_Bn_NRT_ENTRY_SLICE1_PASTATID                    0x011C    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] PRU1 diagnostic counter which increments when NRT path of RX_Bn handling is invoked
+#define RX_Bn_NRT_ENTRY_SLICE1_PASTATID_SIZE               0x4
+#define RX_EOF_NRT_ENTRY_SLICE0_PASTATID                   0x0120    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] PRU0 diagnostic counter which increments when NRT path of RX_EOF handling is invoked
+#define RX_EOF_NRT_ENTRY_SLICE0_PASTATID_SIZE              0x4
+#define RX_EOF_NRT_ENTRY_SLICE1_PASTATID                   0x0124    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] PRU1 diagnostic counter which increments when NRT path of RX_EOF handling is invoked
+#define RX_EOF_NRT_ENTRY_SLICE1_PASTATID_SIZE              0x4
+#define NRT_TX_PORT1_DROPPED_PACKET_PASTATID               0x0128    //Counter for packets dropped via NRT TX Port1
+#define NRT_TX_PORT1_DROPPED_PACKET_PASTATID_SIZE          0x4
+#define NRT_TX_PORT2_DROPPED_PACKET_PASTATID               0x012C    //Counter for packets dropped via NRT TX Port2
+#define NRT_TX_PORT2_DROPPED_PACKET_PASTATID_SIZE          0x4
+#define NRT_TX_PORT1_TS_DROPPED_PACKET_PASTATID            0x0130    //Counter for packets with TS flag dropped via NRT TX Port1
+#define NRT_TX_PORT1_TS_DROPPED_PACKET_PASTATID_SIZE       0x4
+#define NRT_TX_PORT2_TS_DROPPED_PACKET_PASTATID            0x0134    //Counter for packets with TS flag dropped via NRT TX Port2
+#define NRT_TX_PORT2_TS_DROPPED_PACKET_PASTATID_SIZE       0x4
+#define NRT_INF_PORT_DISABLED_SLICE0_PASTATID              0x0138    //PRU0 diagnostic error counter which increments when RX frame is dropped due to port is disabled
+#define NRT_INF_PORT_DISABLED_SLICE0_PASTATID_SIZE         0x4
+#define NRT_INF_PORT_DISABLED_SLICE1_PASTATID              0x013C    //PRU1 diagnostic error counter which increments when RX frame is dropped due to port is disabled
+#define NRT_INF_PORT_DISABLED_SLICE1_PASTATID_SIZE         0x4
+#define NRT_INF_SAV_SLICE0_PASTATID                        0x0140    //PRU0 diagnostic error counter which increments when RX frame is dropped due to SA violation
+#define NRT_INF_SAV_SLICE0_PASTATID_SIZE                   0x4
+#define NRT_INF_SAV_SLICE1_PASTATID                        0x0144    //PRU1 diagnostic error counter which increments when RX frame is dropped due to SA violation
+#define NRT_INF_SAV_SLICE1_PASTATID_SIZE                   0x4
+#define NRT_INF_SA_BL_SLICE0_PASTATID                      0x0148    //PRU0 diagnostic error counter which increments when RX frame is dropped due to SA black listed
+#define NRT_INF_SA_BL_SLICE0_PASTATID_SIZE                 0x4
+#define NRT_INF_SA_BL_SLICE1_PASTATID                      0x014C    //PRU1 diagnostic error counter which increments when RX frame is dropped due to SA black listed
+#define NRT_INF_SA_BL_SLICE1_PASTATID_SIZE                 0x4
+#define NRT_INF_PORT_BLOCKED_SLICE0_PASTATID               0x0150    //PRU0 diagnostic error counter which increments when RX frame is dropped due to port blocked and not a special frame
+#define NRT_INF_PORT_BLOCKED_SLICE0_PASTATID_SIZE          0x4
+#define NRT_INF_PORT_BLOCKED_SLICE1_PASTATID               0x0154    //PRU1 diagnostic error counter which increments when RX frame is dropped due to port blocked and not a special frame
+#define NRT_INF_PORT_BLOCKED_SLICE1_PASTATID_SIZE          0x4
+#define NRT_INF_AFT_DROP_TAGGED_SLICE0_PASTATID            0x0158    //PRU0 diagnostic error counter which increments when RX frame is dropped due to tagged
+#define NRT_INF_AFT_DROP_TAGGED_SLICE0_PASTATID_SIZE       0x4
+#define NRT_INF_AFT_DROP_TAGGED_SLICE1_PASTATID            0x015C    //PRU1 diagnostic error counter which increments when RX frame is dropped due to tagged
+#define NRT_INF_AFT_DROP_TAGGED_SLICE1_PASTATID_SIZE       0x4
+#define NRT_INF_AFT_DROP_PRIOTAGGED_SLICE0_PASTATID        0x0160    //PRU0 diagnostic error counter which increments when RX frame is dropped due to priority tagged
+#define NRT_INF_AFT_DROP_PRIOTAGGED_SLICE0_PASTATID_SIZE   0x4
+#define NRT_INF_AFT_DROP_PRIOTAGGED_SLICE1_PASTATID        0x0164    //PRU1 diagnostic error counter which increments when RX frame is dropped due to priority tagged
+#define NRT_INF_AFT_DROP_PRIOTAGGED_SLICE1_PASTATID_SIZE   0x4
+#define NRT_INF_AFT_DROP_NOTAG_SLICE0_PASTATID             0x0168    //PRU0 diagnostic error counter which increments when RX frame is dropped due to untagged
+#define NRT_INF_AFT_DROP_NOTAG_SLICE0_PASTATID_SIZE        0x4
+#define NRT_INF_AFT_DROP_NOTAG_SLICE1_PASTATID             0x016C    //PRU1 diagnostic error counter which increments when RX frame is dropped due to untagged
+#define NRT_INF_AFT_DROP_NOTAG_SLICE1_PASTATID_SIZE        0x4
+#define NRT_INF_AFT_DROP_NOTMEMBER_SLICE0_PASTATID         0x0170    //PRU0 diagnostic error counter which increments when RX frame is dropped due to port not member of VLAN
+#define NRT_INF_AFT_DROP_NOTMEMBER_SLICE0_PASTATID_SIZE    0x4
+#define NRT_INF_AFT_DROP_NOTMEMBER_SLICE1_PASTATID         0x0174    //PRU1 diagnostic error counter which increments when RX frame is dropped due to port not member of VLAN
+#define NRT_INF_AFT_DROP_NOTMEMBER_SLICE1_PASTATID_SIZE    0x4
+#define NRT_FDB_NO_SPACE_TO_LEARN                          0x0178    //PRU diagnostic error counter which increments when an entry couldn't be learned
 #define NRT_FDB_NO_SPACE_TO_LEARN_SIZE                     0x4
-#define NRT_FDB_LAST_ENTRY_OVERWRITTEN_FOR_LEARNING        0x0120    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] PRU diagnostic error counter which increments when the fourth entry is overwritten to accomodate leart MAC
+#define NRT_FDB_LAST_ENTRY_OVERWRITTEN_FOR_LEARNING        0x017C    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] PRU diagnostic error counter which increments when the fourth entry is overwritten to accomodate leart MAC
 #define NRT_FDB_LAST_ENTRY_OVERWRITTEN_FOR_LEARNING_SIZE   0x4
-#define NRT_PREEMPT_BAD_FRAG_PASTATID                      0x0124    //Bad fragment Error Counter
-#define NRT_PREEMPT_BAD_FRAG_PASTATID_SIZE                 0x4
-#define NRT_PREEMPT_ASSEMBLY_ERROR_PASTATID                0x0128    //Fragment assembly Error Counter
-#define NRT_PREEMPT_ASSEMBLY_ERROR_PASTATID_SIZE           0x4
-#define NRT_PREEMPT_FRAG_COUNT_TX_PASTATID                 0x012C    //Fragment count in TX
-#define NRT_PREEMPT_FRAG_COUNT_TX_PASTATID_SIZE            0x4
-#define NRT_PREEMPT_ASSEMBLY_OK_PASTATID                   0x0130    //Assembly Completed
-#define NRT_PREEMPT_ASSEMBLY_OK_PASTATID_SIZE              0x4
-#define NRT_PREEMPT_FRAG_COUNT_RX_PASTATID                 0x0134    //Fragments received
-#define NRT_PREEMPT_FRAG_COUNT_RX_PASTATID_SIZE            0x4
-#define NRT_PREEMPT_DEBUG_GLOBAL_ERROR                     0x0138    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] Global Debug Error Counter
-#define NRT_PREEMPT_DEBUG_GLOBAL_ERROR_SIZE                0x4
-#define NRT_PREEMPT_DEBUG_SMDCx_PASTATID                   0x013C    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] Debug counter SMDCx
-#define NRT_PREEMPT_DEBUG_SMDCx_PASTATID_SIZE              0x4
-#define NRT_PREEMPT_DEBUG_SMDSx_PASTATID                   0x0140    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] Debug counter SMDSx
-#define NRT_PREEMPT_DEBUG_SMDSx_PASTATID_SIZE              0x4
-#define NRT_PREEMPT_DEBUG_EOF_MPKT_FRAG0_ERROR_PASTATID    0x0144    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] Debug counter - Error in SMDSx
-#define NRT_PREEMPT_DEBUG_EOF_MPKT_FRAG0_ERROR_PASTATID_SIZE 0x4
-#define NRT_PREEMPT_DEBUG_EOF_MPKT_FRAGX_ERROR_PASTATID    0x0148    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] Debug counter - Error in SMDCx
-#define NRT_PREEMPT_DEBUG_EOF_MPKT_FRAGX_ERROR_PASTATID_SIZE 0x4
-#define NRT_RECYCLE_TXPRU_COUNTER_SLICE0_PASTATID          0x014C    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] Debug counter - TXPRU recycle counter Slice0
+#define NRT_PREEMPT_BAD_FRAG_SLICE0_PASTATID               0x0180    //PRU0 Bad fragment Error Counter
+#define NRT_PREEMPT_BAD_FRAG_SLICE0_PASTATID_SIZE          0x4
+#define NRT_PREEMPT_BAD_FRAG_SLICE1_PASTATID               0x0184    //PRU1 Bad fragment Error Counter
+#define NRT_PREEMPT_BAD_FRAG_SLICE1_PASTATID_SIZE          0x4
+#define NRT_PREEMPT_ASSEMBLY_ERROR_SLICE0_PASTATID         0x0188    //PRU0 Fragment assembly Error Counter
+#define NRT_PREEMPT_ASSEMBLY_ERROR_SLICE0_PASTATID_SIZE    0x4
+#define NRT_PREEMPT_ASSEMBLY_ERROR_SLICE1_PASTATID         0x018C    //PRU1 Fragment assembly Error Counter
+#define NRT_PREEMPT_ASSEMBLY_ERROR_SLICE1_PASTATID_SIZE    0x4
+#define NRT_PREEMPT_FRAG_COUNT_TX_SLICE0_PASTATID          0x0190    //PRU0 Fragment count in TX
+#define NRT_PREEMPT_FRAG_COUNT_TX_SLICE0_PASTATID_SIZE     0x4
+#define NRT_PREEMPT_FRAG_COUNT_TX_SLICE1_PASTATID          0x0194    //PRU1 Fragment count in TX
+#define NRT_PREEMPT_FRAG_COUNT_TX_SLICE1_PASTATID_SIZE     0x4
+#define NRT_PREEMPT_ASSEMBLY_OK_SLICE0_PASTATID            0x0198    //PRU0 Assembly Completed
+#define NRT_PREEMPT_ASSEMBLY_OK_SLICE0_PASTATID_SIZE       0x4
+#define NRT_PREEMPT_ASSEMBLY_OK_SLICE1_PASTATID            0x019C    //PRU1 Assembly Completed
+#define NRT_PREEMPT_ASSEMBLY_OK_SLICE1_PASTATID_SIZE       0x4
+#define NRT_PREEMPT_FRAG_COUNT_RX_SLICE0_PASTATID          0x01A0    //PRU0 Fragments received
+#define NRT_PREEMPT_FRAG_COUNT_RX_SLICE0_PASTATID_SIZE     0x4
+#define NRT_PREEMPT_FRAG_COUNT_RX_SLICE1_PASTATID          0x01A4    //PRU1 Fragments received
+#define NRT_PREEMPT_FRAG_COUNT_RX_SLICE1_PASTATID_SIZE     0x4
+#define NRT_PREEMPT_DEBUG_GLOBAL_ERROR_SLICE0_PASTATID     0x01A8    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] PRU0 Global Debug Error Counter
+#define NRT_PREEMPT_DEBUG_GLOBAL_ERROR_SLICE0_PASTATID_SIZE 0x4
+#define NRT_PREEMPT_DEBUG_GLOBAL_ERROR_SLICE1_PASTATID     0x01AC    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] PRU1 Global Debug Error Counter
+#define NRT_PREEMPT_DEBUG_GLOBAL_ERROR_SLICE1_PASTATID_SIZE 0x4
+#define NRT_PREEMPT_DEBUG_SMDCx_SLICE0_PASTATID            0x01B0    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] PRU0 Debug counter SMDCx
+#define NRT_PREEMPT_DEBUG_SMDCx_SLICE0_PASTATID_SIZE       0x4
+#define NRT_PREEMPT_DEBUG_SMDCx_SLICE1_PASTATID            0x01B4    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] PRU1 Debug counter SMDCx
+#define NRT_PREEMPT_DEBUG_SMDCx_SLICE1_PASTATID_SIZE       0x4
+#define NRT_PREEMPT_DEBUG_SMDSx_SLICE0_PASTATID            0x01B8    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] PRU0 Debug counter SMDSx
+#define NRT_PREEMPT_DEBUG_SMDSx_SLICE0_PASTATID_SIZE       0x4
+#define NRT_PREEMPT_DEBUG_SMDSx_SLICE1_PASTATID            0x01BC    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] PRU1 Debug counter SMDSx
+#define NRT_PREEMPT_DEBUG_SMDSx_SLICE1_PASTATID_SIZE       0x4
+#define NRT_PREEMPT_DEBUG_EOF_MPKT_FRAG0_ERROR_SLICE0_PASTATID 0x01C0    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] PRU0 Debug counter - Error in SMDSx
+#define NRT_PREEMPT_DEBUG_EOF_MPKT_FRAG0_ERROR_SLICE0_PASTATID_SIZE 0x4
+#define NRT_PREEMPT_DEBUG_EOF_MPKT_FRAG0_ERROR_SLICE1_PASTATID 0x01C4    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] PRU1 Debug counter - Error in SMDSx
+#define NRT_PREEMPT_DEBUG_EOF_MPKT_FRAG0_ERROR_SLICE1_PASTATID_SIZE 0x4
+#define NRT_PREEMPT_DEBUG_EOF_MPKT_FRAGX_ERROR_SLICE0_PASTATID 0x01C8    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] PRU0 Debug counter - Error in SMDCx
+#define NRT_PREEMPT_DEBUG_EOF_MPKT_FRAGX_ERROR_SLICE0_PASTATID_SIZE 0x4
+#define NRT_PREEMPT_DEBUG_EOF_MPKT_FRAGX_ERROR_SLICE1_PASTATID 0x01CC    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] PRU1 Debug counter - Error in SMDCx
+#define NRT_PREEMPT_DEBUG_EOF_MPKT_FRAGX_ERROR_SLICE1_PASTATID_SIZE 0x4
+#define NRT_RECYCLE_TXPRU_COUNTER_SLICE0_PASTATID          0x01D0    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] Debug counter - TXPRU recycle counter Slice0
 #define NRT_RECYCLE_TXPRU_COUNTER_SLICE0_PASTATID_SIZE     0x4
-#define NRT_RECYCLE_TXPRU_COUNTER_SLICE1_PASTATID          0x0150    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] Debug counter - TXPRU recycle counter Slice1
+#define NRT_RECYCLE_TXPRU_COUNTER_SLICE1_PASTATID          0x01D4    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] Debug counter - TXPRU recycle counter Slice1
 #define NRT_RECYCLE_TXPRU_COUNTER_SLICE1_PASTATID_SIZE     0x4
-#define NRT_RECYCLE_RXERR_RTU_COUNTER_SLICE0_PASTATID      0x0154    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] Debug counter - RTU recycle on RXERR counter Slice0
+#define NRT_RECYCLE_RXERR_RTU_COUNTER_SLICE0_PASTATID      0x01D8    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] Debug counter - RTU recycle on RXERR counter Slice0
 #define NRT_RECYCLE_RXERR_RTU_COUNTER_SLICE0_PASTATID_SIZE 0x4
-#define NRT_RECYCLE_RXERR_RTU_COUNTER_SLICE1_PASTATID      0x0158    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] Debug counter - RTU recycle on RXERR counter Slice1
+#define NRT_RECYCLE_RXERR_RTU_COUNTER_SLICE1_PASTATID      0x01DC    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] Debug counter - RTU recycle on RXERR counter Slice1
 #define NRT_RECYCLE_RXERR_RTU_COUNTER_SLICE1_PASTATID_SIZE 0x4
-#define NRT_RECYCLE_BG_RTU_COUNTER_SLICE0_PASTATID         0x015C    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] Debug counter - RTU recycle from BG task counter Slice0
+#define NRT_RECYCLE_BG_RTU_COUNTER_SLICE0_PASTATID         0x01E0    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] Debug counter - RTU recycle from BG task counter Slice0
 #define NRT_RECYCLE_BG_RTU_COUNTER_SLICE0_PASTATID_SIZE    0x4
-#define NRT_RECYCLE_BG_RTU_COUNTER_SLICE1_PASTATID         0x0160    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] Debug counter - RTU recycle from BG task counter Slice1
+#define NRT_RECYCLE_BG_RTU_COUNTER_SLICE1_PASTATID         0x01E4    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] Debug counter - RTU recycle from BG task counter Slice1
 #define NRT_RECYCLE_BG_RTU_COUNTER_SLICE1_PASTATID_SIZE    0x4
-#define RX_EOF_SHORT_FRAMEERR_PASTATID                     0x0164    //PRU diagnostic error counter which increments if EOF task is scheduled without seeing RX_B1
-#define RX_EOF_SHORT_FRAMEERR_PASTATID_SIZE                0x4
-#define RX_B1_ENTRY_PASTATID                               0x0168    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] PRU diagnostic counter which increments when RX_B1 handling is invoked
-#define RX_B1_ENTRY_PASTATID_SIZE                          0x4
-#define RX_Bn_ENTRY_PASTATID                               0x016C    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] PRU diagnostic counter which increments when RX_Bn handling is invoked
-#define RX_Bn_ENTRY_PASTATID_SIZE                          0x4
-#define RX_EOF_ENTRY_PASTATID                              0x0170    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] PRU diagnostic counter which increments when RX_EOF handling is invoked
-#define RX_EOF_ENTRY_PASTATID_SIZE                         0x4
-#define PA_STAT_END_OFFSET                                 0x0174
+#define RX_EOF_SHORT_FRAMEERR_SLICE0_PASTATID              0x01E8    //PRU0 diagnostic error counter which increments if EOF task is scheduled without seeing RX_B1
+#define RX_EOF_SHORT_FRAMEERR_SLICE0_PASTATID_SIZE         0x4
+#define RX_EOF_SHORT_FRAMEERR_SLICE1_PASTATID              0x01EC    //PRU1 diagnostic error counter which increments if EOF task is scheduled without seeing RX_B1
+#define RX_EOF_SHORT_FRAMEERR_SLICE1_PASTATID_SIZE         0x4
+#define RX_B1_ENTRY_SLICE0_PASTATID                        0x01F0    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] PRU0 diagnostic counter which increments when RX_B1 handling is invoked
+#define RX_B1_ENTRY_SLICE0_PASTATID_SIZE                   0x4
+#define RX_B1_ENTRY_SLICE1_PASTATID                        0x01F4    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] PRU1 diagnostic counter which increments when RX_B1 handling is invoked
+#define RX_B1_ENTRY_SLICE1_PASTATID_SIZE                   0x4
+#define RX_Bn_ENTRY_SLICE0_PASTATID                        0x01F8    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] PRU0 diagnostic counter which increments when RX_Bn handling is invoked
+#define RX_Bn_ENTRY_SLICE0_PASTATID_SIZE                   0x4
+#define RX_Bn_ENTRY_SLICE1_PASTATID                        0x01FC    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] PRU1 diagnostic counter which increments when RX_Bn handling is invoked
+#define RX_Bn_ENTRY_SLICE1_PASTATID_SIZE                   0x4
+#define RX_EOF_ENTRY_SLICE0_PASTATID                       0x0200    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] PRU0 diagnostic counter which increments when RX_EOF handling is invoked
+#define RX_EOF_ENTRY_SLICE0_PASTATID_SIZE                  0x4
+#define RX_EOF_ENTRY_SLICE1_PASTATID                       0x0204    //[DEBUG_L2_DIAGNOSTICS |  not in release binary] PRU1 diagnostic counter which increments when RX_EOF handling is invoked
+#define RX_EOF_ENTRY_SLICE1_PASTATID_SIZE                  0x4
+#define PA_STAT_END_OFFSET                                 0x0208
 
-// total PA_STAT memory usage : 0.36328125 KB from total of 2.0KB 
+// total PA_STAT memory usage : 0.5078125 KB from total of 2.0KB 
 
 
 #endif // ____switch_mem_map_h
