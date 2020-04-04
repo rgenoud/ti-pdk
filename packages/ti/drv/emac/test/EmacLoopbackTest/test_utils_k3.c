@@ -2126,9 +2126,8 @@ int32_t  app_test_task_init_pruicss(uint32_t portNum)
     //SMEM
     //#define PSI_L_REGULAR_FLOW_ID_BASE_OFFSET
     //#define PSI_L_MGMT_FLOW_ID_OFFSET
-    i = (portNum & 1) ? 4 : 0 ;
     //10 flows per slice
-    HWREG (icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE + PSI_L_REGULAR_FLOW_ID_BASE_SLICE0_OFFSET + i) = ((emac_mcb.port_cb[0].rxMgmtCh.flowHandle->flowStart+portNum*10) << 16) |
+    HWREG (icssgBaseAddr + CSL_ICSS_G_DRAM0_SLV_RAM_REGS_BASE + PSI_L_REGULAR_FLOW_ID_BASE_OFFSET + 0x2000*portNum) = ((emac_mcb.port_cb[0].rxMgmtCh.flowHandle->flowStart+portNum*10) << 16) |
             (emac_mcb.port_cb[0].rxPktCh.flowHandle->flowStart+portNum*10);
 
     //#define SPL_PKT_DEFAULT_PRIORITY 
@@ -2137,8 +2136,8 @@ int32_t  app_test_task_init_pruicss(uint32_t portNum)
     //#define P2_PORT_DF_VLAN_OFFSET
     //#define P1_QUEUE_NUM_UNTAGGED
     //#define P2_QUEUE_NUM_UNTAGGED
-    HWREG (icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE + SPL_PKT_DEFAULT_PRIORITY) = 0;
-    HWREG (icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE + P1_QUEUE_NUM_UNTAGGED) = 0x404;
+    HWREGB (icssgBaseAddr + CSL_ICSS_G_DRAM0_SLV_RAM_REGS_BASE + SPL_PKT_DEFAULT_PRIORITY + 0x2000*portNum) = 0;
+    HWREGB (icssgBaseAddr + CSL_ICSS_G_DRAM0_SLV_RAM_REGS_BASE + QUEUE_NUM_UNTAGGED + 0x2000*portNum) = 0x4;
 
     //DMEM0
     //#define PORT_Q_PRIORITY_REGEN_OFFSET
@@ -2297,7 +2296,7 @@ int32_t  app_test_task_init_pruicss(uint32_t portNum)
         HWREG (icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE + HOST_RX_Q_PRE_CONTEXT_SLICE0_OFFSET) = 0x701B7800;
         HWREG (icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE + HOST_RX_Q_PRE_CONTEXT_SLICE0_OFFSET + 4) = 0x701B7800;
         HWREG (icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE + HOST_RX_Q_PRE_CONTEXT_SLICE0_OFFSET + 8) = 0x701B7800;
-        HWREG (icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE + HOST_RX_Q_PRE_CONTEXT_SLICE0_OFFSET + 12) = 0x701B9800;
+        HWREG (icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE + HOST_RX_Q_PRE_CONTEXT_SLICE0_OFFSET + 12) = 0x701BB800;
     }
     if ((portNum & 1))
     {
@@ -2405,10 +2404,10 @@ int32_t  app_test_task_init_pruicss(uint32_t portNum)
                 BUFFER_POOL_0_ADDR_SLICE1_OFFSET + i*8), &bufPoolCfg, 8);
             bufPoolCfg.poolBase += bufPoolCfg.poolLen;
         }
-        HWREG (icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE + HOST_RX_Q_PRE_CONTEXT_SLICE1_OFFSET) = 0x701BB800;
-        HWREG (icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE + HOST_RX_Q_PRE_CONTEXT_SLICE1_OFFSET + 4) = 0x701BB800;
-        HWREG (icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE + HOST_RX_Q_PRE_CONTEXT_SLICE1_OFFSET + 8) = 0x701BB800;
-        HWREG (icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE + HOST_RX_Q_PRE_CONTEXT_SLICE1_OFFSET + 12) = 0x701BD800;
+        HWREG (icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE + HOST_RX_Q_PRE_CONTEXT_SLICE1_OFFSET) = 0x701BD800;
+        HWREG (icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE + HOST_RX_Q_PRE_CONTEXT_SLICE1_OFFSET + 4) = 0x701BD800;
+        HWREG (icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE + HOST_RX_Q_PRE_CONTEXT_SLICE1_OFFSET + 8) = 0x701BD800;
+        HWREG (icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE + HOST_RX_Q_PRE_CONTEXT_SLICE1_OFFSET + 12) = 0x701C2800;
     }
 
 #endif //TSN_MAC

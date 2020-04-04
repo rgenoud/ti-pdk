@@ -3266,8 +3266,11 @@ void emac_icssg_update_rgmii_cfg_100MB(uint32_t port_num, uintptr_t icssgRgmiiCf
         emac_icssg_update_rgmii_cfg_100fd(port_num, icssgRgmiiCfgBaseAddr);
     }
 }
-
+#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
 #define EMAC_ICSSG_CONFIG_TX_IPG_960_NS ((uint32_t)(0x166)) /* configure 960 nano-second TX IPG */
+#else
+#define EMAC_ICSSG_CONFIG_TX_IPG_960_NS ((uint32_t)(0x17)) /* configure 960 nano-second TX IPG */
+#endif
 /*
  *  ======== emac_icssg_update_link_speed_100MB ========
  */

@@ -107,8 +107,8 @@ EMAC_ICSSG_SWITCH_FW_CFG emac_switch_cfg = {
     NUMBER_OF_FDB_BUCKET_ENTRIES, // Number of entries in FDB bucket
     SIZE_OF_FDB, // FDB size
     PORT_Q_PRIORITY_MAPPING_OFFSET, //Port Priority Mapping offset
-    P1_QUEUE_NUM_UNTAGGED, // Untagged packet default Queue num offset Port1
-    P2_QUEUE_NUM_UNTAGGED  // Untagged packet default Queue num offset Port1
+    QUEUE_NUM_UNTAGGED, // Untagged packet default Queue num offset Port1
+    QUEUE_NUM_UNTAGGED  // Untagged packet default Queue num offset Port1
 };
 
 

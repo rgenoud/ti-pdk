@@ -47,82 +47,66 @@
 #define PRE_EMPTION_CONTEXT_OFFSET_SIZE                    0x8
 #define FW_HOST_HANDSHAKE_MAGIC_VAL_OFFSET                 0x0008    //Firmware host handshake
 #define FW_HOST_HANDSHAKE_MAGIC_VAL_OFFSET_SIZE            0x4
-#define PSI_L_REGULAR_FLOW_ID_BASE_SLICE0_OFFSET           0x000C    //Base Flow ID for sending packets to Host for Slice0
-#define PSI_L_REGULAR_FLOW_ID_BASE_SLICE0_OFFSET_SIZE      0x2
-#define EMAC_ICSSG_SWITCH_PSI_L_REGULAR_FLOW_ID_BASE_OFFSET PSI_L_REGULAR_FLOW_ID_BASE_SLICE0_OFFSET    //Same as PSI_L_REGULAR_FLOW_ID_BASE_SLICE0_OFFSET
-#define PSI_L_MGMT_FLOW_ID_SLICE0_OFFSET                   0x000E    //Base Flow ID for sending mgmt and Tx TS to Host for Slice0
-#define PSI_L_MGMT_FLOW_ID_SLICE0_OFFSET_SIZE              0x2
-#define EMAC_ICSSG_SWITCH_PSI_L_MGMT_FLOW_ID_BASE_OFFSET   PSI_L_MGMT_FLOW_ID_SLICE0_OFFSET    //Same as PSI_L_MGMT_FLOW_ID_SLICE0_OFFSET
-#define PSI_L_REGULAR_FLOW_ID_BASE_SLICE1_OFFSET           0x0010    //Base Flow ID for sending packets to Host for Slice1
-#define PSI_L_REGULAR_FLOW_ID_BASE_SLICE1_OFFSET_SIZE      0x2
-#define PSI_L_MGMT_FLOW_ID_SLICE1_OFFSET                   0x0012    //Base Flow ID for sending mgmt and Tx TS to Host for Slice1
-#define PSI_L_MGMT_FLOW_ID_SLICE1_OFFSET_SIZE              0x2
-#define SPL_PKT_DEFAULT_PRIORITY                           0x0014    //Queue number for Special packets written here. Only 1B is used
-#define SPL_PKT_DEFAULT_PRIORITY_SIZE                      0x4
-#define FDB_SA_MAC_ADDRESS                                 0x0018    //Used internally by FW for learning
+#define FDB_SA_MAC_ADDRESS                                 0x000C    //Used internally by FW for learning
 #define FDB_SA_MAC_ADDRESS_SIZE                            0x8
-#define FDB_FID_FIDC2_OFFSET                               0x0020    //Used internally by FW for learning
+#define FDB_FID_FIDC2_OFFSET                               0x0014    //Used internally by FW for learning
 #define FDB_FID_FIDC2_OFFSET_SIZE                          0x4
-#define FDB_BUCKET_OFFSET                                  0x0024    //Used internally by FW for learning
+#define FDB_BUCKET_OFFSET                                  0x0018    //Used internally by FW for learning
 #define FDB_BUCKET_OFFSET_SIZE                             0x4
-#define FDB_AGEING_LAST_USED_OFFSET                        0x0028    //Used internally by FW for learning
+#define FDB_AGEING_LAST_USED_OFFSET                        0x001C    //Used internally by FW for learning
 #define FDB_AGEING_LAST_USED_OFFSET_SIZE                   0x4
-#define TX_TS_COOKIE0_OFFSET                               0x002C    //Used internally by FW to store Tx timestamp slice0
+#define TX_TS_COOKIE0_OFFSET                               0x0020    //Used internally by FW to store Tx timestamp slice0
 #define TX_TS_COOKIE0_OFFSET_SIZE                          0x4
-#define TX_TS_SPARE0_OFFSET                                0x0030    //not used
+#define TX_TS_SPARE0_OFFSET                                0x0024    //not used
 #define TX_TS_SPARE0_OFFSET_SIZE                           0x4
-#define TX_TS_COOKIE1_OFFSET                               0x0034    //Used internally by FW to stash cookie slice1
+#define TX_TS_COOKIE1_OFFSET                               0x0028    //Used internally by FW to stash cookie slice1
 #define TX_TS_COOKIE1_OFFSET_SIZE                          0x4
-#define HOST_PORT_DF_VLAN_OFFSET                           0x0038    //default VLAN tag for Host Port
+#define HOST_PORT_DF_VLAN_OFFSET                           0x002C    //default VLAN tag for Host Port
 #define HOST_PORT_DF_VLAN_OFFSET_SIZE                      0x4
 #define EMAC_ICSSG_SWITCH_PORT0_DEFAULT_VLAN_OFFSET        HOST_PORT_DF_VLAN_OFFSET    //Same as HOST_PORT_DF_VLAN_OFFSET
-#define P1_PORT_DF_VLAN_OFFSET                             0x003C    //default VLAN tag for P1 Port
+#define P1_PORT_DF_VLAN_OFFSET                             0x0030    //default VLAN tag for P1 Port
 #define P1_PORT_DF_VLAN_OFFSET_SIZE                        0x4
 #define EMAC_ICSSG_SWITCH_PORT1_DEFAULT_VLAN_OFFSET        P1_PORT_DF_VLAN_OFFSET    //Same as P1_PORT_DF_VLAN_OFFSET
-#define P2_PORT_DF_VLAN_OFFSET                             0x0040    //default VLAN tag for P2 Port
+#define P2_PORT_DF_VLAN_OFFSET                             0x0034    //default VLAN tag for P2 Port
 #define P2_PORT_DF_VLAN_OFFSET_SIZE                        0x4
 #define EMAC_ICSSG_SWITCH_PORT2_DEFAULT_VLAN_OFFSET        P2_PORT_DF_VLAN_OFFSET    //Same as P2_PORT_DF_VLAN_OFFSET
-#define RX_TS_STASHED_SLICE0                               0x0044    //Used internally by FW for stashed Rx timestamp
+#define RX_TS_STASHED_SLICE0                               0x0038    //Used internally by FW for stashed Rx timestamp
 #define RX_TS_STASHED_SLICE0_SIZE                          0x8
-#define RX_TS_STASHED_SLICE1                               0x004C    //Used internally by FW for stashed Rx timestamp
+#define RX_TS_STASHED_SLICE1                               0x0040    //Used internally by FW for stashed Rx timestamp
 #define RX_TS_STASHED_SLICE1_SIZE                          0x8
-#define MGR_CMD_SLICE0_OFFSET                              0x0054    //Management command from Host to RTU0
+#define MGR_CMD_SLICE0_OFFSET                              0x0048    //Management command from Host to RTU0
 #define MGR_CMD_SLICE0_OFFSET_SIZE                         0x20
-#define MGR_CMD_RET_SLICE0                                 0x0074    //Management reply to Host from RTU0
+#define MGR_CMD_RET_SLICE0                                 0x0068    //Management reply to Host from RTU0
 #define MGR_CMD_RET_SLICE0_SIZE                            0xc
-#define MGR_CMD_STATE_SLICE0                               0x0080    //0 - idle; 1 - todo; 2 - executing
+#define MGR_CMD_STATE_SLICE0                               0x0074    //0 - idle; 1 - todo; 2 - executing
 #define MGR_CMD_STATE_SLICE0_SIZE                          0x1
 //Padding of 3 bytes
-#define MGR_CMD_RXPRU_STATUS_SLICE0                        0x0084    //Used internally by FW to communicate from RTU0 to PRU0
+#define MGR_CMD_RXPRU_STATUS_SLICE0                        0x0078    //Used internally by FW to communicate from RTU0 to PRU0
 #define MGR_CMD_RXPRU_STATUS_SLICE0_SIZE                   0x2
-#define MGR_CMD_TXPRU_STATUS_SLICE0                        0x0086    //Used internally by FW to communicate from RTU0 to PRU1
+#define MGR_CMD_TXPRU_STATUS_SLICE0                        0x007A    //Used internally by FW to communicate from RTU0 to PRU1
 #define MGR_CMD_TXPRU_STATUS_SLICE0_SIZE                   0x2
-#define MGR_CMD_RTU_STATUS_SLICE0                          0x0088    //Used internally by FW to communicate from RTU0 to RTU0
+#define MGR_CMD_RTU_STATUS_SLICE0                          0x007C    //Used internally by FW to communicate from RTU0 to RTU0
 #define MGR_CMD_RTU_STATUS_SLICE0_SIZE                     0x2
 //Padding of 2 bytes
-#define MGR_CMD_BUFF_PTR_SLICE0                            0x008C    //Used for storing buffer pointers
+#define MGR_CMD_BUFF_PTR_SLICE0                            0x0080    //Used for storing buffer pointers
 #define MGR_CMD_BUFF_PTR_SLICE0_SIZE                       0x4
-#define MGR_CMD_SLICE1_OFFSET                              0x0090    //Management command from Host to RTU0
+#define MGR_CMD_SLICE1_OFFSET                              0x0084    //Management command from Host to RTU0
 #define MGR_CMD_SLICE1_OFFSET_SIZE                         0x20
-#define MGR_CMD_RET_SLICE1                                 0x00B0    //Management reply to Host from RTU0
+#define MGR_CMD_RET_SLICE1                                 0x00A4    //Management reply to Host from RTU0
 #define MGR_CMD_RET_SLICE1_SIZE                            0xc
-#define MGR_CMD_STATE_SLICE1                               0x00BC    //0 - idle; 1 - todo; 2 - executing
+#define MGR_CMD_STATE_SLICE1                               0x00B0    //0 - idle; 1 - todo; 2 - executing
 #define MGR_CMD_STATE_SLICE1_SIZE                          0x1
 //Padding of 3 bytes
-#define MGR_CMD_RXPRU_STATUS_SLICE1                        0x00C0    //Used internally by FW to communicate from RTU0 to PRU0
+#define MGR_CMD_RXPRU_STATUS_SLICE1                        0x00B4    //Used internally by FW to communicate from RTU0 to PRU0
 #define MGR_CMD_RXPRU_STATUS_SLICE1_SIZE                   0x2
-#define MGR_CMD_TXPRU_STATUS_SLICE1                        0x00C2    //Used internally by FW to communicate from RTU0 to PRU1
+#define MGR_CMD_TXPRU_STATUS_SLICE1                        0x00B6    //Used internally by FW to communicate from RTU0 to PRU1
 #define MGR_CMD_TXPRU_STATUS_SLICE1_SIZE                   0x2
-#define MGR_CMD_RTU_STATUS_SLICE1                          0x00C4    //Used internally by FW to communicate from RTU0 to RTU0
+#define MGR_CMD_RTU_STATUS_SLICE1                          0x00B8    //Used internally by FW to communicate from RTU0 to RTU0
 #define MGR_CMD_RTU_STATUS_SLICE1_SIZE                     0x2
 //Padding of 2 bytes
-#define MGR_CMD_BUFF_PTR_SLICE1                            0x00C8    //Used for storing buffer pointers
+#define MGR_CMD_BUFF_PTR_SLICE1                            0x00BC    //Used for storing buffer pointers
 #define MGR_CMD_BUFF_PTR_SLICE1_SIZE                       0x4
-#define MGR_CMD_END_OFFSET                                 0x00CC    //End of Management command region
-#define P1_QUEUE_NUM_UNTAGGED                              0x00CC    //Port1 Default Queue number for untagged packets
-#define P1_QUEUE_NUM_UNTAGGED_SIZE                         0x1
-#define P2_QUEUE_NUM_UNTAGGED                              0x00CD    //Port2 Default Queue number for untagged packets
-#define P2_QUEUE_NUM_UNTAGGED_SIZE                         0x1
+#define MGR_CMD_END_OFFSET                                 0x00C0    //End of Management command region
 #define BUFFER_POOL_0_ADDR_SLICE0_OFFSET                   0x0100    //HW Buffer Pool0 base address Slice0
 #define BUFFER_POOL_0_ADDR_SLICE0_OFFSET_SIZE              0x4
 #define BUFFER_POOL_0_LEN_SLICE0_OFFSET                    0x0104    //HW Buffer Pool0 length Slice0
@@ -416,16 +400,21 @@
 #define TAS_ADMIN_CYCLE_TIME_SIZE                          0x4
 #define TAS_CONFIG_CHANGE_CYCLE_COUNT                      0x0020    //Cycle counts remaining till the TAS list update
 #define TAS_CONFIG_CHANGE_CYCLE_COUNT_SIZE                 0x4
-#define PORT_Q_PRIORITY_REGEN_SLICE0_OFFSET                0x0024    //Stores the table used for priority regeneration. 1B per PCP/Queue
-#define PORT_Q_PRIORITY_REGEN_SLICE0_OFFSET_SIZE           0x8
-#define PORT_Q_PRIORITY_REGEN_OFFSET                       PORT_Q_PRIORITY_REGEN_SLICE0_OFFSET    //Same as PORT_Q_PRIORITY_REGEN_SLICE0_OFFSET
-#define PORT_Q_PRIORITY_REGEN_SLICE1_OFFSET                0x002C    //Stores the table used for priority regeneration. 1B per PCP/Queue
-#define PORT_Q_PRIORITY_REGEN_SLICE1_OFFSET_SIZE           0x8
-#define RESERVED                                           0x0034    //Reserved for future use
-#define RESERVED_SIZE                                      0x10
-#define EXPRESS_PRE_EMPTIVE_Q_MAP                          0x0044    //For marking packet as priority/express (this feature is disabled) or cut-through/S&F. One per slice
-#define EXPRESS_PRE_EMPTIVE_Q_MAP_SIZE                     0x20
-#define PORT_Q_PRIORITY_MAPPING_OFFSET                     0x0064    //Stores the table used for priority mapping. 1B per PCP/Queue
+#define PSI_L_REGULAR_FLOW_ID_BASE_OFFSET                  0x0024    //Base Flow ID for sending packets to Host for Slice0
+#define PSI_L_REGULAR_FLOW_ID_BASE_OFFSET_SIZE             0x2
+#define EMAC_ICSSG_SWITCH_PSI_L_REGULAR_FLOW_ID_BASE_OFFSET PSI_L_REGULAR_FLOW_ID_BASE_OFFSET    //Same as PSI_L_REGULAR_FLOW_ID_BASE_OFFSET
+#define PSI_L_MGMT_FLOW_ID_OFFSET                          0x0026    //Base Flow ID for sending mgmt and Tx TS to Host for Slice0
+#define PSI_L_MGMT_FLOW_ID_OFFSET_SIZE                     0x2
+#define EMAC_ICSSG_SWITCH_PSI_L_MGMT_FLOW_ID_BASE_OFFSET   PSI_L_MGMT_FLOW_ID_OFFSET    //Same as PSI_L_MGMT_FLOW_ID_OFFSET
+#define SPL_PKT_DEFAULT_PRIORITY                           0x0028    //Queue number for Special packets written here. Only 1B is used
+#define SPL_PKT_DEFAULT_PRIORITY_SIZE                      0x2
+#define QUEUE_NUM_UNTAGGED                                 0x002A    //Port1/Port2 Default Queue number for untagged packets
+#define QUEUE_NUM_UNTAGGED_SIZE                            0x2
+#define PORT_Q_PRIORITY_REGEN_OFFSET                       0x002C    //Stores the table used for priority regeneration. 1B per PCP/Queue
+#define PORT_Q_PRIORITY_REGEN_OFFSET_SIZE                  0x8
+#define EXPRESS_PRE_EMPTIVE_Q_MAP                          0x0034    //For marking packet as priority/express (this feature is disabled) or cut-through/S&F. One per slice
+#define EXPRESS_PRE_EMPTIVE_Q_MAP_SIZE                     0x8
+#define PORT_Q_PRIORITY_MAPPING_OFFSET                     0x003C    //Stores the table used for priority mapping. 1B per PCP/Queue
 #define PORT_Q_PRIORITY_MAPPING_OFFSET_SIZE                0x8
 #define TAS_GATE_MASK_LIST0                                0x0100    //TAS gate mask for windows list0
 #define TAS_GATE_MASK_LIST0_SIZE                           (TAS_NUM_WINDOWS) //0x10
@@ -483,43 +472,57 @@
 #define TAS_ADMIN_CYCLE_TIME_SIZE                          0x4
 #define TAS_CONFIG_CHANGE_CYCLE_COUNT                      0x0020    //Cycle counts remaining till the TAS list update
 #define TAS_CONFIG_CHANGE_CYCLE_COUNT_SIZE                 0x4
-#define NRT_FRAME_PREEMPTION_ENABLE_OFFSET                 0x0024    //Memory used for Global enable and disable Frame Preemption
+#define PSI_L_REGULAR_FLOW_ID_BASE_OFFSET                  0x0024    //Base Flow ID for sending packets to Host for Slice0
+#define PSI_L_REGULAR_FLOW_ID_BASE_OFFSET_SIZE             0x2
+#define PSI_L_MGMT_FLOW_ID_OFFSET                          0x0026    //Base Flow ID for sending mgmt and Tx TS to Host for Slice0
+#define PSI_L_MGMT_FLOW_ID_OFFSET_SIZE                     0x2
+#define SPL_PKT_DEFAULT_PRIORITY                           0x0028    //Queue number for Special packets written here. Only 1B is used
+#define SPL_PKT_DEFAULT_PRIORITY_SIZE                      0x2
+#define QUEUE_NUM_UNTAGGED                                 0x002A    //Port1/Port2 Default Queue number for untagged packets
+#define QUEUE_NUM_UNTAGGED_SIZE                            0x2
+#define PORT_Q_PRIORITY_REGEN_OFFSET                       0x002C    //Stores the table used for priority regeneration. 1B per PCP/Queue
+#define PORT_Q_PRIORITY_REGEN_OFFSET_SIZE                  0x8
+#define EXPRESS_PRE_EMPTIVE_Q_MAP                          0x0034    //For marking packet as priority/express (this feature is disabled) or cut-through/S&F. One per slice
+#define EXPRESS_PRE_EMPTIVE_Q_MAP_SIZE                     0x8
+#define PORT_Q_PRIORITY_MAPPING_OFFSET                     0x003C    //Stores the table used for priority mapping. 1B per PCP/Queue
+#define PORT_Q_PRIORITY_MAPPING_OFFSET_SIZE                0x8
+#define NRT_FRAME_PREEMPTION_ENABLE_OFFSET                 0x0044    //Memory used for Global enable and disable Frame Preemption
 #define NRT_FRAME_PREEMPTION_ENABLE_OFFSET_SIZE            0x4
-#define NRT_STASHED_Q_NUM_OFFSET                           0x0028    //Memory used for Stashing queue number during Host Egress in BG Task
+#define NRT_STASHED_Q_NUM_OFFSET                           0x0048    //Memory used for Stashing queue number during Host Egress in BG Task
 #define NRT_STASHED_Q_NUM_OFFSET_SIZE                      0x4
-#define PSI_TX_PKT_DATA_OFFSET_SLICE0                      0x002C    //Used Internally by FW. 
+#define PSI_TX_PKT_DATA_OFFSET_SLICE0                      0x004C    //Used Internally by FW. 
 #define PSI_TX_PKT_DATA_OFFSET_SLICE0_SIZE                 0x24
-#define PSI_TX_PKT_DATA_OFFSET_SLICE1                      0x0050    //Used Internally by FW. 
+#define PSI_TX_PKT_DATA_OFFSET_SLICE1                      0x0070    //Used Internally by FW. 
 #define PSI_TX_PKT_DATA_OFFSET_SLICE1_SIZE                 0x24
-#define LEARNING_WR_RD_COUNT_OFFSET                        0x0074    //Used Internally by FW to synchronize FDB Learning between RTU0 and PRU0 
+#define LEARNING_WR_RD_COUNT_OFFSET                        0x0094    //Used Internally by FW to synchronize FDB Learning between RTU0 and PRU0 
 #define LEARNING_WR_RD_COUNT_OFFSET_SIZE                   0x4
-#define FDB_G0_M_G1_SLV_OFFSET                             0x0078    //Used Internally by FW to synchronize FDB Learning between two ICSSG's 
+#define FDB_G0_M_G1_SLV_OFFSET                             0x0098    //Used Internally by FW to synchronize FDB Learning between two ICSSG's 
 #define FDB_G0_M_G1_SLV_OFFSET_SIZE                        0x4
-#define FDB_G1_M_G0_SLV_OFFSET                             0x007C    //Used Internally by FW to synchronize FDB Learning between two ICSSG's 
+#define FDB_G1_M_G0_SLV_OFFSET                             0x009C    //Used Internally by FW to synchronize FDB Learning between two ICSSG's 
 #define FDB_G1_M_G0_SLV_OFFSET_SIZE                        0x4
-#define FDB_SYNC_ENTRY                                     0x0080    //Used to store the FDB entry one ICSSG learnt and one that needs to be communicated to other ICSSG 
+#define FDB_SYNC_ENTRY                                     0x00A0    //Used to store the FDB entry one ICSSG learnt and one that needs to be communicated to other ICSSG 
 #define FDB_SYNC_ENTRY_SIZE                                0x10
-#define DEBUG_FDB_COMPARISON_MAC_VLAN                      0x0090    //Used for debugging FDB lookups, write the MAC and VLAN combination that is suspect. Currently disabled
+#define DEBUG_FDB_COMPARISON_MAC_VLAN                      0x00B0    //Used for debugging FDB lookups, write the MAC and VLAN combination that is suspect. Currently disabled
 #define DEBUG_FDB_COMPARISON_MAC_VLAN_SIZE                 0x8
-#define DEBUG_FDB_RESULTS                                  0x0098    //The results of FBD lookup for Local injection are dumped here
+#define DEBUG_FDB_RESULTS                                  0x00B8    //The results of FBD lookup for Local injection are dumped here
 #define DEBUG_FDB_RESULTS_SIZE                             0xc
-#define FDB_AGEING_TIMEOUT_OFFSET                          0x00A4    //Time after which FDB entries are checked for aged out values. Value in nanoseconds
+#define FDB_AGEING_TIMEOUT_OFFSET                          0x00C4    //Time after which FDB entries are checked for aged out values. Value in nanoseconds
 #define FDB_AGEING_TIMEOUT_OFFSET_SIZE                     0x8
-#define VERIFY_FRAME_RECEIVE_OFFSET                        0x00AC    //Used Internally by FW. Memory updated by RX PRU when verify frame is received
+#define VERIFY_FRAME_RECEIVE_OFFSET                        0x00CC    //Used Internally by FW. Memory updated by RX PRU when verify frame is received
 #define VERIFY_FRAME_RECEIVE_OFFSET_SIZE                   0x1
 //Padding of 3 bytes
-#define VERIFY_FRAME_SEND_OFFSET                           0x00B0    //Used Internally by FW. Memory updated by TX PRU to inform the state machine that the verify frame has been sent
+#define VERIFY_FRAME_SEND_OFFSET                           0x00D0    //Used Internally by FW. Memory updated by TX PRU to inform the state machine that the verify frame has been sent
 #define VERIFY_FRAME_SEND_OFFSET_SIZE                      0x1
 //Padding of 3 bytes
-#define RESPOND_FRAME_RECEIVE_OFFSET                       0x00B4    //Used Internally by FW.Memory updated by RX PRU when respond frame is received
+#define RESPOND_FRAME_RECEIVE_OFFSET                       0x00D4    //Used Internally by FW.Memory updated by RX PRU when respond frame is received
 #define RESPOND_FRAME_RECEIVE_OFFSET_SIZE                  0x1
 //Padding of 3 bytes
-#define RESPOND_FRAME_SEND_OFFSET                          0x00B8    //Used Internally by FW.Memory updated by TX PRU to inform the state machine that the respond frame has been sent
+#define RESPOND_FRAME_SEND_OFFSET                          0x00D8    //Used Internally by FW.Memory updated by TX PRU to inform the state machine that the respond frame has been sent
 #define RESPOND_FRAME_SEND_OFFSET_SIZE                     0x1
 //Padding of 3 bytes
-#define PRE_EMPTION_CONTEXT_SLICE0_OFFSET                  0x00BC    //Backup of active Tx and Q context
+#define PRE_EMPTION_CONTEXT_SLICE0_OFFSET                  0x00DC    //Backup of active Tx and Q context
 #define PRE_EMPTION_CONTEXT_SLICE0_OFFSET_SIZE             0x18
-#define PRE_EMPTION_CONTEXT_SLICE1_OFFSET                  0x00D4    //Backup of active Tx and Q context
+#define PRE_EMPTION_CONTEXT_SLICE1_OFFSET                  0x00F4    //Backup of active Tx and Q context
 #define PRE_EMPTION_CONTEXT_SLICE1_OFFSET_SIZE             0x18
 #define TAS_GATE_MASK_LIST0                                0x0100    //TAS gate mask for windows list0
 #define TAS_GATE_MASK_LIST0_SIZE                           (TAS_NUM_WINDOWS) //0x10
@@ -533,9 +536,24 @@
 #define TAS_WINDOW_END_TIME_LIST1_SIZE                     (TAS_NUM_WINDOWS*4) //0x40
 #define TAS_GATE_CLOSE_TIME_LIST1                          0x03A0    //TAS gate close time[window][queue] list1
 #define TAS_GATE_CLOSE_TIME_LIST1_SIZE                     (TAS_NUM_WINDOWS*TAS_NUM_QUEUES*4) //0x200
-#define DMEM1_END_OFFSET                                   0x05A0
+#define PRE_EMPTION_ENABLE_TX                              0x05A0    //Memory to Enable/Disable Preemption on TX side
+#define PRE_EMPTION_ENABLE_TX_SIZE                         0x1
+#define PRE_EMPTION_ACTIVE_TX                              0x05A1    //Active State of Preemption on TX side
+#define PRE_EMPTION_ACTIVE_TX_SIZE                         0x1
+#define PRE_EMPTION_ENABLE_VERIFY                          0x05A2    //Memory to Enable/Disable Verify State Machine Preemption
+#define PRE_EMPTION_ENABLE_VERIFY_SIZE                     0x1
+#define PRE_EMPTION_VERIFY_STATUS                          0x05A3    //Verify Status of State Machine
+#define PRE_EMPTION_VERIFY_STATUS_SIZE                     0x1
+#define PRE_EMPTION_ADD_FRAG_SIZE_REMOTE                   0x05A4    //Non Final Fragment Size supported by Link Partner
+#define PRE_EMPTION_ADD_FRAG_SIZE_REMOTE_SIZE              0x2
+#define PRE_EMPTION_ADD_FRAG_SIZE_LOCAL                    0x05A6    //Non Final Fragment Size supported by Firmware
+#define PRE_EMPTION_ADD_FRAG_SIZE_LOCAL_SIZE               0x1
+//Padding of 1 bytes
+#define PRE_EMPTION_VERIFY_TIME                            0x05A8    //Time in ms the State machine waits for respond packet
+#define PRE_EMPTION_VERIFY_TIME_SIZE                       0x2
+#define DMEM1_END_OFFSET                                   0x05AA
 
-// total DMEM1 memory usage : 1.40625 KB from total of 8.0KB 
+// total DMEM1 memory usage : 1.416015625 KB from total of 8.0KB 
 
 //************************************************************************************
 //

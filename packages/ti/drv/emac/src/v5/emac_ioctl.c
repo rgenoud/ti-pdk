@@ -729,11 +729,11 @@ EMAC_DRV_ERR_E emac_ioctl_vlan_ctrl_set_default_vlan_id(uint32_t port_num, void*
         tempByte1 = CSL_REG8_RD(emac_mcb.port_cb[port_num].icssDram0BaseAddr + prioMapOffset + vlanDefaultEntry->pcp);
         if(port_num == 0)
         {
-            regAddr = emac_mcb.port_cb[port_num].icssSharedRamBaseAddr + pSwitchFwCfg->switchPort1UntaggedQueue;
+            regAddr = emac_mcb.port_cb[port_num].icssDram0BaseAddr + pSwitchFwCfg->switchPort1UntaggedQueue;
         }
         else
         {
-            regAddr = emac_mcb.port_cb[port_num].icssSharedRamBaseAddr + pSwitchFwCfg->switchPort2UntaggedQueue;
+            regAddr = emac_mcb.port_cb[port_num].icssDram1BaseAddr + pSwitchFwCfg->switchPort2UntaggedQueue;
         }
         CSL_REG8_WR (regAddr, tempByte1);
     }
@@ -815,7 +815,7 @@ void emac_ioctl_port_prio_mapping_ctrl(uint32_t port_num, void*  ctrl)
         prioMapOffset = pSwitchFwCfg->prioMappingTableOffset;
 
         pPrioMap = (EMAC_IOCTL_PORT_PRIO_MAP*)ctrl;
-        icssgBaseAddr = emac_mcb.port_cb[port_num].icssDram0BaseAddr;
+        icssgBaseAddr = emac_mcb.port_cb[port_num].icssDram0BaseAddr + 0x2000*port_num;
         for (index = 0; index < EMAC_IOCTL_PRIO_MAX;index++)
         {
             tempVal = (uint8_t)pPrioMap->portPrioMap[index];
@@ -849,7 +849,7 @@ void emac_ioctl_port_prio_mapping_ctrl(uint32_t port_num, void*  ctrl)
         for(pcp = 0U; pcp < EMAC_IOCTL_PRIO_MAX; pcp++)
         {
             /* Get regenerated value for PCP = p*/
-            tempVal = CSL_REG8_RD(icssgBaseAddr + prioRegenMapOffset + (pcp*4U));
+            tempVal = CSL_REG8_RD(icssgBaseAddr + prioRegenMapOffset + pcp);
             /*Shift PCP value by 5 to get the value*/
             tempVal = tempVal >> 5;
 
@@ -1292,7 +1292,7 @@ EMAC_DRV_ERR_E emac_ioctl_prio_regen_mapping_ctrl(uint32_t port_num, void*  ctrl
         pSwitchFwCfg = (EMAC_ICSSG_SWITCH_FW_CFG*) pEmacFwCfg->pFwPortCfg;
         prioRegenMapOffset = pSwitchFwCfg->prioRegenTableOffset;
 
-        icssgBaseAddr = emac_mcb.port_cb[port_num].icssDram0BaseAddr;
+        icssgBaseAddr = emac_mcb.port_cb[port_num].icssDram0BaseAddr + 0x2000*port_num;
         for (index = 0; index < EMAC_IOCTL_PRIO_MAX;index++)
         {
             tempVal = (uint32_t)pPrioRegenMap->prioRegenMap[index];
@@ -1301,7 +1301,7 @@ EMAC_DRV_ERR_E emac_ioctl_prio_regen_mapping_ctrl(uint32_t port_num, void*  ctrl
 #ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
             emac_hw_mem_write(icssgBaseAddr +prioRegenMapOffset + (index*4),(void*)&tempVal,1);
 #else
-            HWREGB(icssgBaseAddr +prioRegenMapOffset + port_num*8 + index) = tempVal;
+            HWREGB(icssgBaseAddr +prioRegenMapOffset + index) = tempVal;
 #endif
         }
         retVal = EMAC_DRV_RESULT_OK;
@@ -1488,11 +1488,12 @@ EMAC_DRV_ERR_E emac_ioctl_configure_cut_through_or_prempt_select_ctrl(uint32_t p
         {
             emac_mcb.port_cb[port_num].getFwCfg(port_num,&pEmacFwCfg);
             pSwitchFwCfg = (EMAC_ICSSG_SWITCH_FW_CFG*) pEmacFwCfg->pFwPortCfg;
-            expressPremptiveQueueAddr = emac_mcb.port_cb[port_num].icssDram0BaseAddr + pSwitchFwCfg->expressPremptiveQueueOffset;
+            expressPremptiveQueueAddr = emac_mcb.port_cb[port_num].icssDram0BaseAddr + 0x2000*port_num
+                                        + pSwitchFwCfg->expressPremptiveQueueOffset;
             for (queue_num = 0U; queue_num < EMAC_IOCTL_PRIO_MAX; queue_num++)
             {
                 temp_byte = (entry->pcpPreemptMap[queue_num] << 4U) | (entry->pcpCutThroughMap[queue_num] << 7U);   /*as per bit order in descriptor flags. Helps save PRU cycles*/
-                CSL_REG8_WR(expressPremptiveQueueAddr+(queue_num*4U), temp_byte);
+                CSL_REG8_WR(expressPremptiveQueueAddr+queue_num, temp_byte);
             }
         }
     }
@@ -1585,42 +1586,50 @@ EMAC_DRV_ERR_E emac_ioctl_frame_premption_ctrl(uint32_t port_num, uint32_t switc
                 }
                 else
                 {
-                    premptionTxEnabledStatusAddr = emac_mcb.port_cb[port_num].icssDram0BaseAddr + pSwitchFwCfg->premptionTxEnabledStatusOffset;
+                    premptionTxEnabledStatusAddr = emac_mcb.port_cb[port_num].icssDram0BaseAddr + 0x2000*port_num
+                                                   + pSwitchFwCfg->premptionTxEnabledStatusOffset;
                     CSL_REG8_WR(premptionTxEnabledStatusAddr, 0x00);
                 }
                 break;
             case EMAC_IOCTL_PREEMPT_GET_TX_ENABLE_STATUS:
-                premptionTxEnabledStatusAddr = emac_mcb.port_cb[port_num].icssDram0BaseAddr + pSwitchFwCfg->premptionTxEnabledStatusOffset;
+                premptionTxEnabledStatusAddr = emac_mcb.port_cb[port_num].icssDram0BaseAddr + 0x2000*port_num
+                                               + pSwitchFwCfg->premptionTxEnabledStatusOffset;
                 entry->premt_tx_enabled_status = CSL_REG8_RD(premptionTxEnabledStatusAddr);
                 retVal = EMAC_DRV_RESULT_OK;
                 break;
             case EMAC_IOCTL_PREEMPT_GET_TX_ACTIVE_STATUS:
-                premptionTxActiveStatusAddr = emac_mcb.port_cb[port_num].icssDram0BaseAddr + pSwitchFwCfg->premptionTxActiveStatusOffset;
+                premptionTxActiveStatusAddr = emac_mcb.port_cb[port_num].icssDram0BaseAddr + 0x2000*port_num
+                                              + pSwitchFwCfg->premptionTxActiveStatusOffset;
                 entry->premt_tx_active_status = CSL_REG8_RD(premptionTxActiveStatusAddr);
                 retVal = EMAC_DRV_RESULT_OK;
                 break;
             case EMAC_IOCTL_PREEMPT_VERIFY_ENABLE:
-                premptionVerifyStateStatusAddr = emac_mcb.port_cb[port_num].icssDram0BaseAddr + pSwitchFwCfg->premptionVerifyStateStatusOffset;
+                premptionVerifyStateStatusAddr = emac_mcb.port_cb[port_num].icssDram0BaseAddr + 0x2000*port_num
+                                                 + pSwitchFwCfg->premptionVerifyStateStatusOffset;
                 CSL_REG8_WR(premptionVerifyStateStatusAddr, 0x01);
                 retVal = EMAC_DRV_RESULT_OK;
                 break;
             case EMAC_IOCTL_PREEMPT_VERIFY_DISABLE:
-                premptionVerifyStateStatusAddr = emac_mcb.port_cb[port_num].icssDram0BaseAddr + pSwitchFwCfg->premptionVerifyStateStatusOffset;
+                premptionVerifyStateStatusAddr = emac_mcb.port_cb[port_num].icssDram0BaseAddr + 0x2000*port_num
+                                                 + pSwitchFwCfg->premptionVerifyStateStatusOffset;
                 CSL_REG8_WR(premptionVerifyStateStatusAddr, 0x00);
                 retVal = EMAC_DRV_RESULT_OK;
                 break;
             case EMAC_IOCTL_PREEMPT_GET_VERIFY_STATE:
-                premptionVerifyStateValueAddr = emac_mcb.port_cb[port_num].icssDram0BaseAddr + pSwitchFwCfg->premptionVerifyStateValueOffset;
+                premptionVerifyStateValueAddr = emac_mcb.port_cb[port_num].icssDram0BaseAddr + 0x2000*port_num
+                                                + pSwitchFwCfg->premptionVerifyStateValueOffset;
                 entry->premt_verify_state = (Preempt_Verify_States)(CSL_REG8_RD(premptionVerifyStateValueAddr));
                 retVal = EMAC_DRV_RESULT_OK;
                 break;
             case EMAC_IOCTL_PREEMPT_GET_MIN_FRAG_SIZE_LOCAL:
-                premptionMinFragSizeAddr = emac_mcb.port_cb[port_num].icssDram0BaseAddr + pSwitchFwCfg->premptionMinFragSizeOffset;
+                premptionMinFragSizeAddr = emac_mcb.port_cb[port_num].icssDram0BaseAddr + 0x2000*port_num
+                                           + pSwitchFwCfg->premptionMinFragSizeOffset;
                 entry->premt_min_fragment_size = CSL_REG8_RD(premptionMinFragSizeAddr);
                 retVal = EMAC_DRV_RESULT_OK;
                 break;
             case  EMAC_IOCTL_PREEMPT_SET_MIN_FRAG_SIZE_REMOTE:
-                premptionMinFragAddAddr = emac_mcb.port_cb[port_num].icssDram0BaseAddr + pSwitchFwCfg->premptionMinFragAddOffset;
+                premptionMinFragAddAddr = emac_mcb.port_cb[port_num].icssDram0BaseAddr + 0x2000*port_num
+                                          + pSwitchFwCfg->premptionMinFragAddOffset;
                 CSL_REG16_WR(premptionMinFragAddAddr, ((entry->add_min_fragment_size)+1)*64);
                 retVal = EMAC_DRV_RESULT_OK;
                 break;
@@ -1655,7 +1664,8 @@ EMAC_DRV_ERR_E emac_ioctl_configure_special_frame_prio_ctrl(uint32_t port_num, u
         {
             emac_mcb.port_cb[port_num].getFwCfg(port_num,&pEmacFwCfg);
             pSwitchFwCfg = (EMAC_ICSSG_SWITCH_FW_CFG*) pEmacFwCfg->pFwPortCfg;
-            splPacketDefaultPrioAddr = emac_mcb.port_cb[port_num].icssSharedRamBaseAddr + pSwitchFwCfg->splPacketDefaultPrioOffset;
+            splPacketDefaultPrioAddr = emac_mcb.port_cb[port_num].icssDram0BaseAddr + 0x2000*port_num
+                                       + pSwitchFwCfg->splPacketDefaultPrioOffset;
             CSL_REG8_WR(splPacketDefaultPrioAddr, entry->specialFramePrio);
         }
     }
