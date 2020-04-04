@@ -888,17 +888,6 @@ emac_setup_udma_channel_rx(uint32_t portNum,EMAC_PER_CHANNEL_CFG_RX* pChCfg, uin
                     emac_mcb.port_cb[portNum].pollTable.rxMgmt[EMAC_RX_RING_TX_TS_RESPONSE].ringPollFxn = emac_poll_tx_ts_resp;
                     emac_mcb.port_cb[portNum].pollTable.rxMgmt[EMAC_RX_RING_MGMT_PSI_RESPONSE].ringPollFxn = emac_poll_mgmt_pkts;
                 }
-#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
-                else
-                {
-                    emac_mcb.port_cb[portNum].rxMgmtCh2.subChan[0].freeRingMem[0] = pChCfg->subChan[0].freeRingMem[0];
-                    emac_mcb.port_cb[portNum].rxMgmtCh2.subChan[0].compRingMem = pChCfg->subChan[0].compRingMem;
-                    emac_mcb.port_cb[portNum].pollTable.rxMgmt[EMAC_RX_RING_TX_TS_RESPONSE].compRingHandle = Udma_chGetCqRingHandle(emac_mcb.port_cb[portNum].rxMgmtCh2.rxChHandle);
-                    emac_mcb.port_cb[portNum].pollTable.rxMgmt[EMAC_RX_RING_TX_TS_RESPONSE].freeRingHandle = Udma_chGetFqRingHandle(emac_mcb.port_cb[portNum].rxMgmtCh2.rxChHandle);
-                    emac_mcb.port_cb[portNum].pollTable.rxMgmt[EMAC_RX_RING_TX_TS_RESPONSE].ringPollFxn = emac_poll_tx_ts_resp;
-                    emac_mcb.port_cb[portNum].pollTable.rxMgmt[EMAC_RX_RING_MGMT_PSI_RESPONSE].ringPollFxn = emac_poll_mgmt_pkts;
-                }
-#endif
             }
         }
     }
@@ -1036,9 +1025,6 @@ emac_setup_rx_subsystem (uint32_t port_num,
     int32_t retVal = EMAC_DRV_RESULT_OK;
     Udma_ChHandle rxChHandle;
     Udma_ChHandle rxMgmtChHandle;
-#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
-    Udma_ChHandle rxMgmt2ChHandle;
-#endif
 
     UTILS_trace(UTIL_TRACE_LEVEL_INFO, emac_mcb.drv_trace_cb, "port: %d: ENTER",port_num);
 
@@ -1069,19 +1055,6 @@ emac_setup_rx_subsystem (uint32_t port_num,
                                  &(hwAttrs->portCfg[port_num].rxChannelCfgOverPSI),
                                  EMAC_RX_MGMT_CHAN,
                                  &emac_mcb.port_cb[port_num].rxMgmtCh);
-#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
-        if((retVal == EMAC_DRV_RESULT_OK) && (hwAttrs->portCfg[port_num].rxChannel2CfgOverPSI.chHandle))
-        {
-            /* Setup UDMA RX channel for rx config responses over PSI for ICSSG only*/
-            rxMgmt2ChHandle = (Udma_ChHandle)(hwAttrs->portCfg[port_num].rxChannel2CfgOverPSI.chHandle);
-            emac_mcb.port_cb[port_num].rxMgmtCh2.nsubChan = hwAttrs->portCfg[port_num].rxChannel2CfgOverPSI.nsubChan;
-            emac_mcb.port_cb[port_num].rxMgmtCh2.rxChHandle= rxMgmt2ChHandle;
-            retVal = emac_setup_udma_channel_rx(port_num,
-                                 &(hwAttrs->portCfg[port_num].rxChannel2CfgOverPSI),
-                                 EMAC_RX_MGMT2_CHAN,
-                                 &emac_mcb.port_cb[port_num].rxMgmtCh2);
-        }
-#endif
     }
     UTILS_trace(UTIL_TRACE_LEVEL_INFO, emac_mcb.drv_trace_cb, "port: %d: EXIT with status: %d",
                                             port_num, retVal);
@@ -1178,15 +1151,6 @@ emac_close_rx_subsystem (uint32_t port_num)
         }
     }
 
-#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
-    /* free up resources for rx mgmt channel2, this has no sub-channels*/
-    if (emac_mcb.port_cb[port_num].rxMgmtCh2.rxChHandle)
-    {
-        Udma_chClose(emac_mcb.port_cb[port_num].rxMgmtCh2.rxChHandle);
-        emac_cleanup_free_ring(port_num, (uint64_t *)(emac_mcb.port_cb[port_num].rxMgmtCh2.subChan[0].freeRingMem[0]));
-    }
-#endif
-
     /* free up resources for rx mgmt channel and sub-channels */
     if (emac_mcb.port_cb[port_num].rxMgmtCh.rxChHandle)
     {
@@ -1256,12 +1220,6 @@ static EMAC_DRV_ERR_E emac_interposer_setup_switch(uint32_t port_num,  EMAC_OPEN
 
     if ((port_num == 3U) || (port_num == 1U))
     {
-#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
-        /* Ports 3 and 1 are not used for DMA transactions with Firmware*/
-        openCfg.num_of_rx_pkt_desc = 0;
-        openCfg.num_of_tx_pkt_desc = 0;
-        hwAttrs->portCfg[port_num].nTxChans = 0;
-#endif
         EMAC_socSetInitCfg(0, hwAttrs);
         retVal = emac_open_v5_local(port_num, EMAC_SWITCH_PORT,&openCfg);
     }
@@ -1385,166 +1343,11 @@ EMAC_TX_QUEUE_CONTEXT host_egress_q_desc_context[EMAC_NUM_HOST_EGRESS_FW_QUEUES]
  */
 static EMAC_DRV_ERR_E emac_config_icssg_switch_fw(uint32_t port_num, EMAC_HwAttrs_V5 *hwAttrs)
 {
-#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
-    uint8_t queue_num;
-    uint32_t smem_offset;
-    uint32_t start_of_host_Q_offset;
-    uint32_t start_of_host_egress_Q_offset;
-    uint32_t sMemBase;
-    uint32_t txPortQBaseAddr;
-    uint32_t smem_offset_start_host_Q_context;
-    uint32_t smem_offset_start_host_egress_Q_context;
-    uint32_t smem_offset_start_port_desc_Q_context;
-    uint32_t smem_offset_start_host_desc_Q_context;
-    uint32_t smem_offset_start_host_egress_desc_Q_context;
-    uint32_t start_of_port_desc_Q_offset;
-    uint32_t start_of_host_desc_Q_offset;
-    uint32_t start_of_host_egress_desc_Q_offset;
-    EMAC_PER_PORT_ICSSG_FW_CFG *pEmacFwCfg;
-    EMAC_ICSSG_SWITCH_FW_CFG *pSwitchFwCfg;
-    Udma_FlowHandle flowHandle;
-    Udma_ChHandle chHandle;
-    uint32_t flowIdBase;
-    uint32_t descQueueSize;
-#endif
     EMAC_DRV_ERR_E retVal = EMAC_DRV_RESULT_OK;
     UTILS_trace(UTIL_TRACE_LEVEL_INFO, emac_mcb.drv_trace_cb, "port: %d: ENTER",port_num);
 
     emac_icssg_switch_eth_setup(port_num);
 
-#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
-    hwAttrs->portCfg[port_num].getFwCfg(port_num,&pEmacFwCfg);
-
-    pSwitchFwCfg = (EMAC_ICSSG_SWITCH_FW_CFG*)pEmacFwCfg->pFwPortCfg;
-    txPortQBaseAddr = pEmacFwCfg->fwAppCfg.txPortQueueLowAddr;
-
-    if((port_num & 1) ==0)
-    {
-        sMemBase = hwAttrs->portCfg[port_num].icssSharedRamBaseAddr;
-        /* write context for all Port queues to SMEM */
-        for(queue_num = 0; queue_num < EMAC_NUM_TRANSMIT_FW_QUEUES; queue_num++)
-        {
-            port_tx_q_msmc_context[queue_num].start_addr = txPortQBaseAddr + 
-                                                        ((pSwitchFwCfg->txPortQueueSize[queue_num]+ pSwitchFwCfg->mtuSize)* queue_num);
-            port_tx_q_msmc_context[queue_num].rd_ptr = port_tx_q_msmc_context[queue_num].start_addr;
-            port_tx_q_msmc_context[queue_num].wr_ptr = port_tx_q_msmc_context[queue_num].start_addr;
-            port_tx_q_msmc_context[queue_num].end_addr = port_tx_q_msmc_context[queue_num].start_addr +
-                                                            pSwitchFwCfg->txPortQueueSize[queue_num] +
-                                                            pSwitchFwCfg->mtuSize;
-            smem_offset = sMemBase + pSwitchFwCfg->queueContextOffset+ EMAC_NRT_QUEUE_CONTEXT_SIZE * queue_num;
-            emac_hw_mem_write (smem_offset, &(port_tx_q_msmc_context[queue_num]), (sizeof(EMAC_TX_QUEUE_CONTEXT)/sizeof(uint32_t)));
-            emac_hw_mem_write (hwAttrs->portCfg[port_num].icssSharedRamBaseAddr + pSwitchFwCfg->startOfPortQueueReadPtrsOffset + 4*queue_num, &(port_tx_q_msmc_context[queue_num].rd_ptr),1);
-        }
-
-        /* write context for all Host port queues to SMEM */
-        smem_offset_start_host_Q_context = smem_offset + EMAC_NRT_QUEUE_CONTEXT_SIZE;
-        start_of_host_Q_offset = port_tx_q_msmc_context[EMAC_NUM_TRANSMIT_FW_QUEUES-1].end_addr;
-        for(queue_num = 0; queue_num < EMAC_NUM_TRANSMIT_FW_QUEUES; queue_num++)
-        {
-            host_tx_q_msmc_context[queue_num].start_addr = start_of_host_Q_offset + ((pSwitchFwCfg->txHostQueueSize[queue_num] + pSwitchFwCfg->mtuSize) * queue_num);
-            host_tx_q_msmc_context[queue_num].rd_ptr = host_tx_q_msmc_context[queue_num].start_addr;
-            host_tx_q_msmc_context[queue_num].wr_ptr = host_tx_q_msmc_context[queue_num].start_addr;
-            host_tx_q_msmc_context[queue_num].end_addr = host_tx_q_msmc_context[queue_num].start_addr + pSwitchFwCfg->txHostQueueSize[queue_num] + pSwitchFwCfg->mtuSize;
-            smem_offset = smem_offset_start_host_Q_context + EMAC_NRT_QUEUE_CONTEXT_SIZE * queue_num;
-            emac_hw_mem_write (smem_offset, &(host_tx_q_msmc_context[queue_num]), (sizeof(EMAC_TX_QUEUE_CONTEXT)/sizeof(uint32_t)));
-            emac_hw_mem_write (hwAttrs->portCfg[port_num].icssSharedRamBaseAddr + (pSwitchFwCfg->startOfPortQueueReadPtrsOffset +EMAC_NUM_TRANSMIT_FW_QUEUES*4)  + 4*queue_num, &(host_tx_q_msmc_context[queue_num].rd_ptr),1);
-        }
-
-        smem_offset_start_host_egress_Q_context = smem_offset + EMAC_NRT_QUEUE_CONTEXT_SIZE;
-        start_of_host_egress_Q_offset = host_tx_q_msmc_context[EMAC_NUM_TRANSMIT_FW_QUEUES-1].end_addr;
-        /* write context for all host host_egress queues */
-        for(queue_num = 0; queue_num < 2; queue_num++)
-        {
-            host_egress_q_msmc_context[queue_num].start_addr = start_of_host_egress_Q_offset + ((pSwitchFwCfg->txPortQueueSize[queue_num] +  pSwitchFwCfg->mtuSize) * queue_num);
-            host_egress_q_msmc_context[queue_num].rd_ptr = host_egress_q_msmc_context[queue_num].start_addr;
-            host_egress_q_msmc_context[queue_num].wr_ptr = host_egress_q_msmc_context[queue_num].start_addr;
-            host_egress_q_msmc_context[queue_num].end_addr = host_egress_q_msmc_context[queue_num].start_addr + pSwitchFwCfg->txPortQueueSize[queue_num] +  pSwitchFwCfg->mtuSize;
-
-            smem_offset = smem_offset_start_host_egress_Q_context + EMAC_NRT_QUEUE_CONTEXT_SIZE * queue_num;
-            emac_hw_mem_write (smem_offset, &(host_egress_q_msmc_context[queue_num]), (sizeof(EMAC_TX_QUEUE_CONTEXT)/sizeof(uint32_t)));
-        }
-
-        /* need size check to make sure memory for port queue is big enough */
-        if ((host_egress_q_msmc_context[1].end_addr - txPortQBaseAddr) > pEmacFwCfg->fwAppCfg.txPortQueueSize)
-        {
-            UTILS_trace(UTIL_TRACE_LEVEL_ERR, emac_mcb.drv_trace_cb, "port: %d: allocated port queue size memory is too small",port_num);
-            retVal = EMAC_DRV_RESULT_TX_PORT_QUEUE_SIZE_ERR;
-        }
-
-        if (retVal == EMAC_DRV_RESULT_OK)
-        {
-            /* write context for all Port descriptor queues to SMEM */
-            smem_offset_start_port_desc_Q_context = smem_offset + EMAC_NRT_QUEUE_CONTEXT_SIZE;
-            start_of_port_desc_Q_offset = pSwitchFwCfg->descQueueOffset;
-            for(queue_num = 0; queue_num < EMAC_NUM_TRANSMIT_FW_QUEUES; queue_num++) 
-            {
-                descQueueSize = pSwitchFwCfg->txPortQueueDescSize;
-                port_tx_q_desc_context[queue_num].start_addr = start_of_port_desc_Q_offset + descQueueSize * queue_num;
-                port_tx_q_desc_context[queue_num].rd_ptr = port_tx_q_desc_context[queue_num].start_addr;
-                port_tx_q_desc_context[queue_num].wr_ptr = port_tx_q_desc_context[queue_num].start_addr;
-                port_tx_q_desc_context[queue_num].end_addr = port_tx_q_desc_context[queue_num].start_addr + descQueueSize;
-                smem_offset = smem_offset_start_port_desc_Q_context +  EMAC_NRT_QUEUE_CONTEXT_SIZE * queue_num;
-                emac_hw_mem_write (smem_offset, &(port_tx_q_desc_context[queue_num]), (sizeof(EMAC_TX_QUEUE_CONTEXT)/sizeof(uint32_t)));
-            }
-    
-            /* write context for all Host descriptor queues to SMEM */
-            smem_offset_start_host_desc_Q_context = smem_offset + EMAC_NRT_QUEUE_CONTEXT_SIZE;
-            start_of_host_desc_Q_offset = port_tx_q_desc_context[EMAC_NUM_TRANSMIT_FW_QUEUES-1].end_addr;
-            for(queue_num = 0; queue_num < EMAC_NUM_TRANSMIT_FW_QUEUES; queue_num++) 
-            {
-                descQueueSize = pSwitchFwCfg->txHostQueueDescSize;
-                host_tx_q_desc_context[queue_num].start_addr = start_of_host_desc_Q_offset + descQueueSize * queue_num;
-                host_tx_q_desc_context[queue_num].rd_ptr = host_tx_q_desc_context[queue_num].start_addr;
-                host_tx_q_desc_context[queue_num].wr_ptr = host_tx_q_desc_context[queue_num].start_addr;
-                host_tx_q_desc_context[queue_num].end_addr = host_tx_q_desc_context[queue_num].start_addr+ descQueueSize ;
-                smem_offset = smem_offset_start_host_desc_Q_context + EMAC_NRT_QUEUE_CONTEXT_SIZE * queue_num; 
-                emac_hw_mem_write (smem_offset, &(host_tx_q_desc_context[queue_num]), (sizeof(EMAC_TX_QUEUE_CONTEXT)/sizeof(uint32_t)));
-            }
-    
-            /* write context for all Host egress descriptor queues to SMEM */
-            smem_offset_start_host_egress_desc_Q_context = smem_offset + EMAC_NRT_QUEUE_CONTEXT_SIZE;
-            start_of_host_egress_desc_Q_offset = host_tx_q_desc_context[EMAC_NUM_TRANSMIT_FW_QUEUES-1].end_addr;
-            for(queue_num = 0; queue_num < EMAC_NUM_HOST_EGRESS_FW_QUEUES; queue_num++) 
-            {
-                descQueueSize = pSwitchFwCfg->txPortQueueDescSize;
-                host_egress_q_desc_context[queue_num].start_addr = start_of_host_egress_desc_Q_offset + descQueueSize * queue_num;
-                host_egress_q_desc_context[queue_num].rd_ptr = host_egress_q_desc_context[queue_num].start_addr;
-                host_egress_q_desc_context[queue_num].wr_ptr = host_egress_q_desc_context[queue_num].start_addr;
-                host_egress_q_desc_context[queue_num].end_addr = host_egress_q_desc_context[queue_num].start_addr+ descQueueSize ;
-                smem_offset = smem_offset_start_host_egress_desc_Q_context + EMAC_NRT_QUEUE_CONTEXT_SIZE * queue_num; 
-                emac_hw_mem_write (smem_offset, &(host_egress_q_desc_context[queue_num]), (sizeof(EMAC_TX_QUEUE_CONTEXT)/sizeof(uint32_t)));
-            }
-
-            /* write pkt flow Id start to SMEM */
-            smem_offset = hwAttrs->portCfg[port_num].icssSharedRamBaseAddr + pSwitchFwCfg->pktFlowIdOffset;
-    
-            /* Flow for rx pkt. 1 subChan use default flow */
-            if (emac_mcb.port_cb[port_num].rxPktCh.nsubChan > 1)
-            {
-                flowIdBase = Udma_flowGetNum(emac_mcb.port_cb[port_num].rxPktCh.flowHandle);
-            }
-            else
-            {
-                chHandle = emac_mcb.port_cb[port_num].rxPktCh.rxChHandle;
-                flowHandle = Udma_chGetDefaultFlowHandle(chHandle);
-                flowIdBase= Udma_flowGetNum( flowHandle);
-            }
-    
-            /* Flow for rx mgmt, 1 subChan use default flow */
-            if (emac_mcb.port_cb[port_num].rxMgmtCh.nsubChan > 1)
-            {
-                flowIdBase |= (Udma_flowGetNum(emac_mcb.port_cb[port_num].rxMgmtCh.flowHandle) << 16);
-            }
-            else
-            {
-                chHandle = emac_mcb.port_cb[port_num].rxMgmtCh.rxChHandle;
-                flowHandle = Udma_chGetDefaultFlowHandle(chHandle);
-                flowIdBase |= Udma_flowGetNum( flowHandle) << 16;
-            }
-            emac_hw_mem_write (smem_offset, &(flowIdBase), 1);
-        }
-    }
-#endif 
     UTILS_trace(UTIL_TRACE_LEVEL_INFO, emac_mcb.drv_trace_cb, "port: %d: EXIT with status: %d",
                                             port_num, retVal);
     return retVal;
@@ -1721,16 +1524,6 @@ static EMAC_DRV_ERR_E  EMAC_open_v5(uint32_t port_num,  EMAC_OPEN_CONFIG_INFO_T 
             if(retVal == EMAC_DRV_RESULT_OK)
             {
                 retVal = emac_interposer_setup_switch(1U, p_config);
-#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
-                if(retVal == EMAC_DRV_RESULT_OK)
-                {
-                    retVal = emac_interposer_setup_switch(2U, p_config);
-                    if(retVal == EMAC_DRV_RESULT_OK)
-                    {
-                        retVal = emac_interposer_setup_switch(3U, p_config);
-                    }
-                }
-#endif
             }
             break;
         default:
@@ -1804,18 +1597,7 @@ static EMAC_DRV_ERR_E  EMAC_close_v5(uint32_t port_num)
             if(retVal == EMAC_DRV_RESULT_OK)
             {
                 retVal = emac_close_v5_local(1U);
-#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
-                if(retVal == EMAC_DRV_RESULT_OK)
-                {
-                    retVal = emac_close_v5_local(2U);
-                    if(retVal == EMAC_DRV_RESULT_OK)
-                    {
-                        retVal = emac_close_v5_local(3U);
-                    }
-                }
-#else
-            //FIXME: Hard coded for ICSSG0
-#endif
+
             }
             break;
         default:
@@ -1921,17 +1703,6 @@ static EMAC_DRV_ERR_E EMAC_get_stats_icssg_v5(uint32_t port_num, EMAC_STATISTICS
                 break;
 
             case EMAC_SWITCH_PORT1:
-#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
-                if ((emac_is_port_open(0,3) == true))
-                {
-                    /* need to query port 0 for RX*/
-                    emac_read_icssg_hw_stats(emac_mcb.port_cb[0].icssgCfgRegBaseAddr +  CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_RX_STAT_GOOD_PRU0, statPtr, 0U, clear);
-                    /* need to query port 3 for TX*/
-                    statPtr = (uint32_t*)p_stats + EMAC_ICSSG_TX_STATS_OFFSET;
-                    emac_read_icssg_hw_stats(emac_mcb.port_cb[3].icssgCfgRegBaseAddr +  CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_RX_STAT_GOOD_PRU1, statPtr, EMAC_ICSSG_TX_STATS_OFFSET, clear);
-                    retVal = EMAC_DRV_RESULT_OK;
-                }
-#else
                 if ((emac_is_port_open(0,1) == true)) //FIXME : Hard code for ICSSG0
                 {
                     /* need to query port 0 for RX*/
@@ -1941,21 +1712,9 @@ static EMAC_DRV_ERR_E EMAC_get_stats_icssg_v5(uint32_t port_num, EMAC_STATISTICS
                     emac_read_icssg_hw_stats(emac_mcb.port_cb[1].icssgCfgRegBaseAddr +  CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_RX_STAT_GOOD_PRU0, statPtr, EMAC_ICSSG_TX_STATS_OFFSET, clear);
                     retVal = EMAC_DRV_RESULT_OK;
                 }
-#endif
                 break;
 
             case EMAC_SWITCH_PORT2:
-#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
-                if ((emac_is_port_open(1,1) == true))
-                {
-                    /* need to query port 2 for RX*/
-                    emac_read_icssg_hw_stats(emac_mcb.port_cb[2].icssgCfgRegBaseAddr +  CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_RX_STAT_GOOD_PRU0, statPtr, 0U, clear);
-                    /* need to query port 1 for TX*/
-                    statPtr = (uint32_t*)p_stats + EMAC_ICSSG_TX_STATS_OFFSET;
-                    emac_read_icssg_hw_stats(emac_mcb.port_cb[1].icssgCfgRegBaseAddr +  CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_RX_STAT_GOOD_PRU1, statPtr, EMAC_ICSSG_TX_STATS_OFFSET, clear);
-                    retVal = EMAC_DRV_RESULT_OK;
-                }
-#else
                 if ((emac_is_port_open(1,0) == true))
                 {
                     /* need to query port 1 for RX*/
@@ -1965,7 +1724,6 @@ static EMAC_DRV_ERR_E EMAC_get_stats_icssg_v5(uint32_t port_num, EMAC_STATISTICS
                     emac_read_icssg_hw_stats(emac_mcb.port_cb[0].icssgCfgRegBaseAddr +  CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_RX_STAT_GOOD_PRU1, statPtr, EMAC_ICSSG_TX_STATS_OFFSET, clear);
                     retVal = EMAC_DRV_RESULT_OK;
                 }
-#endif
                 break;
 
             default:
@@ -2211,11 +1969,7 @@ static EMAC_DRV_ERR_E EMAC_send_v5(uint32_t port_num, EMAC_PKT_DESC_T* p_desc)
             break;
         case EMAC_SWITCH_PORT1:
             virt_port_num = port_num;
-#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
-            port_num = 2U;
-#else
             port_num = 1U;
-#endif
             break;
         case EMAC_SWITCH_PORT2:
             virt_port_num = port_num;
@@ -2234,21 +1988,13 @@ static EMAC_DRV_ERR_E EMAC_send_v5(uint32_t port_num, EMAC_PKT_DESC_T* p_desc)
         if (port_num == EMAC_SWITCH_PORT)
         {
             /* make sure there is hw descriptor for boths switch ports prior to actually sending */
-#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG           
-            if (emac_get_hw_cppi_tx_descs(0, p_desc->PktChannel,2U, p_desc->PktChannel, &pCppiDescTx1, &pCppiDescTx2))
-#else
             if (emac_get_hw_cppi_tx_descs(0, p_desc->PktChannel,1U, p_desc->PktChannel, &pCppiDescTx1, &pCppiDescTx2))//FIXME: Hard coded for ICSSG0
-#endif
             {
                 p_desc->RefCount = 2U;
                 retVal = EMAC_send_v5_local(0, port_num, p_desc, pCppiDescTx1);
                 if (retVal == EMAC_DRV_RESULT_OK)
                 {
-#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG                    
-                    retVal = EMAC_send_v5_local(2U, port_num, p_desc, pCppiDescTx2);
-#else
                     retVal = EMAC_send_v5_local(1U, port_num, p_desc, pCppiDescTx2);
-#endif    
                     if (retVal != EMAC_DRV_RESULT_OK)
                     {
                          UTILS_trace(UTIL_TRACE_LEVEL_UNEXPECTED,emac_mcb.drv_trace_cb,"port: %d: Send failure for 1st switch port, unexpected: %d",port_num);
@@ -2549,11 +2295,7 @@ static uint32_t emac_get_sw_port_num(uint32_t port_num)
             break;
         case EMAC_INTERPOSER_PORT1:
         case EMAC_SWITCH_PORT2:
-#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
-            pNum = 2U;
-#else
             pNum = 1U;
-#endif
             break;
         default:
             break;
@@ -2625,20 +2367,12 @@ static EMAC_DRV_ERR_E EMAC_ioctl_v5(uint32_t port_num, EMAC_IOCTL_CMD emacIoctlC
                port_map[0] = 1;
                break;
            case EMAC_SWITCH_PORT2:
-#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
-               port_map[2] = 1;
-#else
                port_map[1] = 1;
-#endif
                break;
            case EMAC_SWITCH_PORT:
            case EMAC_SWITCH_PORT0:
                port_map[0] = 1;
-#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
-               port_map[2] = 1;
-#else
                port_map[1] = 1;
-#endif
                break;
            default:
                port_map[port_num] = 1;
@@ -2716,20 +2450,12 @@ static EMAC_DRV_ERR_E EMAC_ioctl_v5(uint32_t port_num, EMAC_IOCTL_CMD emacIoctlC
                             case EMAC_IOCTL_FDB_ENTRY_ADD:
                             case EMAC_IOCTL_FDB_ENTRY_DELETE:
                                 /* emac_ioctl_fdb_entry_ctrl will update both instances */
-#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
-                                port_map[2] = 0;
-#else
                                 port_map[1] = 0;
-#endif
                                 retVal = emac_ioctl_fdb_entry_ctrl(i, (void*)emacIoctlParams);
                                 break;
                             case EMAC_IOCTL_FDB_ENTRY_DELETE_ALL:
                             case EMAC_IOCTL_FDB_ENTRY_DELETE_ALL_AGEABLE:
-#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
-                                port_map[2] = 0;
-#else
                                 port_map[1] = 0;
-#endif
                                 /* emac_ioctl_fdb_entry_ctrl will update both instances */
                                 retVal = emac_ioctl_fdb_del_all(i,(void*)emacIoctlParams);
                                 break;
@@ -2895,11 +2621,7 @@ static EMAC_DRV_ERR_E EMAC_poll_ctrl_v5(uint32_t port_num, uint32_t rxPktRings, 
     /* polling of TX completion rings has different port mapping than rx channels for switch*/
     if (port_num == EMAC_SWITCH_PORT1)
     {
-#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
-        pNum = 2;
-#else
         pNum = 1;
-#endif
     }
     else if (port_num == EMAC_SWITCH_PORT2)
     {
@@ -3122,21 +2844,12 @@ void emac_icssg_switch_eth_setup (uint32_t portNum)
     /* Enable stats block, 0 64-bit counters */
     CSL_REG32_WR (icssgBaseAddr + CSL_ICSS_G_PA_STAT_WRAP_PA_SLV_REGS_BASE + 8, EMAC_BIT(31));
 
-#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
-    /* Configure Min and Max packet size in MII RT*/
-    /* Configuring half the value. ICSSG1.0 Errata*/
-    reg_val = 0x3E7 << 16; /*Configure 999 to detect 2000 as max size*/
-    reg_val |= 0x1F;       /*Configure 31 to detect 64 as min size*/
-    CSL_REG32_WR ((icssgBaseAddr + CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_REGS_BASE +
-                      CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_RX_FRMS0), reg_val);
-#else
     reg_val = 0x7CF << 16; /*Configure 1999 to detect 2000 as max size*/
     reg_val |= 0x3F;       /*Configure 63 to detect 64 as min size*/
     CSL_REG32_WR ((icssgBaseAddr + CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_REGS_BASE +
                   CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_RX_FRMS0), reg_val);
     CSL_REG32_WR ((icssgBaseAddr + CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_REGS_BASE +
                   CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_RX_FRMS1), reg_val);
-#endif
 
     /* Configure Default Ageing value for firmware to use*/
     /* The actual value written to memory is ageing timeout divided by number of buckets
@@ -3165,11 +2878,7 @@ uintptr_t emac_get_icssg_cfg_base_addr(uint32_t port_num, uint32_t virt_port_num
     switch (virt_port_num)
     {
         case EMAC_SWITCH_PORT1:
-#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
-            baseAddr = emac_mcb.port_cb[3].icssDram0BaseAddr;
-#else
             baseAddr = emac_mcb.port_cb[0].icssDram0BaseAddr;
-#endif
             break;
         case EMAC_SWITCH_PORT2:
             baseAddr = emac_mcb.port_cb[1].icssDram0BaseAddr;
@@ -3266,11 +2975,9 @@ void emac_icssg_update_rgmii_cfg_100MB(uint32_t port_num, uintptr_t icssgRgmiiCf
         emac_icssg_update_rgmii_cfg_100fd(port_num, icssgRgmiiCfgBaseAddr);
     }
 }
-#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
-#define EMAC_ICSSG_CONFIG_TX_IPG_960_NS ((uint32_t)(0x166)) /* configure 960 nano-second TX IPG */
-#else
+
 #define EMAC_ICSSG_CONFIG_TX_IPG_960_NS ((uint32_t)(0x17)) /* configure 960 nano-second TX IPG */
-#endif
+
 /*
  *  ======== emac_icssg_update_link_speed_100MB ========
  */
@@ -3329,11 +3036,8 @@ void emac_icssg_update_rgmii_cfg_1G(uint32_t port_num, uintptr_t icssgRgmiiCfgBa
     CSL_REG32_WR (icssgRgmiiCfgBaseAddr, regVal);
 }
 
-#ifdef EMAC_AM65XX_DUAL_ICSSG_CONFIG
-#define EMAC_ICSSG_CONFIG_TX_IPG_104_NS ((uint32_t)(0x1A)) /* configure 104 nano-second TX IPG */
-#else
 #define EMAC_ICSSG_CONFIG_TX_IPG_104_NS ((uint32_t)(0xB)) /* configure 104 nano-second TX IPG */
-#endif
+
 /*
  *  ======== emac_icssg_update_link_speed_1G ========
  */
