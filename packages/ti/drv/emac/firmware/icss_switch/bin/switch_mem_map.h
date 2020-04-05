@@ -192,6 +192,8 @@
 #define TX_TS_COOKIE_OFFSET_SIZE                           0x4
 #define RX_TS_STASHED                                      0x0048    //Used internally by FW for stashed Rx timestamp
 #define RX_TS_STASHED_SIZE                                 0x8
+#define PRE_EMPTION_CONTEXT_OFFSET                         0x0050    //Backup of active Tx and Q context
+#define PRE_EMPTION_CONTEXT_OFFSET_SIZE                    0x14
 #define TAS_GATE_MASK_LIST0                                0x0100    //TAS gate mask for windows list0
 #define TAS_GATE_MASK_LIST0_SIZE                           (TAS_NUM_WINDOWS) //0x10
 #define TAS_WINDOW_END_TIME_LIST0                          0x0110    //TAS window end time list0
@@ -373,34 +375,31 @@
 #define TX_TS_COOKIE_OFFSET_SIZE                           0x4
 #define RX_TS_STASHED                                      0x0048    //Used internally by FW for stashed Rx timestamp
 #define RX_TS_STASHED_SIZE                                 0x8
-#define PSI_TX_PKT_DATA_OFFSET_SLICE0                      0x0050    //Used Internally by FW. 
+#define PRE_EMPTION_CONTEXT_OFFSET                         0x0050    //Backup of active Tx and Q context
+#define PRE_EMPTION_CONTEXT_OFFSET_SIZE                    0x14
+#define PSI_TX_PKT_DATA_OFFSET_SLICE0                      0x0064    //Used Internally by FW. 
 #define PSI_TX_PKT_DATA_OFFSET_SLICE0_SIZE                 0x24
-#define PSI_TX_PKT_DATA_OFFSET_SLICE1                      0x0074    //Used Internally by FW. 
+#define PSI_TX_PKT_DATA_OFFSET_SLICE1                      0x0088    //Used Internally by FW. 
 #define PSI_TX_PKT_DATA_OFFSET_SLICE1_SIZE                 0x24
-#define LEARNING_WR_RD_COUNT_OFFSET                        0x0098    //Used Internally by FW to synchronize FDB Learning between RTU0 and PRU0 
+#define LEARNING_WR_RD_COUNT_OFFSET                        0x00AC    //Used Internally by FW to synchronize FDB Learning between RTU0 and PRU0 
 #define LEARNING_WR_RD_COUNT_OFFSET_SIZE                   0x4
-#define DEBUG_FDB_COMPARISON_MAC_VLAN                      0x009C    //Used for debugging FDB lookups, write the MAC and VLAN combination that is suspect. Currently disabled
+#define DEBUG_FDB_COMPARISON_MAC_VLAN                      0x00B0    //Used for debugging FDB lookups, write the MAC and VLAN combination that is suspect. Currently disabled
 #define DEBUG_FDB_COMPARISON_MAC_VLAN_SIZE                 0x8
-#define DEBUG_FDB_RESULTS                                  0x00A4    //The results of FBD lookup for Local injection are dumped here
+#define DEBUG_FDB_RESULTS                                  0x00B8    //The results of FBD lookup for Local injection are dumped here
 #define DEBUG_FDB_RESULTS_SIZE                             0xc
-#define FDB_AGEING_TIMEOUT_OFFSET                          0x00B0    //Time after which FDB entries are checked for aged out values. Value in nanoseconds
+#define FDB_AGEING_TIMEOUT_OFFSET                          0x00C4    //Time after which FDB entries are checked for aged out values. Value in nanoseconds
 #define FDB_AGEING_TIMEOUT_OFFSET_SIZE                     0x8
-#define VERIFY_FRAME_RECEIVE_OFFSET                        0x00B8    //Used Internally by FW. Memory updated by RX PRU when verify frame is received
+#define VERIFY_FRAME_RECEIVE_OFFSET                        0x00CC    //Used Internally by FW. Memory updated by RX PRU when verify frame is received
 #define VERIFY_FRAME_RECEIVE_OFFSET_SIZE                   0x1
 //Padding of 3 bytes
-#define VERIFY_FRAME_SEND_OFFSET                           0x00BC    //Used Internally by FW. Memory updated by TX PRU to inform the state machine that the verify frame has been sent
+#define VERIFY_FRAME_SEND_OFFSET                           0x00D0    //Used Internally by FW. Memory updated by TX PRU to inform the state machine that the verify frame has been sent
 #define VERIFY_FRAME_SEND_OFFSET_SIZE                      0x1
 //Padding of 3 bytes
-#define RESPOND_FRAME_RECEIVE_OFFSET                       0x00C0    //Used Internally by FW.Memory updated by RX PRU when respond frame is received
+#define RESPOND_FRAME_RECEIVE_OFFSET                       0x00D4    //Used Internally by FW.Memory updated by RX PRU when respond frame is received
 #define RESPOND_FRAME_RECEIVE_OFFSET_SIZE                  0x1
 //Padding of 3 bytes
-#define RESPOND_FRAME_SEND_OFFSET                          0x00C4    //Used Internally by FW.Memory updated by TX PRU to inform the state machine that the respond frame has been sent
+#define RESPOND_FRAME_SEND_OFFSET                          0x00D8    //Used Internally by FW.Memory updated by TX PRU to inform the state machine that the respond frame has been sent
 #define RESPOND_FRAME_SEND_OFFSET_SIZE                     0x1
-//Padding of 3 bytes
-#define PRE_EMPTION_CONTEXT_SLICE0_OFFSET                  0x00C8    //Backup of active Tx and Q context
-#define PRE_EMPTION_CONTEXT_SLICE0_OFFSET_SIZE             0x18
-#define PRE_EMPTION_CONTEXT_SLICE1_OFFSET                  0x00E0    //Backup of active Tx and Q context
-#define PRE_EMPTION_CONTEXT_SLICE1_OFFSET_SIZE             0x18
 #define TAS_GATE_MASK_LIST0                                0x0100    //TAS gate mask for windows list0
 #define TAS_GATE_MASK_LIST0_SIZE                           (TAS_NUM_WINDOWS) //0x10
 #define TAS_WINDOW_END_TIME_LIST0                          0x0110    //TAS window end time list0
