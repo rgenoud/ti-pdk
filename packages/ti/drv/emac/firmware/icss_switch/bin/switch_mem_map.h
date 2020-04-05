@@ -178,9 +178,11 @@
 #define PSI_L_MGMT_FLOW_ID_OFFSET                          0x0026    //Base Flow ID for sending mgmt and Tx TS to Host for Slice0
 #define PSI_L_MGMT_FLOW_ID_OFFSET_SIZE                     0x2
 #define EMAC_ICSSG_SWITCH_PSI_L_MGMT_FLOW_ID_BASE_OFFSET   PSI_L_MGMT_FLOW_ID_OFFSET    //Same as PSI_L_MGMT_FLOW_ID_OFFSET
-#define SPL_PKT_DEFAULT_PRIORITY                           0x0028    //Queue number for Special packets written here. Only 1B is used
-#define SPL_PKT_DEFAULT_PRIORITY_SIZE                      0x2
-#define QUEUE_NUM_UNTAGGED                                 0x002A    //Port1/Port2 Default Queue number for untagged packets
+#define SPL_PKT_DEFAULT_PRIORITY                           0x0028    //Queue number for Special packets written here
+#define SPL_PKT_DEFAULT_PRIORITY_SIZE                      0x1
+#define EXPRESS_PRE_EMPTIVE_Q_MASK                         0x0029    //Express Preemptible Queue Mask
+#define EXPRESS_PRE_EMPTIVE_Q_MASK_SIZE                    0x1
+#define QUEUE_NUM_UNTAGGED                                 0x002A    //Port1/Port2 Default Queue number for untagged packets, only 1B is used
 #define QUEUE_NUM_UNTAGGED_SIZE                            0x2
 #define PORT_Q_PRIORITY_REGEN_OFFSET                       0x002C    //Stores the table used for priority regeneration. 1B per PCP/Queue
 #define PORT_Q_PRIORITY_REGEN_OFFSET_SIZE                  0x8
@@ -363,9 +365,11 @@
 #define PSI_L_REGULAR_FLOW_ID_BASE_OFFSET_SIZE             0x2
 #define PSI_L_MGMT_FLOW_ID_OFFSET                          0x0026    //Base Flow ID for sending mgmt and Tx TS to Host for Slice0
 #define PSI_L_MGMT_FLOW_ID_OFFSET_SIZE                     0x2
-#define SPL_PKT_DEFAULT_PRIORITY                           0x0028    //Queue number for Special packets written here. Only 1B is used
-#define SPL_PKT_DEFAULT_PRIORITY_SIZE                      0x2
-#define QUEUE_NUM_UNTAGGED                                 0x002A    //Port1/Port2 Default Queue number for untagged packets
+#define SPL_PKT_DEFAULT_PRIORITY                           0x0028    //Queue number for Special packets written here
+#define SPL_PKT_DEFAULT_PRIORITY_SIZE                      0x1
+#define EXPRESS_PRE_EMPTIVE_Q_MASK                         0x0029    //Express Preemptible Queue Mask
+#define EXPRESS_PRE_EMPTIVE_Q_MASK_SIZE                    0x1
+#define QUEUE_NUM_UNTAGGED                                 0x002A    //Port1/Port2 Default Queue number for untagged packets, only 1B is used
 #define QUEUE_NUM_UNTAGGED_SIZE                            0x2
 #define PORT_Q_PRIORITY_REGEN_OFFSET                       0x002C    //Stores the table used for priority regeneration. 1B per PCP/Queue
 #define PORT_Q_PRIORITY_REGEN_OFFSET_SIZE                  0x8
