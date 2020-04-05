@@ -101,7 +101,7 @@ EMAC_ICSSG_SWITCH_FW_CFG emac_switch_cfg = {
     SIZE_OF_FDB, // FDB size
     PORT_Q_PRIORITY_MAPPING_OFFSET, //Port Priority Mapping offset
     QUEUE_NUM_UNTAGGED, // Untagged packet default Queue num offset Port1
-    QUEUE_NUM_UNTAGGED  // Untagged packet default Queue num offset Port1
+    QUEUE_NUM_UNTAGGED, // Untagged packet default Queue num offset Port1
     EXPRESS_PRE_EMPTIVE_Q_MASK  //express Preemtible Queue mask
 };
 
