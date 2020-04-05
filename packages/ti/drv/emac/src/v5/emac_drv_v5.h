@@ -330,6 +330,7 @@ uint32_t fdbSize;                                       /* FDB size */
 uint32_t prioMappingTableOffset;                         /* DEM0 offset to priority mapping table */
 uint32_t switchPort1UntaggedQueue;                       /* SHARED MEM OFFSET to switch port 1 untagged packet queue number */
 uint32_t switchPort2UntaggedQueue;                       /* SHARED MEM OFFSET to switch port 2 untagged packet queue number */
+uint32_t expressPremptiveQueueMaskOffset;                /* DMEM0 offset for express queue mask */
 } EMAC_ICSSG_SWITCH_FW_CFG;
 
 /**

@@ -451,7 +451,8 @@
 #define PRE_EMPTION_ADD_FRAG_SIZE_REMOTE_SIZE              0x2
 #define PRE_EMPTION_ADD_FRAG_SIZE_LOCAL                    0x05A6    //Non Final Fragment Size supported by Firmware
 #define PRE_EMPTION_ADD_FRAG_SIZE_LOCAL_SIZE               0x1
-//Padding of 1 bytes
+#define EXPRESS_PRE_EMPTIVE_Q_MASK                         0x05A7    //Express Preemptible Queue Mask
+#define EXPRESS_PRE_EMPTIVE_Q_MASK_SIZE                    0x1
 #define PRE_EMPTION_VERIFY_TIME                            0x05A8    //Time in ms the State machine waits for respond packet
 #define PRE_EMPTION_VERIFY_TIME_SIZE                       0x2
 #define DMEM0_END_OFFSET                                   0x05AA

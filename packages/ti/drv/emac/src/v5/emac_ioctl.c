@@ -1476,6 +1476,7 @@ EMAC_DRV_ERR_E emac_ioctl_configure_cut_through_or_prempt_select_ctrl(uint32_t p
     }
     else
     {
+        uint8_t queue_mask = 0;
         uint8_t queue_num;
         uint8_t temp_byte;
         uintptr_t expressPremptiveQueueAddr;
@@ -1493,7 +1494,10 @@ EMAC_DRV_ERR_E emac_ioctl_configure_cut_through_or_prempt_select_ctrl(uint32_t p
             {
                 temp_byte = (entry->pcpPreemptMap[queue_num] << 4U) | (entry->pcpCutThroughMap[queue_num] << 7U);   /*as per bit order in descriptor flags. Helps save PRU cycles*/
                 CSL_REG8_WR(expressPremptiveQueueAddr+(queue_num*4U), temp_byte);
+                queue_mask = queue_mask | ((entry->pcpPreemptMap[queue_num]) << queue_num);
             }
+            expressPremptiveQueueAddr = emac_mcb.port_cb[port_num].icssDram0BaseAddr + pSwitchFwCfg->expressPremptiveQueueMaskOffset;
+            CSL_REG8_WR(expressPremptiveQueueAddr, queue_mask);
         }
     }
     UTILS_trace(UTIL_TRACE_LEVEL_INFO, emac_mcb.drv_trace_cb, "port: %d: EXIT with status: %d",port_num, retVal);
