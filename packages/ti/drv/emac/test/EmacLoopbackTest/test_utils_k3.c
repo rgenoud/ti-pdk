@@ -2289,14 +2289,14 @@ int32_t  app_test_task_init_pruicss(uint32_t portNum)
         bufPoolCfg.poolLen = 0x2000;
         for (i = 0; i < NUM_BUF_POOLS_PER_SLICE ; i++)
         {
-            memcpy ((void*)(icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE +
-                BUFFER_POOL_0_ADDR_SLICE0_OFFSET + i*8), &bufPoolCfg, 8);
+            memcpy ((void*)(icssgBaseAddr + CSL_ICSS_G_DRAM0_SLV_RAM_REGS_BASE +
+                BUFFER_POOL_0_ADDR_OFFSET + i*8), &bufPoolCfg, 8);
             bufPoolCfg.poolBase += bufPoolCfg.poolLen;
         }
-        HWREG (icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE + HOST_RX_Q_PRE_CONTEXT_SLICE0_OFFSET) = 0x701B7800;
-        HWREG (icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE + HOST_RX_Q_PRE_CONTEXT_SLICE0_OFFSET + 4) = 0x701B7800;
-        HWREG (icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE + HOST_RX_Q_PRE_CONTEXT_SLICE0_OFFSET + 8) = 0x701B7800;
-        HWREG (icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE + HOST_RX_Q_PRE_CONTEXT_SLICE0_OFFSET + 12) = 0x701BB800;
+        HWREG (icssgBaseAddr + CSL_ICSS_G_DRAM0_SLV_RAM_REGS_BASE + HOST_RX_Q_PRE_CONTEXT_OFFSET) = 0x701B7800;
+        HWREG (icssgBaseAddr + CSL_ICSS_G_DRAM0_SLV_RAM_REGS_BASE + HOST_RX_Q_PRE_CONTEXT_OFFSET + 4) = 0x701B7800;
+        HWREG (icssgBaseAddr + CSL_ICSS_G_DRAM0_SLV_RAM_REGS_BASE + HOST_RX_Q_PRE_CONTEXT_OFFSET + 8) = 0x701B7800;
+        HWREG (icssgBaseAddr + CSL_ICSS_G_DRAM0_SLV_RAM_REGS_BASE + HOST_RX_Q_PRE_CONTEXT_OFFSET + 12) = 0x701BB800;
     }
     if ((portNum & 1))
     {
@@ -2400,14 +2400,14 @@ int32_t  app_test_task_init_pruicss(uint32_t portNum)
         bufPoolCfg.poolLen = 0x2000;
         for (i = 0; i < NUM_BUF_POOLS_PER_SLICE ; i++)
         {
-            memcpy ((void*)(icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE +
-                BUFFER_POOL_0_ADDR_SLICE1_OFFSET + i*8), &bufPoolCfg, 8);
+            memcpy ((void*)(icssgBaseAddr + CSL_ICSS_G_DRAM1_SLV_RAM_REGS_BASE +
+                BUFFER_POOL_0_ADDR_OFFSET + i*8), &bufPoolCfg, 8);
             bufPoolCfg.poolBase += bufPoolCfg.poolLen;
         }
-        HWREG (icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE + HOST_RX_Q_PRE_CONTEXT_SLICE1_OFFSET) = 0x701BD800;
-        HWREG (icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE + HOST_RX_Q_PRE_CONTEXT_SLICE1_OFFSET + 4) = 0x701BD800;
-        HWREG (icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE + HOST_RX_Q_PRE_CONTEXT_SLICE1_OFFSET + 8) = 0x701BD800;
-        HWREG (icssgBaseAddr + CSL_ICSS_G_RAM_SLV_RAM_REGS_BASE + HOST_RX_Q_PRE_CONTEXT_SLICE1_OFFSET + 12) = 0x701C2800;
+        HWREG (icssgBaseAddr + CSL_ICSS_G_DRAM1_SLV_RAM_REGS_BASE + HOST_RX_Q_PRE_CONTEXT_OFFSET) = 0x701BD800;
+        HWREG (icssgBaseAddr + CSL_ICSS_G_DRAM1_SLV_RAM_REGS_BASE + HOST_RX_Q_PRE_CONTEXT_OFFSET + 4) = 0x701BD800;
+        HWREG (icssgBaseAddr + CSL_ICSS_G_DRAM1_SLV_RAM_REGS_BASE + HOST_RX_Q_PRE_CONTEXT_OFFSET + 8) = 0x701BD800;
+        HWREG (icssgBaseAddr + CSL_ICSS_G_DRAM1_SLV_RAM_REGS_BASE + HOST_RX_Q_PRE_CONTEXT_OFFSET + 12) = 0x701C2800;
     }
 
 #endif //TSN_MAC

@@ -43,326 +43,98 @@
 //************************************************************************************
 
 #define SHARED_MEMORY_START_OFFSET                         0x0000
-#define PRE_EMPTION_CONTEXT_OFFSET                         0x0000    //Backup of active Tx and Q context. The offset is not used
-#define PRE_EMPTION_CONTEXT_OFFSET_SIZE                    0x8
-#define FW_HOST_HANDSHAKE_MAGIC_VAL_OFFSET                 0x0008    //Firmware host handshake
+#define FW_HOST_HANDSHAKE_MAGIC_VAL_OFFSET                 0x0000    //Firmware host handshake
 #define FW_HOST_HANDSHAKE_MAGIC_VAL_OFFSET_SIZE            0x4
-#define FDB_SA_MAC_ADDRESS                                 0x000C    //Used internally by FW for learning
+#define FDB_SA_MAC_ADDRESS                                 0x0004    //Used internally by FW for learning
 #define FDB_SA_MAC_ADDRESS_SIZE                            0x8
-#define FDB_FID_FIDC2_OFFSET                               0x0014    //Used internally by FW for learning
+#define FDB_FID_FIDC2_OFFSET                               0x000C    //Used internally by FW for learning
 #define FDB_FID_FIDC2_OFFSET_SIZE                          0x4
-#define FDB_BUCKET_OFFSET                                  0x0018    //Used internally by FW for learning
+#define FDB_BUCKET_OFFSET                                  0x0010    //Used internally by FW for learning
 #define FDB_BUCKET_OFFSET_SIZE                             0x4
-#define FDB_AGEING_LAST_USED_OFFSET                        0x001C    //Used internally by FW for learning
+#define FDB_AGEING_LAST_USED_OFFSET                        0x0014    //Used internally by FW for learning
 #define FDB_AGEING_LAST_USED_OFFSET_SIZE                   0x4
-#define TX_TS_COOKIE0_OFFSET                               0x0020    //Used internally by FW to store Tx timestamp slice0
-#define TX_TS_COOKIE0_OFFSET_SIZE                          0x4
-#define TX_TS_SPARE0_OFFSET                                0x0024    //not used
-#define TX_TS_SPARE0_OFFSET_SIZE                           0x4
-#define TX_TS_COOKIE1_OFFSET                               0x0028    //Used internally by FW to stash cookie slice1
-#define TX_TS_COOKIE1_OFFSET_SIZE                          0x4
-#define HOST_PORT_DF_VLAN_OFFSET                           0x002C    //default VLAN tag for Host Port
+#define HOST_PORT_DF_VLAN_OFFSET                           0x0018    //default VLAN tag for Host Port
 #define HOST_PORT_DF_VLAN_OFFSET_SIZE                      0x4
 #define EMAC_ICSSG_SWITCH_PORT0_DEFAULT_VLAN_OFFSET        HOST_PORT_DF_VLAN_OFFSET    //Same as HOST_PORT_DF_VLAN_OFFSET
-#define P1_PORT_DF_VLAN_OFFSET                             0x0030    //default VLAN tag for P1 Port
+#define P1_PORT_DF_VLAN_OFFSET                             0x001C    //default VLAN tag for P1 Port
 #define P1_PORT_DF_VLAN_OFFSET_SIZE                        0x4
 #define EMAC_ICSSG_SWITCH_PORT1_DEFAULT_VLAN_OFFSET        P1_PORT_DF_VLAN_OFFSET    //Same as P1_PORT_DF_VLAN_OFFSET
-#define P2_PORT_DF_VLAN_OFFSET                             0x0034    //default VLAN tag for P2 Port
+#define P2_PORT_DF_VLAN_OFFSET                             0x0020    //default VLAN tag for P2 Port
 #define P2_PORT_DF_VLAN_OFFSET_SIZE                        0x4
 #define EMAC_ICSSG_SWITCH_PORT2_DEFAULT_VLAN_OFFSET        P2_PORT_DF_VLAN_OFFSET    //Same as P2_PORT_DF_VLAN_OFFSET
-#define RX_TS_STASHED_SLICE0                               0x0038    //Used internally by FW for stashed Rx timestamp
-#define RX_TS_STASHED_SLICE0_SIZE                          0x8
-#define RX_TS_STASHED_SLICE1                               0x0040    //Used internally by FW for stashed Rx timestamp
-#define RX_TS_STASHED_SLICE1_SIZE                          0x8
-#define MGR_CMD_SLICE0_OFFSET                              0x0048    //Management command from Host to RTU0
+#define MGR_CMD_SLICE0_OFFSET                              0x0024    //Management command from Host to RTU0
 #define MGR_CMD_SLICE0_OFFSET_SIZE                         0x20
-#define MGR_CMD_RET_SLICE0                                 0x0068    //Management reply to Host from RTU0
+#define MGR_CMD_RET_SLICE0                                 0x0044    //Management reply to Host from RTU0
 #define MGR_CMD_RET_SLICE0_SIZE                            0xc
-#define MGR_CMD_STATE_SLICE0                               0x0074    //0 - idle; 1 - todo; 2 - executing
+#define MGR_CMD_STATE_SLICE0                               0x0050    //0 - idle; 1 - todo; 2 - executing
 #define MGR_CMD_STATE_SLICE0_SIZE                          0x1
 //Padding of 3 bytes
-#define MGR_CMD_RXPRU_STATUS_SLICE0                        0x0078    //Used internally by FW to communicate from RTU0 to PRU0
+#define MGR_CMD_RXPRU_STATUS_SLICE0                        0x0054    //Used internally by FW to communicate from RTU0 to PRU0
 #define MGR_CMD_RXPRU_STATUS_SLICE0_SIZE                   0x2
-#define MGR_CMD_TXPRU_STATUS_SLICE0                        0x007A    //Used internally by FW to communicate from RTU0 to PRU1
+#define MGR_CMD_TXPRU_STATUS_SLICE0                        0x0056    //Used internally by FW to communicate from RTU0 to PRU1
 #define MGR_CMD_TXPRU_STATUS_SLICE0_SIZE                   0x2
-#define MGR_CMD_RTU_STATUS_SLICE0                          0x007C    //Used internally by FW to communicate from RTU0 to RTU0
+#define MGR_CMD_RTU_STATUS_SLICE0                          0x0058    //Used internally by FW to communicate from RTU0 to RTU0
 #define MGR_CMD_RTU_STATUS_SLICE0_SIZE                     0x2
 //Padding of 2 bytes
-#define MGR_CMD_BUFF_PTR_SLICE0                            0x0080    //Used for storing buffer pointers
+#define MGR_CMD_BUFF_PTR_SLICE0                            0x005C    //Used for storing buffer pointers
 #define MGR_CMD_BUFF_PTR_SLICE0_SIZE                       0x4
-#define MGR_CMD_SLICE1_OFFSET                              0x0084    //Management command from Host to RTU0
+#define MGR_CMD_SLICE1_OFFSET                              0x0060    //Management command from Host to RTU0
 #define MGR_CMD_SLICE1_OFFSET_SIZE                         0x20
-#define MGR_CMD_RET_SLICE1                                 0x00A4    //Management reply to Host from RTU0
+#define MGR_CMD_RET_SLICE1                                 0x0080    //Management reply to Host from RTU0
 #define MGR_CMD_RET_SLICE1_SIZE                            0xc
-#define MGR_CMD_STATE_SLICE1                               0x00B0    //0 - idle; 1 - todo; 2 - executing
+#define MGR_CMD_STATE_SLICE1                               0x008C    //0 - idle; 1 - todo; 2 - executing
 #define MGR_CMD_STATE_SLICE1_SIZE                          0x1
 //Padding of 3 bytes
-#define MGR_CMD_RXPRU_STATUS_SLICE1                        0x00B4    //Used internally by FW to communicate from RTU0 to PRU0
+#define MGR_CMD_RXPRU_STATUS_SLICE1                        0x0090    //Used internally by FW to communicate from RTU0 to PRU0
 #define MGR_CMD_RXPRU_STATUS_SLICE1_SIZE                   0x2
-#define MGR_CMD_TXPRU_STATUS_SLICE1                        0x00B6    //Used internally by FW to communicate from RTU0 to PRU1
+#define MGR_CMD_TXPRU_STATUS_SLICE1                        0x0092    //Used internally by FW to communicate from RTU0 to PRU1
 #define MGR_CMD_TXPRU_STATUS_SLICE1_SIZE                   0x2
-#define MGR_CMD_RTU_STATUS_SLICE1                          0x00B8    //Used internally by FW to communicate from RTU0 to RTU0
+#define MGR_CMD_RTU_STATUS_SLICE1                          0x0094    //Used internally by FW to communicate from RTU0 to RTU0
 #define MGR_CMD_RTU_STATUS_SLICE1_SIZE                     0x2
 //Padding of 2 bytes
-#define MGR_CMD_BUFF_PTR_SLICE1                            0x00BC    //Used for storing buffer pointers
+#define MGR_CMD_BUFF_PTR_SLICE1                            0x0098    //Used for storing buffer pointers
 #define MGR_CMD_BUFF_PTR_SLICE1_SIZE                       0x4
-#define MGR_CMD_END_OFFSET                                 0x00C0    //End of Management command region
-#define BUFFER_POOL_0_ADDR_SLICE0_OFFSET                   0x0100    //HW Buffer Pool0 base address Slice0
-#define BUFFER_POOL_0_ADDR_SLICE0_OFFSET_SIZE              0x4
-#define BUFFER_POOL_0_LEN_SLICE0_OFFSET                    0x0104    //HW Buffer Pool0 length Slice0
-#define BUFFER_POOL_0_LEN_SLICE0_OFFSET_SIZE               0x4
-#define BUFFER_POOL_1_ADDR_SLICE0_OFFSET                   0x0108    //HW Buffer Pool1 base address Slice0
-#define BUFFER_POOL_1_ADDR_SLICE0_OFFSET_SIZE              0x4
-#define BUFFER_POOL_1_LEN_SLICE0_OFFSET                    0x010C    //HW Buffer Pool1 length Slice0
-#define BUFFER_POOL_1_LEN_SLICE0_OFFSET_SIZE               0x4
-#define BUFFER_POOL_2_ADDR_SLICE0_OFFSET                   0x0110    //HW Buffer Pool2 base address Slice0
-#define BUFFER_POOL_2_ADDR_SLICE0_OFFSET_SIZE              0x4
-#define BUFFER_POOL_2_LEN_SLICE0_OFFSET                    0x0114    //HW Buffer Pool2 length Slice0
-#define BUFFER_POOL_2_LEN_SLICE0_OFFSET_SIZE               0x4
-#define BUFFER_POOL_3_ADDR_SLICE0_OFFSET                   0x0118    //HW Buffer Pool3 base address Slice0
-#define BUFFER_POOL_3_ADDR_SLICE0_OFFSET_SIZE              0x4
-#define BUFFER_POOL_3_LEN_SLICE0_OFFSET                    0x011C    //HW Buffer Pool3 length Slice0
-#define BUFFER_POOL_3_LEN_SLICE0_OFFSET_SIZE               0x4
-#define BUFFER_POOL_4_ADDR_SLICE0_OFFSET                   0x0120    //HW Buffer Pool4 base address Slice0
-#define BUFFER_POOL_4_ADDR_SLICE0_OFFSET_SIZE              0x4
-#define BUFFER_POOL_4_LEN_SLICE0_OFFSET                    0x0124    //HW Buffer Pool4 length Slice0
-#define BUFFER_POOL_4_LEN_SLICE0_OFFSET_SIZE               0x4
-#define BUFFER_POOL_5_ADDR_SLICE0_OFFSET                   0x0128    //HW Buffer Pool5 base address Slice0
-#define BUFFER_POOL_5_ADDR_SLICE0_OFFSET_SIZE              0x4
-#define BUFFER_POOL_5_LEN_SLICE0_OFFSET                    0x012C    //HW Buffer Pool5 length Slice0
-#define BUFFER_POOL_5_LEN_SLICE0_OFFSET_SIZE               0x4
-#define BUFFER_POOL_6_ADDR_SLICE0_OFFSET                   0x0130    //HW Buffer Pool6 base address Slice0
-#define BUFFER_POOL_6_ADDR_SLICE0_OFFSET_SIZE              0x4
-#define BUFFER_POOL_6_LEN_SLICE0_OFFSET                    0x0134    //HW Buffer Pool6 length Slice0
-#define BUFFER_POOL_6_LEN_SLICE0_OFFSET_SIZE               0x4
-#define BUFFER_POOL_7_ADDR_SLICE0_OFFSET                   0x0138    //HW Buffer Pool7 base address Slice0
-#define BUFFER_POOL_7_ADDR_SLICE0_OFFSET_SIZE              0x4
-#define BUFFER_POOL_7_LEN_SLICE0_OFFSET                    0x013C    //HW Buffer Pool7 length Slice0
-#define BUFFER_POOL_7_LEN_SLICE0_OFFSET_SIZE               0x4
-#define BUFFER_POOL_8_ADDR_SLICE0_OFFSET                   0x0140    //HW Buffer Pool8 base address Slice0
-#define BUFFER_POOL_8_ADDR_SLICE0_OFFSET_SIZE              0x4
-#define BUFFER_POOL_8_LEN_SLICE0_OFFSET                    0x0144    //HW Buffer Pool8 length Slice0
-#define BUFFER_POOL_8_LEN_SLICE0_OFFSET_SIZE               0x4
-#define BUFFER_POOL_9_ADDR_SLICE0_OFFSET                   0x0148    //HW Buffer Pool9 base address Slice0
-#define BUFFER_POOL_9_ADDR_SLICE0_OFFSET_SIZE              0x4
-#define BUFFER_POOL_9_LEN_SLICE0_OFFSET                    0x014C    //HW Buffer Pool9 length Slice0
-#define BUFFER_POOL_9_LEN_SLICE0_OFFSET_SIZE               0x4
-#define BUFFER_POOL_10_ADDR_SLICE0_OFFSET                  0x0150    //HW Buffer Pool10 base address Slice0
-#define BUFFER_POOL_10_ADDR_SLICE0_OFFSET_SIZE             0x4
-#define BUFFER_POOL_10_LEN_SLICE0_OFFSET                   0x0154    //HW Buffer Pool10 length Slice0
-#define BUFFER_POOL_10_LEN_SLICE0_OFFSET_SIZE              0x4
-#define BUFFER_POOL_11_ADDR_SLICE0_OFFSET                  0x0158    //HW Buffer Pool11 base address Slice0
-#define BUFFER_POOL_11_ADDR_SLICE0_OFFSET_SIZE             0x4
-#define BUFFER_POOL_11_LEN_SLICE0_OFFSET                   0x015C    //HW Buffer Pool11 length Slice0
-#define BUFFER_POOL_11_LEN_SLICE0_OFFSET_SIZE              0x4
-#define BUFFER_POOL_12_ADDR_SLICE0_OFFSET                  0x0160    //HW Buffer Pool12 base address Slice0
-#define BUFFER_POOL_12_ADDR_SLICE0_OFFSET_SIZE             0x4
-#define BUFFER_POOL_12_LEN_SLICE0_OFFSET                   0x0164    //HW Buffer Pool12 length Slice0
-#define BUFFER_POOL_12_LEN_SLICE0_OFFSET_SIZE              0x4
-#define BUFFER_POOL_13_ADDR_SLICE0_OFFSET                  0x0168    //HW Buffer Pool13 base address Slice0
-#define BUFFER_POOL_13_ADDR_SLICE0_OFFSET_SIZE             0x4
-#define BUFFER_POOL_13_LEN_SLICE0_OFFSET                   0x016C    //HW Buffer Pool13 length Slice0
-#define BUFFER_POOL_13_LEN_SLICE0_OFFSET_SIZE              0x4
-#define BUFFER_POOL_14_ADDR_SLICE0_OFFSET                  0x0170    //HW Buffer Pool14 base address Slice0
-#define BUFFER_POOL_14_ADDR_SLICE0_OFFSET_SIZE             0x4
-#define BUFFER_POOL_14_LEN_SLICE0_OFFSET                   0x0174    //HW Buffer Pool14 length Slice0
-#define BUFFER_POOL_14_LEN_SLICE0_OFFSET_SIZE              0x4
-#define BUFFER_POOL_15_ADDR_SLICE0_OFFSET                  0x0178    //HW Buffer Pool15 base address Slice0
-#define BUFFER_POOL_15_ADDR_SLICE0_OFFSET_SIZE             0x4
-#define BUFFER_POOL_15_LEN_SLICE0_OFFSET                   0x017C    //HW Buffer Pool15 length Slice0
-#define BUFFER_POOL_15_LEN_SLICE0_OFFSET_SIZE              0x4
-#define BUFFER_POOL_16_ADDR_SLICE0_OFFSET                  0x0180    //HW Buffer Pool16 base address Slice0
-#define BUFFER_POOL_16_ADDR_SLICE0_OFFSET_SIZE             0x4
-#define BUFFER_POOL_16_LEN_SLICE0_OFFSET                   0x0184    //HW Buffer Pool16 length Slice0
-#define BUFFER_POOL_16_LEN_SLICE0_OFFSET_SIZE              0x4
-#define BUFFER_POOL_17_ADDR_SLICE0_OFFSET                  0x0188    //HW Buffer Pool17 base address Slice0
-#define BUFFER_POOL_17_ADDR_SLICE0_OFFSET_SIZE             0x4
-#define BUFFER_POOL_17_LEN_SLICE0_OFFSET                   0x018C    //HW Buffer Pool17 length Slice0
-#define BUFFER_POOL_17_LEN_SLICE0_OFFSET_SIZE              0x4
-#define BUFFER_POOL_18_ADDR_SLICE0_OFFSET                  0x0190    //HW Buffer Pool18 base address Slice0
-#define BUFFER_POOL_18_ADDR_SLICE0_OFFSET_SIZE             0x4
-#define BUFFER_POOL_18_LEN_SLICE0_OFFSET                   0x0194    //HW Buffer Pool18 length Slice0
-#define BUFFER_POOL_18_LEN_SLICE0_OFFSET_SIZE              0x4
-#define BUFFER_POOL_19_ADDR_SLICE0_OFFSET                  0x0198    //HW Buffer Pool19 base address Slice0
-#define BUFFER_POOL_19_ADDR_SLICE0_OFFSET_SIZE             0x4
-#define BUFFER_POOL_19_LEN_SLICE0_OFFSET                   0x019C    //HW Buffer Pool19 length Slice0
-#define BUFFER_POOL_19_LEN_SLICE0_OFFSET_SIZE              0x4
-#define BUFFER_POOL_20_ADDR_SLICE0_OFFSET                  0x01A0    //HW Buffer Pool20 base address Slice0
-#define BUFFER_POOL_20_ADDR_SLICE0_OFFSET_SIZE             0x4
-#define BUFFER_POOL_20_LEN_SLICE0_OFFSET                   0x01A4    //HW Buffer Pool20 length Slice0
-#define BUFFER_POOL_20_LEN_SLICE0_OFFSET_SIZE              0x4
-#define BUFFER_POOL_21_ADDR_SLICE0_OFFSET                  0x01A8    //HW Buffer Pool21 base address Slice0
-#define BUFFER_POOL_21_ADDR_SLICE0_OFFSET_SIZE             0x4
-#define BUFFER_POOL_21_LEN_SLICE0_OFFSET                   0x01AC    //HW Buffer Pool21 length Slice0
-#define BUFFER_POOL_21_LEN_SLICE0_OFFSET_SIZE              0x4
-#define BUFFER_POOL_22_ADDR_SLICE0_OFFSET                  0x01B0    //HW Buffer Pool22 base address Slice0
-#define BUFFER_POOL_22_ADDR_SLICE0_OFFSET_SIZE             0x4
-#define BUFFER_POOL_22_LEN_SLICE0_OFFSET                   0x01B4    //HW Buffer Pool22 length Slice0
-#define BUFFER_POOL_22_LEN_SLICE0_OFFSET_SIZE              0x4
-#define BUFFER_POOL_23_ADDR_SLICE0_OFFSET                  0x01B8    //HW Buffer Pool23 base address Slice0
-#define BUFFER_POOL_23_ADDR_SLICE0_OFFSET_SIZE             0x4
-#define BUFFER_POOL_23_LEN_SLICE0_OFFSET                   0x01BC    //HW Buffer Pool23 length Slice0
-#define BUFFER_POOL_23_LEN_SLICE0_OFFSET_SIZE              0x4
-#define BUFFER_POOL_0_ADDR_SLICE1_OFFSET                   0x01C0    //HW Buffer Pool0 base address Slice0
-#define BUFFER_POOL_0_ADDR_SLICE1_OFFSET_SIZE              0x4
-#define BUFFER_POOL_0_LEN_SLICE1_OFFSET                    0x01C4    //HW Buffer Pool0 length Slice0
-#define BUFFER_POOL_0_LEN_SLICE1_OFFSET_SIZE               0x4
-#define BUFFER_POOL_1_ADDR_SLICE1_OFFSET                   0x01C8    //HW Buffer Pool1 base address Slice0
-#define BUFFER_POOL_1_ADDR_SLICE1_OFFSET_SIZE              0x4
-#define BUFFER_POOL_1_LEN_SLICE1_OFFSET                    0x01CC    //HW Buffer Pool1 length Slice0
-#define BUFFER_POOL_1_LEN_SLICE1_OFFSET_SIZE               0x4
-#define BUFFER_POOL_2_ADDR_SLICE1_OFFSET                   0x01D0    //HW Buffer Pool2 base address Slice0
-#define BUFFER_POOL_2_ADDR_SLICE1_OFFSET_SIZE              0x4
-#define BUFFER_POOL_2_LEN_SLICE1_OFFSET                    0x01D4    //HW Buffer Pool2 length Slice0
-#define BUFFER_POOL_2_LEN_SLICE1_OFFSET_SIZE               0x4
-#define BUFFER_POOL_3_ADDR_SLICE1_OFFSET                   0x01D8    //HW Buffer Pool3 base address Slice0
-#define BUFFER_POOL_3_ADDR_SLICE1_OFFSET_SIZE              0x4
-#define BUFFER_POOL_3_LEN_SLICE1_OFFSET                    0x01DC    //HW Buffer Pool3 length Slice0
-#define BUFFER_POOL_3_LEN_SLICE1_OFFSET_SIZE               0x4
-#define BUFFER_POOL_4_ADDR_SLICE1_OFFSET                   0x01E0    //HW Buffer Pool4 base address Slice0
-#define BUFFER_POOL_4_ADDR_SLICE1_OFFSET_SIZE              0x4
-#define BUFFER_POOL_4_LEN_SLICE1_OFFSET                    0x01E4    //HW Buffer Pool4 length Slice0
-#define BUFFER_POOL_4_LEN_SLICE1_OFFSET_SIZE               0x4
-#define BUFFER_POOL_5_ADDR_SLICE1_OFFSET                   0x01E8    //HW Buffer Pool5 base address Slice0
-#define BUFFER_POOL_5_ADDR_SLICE1_OFFSET_SIZE              0x4
-#define BUFFER_POOL_5_LEN_SLICE1_OFFSET                    0x01EC    //HW Buffer Pool5 length Slice0
-#define BUFFER_POOL_5_LEN_SLICE1_OFFSET_SIZE               0x4
-#define BUFFER_POOL_6_ADDR_SLICE1_OFFSET                   0x01F0    //HW Buffer Pool6 base address Slice0
-#define BUFFER_POOL_6_ADDR_SLICE1_OFFSET_SIZE              0x4
-#define BUFFER_POOL_6_LEN_SLICE1_OFFSET                    0x01F4    //HW Buffer Pool6 length Slice0
-#define BUFFER_POOL_6_LEN_SLICE1_OFFSET_SIZE               0x4
-#define BUFFER_POOL_7_ADDR_SLICE1_OFFSET                   0x01F8    //HW Buffer Pool7 base address Slice0
-#define BUFFER_POOL_7_ADDR_SLICE1_OFFSET_SIZE              0x4
-#define BUFFER_POOL_7_LEN_SLICE1_OFFSET                    0x01FC    //HW Buffer Pool7 length Slice0
-#define BUFFER_POOL_7_LEN_SLICE1_OFFSET_SIZE               0x4
-#define BUFFER_POOL_8_ADDR_SLICE1_OFFSET                   0x0200    //HW Buffer Pool8 base address Slice0
-#define BUFFER_POOL_8_ADDR_SLICE1_OFFSET_SIZE              0x4
-#define BUFFER_POOL_8_LEN_SLICE1_OFFSET                    0x0204    //HW Buffer Pool8 length Slice0
-#define BUFFER_POOL_8_LEN_SLICE1_OFFSET_SIZE               0x4
-#define BUFFER_POOL_9_ADDR_SLICE1_OFFSET                   0x0208    //HW Buffer Pool9 base address Slice0
-#define BUFFER_POOL_9_ADDR_SLICE1_OFFSET_SIZE              0x4
-#define BUFFER_POOL_9_LEN_SLICE1_OFFSET                    0x020C    //HW Buffer Pool9 length Slice0
-#define BUFFER_POOL_9_LEN_SLICE1_OFFSET_SIZE               0x4
-#define BUFFER_POOL_10_ADDR_SLICE1_OFFSET                  0x0210    //HW Buffer Pool10 base address Slice0
-#define BUFFER_POOL_10_ADDR_SLICE1_OFFSET_SIZE             0x4
-#define BUFFER_POOL_10_LEN_SLICE1_OFFSET                   0x0214    //HW Buffer Pool10 length Slice0
-#define BUFFER_POOL_10_LEN_SLICE1_OFFSET_SIZE              0x4
-#define BUFFER_POOL_11_ADDR_SLICE1_OFFSET                  0x0218    //HW Buffer Pool11 base address Slice0
-#define BUFFER_POOL_11_ADDR_SLICE1_OFFSET_SIZE             0x4
-#define BUFFER_POOL_11_LEN_SLICE1_OFFSET                   0x021C    //HW Buffer Pool11 length Slice0
-#define BUFFER_POOL_11_LEN_SLICE1_OFFSET_SIZE              0x4
-#define BUFFER_POOL_12_ADDR_SLICE1_OFFSET                  0x0220    //HW Buffer Pool12 base address Slice0
-#define BUFFER_POOL_12_ADDR_SLICE1_OFFSET_SIZE             0x4
-#define BUFFER_POOL_12_LEN_SLICE1_OFFSET                   0x0224    //HW Buffer Pool12 length Slice0
-#define BUFFER_POOL_12_LEN_SLICE1_OFFSET_SIZE              0x4
-#define BUFFER_POOL_13_ADDR_SLICE1_OFFSET                  0x0228    //HW Buffer Pool13 base address Slice0
-#define BUFFER_POOL_13_ADDR_SLICE1_OFFSET_SIZE             0x4
-#define BUFFER_POOL_13_LEN_SLICE1_OFFSET                   0x022C    //HW Buffer Pool13 length Slice0
-#define BUFFER_POOL_13_LEN_SLICE1_OFFSET_SIZE              0x4
-#define BUFFER_POOL_14_ADDR_SLICE1_OFFSET                  0x0230    //HW Buffer Pool14 base address Slice0
-#define BUFFER_POOL_14_ADDR_SLICE1_OFFSET_SIZE             0x4
-#define BUFFER_POOL_14_LEN_SLICE1_OFFSET                   0x0234    //HW Buffer Pool14 length Slice0
-#define BUFFER_POOL_14_LEN_SLICE1_OFFSET_SIZE              0x4
-#define BUFFER_POOL_15_ADDR_SLICE1_OFFSET                  0x0238    //HW Buffer Pool15 base address Slice0
-#define BUFFER_POOL_15_ADDR_SLICE1_OFFSET_SIZE             0x4
-#define BUFFER_POOL_15_LEN_SLICE1_OFFSET                   0x023C    //HW Buffer Pool15 length Slice0
-#define BUFFER_POOL_15_LEN_SLICE1_OFFSET_SIZE              0x4
-#define BUFFER_POOL_16_ADDR_SLICE1_OFFSET                  0x0240    //HW Buffer Pool16 base address Slice0
-#define BUFFER_POOL_16_ADDR_SLICE1_OFFSET_SIZE             0x4
-#define BUFFER_POOL_16_LEN_SLICE1_OFFSET                   0x0244    //HW Buffer Pool16 length Slice0
-#define BUFFER_POOL_16_LEN_SLICE1_OFFSET_SIZE              0x4
-#define BUFFER_POOL_17_ADDR_SLICE1_OFFSET                  0x0248    //HW Buffer Pool17 base address Slice0
-#define BUFFER_POOL_17_ADDR_SLICE1_OFFSET_SIZE             0x4
-#define BUFFER_POOL_17_LEN_SLICE1_OFFSET                   0x024C    //HW Buffer Pool17 length Slice0
-#define BUFFER_POOL_17_LEN_SLICE1_OFFSET_SIZE              0x4
-#define BUFFER_POOL_18_ADDR_SLICE1_OFFSET                  0x0250    //HW Buffer Pool18 base address Slice0
-#define BUFFER_POOL_18_ADDR_SLICE1_OFFSET_SIZE             0x4
-#define BUFFER_POOL_18_LEN_SLICE1_OFFSET                   0x0254    //HW Buffer Pool18 length Slice0
-#define BUFFER_POOL_18_LEN_SLICE1_OFFSET_SIZE              0x4
-#define BUFFER_POOL_19_ADDR_SLICE1_OFFSET                  0x0258    //HW Buffer Pool19 base address Slice0
-#define BUFFER_POOL_19_ADDR_SLICE1_OFFSET_SIZE             0x4
-#define BUFFER_POOL_19_LEN_SLICE1_OFFSET                   0x025C    //HW Buffer Pool19 length Slice0
-#define BUFFER_POOL_19_LEN_SLICE1_OFFSET_SIZE              0x4
-#define BUFFER_POOL_20_ADDR_SLICE1_OFFSET                  0x0260    //HW Buffer Pool20 base address Slice0
-#define BUFFER_POOL_20_ADDR_SLICE1_OFFSET_SIZE             0x4
-#define BUFFER_POOL_20_LEN_SLICE1_OFFSET                   0x0264    //HW Buffer Pool20 length Slice0
-#define BUFFER_POOL_20_LEN_SLICE1_OFFSET_SIZE              0x4
-#define BUFFER_POOL_21_ADDR_SLICE1_OFFSET                  0x0268    //HW Buffer Pool21 base address Slice0
-#define BUFFER_POOL_21_ADDR_SLICE1_OFFSET_SIZE             0x4
-#define BUFFER_POOL_21_LEN_SLICE1_OFFSET                   0x026C    //HW Buffer Pool21 length Slice0
-#define BUFFER_POOL_21_LEN_SLICE1_OFFSET_SIZE              0x4
-#define BUFFER_POOL_22_ADDR_SLICE1_OFFSET                  0x0270    //HW Buffer Pool22 base address Slice0
-#define BUFFER_POOL_22_ADDR_SLICE1_OFFSET_SIZE             0x4
-#define BUFFER_POOL_22_LEN_SLICE1_OFFSET                   0x0274    //HW Buffer Pool22 length Slice0
-#define BUFFER_POOL_22_LEN_SLICE1_OFFSET_SIZE              0x4
-#define BUFFER_POOL_23_ADDR_SLICE1_OFFSET                  0x0278    //HW Buffer Pool23 base address Slice0
-#define BUFFER_POOL_23_ADDR_SLICE1_OFFSET_SIZE             0x4
-#define BUFFER_POOL_23_LEN_SLICE1_OFFSET                   0x027C    //HW Buffer Pool23 length Slice0
-#define BUFFER_POOL_23_LEN_SLICE1_OFFSET_SIZE              0x4
-#define HOST_RX_PRE_RD_PTR_OFFSET                          0x0280    //Host Egress Q MSMC Read pointer (for Pre-emptive queue) stored here
-#define HOST_RX_PRE_RD_PTR_OFFSET_SIZE                     0x4
-#define EMAC_ICSSG_SWITCH_HOST_QUEUE_READ_PTR_OFFSET       HOST_RX_PRE_RD_PTR_OFFSET    //Same as HOST_RX_PRE_RD_PTR_OFFSET
-#define HOST_RX_PRE_WR_PTR_OFFSET                          0x0284    //Host Egress Q MSMC Write pointer (for Pre-emptive queue) stored here
-#define HOST_RX_PRE_WR_PTR_OFFSET_SIZE                     0x4
-#define HOST_RX_PRE_RD_PTR_OFFSET_1                        0x0288    //Host Egress Q MSMC Read pointer (for Pre-emptive queue) stored here
-#define HOST_RX_PRE_RD_PTR_OFFSET_1_SIZE                   0x4
-#define EMAC_ICSSG_SWITCH_HOST_QUEUE_READ_PTR_OFFSET_1     HOST_RX_PRE_RD_PTR_OFFSET_1    //Same as HOST_RX_PRE_RD_PTR_OFFSET_1
-#define HOST_RX_PRE_WR_PTR_OFFSET_1                        0x028C    //Host Egress Q MSMC Write pointer (for Pre-emptive queue) stored here
-#define HOST_RX_PRE_WR_PTR_OFFSET_1_SIZE                   0x4
-#define VLAN_STATIC_REG_TABLE_OFFSET                       0x0290    //VLAN-FID Table offset. 4096 VIDs. 2B per VID = 8KB = 0x2000
+#define MGR_CMD_END_OFFSET                                 0x009C    //End of Management command region
+#define VLAN_STATIC_REG_TABLE_OFFSET                       0x0100    //VLAN-FID Table offset. 4096 VIDs. 2B per VID = 8KB = 0x2000
 #define VLAN_STATIC_REG_TABLE_OFFSET_SIZE                  0x2000
 #define EMAC_ICSSG_SWITCH_DEFAULT_VLAN_TABLE_OFFSET        VLAN_STATIC_REG_TABLE_OFFSET    //VLAN-FID Table offset for EMAC
-#define SMEM_VLAN_END_OF_MEM                               0x2290    //End of VLAN-FID table marker
+#define SMEM_VLAN_END_OF_MEM                               0x2100    //End of VLAN-FID table marker
 #define SMEM_VLAN_END_OF_MEM_SIZE                          0x4
-#define HOST_RX_Q_PRE_CONTEXT_SLICE0_OFFSET                0x2294    //16B for Host Egress MSMC Q (Pre-emptible) Slice0 context
-#define HOST_RX_Q_PRE_CONTEXT_SLICE0_OFFSET_SIZE           (NRT_QUEUE_CONTEXT_SIZE) //0x10
-#define DEFAULT_MSMC_Q_SLICE0_OFFSET                       (HOST_RX_Q_PRE_CONTEXT_SLICE0_OFFSET+12)    //2k memory reserved for default writes by Slice0
-#define HOST_RX_Q_PRE_CONTEXT_SLICE1_OFFSET                0x22A4    //16B for Host Egress MSMC Q (Pre-emptible) Slice1 context
-#define HOST_RX_Q_PRE_CONTEXT_SLICE1_OFFSET_SIZE           (NRT_QUEUE_CONTEXT_SIZE) //0x10
-#define DEFAULT_MSMC_Q_SLICE1_OFFSET                       (HOST_RX_Q_PRE_CONTEXT_SLICE1_OFFSET+12)    //2k memory reserved for default writes by Slice1
-#define XXPD_DESC_START                                    0x22B4    //packet descriptor Q reserved memory start offset
-#define PORT_DESC0_HI                                      0x22B4    //packet descriptor Q reserved memory
+#define XXPD_DESC_START                                    0x2104    //packet descriptor Q reserved memory start offset
+#define PORT_DESC0_HI                                      0x2104    //packet descriptor Q reserved memory
 #define PORT_DESC0_HI_SIZE                                 (NRT_PORT_DESC_SMEM_SIZE) //0xe68
-#define PORT_DESC0_LO                                      0x311C    //packet descriptor Q reserved memory
+#define PORT_DESC0_LO                                      0x2F6C    //packet descriptor Q reserved memory
 #define PORT_DESC0_LO_SIZE                                 (NRT_PORT_DESC_SMEM_SIZE) //0xe68
-#define PORT_DESC1_HI                                      0x3F84    //packet descriptor Q reserved memory
+#define PORT_DESC1_HI                                      0x3DD4    //packet descriptor Q reserved memory
 #define PORT_DESC1_HI_SIZE                                 (NRT_PORT_DESC_SMEM_SIZE) //0xe68
-#define PORT_DESC1_LO                                      0x4DEC    //packet descriptor Q reserved memory
+#define PORT_DESC1_LO                                      0x4C3C    //packet descriptor Q reserved memory
 #define PORT_DESC1_LO_SIZE                                 (NRT_PORT_DESC_SMEM_SIZE) //0xe68
-#define HOST_DESC0_HI                                      0x5C54    //packet descriptor Q reserved memory
+#define HOST_DESC0_HI                                      0x5AA4    //packet descriptor Q reserved memory
 #define HOST_DESC0_HI_SIZE                                 (NRT_HOST_DESC_SMEM_SIZE) //0x468
-#define HOST_DESC0_LO                                      0x60BC    //packet descriptor Q reserved memory
+#define HOST_DESC0_LO                                      0x5F0C    //packet descriptor Q reserved memory
 #define HOST_DESC0_LO_SIZE                                 (NRT_HOST_DESC_SMEM_SIZE) //0x468
-#define HOST_DESC1_HI                                      0x6524    //packet descriptor Q reserved memory
+#define HOST_DESC1_HI                                      0x6374    //packet descriptor Q reserved memory
 #define HOST_DESC1_HI_SIZE                                 (NRT_HOST_DESC_SMEM_SIZE) //0x468
-#define HOST_DESC1_LO                                      0x698C    //packet descriptor Q reserved memory
+#define HOST_DESC1_LO                                      0x67DC    //packet descriptor Q reserved memory
 #define HOST_DESC1_LO_SIZE                                 (NRT_HOST_DESC_SMEM_SIZE) //0x468
-#define XXPD_DESC_END                                      0x6DF4    //packet descriptor Q reserved memory end offset
-#define HOST_RX_DESC_Q_PRE_OFFSET                          0x6DF4    //packet descriptor Q reserved memory for Host Egress (Pre-emptible) queues
+#define XXPD_DESC_END                                      0x6C44    //packet descriptor Q reserved memory end offset
+#define HOST_RX_DESC_Q_PRE_OFFSET                          0x6C44    //packet descriptor Q reserved memory for Host Egress (Pre-emptible) queues
 #define HOST_RX_DESC_Q_PRE_OFFSET_SIZE                     (NRT_PORT_DESC_QUEUE_SIZE) //0x734
-#define HOST_RX_DESC_Q_EXP_OFFSET                          0x7528    //packet descriptor Q reserved memory for Host Egress (Pre-emptible) queues. redundant
+#define HOST_RX_DESC_Q_EXP_OFFSET                          0x7378    //packet descriptor Q reserved memory for Host Egress (Pre-emptible) queues. redundant
 #define HOST_RX_DESC_Q_EXP_OFFSET_SIZE                     (NRT_PORT_DESC_QUEUE_SIZE) //0x734
-#define SPPD_DESC_START                                    0x7C5C    //special packet descriptor Q reserved memory start offset
-#define HOST_SPPD0                                         0x7C5C    //special packet descriptor Q reserved memory
+#define SPPD_DESC_START                                    0x7AAC    //special packet descriptor Q reserved memory start offset
+#define HOST_SPPD0                                         0x7AAC    //special packet descriptor Q reserved memory
 #define HOST_SPPD0_SIZE                                    (NRT_SPECIAL_PD_SMEM_SIZE) //0x400
-#define HOST_SPPD1                                         0x805C    //special packet descriptor Q reserved memory
+#define HOST_SPPD1                                         0x7EAC    //special packet descriptor Q reserved memory
 #define HOST_SPPD1_SIZE                                    (NRT_SPECIAL_PD_SMEM_SIZE) //0x400
-#define SPPD_DESC_END                                      0x845C    //special packet descriptor Q reserved memory end offset
-#define HOST_RX_EXP_RD_PTR_OFFSET                          0x845C    //Reserved for Future Use
-#define HOST_RX_EXP_RD_PTR_OFFSET_SIZE                     0x4
-#define HOST_RX_EXP_WR_PTR_OFFSET                          0x8460    //Reserved for Future Use
-#define HOST_RX_EXP_WR_PTR_OFFSET_SIZE                     0x4
-#define NRT_DESC_SLICE0                                    0x8464    //FIMXE : REVIEW this offset. this is used in PG11 to save the descriptor
-#define NRT_DESC_SLICE0_SIZE                               0x200
-#define NRT_DESC_SLICE1                                    0x8664    //FIMXE : REVIEW this offset. this is used in PG11 to save the descriptor
-#define NRT_DESC_SLICE1_SIZE                               0x200
-#define MGR_PKT_PULL_SLICE0                                0x8864    //Command buffers for slice0 
+#define SPPD_DESC_END                                      0x82AC    //special packet descriptor Q reserved memory end offset
+#define MGR_PKT_PULL_SLICE0                                0x82AC    //Command buffers for slice0 
 #define MGR_PKT_PULL_SLICE0_SIZE                           0xa0
-#define MGR_PKT_PULL_SLICE1                                0x8904    //Command buffers for slice0 
+#define MGR_PKT_PULL_SLICE1                                0x834C    //Command buffers for slice0 
 #define MGR_PKT_PULL_SLICE1_SIZE                           0xa0
-#define SHARED_MEMORY_END_OFFSET                           0x89A4
+#define SHARED_MEMORY_END_OFFSET                           0x83EC
 
-// total SHARED_MEMORY memory usage : 34.41015625 KB from total of 64.0KB 
+// total SHARED_MEMORY memory usage : 32.98046875 KB from total of 64.0KB 
 
 //************************************************************************************
 //
@@ -416,6 +188,10 @@
 #define EXPRESS_PRE_EMPTIVE_Q_MAP_SIZE                     0x8
 #define PORT_Q_PRIORITY_MAPPING_OFFSET                     0x003C    //Stores the table used for priority mapping. 1B per PCP/Queue
 #define PORT_Q_PRIORITY_MAPPING_OFFSET_SIZE                0x8
+#define TX_TS_COOKIE_OFFSET                                0x0044    //Used internally by FW to store Tx timestamp
+#define TX_TS_COOKIE_OFFSET_SIZE                           0x4
+#define RX_TS_STASHED                                      0x0048    //Used internally by FW for stashed Rx timestamp
+#define RX_TS_STASHED_SIZE                                 0x8
 #define TAS_GATE_MASK_LIST0                                0x0100    //TAS gate mask for windows list0
 #define TAS_GATE_MASK_LIST0_SIZE                           (TAS_NUM_WINDOWS) //0x10
 #define TAS_WINDOW_END_TIME_LIST0                          0x0110    //TAS window end time list0
@@ -443,9 +219,116 @@
 //Padding of 1 bytes
 #define PRE_EMPTION_VERIFY_TIME                            0x05A8    //Time in ms the State machine waits for respond packet
 #define PRE_EMPTION_VERIFY_TIME_SIZE                       0x2
-#define DMEM0_END_OFFSET                                   0x05AA
+//Padding of 2 bytes
+#define BUFFER_POOL_0_ADDR_OFFSET                          0x05AC    //HW Buffer Pool0 base address
+#define BUFFER_POOL_0_ADDR_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_0_LEN_OFFSET                           0x05B0    //HW Buffer Pool0 length
+#define BUFFER_POOL_0_LEN_OFFSET_SIZE                      0x4
+#define BUFFER_POOL_1_ADDR_OFFSET                          0x05B4    //HW Buffer Pool1 base address
+#define BUFFER_POOL_1_ADDR_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_1_LEN_OFFSET                           0x05B8    //HW Buffer Pool1 length
+#define BUFFER_POOL_1_LEN_OFFSET_SIZE                      0x4
+#define BUFFER_POOL_2_ADDR_OFFSET                          0x05BC    //HW Buffer Pool2 base address
+#define BUFFER_POOL_2_ADDR_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_2_LEN_OFFSET                           0x05C0    //HW Buffer Pool2 length
+#define BUFFER_POOL_2_LEN_OFFSET_SIZE                      0x4
+#define BUFFER_POOL_3_ADDR_OFFSET                          0x05C4    //HW Buffer Pool3 base address
+#define BUFFER_POOL_3_ADDR_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_3_LEN_OFFSET                           0x05C8    //HW Buffer Pool3 length
+#define BUFFER_POOL_3_LEN_OFFSET_SIZE                      0x4
+#define BUFFER_POOL_4_ADDR_OFFSET                          0x05CC    //HW Buffer Pool4 base address
+#define BUFFER_POOL_4_ADDR_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_4_LEN_OFFSET                           0x05D0    //HW Buffer Pool4 length
+#define BUFFER_POOL_4_LEN_OFFSET_SIZE                      0x4
+#define BUFFER_POOL_5_ADDR_OFFSET                          0x05D4    //HW Buffer Pool5 base address
+#define BUFFER_POOL_5_ADDR_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_5_LEN_OFFSET                           0x05D8    //HW Buffer Pool5 length
+#define BUFFER_POOL_5_LEN_OFFSET_SIZE                      0x4
+#define BUFFER_POOL_6_ADDR_OFFSET                          0x05DC    //HW Buffer Pool6 base address
+#define BUFFER_POOL_6_ADDR_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_6_LEN_OFFSET                           0x05E0    //HW Buffer Pool6 length
+#define BUFFER_POOL_6_LEN_OFFSET_SIZE                      0x4
+#define BUFFER_POOL_7_ADDR_OFFSET                          0x05E4    //HW Buffer Pool7 base address
+#define BUFFER_POOL_7_ADDR_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_7_LEN_OFFSET                           0x05E8    //HW Buffer Pool7 length
+#define BUFFER_POOL_7_LEN_OFFSET_SIZE                      0x4
+#define BUFFER_POOL_8_ADDR_OFFSET                          0x05EC    //HW Buffer Pool8 base address
+#define BUFFER_POOL_8_ADDR_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_8_LEN_OFFSET                           0x05F0    //HW Buffer Pool8 length
+#define BUFFER_POOL_8_LEN_OFFSET_SIZE                      0x4
+#define BUFFER_POOL_9_ADDR_OFFSET                          0x05F4    //HW Buffer Pool9 base address
+#define BUFFER_POOL_9_ADDR_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_9_LEN_OFFSET                           0x05F8    //HW Buffer Pool9 length
+#define BUFFER_POOL_9_LEN_OFFSET_SIZE                      0x4
+#define BUFFER_POOL_10_ADDR_OFFSET                         0x05FC    //HW Buffer Pool10 base address
+#define BUFFER_POOL_10_ADDR_OFFSET_SIZE                    0x4
+#define BUFFER_POOL_10_LEN_OFFSET                          0x0600    //HW Buffer Pool10 length
+#define BUFFER_POOL_10_LEN_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_11_ADDR_OFFSET                         0x0604    //HW Buffer Pool11 base address
+#define BUFFER_POOL_11_ADDR_OFFSET_SIZE                    0x4
+#define BUFFER_POOL_11_LEN_OFFSET                          0x0608    //HW Buffer Pool11 length
+#define BUFFER_POOL_11_LEN_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_12_ADDR_OFFSET                         0x060C    //HW Buffer Pool12 base address
+#define BUFFER_POOL_12_ADDR_OFFSET_SIZE                    0x4
+#define BUFFER_POOL_12_LEN_OFFSET                          0x0610    //HW Buffer Pool12 length
+#define BUFFER_POOL_12_LEN_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_13_ADDR_OFFSET                         0x0614    //HW Buffer Pool13 base address
+#define BUFFER_POOL_13_ADDR_OFFSET_SIZE                    0x4
+#define BUFFER_POOL_13_LEN_OFFSET                          0x0618    //HW Buffer Pool13 length
+#define BUFFER_POOL_13_LEN_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_14_ADDR_OFFSET                         0x061C    //HW Buffer Pool14 base address
+#define BUFFER_POOL_14_ADDR_OFFSET_SIZE                    0x4
+#define BUFFER_POOL_14_LEN_OFFSET                          0x0620    //HW Buffer Pool14 length
+#define BUFFER_POOL_14_LEN_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_15_ADDR_OFFSET                         0x0624    //HW Buffer Pool15 base address
+#define BUFFER_POOL_15_ADDR_OFFSET_SIZE                    0x4
+#define BUFFER_POOL_15_LEN_OFFSET                          0x0628    //HW Buffer Pool15 length
+#define BUFFER_POOL_15_LEN_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_16_ADDR_OFFSET                         0x062C    //HW Buffer Pool16 base address
+#define BUFFER_POOL_16_ADDR_OFFSET_SIZE                    0x4
+#define BUFFER_POOL_16_LEN_OFFSET                          0x0630    //HW Buffer Pool16 length
+#define BUFFER_POOL_16_LEN_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_17_ADDR_OFFSET                         0x0634    //HW Buffer Pool17 base address
+#define BUFFER_POOL_17_ADDR_OFFSET_SIZE                    0x4
+#define BUFFER_POOL_17_LEN_OFFSET                          0x0638    //HW Buffer Pool17 length
+#define BUFFER_POOL_17_LEN_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_18_ADDR_OFFSET                         0x063C    //HW Buffer Pool18 base address
+#define BUFFER_POOL_18_ADDR_OFFSET_SIZE                    0x4
+#define BUFFER_POOL_18_LEN_OFFSET                          0x0640    //HW Buffer Pool18 length
+#define BUFFER_POOL_18_LEN_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_19_ADDR_OFFSET                         0x0644    //HW Buffer Pool19 base address
+#define BUFFER_POOL_19_ADDR_OFFSET_SIZE                    0x4
+#define BUFFER_POOL_19_LEN_OFFSET                          0x0648    //HW Buffer Pool19 length
+#define BUFFER_POOL_19_LEN_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_20_ADDR_OFFSET                         0x064C    //HW Buffer Pool20 base address
+#define BUFFER_POOL_20_ADDR_OFFSET_SIZE                    0x4
+#define BUFFER_POOL_20_LEN_OFFSET                          0x0650    //HW Buffer Pool20 length
+#define BUFFER_POOL_20_LEN_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_21_ADDR_OFFSET                         0x0654    //HW Buffer Pool21 base address
+#define BUFFER_POOL_21_ADDR_OFFSET_SIZE                    0x4
+#define BUFFER_POOL_21_LEN_OFFSET                          0x0658    //HW Buffer Pool21 length
+#define BUFFER_POOL_21_LEN_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_22_ADDR_OFFSET                         0x065C    //HW Buffer Pool22 base address
+#define BUFFER_POOL_22_ADDR_OFFSET_SIZE                    0x4
+#define BUFFER_POOL_22_LEN_OFFSET                          0x0660    //HW Buffer Pool22 length
+#define BUFFER_POOL_22_LEN_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_23_ADDR_OFFSET                         0x0664    //HW Buffer Pool23 base address
+#define BUFFER_POOL_23_ADDR_OFFSET_SIZE                    0x4
+#define BUFFER_POOL_23_LEN_OFFSET                          0x0668    //HW Buffer Pool23 length
+#define BUFFER_POOL_23_LEN_OFFSET_SIZE                     0x4
+#define HOST_RX_PRE_RD_PTR_OFFSET                          0x066C    //Host Egress Q MSMC Read pointer (for Pre-emptive queue) stored here
+#define HOST_RX_PRE_RD_PTR_OFFSET_SIZE                     0x4
+#define EMAC_ICSSG_SWITCH_HOST_QUEUE_READ_PTR_OFFSET       HOST_RX_PRE_RD_PTR_OFFSET    //Same as HOST_RX_PRE_RD_PTR_OFFSET
+#define HOST_RX_PRE_WR_PTR_OFFSET                          0x0670    //Host Egress Q MSMC Write pointer (for Pre-emptive queue) stored here
+#define HOST_RX_PRE_WR_PTR_OFFSET_SIZE                     0x4
+#define HOST_RX_Q_PRE_CONTEXT_OFFSET                       0x0674    //16B for Host Egress MSMC Q (Pre-emptible) context
+#define HOST_RX_Q_PRE_CONTEXT_OFFSET_SIZE                  (NRT_QUEUE_CONTEXT_SIZE) //0x10
+#define DEFAULT_MSMC_Q_OFFSET                              (HOST_RX_Q_PRE_CONTEXT_OFFSET+12)    //2k memory reserved for default writes by PRU0
+#define NRT_DESC                                           0x0684    //Area to store NRT descriptors
+#define NRT_DESC_SIZE                                      0x200
+#define DMEM0_END_OFFSET                                   0x0884
 
-// total DMEM0 memory usage : 1.416015625 KB from total of 8.0KB 
+// total DMEM0 memory usage : 2.12890625 KB from total of 8.0KB 
 
 //************************************************************************************
 //
@@ -486,33 +369,37 @@
 #define EXPRESS_PRE_EMPTIVE_Q_MAP_SIZE                     0x8
 #define PORT_Q_PRIORITY_MAPPING_OFFSET                     0x003C    //Stores the table used for priority mapping. 1B per PCP/Queue
 #define PORT_Q_PRIORITY_MAPPING_OFFSET_SIZE                0x8
-#define PSI_TX_PKT_DATA_OFFSET_SLICE0                      0x0044    //Used Internally by FW. 
+#define TX_TS_COOKIE_OFFSET                                0x0044    //Used internally by FW to store Tx timestamp
+#define TX_TS_COOKIE_OFFSET_SIZE                           0x4
+#define RX_TS_STASHED                                      0x0048    //Used internally by FW for stashed Rx timestamp
+#define RX_TS_STASHED_SIZE                                 0x8
+#define PSI_TX_PKT_DATA_OFFSET_SLICE0                      0x0050    //Used Internally by FW. 
 #define PSI_TX_PKT_DATA_OFFSET_SLICE0_SIZE                 0x24
-#define PSI_TX_PKT_DATA_OFFSET_SLICE1                      0x0068    //Used Internally by FW. 
+#define PSI_TX_PKT_DATA_OFFSET_SLICE1                      0x0074    //Used Internally by FW. 
 #define PSI_TX_PKT_DATA_OFFSET_SLICE1_SIZE                 0x24
-#define LEARNING_WR_RD_COUNT_OFFSET                        0x008C    //Used Internally by FW to synchronize FDB Learning between RTU0 and PRU0 
+#define LEARNING_WR_RD_COUNT_OFFSET                        0x0098    //Used Internally by FW to synchronize FDB Learning between RTU0 and PRU0 
 #define LEARNING_WR_RD_COUNT_OFFSET_SIZE                   0x4
-#define DEBUG_FDB_COMPARISON_MAC_VLAN                      0x0090    //Used for debugging FDB lookups, write the MAC and VLAN combination that is suspect. Currently disabled
+#define DEBUG_FDB_COMPARISON_MAC_VLAN                      0x009C    //Used for debugging FDB lookups, write the MAC and VLAN combination that is suspect. Currently disabled
 #define DEBUG_FDB_COMPARISON_MAC_VLAN_SIZE                 0x8
-#define DEBUG_FDB_RESULTS                                  0x0098    //The results of FBD lookup for Local injection are dumped here
+#define DEBUG_FDB_RESULTS                                  0x00A4    //The results of FBD lookup for Local injection are dumped here
 #define DEBUG_FDB_RESULTS_SIZE                             0xc
-#define FDB_AGEING_TIMEOUT_OFFSET                          0x00A4    //Time after which FDB entries are checked for aged out values. Value in nanoseconds
+#define FDB_AGEING_TIMEOUT_OFFSET                          0x00B0    //Time after which FDB entries are checked for aged out values. Value in nanoseconds
 #define FDB_AGEING_TIMEOUT_OFFSET_SIZE                     0x8
-#define VERIFY_FRAME_RECEIVE_OFFSET                        0x00AC    //Used Internally by FW. Memory updated by RX PRU when verify frame is received
+#define VERIFY_FRAME_RECEIVE_OFFSET                        0x00B8    //Used Internally by FW. Memory updated by RX PRU when verify frame is received
 #define VERIFY_FRAME_RECEIVE_OFFSET_SIZE                   0x1
 //Padding of 3 bytes
-#define VERIFY_FRAME_SEND_OFFSET                           0x00B0    //Used Internally by FW. Memory updated by TX PRU to inform the state machine that the verify frame has been sent
+#define VERIFY_FRAME_SEND_OFFSET                           0x00BC    //Used Internally by FW. Memory updated by TX PRU to inform the state machine that the verify frame has been sent
 #define VERIFY_FRAME_SEND_OFFSET_SIZE                      0x1
 //Padding of 3 bytes
-#define RESPOND_FRAME_RECEIVE_OFFSET                       0x00B4    //Used Internally by FW.Memory updated by RX PRU when respond frame is received
+#define RESPOND_FRAME_RECEIVE_OFFSET                       0x00C0    //Used Internally by FW.Memory updated by RX PRU when respond frame is received
 #define RESPOND_FRAME_RECEIVE_OFFSET_SIZE                  0x1
 //Padding of 3 bytes
-#define RESPOND_FRAME_SEND_OFFSET                          0x00B8    //Used Internally by FW.Memory updated by TX PRU to inform the state machine that the respond frame has been sent
+#define RESPOND_FRAME_SEND_OFFSET                          0x00C4    //Used Internally by FW.Memory updated by TX PRU to inform the state machine that the respond frame has been sent
 #define RESPOND_FRAME_SEND_OFFSET_SIZE                     0x1
 //Padding of 3 bytes
-#define PRE_EMPTION_CONTEXT_SLICE0_OFFSET                  0x00BC    //Backup of active Tx and Q context
+#define PRE_EMPTION_CONTEXT_SLICE0_OFFSET                  0x00C8    //Backup of active Tx and Q context
 #define PRE_EMPTION_CONTEXT_SLICE0_OFFSET_SIZE             0x18
-#define PRE_EMPTION_CONTEXT_SLICE1_OFFSET                  0x00D4    //Backup of active Tx and Q context
+#define PRE_EMPTION_CONTEXT_SLICE1_OFFSET                  0x00E0    //Backup of active Tx and Q context
 #define PRE_EMPTION_CONTEXT_SLICE1_OFFSET_SIZE             0x18
 #define TAS_GATE_MASK_LIST0                                0x0100    //TAS gate mask for windows list0
 #define TAS_GATE_MASK_LIST0_SIZE                           (TAS_NUM_WINDOWS) //0x10
@@ -541,9 +428,116 @@
 //Padding of 1 bytes
 #define PRE_EMPTION_VERIFY_TIME                            0x05A8    //Time in ms the State machine waits for respond packet
 #define PRE_EMPTION_VERIFY_TIME_SIZE                       0x2
-#define DMEM1_END_OFFSET                                   0x05AA
+//Padding of 2 bytes
+#define BUFFER_POOL_0_ADDR_OFFSET                          0x05AC    //HW Buffer Pool0 base address
+#define BUFFER_POOL_0_ADDR_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_0_LEN_OFFSET                           0x05B0    //HW Buffer Pool0 length
+#define BUFFER_POOL_0_LEN_OFFSET_SIZE                      0x4
+#define BUFFER_POOL_1_ADDR_OFFSET                          0x05B4    //HW Buffer Pool1 base address
+#define BUFFER_POOL_1_ADDR_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_1_LEN_OFFSET                           0x05B8    //HW Buffer Pool1 length
+#define BUFFER_POOL_1_LEN_OFFSET_SIZE                      0x4
+#define BUFFER_POOL_2_ADDR_OFFSET                          0x05BC    //HW Buffer Pool2 base address
+#define BUFFER_POOL_2_ADDR_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_2_LEN_OFFSET                           0x05C0    //HW Buffer Pool2 length
+#define BUFFER_POOL_2_LEN_OFFSET_SIZE                      0x4
+#define BUFFER_POOL_3_ADDR_OFFSET                          0x05C4    //HW Buffer Pool3 base address
+#define BUFFER_POOL_3_ADDR_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_3_LEN_OFFSET                           0x05C8    //HW Buffer Pool3 length
+#define BUFFER_POOL_3_LEN_OFFSET_SIZE                      0x4
+#define BUFFER_POOL_4_ADDR_OFFSET                          0x05CC    //HW Buffer Pool4 base address
+#define BUFFER_POOL_4_ADDR_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_4_LEN_OFFSET                           0x05D0    //HW Buffer Pool4 length
+#define BUFFER_POOL_4_LEN_OFFSET_SIZE                      0x4
+#define BUFFER_POOL_5_ADDR_OFFSET                          0x05D4    //HW Buffer Pool5 base address
+#define BUFFER_POOL_5_ADDR_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_5_LEN_OFFSET                           0x05D8    //HW Buffer Pool5 length
+#define BUFFER_POOL_5_LEN_OFFSET_SIZE                      0x4
+#define BUFFER_POOL_6_ADDR_OFFSET                          0x05DC    //HW Buffer Pool6 base address
+#define BUFFER_POOL_6_ADDR_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_6_LEN_OFFSET                           0x05E0    //HW Buffer Pool6 length
+#define BUFFER_POOL_6_LEN_OFFSET_SIZE                      0x4
+#define BUFFER_POOL_7_ADDR_OFFSET                          0x05E4    //HW Buffer Pool7 base address
+#define BUFFER_POOL_7_ADDR_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_7_LEN_OFFSET                           0x05E8    //HW Buffer Pool7 length
+#define BUFFER_POOL_7_LEN_OFFSET_SIZE                      0x4
+#define BUFFER_POOL_8_ADDR_OFFSET                          0x05EC    //HW Buffer Pool8 base address
+#define BUFFER_POOL_8_ADDR_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_8_LEN_OFFSET                           0x05F0    //HW Buffer Pool8 length
+#define BUFFER_POOL_8_LEN_OFFSET_SIZE                      0x4
+#define BUFFER_POOL_9_ADDR_OFFSET                          0x05F4    //HW Buffer Pool9 base address
+#define BUFFER_POOL_9_ADDR_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_9_LEN_OFFSET                           0x05F8    //HW Buffer Pool9 length
+#define BUFFER_POOL_9_LEN_OFFSET_SIZE                      0x4
+#define BUFFER_POOL_10_ADDR_OFFSET                         0x05FC    //HW Buffer Pool10 base address
+#define BUFFER_POOL_10_ADDR_OFFSET_SIZE                    0x4
+#define BUFFER_POOL_10_LEN_OFFSET                          0x0600    //HW Buffer Pool10 length
+#define BUFFER_POOL_10_LEN_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_11_ADDR_OFFSET                         0x0604    //HW Buffer Pool11 base address
+#define BUFFER_POOL_11_ADDR_OFFSET_SIZE                    0x4
+#define BUFFER_POOL_11_LEN_OFFSET                          0x0608    //HW Buffer Pool11 length
+#define BUFFER_POOL_11_LEN_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_12_ADDR_OFFSET                         0x060C    //HW Buffer Pool12 base address
+#define BUFFER_POOL_12_ADDR_OFFSET_SIZE                    0x4
+#define BUFFER_POOL_12_LEN_OFFSET                          0x0610    //HW Buffer Pool12 length
+#define BUFFER_POOL_12_LEN_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_13_ADDR_OFFSET                         0x0614    //HW Buffer Pool13 base address
+#define BUFFER_POOL_13_ADDR_OFFSET_SIZE                    0x4
+#define BUFFER_POOL_13_LEN_OFFSET                          0x0618    //HW Buffer Pool13 length
+#define BUFFER_POOL_13_LEN_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_14_ADDR_OFFSET                         0x061C    //HW Buffer Pool14 base address
+#define BUFFER_POOL_14_ADDR_OFFSET_SIZE                    0x4
+#define BUFFER_POOL_14_LEN_OFFSET                          0x0620    //HW Buffer Pool14 length
+#define BUFFER_POOL_14_LEN_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_15_ADDR_OFFSET                         0x0624    //HW Buffer Pool15 base address
+#define BUFFER_POOL_15_ADDR_OFFSET_SIZE                    0x4
+#define BUFFER_POOL_15_LEN_OFFSET                          0x0628    //HW Buffer Pool15 length
+#define BUFFER_POOL_15_LEN_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_16_ADDR_OFFSET                         0x062C    //HW Buffer Pool16 base address
+#define BUFFER_POOL_16_ADDR_OFFSET_SIZE                    0x4
+#define BUFFER_POOL_16_LEN_OFFSET                          0x0630    //HW Buffer Pool16 length
+#define BUFFER_POOL_16_LEN_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_17_ADDR_OFFSET                         0x0634    //HW Buffer Pool17 base address
+#define BUFFER_POOL_17_ADDR_OFFSET_SIZE                    0x4
+#define BUFFER_POOL_17_LEN_OFFSET                          0x0638    //HW Buffer Pool17 length
+#define BUFFER_POOL_17_LEN_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_18_ADDR_OFFSET                         0x063C    //HW Buffer Pool18 base address
+#define BUFFER_POOL_18_ADDR_OFFSET_SIZE                    0x4
+#define BUFFER_POOL_18_LEN_OFFSET                          0x0640    //HW Buffer Pool18 length
+#define BUFFER_POOL_18_LEN_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_19_ADDR_OFFSET                         0x0644    //HW Buffer Pool19 base address
+#define BUFFER_POOL_19_ADDR_OFFSET_SIZE                    0x4
+#define BUFFER_POOL_19_LEN_OFFSET                          0x0648    //HW Buffer Pool19 length
+#define BUFFER_POOL_19_LEN_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_20_ADDR_OFFSET                         0x064C    //HW Buffer Pool20 base address
+#define BUFFER_POOL_20_ADDR_OFFSET_SIZE                    0x4
+#define BUFFER_POOL_20_LEN_OFFSET                          0x0650    //HW Buffer Pool20 length
+#define BUFFER_POOL_20_LEN_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_21_ADDR_OFFSET                         0x0654    //HW Buffer Pool21 base address
+#define BUFFER_POOL_21_ADDR_OFFSET_SIZE                    0x4
+#define BUFFER_POOL_21_LEN_OFFSET                          0x0658    //HW Buffer Pool21 length
+#define BUFFER_POOL_21_LEN_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_22_ADDR_OFFSET                         0x065C    //HW Buffer Pool22 base address
+#define BUFFER_POOL_22_ADDR_OFFSET_SIZE                    0x4
+#define BUFFER_POOL_22_LEN_OFFSET                          0x0660    //HW Buffer Pool22 length
+#define BUFFER_POOL_22_LEN_OFFSET_SIZE                     0x4
+#define BUFFER_POOL_23_ADDR_OFFSET                         0x0664    //HW Buffer Pool23 base address
+#define BUFFER_POOL_23_ADDR_OFFSET_SIZE                    0x4
+#define BUFFER_POOL_23_LEN_OFFSET                          0x0668    //HW Buffer Pool23 length
+#define BUFFER_POOL_23_LEN_OFFSET_SIZE                     0x4
+#define HOST_RX_PRE_RD_PTR_OFFSET                          0x066C    //Host Egress Q MSMC Read pointer (for Pre-emptive queue) stored here
+#define HOST_RX_PRE_RD_PTR_OFFSET_SIZE                     0x4
+#define EMAC_ICSSG_SWITCH_HOST_QUEUE_READ_PTR_OFFSET       HOST_RX_PRE_RD_PTR_OFFSET    //Same as HOST_RX_PRE_RD_PTR_OFFSET
+#define HOST_RX_PRE_WR_PTR_OFFSET                          0x0670    //Host Egress Q MSMC Write pointer (for Pre-emptive queue) stored here
+#define HOST_RX_PRE_WR_PTR_OFFSET_SIZE                     0x4
+#define HOST_RX_Q_PRE_CONTEXT_OFFSET                       0x0674    //16B for Host Egress MSMC Q (Pre-emptible) context
+#define HOST_RX_Q_PRE_CONTEXT_OFFSET_SIZE                  (NRT_QUEUE_CONTEXT_SIZE) //0x10
+#define DEFAULT_MSMC_Q_OFFSET                              (HOST_RX_Q_PRE_CONTEXT_OFFSET+12)    //2k memory reserved for default writes by PRU0
+#define NRT_DESC                                           0x0684    //Area to store NRT descriptors
+#define NRT_DESC_SIZE                                      0x200
+#define DMEM1_END_OFFSET                                   0x0884
 
-// total DMEM1 memory usage : 1.416015625 KB from total of 8.0KB 
+// total DMEM1 memory usage : 2.12890625 KB from total of 8.0KB 
 
 //************************************************************************************
 //
