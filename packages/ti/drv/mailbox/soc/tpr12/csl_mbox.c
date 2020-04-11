@@ -1,6 +1,5 @@
 /*
- *  Copyright (c) Texas Instruments Incorporated 2018
- *  All rights reserved.
+ *  Copyright (c) Texas Instruments Incorporated 2020
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -31,34 +30,19 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/**
- *  \file main_tirtos.c
+/*
+ * CSL Mailbox
  *
- *  \brief Main file for TI-RTOS build
+ * This file implements the CSL Functional Layer for the Mailbox
+ *
  */
 
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
 
-#include <stdio.h>
-#include <stdint.h>
-
-/* XDCtools Header files */
-#include <xdc/std.h>
-#include <xdc/runtime/Error.h>
-#include <xdc/runtime/System.h>
-/* BIOS Header files */
-#include <ti/sysbios/BIOS.h>
-#include <ti/sysbios/knl/Task.h>
-
-#include "ipc_utils.h"
-#if defined (__C7100__)
-#include <ti/sysbios/family/c7x/Mmu.h>
-#endif
-
-#include <ti/drv/sciclient/sciclient.h>
-#include <ti/board/board.h>
+#include <ti/drv/mailbox/soc/tpr12/csl_mbox.h>
+#include <ti/csl/hw_types.h>
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
@@ -76,8 +60,7 @@
 /*                          Function Declarations                             */
 /* ========================================================================== */
 
-static Void taskFxn(UArg a0, UArg a1);
-extern int32_t Ipc_echo_test(void);
+/* None */
 
 /* ========================================================================== */
 /*                            Global Variables                                */
@@ -89,74 +72,55 @@ extern int32_t Ipc_echo_test(void);
 /*                          Function Definitions                              */
 /* ========================================================================== */
 
-
-void ipc_initSciclient()
+void CSL_Mbox_memInit (CSL_mboxRegAddr* pMboxRegAddr)
 {
-    Sciclient_ConfigPrms_t        config;
-
-    /* Now reinitialize it as default parameter */
-    Sciclient_configPrmsInit(&config);
-
-#if defined(BUILD_C7X_1)
-    config.isSecureMode  = 1;
-#endif
-
-    Sciclient_init(&config);
-
+    /* Initialize the memory for the mailbox */
+    HW_WR_REG32(pMboxRegAddr->memInit, 1U);
 }
 
-#if !defined(A72_LINUX_OS)
-void ipc_boardInit()
+uint32_t CSL_Mbox_isMeminitDone (const CSL_mboxRegAddr* pMboxRegAddr)
 {
-    Board_initCfg           boardCfg;
-
-    boardCfg = BOARD_INIT_PINMUX_CONFIG |
-               BOARD_INIT_UART_STDIO;
-    Board_init(boardCfg);
-
-}
-#endif
-
-int main(void)
-{
-    Task_Handle task;
-    Error_Block eb;
-    Task_Params taskParams;
-
-    /* It must be called before board init */
-    ipc_initSciclient();
-
-#if !defined(A72_LINUX_OS)
-    ipc_boardInit();
-#endif
-
-    Error_init(&eb);
-
-    /* Initialize the task params */
-    Task_Params_init(&taskParams);
-    /* Set the task priority higher than the default priority (1) */
-    taskParams.priority = 2;
-
-    task = Task_create(taskFxn, &taskParams, &eb);
-    if(NULL == task)
+    uint32_t retVal = 0U;
+    if (HW_RD_REG32(pMboxRegAddr->memInitDone) & 0x01U == 0x01U)
     {
-        BIOS_exit(0);
+        retVal = 1U;
+        /* Clear init Done status. */
+        HW_WR_REG32(pMboxRegAddr->memInitDone, 1U);
     }
-    BIOS_start();    /* does not return */
-
-    return(0);
+    return (retVal);
 }
 
-static Void taskFxn(UArg a0, UArg a1)
+void CSL_Mbox_triggerTxInterrupt (CSL_mboxRegAddr* pMboxRegAddr, uint32_t processorId)
 {
-    Ipc_echo_test();
+    uint32_t     bits;
+    bits = (processorId << 2U) ;
+    /* raise interrupt to the processor */
+    HW_WR_REG32(pMboxRegAddr->mboxWriteDone, (1U << bits));
 }
 
-#if defined(BUILD_MPU) || defined (__C7100__)
-extern void Osal_initMmuDefault(void);
-void InitMmu(void)
+
+uint32_t CSL_Mbox_getBoxFullIntr (CSL_mboxRegAddr* pMboxRegAddr)
 {
-    Osal_initMmuDefault();
+    return (HW_RD_REG32(pMboxRegAddr->mboxReadReq));
 }
-#endif
 
+void CSL_Mbox_triggerAckInterrupt (CSL_mboxRegAddr* pMboxRegAddr, uint32_t processorId)
+{
+    uint32_t     bits;
+    bits = (processorId << 2U) ;
+    /* raise interrupt to the processor */
+    HW_WR_REG32(pMboxRegAddr->mboxReadReq, (1U << bits));
+}
+
+uint32_t CSL_Mbox_getBoxEmptyIntr (CSL_mboxRegAddr* pMboxRegAddr)
+{
+    return (HW_RD_REG32(pMboxRegAddr->mboxReadDone));
+}
+
+void CSL_Mbox_clearTxAckInterrupt (CSL_mboxRegAddr* pMboxRegAddr, uint32_t processorId)
+{
+    uint32_t     bits;
+    bits = (processorId << 2U) ;
+    /* clear the interrupt */
+    HW_WR_REG32(pMboxRegAddr->mboxReadDone, (1U << bits));
+}

@@ -1665,7 +1665,8 @@ void test_EMAC_verify_ut_dual_mac_icssg(void)
     /* @description:Unit test for ICSSG dual mac use case
 
        @requirements: PRSDK-3771, PRSDK-3767, PRSDK-3768, PRSDK-3774, PRSDK-3776,
-                      PRSDK-3780, PRSDK-3782, PRSDK-3813, PRSDK-3815, PRSDK-4029
+                      PRSDK-3780, PRSDK-3782, PRSDK-3813, PRSDK-3815, PRSDK-4029,
+                      PRSDK-7156
 
        @cores: mpu1_0, mcu1_0 */
     Board_STATUS boardInitStatus =0;
@@ -1744,33 +1745,41 @@ void test_EMAC_verify_ut_dual_mac_icssg(void)
 #endif
     app_test_interrrupt_mode();
 
-    /* test close -re open sequence */
-    if(app_test_emac_close() == -1)
+    if (gPgVersion == APP_TEST_AM65XX_PG1_0_VERSION)
     {
-        UART_printf("emac unit test app_test_emac_close failed\n");
-        while(1);
-    }
-    /* re-init the app */
-    app_init();
+        /* test close -re open sequence */
+        if(app_test_emac_close() == -1)
+        {
+            UART_printf("emac unit test app_test_emac_close failed\n");
+            while(1);
+        }
+        /* re-init the app */
+        app_init();
 
-    /* re-open in polling mode */
-    if (app_test_emac_open(EMAC_MODE_POLL) != 0)
-    {
-        while(1);
-    }
+        /* re-open in polling mode */
+        if (app_test_emac_open(EMAC_MODE_POLL) != 0)
+        {
+            while(1);
+        }
 
-    app_test_poll_mode();
-
-
+        app_test_poll_mode();
 #ifndef BUILD_MCU1_0
-        app_test_multi_flows();
+            app_test_multi_flows();
 #endif
-
-    app_test_config_promiscous_mode(1);
-    app_test_promiscous_mode();
-
-    emac_test_get_icssg_stats();
-
+        app_test_config_promiscous_mode(1);
+        app_test_promiscous_mode();
+        emac_test_get_icssg_stats();
+    }
+    else
+    {
+        emac_test_get_icssg_stats();
+        /* test close -re open sequence */
+        if(app_test_emac_close() == -1)
+        {
+            UART_printf("emac unit test app_test_emac_close failed\n");
+            while(1);
+        }
+    }
     UART_printf("All tests have passed\n");
 #ifdef UNITY_INCLUDE_CONFIG_H
     TEST_PASS();
@@ -1783,7 +1792,7 @@ void test_EMAC_verify_ut_cpsw(void)
     /* @description:Unit test for ICSSG dual mac and CPSW use cases
 
        @requirements: PRSDK-3485, PRSDK-3486, PRSDK-3487, PRSDK-3509,
-                      PRSDK-3726, PRSDK-3755, PRSDK-3765
+                      PRSDK-3726, PRSDK-3755, PRSDK-3765, PRSDK-5567
 
        @cores: mpu1_0, mcu1_0 */
 
@@ -1871,7 +1880,7 @@ void test_Emac_Cpsw_TestApp_runner(void)
     /* @description: Test runner for EMAC CPSW tests
 
        @requirements: PRSDK-3485, PRSDK-3486, PRSDK-3487, PRSDK-3509,
-                      PRSDK-3726, PRSDK-3755, PRSDK-3765
+                      PRSDK-3726, PRSDK-3755, PRSDK-3765, PRSDK-5567
 
        @cores: mpu1_0, mcu1_0 */
 

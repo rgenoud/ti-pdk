@@ -1,6 +1,5 @@
 /*
- *  Copyright (c) Texas Instruments Incorporated 2018
- *  All rights reserved.
+ *  Copyright (c) Texas Instruments Incorporated 2020
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -32,39 +31,49 @@
  */
 
 /**
- *  \file main_tirtos.c
+ *  \file mailbox_soc.h
  *
- *  \brief Main file for TI-RTOS build
+ *  \brief MAILBOX Driver SOC specific file.
  */
+
+#ifndef MAILBOX_SOC_H_
+#define MAILBOX_SOC_H_
 
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
 
-#include <stdio.h>
-#include <stdint.h>
-
-/* XDCtools Header files */
-#include <xdc/std.h>
-#include <xdc/runtime/Error.h>
-#include <xdc/runtime/System.h>
-/* BIOS Header files */
-#include <ti/sysbios/BIOS.h>
-#include <ti/sysbios/knl/Task.h>
-
-#include "ipc_utils.h"
-#if defined (__C7100__)
-#include <ti/sysbios/family/c7x/Mmu.h>
+#ifdef __cplusplus
+extern "C" {
 #endif
-
-#include <ti/drv/sciclient/sciclient.h>
-#include <ti/board/board.h>
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
+/*! @brief Mailbox Instance Number */
+typedef uint32_t Mailbox_Instance;
 
-/* None */
+/** @defgroup MAILBOX_INSTANCE Instance IDs
+\ingroup DRV_MAILBOX_MODULE
+ *
+ @{ */
+
+/*! \brief MCU1_0 Mailbox INST */
+#define MAILBOX_INST_MSS_CR5A        (0U)
+/*! \brief MCU1_1 Mailbox INST */
+#define MAILBOX_INST_MSS_CR5B        (1U)
+/*! \brief HSM M4 Mailbox INST */
+#define MAILBOX_INST_HSM_CM4         (2U)
+/*! \brief C66x Mailbox INST */
+#define MAILBOX_INST_DSP             (4U)
+/*! \brief DSS M4 Mailbox INST */
+#define MAILBOX_INST_DSP_CM4         (5U)
+/*! \brief Last Mailbox INST */
+#define MAILBOX_INST_LAST            (MAILBOX_INST_DSP_CM4)
+/*! \brief Invalid Mailbox INST */
+#define MAILBOX_INST_INVALID         (0xFFU)
+
+/** @}*/ /* end defgroup MAILBOX_INSTANCE */
 
 /* ========================================================================== */
 /*                         Structure Declarations                             */
@@ -76,87 +85,16 @@
 /*                          Function Declarations                             */
 /* ========================================================================== */
 
-static Void taskFxn(UArg a0, UArg a1);
-extern int32_t Ipc_echo_test(void);
+/* None */
 
 /* ========================================================================== */
-/*                            Global Variables                                */
+/*                       Static Function Definitions                          */
 /* ========================================================================== */
 
 /* None */
 
-/* ========================================================================== */
-/*                          Function Definitions                              */
-/* ========================================================================== */
-
-
-void ipc_initSciclient()
-{
-    Sciclient_ConfigPrms_t        config;
-
-    /* Now reinitialize it as default parameter */
-    Sciclient_configPrmsInit(&config);
-
-#if defined(BUILD_C7X_1)
-    config.isSecureMode  = 1;
-#endif
-
-    Sciclient_init(&config);
-
-}
-
-#if !defined(A72_LINUX_OS)
-void ipc_boardInit()
-{
-    Board_initCfg           boardCfg;
-
-    boardCfg = BOARD_INIT_PINMUX_CONFIG |
-               BOARD_INIT_UART_STDIO;
-    Board_init(boardCfg);
-
+#ifdef __cplusplus
 }
 #endif
 
-int main(void)
-{
-    Task_Handle task;
-    Error_Block eb;
-    Task_Params taskParams;
-
-    /* It must be called before board init */
-    ipc_initSciclient();
-
-#if !defined(A72_LINUX_OS)
-    ipc_boardInit();
-#endif
-
-    Error_init(&eb);
-
-    /* Initialize the task params */
-    Task_Params_init(&taskParams);
-    /* Set the task priority higher than the default priority (1) */
-    taskParams.priority = 2;
-
-    task = Task_create(taskFxn, &taskParams, &eb);
-    if(NULL == task)
-    {
-        BIOS_exit(0);
-    }
-    BIOS_start();    /* does not return */
-
-    return(0);
-}
-
-static Void taskFxn(UArg a0, UArg a1)
-{
-    Ipc_echo_test();
-}
-
-#if defined(BUILD_MPU) || defined (__C7100__)
-extern void Osal_initMmuDefault(void);
-void InitMmu(void)
-{
-    Osal_initMmuDefault();
-}
-#endif
-
+#endif /* #ifndef EDMA_SOC_TOP_H_ */
