@@ -1398,7 +1398,7 @@ EMAC_DRV_ERR_E emac_ioctl_configure_cut_through_or_prempt_select_ctrl(uint32_t p
             }
             expressPremptiveQueueAddr = emac_mcb.port_cb[port_num].icssDram0BaseAddr + 0x2000*port_num
                                         + pSwitchFwCfg->expressPremptiveQueueMaskOffset;
-            CSL_REG8_WR(expressPremptiveQueueAddr, queue_mask);
+            CSL_REG8_WR(expressPremptiveQueueAddr, ~queue_mask);
         }
     }
     UTILS_trace(UTIL_TRACE_LEVEL_INFO, emac_mcb.drv_trace_cb, "port: %d: EXIT with status: %d",port_num, retVal);
