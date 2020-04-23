@@ -2783,49 +2783,11 @@ void emac_icssg_switch_eth_setup (uint32_t portNum)
                       CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_G_CFG_REGS_G_ICSS_G_CFG),
                      reg_val);
 
-    /*Configure task manager TXL2 watermark. TBD: Need to move to firmware */
-    /*TX_WM ask runs on TX_PRU/PRU1 */
-    reg_val = 0;
-    emac_hw_mem_write
-    (icssgBaseAddr + CSL_ICSS_G_PR1_TASKS_MGR_PRU1_PR1_TASKS_MGR_PRU1_MMR_REGS_BASE +
-     CSL_ICSS_G_PR1_TASKS_MGR_PRU1_PR1_TASKS_MGR_PRU1_MMR_TX_CFG, &reg_val,1);
-    /* RX tasks run on RX_PRU/PRU0 */
-    /*Configure RXBK1 Size = 20Bytes, RXBK2 Size = 12 Bytes, RXBKn Size = 32 Bytes. */
-    reg_val =
-        (19 <<
-         CSL_ICSS_G_PR1_TASKS_MGR_PRU0_PR1_TASKS_MGR_PRU0_MMR_RX_CFG_BK1_SIZE_SHIFT)
-        | (11 <<
-           CSL_ICSS_G_PR1_TASKS_MGR_PRU0_PR1_TASKS_MGR_PRU0_MMR_RX_CFG_BK2_SIZE_SHIFT)
-        | (31 <<
-           CSL_ICSS_G_PR1_TASKS_MGR_PRU0_PR1_TASKS_MGR_PRU0_MMR_RX_CFG_BKN_SIZE_SHIFT);
-    emac_hw_mem_write
-    (icssgBaseAddr + CSL_ICSS_G_PR1_TASKS_MGR_PRU0_PR1_TASKS_MGR_PRU0_MMR_REGS_BASE +
-     CSL_ICSS_G_PR1_TASKS_MGR_PRU0_PR1_TASKS_MGR_PRU0_MMR_RX_CFG, &reg_val, 1);
-    /* Configure RXBKn task to capture new event CAP_NEW_EN */
-    /* configure similar values for RTU0 */
-     reg_val =
-        (19 <<
-         CSL_ICSS_G_PR1_TASKS_MGR_RTU0_PR1_TASKS_MGR_RTU0_MMR_RX_CFG_BK1_SIZE_SHIFT)
-        | (11 <<
-           CSL_ICSS_G_PR1_TASKS_MGR_RTU0_PR1_TASKS_MGR_RTU0_MMR_RX_CFG_BK2_SIZE_SHIFT)
-        | (31 <<
-           CSL_ICSS_G_PR1_TASKS_MGR_RTU0_PR1_TASKS_MGR_RTU0_MMR_RX_CFG_BKN_SIZE_SHIFT);
-    emac_hw_mem_write
-    (icssgBaseAddr+ CSL_ICSS_G_PR1_TASKS_MGR_RTU0_PR1_TASKS_MGR_RTU0_MMR_REGS_BASE +
-     CSL_ICSS_G_PR1_TASKS_MGR_RTU0_PR1_TASKS_MGR_RTU0_MMR_RX_CFG, &reg_val, 1);
-
-    /* enable only for TS 1 task due to HW errata*/
-    reg_val = 0x1f;
-    emac_hw_mem_write
-    (icssgBaseAddr + CSL_ICSS_G_PR1_TASKS_MGR_PRU0_PR1_TASKS_MGR_PRU0_MMR_REGS_BASE +
-     CSL_ICSS_G_PR1_TASKS_MGR_PRU0_PR1_TASKS_MGR_PRU0_MMR_CAP_EN_CFG, &reg_val,1);
-
     /*For reducing IEP latency. Enable OCP clock */
     CSL_REG32_WR (icssgBaseAddr + CSL_ICSSCFG_REGS_BASE +
                      CSL_ICSSCFG_IEPCLK,
                      (0x1 <<
                       CSL_ICSSCFG_IEPCLK_OCP_EN_SHIFT));
-
 
     /* Enable IEP0 counter and set default increment as 4 */
     reg_val = (0x1 << CSL_ICSS_G_PR1_IEP0_SLV_GLOBAL_CFG_REG_CNT_ENABLE_SHIFT)
