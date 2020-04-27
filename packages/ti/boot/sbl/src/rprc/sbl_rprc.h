@@ -146,6 +146,8 @@ typedef struct meta_header_end
     uint32_t magic_string_end;
 }meta_header_end_t;
 
+extern rprcSectionHeader_t gSectionList[NUM_CORES];
+
 /* ========================================================================== */
 /*                          Function Declarations                             */
 /* ========================================================================== */

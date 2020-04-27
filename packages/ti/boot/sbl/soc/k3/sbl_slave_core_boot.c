@@ -57,6 +57,7 @@
 #include "sbl_err_trap.h"
 #include "sbl_sci_client.h"
 #include "sbl_slave_core_boot.h"
+#include <ti/boot/sbl/src/rprc/sbl_rprc.h>
 
 #if defined(BOOT_OSPI)
 #include "sbl_ospi.h"
@@ -592,6 +593,8 @@ void SBL_SlaveCoreBoot(cpu_core_id_t core_id, uint32_t freqHz, sblEntryPoint_t *
         SBL_log(SBL_LOG_MAX, "Copying first 128 byptes from app to MCU ATCM @ 0x%x for core %d\n", SblAtcmAddr[core_id - MCU1_CPU0_ID], core_id);
         memcpy(((void *)(SblAtcmAddr[core_id - MCU1_CPU0_ID])), (void *)(pAppEntry->CpuEntryPoint[core_id]), 128);
 #endif        
+        void SBL_Setup_Firewalls(uint32_t coreId, uint32_t size, uint32_t addr, uint32_t preInit);
+        SBL_Setup_Firewalls(core_id, gSectionList[core_id].size, gSectionList[core_id].addr, FALSE);
         return;
     }
 
@@ -663,6 +666,8 @@ void SBL_SlaveCoreBoot(cpu_core_id_t core_id, uint32_t freqHz, sblEntryPoint_t *
                     SBL_log(SBL_LOG_MAX, "Copying first 128 byptes from app to MCU ATCM @ 0x%x for core %d\n", SblAtcmAddr[core_id - MCU1_CPU0_ID], core_id);
                     memcpy(((void *)(SblAtcmAddr[core_id - MCU1_CPU0_ID])), (void *)(pAppEntry->CpuEntryPoint[core_id]), 128);
 #endif
+                    void SBL_Setup_Firewalls(uint32_t coreId, uint32_t size, uint32_t addr, uint32_t preInit);
+                    SBL_Setup_Firewalls(core_id, gSectionList[core_id].size, gSectionList[core_id].addr, FALSE);
                 }
             }
 

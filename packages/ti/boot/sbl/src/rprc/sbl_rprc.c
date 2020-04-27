@@ -675,6 +675,7 @@ void SBL_SetupCoreMem(uint32_t core_id)
     return;
 }
 
+rprcSectionHeader_t gSectionList[NUM_CORES] = {0};
 static int32_t SBL_RprcImageParse(void *srcAddr,
                                   uint32_t *entryPoint,
                                   int32_t CoreId)
@@ -758,7 +759,7 @@ static int32_t SBL_RprcImageParse(void *srcAddr,
         /* Setup CPUs internal memory before using it */
         SBL_SetupCoreMem(CoreId);
 
-	/*read entrypoint and copy sections to memory*/
+        /*read entrypoint and copy sections to memory*/
         for (i = (0U); i < header.SectionCount; i++)
         {
             fp_readData(&section, srcAddr, sizeof (rprcSectionHeader_t));
@@ -884,12 +885,240 @@ static int32_t SBL_RprcImageParse(void *srcAddr,
             else
             {
                 SBL_log(SBL_LOG_MAX, "Copying 0x%x bytes to 0x%x\n", section.size, section.addr);
+                /* Currently setting the firewall to be set to the MCU R5F to load the section for a given core.
+                 * No other Core has access at this point.
+                 * This logic needs to be enhanced for codes with mulitple sections.
+                 * Currently the firewall is set only for loaded sections. Ideally would like to make sure the
+                 * non-loadable sections like BSS and Stack are also firewall protected. This can be done
+                 * by giving the firewall configuration the exact memory address ranges which need protection.
+                 */
+                void SBL_Setup_Firewalls(uint32_t coreId, uint32_t size, uint32_t addr, uint32_t preInit);
+                SBL_Setup_Firewalls(CoreId, section.size, section.addr, TRUE);
                 fp_readData((void *)(uintptr_t)(section.addr), srcAddr, section.size);
+                gSectionList[CoreId].size = section.size;
+                gSectionList[CoreId].addr = section.addr;
+                
             }
         }
     }
     return retVal;
 }
+
+#define SEC_SUPV_WRITE_MASK (0x00000001U)
+#define SEC_SUPV_READ_MASK (0x00000002U)
+#define SEC_SUPV_CACHEABLE_MASK (0x00000004U)
+#define SEC_SUPV_DEBUG_MASK (0x00000008U)
+#define SEC_USER_WRITE_MASK (0x00000010U)
+#define SEC_USER_READ_MASK (0x00000020U)
+#define SEC_USER_CACHEABLE_MASK (0x00000040U)
+#define SEC_USER_DEBUG_MASK (0x00000080U)
+#define NONSEC_SUPV_WRITE_MASK (0x00000100U)
+#define NONSEC_SUPV_READ_MASK (0x00000200U)
+#define NONSEC_SUPV_CACHEABLE_MASK (0x00000400U)
+#define NONSEC_SUPV_DEBUG_MASK (0x00000800U)
+#define NONSEC_USER_WRITE_MASK (0x00001000U)
+#define NONSEC_USER_READ_MASK (0x00002000U)
+#define NONSEC_USER_CACHEABLE_MASK (0x00004000U)
+#define NONSEC_USER_DEBUG_MASK (0x00008000U)
+void SBL_Setup_Firewalls(uint32_t coreId, uint32_t size, uint32_t addr, uint32_t preInit)
+{
+#if defined (SOC_AM65XX)
+    uint32_t privId;
+    int32_t ret = CSL_PASS;
+    uint32_t fwl_id;
+    const uint32_t perm_for_access =
+            SEC_SUPV_WRITE_MASK | SEC_SUPV_READ_MASK | 
+            SEC_SUPV_CACHEABLE_MASK | SEC_SUPV_DEBUG_MASK |
+            SEC_USER_WRITE_MASK | SEC_USER_READ_MASK | 
+            SEC_USER_CACHEABLE_MASK | SEC_USER_DEBUG_MASK |
+            NONSEC_SUPV_WRITE_MASK | NONSEC_SUPV_READ_MASK | 
+            NONSEC_SUPV_CACHEABLE_MASK | NONSEC_SUPV_DEBUG_MASK |
+            NONSEC_USER_WRITE_MASK | NONSEC_USER_READ_MASK | 
+            NONSEC_USER_CACHEABLE_MASK | NONSEC_USER_DEBUG_MASK;
+    uint32_t timeout = 0xFFFFFFFFU;
+    struct tisci_msg_fwl_change_owner_info_req req = {
+        .fwl_id = (uint16_t)0,
+        .region = (uint16_t) 0,
+        .owner_index = (uint8_t) TISCI_HOST_ID_R5_0
+        };
+    struct tisci_msg_fwl_change_owner_info_resp resp = {0};
+    struct tisci_msg_fwl_set_firewall_region_resp resp_fw_set_pass = {0};
+    struct tisci_msg_fwl_set_firewall_region_req req_fw_set_pass = { 
+        .fwl_id = (uint16_t)0,
+        .region = (uint16_t) 0,
+        .n_permission_regs = (uint32_t) 3,
+        .control = (uint32_t) 0xA,
+        .permissions[0] = (uint32_t) 0,
+        .permissions[1] = (uint32_t) 0,
+        .permissions[2] = (uint32_t) 0,
+        .start_address = 0,
+        .end_address = 0
+        };
+    /* Currently only supporting MCU1_0 to run the firewalled application
+     * image.
+     */
+    switch (coreId)
+    {
+        case MCU1_CPU0_ID: privId = 96; break;
+        case MCU1_CPU1_ID: privId = 97; break;
+        default: ret = CSL_EFAIL;
+    }
+    if (preInit == TRUE)
+    {
+        /* Currently only supporting only MCU SRAM, MSMC targetting HSM applications will use internal memory */
+        if ((addr >= 0x41C00000) && (addr < 0x41c00000 + 512 *1024))
+        {
+            fwl_id = 1050;
+            /* Set this background region for access from the CPU core to non loaded sections 
+             * like stack and bss.
+             */
+            req_fw_set_pass.fwl_id = fwl_id;
+            req_fw_set_pass.start_address = 0x41C00000;
+            req_fw_set_pass.end_address = 0x41c00000 + 512 *1024 - 1;
+            req_fw_set_pass.region = 0;
+            req_fw_set_pass.n_permission_regs = 3;
+            req_fw_set_pass.permissions[0] = 195 << 16 | perm_for_access;
+            req_fw_set_pass.permissions[1] = 0;
+            req_fw_set_pass.permissions[2] = 0;
+            req_fw_set_pass.control = 0x10A;
+            req.fwl_id = fwl_id;
+            req.region = 0;
+            ret = Sciclient_firewallChangeOwnerInfo(&req, &resp, timeout);
+            if (ret == CSL_PASS)
+            {
+                /* Set background region */
+                ret = Sciclient_firewallSetRegion(&req_fw_set_pass, &resp_fw_set_pass, timeout);
+            }
+        }
+        else if ((addr >= 0x70000000) && (addr < 0x70000000 + 2 *1024 * 1024))
+        {
+            /* For MSMC need to set master firewalls as well : AM65xx 257, 259, 284
+             * to make sure no one has access to this region.
+             */
+
+            /* Master firewall for A53 Corepac 0 */
+            ret += Sciclient_pmSetModuleState(TISCI_DEV_COMPUTE_CLUSTER_CPAC0,
+                                     TISCI_MSG_VALUE_DEVICE_SW_STATE_ON,
+                                     0,
+                                     timeout);
+            fwl_id = 257;
+            req.fwl_id = fwl_id;
+            req.region = 1;
+            ret += Sciclient_firewallChangeOwnerInfo(&req, &resp, timeout);
+
+            req_fw_set_pass.fwl_id = fwl_id;
+            req_fw_set_pass.start_address = addr;
+            req_fw_set_pass.end_address = addr + size - 1;
+            req_fw_set_pass.control = 0xA;
+            req_fw_set_pass.region = 1;
+            req_fw_set_pass.n_permission_regs = 1;
+            req_fw_set_pass.permissions[0] = 0;
+            ret += Sciclient_firewallSetRegion(&req_fw_set_pass, &resp_fw_set_pass, timeout);
+            
+            /* Master firewall for A53 Corepac 1 */
+            ret += Sciclient_pmSetModuleState(TISCI_DEV_COMPUTE_CLUSTER_CPAC1,
+                                     TISCI_MSG_VALUE_DEVICE_SW_STATE_ON,
+                                     0,
+                                     timeout);
+            fwl_id = 259;
+            req.fwl_id = fwl_id;
+            req.region = 1;
+            ret += Sciclient_firewallChangeOwnerInfo(&req, &resp, timeout);
+
+            req_fw_set_pass.fwl_id = fwl_id;
+            req_fw_set_pass.start_address = addr;
+            req_fw_set_pass.end_address = addr + size - 1;
+            req_fw_set_pass.control = 0xA;
+            req_fw_set_pass.region = 1;
+            req_fw_set_pass.n_permission_regs = 1;
+            req_fw_set_pass.permissions[0] = 0;
+            ret += Sciclient_firewallSetRegion(&req_fw_set_pass, &resp_fw_set_pass, timeout);
+
+            /* Master firewall for MSMC */
+            ret += Sciclient_pmSetModuleState(TISCI_DEV_COMPUTE_CLUSTER_MSMC0,
+                                     TISCI_MSG_VALUE_DEVICE_SW_STATE_ON,
+                                     0,
+                                     timeout);
+            fwl_id = 284;
+            req.fwl_id = fwl_id;
+            req.region = 1;
+            ret += Sciclient_firewallChangeOwnerInfo(&req, &resp, timeout);
+
+            req_fw_set_pass.fwl_id = fwl_id;
+            req_fw_set_pass.start_address = addr;
+            req_fw_set_pass.end_address = addr + size - 1;
+            req_fw_set_pass.control = 0xA;
+            req_fw_set_pass.region = 1;
+            req_fw_set_pass.n_permission_regs = 1;
+            req_fw_set_pass.permissions[0] = 0;
+            ret += Sciclient_firewallSetRegion(&req_fw_set_pass, &resp_fw_set_pass, timeout);
+
+            /* No need to set the background region as the DMSC already sets it */
+            fwl_id = 4449;
+            req.fwl_id = fwl_id;
+            req.region = 0;
+            ret += Sciclient_firewallChangeOwnerInfo(&req, &resp, timeout);
+
+        }
+        else
+        {
+            ret = CSL_EFAIL;
+        }
+        if (ret == CSL_PASS)
+        {
+            req.region = 1;
+            req.fwl_id = fwl_id;
+            ret = Sciclient_firewallChangeOwnerInfo(&req, &resp, timeout);
+        }
+        if (ret == CSL_PASS)
+        {
+            req_fw_set_pass.fwl_id = fwl_id;
+            req_fw_set_pass.start_address = addr;
+            req_fw_set_pass.end_address = addr + size - 1;
+            req_fw_set_pass.control = 0xA;
+            req_fw_set_pass.region = 1;
+            req_fw_set_pass.n_permission_regs = 3;
+            req_fw_set_pass.permissions[0] = privId << 16 | perm_for_access;
+            /* This is done so that the MCU1_0 can load the section without issues */
+            req_fw_set_pass.permissions[1] = 96 << 16 | perm_for_access;
+            req_fw_set_pass.permissions[2] = 0;
+            /* Set Foreground region */
+            ret = Sciclient_firewallSetRegion(&req_fw_set_pass, &resp_fw_set_pass, timeout);
+        }
+    }
+    else
+    {
+        ret = CSL_PASS;
+        if ((addr >= 0x41C00000) && (addr < 0x41c00000 + 512 *1024))
+        {
+            fwl_id = 1050;
+        }
+        else if ((addr >= 0x70000000) && (addr < 0x70000000 + 2 *1024 * 1024))
+        {
+            fwl_id = 4449;
+        }
+        else
+        {
+            ret = CSL_EFAIL;
+        }
+        if (ret == CSL_PASS)
+        {
+            req_fw_set_pass.fwl_id = fwl_id;
+            req_fw_set_pass.start_address = addr;
+            req_fw_set_pass.end_address = addr + size - 1;
+            req_fw_set_pass.control = 0xA;
+            req_fw_set_pass.region = 1;
+            req_fw_set_pass.n_permission_regs = 3;
+            req_fw_set_pass.permissions[0] = privId << 16 | perm_for_access;
+            req_fw_set_pass.permissions[1] = 0;
+            req_fw_set_pass.permissions[2] = 0;
+            /* Set Foreground region */
+            ret = Sciclient_firewallSetRegion(&req_fw_set_pass, &resp_fw_set_pass, timeout);
+        }
+    }
+#endif
+}
+
 #endif
 
 /**
