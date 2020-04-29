@@ -1077,7 +1077,6 @@ EMAC_DRV_ERR_E emac_ioctl_accept_frame_check_ctrl(uint32_t port_num, void* p_par
     EMAC_DRV_ERR_E retVal = EMAC_DRV_RESULT_IOCTL_IN_PROGRESS;
     EMAC_IOCTL_PARAMS *pParams = (EMAC_IOCTL_PARAMS*) p_params;
     uint32_t portLoc = 0;
-    uint32_t icssgInstance = 0;
 
     UTILS_trace(UTIL_TRACE_LEVEL_INFO, emac_mcb.drv_trace_cb, "port: %d: ENTER",port_num);
     emac_update_cmd(port_num, EMAC_IOCTL_ACCEPTABLE_FRAME_CHECK_CTRL, emac_mcb.ioctl_cb.pCmd1Icssg, pParams, NULL, EMAC_FW_MGMT_CMD_TYPE, 0, 0);
@@ -1085,12 +1084,10 @@ EMAC_DRV_ERR_E emac_ioctl_accept_frame_check_ctrl(uint32_t port_num, void* p_par
     if (port_num == 0)
     {
         portLoc = 0;
-        icssgInstance = EMAC_ICSSG_0;
     }
     else if(port_num == 1)
     {
         portLoc =1;
-        icssgInstance = EMAC_ICSSG_0;
     }
     else
     {
@@ -1103,13 +1100,13 @@ EMAC_DRV_ERR_E emac_ioctl_accept_frame_check_ctrl(uint32_t port_num, void* p_par
         switch (pParams->subCommand)
         {
             case EMAC_IOCTL_ACCEPTABLE_FRAME_CHECK_ONLY_VLAN_TAGGED:
-                ioctl_port_state_hlp_A(EMAC_PORT_ACCEPT_TAGGED, portLoc, icssgInstance);
+                ioctl_port_state_hlp(EMAC_PORT_ACCEPT_TAGGED, portLoc);
                 break;
             case EMAC_IOCTL_ACCEPTABLE_FRAME_CHECK_ONLY_UN_TAGGED_PRIO_TAGGED:
-                ioctl_port_state_hlp_A(EMAC_PORT_ACCEPT_UNTAGGED_N_PRIO, portLoc, icssgInstance);
+                ioctl_port_state_hlp(EMAC_PORT_ACCEPT_UNTAGGED_N_PRIO, portLoc);
                 break;
             case EMAC_IOCTL_ACCEPTABLE_FRAME_CHECK_ALL_FRAMES:
-                ioctl_port_state_hlp_A(EMAC_PORT_ACCEPT_ALL, portLoc, icssgInstance);
+                ioctl_port_state_hlp(EMAC_PORT_ACCEPT_ALL, portLoc);
                 break;
              default:
                 break;
