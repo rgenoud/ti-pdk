@@ -12,7 +12,6 @@ endif
   GCC_CROSS_TOOL_PREFIX=arm-none-eabi-
   GCC_CROSS_TOOL_TAG=7-2018-q2-update
   GCC_ARCH64_VERSION=7.2.1-2017.11
-  CGT_VERSION=8.3.2
 
   CGT_C7X_VERSION=1.2.0.STS
   CGT_ARM_VERSION=18.12.5.LTS
@@ -22,12 +21,17 @@ endif
   CG_XML_VERSION=2.61.00
 
   #Component versions for non-TDA builds
-ifeq ($(BOARD),$(filter $(BOARD), tpr12_evm))
-  BIOS_VERSION=6_82_00_16
-  XDC_VERSION=3_61_00_10_core_eng
-else
   BIOS_VERSION=6_76_03_01
   XDC_VERSION=3_55_02_22_core
+  CGT_VERSION=8.3.2
+ifeq ($(BOARD),$(filter $(BOARD), tpr12_evm))
+  BIOS_VERSION=6_82_00_16
+  XDC_VERSION=3_61_00_16_core
+  CGT_VERSION=8.3.3
+endif
+ifeq ($(BOARD),$(filter $(BOARD), am64x_evm))
+  BIOS_VERSION=6_83_00_01_eng
+  XDC_VERSION=3_61_00_16_core
 endif
 
   EDMA_VERSION=2_12_05_30E

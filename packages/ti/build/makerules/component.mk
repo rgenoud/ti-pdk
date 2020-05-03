@@ -132,6 +132,14 @@ pdk_EXAMPLE_LIST =
 ############################
 pdk_DUP_EXAMPLE_LIST =
 
+###########################
+# PDK Utils list which are not built on every build
+# Example includes the sciclient board configruation.
+# This is specifically used when some additional tools are required to build
+# these utilities like python.
+###########################
+pdk_UTILS_LIST =
+
 # Components included independent of OS type
 
 #include each module component makefile
@@ -149,6 +157,9 @@ ifneq ($(csl_APP_LIB_LIST),)
 endif
 ifneq ($(csl_EXAMPLE_LIST),)
   pdk_EXAMPLE_LIST += $(csl_EXAMPLE_LIST)
+endif
+ifneq ($(csl_DUP_EXAMPLE_LIST),)
+  pdk_DUP_EXAMPLE_LIST += $(csl_DUP_EXAMPLE_LIST)
 endif
 
 # - used to ignore include if component not present
@@ -333,6 +344,9 @@ ifneq ($(sciclient_APP_LIB_LIST),)
 endif
 ifneq ($(sciclient_EXAMPLE_LIST),)
   pdk_EXAMPLE_LIST += $(sciclient_EXAMPLE_LIST)
+endif
+ifneq ($(sciclient_UTILS_LIST),)
+  pdk_UTILS_LIST += $(sciclient_UTILS_LIST)
 endif
 
 -include $(PDK_VHWA_COMP_PATH)/vhwa_component.mk
@@ -781,6 +795,18 @@ ifneq ($(mailbox_EXAMPLE_LIST),)
   pdk_EXAMPLE_LIST += $(mailbox_EXAMPLE_LIST)
 endif
 # - used to ignore include if component not present
+-include $(PDK_MIBSPI_COMP_PATH)/mibspi_component.mk
+ifneq ($(mibspi_LIB_LIST),)
+  pdk_LIB_LIST += $(mibspi_LIB_LIST)
+endif
+ifneq ($(mibspi_APP_LIB_LIST),)
+  pdk_APP_LIB_LIST += $(mibspi_APP_LIB_LIST)
+endif
+ifneq ($(mibspi_EXAMPLE_LIST),)
+  pdk_EXAMPLE_LIST += $(mibspi_EXAMPLE_LIST)
+endif
+
+# - used to ignore include if component not present
 -include $(PDK_ESM_COMP_PATH)/esm_component.mk
 ifneq ($(esm_LIB_LIST),)
   pdk_LIB_LIST += $(esm_LIB_LIST)
@@ -1042,6 +1068,11 @@ endif
 ifeq ($(CORE),$(filter $(CORE), qnx_mpu1_0))
   PDK_CFLAGS += -DQNX_OS -DBUILD_MPU1_0
   PDK_LNKFLAGS += --define=QNX_OS --define=BUILD_MPU1_0
+endif
+
+ifeq ($(CORE),$(filter $(CORE), m4f_0))
+  PDK_CFLAGS += -DBUILD_M4F_0 -DBUILD_M4F
+  PDK_LNKFLAGS += --define=BUILD_M4F_0 --define=BUILD_M4F
 endif
 
 export PDK_CFLAGS

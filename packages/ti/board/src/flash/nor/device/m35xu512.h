@@ -69,6 +69,8 @@
 #define NOR_CMD_RDCR_VOL             (0x85U)
 #define NOR_CMD_RDCR_NVOL            (0xB5U)
 #define NOR_CMD_RDID                 (0x9FU)
+#define NOR_CMD_RSTEN                (0x66U)
+#define NOR_CMD_RST_MEM              (0x99U)
 
 /** Different commands for 4 byte addressing and 3 byte addressing */
 #ifdef EXT_ADDRESS_ENABLE
@@ -103,13 +105,8 @@
 
 /* \brief Read ID command definitions */
 #define NOR_RDID_NUM_BYTES           (0x3U)
-#if defined(j721e_sim)
-#define NOR_MANF_ID                  (0x01U)    /* Manufacturer ID */
-#define NOR_DEVICE_ID                (0x2018)   /* Device ID */
-#else
 #define NOR_MANF_ID                  (0x2CU)    /* Manufacturer ID */
 #define NOR_DEVICE_ID                (0x5B1A)   /* Device ID */
-#endif
 
 /** Status Register, Write-in-Progress bit */
 #define NOR_SR_WIP                   (1U << 0U)

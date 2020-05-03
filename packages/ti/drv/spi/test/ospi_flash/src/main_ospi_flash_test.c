@@ -50,7 +50,7 @@
 #include <ti/sysbios/knl/Task.h>
 #include <ti/sysbios/BIOS.h>
 #include <ti/sysbios/utils/Load.h>
-#if defined(SOC_AM65XX) || defined(SOC_J721E) || defined(SOC_J7200)
+#if defined(SOC_AM65XX) || defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_AM64X)
 #if defined (__aarch64__)
 #include <ti/sysbios/family/arm/v8a/Mmu.h>
 #endif
@@ -71,13 +71,19 @@
 #include <ti/osal/CacheP.h>
 #endif
 
-#if defined(SOC_AM65XX) || defined(SOC_J721E) || defined(SOC_J7200)
-#include <ti/csl/src/ip/fss/V0/V0_1/cslr_fss.h>
-#include <ti/csl/src/ip/rat/V0/csl_rat.h>
+#if defined(SOC_AM65XX) || defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_AM64X)
+#include <ti/csl/cslr_fss.h>
+#include <ti/csl/csl_rat.h>
 #include <ti/csl/arch/csl_arch.h>
 #include <ti/drv/sciclient/sciclient.h>
+#ifdef SPI_DMA_ENABLE
 #include <ti/drv/udma/udma.h>
+#endif
+#if defined(SOC_AM64X)
+#include <ti/board/src/flash/nor/device/m35xu256.h>
+#else
 #include <ti/board/src/flash/nor/device/m35xu512.h>
+#endif
 
 #if defined(SOC_AM65XX)
 #include <ti/csl/soc/am65xx/src/cslr_soc_baseaddress.h>
@@ -129,6 +135,7 @@ typedef struct OSPI_Tests_s
 #define OSPI_TEST_ID_DAC_166M     3   /* OSPI flash test in Direct Acess Controller mode at 166MHz RCLK */
 #define OSPI_TEST_ID_INDAC_166M   4   /* OSPI flash test in Indirect Acess Controller mode at 166MHz RCLK */
 #define OSPI_TEST_ID_DAC_DMA_166M 5   /* OSPI flash test in Direct Acess Controller DMA mode at 166MHz RCLK */
+#define OSPI_TEST_ID_DAC_133M_SPI 6   /* OSPI flash test in Direct Acess Controller legacy SPI mode at 133MHz RCLK */
 
 /* OSPI NOR flash offset address for read/write test */
 #define TEST_ADDR_OFFSET   (0U)
@@ -155,20 +162,39 @@ bool VerifyData(uint8_t *expData,
  **********************************************************************/
 
 /* Buffer containing the known data that needs to be written to flash */
-#if defined(SOC_AM65XX)
+#if defined(SOC_AM65XX) || defined(SOC_AM64X)
+#ifdef SPI_DMA_ENABLE
 uint8_t txBuf[TEST_BUF_LEN]  __attribute__((aligned(UDMA_CACHELINE_ALIGNMENT))) __attribute__((section(".benchmark_buffer")));
+#else
+uint8_t txBuf[TEST_BUF_LEN]  __attribute__((aligned(128))) __attribute__((section(".benchmark_buffer")));
+#endif
 #endif
 #if defined(SOC_J721E) || defined(SOC_J7200)
+#ifdef SPI_DMA_ENABLE
 uint8_t txBuf[TEST_BUF_LEN]  __attribute__((aligned(UDMA_CACHELINE_ALIGNMENT)));
-uint8_t rxBuf[TEST_BUF_LEN]  __attribute__((aligned(UDMA_CACHELINE_ALIGNMENT)));
+#else
+uint8_t txBuf[TEST_BUF_LEN]  __attribute__((aligned(128)));
+#endif
 #endif
 
 /* Buffer containing the received data */
-#if defined(SOC_AM65XX)
+#if defined(SOC_AM65XX) || defined(SOC_AM64X)
+#ifdef SPI_DMA_ENABLE
 uint8_t rxBuf[TEST_BUF_LEN]  __attribute__((aligned(UDMA_CACHELINE_ALIGNMENT))) __attribute__((section(".benchmark_buffer")));
+#else
+uint8_t rxBuf[TEST_BUF_LEN]  __attribute__((aligned(128))) __attribute__((section(".benchmark_buffer")));
+#endif
 #endif
 
-#if defined(SOC_AM65XX) || defined(SOC_J721E) || defined(SOC_J7200)
+#if defined(SOC_J721E) || defined(SOC_J7200)
+#ifdef SPI_DMA_ENABLE
+uint8_t rxBuf[TEST_BUF_LEN]  __attribute__((aligned(UDMA_CACHELINE_ALIGNMENT)));
+#else
+uint8_t rxBuf[TEST_BUF_LEN]  __attribute__((aligned(128)));
+#endif
+#endif
+
+#if defined(SOC_AM65XX) || defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_AM64X)
 
 #ifdef SPI_DMA_ENABLE
 /*
@@ -274,6 +300,7 @@ void InitMmu(void)
 #endif
 #endif
 
+#if defined(SOC_AM65XX)
 /* define the unlock and lock values */
 #define KICK0_UNLOCK_VAL 0x68EF3490
 #define KICK1_UNLOCK_VAL 0xD172BC5A
@@ -415,7 +442,6 @@ uint32_t MCU_CTRL_MMR_lock_all()
     return status;
 }
 
-#if defined(SOC_AM65XX)
 void OSPI_configClk(uint32_t freq, bool usePHY)
 {
 	uint32_t divider = 0x12;
@@ -469,58 +495,105 @@ void OSPI_configClk(uint32_t freq, bool usePHY)
 }
 #endif
 
-#if defined(SOC_J721E) || defined(SOC_J7200)
+#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_AM64X)
 void OSPI_configClk(uint32_t freq, bool usePHY)
 {
     OSPI_v0_HwAttrs ospi_cfg;
 	int32_t retVal;
     uint64_t ospi_rclk_freq;
-    uint32_t ospi_clk_id[] = {TISCI_DEV_MCU_FSS0_OSPI_0_OSPI_RCLK_CLK,
-                              TISCI_DEV_MCU_FSS0_OSPI_1_OSPI_RCLK_CLK };
-    uint32_t dev_id[]= {TISCI_DEV_MCU_FSS0_OSPI_0,
-	                    TISCI_DEV_MCU_FSS0_OSPI_1};							  
+    uint32_t parClk;
+#if defined (SOC_AM64X)
+    uint32_t clkID[] = {
+                           TISCI_DEV_FSS0_OSPI_0_OSPI_RCLK_CLK,
+    };
+    uint32_t devID[] = {
+                           TISCI_DEV_FSS0_OSPI_0,
+    };
+#else
+    uint32_t clkID[] = {
+                           TISCI_DEV_MCU_FSS0_OSPI_0_OSPI_RCLK_CLK,
+                           TISCI_DEV_MCU_FSS0_OSPI_1_OSPI_RCLK_CLK
+    };
+    uint32_t devID[] = {
+                           TISCI_DEV_MCU_FSS0_OSPI_0,
+	                       TISCI_DEV_MCU_FSS0_OSPI_1
+    };
+#endif
 
     /* Get the default SPI init configurations */
     OSPI_socGetInitCfg(BOARD_OSPI_NOR_INSTANCE, &ospi_cfg);    
 
-    retVal=Sciclient_pmModuleClkRequest(dev_id[BOARD_OSPI_NOR_INSTANCE],ospi_clk_id[BOARD_OSPI_NOR_INSTANCE],
-                                        TISCI_MSG_VALUE_CLOCK_SW_STATE_REQ,TISCI_MSG_FLAG_AOP,SCICLIENT_SERVICE_WAIT_FOREVER);    
-    if(retVal!=CSL_PASS) {
-       SPI_log("\n Sciclient_pmModuleClkRequest failed");
-	   goto clk_cfg_exit;
-     }
+    retVal = Sciclient_pmModuleClkRequest(devID[BOARD_OSPI_NOR_INSTANCE],
+                                          clkID[BOARD_OSPI_NOR_INSTANCE],
+                                          TISCI_MSG_VALUE_CLOCK_SW_STATE_REQ,
+                                          TISCI_MSG_FLAG_AOP,
+                                          SCICLIENT_SERVICE_WAIT_FOREVER);
+    if (retVal != CSL_PASS)
+    {
+        SPI_log("\n Sciclient_pmModuleClkRequest failed");
+	    goto clk_cfg_exit;
+    }
 
     /* Max clocks */
-	if(freq == OSPI_MODULE_CLK_166M) {
-       retVal=Sciclient_pmSetModuleClkParent(dev_id[BOARD_OSPI_NOR_INSTANCE], ospi_clk_id[BOARD_OSPI_NOR_INSTANCE], TISCI_DEV_MCU_FSS0_OSPI_0_OSPI_RCLK_CLK_PARENT_HSDIV4_16FFT_MCU_2_HSDIVOUT4_CLK, SCICLIENT_SERVICE_WAIT_FOREVER); 
-	 } else {
-       retVal=Sciclient_pmSetModuleClkParent(dev_id[BOARD_OSPI_NOR_INSTANCE], ospi_clk_id[BOARD_OSPI_NOR_INSTANCE], TISCI_DEV_MCU_FSS0_OSPI_0_OSPI_RCLK_CLK_PARENT_HSDIV4_16FFT_MCU_1_HSDIVOUT4_CLK, SCICLIENT_SERVICE_WAIT_FOREVER); 
-	 }		
+    if (freq == OSPI_MODULE_CLK_166M)
+    {
+#if defined (SOC_AM64X)
+        parClk = TISCI_DEV_FSS0_OSPI_0_OSPI_RCLK_CLK_PARENT_HSDIV4_16FFT_MAIN_0_HSDIVOUT1_CLK;  /* TBD */
+#else
+        parClk = TISCI_DEV_MCU_FSS0_OSPI_0_OSPI_RCLK_CLK_PARENT_HSDIV4_16FFT_MCU_2_HSDIVOUT4_CLK;
+#endif
+        retVal = Sciclient_pmSetModuleClkParent(devID[BOARD_OSPI_NOR_INSTANCE],
+                                                clkID[BOARD_OSPI_NOR_INSTANCE],
+                                                parClk,
+                                                SCICLIENT_SERVICE_WAIT_FOREVER);
+    }
+    else
+    {
+#if defined (SOC_AM64X)
+        parClk = TISCI_DEV_FSS0_OSPI_0_OSPI_RCLK_CLK_PARENT_POSTDIV1_16FFT_MAIN_1_HSDIVOUT5_CLK;  /* TBD */
+#else
+        parClk = TISCI_DEV_MCU_FSS0_OSPI_0_OSPI_RCLK_CLK_PARENT_HSDIV4_16FFT_MCU_1_HSDIVOUT4_CLK;
+#endif
+        retVal = Sciclient_pmSetModuleClkParent(devID[BOARD_OSPI_NOR_INSTANCE],
+                                                clkID[BOARD_OSPI_NOR_INSTANCE],
+                                                parClk,
+                                                SCICLIENT_SERVICE_WAIT_FOREVER);
+    }
 	 
-     if(retVal!=CSL_PASS) {
-         SPI_log("\n Sciclient_pmSetModuleClkParent failed");
-	    goto clk_cfg_exit;
-     } 
+    if (retVal != CSL_PASS)
+    {
+        SPI_log("\n Sciclient_pmSetModuleClkParent failed");
+        goto clk_cfg_exit;
+    }
 	 
 	ospi_cfg.funcClk = freq;
     OSPI_socSetInitCfg(BOARD_OSPI_NOR_INSTANCE, &ospi_cfg);    
 	
     ospi_rclk_freq = (uint64_t)freq;
-    retVal=Sciclient_pmSetModuleClkFreq(dev_id[BOARD_OSPI_NOR_INSTANCE], ospi_clk_id[BOARD_OSPI_NOR_INSTANCE], ospi_rclk_freq, TISCI_MSG_FLAG_AOP, SCICLIENT_SERVICE_WAIT_FOREVER);
+    retVal = Sciclient_pmSetModuleClkFreq(devID[BOARD_OSPI_NOR_INSTANCE],
+                                          clkID[BOARD_OSPI_NOR_INSTANCE],
+                                          ospi_rclk_freq,
+                                          TISCI_MSG_FLAG_AOP,
+                                          SCICLIENT_SERVICE_WAIT_FOREVER);
 
-    if(retVal!=CSL_PASS) {
-         SPI_log("\n Sciclient_pmSetModuleClkFreq failed");
+    if (retVal != CSL_PASS)
+    {
+        SPI_log("\n Sciclient_pmSetModuleClkFreq failed");
 	    goto clk_cfg_exit;
-     } 
+    }
 
-	ospi_rclk_freq=0;
-    retVal=Sciclient_pmGetModuleClkFreq(dev_id[BOARD_OSPI_NOR_INSTANCE], ospi_clk_id[BOARD_OSPI_NOR_INSTANCE], &ospi_rclk_freq, SCICLIENT_SERVICE_WAIT_FOREVER);
-    if(retVal!=CSL_PASS) {
+	ospi_rclk_freq = 0;
+    retVal = Sciclient_pmGetModuleClkFreq(devID[BOARD_OSPI_NOR_INSTANCE],
+                                          clkID[BOARD_OSPI_NOR_INSTANCE],
+                                          &ospi_rclk_freq,
+                                          SCICLIENT_SERVICE_WAIT_FOREVER);
+    if (retVal != CSL_PASS)
+    {
         SPI_log("\n Sciclient_pmGetModuleClkFreq failed");
 	    goto clk_cfg_exit;
-     } 
+    }
 
-     SPI_log("\n OSPI RCLK running at %d Hz. \n", freq);
+    SPI_log("\n OSPI RCLK running at %d Hz. \n", freq);
 
 clk_cfg_exit:
       return;  
@@ -557,8 +630,21 @@ void OSPI_initConfig(OSPI_Tests *test)
         ospi_cfg.phyEnable = false;
     }
 
+    if (test->testId == OSPI_TEST_ID_DAC_133M_SPI)
+    {
+        /* Disable PHY in legacy SPI mode (1-1-1) */
+        ospi_cfg.phyEnable = false;
+        ospi_cfg.dtrEnable = false;
+        ospi_cfg.xferLines = OSPI_XFER_LINES_SINGLE;
+    }
+    else
+    {
+        ospi_cfg.xferLines = OSPI_XFER_LINES_OCTAL;
+    }
     ospi_cfg.funcClk = test->clk;
-
+#if defined(VLAB_SIM)
+    ospi_cfg.phyEnable = false;
+#endif    
     /* Set the default OSPI init configurations */
     OSPI_socSetInitCfg(BOARD_OSPI_NOR_INSTANCE, &ospi_cfg);
 }
@@ -597,7 +683,11 @@ static bool OSPI_flash_test(void *arg)
 
     OSPI_initConfig(test);
 
+#if defined(SOC_AM64X)
+    deviceId = BOARD_FLASH_ID_MT35XU256ABA1G12;
+#else
     deviceId = BOARD_FLASH_ID_MT35XU512ABA1G12;
+#endif
 
     /* Open the Board OSPI NOR device with OSPI port 0
        and use default OSPI configurations */
@@ -785,6 +875,7 @@ OSPI_Tests Ospi_tests[] =
 #ifdef SPI_DMA_ENABLE
     {OSPI_flash_test, OSPI_TEST_ID_DAC_DMA_166M, true,   true,   OSPI_MODULE_CLK_166M, "\r\n OSPI flash test slave in DAC DMA mode at 166MHz RCLK"},
 #endif
+    {OSPI_flash_test, OSPI_TEST_ID_DAC_133M_SPI, true,   false,  OSPI_MODULE_CLK_133M, "\r\n OSPI flash test slave in DAC Legacy SPI mode at 133MHz RCLK"},
 
     {NULL, }
 };
@@ -801,8 +892,6 @@ void spi_test()
     uint32_t    i;
     bool        testFail = false;
     OSPI_Tests *test;
-    bool        clk133M = false;
-    bool        clk166M = false;
 
     /* Init SPI driver */
     SPI_init();
@@ -815,19 +904,7 @@ void spi_test()
             break;
         }
 
-        /* configure 133MHz reference clock only once */
-        if ((test->clk == OSPI_MODULE_CLK_133M) && (!clk133M))
-        {
-            OSPI_configClk(test->clk, true);
-            clk133M = true;
-        }
-
-        /* configure 166MHz reference clock only once */
-        if ((test->clk == OSPI_MODULE_CLK_166M) && (!clk166M))
-        {
-            OSPI_configClk(test->clk, true);
-            clk166M = true;
-        }
+        OSPI_configClk(test->clk, true);
 
         OSPI_test_print_test_desc(test);
         if (test->testFunc((void *)test) == true)

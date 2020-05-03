@@ -75,29 +75,35 @@
 #include <j721e/tisci_sec_proxy.h>
 #include <j721e/tisci_boardcfg_constraints.h>
 #endif
+#if defined (SOC_AM64X)
+#include <am64x/tisci_resasg_types.h>
+#include <am64x/tisci_hosts.h>
+#include <am64x/tisci_sec_proxy.h>
+#include <am64x/tisci_boardcfg_constraints.h>
+#endif
+#include <tisci/security/tisci_firewall.h>
+#include <tisci/security/tisci_sec_macros.h>
+#include <tisci/security/tisci_soc_uid.h>
+#include <tisci/security/tisci_keystore.h>
+#include <tisci/security/tisci_sa2ul_pka.h>
+#include <tisci/security/tisci_procboot.h>
+#include <tisci/security/tisci_rng.h>
+#include <tisci/security/tisci_secure_jtag.h>
+#include <tisci/security/tisci_ext_otp.h>
 #include <tisci/tisci_boardcfg_macros.h>
-#include <tisci/pm/tisci_pm_device.h>
-#include <tisci/pm/tisci_pm_clock.h>
-#include <tisci/pm/tisci_pm_core.h>
-#include <tisci/tisci_boardcfg.h>
+#include <tisci/rm/tisci_rm_psil.h>
+#include <tisci/rm/tisci_rm_shared.h>
+#include <tisci/rm/tisci_rm_core.h>
+#include <tisci/rm/tisci_rm_ra.h>
+#include <tisci/rm/tisci_rm_udmap.h>
 #include <tisci/rm/tisci_rm_irq.h>
 #include <tisci/rm/tisci_rm_proxy.h>
-#include <tisci/rm/tisci_rm_core.h>
-#include <tisci/rm/tisci_rm_shared.h>
-#include <tisci/rm/tisci_rm_ra.h>
-#include <tisci/rm/tisci_rm_psil.h>
-#include <tisci/rm/tisci_rm_udmap.h>
-#include <tisci/tisci_protocol.h>
-#include <tisci/security/tisci_procboot.h>
-#include <tisci/security/tisci_sec_macros.h>
-#include <tisci/security/tisci_secure_jtag.h>
-#include <tisci/security/tisci_soc_uid.h>
-#include <tisci/security/tisci_ext_otp.h>
-#include <tisci/security/tisci_sa2ul_pka.h>
-#include <tisci/security/tisci_keystore.h>
-#include <tisci/security/tisci_firewall.h>
-#include <tisci/security/tisci_rng.h>
 #include <tisci/tisci_core.h>
+#include <tisci/tisci_boardcfg.h>
+#include <tisci/tisci_protocol.h>
+#include <tisci/pm/tisci_pm_core.h>
+#include <tisci/pm/tisci_pm_clock.h>
+#include <tisci/pm/tisci_pm_device.h>
 
 #endif /* TISCI_INCLUDES_H */
 
