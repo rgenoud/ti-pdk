@@ -786,7 +786,7 @@ int32_t VirtioIPC_createVirtioCorePair(Ipc_VirtioInfo* vqInfo, uint32_t timeoutC
 {
     Vring_Params   params;
     Virtio_Handle  tx_vq, rx_vq;
-    uint8_t        status = 0;
+    uint8_t        status = 1;
     int32_t        retVal = IPC_SOK;
 
     /* TX VQ */
