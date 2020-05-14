@@ -100,10 +100,10 @@ __attribute__(( aligned(128), section(".boardcfg_data") )) =
     /* SA2UL RM config */
     .sa2ul_auth_cfg = {
         .subhdr = {
-            .magic = TISCI_BOARDCFG_SA2UL_CFG_MAGIC_NUM_RSVD,
-            .size = 0,
+            .magic = TISCI_BOARDCFG_SA2UL_CFG_MAGIC_NUM,
+            .size = sizeof(struct tisci_boardcfg_sa2ul_cfg),
         },
-        .auth_resource_owner = 0,
+        .auth_resource_owner = TISCI_HOST_ID_R5_0,
         .rsvd = {0, 0, 0},
     },
     
