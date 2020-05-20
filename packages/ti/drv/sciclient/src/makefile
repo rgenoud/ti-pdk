@@ -45,6 +45,7 @@ SRCS_COMMON += sciclient_fmwSecureProxyMap.c
 SRCS_COMMON += sciclient_pm.c
 SRCS_COMMON += sciclient_rm.c
 SRCS_COMMON += sciclient_firewall.c
+SRCS_COMMON += sciclient_sec_sa2ul.c
 SRCS_COMMON += sciclient_irq_rm.c
 SRCS_COMMON += sciclient_rm_irq.c
 SRCS_COMMON += sciclient_boardcfg.c
