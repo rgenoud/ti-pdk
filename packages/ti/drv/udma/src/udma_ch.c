@@ -42,7 +42,9 @@
 /* ========================================================================== */
 
 #include <ti/drv/udma/src/udma_priv.h>
-
+#ifdef QNX_OS
+#include <udma_resmgr.h>
+#endif
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
@@ -1958,18 +1960,33 @@ static int32_t Udma_chAllocResource(Udma_ChHandle chHandle)
     {
         if((chHandle->chType & UDMA_CH_FLAG_HC) == UDMA_CH_FLAG_HC)
         {
+#ifdef QNX_OS
+            chHandle->txChNum =
+                Udma_resmgr_rmAllocBlkCopyHcCh(chHandle->chPrms.chNum, drvHandle);
+#else
             chHandle->txChNum =
                 Udma_rmAllocBlkCopyHcCh(chHandle->chPrms.chNum, drvHandle);
+#endif
         }
         else if((chHandle->chType & UDMA_CH_FLAG_UHC) == UDMA_CH_FLAG_UHC)
         {
+#ifdef QNX_OS
+            chHandle->txChNum =
+                Udma_resmgr_rmAllocBlkCopyUhcCh(chHandle->chPrms.chNum, drvHandle);
+#else
             chHandle->txChNum =
                 Udma_rmAllocBlkCopyUhcCh(chHandle->chPrms.chNum, drvHandle);
+#endif
         }
         else
         {
+#ifdef QNX_OS
+            chHandle->txChNum =
+                Udma_resmgr_rmAllocBlkCopyCh(chHandle->chPrms.chNum, drvHandle);
+#else
             chHandle->txChNum =
                 Udma_rmAllocBlkCopyCh(chHandle->chPrms.chNum, drvHandle);
+#endif
         }
         if(UDMA_DMA_CH_INVALID == chHandle->txChNum)
         {
@@ -2004,10 +2021,17 @@ static int32_t Udma_chAllocResource(Udma_ChHandle chHandle)
         utcInfo = chHandle->utcInfo;
         Udma_assert(drvHandle, utcInfo != NULL_PTR);
         /* Allocate external channel */
+#ifdef QNX_OS
+        chHandle->extChNum = Udma_resmgr_rmAllocExtCh(
+                                 chHandle->chPrms.chNum,
+                                 drvHandle,
+                                 utcInfo);
+#else
         chHandle->extChNum = Udma_rmAllocExtCh(
                                  chHandle->chPrms.chNum,
                                  drvHandle,
                                  utcInfo);
+#endif
         if(UDMA_DMA_CH_INVALID == chHandle->extChNum)
         {
             retVal = UDMA_EALLOC;
@@ -2034,8 +2058,13 @@ static int32_t Udma_chAllocResource(Udma_ChHandle chHandle)
         {
             if((chHandle->chType & UDMA_CH_FLAG_HC) == UDMA_CH_FLAG_HC)
             {
+#ifdef QNX_OS
+                chHandle->txChNum =
+                    Udma_resmgr_rmAllocTxHcCh(chHandle->chPrms.chNum, drvHandle);
+#else
                 chHandle->txChNum =
                     Udma_rmAllocTxHcCh(chHandle->chPrms.chNum, drvHandle);
+#endif
             }
 #if (UDMA_NUM_MAPPED_TX_GROUP > 0)
             else if((chHandle->chType & UDMA_CH_FLAG_MAPPED) == UDMA_CH_FLAG_MAPPED)
@@ -2046,13 +2075,23 @@ static int32_t Udma_chAllocResource(Udma_ChHandle chHandle)
 #endif
             else if((chHandle->chType & UDMA_CH_FLAG_UHC) == UDMA_CH_FLAG_UHC)
             {
+#ifdef QNX_OS
+                chHandle->txChNum =
+                    Udma_resmgr_rmAllocTxUhcCh(chHandle->chPrms.chNum, drvHandle);
+#else
                 chHandle->txChNum =
                     Udma_rmAllocTxUhcCh(chHandle->chPrms.chNum, drvHandle);
+#endif
             }
             else
             {
+#ifdef QNX_OS
+                chHandle->txChNum =
+                    Udma_resmgr_rmAllocTxCh(chHandle->chPrms.chNum, drvHandle);
+#else
                 chHandle->txChNum =
                     Udma_rmAllocTxCh(chHandle->chPrms.chNum, drvHandle);
+#endif
             }
             if(UDMA_DMA_CH_INVALID == chHandle->txChNum)
             {
@@ -2064,8 +2103,13 @@ static int32_t Udma_chAllocResource(Udma_ChHandle chHandle)
         {
             if((chHandle->chType & UDMA_CH_FLAG_HC) == UDMA_CH_FLAG_HC)
             {
+#ifdef QNX_OS
+                chHandle->rxChNum =
+                    Udma_resmgr_rmAllocRxHcCh(chHandle->chPrms.chNum, drvHandle);
+#else
                 chHandle->rxChNum =
                     Udma_rmAllocRxHcCh(chHandle->chPrms.chNum, drvHandle);
+#endif
             }
 #if (UDMA_NUM_MAPPED_RX_GROUP > 0)
             else if((chHandle->chType & UDMA_CH_FLAG_MAPPED) == UDMA_CH_FLAG_MAPPED)
@@ -2078,13 +2122,23 @@ static int32_t Udma_chAllocResource(Udma_ChHandle chHandle)
 #endif
             else if((chHandle->chType & UDMA_CH_FLAG_UHC) == UDMA_CH_FLAG_UHC)
             {
+#ifdef QNX_OS
+                chHandle->rxChNum =
+                    Udma_resmgr_rmAllocRxUhcCh(chHandle->chPrms.chNum, drvHandle);
+#else
                 chHandle->rxChNum =
                     Udma_rmAllocRxUhcCh(chHandle->chPrms.chNum, drvHandle);
+#endif
             }
             else
             {
+#ifdef QNX_OS
+                chHandle->rxChNum =
+                    Udma_resmgr_rmAllocRxCh(chHandle->chPrms.chNum, drvHandle);
+#else
                 chHandle->rxChNum =
                     Udma_rmAllocRxCh(chHandle->chPrms.chNum, drvHandle);
+#endif
             }
             if(UDMA_DMA_CH_INVALID == chHandle->rxChNum)
             {
@@ -2254,15 +2308,27 @@ static int32_t Udma_chFreeResource(Udma_ChHandle chHandle)
             /* TX channel free */
             if((chHandle->chType & UDMA_CH_FLAG_HC) == UDMA_CH_FLAG_HC)
             {
+#ifdef QNX_OS
+                Udma_resmgr_rmFreeBlkCopyHcCh(chHandle->txChNum, drvHandle);
+#else
                 Udma_rmFreeBlkCopyHcCh(chHandle->txChNum, drvHandle);
+#endif
             }
             else if((chHandle->chType & UDMA_CH_FLAG_UHC) == UDMA_CH_FLAG_UHC)
             {
+#ifdef QNX_OS
+                Udma_resmgr_rmFreeBlkCopyUhcCh(chHandle->txChNum, drvHandle);
+#else
                 Udma_rmFreeBlkCopyUhcCh(chHandle->txChNum, drvHandle);
+#endif
             }
             else
             {
+#ifdef QNX_OS
+                Udma_resmgr_rmFreeBlkCopyCh(chHandle->txChNum, drvHandle);
+#else
                 Udma_rmFreeBlkCopyCh(chHandle->txChNum, drvHandle);
+#endif
             }
             chHandle->txChNum = UDMA_DMA_CH_INVALID;
             chHandle->rxChNum = UDMA_DMA_CH_INVALID;
@@ -2275,7 +2341,11 @@ static int32_t Udma_chFreeResource(Udma_ChHandle chHandle)
             /* TX channel free */
             if((chHandle->chType & UDMA_CH_FLAG_HC) == UDMA_CH_FLAG_HC)
             {
+#ifdef QNX_OS
+                Udma_resmgr_rmFreeTxHcCh(chHandle->txChNum, drvHandle);
+#else
                 Udma_rmFreeTxHcCh(chHandle->txChNum, drvHandle);
+#endif
             }
 #if (UDMA_NUM_MAPPED_TX_GROUP > 0)
             else if((chHandle->chType & UDMA_CH_FLAG_MAPPED) == UDMA_CH_FLAG_MAPPED)
@@ -2285,11 +2355,19 @@ static int32_t Udma_chFreeResource(Udma_ChHandle chHandle)
 #endif
             else if((chHandle->chType & UDMA_CH_FLAG_UHC) == UDMA_CH_FLAG_UHC)
             {
+#ifdef QNX_OS
+                Udma_resmgr_rmFreeTxUhcCh(chHandle->txChNum, drvHandle);
+#else
                 Udma_rmFreeTxUhcCh(chHandle->txChNum, drvHandle);
+#endif
             }
             else
             {
+#ifdef QNX_OS
+                Udma_resmgr_rmFreeTxCh(chHandle->txChNum, drvHandle);
+#else
                 Udma_rmFreeTxCh(chHandle->txChNum, drvHandle);
+#endif
             }
             chHandle->txChNum = UDMA_DMA_CH_INVALID;
         }
@@ -2298,7 +2376,11 @@ static int32_t Udma_chFreeResource(Udma_ChHandle chHandle)
             /* RX channel free */
             if((chHandle->chType & UDMA_CH_FLAG_HC) == UDMA_CH_FLAG_HC)
             {
+#ifdef QNX_OS
+                Udma_resmgr_rmFreeRxHcCh(chHandle->rxChNum, drvHandle);
+#else
                 Udma_rmFreeRxHcCh(chHandle->rxChNum, drvHandle);
+#endif
             }
 #if (UDMA_NUM_MAPPED_RX_GROUP > 0)
             else if((chHandle->chType & UDMA_CH_FLAG_MAPPED) == UDMA_CH_FLAG_MAPPED)
@@ -2309,11 +2391,19 @@ static int32_t Udma_chFreeResource(Udma_ChHandle chHandle)
 #endif
             else if((chHandle->chType & UDMA_CH_FLAG_UHC) == UDMA_CH_FLAG_UHC)
             {
+#ifdef QNX_OS
+                Udma_resmgr_rmFreeRxUhcCh(chHandle->rxChNum, drvHandle);
+#else
                 Udma_rmFreeRxUhcCh(chHandle->rxChNum, drvHandle);
+#endif
             }
             else
             {
+#ifdef QNX_OS
+                Udma_resmgr_rmFreeRxCh(chHandle->rxChNum, drvHandle);
+#else
                 Udma_rmFreeRxCh(chHandle->rxChNum, drvHandle);
+#endif
             }
             chHandle->rxChNum = UDMA_DMA_CH_INVALID;
         }
@@ -2328,7 +2418,11 @@ static int32_t Udma_chFreeResource(Udma_ChHandle chHandle)
     if(UDMA_DMA_CH_INVALID != chHandle->extChNum)
     {
         /* External channel free */
+#ifdef QNX_OS
+        Udma_resmgr_rmFreeExtCh(chHandle->extChNum, drvHandle, chHandle->utcInfo);
+#else
         Udma_rmFreeExtCh(chHandle->extChNum, drvHandle, chHandle->utcInfo);
+#endif
         chHandle->extChNum = UDMA_DMA_CH_INVALID;
     }
 #endif
