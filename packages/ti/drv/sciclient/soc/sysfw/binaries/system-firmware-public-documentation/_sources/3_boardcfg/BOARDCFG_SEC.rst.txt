@@ -106,7 +106,7 @@ boardcfg structure does..
 +--------------------+------------------------------------+-----------------------------------------------------------+
 | dkek_config        | :ref:`pub_boardcfg_dkek_config`    | DKEK access configuration                                 |
 +--------------------+------------------------------------+-----------------------------------------------------------+
-| reserved_cfg_entry | :ref:`pub_boardcfg_reserved_entry` | Reserved configuration entry                              |
+| sa2ul_config       | :ref:`pub_boardcfg_sa2ul_config`   | SA2UL resource configuration                              |
 +--------------------+------------------------------------+-----------------------------------------------------------+
 
 .. _pub_boardcfg_proc_acl:
@@ -264,20 +264,32 @@ Please also refer to the below documents to understand the usage of the board co
 
 The magic number to be populated in the ``subhdr`` is ``0x5170``.
 
-.. _pub_boardcfg_reserved_entry:
+.. _pub_boardcfg_sa2ul_config:
 
-Reserved Entry
---------------
+boardcfg_sa2ul_config
+--------------------------
 
-The below entry is reserved for future use.
+The below structure defines which host is able to acquire and release access to
+the SA2UL resources used for |sysfw| authentication services.
+
+Host ID may be one of the specified values for the SoC, or one the following
+special host values may be used:
+
+* Set to 0 to restrict MMR access from all hosts and reject all requests to
+  acquire/release the resources
+
+* Set to 128 to set the wildcard privid in firewall regions and enable all hosts
+  to acquire/release the resources
 
 +---------------------+-----------------------------------------+------------------------------------------------------------------------+
 |     Element         |              Type                       |            Description                                                 |
 +=====================+=========================================+========================================================================+
 | subhdr              | :ref:`pub_boardcfg_subhdr`              | Magic and size for integrity check                                     |
 +---------------------+-----------------------------------------+------------------------------------------------------------------------+
-| rsvd                | u8[4]                                   | Reserved for future use. Set to 0                                      |
+| auth_resource_owner | u8                                      | ID of the host allowed to acquire/release the authentication resources |
++---------------------+-----------------------------------------+------------------------------------------------------------------------+
+| reserved            | u8[3]                                   | Reserved for future use. Set to 0                                      |
 +---------------------+-----------------------------------------+------------------------------------------------------------------------+
 
-The magic number to be populated in the ``subhdr`` is ``0x23BE``.
+The magic number to be populated in the ``subhdr`` is ``0xB4FD``.
 

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Firewall TISCI Description &mdash; TISCI User Guide</title>
+  <title>SA2UL Resource Management &mdash; TISCI User Guide</title>
   
 
   
@@ -40,7 +40,7 @@
     <link rel="top" title="TISCI User Guide" href="../../index.html"/>
         <link rel="up" title="Chapter 2: TISCI Message Documentation" href="../index.html"/>
         <link rel="next" title="Secure AP Command Interface" href="sec_ap_data_transfer.html"/>
-        <link rel="prev" title="Processor Boot Management TISCI Description" href="PROC_BOOT.html"/> 
+        <link rel="prev" title="Firewall TISCI Description" href="firewall_api.html"/> 
 
   
   <script src="../../_static/js/modernizr.min.js"></script>
@@ -110,8 +110,9 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html#secure-management">Secure Management</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="sec_cert_format.html">Security X509 Certificate Documentation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="PROC_BOOT.html">Processor Boot Management TISCI Description</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Firewall TISCI Description</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#background-information">Background Information</a></li>
+<li class="toctree-l3"><a class="reference internal" href="firewall_api.html">Firewall TISCI Description</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">SA2UL Resource Management</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#introduction">Introduction</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#initial-configuration">Initial Configuration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#api-description">API Description</a></li>
 </ul>
@@ -160,7 +161,7 @@
       
           <li><a href="../index.html">Chapter 2: TISCI Message Documentation</a> &raquo;</li>
       
-    <li>Firewall TISCI Description</li>
+    <li>SA2UL Resource Management</li>
       <li class="wy-breadcrumbs-aside">
         
           
@@ -172,14 +173,16 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="firewall-tisci-description">
-<h1>Firewall TISCI Description<a class="headerlink" href="#firewall-tisci-description" title="Permalink to this headline">¶</a></h1>
-<p id="sec-ap-fwl-tisci-desc">This chapter provides information on Firewall API’s provided by system firmware.
-There are three firewall API as listed below.</p>
+  <div class="section" id="sa2ul-resource-management">
+<h1>SA2UL Resource Management<a class="headerlink" href="#sa2ul-resource-management" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introduction">
+<span id="sec-sa2ul-rm-desc"></span><h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>This chapter provides information on available TISCI messages for managing
+the resources of the SA2UL crypto accelerator on K3 devices.</p>
 <table border="1" class="docutils">
 <colgroup>
-<col width="23%" />
-<col width="77%" />
+<col width="20%" />
+<col width="80%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">TISCI Message ID</th>
@@ -187,45 +190,28 @@ There are three firewall API as listed below.</p>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td>0x9000</td>
-<td><a class="reference internal" href="#set-firewall-region"><span class="std std-ref">TISCI_MSG_SET_FWL_REGION</span></a>.</td>
+<tr class="row-even"><td>0x9017</td>
+<td><a class="reference internal" href="#sec-sa2ul-auth-res-acquire"><span class="std std-ref">TISCI_MSG_SA2UL_AUTH_RES_ACQUIRE</span></a></td>
 </tr>
-<tr class="row-odd"><td>0x9001</td>
-<td><a class="reference internal" href="#get-firewall-region"><span class="std std-ref">TISCI_MSG_GET_FWL_REGION</span></a>.</td>
-</tr>
-<tr class="row-even"><td>0x9002</td>
-<td><a class="reference internal" href="#change-firewall-owner"><span class="std std-ref">TISCI_MSG_CHANGE_FWL_OWNER</span></a>.</td>
+<tr class="row-odd"><td>0x9018</td>
+<td><a class="reference internal" href="#sec-sa2ul-auth-res-release"><span class="std std-ref">TISCI_MSG_SA2UL_AUTH_RES_RELEASE</span></a></td>
 </tr>
 </tbody>
 </table>
-<div class="section" id="background-information">
-<h2>Background Information<a class="headerlink" href="#background-information" title="Permalink to this headline">¶</a></h2>
-<p>Each firewall in the system is assigned an owner. Ownership is
-assigned using <cite>Host ID</cite>. Only a owner of a firewall can</p>
-<ul class="simple">
-<li>Configure the firewall permissions</li>
-<li>Query the firewall permissions</li>
-<li>Transfer the firewall ownership to another owner(host)</li>
-</ul>
 </div>
 <div class="section" id="initial-configuration">
 <h2>Initial Configuration<a class="headerlink" href="#initial-configuration" title="Permalink to this headline">¶</a></h2>
-<p>System firmware configures the firewalls in the following manner on startup.</p>
-<ol class="arabic simple">
-<li>DMSC internal memories are firewalled. Firewall ownership is assigned to DMSC.</li>
-<li>Secure proxy and associated resources required for DMSC operation are
-firewalled. Firewall ownership is assigned to DMSC.</li>
-<li>All Navss resources not used by DMSC are firewalled and ownership of the
-firewalls is assigned to Resource Manager(RM). The intent is that RM programs
-the firewalls for Navss resources based on resource assignment in board
-configuration.</li>
-</ol>
+<p>A single host ID may be specified in the security board configuration to allow
+handoff of authentication resources from System Firmware. This host ID is used to check
+the below API which are used to trigger the handoff during runtime.</p>
 </div>
 <div class="section" id="api-description">
 <h2>API Description<a class="headerlink" href="#api-description" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="tisci-msg-set-fwl-region-set-firewall-region">
-<span id="set-firewall-region"></span><h3>TISCI_MSG_SET_FWL_REGION - Set Firewall region<a class="headerlink" href="#tisci-msg-set-fwl-region-set-firewall-region" title="Permalink to this headline">¶</a></h3>
-<p><strong>Usage</strong>:</p>
+<div class="section" id="tisci-msg-sa2ul-auth-res-acquire">
+<span id="sec-sa2ul-auth-res-acquire"></span><h3>TISCI_MSG_SA2UL_AUTH_RES_ACQUIRE<a class="headerlink" href="#tisci-msg-sa2ul-auth-res-acquire" title="Permalink to this headline">¶</a></h3>
+<p>Acquire System Firmware’s authentication resources</p>
+<div class="section" id="usage">
+<h4>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h4>
 <table border="1" class="docutils">
 <colgroup>
 <col width="75%" />
@@ -233,7 +219,7 @@ configuration.</li>
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td><strong>Message Type</strong></td>
-<td>Normal</td>
+<td>Secure</td>
 </tr>
 <tr class="row-even"><td><strong>Secure Queue Only?</strong></td>
 <td>No</td>
@@ -242,17 +228,17 @@ configuration.</li>
 </table>
 </div>
 <div class="section" id="tisci-message-id">
-<h3>TISCI Message ID<a class="headerlink" href="#tisci-message-id" title="Permalink to this headline">¶</a></h3>
-<p><p><code class="docutils literal"><span class="pre">TISCI_MSG_SET_FWL_REGION</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">(0x9000U)</span></code></p>
-<p>Message to set a firewall region configuration</p>
+<h4>TISCI Message ID<a class="headerlink" href="#tisci-message-id" title="Permalink to this headline">¶</a></h4>
+<p><p><code class="docutils literal"><span class="pre">TISCI_MSG_SA2UL_AUTH_RES_ACQUIRE</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">(0x9017U)</span></code></p>
+<p>Message to acquire authentication resources from sysfw</p>
 </p>
-<p><p><strong>struct tisci_msg_fwl_set_firewall_region_req</strong></p>
-<p>Request for configuring the firewall permissions.</p>
+<p><p><strong>struct tisci_msg_sa2ul_auth_res_acquire_req</strong></p>
+<p>Request to acquire the authentication resources from System Fimrware</p>
 <table border="1" class="docutils">
 <colgroup>
-<col width="5%" />
-<col width="6%" />
-<col width="90%" />
+<col width="23%" />
+<col width="38%" />
+<col width="39%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Parameter</th>
@@ -265,44 +251,25 @@ configuration.</li>
 <td>struct tisci_header</td>
 <td>Common TI-SCI header</td>
 </tr>
-<tr class="row-odd"><td>fwl_id</td>
-<td>u16</td>
-<td>firewall ID in question. fwl_id is defined in the TRM.</td>
-</tr>
-<tr class="row-even"><td>region</td>
-<td>u16</td>
-<td>Region or channel number to set config info This field is unused in case of a simple firewall  and must be initialized to zero.  In case of a region based firewall, this field indicates the region in question. (index starting from 0) In case of a channel based firewall, this field indicates the channel in question (index starting from 0)</td>
-</tr>
-<tr class="row-odd"><td>n_permission_regs</td>
-<td>u32</td>
-<td>Number of permission registers to set</td>
-</tr>
-<tr class="row-even"><td>control</td>
-<td>u32</td>
-<td>Contents of the firewall CONTROL register to set</td>
-</tr>
-<tr class="row-odd"><td>permissions</td>
-<td>u32</td>
-<td>Contents of the firewall PERMISSION register to set</td>
-</tr>
-<tr class="row-even"><td>start_address</td>
-<td>soc_phys_addr_t</td>
-<td>Contents of the firewall START_ADDRESS register to set</td>
-</tr>
-<tr class="row-odd"><td>end_address</td>
-<td>soc_phys_addr_t</td>
-<td>Contents of the firewall END_ADDRESS register to set</td>
-</tr>
 </tbody>
 </table>
+<p>The following is to request for SYSFW authentication resources to be handed
+ off to the requesting host. The following occurs during this API request:
+ PKA firewall region ownership is transitioned to the requesting host. No
+ permissions are updated at this time - the host must take further action to
+ update the region permissions through firewall API.
+ Secure PSIL threads are unpaired by SYSFW so that the requesting host can
+ pair to their own DMA channels
+ Only the host who is listed as the auth_resources owner in the security board
+ configuration may make this request.</p>
 </p>
-<p><p><strong>struct tisci_msg_fwl_set_firewall_region_resp</strong></p>
-<p>Response for configuring the firewall permissions.</p>
+<p><p><strong>struct tisci_msg_sa2ul_auth_res_acquire_resp</strong></p>
+<p>Response to authentication resource acquisition request</p>
 <table border="1" class="docutils">
 <colgroup>
+<col width="4%" />
 <col width="7%" />
-<col width="11%" />
-<col width="83%" />
+<col width="89%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Parameter</th>
@@ -313,128 +280,18 @@ configuration.</li>
 <tbody valign="top">
 <tr class="row-even"><td>hdr</td>
 <td>struct tisci_header</td>
-<td>Generic TISCI message header. ACK response indicates that firewall configuration is succesful. NACK response indicates that the configuration was not performed.</td>
+<td>Generic TISCI message header. ACK response indicates that the secure threads are unpaired from System Firmware’s DMA channels and the host has exclusive access to PKA registers. A NACK response indicates that the resources could not be released to the requesting host.</td>
 </tr>
 </tbody>
 </table>
 </p>
 </div>
-<div class="section" id="tisci-msg-get-fwl-region-get-firewall-region">
-<span id="get-firewall-region"></span><h3>TISCI_MSG_GET_FWL_REGION - Get Firewall region<a class="headerlink" href="#tisci-msg-get-fwl-region-get-firewall-region" title="Permalink to this headline">¶</a></h3>
-<p><strong>Usage</strong>:</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="75%" />
-<col width="25%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><strong>Message Type</strong></td>
-<td>Normal</td>
-</tr>
-<tr class="row-even"><td><strong>Secure Queue Only?</strong></td>
-<td>No</td>
-</tr>
-</tbody>
-</table>
 </div>
+<div class="section" id="tisci-msg-sa2ul-auth-res-release">
+<span id="sec-sa2ul-auth-res-release"></span><h3>TISCI_MSG_SA2UL_AUTH_RES_RELEASE<a class="headerlink" href="#tisci-msg-sa2ul-auth-res-release" title="Permalink to this headline">¶</a></h3>
+<p>Release System Firmware’s authentication resources</p>
 <div class="section" id="id1">
-<h3>TISCI Message ID<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
-<p><p><code class="docutils literal"><span class="pre">TISCI_MSG_GET_FWL_REGION</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">(0x9001U)</span></code></p>
-<p>Message to get a firewall region configuration</p>
-</p>
-<p><p><strong>struct tisci_msg_fwl_get_firewall_region_req</strong></p>
-<p>Request for retrieving the firewall permissions.</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="20%" />
-<col width="22%" />
-<col width="58%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Parameter</th>
-<th class="head">Type</th>
-<th class="head">Description</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td>hdr</td>
-<td>struct tisci_header</td>
-<td>Generic TISCI message header.</td>
-</tr>
-<tr class="row-odd"><td>fwl_id</td>
-<td>u16</td>
-<td>firewall ID in question. fwl_id is defined in the TRM.</td>
-</tr>
-<tr class="row-even"><td>region</td>
-<td>u16</td>
-<td>Region or channel number to set config info</td>
-</tr>
-<tr class="row-odd"><td>n_permission_regs</td>
-<td>u32</td>
-<td>Number of permission registers to retrieve</td>
-</tr>
-</tbody>
-</table>
-<p>This field is unused in case of a simple firewall  and must be initialized
- to zero.  In case of a region based firewall, this field indicates the
- region in question (index starting from 0). In case of a channel based
- firewall, this field indicates the channel in question (index starting
- from 0).</p>
-</p>
-<p><p><strong>struct tisci_msg_fwl_get_firewall_region_resp</strong></p>
-<p>Response for retrieving the firewall permissions.</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="5%" />
-<col width="6%" />
-<col width="90%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Parameter</th>
-<th class="head">Type</th>
-<th class="head">Description</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td>hdr</td>
-<td>struct tisci_header</td>
-<td>Generic TISCI message header. A ACK response in the hdr indicates that the message was processed. successfully. A NACK response indicates failure to retrieve firewall permissions.</td>
-</tr>
-<tr class="row-odd"><td>fwl_id</td>
-<td>u16</td>
-<td>firewall ID in question. fwl_id is defined in the TRM.</td>
-</tr>
-<tr class="row-even"><td>region</td>
-<td>u16</td>
-<td>Region or channel number to set config info This field is unused in case of a simple firewall  and must be initialized to zero.  In case of a region based firewall, this field indicates the region in question. (index starting from 0) In case of a channel based firewall, this field indicates the channel in question (index starting from 0)</td>
-</tr>
-<tr class="row-odd"><td>n_permission_regs</td>
-<td>u32</td>
-<td>Number of permission registers retrieved</td>
-</tr>
-<tr class="row-even"><td>control</td>
-<td>u32</td>
-<td>Contents of the firewall CONTROL register</td>
-</tr>
-<tr class="row-odd"><td>permissions</td>
-<td>u32</td>
-<td>Contents of the firewall PERMISSION registers</td>
-</tr>
-<tr class="row-even"><td>start_address</td>
-<td>soc_phys_addr_t</td>
-<td>Contents of the firewall START_ADDRESS register This is not applicable for channelized firewalls.</td>
-</tr>
-<tr class="row-odd"><td>end_address</td>
-<td>soc_phys_addr_t</td>
-<td>Contents of the firewall END_ADDRESS register This is not applicable for channelized firewalls.</td>
-</tr>
-</tbody>
-</table>
-</p>
-</div>
-<div class="section" id="tisci-msg-change-fwl-owner-change-firewall-owner">
-<span id="change-firewall-owner"></span><h3>TISCI_MSG_CHANGE_FWL_OWNER - Change Firewall Owner<a class="headerlink" href="#tisci-msg-change-fwl-owner-change-firewall-owner" title="Permalink to this headline">¶</a></h3>
-<p><strong>Usage</strong>:</p>
+<h4>Usage<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h4>
 <table border="1" class="docutils">
 <colgroup>
 <col width="75%" />
@@ -442,7 +299,7 @@ configuration.</li>
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td><strong>Message Type</strong></td>
-<td>Normal</td>
+<td>Secure</td>
 </tr>
 <tr class="row-even"><td><strong>Secure Queue Only?</strong></td>
 <td>No</td>
@@ -451,17 +308,17 @@ configuration.</li>
 </table>
 </div>
 <div class="section" id="id2">
-<h3>TISCI Message ID<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
-<p><p><code class="docutils literal"><span class="pre">TISCI_MSG_CHANGE_FWL_OWNER</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">(0x9002U)</span></code></p>
-<p>Message to change firewall region owner</p>
+<h4>TISCI Message ID<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h4>
+<p><p><code class="docutils literal"><span class="pre">TISCI_MSG_SA2UL_AUTH_RES_RELEASE</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">(0x9018U)</span></code></p>
+<p>Message to release authentication resources back to sysfw</p>
 </p>
-<p><p><strong>struct tisci_msg_fwl_change_owner_info_req</strong></p>
-<p>Request for a change owner operation</p>
+<p><p><strong>struct tisci_msg_sa2ul_auth_res_release_req</strong></p>
+<p>Request to release the authentication resources back to System Fimrware</p>
 <table border="1" class="docutils">
 <colgroup>
-<col width="17%" />
-<col width="28%" />
-<col width="55%" />
+<col width="23%" />
+<col width="38%" />
+<col width="39%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Parameter</th>
@@ -474,28 +331,24 @@ configuration.</li>
 <td>struct tisci_header</td>
 <td>Common TI-SCI header</td>
 </tr>
-<tr class="row-odd"><td>fwl_id</td>
-<td>u16</td>
-<td>firewall ID in question</td>
-</tr>
-<tr class="row-even"><td>region</td>
-<td>u16</td>
-<td>Region or channel number if applicable</td>
-</tr>
-<tr class="row-odd"><td>owner_index</td>
-<td>u8</td>
-<td>New owner index to transfer ownership to</td>
-</tr>
 </tbody>
 </table>
+<p>The following is to request for SYSFW authentication resources to be given
+ back to SYSFW. The following occurs during this API request:
+ PKA firewall is updated so that SYSFW becomes owner once again, and access
+ is limited to DMSC only
+ Secure PSIL threads are cleaned up so that they can be are re-paired by
+ SYSFW
+ Only the host who is listed as the auth_resources owner in the security board
+ configuration may make this request.</p>
 </p>
-<p><p><strong>struct tisci_msg_fwl_change_owner_info_resp</strong></p>
-<p>Response for a change owner operation</p>
+<p><p><strong>struct tisci_msg_sa2ul_auth_res_release_resp</strong></p>
+<p>Response to authentication resource release request</p>
 <table border="1" class="docutils">
 <colgroup>
-<col width="12%" />
-<col width="11%" />
-<col width="77%" />
+<col width="4%" />
+<col width="6%" />
+<col width="90%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Parameter</th>
@@ -506,31 +359,12 @@ configuration.</li>
 <tbody valign="top">
 <tr class="row-even"><td>hdr</td>
 <td>struct tisci_header</td>
-<td>Common TI-SCI header ACK response indicates that change owner operation is succesful. NACK response indicates that change owner operation failed.</td>
-</tr>
-<tr class="row-odd"><td>fwl_id</td>
-<td>u16</td>
-<td>firewall ID specified in request</td>
-</tr>
-<tr class="row-even"><td>region</td>
-<td>u16</td>
-<td>Region or channel number specified in request</td>
-</tr>
-<tr class="row-odd"><td>owner_index</td>
-<td>u8</td>
-<td>owner index specified in request</td>
-</tr>
-<tr class="row-even"><td>owner_privid</td>
-<td>u8</td>
-<td>new owner priv-ID returned by DMSC. This field is currently initialized to zero by DMSC.</td>
-</tr>
-<tr class="row-odd"><td>owner_permission_bits</td>
-<td>u16</td>
-<td>new owner permission bits returned by DMSC. This field is currently initialized to zero by DMSC.</td>
+<td>Generic TISCI message header. ACK response indicates that the secure threads are cleaned for pairing to System Firmware’s DMA channels and the DMSC access to PKA registers is restored. A NACK response indicates that the resources could not be released to the requesting back to System Firmware.</td>
 </tr>
 </tbody>
 </table>
 </p>
+</div>
 </div>
 </div>
 </div>
@@ -545,7 +379,7 @@ configuration.</li>
         <a href="sec_ap_data_transfer.html" class="btn btn-neutral float-right" title="Secure AP Command Interface" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="PROC_BOOT.html" class="btn btn-neutral" title="Processor Boot Management TISCI Description" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="firewall_api.html" class="btn btn-neutral" title="Firewall TISCI Description" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

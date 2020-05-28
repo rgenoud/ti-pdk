@@ -118,6 +118,11 @@
 <li class="toctree-l4"><a class="reference internal" href="#resource-access">Resource Access</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#shared-access-with-sysfw">Shared Access with System Firmware</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pka">PKA</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#psil-threads">PSIL Threads</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -215,10 +220,12 @@ use the resources on the additional instances. For example:</p>
 </tr>
 </tbody>
 </table>
-<p>The following section describes the details on availability of the SA2UL
-resources for host software.</p>
+<p>The following sections describe the details on availability of the SA2UL
+resources and how any shared resources with System Firmware are expected to be managed
+by host software.</p>
 <ul class="simple">
 <li><a class="reference internal" href="#pub-ug-sa2ul-resources"><span class="std std-ref">SA2UL Resource Availability</span></a></li>
+<li><a class="reference internal" href="#pub-ug-sa2ul-shared-access"><span class="std std-ref">Shared Access with System Firmware</span></a></li>
 </ul>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
@@ -289,7 +296,9 @@ host software.</td>
 <td rowspan="2">Open Access. Engine must be enabled by
 host software.</td>
 <td><strong>Reserved for System Firmware.</strong>
-Not availablere for host access.</td>
+Must be acquired and released through API
+request. Engine is enabled indefinitely by
+System Firmware and and cannot be modified.</td>
 </tr>
 <tr class="row-odd"><td>Others</td>
 <td>Open Access. Engine must be enabled by
@@ -305,7 +314,10 @@ engines must beenabled by host software.</td>
 <td><strong>System Firmware owns secure threads: ingress
 thread 0, egress thread 0,1</strong>. Open access to
 ingress thread <strong>1:M-1</strong> and egress threads
-<strong>2:N-1</strong> only.</td>
+<strong>2:N-1</strong> only. Thread 0 must be acquired and
+released through API request. Related engines
+are enabled indefinitely by System Firmware
+and cannot be modified.</td>
 </tr>
 <tr class="row-odd"><td>Others</td>
 <td>Open Access to all threads. All related
@@ -340,6 +352,64 @@ hosts may read the MMR.</p>
 <p>All PSIL thread pairing and unpairing is performed by the
 <a class="reference internal" href="../2_tisci_msgs/rm/rm_psil.html#pub-rm-public-psil-pair"><span class="std std-ref">TISCI_MSG_RM_PSIL_PAIR</span></a> and
 <a class="reference internal" href="../2_tisci_msgs/rm/rm_psil.html#pub-rm-public-psil-write"><span class="std std-ref">TISCI_MSG_RM_PSIL_WRITE</span></a> API.</p>
+</div>
+</div>
+<div class="section" id="shared-access-with-sysfw">
+<span id="pub-ug-sa2ul-shared-access"></span><h2>Shared Access with System Firmware<a class="headerlink" href="#shared-access-with-sysfw" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This section only applies to HS devices</p>
+</div>
+<p>On HS devices, System Firmware accesses the primary SA2UL instance for processor boot
+and board configuration authentication. This requires internal usage of the
+following resources:</p>
+<ul class="simple">
+<li>PKA - used for verifying certificate signatures</li>
+<li>PSIL threads - used for hashing and decrpytion operations</li>
+</ul>
+<p>After system initialization, these resources are seldom used by System Firmware at
+runtime, typically only in such use-cases like domain restart/recovery, OTA,
+etc., but can otherwise be made available to other applications. Enablement of
+and access to these resources must be carefully considered during system design
+if such runtime applications are necessary so as not to cripple System Firmware ability
+to perform data authentication and decryption.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">It is <strong>strongly</strong> suggested that only trusted software be granted access to
+these resources for the primary SA2UL instance on HS devices in order to
+minimize the risk for unintentional misconfiguration and denial of service.</p>
+</div>
+<p>The below sections describe the expected interaction from the host sotware for
+each of these resources in order to preserve functionality for System Firmware services.</p>
+<div class="section" id="pka">
+<h3>PKA<a class="headerlink" href="#pka" title="Permalink to this headline">¶</a></h3>
+<p>System Firmware enables the PKA engine, loads the PKA firmware, and enables all clock
+groups for the various PKA submodules at initialization, and the module is left
+in this state indefinitely. It is not mandatory to reconfigure PKA for use by
+host software. and it is recommended that no reconfiguration be performed in
+order to prevent unnecessary failures in System Firmware.</p>
+</div>
+<div class="section" id="psil-threads">
+<h3>PSIL Threads<a class="headerlink" href="#psil-threads" title="Permalink to this headline">¶</a></h3>
+<p>System Firmware pairs the secure set of SA2UL PSIL threads to internal DMA channels for
+communication to the encryption and authentication subsystems. The secure
+threads are defined as the first ingress and first two egress threads of the
+SA2UL instance. The specific thread mapping will vary for each SoC and can be
+found by referring to the device TRM.</p>
+<p>Most applications should attempt to avoid using these threads to access SA2UL if
+possible. However, in systems where there are no remaining available threads,
+host software can request that System Firmware unpair these threads to access. The
+request is made through the <a class="reference internal" href="../2_tisci_msgs/security/sa2ul_rm.html#sec-sa2ul-auth-res-acquire"><span class="std std-ref">TISCI_MSG_SA2UL_AUTH_RES_ACQUIRE</span></a> by the host which has been designated in the
+security board configuration.</p>
+<p>The implication of a host pairing these threads in an application is that
+System Firmware can no longer access without further intervention by that host. That is,
+the host must consciously unpair the threads and release the threads back to
+System Firmware through a balanced call to <a class="reference internal" href="../2_tisci_msgs/security/sa2ul_rm.html#sec-sa2ul-auth-res-release"><span class="std std-ref">TISCI_MSG_SA2UL_AUTH_RES_RELEASE</span></a> before any subsequent request for
+authentication and decryption services. After the service has completed, the
+host must again acquire the authenticaion resources before pairing the threads
+once again for use. This is illustrated in the below diagram:</p>
+<div class="figure align-center">
+<img alt="../_images/sa2ul_rm_auth_res.svg" src="../_images/sa2ul_rm_auth_res.svg" /></div>
 </div>
 </div>
 </div>
@@ -392,7 +462,7 @@ hosts may read the MMR.</p>
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="../_static/language_data.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
     <script src="http://www.ti.com/assets/js/headerfooter/analytics.js" type="text/javascript" charset="utf-8"></script>
 

@@ -1,0 +1,80 @@
+=========================
+SA2UL Resource Management
+=========================
+
+.. _sec_sa2ul_rm_desc:
+
+Introduction
+============
+
+This chapter provides information on available TISCI messages for managing
+the resources of the SA2UL crypto accelerator on K3 devices.
+
++------------------+-------------------------------------------------------------------------+
+| TISCI Message ID |                        Message Name                                     |
++==================+=========================================================================+
+| 0x9017           | :ref:`TISCI_MSG_SA2UL_AUTH_RES_ACQUIRE <sec_sa2ul_auth_res_acquire>`    |
++------------------+-------------------------------------------------------------------------+
+| 0x9018           | :ref:`TISCI_MSG_SA2UL_AUTH_RES_RELEASE <sec_sa2ul_auth_res_release>`    |
++------------------+-------------------------------------------------------------------------+
+
+Initial Configuration
+=====================
+
+A single host ID may be specified in the security board configuration to allow
+handoff of authentication resources from |sysfw|. This host ID is used to check
+the below API which are used to trigger the handoff during runtime.
+
+API Description
+===============
+
+.. _sec_sa2ul_auth_res_acquire:
+
+TISCI_MSG_SA2UL_AUTH_RES_ACQUIRE
+--------------------------------
+
+Acquire |sysfw|'s authentication resources
+
+Usage
+^^^^^
+
++------------------------+--------+
+| **Message Type**       | Secure |
++------------------------+--------+
+| **Secure Queue Only?** | No     |
++------------------------+--------+
+
+TISCI Message ID
+^^^^^^^^^^^^^^^^
+
+.. sysfwapimacro:: TISCI_MSG_SA2UL_AUTH_RES_ACQUIRE
+
+.. sysfwapistruct:: tisci_msg_sa2ul_auth_res_acquire_req
+
+.. sysfwapistruct:: tisci_msg_sa2ul_auth_res_acquire_resp
+
+.. _sec_sa2ul_auth_res_release:
+
+TISCI_MSG_SA2UL_AUTH_RES_RELEASE
+--------------------------------
+
+Release |sysfw|'s authentication resources
+
+Usage
+^^^^^
+
++------------------------+--------+
+| **Message Type**       | Secure |
++------------------------+--------+
+| **Secure Queue Only?** | No     |
++------------------------+--------+
+
+TISCI Message ID
+^^^^^^^^^^^^^^^^
+
+.. sysfwapimacro:: TISCI_MSG_SA2UL_AUTH_RES_RELEASE
+
+.. sysfwapistruct:: tisci_msg_sa2ul_auth_res_release_req
+
+.. sysfwapistruct:: tisci_msg_sa2ul_auth_res_release_resp
+

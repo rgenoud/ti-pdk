@@ -58,6 +58,7 @@ Secure Management
    security/sec_cert_format
    security/PROC_BOOT
    security/firewall_api
+   security/sa2ul_rm
    security/sec_ap_data_transfer
    security/runtime_debug
    security/extended_otp

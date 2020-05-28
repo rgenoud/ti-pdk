@@ -27,10 +27,13 @@ use the resources on the additional instances. For example:
 |       |                           | J721E_DEV_SA2_UL0     | No                      | Yes                   |
 +-------+---------------------------+-----------------------+-------------------------+-----------------------+
 
-The following section describes the details on availability of the SA2UL
-resources for host software.
+The following sections describe the details on availability of the SA2UL
+resources and how any shared resources with |sysfw| are expected to be managed
+by host software.
 
 * :ref:`pub_ug_sa2ul_resources`
+
+* :ref:`pub_ug_sa2ul_shared_access`
 
 .. note::
 
@@ -44,6 +47,7 @@ SA2UL Resource Availability
 
 The following table describes the access policies for all SA2UL instances on GP
 and HS devices
+
 
 +----------------+----------------+--------------------------------------------+------------------------------------------------+
 | Resource       | SA2UL instance | GP Policy                                  | HS Policy                                      | 
@@ -70,7 +74,9 @@ and HS devices
 |                |                |                                            | host software.                                 |
 +----------------+----------------+--------------------------------------------+------------------------------------------------+
 | PKA MMR        | Primary        | Open Access. Engine must be enabled by     | **Reserved for System Firmware.**              |
-|                |                | host software.                             | Not availablere for host access.               |
+|                |                | host software.                             | Must be acquired and released through API      |
+|                |                |                                            | request. Engine is enabled indefinitely by     |
+|                |                |                                            | System Firmware and and cannot be modified.    |
 |                +----------------+                                            +------------------------------------------------+
 |                | Others         |                                            | Open Access. Engine must be enabled by         |
 |                |                |                                            | host software.                                 |
@@ -78,8 +84,10 @@ and HS devices
 | PSIL Threads   | Primary        | Full access to all threads 0:M-1 and 0:N-1,| **System Firmware owns secure threads: ingress |
 |                |                | where M refers to the total number of      | thread 0, egress thread 0,1**. Open access to  |
 |                |                | ingress threads and N refers to the total  | ingress thread **1:M-1** and egress threads    |
-|                |                | egress threads (M * 2 = N). All related    | **2:N-1** only.                                |
-|                |                | engines must beenabled by host software.   |                                                |
+|                |                | egress threads (M * 2 = N). All related    | **2:N-1** only. Thread 0 must be acquired and  |
+|                |                | engines must beenabled by host software.   | released through API request. Related engines  |
+|                |                |                                            | are enabled indefinitely by System Firmware    |
+|                |                |                                            | and cannot be modified.                        |
 |                +----------------+                                            +------------------------------------------------+
 |                | Others         |                                            | Open Access to all threads. All related        |
 |                |                |                                            | engines must be enabled by host software.      |
@@ -118,4 +126,74 @@ hosts may read the MMR.
 All PSIL thread pairing and unpairing is performed by the
 :ref:`TISCI_MSG_RM_PSIL_PAIR <pub_rm_public_psil_pair>` and
 :ref:`TISCI_MSG_RM_PSIL_WRITE <pub_rm_public_psil_write>` API.
+
+.. _pub_ug_sa2ul_shared_access:
+
+Shared Access with |sysfw|
+==========================
+
+.. note::
+
+   This section only applies to HS devices
+
+On HS devices, |sysfw| accesses the primary SA2UL instance for processor boot
+and board configuration authentication. This requires internal usage of the
+following resources:
+
+* PKA - used for verifying certificate signatures
+
+* PSIL threads - used for hashing and decrpytion operations
+
+After system initialization, these resources are seldom used by |sysfw| at
+runtime, typically only in such use-cases like domain restart/recovery, OTA,
+etc., but can otherwise be made available to other applications. Enablement of
+and access to these resources must be carefully considered during system design
+if such runtime applications are necessary so as not to cripple |sysfw| ability
+to perform data authentication and decryption.
+
+.. warning::
+
+   It is **strongly** suggested that only trusted software be granted access to
+   these resources for the primary SA2UL instance on HS devices in order to
+   minimize the risk for unintentional misconfiguration and denial of service.
+
+The below sections describe the expected interaction from the host sotware for
+each of these resources in order to preserve functionality for |sysfw| services.
+
+PKA
+---
+
+|sysfw| enables the PKA engine, loads the PKA firmware, and enables all clock
+groups for the various PKA submodules at initialization, and the module is left
+in this state indefinitely. It is not mandatory to reconfigure PKA for use by
+host software. and it is recommended that no reconfiguration be performed in
+order to prevent unnecessary failures in |sysfw|.
+
+PSIL Threads
+------------
+
+|sysfw| pairs the secure set of SA2UL PSIL threads to internal DMA channels for
+communication to the encryption and authentication subsystems. The secure
+threads are defined as the first ingress and first two egress threads of the
+SA2UL instance. The specific thread mapping will vary for each SoC and can be
+found by referring to the device TRM.
+
+Most applications should attempt to avoid using these threads to access SA2UL if
+possible. However, in systems where there are no remaining available threads,
+host software can request that |sysfw| unpair these threads to access. The
+request is made through the :ref:`TISCI_MSG_SA2UL_AUTH_RES_ACQUIRE
+<sec_sa2ul_auth_res_acquire>` by the host which has been designated in the
+security board configuration.
+
+The implication of a host pairing these threads in an application is that
+|sysfw| can no longer access without further intervention by that host. That is,
+the host must consciously unpair the threads and release the threads back to
+|sysfw| through a balanced call to :ref:`TISCI_MSG_SA2UL_AUTH_RES_RELEASE
+<sec_sa2ul_auth_res_release>` before any subsequent request for
+authentication and decryption services. After the service has completed, the
+host must again acquire the authenticaion resources before pairing the threads
+once again for use. This is illustrated in the below diagram:
+
+.. figure:: ../../design/img/sec/sa2ul_rm_auth_res.svg
+   :align: center
 
