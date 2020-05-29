@@ -55,6 +55,7 @@
 
 #include "ipc_osal.h"
 #include "ipc_priv.h"
+#include "ipc_utils.h"
 
 /* Fix Me, need not be 256, can be max remote proc / max proc, i.e. 1 as
     structure which uses this is instantiated max proc times. */
@@ -111,7 +112,7 @@ void Ipc_mailboxInternalCallback(uintptr_t mboxNdx);
 /* ========================================================================== */
 
 #ifndef IPC_EXCLUDE_POLLED_RX
-#define IPC_POLL_TIMER  10
+#define IPC_POLL_TIMER  100
 
 uint32_t     g_pollTaskExit = FALSE;
 TaskP_Handle g_pollTask     = NULL;
@@ -123,6 +124,7 @@ void Mailbox_Poll_Task(void* argNotUsed)
     uint32_t                msg[4];
     Ipc_MailboxData        *mbox = NULL;
     Ipc_MailboxFifo        *fifo = NULL;
+    uint32_t                msgCnt = 0;
 
     while(FALSE == g_pollTaskExit)
     {
@@ -132,7 +134,8 @@ void Mailbox_Poll_Task(void* argNotUsed)
              for(cnt = 0; cnt < mbox->fifoCnt; cnt++)
              {
                  fifo = &mbox->fifoTable[cnt];
-                 if(MailboxGetMessageCount(mbox->baseAddr, fifo->queueId) > 0)
+                 msgCnt = MailboxGetMessageCount(mbox->baseAddr, fifo->queueId);
+                 if(msgCnt > 0)
                  {
                     /* Get the message from Mailbox fifo */
                     MailboxGetMessage(mbox->baseAddr, fifo->queueId, msg);
@@ -150,7 +153,8 @@ void Mailbox_Poll_Task(void* argNotUsed)
              }
         }
         /* Temporarily we use Task_yield() */
-        TaskP_yield();
+        //TaskP_yield();
+        TaskP_sleep(IPC_POLL_TIMER);
     }
 }
 

@@ -25,11 +25,20 @@ INCDIR =
 
 # List all the external components/interfaces, whose interface header files
 # need to be included for this component
-INCLUDE_EXTERNAL_INTERFACES = pdk bios xdc
+INCLUDE_EXTERNAL_INTERFACES = pdk
+ifeq ($(BUILD_OS_TYPE), qnx)
+INCLUDE_EXTERNAL_INTERFACES += osal_qnx csl_init
+else
+INCLUDE_EXTERNAL_INTERFACES += bios xdc
+endif
 
 # Common source files and CFLAGS across all platforms and cores
-SRCS_COMMON += ipc_api.c ipc_mp.c ipc_soc.c ipc_virtio.c
-SRCS_COMMON += ipc_osal.c ipc_utils.c
+SRCS_COMMON += ipc_api.c ipc_mp.c ipc_soc.c ipc_virtio.c ipc_utils.c
+ifeq ($(BUILD_OS_TYPE), qnx)
+SRCS_COMMON += ipc_osal_qnx.c
+else
+SRCS_COMMON += ipc_osal.c 
+endif
 ifeq ($(SOC),$(filter $(SOC), am64x))
 SRCS_COMMON += ipc_mailbox_lld.c
 else
@@ -41,6 +50,7 @@ PACKAGE_SRCS_COMMON += soc/ipc_soc.h
 PACKAGE_SRCS_COMMON += config_mk.bld ipcver.h
 CFLAGS_LOCAL_COMMON = $(PDK_CFLAGS) $(IPC_CFLAGS) -DIPC_SUPPORT_SCICLIENT -DIPC_EXCLUDE_POLLED_RX -DMAILBOX_INTERRUPT_MODE
 
+ 
 #Temporarily adding it until we have official support of C7x in Bios
 CFLAGS_LOCAL_c7x = -Dxdc_target_name__=C71 -Dxdc_target_types__=ti/targets/elf/nda/std.h
 
