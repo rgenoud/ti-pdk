@@ -86,6 +86,9 @@ typedef struct {
                                       - A8/A9: Low/High Level and Rising/Falling/Both Edge Trigger
                                       - R5: Level Trigger and Pulse Trigger
                                   */
+#ifdef QNX_OS
+    uint32_t intAutoEnable;     /*!< Automatically enable interrupt after calling ISR routine */
+#endif
 } OsalRegisterIntParams_corepac_t;
 
 /*!
