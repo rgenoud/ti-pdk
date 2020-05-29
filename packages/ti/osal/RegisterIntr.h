@@ -71,6 +71,9 @@ typedef struct {
     uintptr_t arg; /* Argument to the ISR routine */
     uint32_t priority;
     uint32_t triggerSensitivity;
+#ifdef QNX_OS
+    uint32_t intAutoEnable; /* Automatically enable interrupt after calling ISR routine */
+#endif
 } OsalRegisterIntParams_corepac_t;
 
 /* For C6x, if intVec=16, then event combiner is to be used */
