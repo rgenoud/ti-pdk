@@ -76,22 +76,32 @@ typedef struct {
 typedef void *Osal_Queue_Handle;
 
 /*!
- *  @brief  Function to construct the queue
+ *  @brief    Basic Queue Parameters
  *
- *  @param  structPtr  Pointer to the structure containing the queue element
+ *  Structure that contains the parameters are passed into ::Queue_create
+ *  when creating a Queue instance.
+ */
+typedef struct Osal_Queue_Params_s
+{
+    uint32_t *name;           /*!< Name of the Queue instance.                  */
+    uint32_t reserved; /* QNX thread ID space reserve*/
+} Osal_Queue_Params;
+
+/*!
+ *  @brief  Function to initialize the queue params
  *
  *  @param  queueParams queue parameters
  *
  */
-void Osal_Queue_construct(void * structPtr, const  void * queueParams);
+void Osal_Queue_Params_init(const Osal_Queue_Params * queueParams);
+
 /*!
- *  @brief  Function to return the queue handle from the structure
+ *  @brief  Function to create the queue
  *
- *  @param  structPtr  Pointer to the structure containing the queue element
+ *  @param  queueParams queue parameters
  *
  */
- 
-Osal_Queue_Handle Osal_Queue_handle(void *structPtr);
+Osal_Queue_Handle Osal_Queue_create(const Osal_Queue_Params * queueParams, void * eb);
 
 /*!
  *  @brief  Function to perform queue empty chcek
@@ -99,7 +109,7 @@ Osal_Queue_Handle Osal_Queue_handle(void *structPtr);
  *  @param  queueHandle   The queue handle
  *
  */
-bool Osal_Queue_empty(Osal_Queue_Handle queueHandle);
+uint32_t Osal_Queue_empty(Osal_Queue_Handle queueHandle);
 
 /*!
  *  @brief  Function to return the element at the front of the queue
@@ -117,6 +127,14 @@ void * Osal_Queue_get(Osal_Queue_Handle queueHandle);
  *  @param  ptr      Pointer to the queue element 
  */
 void Osal_Queue_put(Osal_Queue_Handle queueHandle,Osal_Queue_Elem *ptr);
+
+/*!
+ *  @brief  Function to delete the queue
+ *
+ *  @param  queueHandle   The queue handle
+ *
+ */
+void Osal_Queue_delete(Osal_Queue_Handle queueHandle);
 
 #ifdef __cplusplus
 }
