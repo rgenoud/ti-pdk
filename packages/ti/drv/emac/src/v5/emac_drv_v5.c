@@ -2852,8 +2852,8 @@ uintptr_t emac_get_icssg_rgmii_cfg_base_addr(uint32_t port_num, uint32_t virt_po
 uintptr_t emac_get_icssg_tx_ipg_cfg_base_addr(uint32_t port_num, uint32_t virt_port_num)
 {
     uintptr_t baseAddr = emac_get_icssg_cfg_base_addr(port_num, virt_port_num);
-    baseAddr += CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_REGS_BASE +
-               CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_TX_IPG1;
+    baseAddr += (CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_REGS_BASE +
+               (CSL_ICSS_G_PR1_MII_RT_PR1_MII_RT_CFG_TX_IPG0 + (port_num *4)));
     return baseAddr;
 }
 
@@ -2958,8 +2958,15 @@ void emac_icssg_update_link_speed_100MB(uint32_t port_num, uint32_t virt_port_nu
     regVal = EMAC_ICSSG_CONFIG_TX_IPG_960_NS;
     icssgTxIpg1CfgAddr  = emac_get_icssg_tx_ipg_cfg_base_addr(port_num, virt_port_num);
     CSL_REG32_WR (icssgTxIpg1CfgAddr, regVal);
-}
 
+    /*Work around to do RMW to TXIPG0 so that TXIPG1 will be latched to hw*/
+    if(virt_port_num == EMAC_SWITCH_PORT2) 
+    {
+        icssgTxIpg1CfgAddr  = emac_get_icssg_tx_ipg_cfg_base_addr(0, EMAC_SWITCH_PORT1);
+        regVal = CSL_REG32_RD (icssgTxIpg1CfgAddr);
+        CSL_REG32_WR (icssgTxIpg1CfgAddr, regVal);
+    }
+}
 /*
  *  ======== emac_icssg_update_rgmii_cfg_1G ========
  */
@@ -3010,6 +3017,14 @@ void emac_icssg_update_link_speed_1G(uint32_t port_num, uint32_t virt_port_num)
     regVal = EMAC_ICSSG_CONFIG_TX_IPG_104_NS;
     icssgTxIpg1CfgAddr  = emac_get_icssg_tx_ipg_cfg_base_addr(port_num, virt_port_num);
     CSL_REG32_WR (icssgTxIpg1CfgAddr, regVal);
+
+    /*Work around to do RMW to TXIPG0 so that TXIPG1 will be latched to hw*/
+    if(virt_port_num == EMAC_SWITCH_PORT2) 
+    {
+        icssgTxIpg1CfgAddr  = emac_get_icssg_tx_ipg_cfg_base_addr(0, EMAC_SWITCH_PORT1);
+        regVal = CSL_REG32_RD (icssgTxIpg1CfgAddr);
+        CSL_REG32_WR (icssgTxIpg1CfgAddr, regVal);
+    }
 }
 
 
