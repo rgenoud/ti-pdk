@@ -46,6 +46,12 @@
 /* This is needed for memset/memcpy */
 #include <string.h>
 #include <ti/drv/udma/udma.h>
+#ifdef QNX_OS
+#include <stdio.h>
+#include <sys/mman.h>
+#include <unistd.h>
+#include <hw/inout.h>
+#endif
 
 #ifdef __cplusplus
 extern "C" {
