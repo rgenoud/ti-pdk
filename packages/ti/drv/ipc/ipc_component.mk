@@ -50,6 +50,9 @@ drvipc_j721e_APPCORELIST = mpu1_0 mcu1_0 mcu2_0 mcu3_0 mcu1_1 mcu2_1 mcu3_1 c66x
 drvipc_j721e_LASTCORE := $(word $(words $(drvipc_j721e_APPCORELIST)), $(drvipc_j721e_APPCORELIST))
 drvipc_j7200_CORELIST  = mpu1_0 mcu1_0 mcu2_0 mcu1_1 mcu2_1
 drvipc_j7200_LASTCORE := $(word $(words $(drvipc_j7200_CORELIST)), $(drvipc_j7200_CORELIST))
+ifeq ($(BUILD_OS_TYPE), qnx)
+drvipc_j721e_CORELIST += qnx_mpu1_0
+endif
 drvipc_DISABLE_PARALLEL_MAKE = yes
 
 ############################
