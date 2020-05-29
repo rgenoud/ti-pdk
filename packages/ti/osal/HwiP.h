@@ -91,7 +91,7 @@ typedef enum HwiP_Status_e {
 /**
  *  @brief Enumerates the types different trigger types.
  *  Please refer to Section 4.3.13 Interrupt Configuration Registers, GICD_ICFGRn
- *  of ARM® Generic Interrupt Controller Architecture version 2.0
+ *  of ARMÂ® Generic Interrupt Controller Architecture version 2.0
  *  Architecture Specification document for details.
  */
 typedef enum
@@ -146,6 +146,9 @@ typedef struct HwiP_Params_s {
                                         ARM cortex-A Generic Interrupt Controller(GIC)
                                         v2.0 specific implementations as @ref OSAL_armGicTrigType_t 
                                     */
+#endif
+#ifdef QNX_OS
+    uint32_t   autoEnable; /*!< Automatically enable the interrupt after calling ISR routine */
 #endif
 } HwiP_Params;
 
