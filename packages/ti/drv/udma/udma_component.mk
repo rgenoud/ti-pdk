@@ -47,6 +47,9 @@ drvudma_$(SOC)_example_CORELIST = $(drvudma_$(SOC)_CORELIST)
 else
 drvudma_am64x_example_CORELIST  = mcu1_0 mcu1_1 mcu2_0 mcu2_1 #temporarily disabling build for a53 and m4f due to sysbios issue
 endif
+ifeq ($(BUILD_OS_TYPE), qnx)
+drvudma_j721e_CORELIST += qnx_mpu1_0
+endif
 
 ############################
 # udma package
