@@ -1792,21 +1792,18 @@ bool emac_get_hw_cppi_tx_desc(uint32_t p1, uint32_t ch1, EMAC_CPPI_DESC_T** pCpp
  *  ======== emac_get_hw_cppi_tx_descs ========
  */
 
-bool emac_get_hw_cppi_tx_descs(uint32_t p1, uint32_t ch1, uint32_t p2, uint32_t ch2, EMAC_CPPI_DESC_T** pCppiDesc1, EMAC_CPPI_DESC_T** pCppiDesc2)
+bool emac_get_hw_cppi_tx_descs(uint32_t p1, uint32_t ch1, EMAC_CPPI_DESC_T** pCppiDesc1)
 {
     bool retVal = FALSE;
     uintptr_t key;
-    EMAC_CPPI_DESC_T *temp1, *temp2;
+    EMAC_CPPI_DESC_T *temp1;
 
     key = EMAC_osalHardwareIntDisable();
     *pCppiDesc1 = emac_mcb.port_cb[p1].txReadyDescs[ch1];
-    *pCppiDesc2 = emac_mcb.port_cb[p2].txReadyDescs[ch2];
-    if(*pCppiDesc1 && *pCppiDesc2)
+    if(*pCppiDesc1)
     {
         temp1 = *pCppiDesc1;
-        temp2 = *pCppiDesc2;
         emac_mcb.port_cb[p1].txReadyDescs[ch1] = temp1->nextPtr;
-        emac_mcb.port_cb[p2].txReadyDescs[ch2] = temp2->nextPtr;
         retVal = TRUE;
     }
     EMAC_osalHardwareIntRestore(key);
@@ -1956,8 +1953,7 @@ static EMAC_DRV_ERR_E EMAC_send_v5(uint32_t port_num, EMAC_PKT_DESC_T* p_desc)
 {
     EMAC_DRV_ERR_E retVal = EMAC_DRV_RESULT_OK;
     EMAC_CPPI_DESC_T *pCppiDescTx1 = NULL;
-    EMAC_CPPI_DESC_T *pCppiDescTx2 = NULL;
-    
+
     uint32_t virt_port_num =0;
     switch (port_num)
     {
@@ -1988,26 +1984,13 @@ static EMAC_DRV_ERR_E EMAC_send_v5(uint32_t port_num, EMAC_PKT_DESC_T* p_desc)
         if (port_num == EMAC_SWITCH_PORT)
         {
             /* make sure there is hw descriptor for boths switch ports prior to actually sending */
-            if (emac_get_hw_cppi_tx_descs(0, p_desc->PktChannel,1U, p_desc->PktChannel, &pCppiDescTx1, &pCppiDescTx2))//FIXME: Hard coded for ICSSG0
+            if (emac_get_hw_cppi_tx_descs(0, p_desc->PktChannel, &pCppiDescTx1))//FIXME: Uses one slice only for undirected send
             {
-                p_desc->RefCount = 2U;
-                retVal = EMAC_send_v5_local(0, port_num, p_desc, pCppiDescTx1);
-                if (retVal == EMAC_DRV_RESULT_OK)
+                p_desc->RefCount = 1U;
+                retVal = EMAC_send_v5_local(0U, port_num, p_desc, pCppiDescTx1);
+                if (retVal != EMAC_DRV_RESULT_OK)
                 {
-                    retVal = EMAC_send_v5_local(1U, port_num, p_desc, pCppiDescTx2);
-                    if (retVal != EMAC_DRV_RESULT_OK)
-                    {
-                         UTILS_trace(UTIL_TRACE_LEVEL_UNEXPECTED,emac_mcb.drv_trace_cb,"port: %d: Send failure for 1st switch port, unexpected: %d",port_num);
-                    }
-                }
-                else
-                {
-                    /* need to free 2nd desciptor since 1st send failed,
-                     * dont need to free 1st desciptor because emac_send frees on failure
-                     */
-                    UTILS_trace(UTIL_TRACE_LEVEL_UNEXPECTED,emac_mcb.drv_trace_cb,"port: %d: Send failure for 2nd switch port, unexpected: %d",port_num);
-                    emac_free_hw_cppi_tx_desc(2, p_desc->PktChannel, pCppiDescTx2);
-                    p_desc->RefCount = 0;
+                     UTILS_trace(UTIL_TRACE_LEVEL_UNEXPECTED,emac_mcb.drv_trace_cb,"port: %d: Send failure for 1st switch port, unexpected: %d",port_num);
                 }
             }
         }
