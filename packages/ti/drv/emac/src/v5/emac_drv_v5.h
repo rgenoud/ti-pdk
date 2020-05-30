@@ -471,7 +471,7 @@ typedef struct EMAC_MCB_V5_S {
 } EMAC_MCB_V5_T;
 
 void emac_free_hw_cppi_tx_desc(uint32_t p1, uint32_t ch1, EMAC_CPPI_DESC_T* pCppiDesc);
-bool emac_get_hw_cppi_tx_descs(uint32_t p1, uint32_t ch1, uint32_t p2, uint32_t ch2, EMAC_CPPI_DESC_T** pCppiDesc1, EMAC_CPPI_DESC_T** pCppiDesc2);
+bool emac_get_hw_cppi_tx_descs(uint32_t p1, uint32_t ch1, EMAC_CPPI_DESC_T** pCppiDesc1);
 bool emac_get_hw_cppi_tx_desc(uint32_t p1, uint32_t ch1, EMAC_CPPI_DESC_T** pCppiDesc);
 
 /**
