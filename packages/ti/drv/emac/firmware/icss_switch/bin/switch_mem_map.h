@@ -47,16 +47,18 @@
  *
  */
 
+/*Time after which FDB entries are checked for aged out values. Value in nanoseconds*/
+#define FDB_AGEING_TIMEOUT_OFFSET                          0x0014
 /*default VLAN tag for Host Port*/
-#define HOST_PORT_DF_VLAN_OFFSET                           0x0018
+#define HOST_PORT_DF_VLAN_OFFSET                           0x001C
 /*Same as HOST_PORT_DF_VLAN_OFFSET*/
 #define EMAC_ICSSG_SWITCH_PORT0_DEFAULT_VLAN_OFFSET        HOST_PORT_DF_VLAN_OFFSET
 /*default VLAN tag for P1 Port*/
-#define P1_PORT_DF_VLAN_OFFSET                             0x001C
+#define P1_PORT_DF_VLAN_OFFSET                             0x0020
 /*Same as P1_PORT_DF_VLAN_OFFSET*/
 #define EMAC_ICSSG_SWITCH_PORT1_DEFAULT_VLAN_OFFSET        P1_PORT_DF_VLAN_OFFSET
 /*default VLAN tag for P2 Port*/
-#define P2_PORT_DF_VLAN_OFFSET                             0x0020
+#define P2_PORT_DF_VLAN_OFFSET                             0x0024
 /*Same as P2_PORT_DF_VLAN_OFFSET*/
 #define EMAC_ICSSG_SWITCH_PORT2_DEFAULT_VLAN_OFFSET        P2_PORT_DF_VLAN_OFFSET
 /*VLAN-FID Table offset. 4096 VIDs. 2B per VID = 8KB = 0x2000*/
@@ -83,6 +85,28 @@
 #define HOST_SPPD0                                         0x7AAC
 /*special packet descriptor Q reserved memory*/
 #define HOST_SPPD1                                         0x7EAC
+/*_Small_Description_*/
+#define TIMESYNC_FW_WC_CYCLECOUNT_OFFSET                   0x83EC
+/*IEP count hi roll over count*/
+#define TIMESYNC_FW_WC_HI_ROLLOVER_COUNT_OFFSET            0x83F4
+/*_Small_Description_*/
+#define TIMESYNC_FW_WC_COUNT_HI_SW_OFFSET_OFFSET           0x83F8
+/*Set clock descriptor*/
+#define TIMESYNC_FW_WC_SETCLOCK_DESC_OFFSET                0x83FC
+/*_Small_Description_*/
+#define TIMESYNC_FW_WC_SYNCOUT_REDUCTION_FACTOR_OFFSET     0x843C
+/*_Small_Description_*/
+#define TIMESYNC_FW_WC_SYNCOUT_REDUCTION_COUNT_OFFSET      0x8440
+/*_Small_Description_*/
+#define TIMESYNC_FW_WC_SYNCOUT_START_TIME_CYCLECOUNT_OFFSET 0x8444
+/*Control variable to generate SYNC1*/
+#define TIMESYNC_FW_WC_ISOM_PIN_SIGNAL_EN_OFFSET           0x844C
+/*SystemTime Sync0 periodicity*/
+#define TIMESYNC_FW_ST_SYNCOUT_PERIOD_OFFSET               0x8450
+/*Set clock operation done signal for next task*/
+#define TIMESYNC_FW_SIG_PNFW_OFFSET                        0x8454
+/*Set clock operation done signal for next task*/
+#define TIMESYNC_FW_SIG_TIMESYNCFW_OFFSET                  0x8458
 
 /*
  *
@@ -133,14 +157,6 @@
 #define EXPRESS_PRE_EMPTIVE_Q_MAP                          0x0034
 /*Stores the table used for priority mapping. 1B per PCP/Queue*/
 #define PORT_Q_PRIORITY_MAPPING_OFFSET                     0x003C
-/*Set clock descriptor*/
-#define TIMESYNC_FW_SETCLOCK_DESC_OFFSET                   0x0088
-/*Control variable to generate SYNC1*/
-#define TIMESYNC_FW_WC_ISOM_SIG_EN_OFFSET                  0x00CC
-/*SystemTime Sync0 periodicity*/
-#define TIMESYNC_FW_ST_SYNCOUT_PERIOD_OFFSET               0x00D0
-/*IEP count hi roll over count*/
-#define TIMESYNC_FW_HI_ROLLOVER_COUNT_OFFSET               0x00D4
 /*TAS gate mask for windows list0*/
 #define TAS_GATE_MASK_LIST0                                0x0100
 /*TAS gate mask for windows list1*/
@@ -163,12 +179,6 @@
 #define BUFFER_POOL_0_ADDR_OFFSET                          0x05AC
 /*16B for Host Egress MSMC Q (Pre-emptible) context*/
 #define HOST_RX_Q_PRE_CONTEXT_OFFSET                       0x0674
-/*_Small_Description_*/
-#define TIMESYNC_FW_COUNT_HI_SW_OFFSET_OFFSET              0x0884
-/*_Small_Description_*/
-#define TIMESYNC_FW_CYCLECOUNT_OFFSET                      0x0888
-/*_Small_Description_*/
-#define TIMESYNC_FW_WC_SYNCOUT_REDUCTION_OFFSET            0x0890
 
 /*
  *
@@ -176,8 +186,6 @@
  *
  */
 
-/*Time after which FDB entries are checked for aged out values. Value in nanoseconds*/
-#define FDB_AGEING_TIMEOUT_OFFSET                          0x00A0
 
 /*
  *
