@@ -76,7 +76,6 @@ uint32_t gTxCounter = 0;
 
 #define EMAC_RX_RING_MGMT_PSI_RESPONSE ((uint32_t)(1U))
 #define EMAC_RX_RING_TX_TS_RESPONSE ((uint32_t)(2U))
-#define EMAC_MIN_PKT_SIZE ((uint32_t)(60U))
 
 extern EMAC_IOCTL_CMD_T cmd1Icssg;
 extern EMAC_IOCTL_CMD_T cmd2Icssg;
@@ -1873,10 +1872,6 @@ static EMAC_DRV_ERR_E EMAC_send_v5_local(uint32_t port_num, uint32_t virt_port_n
     retVal = emac_poll_tx_ring(port_num,Udma_chGetCqRingHandle(txChHandle), chNum);
     if (retVal == EMAC_DRV_RESULT_OK)
     {
-        if (p_desc->PktLength < EMAC_MIN_PKT_SIZE)
-        {
-            p_desc->PktLength = EMAC_MIN_PKT_SIZE;
-        }
         if (p_tx_cppi_desc != NULL)
         {
             pCppiDesc = p_tx_cppi_desc;
