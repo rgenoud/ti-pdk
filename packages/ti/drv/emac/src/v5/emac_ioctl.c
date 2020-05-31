@@ -1624,10 +1624,10 @@ EMAC_DRV_ERR_E emac_ioctl_configure_fdb_ageing_interval(uint32_t port_num, uint3
             /*Calculate number of buckets*/
             numFDBBuckets = pSwitchFwCfg->fdbSize / pSwitchFwCfg->numFdbBucketEntries;
 
-            fdbAgeingIntervalAddr = emac_mcb.port_cb[port_num].icssDram1BaseAddr + pSwitchFwCfg->fdbAgeingTimeoutOffset;
-            /*The actual value written to memory is ageing timeout divided by number of buckets
+            fdbAgeingIntervalAddr = emac_mcb.port_cb[port_num].icssSharedRamBaseAddr + pSwitchFwCfg->fdbAgeingTimeoutOffset;
+            /*The actual value written to memory is 2 * (ageing timeout divided by number of buckets)
               because in firmware we iterate per bucket not for entire FDB. See NRT design doc for more details*/
-            CSL_REG64_WR(fdbAgeingIntervalAddr, entry->fdbAgeingInterval/(uint64_t)numFDBBuckets);
+            CSL_REG64_WR(fdbAgeingIntervalAddr,2 *(entry->fdbAgeingInterval/(uint64_t)numFDBBuckets)); 
         }
     }
     return retVal;

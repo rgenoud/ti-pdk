@@ -2801,10 +2801,10 @@ void emac_icssg_switch_eth_setup (uint32_t portNum)
         /*Calculate number of buckets*/
         numFDBBuckets = pSwitchFwCfg->fdbSize / pSwitchFwCfg->numFdbBucketEntries;
 
-        fdbAgeingIntervalAddr = emac_mcb.port_cb[portNum].icssDram1BaseAddr + pSwitchFwCfg->fdbAgeingTimeoutOffset;
-        /*The actual value written to memory is ageing timeout divided by number of buckets
+        fdbAgeingIntervalAddr = emac_mcb.port_cb[portNum].icssSharedRamBaseAddr + pSwitchFwCfg->fdbAgeingTimeoutOffset;
+        /*The actual value written to memory is 2 * (ageing timeout divided by number of buckets)
           because in firmware we iterate per bucket not for entire FDB. See NRT design doc for more details*/
-        CSL_REG64_WR(fdbAgeingIntervalAddr, pSwitchFwCfg->defaultAgeingTimeout/(uint64_t)numFDBBuckets);
+        CSL_REG64_WR(fdbAgeingIntervalAddr, 2* (pSwitchFwCfg->defaultAgeingTimeout/(uint64_t)numFDBBuckets));
     }
 }
 
