@@ -849,7 +849,7 @@ static void RPMessage_checkForMessages(RPMessage_EndptPool *pool)
  */
 static void RPMessage_ctrlMsgTask(void* arg0, void* arg1)
 {
-    RPMessage_Object *obj = (RPMessage_Object *)(uintptr_t)(*((uint64_t *)arg0));
+    RPMessage_Object *obj = (RPMessage_Object *)(uintptr_t)(((uint64_t *)arg0));
     uint32_t      remoteEndpoint;
     uint32_t      remoteProcId;
     int32_t       status;
