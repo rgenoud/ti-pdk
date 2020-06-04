@@ -2929,11 +2929,8 @@ void emac_icssg_update_link_speed_100MB(uint32_t port_num, uint32_t virt_port_nu
 
     if ((virt_port_num == EMAC_SWITCH_PORT1) ||(virt_port_num == EMAC_SWITCH_PORT2))
     {
-        icssgRgmiiCfgAddr = emac_get_icssg_rgmii_cfg_base_addr(port_num, EMAC_SWITCH_PORT1);
-        emac_icssg_update_rgmii_cfg_100MB(~(port_num&1), icssgRgmiiCfgAddr, link_status);
-
-        icssgRgmiiCfgAddr = emac_get_icssg_rgmii_cfg_base_addr(port_num, EMAC_SWITCH_PORT2);
-        emac_icssg_update_rgmii_cfg_100MB((port_num&1), icssgRgmiiCfgAddr, link_status);
+        icssgRgmiiCfgAddr = emac_get_icssg_rgmii_cfg_base_addr(port_num, virt_port_num);
+        emac_icssg_update_rgmii_cfg_100MB(port_num, icssgRgmiiCfgAddr, link_status);
     }
     else
     {
