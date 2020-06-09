@@ -53,13 +53,15 @@ SemaphoreP_Handle SemaphoreP_create(uint32_t count,
                                     const SemaphoreP_Params *params)
 {
     sem_t *handle;
-    char sem_name[32];
+    struct timespec ts;
+    char sem_name[128];
 
     /* Assign a name if one is not specified */
     if(params->name == NULL)
     {
        static int counter = 0;
-       sprintf(sem_name,"qnx_sem_%d", counter++);
+       clock_gettime(CLOCK_REALTIME, &ts);
+       sprintf(sem_name,"qnx_sem_%ld_%ld_%d", (long int)getpid(), ts.tv_nsec, counter++);
     }
     else
     {
