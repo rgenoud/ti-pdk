@@ -44,6 +44,10 @@ ifeq ($(SOC),$(filter $(SOC), am65xx j721e))
 sciclient_LIB_LIST += sciclient_hs
 endif
 
+ifeq ($(SOC),$(filter $(SOC), j721e))
+sciclient_LIB_LIST += rm_pm_hal
+endif
+
 drvsciclient_BOARDLIST = am65xx_evm am65xx_idk j721e_sim j721e_evm j7200_evm am64x_evm
 drvsciclient_SOCLIST = am65xx j721e j7200 am64x
 drvsciclient_am65xx_CORELIST = mcu1_0 mcu1_1 mpu1_0
@@ -58,7 +62,7 @@ export sciclient_OBJPATH = ti/drv/sciclient
 export sciclient_LIBNAME = sciclient
 sciclient_PATH = $(PDK_SCICLIENT_COMP_PATH)
 export sciclient_LIBPATH = $(PDK_SCICLIENT_COMP_PATH)/lib
-export sciclient_MAKEFILE = -fsrc/makefile BUILD_HS=no
+export sciclient_MAKEFILE = -fsrc/sciclient_indirect_makefile BUILD_HS=no
 # Simulator versus Silicon has a different Firmware Image.
 sciclient_BOARD_DEPENDENCY = no
 ifeq ($(BOARD),$(filter $(BOARD), j721e_ccqt j721e_loki j721e_hostemu))
@@ -78,7 +82,7 @@ export sciclient_hs_OBJPATH = ti/drv/sciclient_hs
 sciclient_hs_PATH = $(PDK_SCICLIENT_COMP_PATH)
 export sciclient_hs_LIBNAME = sciclient_hs
 export sciclient_hs_LIBPATH = $(PDK_SCICLIENT_COMP_PATH)/lib
-export sciclient_hs_MAKEFILE = -fsrc/makefile BUILD_HS=yes
+export sciclient_hs_MAKEFILE = -fsrc/sciclient_indirect_makefile BUILD_HS=yes
 # Simulator versus Silicon has a different Firmware Image.
 sciclient_hs_BOARD_DEPENDENCY = no
 ifeq ($(BOARD),$(filter $(BOARD), j721e_ccqt j721e_loki j721e_hostemu))
@@ -102,6 +106,23 @@ export sciclient_boardcfg_CORE_DEPENDENCY = yes
 export sciclient_boardcfg_BOARDLIST = $(sciclient_BOARDLIST)
 export sciclient_boardcfg_$(SOC)_CORELIST = mcu1_0
 export sciclient_boardcfg_LIBNAME = sciclient_boardcfg
+
+export rm_pm_hal_COMP_LIST = rm_pm_hal
+rm_pm_hal_RELPATH = ti/drv/sciclient/src/rm_pm_hal
+export rm_pm_hal_OBJPATH = ti/drv/sciclient/src/rm_pm_hal
+rm_pm_hal_PATH = $(PDK_SCICLIENT_COMP_PATH)
+export rm_pm_hal_LIBNAME = rm_pm_hal
+export rm_pm_hal_LIBPATH = $(PDK_SCICLIENT_COMP_PATH)/lib
+export rm_pm_hal_MAKEFILE = -fsrc/rm_pm_hal_makefile BUILD_HS=no
+# Simulator versus Silicon has a different Firmware Image.
+rm_pm_hal_BOARD_DEPENDENCY = no
+export rm_pm_hal_BOARD_DEPENDENCY
+export rm_pm_hal_CORE_DEPENDENCY = yes
+rm_pm_hal_PKG_LIST = sciclient
+rm_pm_hal_INCLUDE = $(rm_pm_hal_PATH)
+export rm_pm_hal_SOCLIST = j721e
+export rm_pm_hal_BOARDLIST = j721e_evm
+export rm_pm_hal_$(SOC)_CORELIST = mcu1_0
 
 ############################
 # sciclient examples

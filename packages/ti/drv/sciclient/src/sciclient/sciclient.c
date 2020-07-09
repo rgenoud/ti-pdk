@@ -40,7 +40,7 @@
 /*                             Include Files                                  */
 /* ========================================================================== */
 
-#include <ti/drv/sciclient/src/sciclient_priv.h>
+#include <ti/drv/sciclient/src/sciclient/sciclient_priv.h>
 #include <ti/csl/soc.h>
 #include <string.h> /*For memcpy*/
 #if defined(SOC_J721E) || defined(SOC_J7200)

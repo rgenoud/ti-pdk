@@ -51,7 +51,7 @@
 #include <ti/csl/hw_types.h>
 #include <sciclient.h>
 #include <ti/board/board.h>
-#include <ti/drv/sciclient/src/sciclient_priv.h>
+#include <ti/drv/sciclient/src/sciclient/sciclient_priv.h>
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */

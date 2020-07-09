@@ -14,8 +14,8 @@ endif
 
 MODULE_NAME = sciclient$(HS_SUFFIX)
 
-SRCDIR = src
-INCDIR = soc/sysfw/include
+SRCDIR = src/sciclient
+INCDIR = soc/sysfw/include src/sciclient
 PACKAGE_SRCS_COMMON =
 
 # SoC Specific source files

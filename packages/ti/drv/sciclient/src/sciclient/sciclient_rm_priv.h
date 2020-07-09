@@ -47,7 +47,7 @@
 #include <ti/csl/hw_types.h>
 
 #include <ti/drv/sciclient/sciclient.h>
-#include <ti/drv/sciclient/src/sciclient_priv.h>
+#include <ti/drv/sciclient/src/sciclient/sciclient_priv.h>
 #include <ti/drv/sciclient/soc/sciclient_soc_priv.h>
 
 #ifdef __cplusplus

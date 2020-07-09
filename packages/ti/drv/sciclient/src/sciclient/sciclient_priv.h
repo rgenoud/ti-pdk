@@ -51,7 +51,7 @@
 #include <ti/osal/RegisterIntr.h>
 
 #include <ti/drv/sciclient/sciclient.h>
-#include <ti/drv/sciclient/src/sciclient_romMessages.h>
+#include <ti/drv/sciclient/src/sciclient/sciclient_romMessages.h>
 #include <ti/drv/sciclient/soc/sciclient_soc_priv.h>
 
 #if defined (SOC_AM65XX)
