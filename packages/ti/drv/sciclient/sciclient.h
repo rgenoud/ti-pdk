@@ -229,16 +229,17 @@
 #define TISCI_BIT(n)  (1UL << (n))
 
 /**
- * \brief Defines the sysfw DEVGRP type. This is meant to be used in code
- * or data structures that require distinction of devgrps.
- */
-typedef uint8_t devgrp_t;
-
-/**
  * \brief Defines the sysfw DOMGRP type. This is meant to be used in code
  * or data structures that require distinction of domgrps.
  */
 typedef uint8_t domgrp_t;
+
+#ifndef SYSFW_DEVGRPS_H
+/**
+ * \brief Defines the sysfw DEVGRP type. This is meant to be used in code
+ * or data structures that require distinction of devgrps.
+ */
+typedef uint8_t devgrp_t;
 
 /* External definitions */
 
@@ -269,6 +270,8 @@ typedef uint8_t domgrp_t;
 #define DEVGRP_DMSC             ((0x01U) << 7U)
 /** Match everything - STRICTLY INTERNAL USAGE ONLY */
 #define DEVGRP_DMSC_ALL         (0xFFU)
+
+#endif
 
 /**
  * Maximum number of devgrps that are supported by SYSFW.

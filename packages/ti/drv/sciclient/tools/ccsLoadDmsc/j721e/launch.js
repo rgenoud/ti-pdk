@@ -62,7 +62,7 @@ pdkPath = "/ti/j7presi/workarea/pdk";
 ccs_init_elf_file = pdkPath+"/packages/ti/drv/sciclient/tools/ccsLoadDmsc/j721e/sciclient_ccs_init_mcu1_0_release.xer5f";
 
 //path to sysfw bin
-sysfw_bin = pdkPath+"/packages/ti/drv/sciclient/soc/sysfw/binaries/ti-sci-firmware-j721e-gp.bin"
+sysfw_bin = pdkPath+"/packages/ti/drv/sciclient/soc/sysfw/binaries/ti-sci-firmware-j721e-gp-no-pm-rm.bin"
 
 //<!!!!!! EDIT THIS !!!!!>
 

@@ -70,90 +70,6 @@
 /* ========================================================================== */
 
 /**
- *  \brief   Gives the address for status register for a particular thread.
- *
- *  \param   thread    Index of the thread.
- *
- *  \return  address   address of the thread status
- */
-static inline uintptr_t Sciclient_threadStatusReg(uint32_t thread);
-
-/**
- *  \brief   Read a 32 bit word from the thread.
- *
- *  \param   thread    Index of the thread to be read from.
- *  \param   idx       Index of the word to be read from the thread.
- *
- *  \return  word      Value read back.
- */
-static inline uint32_t Sciclient_readThread32(uint32_t thread, uint8_t idx);
-
-/**
- *  \brief   Read the current thread count.
- *
- *  \param   thread    Index of the thread to be read from.
- *
- *  \return  word      Count read back.
- */
-static inline uint32_t Sciclient_readThreadCount(uint32_t thread);
-
-/**
- *  \brief   Validate thread has no errors and has space to accept the next
- *           message.
- *
- *  \param   thread    Index of the thread.
- *
- *  \return  status    Status of the message.
- */
-static int32_t Sciclient_verifyThread(uint32_t thread);
-
-/**
- *  \brief   Check if there are credits to write to the thread.
- *
- *  \param   thread    Index of the thread.
- *  \param   timeout   Wait for timeout if operation is complete.
- *
- *  \return  status    Status of the message.
- */
-static int32_t Sciclient_waitThread(uint32_t thread, uint32_t timeout);
-
-/**
- *  \brief   API to send the message to the thread.
- *
- *  \param   thread         Index of the thread.
- *  \param   pSecHeader     Pointer to the security header extension.
- *  \param   pHeader        Pointer to the header structure.
- *  \param   pPayload       Pointer to the payload structure.
- *  \param   payloadSize    Size of the payload.
- *
- *  \return  status    Status of the message.
- */
-static void Sciclient_sendMessage(uint32_t        thread,
-                                  const uint8_t  *pSecHeader,
-                                  const uint8_t  *pHeader,
-                                  const uint8_t  *pPayload,
-                                  uint32_t        payloadSize);
-
-/**
- *  \brief   This utility function would find the proxy map context id for
- *           'gSciclientMap' corresponding to a particular interrupt number.
- *
- *  \param   intrNum    Interrupt number.
- *
- *  \return  retVal     Context Id for the interrupt number.
- */
-static int32_t Sciclient_contextIdFromIntrNum(uint32_t intrNum);
-
-/**
- *  \brief   API to flush/remove all outstanding messages on a thread .
- *
- *  \param   thread    Index of the thread.
- *
- *  \return None
- */
-static void Sciclient_flush(uint32_t thread);
-
-/**
  *  \brief   ISR called when a response is received from DMSC.
  *
  *  \param   arg    Not used.
@@ -162,11 +78,28 @@ static void Sciclient_flush(uint32_t thread);
  */
 static void Sciclient_ISR(uintptr_t arg);
 
-/* This utility function is to be used to take care of  all non-aligned c66x accesses */
-void sciclient_util_byte_copy(uint8_t *src, uint8_t *dest,uint32_t num_bytes);
+/**
+ *  \brief   This utility function is to be used to take care of
+ *           all non-aligned c66x accesses
+ *
+ *  \param   src            Source Buffer pointer
+ *  \param   dest           Destination Buffer pointer
+ *  \param   num_bytes      Number of Bytes to copy.
+ *
+ *  \return None
+ */
+static void Sciclient_utilByteCopy(uint8_t *src,
+                                   uint8_t *dest,
+                                   uint32_t num_bytes);
 
 #if defined(_TMS320C6X)
-/* This utility function is used to set the RAT for IRs for C66x */
+/**
+ *  \brief   This utility function is used to set the RAT for IRs for C66x
+ *
+ *  \param   ratRegion      Rat Region configuration
+ *
+ *  \return None
+ */
 static int32_t Sciclient_C66xRatMap(uint32_t ratRegion);
 #endif
 
@@ -176,7 +109,8 @@ static int32_t Sciclient_C66xRatMap(uint32_t ratRegion);
 /**
  *   \brief Handle used by #Sciclient_service function
  */
-static Sciclient_ServiceHandle_t gSciclientHandle = (Sciclient_ServiceHandle_t){0};
+static Sciclient_ServiceHandle_t gSciclientHandle =
+    (Sciclient_ServiceHandle_t){0};
 
 /**
  *   \brief Size of secure header.This is initialized when the context is
@@ -189,211 +123,18 @@ static uint8_t gSecHeaderSizeWords = 0;
  */
 static uint32_t gSciclient_maxMsgSizeBytes;
 
+/**
+ *  \brief Static Header for Security Messages.
+ */
+static struct tisci_sec_header gSciclient_secHeader;
+
 /** \brief This structure contains configuration parameters for
 *       the sec_proxy IP */
-#if defined (SOC_AM64X)
-CSL_SecProxyCfg gSciclient_secProxyCfg =
-{
-    (CSL_sec_proxyRegs *)CSL_DMASS0_SEC_PROXY_MMRS_BASE,
-    /*< pSecProxyRegs */
-    (CSL_sec_proxy_scfgRegs *)CSL_DMASS0_SEC_PROXY_SCFG_BASE,
-    /*< pSecProxyScfgRegs */
-    (CSL_sec_proxy_rtRegs *)CSL_DMASS0_SEC_PROXY_RT_BASE,
-    /*< pSecProxyRtRegs */
-    (uint64_t)CSL_DMASS0_SEC_PROXY_SRC_TARGET_DATA_BASE,
-    /*< proxyTargetAddr */
-    0                                          // maxMsgSize
-};
-#else
-    #if defined (BUILD_MCU1_0) || defined (BUILD_MCU1_1)
-    CSL_SecProxyCfg gSciclient_secProxyCfg =
-    {
-        (CSL_sec_proxyRegs *)CSL_MCU_NAVSS0_SEC_PROXY0_CFG_BASE,
-        /*< pSecProxyRegs */
-        (CSL_sec_proxy_scfgRegs *)CSL_MCU_NAVSS0_SEC_PROXY0_CFG_SCFG_BASE,
-        /*< pSecProxyScfgRegs */
-        (CSL_sec_proxy_rtRegs *)CSL_MCU_NAVSS0_SEC_PROXY0_CFG_RT_BASE,
-        /*< pSecProxyRtRegs */
-        (uint64_t)CSL_MCU_NAVSS0_SEC_PROXY0_TARGET_DATA_BASE,
-        /*< proxyTargetAddr */
-        0                                          // maxMsgSize
-    };
-    #else
-    CSL_SecProxyCfg gSciclient_secProxyCfg =
-    {
-        (CSL_sec_proxyRegs *)CSL_NAVSS0_SEC_PROXY0_CFG_MMRS_BASE,
-        /*< pSecProxyRegs */
-        (CSL_sec_proxy_scfgRegs *)CSL_NAVSS0_SEC_PROXY0_CFG_SCFG_BASE,
-        /*< pSecProxyScfgRegs */
-        (CSL_sec_proxy_rtRegs *)CSL_NAVSS0_SEC_PROXY0_CFG_RT_BASE,
-        /*< pSecProxyRtRegs */
-        (uint64_t)CSL_NAVSS0_SEC_PROXY0_SRC_TARGET_DATA_BASE,
-        /*< proxyTargetAddr */
-        0                                          // maxMsgSize
-    };
-    #endif
-#endif
-
-/* This utility function is to be used to take care of  all non-aligned c66x accesses */
-void sciclient_util_byte_copy(uint8_t *src, uint8_t *dest,uint32_t num_bytes)
-{
-  int32_t i;
-  uint8_t *srcP=src;
-  uint8_t *destP=dest;
-
-  for(i=0;i<num_bytes;i++) {
-	 *destP++ = *srcP++;
-  }
-}
-
-#if defined(_TMS320C6X)
-static int32_t Sciclient_C66xRatMap(uint32_t ratRegion)
-{
-    int32_t status = CSL_PASS;
-    CSL_ratRegs *pC66xRatRegs = (CSL_ratRegs *)CSL_C66_COREPAC_C66_RATCFG_BASE;
-    CSL_RatTranslationCfgInfo TranslationCfg;
-
-#if defined(BUILD_C66X_1)
-    TranslationCfg.sizeInBytes = CSL_C66SS0_INTROUTER0_INTR_ROUTER_CFG_SIZE;
-    TranslationCfg.baseAddress = CSL_C66SS0_INTROUTER0_INTR_ROUTER_CFG_BASE + CSL_C66_COREPAC_RAT_REGION_BASE;
-    TranslationCfg.translatedAddress = CSL_C66SS0_INTROUTER0_INTR_ROUTER_CFG_BASE;
-#endif
-#if defined(BUILD_C66X_2)
-    TranslationCfg.sizeInBytes = CSL_C66SS1_INTROUTER0_INTR_ROUTER_CFG_SIZE;
-    TranslationCfg.baseAddress = CSL_C66SS1_INTROUTER0_INTR_ROUTER_CFG_BASE + CSL_C66_COREPAC_RAT_REGION_BASE;
-    TranslationCfg.translatedAddress = CSL_C66SS1_INTROUTER0_INTR_ROUTER_CFG_BASE;
-#endif
-
-    if (ratRegion < CSL_ratGetMaxRegions(pC66xRatRegs)) {
-        if (CSL_ratIsRegionTranslationEnabled(pC66xRatRegs, ratRegion) == false) {
-            CSL_ratEnableRegionTranslation(pC66xRatRegs, ratRegion);
-            CSL_ratConfigRegionTranslation(pC66xRatRegs, ratRegion, &TranslationCfg);
-        }
-        else
-        {
-            status = CSL_EFAIL;
-        }
-    }
-    else
-    {
-        status = CSL_EBADARGS;
-    }
-
-    return status;
-}
-#endif
+extern CSL_SecProxyCfg gSciclient_secProxyCfg;
 
 /* ========================================================================== */
 /*                          Function Definitions                              */
 /* ========================================================================== */
-
-int32_t Sciclient_loadFirmware(const uint32_t *pSciclient_firmware)
-{
-    int32_t  status   = CSL_PASS;
-    uint32_t txThread = SCICLIENT_ROM_R5_TX_NORMAL_THREAD;
-    uint32_t rxThread = SCICLIENT_ROM_R5_RX_NORMAL_THREAD;
-    Sciclient_RomFirmwareLoadHdr_t header      = {0};
-    Sciclient_RomFirmwareLoadPayload_t payload = {0};
-    uint32_t secHeaderSizeWords = sizeof(struct tisci_sec_header)/sizeof(uint32_t);
-
-    volatile Sciclient_RomFirmwareLoadHdr_t *pLocalRespHdr =
-        (Sciclient_RomFirmwareLoadHdr_t *)CSL_secProxyGetDataAddr
-                                        (&gSciclient_secProxyCfg, rxThread, 0U);
-    uint8_t  payloadSize = sizeof (Sciclient_RomFirmwareLoadPayload_t) /
-                           sizeof (uint8_t);
-    gSciclient_maxMsgSizeBytes = CSL_secProxyGetMaxMsgSize(&gSciclient_secProxyCfg) -
-                                CSL_SEC_PROXY_RSVD_MSG_BYTES;
-
-    /* Construct header */
-    header.type = SCICLIENT_ROM_MSG_R5_TO_M3_M3FW;
-#if defined (SOC_AM64X)
-    header.host = TISCI_HOST_ID_MAIN_0_R5_0;
-#else
-    header.host = TISCI_HOST_ID_R5_1;
-#endif
-    /* ROM expects a sequence number of 0 */
-    header.seq  = 0U;
-    /* ROM doesn't check for flags */
-    header.flags = 0U;
-
-    if (pSciclient_firmware != NULL)
-    {
-        payload.bufferAddress = (uint32_t)(uintptr_t)pSciclient_firmware;
-
-        /*Size is not needed actually.It is taken from x509 certificate*/
-        payload.bufferSizeBytes = 0xffffffffU;
-
-        /* Verify thread status before reading/writing */
-        status = Sciclient_verifyThread(txThread);
-        if (CSL_PASS == status)
-        {
-            status = Sciclient_waitThread(txThread, SCICLIENT_SERVICE_WAIT_FOREVER);
-        }
-        if (CSL_PASS == status)
-        {
-            /* Writing header and payload */
-            Sciclient_sendMessage(txThread,NULL, (uint8_t *) &header,
-                                  (uint8_t *)&payload, payloadSize);
-
-            /* CHECKING FOR FIRMWARE LOAD ACK */
-            /* Verify thread status before reading/writing */
-            status = Sciclient_verifyThread(rxThread);
-        }
-        if (CSL_PASS == status)
-        {
-            while ((HW_RD_REG32(Sciclient_threadStatusReg(rxThread)) &
-                 CSL_SEC_PROXY_RT_THREAD_STATUS_CUR_CNT_MASK) == 0U) {;}
-            /* Check the message type and flag of the response */
-            if ((pLocalRespHdr->type ==
-                SCICLIENT_ROM_MSG_M3_TO_R5_M3FW_RESULT)
-                && (pLocalRespHdr->flags == SCICLIENT_ROM_MSG_CERT_AUTH_PASS))
-            {
-                status = CSL_PASS;
-            }
-            else
-            {
-                status = CSL_EFAIL;
-            }
-            /* Reading from the last register of rxThread*/
-            (void) Sciclient_readThread32(rxThread,
-                            (uint8_t)((gSciclient_maxMsgSizeBytes/4U)-1U));
-        }
-
-        /* CHECKING FOR TISCI_MSG_BOOT_NOTIFICATION from DMSC*/
-        pLocalRespHdr =
-        (Sciclient_RomFirmwareLoadHdr_t *)(CSL_secProxyGetDataAddr(
-                                            &gSciclient_secProxyCfg, rxThread, 0U)
-                                            + ((uintptr_t) secHeaderSizeWords * (uintptr_t) 4U));
-        if (status == CSL_PASS)
-        {
-            status = Sciclient_verifyThread(rxThread);
-        }
-        if (status == CSL_PASS)
-        {
-            while ((HW_RD_REG32(Sciclient_threadStatusReg(rxThread)) &
-                 CSL_SEC_PROXY_RT_THREAD_STATUS_CUR_CNT_MASK) == 0U) {;}
-            /* Check the message type and flag of the response */
-            if (pLocalRespHdr->type ==
-                TISCI_MSG_BOOT_NOTIFICATION)
-            {
-                status = CSL_PASS;
-            }
-            else
-            {
-                status = CSL_EFAIL;
-            }
-            /* Reading from the last register of rxThread*/
-            (void) Sciclient_readThread32(rxThread,
-                            (uint8_t)((gSciclient_maxMsgSizeBytes/4U)-1U));
-        }
-    }
-    else
-    {
-        status = CSL_EFAIL;
-    }
-
-    return status;
-}
 
 int32_t Sciclient_init(const Sciclient_ConfigPrms_t *pCfgPrms)
 {
@@ -475,7 +216,7 @@ int32_t Sciclient_init(const Sciclient_ConfigPrms_t *pCfgPrms)
             {
                 OsalRegisterIntrParams_t    intrPrms;
                 rxThread = gSciclientMap[contextId].respThreadId;
-                Sciclient_flush(rxThread);
+                Sciclient_flush(rxThread, gSciclient_maxMsgSizeBytes);
                 Osal_RegisterInterrupt_initParams(&intrPrms);
                 /* Populate the interrupt parameters */
                 intrPrms.corepacConfig.arg              = (uintptr_t) &(gSciclientMap[contextId].respIntrNum);
@@ -531,7 +272,7 @@ int32_t Sciclient_init(const Sciclient_ConfigPrms_t *pCfgPrms)
             {
                 OsalRegisterIntrParams_t    intrPrms;
                 rxThread = gSciclientMap[contextId].respThreadId;
-                Sciclient_flush(rxThread);
+                Sciclient_flush(rxThread, gSciclient_maxMsgSizeBytes);
                 Osal_RegisterInterrupt_initParams(&intrPrms);
                 /* Populate the interrupt parameters */
                 intrPrms.corepacConfig.arg              = (uintptr_t) &(gSciclientMap[contextId].respIntrNum);
@@ -597,9 +338,170 @@ int32_t Sciclient_init(const Sciclient_ConfigPrms_t *pCfgPrms)
     return status;
 }
 
+int32_t Sciclient_serviceGetThreadIds (const Sciclient_ReqPrm_t *pReqPrm,
+                                       uint32_t *contextId,
+                                       uint32_t *txThread,
+                                       uint32_t *rxThread)
+{
+    int32_t  status    = CSL_PASS;
+
+    *contextId = SCICLIENT_CONTEXT_MAX_NUM;
+    if(pReqPrm == NULL)
+    {
+        status = CSL_EBADARGS;
+    }
+    if (status == CSL_PASS)
+    {
+        /* Get the context ID from the message */
+        *contextId = Sciclient_getCurrentContext(pReqPrm->messageType);
+    }
+    if(*contextId < SCICLIENT_CONTEXT_MAX_NUM)
+    {
+        /* Derive the thread ID from the context */
+#if defined (SOC_AM64X)
+        *txThread = gSciclientMap[*contextId].reqLowPrioThreadId;
+#else
+        *txThread = gSciclientMap[*contextId].reqHighPrioThreadId;
+#endif
+        *rxThread = gSciclientMap[*contextId].respThreadId;
+        /* Find the Secure Message Header Size from the Context */
+        if (gSciclientMap[*contextId].context == SCICLIENT_SECURE_CONTEXT)
+        {
+            gSecHeaderSizeWords = sizeof(struct tisci_sec_header)/sizeof(uint32_t);
+        }
+        else
+        {
+            gSecHeaderSizeWords = 0;
+        }
+        /* Secure Header is still not implemented in SYSFW. This is a place holder
+         * to init the Secure Header.
+         */
+        gSciclient_secHeader.integ_check = (uint16_t)0;
+        gSciclient_secHeader.rsvd = (uint16_t)0;
+        /* Get the Max Message Size */
+        gSciclient_maxMsgSizeBytes = 
+                CSL_secProxyGetMaxMsgSize(&gSciclient_secProxyCfg) -
+                CSL_SEC_PROXY_RSVD_MSG_BYTES;
+    }
+    else
+    {
+        status = CSL_EBADARGS;
+    }
+
+    return status; 
+}
+
+int32_t Sciclient_servicePrepareHeader(const Sciclient_ReqPrm_t *pReqPrm,
+                                       uint8_t *localSeqId,
+                                       uint32_t contextId,
+                                       struct tisci_header **header)
+{
+    int32_t  status    = CSL_PASS;
+    struct tisci_msg_version_req *dummyHdr;
+    /* Run all error checks */
+    if(pReqPrm == NULL)
+    {
+        status = CSL_EBADARGS;
+    }
+    if(status == CSL_PASS)    
+    {
+        dummyHdr = (struct tisci_msg_version_req *)pReqPrm->pReqPayload;
+        if (dummyHdr == NULL)
+        {
+            status = CSL_EBADARGS;
+        }
+    }
+    if(status == CSL_PASS)    
+    {
+        *header = &dummyHdr->hdr;
+        /* This is done in such a fashion as the C66x does not honor a non word aligned
+         * write.
+         */
+        Sciclient_utilByteCopy((uint8_t *)&(pReqPrm->messageType),
+                               (uint8_t *)&((*header)->type),
+                               sizeof(pReqPrm->messageType));
+        (*header)->host = (uint8_t) gSciclientMap[contextId].hostId;
+        (*header)->seq = (uint8_t) gSciclientHandle.currSeqId;
+        *localSeqId = gSciclientHandle.currSeqId;
+        /* This is done in such a fashion as the C66x does not honor a non word aligned
+         * write.
+         */
+        Sciclient_utilByteCopy((uint8_t *)&(pReqPrm->flags),
+                               (uint8_t *)&((*header)->flags),
+                               sizeof(pReqPrm->flags));
+        gSciclientHandle.currSeqId = (gSciclientHandle.currSeqId + 1U) %
+                                    SCICLIENT_MAX_QUEUE_SIZE;
+        if (gSciclientHandle.currSeqId == 0U)
+        {
+            gSciclientHandle.currSeqId++;
+        }
+    }
+    return status;
+}
+
+int32_t Sciclient_serviceGetPayloadSize(const Sciclient_ReqPrm_t *pReqPrm,
+                                        Sciclient_RespPrm_t      *pRespPrm,
+                                        uint32_t *txPayloadSize,
+                                        uint32_t *rxPayloadSize)
+{
+    int32_t status = CSL_PASS;
+    if((pReqPrm == NULL) || (pRespPrm == NULL))
+    {
+        status = CSL_EBADARGS;
+    }
+    if (status == CSL_PASS)
+    {
+        /* The request Payload is expected to have the Header the payload */
+        if (pReqPrm->reqPayloadSize > 0U)
+        {
+            *txPayloadSize = pReqPrm->reqPayloadSize - 
+                            sizeof(struct tisci_header);
+        }
+        else
+        {
+            *txPayloadSize = 0U;
+        }
+        /* Check if the payload is greater than the total message size */
+        if (*txPayloadSize > gSciclient_maxMsgSizeBytes)
+        {
+            status = CSL_EBADARGS;
+        }
+        /* If the payload size is non zero as the payload pointer is 0
+         * then we must error out.
+         */
+        if ((*txPayloadSize > 0U) && (pReqPrm->pReqPayload == NULL))
+        {
+            status = CSL_EBADARGS;
+        }
+        /* The response Payload is expected to have the Header the payload */
+        if (pRespPrm->respPayloadSize > 0U)
+        {
+            *rxPayloadSize = pRespPrm->respPayloadSize - sizeof(struct tisci_header);
+        }
+        else
+        {
+            *rxPayloadSize = 0U;
+        }
+        /* Check if the payload is greater than the total message size */
+        if (*rxPayloadSize > gSciclient_maxMsgSizeBytes)
+        {
+            status = CSL_EBADARGS;
+        }
+        /* If the payload size is non zero as the payload pointer is 0
+         * then we must error out.
+         */
+        if ((*rxPayloadSize > 0U) && (pRespPrm->pRespPayload == NULL))
+        {
+            status = CSL_EBADARGS;
+        }
+    }
+    return status;
+}
+
+
 /* HWI_disable instead of semaphores for MCAL polling based. define in separate files*/
-int32_t Sciclient_service(const Sciclient_ReqPrm_t *pReqPrm,
-                          Sciclient_RespPrm_t      *pRespPrm)
+int32_t Sciclient_serviceSecureProxy(const Sciclient_ReqPrm_t *pReqPrm,
+                                     Sciclient_RespPrm_t      *pRespPrm)
 {
     int32_t           status       = CSL_PASS;
     uint32_t          i            = 0U;
@@ -610,94 +512,27 @@ int32_t Sciclient_service(const Sciclient_ReqPrm_t *pReqPrm,
     uint32_t          rxPayloadSize =0U;
     uint8_t           *pLocalRespPayload = NULL;
     volatile Sciclient_RomFirmwareLoadHdr_t *pLocalRespHdr;
-    uint32_t          contextId = SCICLIENT_CONTEXT_MAX_NUM;
     uint32_t          txThread;
+    uint32_t          contextId;
     uint32_t          rxThread;
     uint8_t           localSeqId;
     uintptr_t         key = 0U;
     uint32_t          timeToWait;
-    struct tisci_header *header;
-    uint8_t *pSecHeader = NULL;
-    struct tisci_sec_header secHeader;
     uint32_t numWords = 0U;
     uint8_t  trailBytes = 0;
+    struct tisci_header *header;
 
-    /* Run all error checks */
-    if((pReqPrm == NULL) || (pRespPrm == NULL))
+    status = Sciclient_serviceGetThreadIds (pReqPrm, &contextId, &txThread,
+                                            &rxThread);
+    if (status == CSL_PASS)
     {
-        status = CSL_EBADARGS;
+        status = Sciclient_serviceGetPayloadSize(pReqPrm, pRespPrm,
+                 &txPayloadSize, &rxPayloadSize);
     }
-    else
+    if (status == CSL_PASS)
     {
-        contextId = Sciclient_getCurrentContext(pReqPrm->messageType);
-        if(contextId < SCICLIENT_CONTEXT_MAX_NUM)
-        {
-#if defined (SOC_AM64X)
-            txThread = gSciclientMap[contextId].reqLowPrioThreadId;
-#else
-            txThread = gSciclientMap[contextId].reqHighPrioThreadId;
-#endif
-            rxThread = gSciclientMap[contextId].respThreadId;
-            if(gSciclientMap[contextId].context == SCICLIENT_SECURE_CONTEXT)
-            {
-                gSecHeaderSizeWords = sizeof(struct tisci_sec_header)/sizeof(uint32_t);
-            }
-            else
-            {
-                gSecHeaderSizeWords = 0;
-            }
-            gSciclient_maxMsgSizeBytes = CSL_secProxyGetMaxMsgSize(&gSciclient_secProxyCfg) -
-                                        CSL_SEC_PROXY_RSVD_MSG_BYTES;
-
-            if(gSciclientMap[contextId].context == SCICLIENT_SECURE_CONTEXT)
-            {
-                secHeader.integ_check = (uint16_t)0;
-                secHeader.rsvd = (uint16_t)0;
-                pSecHeader = (uint8_t * )(&secHeader);
-            }
-            if (pReqPrm->reqPayloadSize > 0U)
-            {
-                txPayloadSize = pReqPrm->reqPayloadSize - sizeof(struct tisci_header);
-            }
-            else
-            {
-                txPayloadSize = 0U;
-            }
-            if (txPayloadSize > gSciclient_maxMsgSizeBytes)
-            {
-                status = CSL_EBADARGS;
-            }
-            if ((txPayloadSize > 0U) && (pReqPrm->pReqPayload == NULL))
-            {
-                status = CSL_EBADARGS;
-            }
-            if (pRespPrm->respPayloadSize > 0U)
-            {
-                rxPayloadSize = pRespPrm->respPayloadSize - sizeof(struct tisci_header);
-            }
-            else
-            {
-                rxPayloadSize = 0U;
-            }
-            if (rxPayloadSize > gSciclient_maxMsgSizeBytes)
-            {
-                status = CSL_EBADARGS;
-            }
-
-            if ((rxPayloadSize > 0U) && (pRespPrm->pRespPayload == NULL))
-            {
-                status = CSL_EBADARGS;
-            }
-            else
-            {
-                pLocalRespPayload = (uint8_t *)(pRespPrm->pRespPayload + sizeof(struct tisci_header));
-            }
-        }
-        else
-        {
-            status = CSL_EBADARGS;
-        }
-
+        pLocalRespPayload = (uint8_t *)(pRespPrm->pRespPayload + 
+                            sizeof(struct tisci_header));
     }
 
     /* CRITICAL Section */
@@ -705,80 +540,44 @@ int32_t Sciclient_service(const Sciclient_ReqPrm_t *pReqPrm,
 
     if (CSL_PASS == status)
     {
-        struct tisci_msg_version_req *dummyHdr = (struct tisci_msg_version_req *)pReqPrm->pReqPayload;
-        if (dummyHdr == NULL)
-        {
-            status = CSL_EBADARGS;
-        }
+        status = Sciclient_servicePrepareHeader(pReqPrm, &localSeqId, 
+                 contextId, &header);
     }
     if (CSL_PASS == status)
     {
-        struct tisci_msg_version_req *dummyHdr = (struct tisci_msg_version_req *)pReqPrm->pReqPayload;
-        uint8_t * pFlags;
-        uint32_t numBytes;
-        /* Construct header */
-        /*This is done to remove stray messages(due to timeout) in a thread
-        * in case of "polling". */
+        /* This is done to remove stray messages(due to timeout) in a thread
+         * in case of "polling". */
         if (gSciclientHandle.opModeFlag ==
              SCICLIENT_SERVICE_OPERATION_MODE_POLLED)
         {
-            Sciclient_flush(rxThread);
+            Sciclient_flush(rxThread, gSciclient_maxMsgSizeBytes);
         }
-        header = &dummyHdr->hdr;
-        sciclient_util_byte_copy((uint8_t *)&(pReqPrm->messageType),(uint8_t *)&(header->type),sizeof(pReqPrm->messageType));
-
-        header->host = (uint8_t) gSciclientMap[contextId].hostId;
-        localSeqId = (uint8_t) gSciclientHandle.currSeqId;
-        header->seq = localSeqId;
-        pFlags = (uint8_t*)&pReqPrm->flags;
-        /* This is done in such a fashion as the C66x does not honor a non word aligned
-         * write.
-         */
-        for (numBytes = 0; numBytes < sizeof(pReqPrm->flags); numBytes++)
-        {
-            uint8_t *pDestFlags = ((uint8_t*)&header->flags) + numBytes;
-            *pDestFlags = *pFlags;
-            pFlags++;
-
-        }
-
-        gSciclientHandle.currSeqId = (gSciclientHandle.currSeqId + 1U) %
-                                    SCICLIENT_MAX_QUEUE_SIZE;
-        if (gSciclientHandle.currSeqId == 0U)
-        {
-            gSciclientHandle.currSeqId++;
-        }
-    }
-
-    if (status == CSL_PASS)
-    {
         /* Verify thread status before reading/writing */
         status = Sciclient_verifyThread(txThread);
     }
-
     if (CSL_PASS == status)
     {
         status = Sciclient_waitThread(txThread, pReqPrm->timeout);
     }
-
     if (CSL_PASS == status)
     {
         /* Send Message */
         initialCount = Sciclient_readThreadCount(rxThread);
-        Sciclient_sendMessage(txThread, pSecHeader ,(uint8_t *) header,
-                              (pReqPrm->pReqPayload + sizeof(struct tisci_header)),
-                              txPayloadSize);
+        Sciclient_sendMessage(txThread,
+                              (const uint8_t *)&gSciclient_secHeader,
+                              gSecHeaderSizeWords,
+                              (uint8_t *) header,
+                              (pReqPrm->pReqPayload + 
+                              sizeof(struct tisci_header)),
+                              txPayloadSize,
+                              gSciclient_maxMsgSizeBytes);
 
+        timeToWait = pReqPrm->timeout;
+        pLocalRespHdr = (struct tisci_header *)(CSL_secProxyGetDataAddr(
+            &gSciclient_secProxyCfg, rxThread, 0U)
+            + ((uintptr_t) gSecHeaderSizeWords * (uintptr_t) 4U));
         /* Verify thread status before reading/writing */
         status = Sciclient_verifyThread(rxThread);
-    }
-    if (CSL_PASS == status)
-    {
-        timeToWait = pReqPrm->timeout;
-        pLocalRespHdr =
-            (struct tisci_header *)(CSL_secProxyGetDataAddr(
-                                            &gSciclient_secProxyCfg, rxThread, 0U)
-                                    + ((uintptr_t) gSecHeaderSizeWords * (uintptr_t) 4U));
     }
     /* Wait for response: Polling based waiting */
     if ((gSciclientHandle.opModeFlag ==
@@ -808,8 +607,10 @@ int32_t Sciclient_service(const Sciclient_ReqPrm_t *pReqPrm,
             timeToWait =  pReqPrm->timeout;
             while (timeToWait > 0U)
             {
-                uint32_t numCurrentMsgs = (HW_RD_REG32(Sciclient_threadStatusReg(rxThread)) &
-                        CSL_SEC_PROXY_RT_THREAD_STATUS_CUR_CNT_MASK) - initialCount;
+                uint32_t numCurrentMsgs = 
+                        (HW_RD_REG32(Sciclient_threadStatusReg(rxThread)) &
+                        CSL_SEC_PROXY_RT_THREAD_STATUS_CUR_CNT_MASK) - 
+                        initialCount;
                 if ((pLocalRespHdr->seq == (uint32_t) localSeqId))
                 {
                     status = CSL_PASS;
@@ -818,7 +619,7 @@ int32_t Sciclient_service(const Sciclient_ReqPrm_t *pReqPrm,
                 if (numCurrentMsgs > 1U)
                 {
                     (void) Sciclient_readThread32(rxThread,
-                                                (uint8_t)((gSciclient_maxMsgSizeBytes/4U) - 1U));
+                           (uint8_t)((gSciclient_maxMsgSizeBytes/4U) - 1U));
                 }
                 timeToWait--;
             }
@@ -866,13 +667,9 @@ int32_t Sciclient_service(const Sciclient_ReqPrm_t *pReqPrm,
                     ((uint8_t)i +
                      SCICLIENT_HEADER_SIZE_IN_WORDS+gSecHeaderSizeWords));
             uint8_t * pTempWord = (uint8_t*) &tempWord;
-            uint32_t bytes;
-            for (bytes = 0U; bytes < trailBytes; bytes++)
-            {
-                uint8_t * address = (uint8_t*)pLocalRespPayload;
-                uint8_t value = *(uint8_t*)(pTempWord + bytes);
-                *(uint8_t*)(address + i*4 + bytes) = value;
-            }
+            Sciclient_utilByteCopy(pTempWord,
+                                   (uint8_t*)pLocalRespPayload + i*4,
+                                   trailBytes);
         }
 
         /* Read the last register of the rxThread */
@@ -1004,15 +801,10 @@ uint32_t Sciclient_getCurrentContext(uint16_t messageType)
     {
         /* For all other message type use non-secure context */
         retVal = SCICLIENT_CONTEXT_NONSEC;
-#if defined (BUILD_C7X_1)
-        /* C7x is left in secure supervisor mode which causes
-         * the non-secure thread access to fail.
-         */
         if(gSciclientHandle.isSecureMode == 1U)
         {
             retVal = SCICLIENT_CONTEXT_SEC;
         }
-#endif
     }
 
     return retVal;
@@ -1059,125 +851,9 @@ static void Sciclient_ISR(uintptr_t arg)
             gSciclientHandle.semStatus[seqId] = SemaphoreP_OK;
         }
     }
-    //return;
 }
 
-static inline uintptr_t Sciclient_threadStatusReg(uint32_t thread)
-{
-    return ((uintptr_t)(gSciclient_secProxyCfg.pSecProxyRtRegs) +
-        CSL_SEC_PROXY_RT_THREAD_STATUS(thread));
-}
-
-static inline uint32_t Sciclient_readThread32(uint32_t thread, uint8_t idx)
-{
-    uint32_t ret;
-    ret = HW_RD_REG32(CSL_secProxyGetDataAddr(&gSciclient_secProxyCfg,thread,0U) +
-        ((uintptr_t) (0x4U) * (uintptr_t) idx));
-    return ret;
-}
-
-static inline uint32_t Sciclient_readThreadCount(uint32_t thread)
-{
-    return (HW_RD_REG32(Sciclient_threadStatusReg(thread)) &
-        CSL_SEC_PROXY_RT_THREAD_STATUS_CUR_CNT_MASK);
-}
-
-static int32_t Sciclient_verifyThread(uint32_t thread)
-{
-    int32_t status = CSL_PASS;
-    /* Verify thread status before reading/writing */
-    if ((HW_RD_REG32(Sciclient_threadStatusReg(thread)) &
-        CSL_SEC_PROXY_RT_THREAD_STATUS_ERROR_MASK) != 0U)
-    {
-        status = CSL_EFAIL;
-    }
-    return status;
-}
-
-static int32_t Sciclient_waitThread(uint32_t thread, uint32_t timeout)
-{
-    int32_t  status     = CSL_ETIMEOUT;
-    uint32_t timeToWait = timeout;
-    /* Checks the thread count is > 0 */
-    while (timeToWait > 0U)
-    {
-        if ((HW_RD_REG32(Sciclient_threadStatusReg(thread)) &
-            CSL_SEC_PROXY_RT_THREAD_STATUS_CUR_CNT_MASK) > 0U)
-        {
-            status = CSL_PASS;
-            break;
-        }
-        timeToWait--;
-    }
-    return status;
-}
-
-#if defined (__C7100__)
-#ifdef __cplusplus
-#pragma FUNCTION_OPTIONS("--opt_level=off")
-#else
-#pragma FUNCTION_OPTIONS(Sciclient_sendMessage, "--opt_level=off")
-#endif
-#endif
-static void Sciclient_sendMessage(uint32_t        thread,
-                                  const uint8_t  *pSecHeader,
-                                  const uint8_t  *pHeader,
-                                  const uint8_t  *pPayload,
-                                  uint32_t        payloadSize)
-{
-    uint32_t        i   = 0U;
-    const uint8_t *msg = pSecHeader;
-    uint32_t numWords   = 0U;
-    uint32_t test = 0U;
-    uintptr_t threadAddr = CSL_secProxyGetDataAddr(&gSciclient_secProxyCfg, thread, 0U);
-
-    if(pSecHeader != NULL)
-    {
-        /* Write secure header */
-        for (i = 0U; i < gSecHeaderSizeWords; i++)
-        {
-            /*Change this when unaligned access is supported*/
-            (void) memcpy((void *)&test, (const void *)msg, 4);
-            CSL_REG32_WR(threadAddr, test);
-            msg += 4;
-            threadAddr+=sizeof(uint32_t);
-        }
-    }
-    /* Write header */
-    msg = pHeader;
-    for (i = 0U; i < SCICLIENT_HEADER_SIZE_IN_WORDS; i++)
-    {
-        /*Change this when unaligned access is supported*/
-        (void) memcpy((void *)&test, (const void *)msg, 4);
-        CSL_REG32_WR(threadAddr, test);
-        msg += 4;
-        threadAddr+=sizeof(uint32_t);
-    }
-    /* Writing payload */
-    if (payloadSize > 0U)
-    {
-        numWords   = (payloadSize+3U)/4U;
-        msg = pPayload;
-        for (; i < (SCICLIENT_HEADER_SIZE_IN_WORDS + numWords); i++)
-        {
-            /*Change this when unaligned access is supported*/
-            (void) memcpy((void *)&test, (const void *)msg, 4);
-            CSL_REG32_WR(threadAddr, test);
-            msg += 4;
-            threadAddr+=sizeof(uint32_t);
-        }
-    }
-    /* Write to the last register of the TX thread */
-    if ((((uint32_t) gSecHeaderSizeWords*4U)+(SCICLIENT_HEADER_SIZE_IN_WORDS*4U)+payloadSize) <=
-        (gSciclient_maxMsgSizeBytes - 4U))
-    {
-        threadAddr = CSL_secProxyGetDataAddr(&gSciclient_secProxyCfg, thread, 0U) +
-        ((uintptr_t) gSciclient_maxMsgSizeBytes  - (uintptr_t) 4U) ;
-        CSL_REG32_WR(threadAddr,0U);
-    }
-}
-
-static int32_t Sciclient_contextIdFromIntrNum(uint32_t intrNum)
+int32_t Sciclient_contextIdFromIntrNum(uint32_t intrNum)
 {
     int32_t retVal = CSL_EFAIL;
     uint32_t i = 0U;
@@ -1193,15 +869,53 @@ static int32_t Sciclient_contextIdFromIntrNum(uint32_t intrNum)
     return retVal;
 }
 
-static void Sciclient_flush(uint32_t thread)
+static void Sciclient_utilByteCopy(uint8_t *src,
+                                   uint8_t *dest,
+                                   uint32_t num_bytes)
 {
-    while ((HW_RD_REG32(Sciclient_threadStatusReg(thread)) &
-        CSL_SEC_PROXY_RT_THREAD_STATUS_CUR_CNT_MASK) > 0U)
+    int32_t i;
+    uint8_t *srcP = src;
+    uint8_t *destP = dest;
+
+    for(i=0; i < num_bytes; i++)
     {
-        /* Reading from the last register of rxThread*/
-        (void) Sciclient_readThread32(thread,
-                        (uint8_t)((gSciclient_maxMsgSizeBytes/4U)-1U));
+        *destP++ = *srcP++;
+    }
+}
+
+#if defined(_TMS320C6X)
+static int32_t Sciclient_C66xRatMap(uint32_t ratRegion)
+{
+    int32_t status = CSL_PASS;
+    CSL_ratRegs *pC66xRatRegs = (CSL_ratRegs *)CSL_C66_COREPAC_C66_RATCFG_BASE;
+    CSL_RatTranslationCfgInfo TranslationCfg;
+
+#if defined(BUILD_C66X_1)
+    TranslationCfg.sizeInBytes = CSL_C66SS0_INTROUTER0_INTR_ROUTER_CFG_SIZE;
+    TranslationCfg.baseAddress = CSL_C66SS0_INTROUTER0_INTR_ROUTER_CFG_BASE + CSL_C66_COREPAC_RAT_REGION_BASE;
+    TranslationCfg.translatedAddress = CSL_C66SS0_INTROUTER0_INTR_ROUTER_CFG_BASE;
+#endif
+#if defined(BUILD_C66X_2)
+    TranslationCfg.sizeInBytes = CSL_C66SS1_INTROUTER0_INTR_ROUTER_CFG_SIZE;
+    TranslationCfg.baseAddress = CSL_C66SS1_INTROUTER0_INTR_ROUTER_CFG_BASE + CSL_C66_COREPAC_RAT_REGION_BASE;
+    TranslationCfg.translatedAddress = CSL_C66SS1_INTROUTER0_INTR_ROUTER_CFG_BASE;
+#endif
+
+    if (ratRegion < CSL_ratGetMaxRegions(pC66xRatRegs)) {
+        if (CSL_ratIsRegionTranslationEnabled(pC66xRatRegs, ratRegion) == false) {
+            CSL_ratEnableRegionTranslation(pC66xRatRegs, ratRegion);
+            CSL_ratConfigRegionTranslation(pC66xRatRegs, ratRegion, &TranslationCfg);
+        }
+        else
+        {
+            status = CSL_EFAIL;
+        }
+    }
+    else
+    {
+        status = CSL_EBADARGS;
     }
 
-    return ;
+    return status;
 }
+#endif

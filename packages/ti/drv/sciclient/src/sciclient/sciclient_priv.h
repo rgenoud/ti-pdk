@@ -213,6 +213,163 @@ int32_t Sciclient_boardCfg(const Sciclient_BoardCfgPrms_t * pInPrms);
  */
 uint32_t Sciclient_getCurrentContext(uint16_t messageType);
 
+/**
+ *  \brief   Gives the address for status register for a particular thread.
+ *
+ *  \param   thread    Index of the thread.
+ *
+ *  \return  address   address of the thread status
+ */
+uint32_t Sciclient_threadStatusReg(uint32_t thread);
+
+/**
+ *  \brief   Read a 32 bit word from the thread.
+ *
+ *  \param   thread    Index of the thread to be read from.
+ *  \param   idx       Index of the word to be read from the thread.
+ *
+ *  \return  word      Value read back.
+ */
+uint32_t Sciclient_readThread32(uint32_t thread, uint8_t idx);
+
+/**
+ *  \brief   Read the current thread count.
+ *
+ *  \param   thread    Index of the thread to be read from.
+ *
+ *  \return  word      Count read back.
+ */
+uint32_t Sciclient_readThreadCount(uint32_t thread);
+
+/**
+ *  \brief   Validate thread has no errors and has space to accept the next
+ *           message.
+ *
+ *  \param   thread    Index of the thread.
+ *
+ *  \return  status    Status of the message.
+ */
+int32_t Sciclient_verifyThread(uint32_t thread);
+
+/**
+ *  \brief   Check if there are credits to write to the thread.
+ *
+ *  \param   thread    Index of the thread.
+ *  \param   timeout   Wait for timeout if operation is complete.
+ *
+ *  \return  status    Status of the message.
+ */
+int32_t Sciclient_waitThread(uint32_t thread, uint32_t timeout);
+
+/**
+ *  \brief   API to send the message to the thread.
+ *
+ *  \param   thread                 Index of the thread.
+ *  \param   pSecHeader             Pointer to the security header extension.
+ *  \param   secHeaderSizeWords     Secure Header size in Words.
+ *  \param   pHeader                Pointer to the header structure.
+ *  \param   pPayload               Pointer to the payload structure.
+ *  \param   payloadSize            Size of the payload.
+ *  \param   maxMsgSizeBytes        Maximum Message size in words.
+ *
+ *  \return  status    Status of the message.
+ */
+void Sciclient_sendMessage(uint32_t        thread,
+                           const uint8_t  *pSecHeader,
+                           const uint8_t   secHeaderSizeWords,
+                           const uint8_t  *pHeader,
+                           const uint8_t  *pPayload,
+                           uint32_t        payloadSize,
+                           const uint32_t  maxMsgSizeBytes);
+
+/**
+ *  \brief   This utility function would find the proxy map context id for
+ *           'gSciclientMap' corresponding to a particular interrupt number.
+ *
+ *  \param   intrNum    Interrupt number.
+ *
+ *  \return  retVal     Context Id for the interrupt number.
+ */
+int32_t Sciclient_contextIdFromIntrNum(uint32_t intrNum);
+
+/**
+ *  \brief   API to flush/remove all outstanding messages on a thread .
+ *
+ *  \param   thread             Index of the thread.
+ *  \param   maxMsgSizeBytes    Maximum message size in Bytes.
+ *
+ *  \return None
+ */
+void Sciclient_flush(uint32_t thread, uint32_t maxMsgSizeBytes);
+
+
+/**
+ *  \brief  This API allows communicating with the System firmware which can be
+ *          called to perform various functions in the system.
+ *          Core sciclient function for transmitting payload and recieving
+ *          the response.
+ *          The caller is expected to allocate memory for the input request
+ *          parameter (Refer #Sciclient_ReqPrm_t). This involves setting the
+ *          message type being communicated to the firmware, the response flags,
+ *          populate the payload of the message based on the inputs in the
+ *          files sciclient_fmwPmMessages.h,sciclient_fmwRmMessages.h,
+ *          sciclient_fmwSecMessages.h and sciclient_fmwCommonMessages.h.
+ *          Since the payload in considered a stream of bytes in this API,
+ *          the caller should also populate the size of this stream in
+ *          reqPayloadSize. The timeout is used to determine for what amount
+ *          of iterations the API would wait for their operation to complete.
+ *
+ *          To make sure the response is captured correctly the caller should
+ *          also allocate the space for #Sciclient_RespPrm_t parameters. The
+ *          caller should populate the pointer to the pRespPayload and the size
+ *          respPayloadSize. The API would populate the response flags to
+ *          indicate any firmware specific errors and also populate the memory
+ *          pointed by pRespPayload till the size given in respPayloadSize.
+ *
+ *
+ * Requirement: DOX_REQ_TAG(PDK-2142), DOX_REQ_TAG(PDK-2141),
+ *              DOX_REQ_TAG(PDK-2140), DOX_REQ_TAG(PDK-2139)
+ *
+ *  \param pReqPrm        [IN]  Pointer to #Sciclient_ReqPrm_t
+ *  \param pRespPrm       [OUT] Pointer to #Sciclient_RespPrm_t
+ *
+ *  \return CSL_PASS on success, else failure
+ *
+ */
+int32_t Sciclient_serviceSecureProxy(const Sciclient_ReqPrm_t *pReqPrm,
+                                     Sciclient_RespPrm_t      *pRespPrm);
+
+/**
+ *  \brief  Sciclient_serviceGetThreadIds Gets the threads used for message.
+ *
+ *  \param pReqPrm        [IN]  Pointer to #Sciclient_ReqPrm_t
+ *  \param contextId      [OUT] Context ID to be used.
+ *  \param txThread       [OUT] Transmit Thread
+ *  \param rxThread       [OUT] Recieve Thread
+ *
+ *  \return CSL_PASS on success, else failure
+ *
+ */
+int32_t Sciclient_serviceGetThreadIds (const Sciclient_ReqPrm_t *pReqPrm,
+                                       uint32_t *contextId,
+                                       uint32_t *txThread,
+                                       uint32_t *rxThread);
+
+/**
+ *  \brief  Sciclient_servicePrepareHeader Prepares the Message Header.
+ *
+ *  \param pReqPrm        [IN]  Pointer to #Sciclient_ReqPrm_t
+ *  \param contextId      [IN]  Context ID to be used.
+ *  \param localSeqId     [OUT] Transmit Thread
+ *  \param header         [OUT] Pointer to the header
+ *
+ *  \return CSL_PASS on success, else failure
+ *
+ */
+int32_t Sciclient_servicePrepareHeader(const Sciclient_ReqPrm_t *pReqPrm,
+                                       uint8_t *localSeqId,
+                                       uint32_t contextId,
+                                       struct tisci_header **header);
 #ifdef __cplusplus
 }
 #endif

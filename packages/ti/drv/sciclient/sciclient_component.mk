@@ -46,6 +46,7 @@ endif
 
 ifeq ($(SOC),$(filter $(SOC), j721e))
 sciclient_LIB_LIST += rm_pm_hal
+sciclient_LIB_LIST += sciclient_direct
 endif
 
 drvsciclient_BOARDLIST = am65xx_evm am65xx_idk j721e_sim j721e_evm j7200_evm am64x_evm
@@ -95,6 +96,36 @@ sciclient_hs_INCLUDE = $(sciclient_hs_PATH)
 export sciclient_hs_SOCLIST = $(drvsciclient_SOCLIST)
 export sciclient_hs_BOARDLIST = $(drvsciclient_BOARDLIST)
 export sciclient_hs_$(SOC)_CORELIST = $(drvsciclient_$(SOC)_CORELIST)
+
+export sciclient_direct_COMP_LIST = sciclient_direct
+export sciclient_direct_RELPATH = ti/drv/sciclient_direct
+export sciclient_direct_OBJPATH = ti/drv/sciclient_direct
+export sciclient_direct_LIBNAME = sciclient_direct
+export sciclient_direct_PATH = $(PDK_SCICLIENT_COMP_PATH)
+export sciclient_direct_LIBPATH = $(PDK_SCICLIENT_COMP_PATH)/lib
+export sciclient_direct_MAKEFILE = -fsrc/sciclient_direct_makefile BUILD_HS=no
+export sciclient_direct_BOARD_DEPENDENCY = no
+export sciclient_direct_CORE_DEPENDENCY = yes
+export sciclient_direct_PKG_LIST = sciclient
+export sciclient_direct_INCLUDE = $(sciclient_direct_PATH)
+export sciclient_direct_SOCLIST = j721e
+export sciclient_direct_BOARDLIST = j721e_evm
+export sciclient_direct_$(SOC)_CORELIST = mcu1_0
+
+export sciclient_hs_direct_COMP_LIST = sciclient_hs_direct
+export sciclient_hs_direct_RELPATH = ti/drv/sciclient_direct
+export sciclient_hs_direct_OBJPATH = ti/drv/sciclient_direct
+export sciclient_hs_direct_LIBNAME = sciclient_hs_direct
+export sciclient_hs_direct_PATH = $(PDK_SCICLIENT_COMP_PATH)
+export sciclient_hs_direct_LIBPATH = $(PDK_SCICLIENT_COMP_PATH)/lib
+export sciclient_hs_direct_MAKEFILE = -fsrc/sciclient_direct_makefile BUILD_HS=yes
+export sciclient_hs_direct_BOARD_DEPENDENCY = no
+export sciclient_hs_direct_CORE_DEPENDENCY = yes
+export sciclient_hs_direct_PKG_LIST = sciclient
+export sciclient_hs_direct_INCLUDE = $(sciclient_hs_direct_PATH)
+export sciclient_hs_direct_SOCLIST = j721e
+export sciclient_hs_direct_BOARDLIST = j721e_evm
+export sciclient_hs_direct_$(SOC)_CORELIST = mcu1_0
 
 export sciclient_UTILS_LIST = sciclient_boardcfg
 export sciclient_boardcfg_COMP_LIST = sciclient_boardcfg
