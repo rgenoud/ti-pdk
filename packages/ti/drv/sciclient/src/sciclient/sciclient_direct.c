@@ -95,8 +95,15 @@ int32_t Sciclient_service (const Sciclient_ReqPrm_t *pReqPrm,
     uint32_t txThread __attribute__((unused));
     uint32_t rxThread __attribute__((unused));
 
-    ret = Sciclient_serviceGetThreadIds (pReqPrm, &contextId, &txThread,
+    if ((pReqPrm == NULL) || (pRespPrm == NULL))
+    {
+        ret = CSL_EBADARGS;
+    }
+    if (CSL_PASS == ret)
+    {
+        ret = Sciclient_serviceGetThreadIds (pReqPrm, &contextId, &txThread,
                                          &rxThread);
+    }
     if (CSL_PASS == ret)
     {
         ret = Sciclient_servicePrepareHeader(pReqPrm, &localSeqId,

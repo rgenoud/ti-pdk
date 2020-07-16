@@ -48,10 +48,17 @@ PACKAGE_SRCS_COMMON = .
 INCLUDE_EXTERNAL_INTERFACES = pdk
 
 # List all the components required by the application
-COMP_LIST_COMMON += $(PDK_COMMON_BAREMETAL_COMP)
+COMP_LIST_COMMON_TEST = $(PDK_COMMON_BAREMETAL_COMP)
 ifneq ($(strip $(HS_SUFFIX)),) #if $(HS_SUFFIX) is non-empty
   COMP_LIST_COMMON := $(filter-out sciclient,$(COMP_LIST_COMMON))
   COMP_LIST_COMMON += sciclient$(HS_SUFFIX)
+endif
+
+ifeq ($(SOC),$(filter $(SOC), j721e))
+  COMP_LIST_COMMON = $(subst sciclient,sciclient_direct,$(COMP_LIST_COMMON_TEST))
+  COMP_LIST_COMMON += rm_pm_hal
+else
+  COMP_LIST_COMMON = $(COMP_LIST_COMMON_TEST)
 endif
 
 CFLAGS_LOCAL_COMMON = $(PDK_CFLAGS) $(SBL_CFLAGS)

@@ -108,26 +108,26 @@ export sciclient_direct_LIBPATH = $(PDK_SCICLIENT_COMP_PATH)/lib
 export sciclient_direct_MAKEFILE = -fsrc/sciclient_direct_makefile BUILD_HS=no
 export sciclient_direct_BOARD_DEPENDENCY = no
 export sciclient_direct_CORE_DEPENDENCY = yes
-export sciclient_direct_PKG_LIST = sciclient
+export sciclient_direct_PKG_LIST = sciclient_direct
 export sciclient_direct_INCLUDE = $(sciclient_direct_PATH)
 export sciclient_direct_SOCLIST = j721e
 export sciclient_direct_BOARDLIST = j721e_evm
 export sciclient_direct_$(SOC)_CORELIST = mcu1_0
 
-export sciclient_hs_direct_COMP_LIST = sciclient_hs_direct
-export sciclient_hs_direct_RELPATH = ti/drv/sciclient_direct
-export sciclient_hs_direct_OBJPATH = ti/drv/sciclient_direct
-export sciclient_hs_direct_LIBNAME = sciclient_hs_direct
-export sciclient_hs_direct_PATH = $(PDK_SCICLIENT_COMP_PATH)
-export sciclient_hs_direct_LIBPATH = $(PDK_SCICLIENT_COMP_PATH)/lib
-export sciclient_hs_direct_MAKEFILE = -fsrc/sciclient_direct_makefile BUILD_HS=yes
-export sciclient_hs_direct_BOARD_DEPENDENCY = no
-export sciclient_hs_direct_CORE_DEPENDENCY = yes
-export sciclient_hs_direct_PKG_LIST = sciclient
-export sciclient_hs_direct_INCLUDE = $(sciclient_hs_direct_PATH)
-export sciclient_hs_direct_SOCLIST = j721e
-export sciclient_hs_direct_BOARDLIST = j721e_evm
-export sciclient_hs_direct_$(SOC)_CORELIST = mcu1_0
+export sciclient_direct_hs_COMP_LIST = sciclient_direct_hs
+export sciclient_direct_hs_RELPATH = ti/drv/sciclient_direct
+export sciclient_direct_hs_OBJPATH = ti/drv/sciclient_direct
+export sciclient_direct_hs_LIBNAME = sciclient_hs_direct
+export sciclient_direct_hs_PATH = $(PDK_SCICLIENT_COMP_PATH)
+export sciclient_direct_hs_LIBPATH = $(PDK_SCICLIENT_COMP_PATH)/lib
+export sciclient_direct_hs_MAKEFILE = -fsrc/sciclient_direct_makefile BUILD_HS=yes
+export sciclient_direct_hs_BOARD_DEPENDENCY = no
+export sciclient_direct_hs_CORE_DEPENDENCY = yes
+export sciclient_direct_hs_PKG_LIST = sciclient_direct
+export sciclient_direct_hs_INCLUDE = $(sciclient_hs_direct_PATH)
+export sciclient_direct_hs_SOCLIST = j721e
+export sciclient_direct_hs_BOARDLIST = j721e_evm
+export sciclient_direct_hs_$(SOC)_CORELIST = mcu1_0
 
 export sciserver_tirtos_COMP_LIST = sciserver_tirtos
 export sciserver_tirtos_RELPATH = ti/drv/sciserver_tirtos
@@ -182,7 +182,7 @@ export rm_pm_hal_MAKEFILE = -fsrc/rm_pm_hal_makefile BUILD_HS=no
 rm_pm_hal_BOARD_DEPENDENCY = no
 export rm_pm_hal_BOARD_DEPENDENCY
 export rm_pm_hal_CORE_DEPENDENCY = yes
-rm_pm_hal_PKG_LIST = sciclient
+rm_pm_hal_PKG_LIST = rm_pm_hal
 rm_pm_hal_INCLUDE = $(rm_pm_hal_PATH)
 export rm_pm_hal_SOCLIST = j721e
 export rm_pm_hal_BOARDLIST = j721e_evm

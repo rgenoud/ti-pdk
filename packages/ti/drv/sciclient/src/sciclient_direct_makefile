@@ -12,7 +12,7 @@ ifeq ($(BUILD_HS),yes)
 HS_SUFFIX=_hs
 endif
 
-MODULE_NAME = sciclient$(HS_SUFFIX)_direct
+MODULE_NAME = sciclient_direct$(HS_SUFFIX)
 
 SRCDIR = src/sciclient
 INCDIR = soc/sysfw/include src/sciclient
@@ -42,6 +42,8 @@ INCLUDE_EXTERNAL_INTERFACES = pdk osal
 ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200 am64x))
 # Keep the sciclient.c the first file in this list. This is used to trigger
 # the generation of the header files from the firware binary file.
+SRCS_COMMON  = sciclient.c
+SRCS_COMMON += sciclient_direct.c
 SRCS_COMMON += sciclient_fmwSecureProxyMap.c
 SRCS_COMMON += sciclient_pm.c
 SRCS_COMMON += sciclient_rm.c
@@ -52,8 +54,8 @@ SRCS_COMMON += sciclient_boardcfg.c
 SRCS_COMMON += sciclient_procboot.c
 SRCS_COMMON += sciclient_genericMsgs.c
 SRCS_COMMON += sciclient_rom.c
-SRCS_COMMON += sciclient.c
-SRCS_COMMON += sciclient_direct.c
+SRCS_COMMON += sciclient_secureProxyCfg.c
+SRCS_COMMON += sciclient_secureproxy.c
 endif
 
 #Use CSL implementation to bypass DMSC
