@@ -9,3 +9,7 @@ packages/ti/drv/emac/firmware/icss_dualmac/src/version_file.h
 packages/ti/drv/pm/
 packages/ti/drv/vhwa/
 packages/ti/starterware/
+packages/ti/board/obj/
+packages/ti/boot/sbl/tools/flashWriter/qspi/bin/
+packages/ti/drv/icss_emac/firmware/icss_dualemac/resource_table.d
+packages/ti/drv/pruss/example/apps/sorte/firmware/bin/
