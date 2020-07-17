@@ -1,10 +1,10 @@
---host_image
+--load_image
 --image
---host_image:target=ARM
---host_image:endianness=little
+--load_image:machine=ARM
+--load_image:endian=little
 
---host_image:hidden_symbols
---host_image:show=shared_buf
+--load_image:symbol_binding=local
+--load_image:localize=shared_buf
 
 --exclude=.resource_table
 

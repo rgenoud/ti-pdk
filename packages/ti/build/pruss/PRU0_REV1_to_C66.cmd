@@ -1,10 +1,10 @@
---host_image
+--load_image
 --image
---host_image:target=C6000
---host_image:endianness=little
+--load_image:machine=C6000
+--load_image:endian=little
 
---host_image:hidden_symbols
---host_image:show=shared_buf
+--load_image:symbol_binding=local
+--load_image:localize=shared_buf
 
 --exclude=.resource_table
 
