@@ -758,16 +758,18 @@ endif
 ifneq ($(crc_EXAMPLE_LIST),)
   pdk_EXAMPLE_LIST += $(crc_EXAMPLE_LIST)
 endif
-# - used to ignore include if component not present
--include $(PDK_EDMA_COMP_PATH)/edma_component.mk
-ifneq ($(edma_LIB_LIST),)
-  pdk_LIB_LIST += $(edma_LIB_LIST)
-endif
-ifneq ($(edma_APP_LIB_LIST),)
-  pdk_APP_LIB_LIST += $(edma_APP_LIB_LIST)
-endif
-ifneq ($(edma_EXAMPLE_LIST),)
-  pdk_EXAMPLE_LIST += $(edma_EXAMPLE_LIST)
+ifeq ($(SOC),$(filter $(SOC), tpr12))
+  # - used to ignore include if component not present
+  -include $(PDK_EDMA_COMP_PATH)/edma_component.mk
+  ifneq ($(edma_LIB_LIST),)
+    pdk_LIB_LIST += $(edma_LIB_LIST)
+  endif
+  ifneq ($(edma_APP_LIB_LIST),)
+    pdk_APP_LIB_LIST += $(edma_APP_LIB_LIST)
+  endif
+  ifneq ($(edma_EXAMPLE_LIST),)
+    pdk_EXAMPLE_LIST += $(edma_EXAMPLE_LIST)
+  endif
 endif
 # - used to ignore include if component not present
 -include $(PDK_MAILBOX_COMP_PATH)/mailbox_component.mk
