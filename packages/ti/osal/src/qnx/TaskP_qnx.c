@@ -60,7 +60,7 @@ TaskP_Handle TaskP_create(void *taskfxn, const TaskP_Params *params)
         }
     }
 
-    status = pthread_create(tid, &attr, taskfxn, (void *)(&params->arg0));
+    status = pthread_create(tid, &attr, taskfxn, (void *)(params->arg0));
 
     if(status==EOK)
     {
