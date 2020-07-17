@@ -17,3 +17,4 @@ package.mak
 package/
 packages/
 install/
+tracever.h

@@ -9,3 +9,5 @@ docs/doxygen/html/
 package/*
 Settings.h
 Settings.xdc
+calver.h
+

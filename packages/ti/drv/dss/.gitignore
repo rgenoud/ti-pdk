@@ -8,3 +8,4 @@ lib/*
 package/*
 Settings.h
 Settings.xdc
+dssver.h

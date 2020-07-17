@@ -1,2 +1,13 @@
 lib/*
 docs/doxygen/html/
+.dlls
+.executables
+.interfaces
+.libraries
+.xdcenv.mak
+Settings.h
+Settings.xdc
+fvid2ver.h
+package.mak
+package/
+

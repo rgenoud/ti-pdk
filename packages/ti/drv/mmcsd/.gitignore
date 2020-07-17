@@ -26,3 +26,4 @@ package/
 packages/
 *.o
 *.dep
+MMCSDver.h

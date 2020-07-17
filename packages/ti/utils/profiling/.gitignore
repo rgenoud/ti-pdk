@@ -18,3 +18,4 @@ package.mak
 package/
 packages/
 install/
+profilingver.h

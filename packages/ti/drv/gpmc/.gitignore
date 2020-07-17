@@ -25,4 +25,4 @@ package/
 packages/
 *.o
 *.dep
-
+docs/Doxyfile

@@ -1,1 +1,10 @@
 lib*
+.executables
+.interfaces
+.libraries
+.xdcenv.mak
+Settings.h
+Settings.xdc
+emacver.h
+package.mak
+package/

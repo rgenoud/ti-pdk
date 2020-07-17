@@ -26,3 +26,4 @@ test/*/c66/bios/src
 example/*/MCBSPDigLpbk/src/
 Debug/
 Release/
+docs/Doxyfile

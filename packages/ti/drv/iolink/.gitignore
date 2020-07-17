@@ -1,11 +1,12 @@
-lib/
 .dlls
 .executables
 .interfaces
 .libraries
 .xdcenv.mak
+IOLINKver.h
 Settings.h
-mcaspver.h
+Settings.xdc
 package.mak
 package/
+lib/
 

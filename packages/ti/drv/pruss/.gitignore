@@ -27,3 +27,9 @@ package/
 packages/
 *.o
 *.dep
+docs/Doxyfile
+example/apps/sorte/*/*/*.xa15fg
+example/apps/sorte/*/*/*.map
+example/apps/sorte/*/*/*.xs
+pruicss_ver.h
+

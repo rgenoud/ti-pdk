@@ -26,3 +26,5 @@ packages/
 *.o
 *.dep
 firmware/icss*/bin
+docs/Doxyfile
+icss_emac_ver.h
