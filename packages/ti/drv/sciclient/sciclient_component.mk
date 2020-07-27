@@ -45,7 +45,9 @@ sciclient_LIB_LIST += sciclient_hs
 endif
 
 ifeq ($(SOC),$(filter $(SOC), j721e))
-sciclient_LIB_LIST += rm_pm_hal
+sciclient_LIB_LIST += rm_pm_hal 
+sciclient_LIB_LIST += sciserver_tirtos
+sciclient_LIB_LIST += sciserver_baremetal
 sciclient_LIB_LIST += sciclient_direct
 endif
 
@@ -126,6 +128,37 @@ export sciclient_hs_direct_INCLUDE = $(sciclient_hs_direct_PATH)
 export sciclient_hs_direct_SOCLIST = j721e
 export sciclient_hs_direct_BOARDLIST = j721e_evm
 export sciclient_hs_direct_$(SOC)_CORELIST = mcu1_0
+
+export sciserver_tirtos_COMP_LIST = sciserver_tirtos
+export sciserver_tirtos_RELPATH = ti/drv/sciserver_tirtos
+export sciserver_tirtos_OBJPATH = ti/drv/sciserver_tirtos
+export sciserver_tirtos_LIBNAME = sciserver_tirtos
+export sciserver_tirtos_PATH = $(PDK_SCICLIENT_COMP_PATH)
+export sciserver_tirtos_LIBPATH = $(PDK_SCICLIENT_COMP_PATH)/lib
+export sciserver_tirtos_MAKEFILE = -fsrc/sciserver_makefile BUILD_OS_TYPE=tirtos
+export sciserver_tirtos_BOARD_DEPENDENCY = no
+export sciserver_tirtos_CORE_DEPENDENCY = yes
+export sciserver_tirtos_PKG_LIST = sciserver_tirtos
+export sciserver_tirtos_INCLUDE = $(sciserver_PATH)
+export sciserver_tirtos_SOCLIST = j721e
+export sciserver_tirtos_BOARDLIST = j721e_evm
+export sciserver_tirtos_$(SOC)_CORELIST = mcu1_0
+
+export sciserver_baremetal_COMP_LIST = sciserver_baremetal
+export sciserver_baremetal_RELPATH = ti/drv/sciserver_baremetal
+export sciserver_baremetal_OBJPATH = ti/drv/sciserver_baremetal
+export sciserver_baremetal_LIBNAME = sciserver_baremetal
+export sciserver_baremetal_PATH = $(PDK_SCICLIENT_COMP_PATH)
+export sciserver_baremetal_LIBPATH = $(PDK_SCICLIENT_COMP_PATH)/lib
+export sciserver_baremetal_MAKEFILE = -fsrc/sciserver_makefile BUILD_OS_TYPE=baremetal
+export sciserver_baremetal_BOARD_DEPENDENCY = no
+export sciserver_baremetal_CORE_DEPENDENCY = yes
+export sciserver_baremetal_PKG_LIST = sciserver_baremetal
+export sciserver_baremetal_INCLUDE = $(sciserver_PATH)
+export sciserver_baremetal_SOCLIST = j721e
+export sciserver_baremetal_BOARDLIST = j721e_evm
+export sciserver_baremetal_$(SOC)_CORELIST = mcu1_0
+
 
 export sciclient_UTILS_LIST = sciclient_boardcfg
 export sciclient_boardcfg_COMP_LIST = sciclient_boardcfg
@@ -279,6 +312,24 @@ export sciclient_unit_testapp_SBL_IMAGEGEN
 ifeq ($(BUILD_OS_TYPE),tirtos)
 sciclient_EXAMPLE_LIST += sciclient_unit_testapp
 endif
+
+# SCISERVER
+export sciserver_testapp_COMP_LIST = sciserver_testapp
+export sciserver_testapp_RELPATH = ti/drv/sciclient/examples/sciserver_testapp
+export sciserver_testapp_PATH = $(PDK_SCICLIENT_COMP_PATH)/examples/sciserver_testapp
+export sciserver_testapp_BOARD_DEPENDENCY = no
+export sciserver_testapp_CORE_DEPENDENCY = yes
+export sciserver_testapp_XDC_CONFIGURO = yes
+export sciserver_testapp_PKG_LIST = sciserver_testapp
+sciserver_testapp_INCLUDE = $(sciserver_testapp_PATH)
+export sciserver_testapp_BOARDLIST = j721e_evm 
+export sciserver_testapp_$(SOC)_CORELIST = mcu1_0
+export sciserver_testapp_SBL_APPIMAGEGEN = yes
+export sciserver_testapp_SBL_IMAGEGEN = no
+ifeq ($(BUILD_OS_TYPE),tirtos)
+sciclient_EXAMPLE_LIST += sciserver_testapp
+endif
+
 
 # SCICLIENT Firewall Unit test
 export sciclient_fw_testapp_COMP_LIST = sciclient_fw_testapp

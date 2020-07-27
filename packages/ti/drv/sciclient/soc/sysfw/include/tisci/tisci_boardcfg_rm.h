@@ -262,10 +262,10 @@ const struct tisci_boardcfg_rm_resasg_entry *tisci_boardcfg_get_rm_resasg(void);
  * \brief Get the RM device group from the local tisci_boardcfg_rm data.
  *
  * \param devgrp Pointer to a device group variable in which the device group
- *        is returned on SUCCESS
+ *        is returned on CSL_PASS
  *
  * \return EINIT if the local RM board data has not yet been received or is
- *         invalid, SUCCESS if in the board data has been received and is valid.
+ *         invalid, CSL_PASS if in the board data has been received and is valid.
  */
 int32_t tisci_boardcfg_get_rm_devgrp(devgrp_t *devgrp);
 

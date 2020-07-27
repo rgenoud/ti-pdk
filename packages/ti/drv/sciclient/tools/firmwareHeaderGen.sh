@@ -34,7 +34,7 @@
 #         For AM65XX    : ./firmwareHeaderGen.sh am65x_sr2
 #         For AM65XX-HS : ./firmwareHeaderGen.sh am65x-hs
 #         For AM65XX-HS : ./firmwareHeaderGen.sh am65x_sr2-hs
-#         For J721E     : ./firmwareHeaderGen.sh j721e
+#         For J721E     : ./firmwareHeaderGen.sh j721e-no-pm-rm
 #         For J721E-HS  : ./firmwareHeaderGen.sh j721e-hs
 #         For AM64x     : ./firmwareHeaderGen.sh am64x-vlab
 #         For AM64x     : ./firmwareHeaderGen.sh am64x-zebu

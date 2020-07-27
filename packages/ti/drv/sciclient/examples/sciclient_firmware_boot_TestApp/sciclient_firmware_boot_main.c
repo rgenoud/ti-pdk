@@ -249,7 +249,7 @@ int32_t App_loadFirmwareTest(void)
     {
 #ifdef PRINT_UART
         App_sciclientPrintf(
-                          " DMSC Loading the Firmware...SUCCESS \n");
+                          " DMSC Loading the Firmware...CSL_PASS \n");
 #endif
     }
     else

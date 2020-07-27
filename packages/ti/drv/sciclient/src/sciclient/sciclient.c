@@ -152,48 +152,40 @@ int32_t Sciclient_init(const Sciclient_ConfigPrms_t *pCfgPrms)
     }
     HwiP_restore(key);
 
-    if(1U == b_doInit)
+    if (pCfgPrms != NULL)
     {
-        if (pCfgPrms != NULL)
+        /* Initialize Config params */
+        if((pCfgPrms->opModeFlag ==
+            SCICLIENT_SERVICE_OPERATION_MODE_POLLED) ||
+            (pCfgPrms->opModeFlag ==
+            SCICLIENT_SERVICE_OPERATION_MODE_INTERRUPT))
         {
-            /* Initialize Config params */
-            if((pCfgPrms->opModeFlag ==
-                SCICLIENT_SERVICE_OPERATION_MODE_POLLED) ||
-                (pCfgPrms->opModeFlag ==
-                SCICLIENT_SERVICE_OPERATION_MODE_INTERRUPT))
-            {
-                gSciclientHandle.opModeFlag = pCfgPrms->opModeFlag;
-            }
-            else
-            {
-                status = CSL_EBADARGS;
-            }
-
-            if( (CSL_PASS==status) && ((pCfgPrms->isSecureMode==0U) ||
-                (pCfgPrms->isSecureMode==1U)) )
-            {
-                gSciclientHandle.isSecureMode = pCfgPrms->isSecureMode;
-            }
-            else
-            {
-                status = CSL_EBADARGS;
-            }
+            gSciclientHandle.opModeFlag = pCfgPrms->opModeFlag;
         }
         else
         {
-            gSciclientHandle.opModeFlag =
-                    SCICLIENT_SERVICE_OPERATION_MODE_POLLED;
-            gSciclientHandle.isSecureMode = 0U;
+            status = CSL_EBADARGS;
         }
-
-        if ((gSciclientHandle.opModeFlag ==
-             SCICLIENT_SERVICE_OPERATION_MODE_INTERRUPT) &&
-            (status == CSL_PASS))
+    }
+    else
+    {
+        gSciclientHandle.opModeFlag =
+                SCICLIENT_SERVICE_OPERATION_MODE_POLLED;
+        gSciclientHandle.isSecureMode = 0U;
+    }
+    if(1U == b_doInit)
+    {
+        gSciclientHandle.isSecureMode = 0U;
+        /* Register interrupts irrespective of polled and interrupt mode to
+         * allow for the case to switch between polled and interrupt mode at
+         * run time.
+         */
+        if (status == CSL_PASS)
         {
             SemaphoreP_Params semParams = {NULL,
                                            SemaphoreP_Mode_BINARY,
                                            1U};
-            uint32_t          i = 0U;
+            uint32_t i = 0U;
             /* Create Sciclient_ServiceHandle_t.semHandles */
             for (i = 0; i < SCICLIENT_MAX_QUEUE_SIZE; i++)
             {
@@ -323,7 +315,18 @@ int32_t Sciclient_init(const Sciclient_ConfigPrms_t *pCfgPrms)
                 status = CSL_EFAIL;
             }
         }
-
+        if (pCfgPrms != NULL)
+        {  
+            if( (CSL_PASS==status) && ((pCfgPrms->isSecureMode==0U) ||
+                    (pCfgPrms->isSecureMode==1U)) )
+            {
+                gSciclientHandle.isSecureMode = pCfgPrms->isSecureMode;
+            }
+            else
+            {
+                status = CSL_EBADARGS;
+            }
+        }
 #if defined(_TMS320C6X)
         if (pCfgPrms != NULL)
         {

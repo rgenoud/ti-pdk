@@ -16,7 +16,6 @@ MODULE_NAME = sciclient$(HS_SUFFIX)
 
 SRCDIR = src/sciclient
 INCDIR = soc/sysfw/include src/sciclient
-PACKAGE_SRCS_COMMON =
 
 # SoC Specific source files
 ifeq ($(SOC),$(filter $(SOC), am65xx))
@@ -72,6 +71,11 @@ endif
 
 CFLAGS_LOCAL_COMMON = $(PDK_CFLAGS) $(SCICLIENT_CFLAGS)
 
+ifeq ($(BUILD_HS),yes)
+CFLAGS_LOCAL_COMMON += -DBUILD_HS
+endif
+
+PACKAGE_SRCS_COMMON =
 PACKAGE_SRCS_COMMON += config_mk.bld
 PACKAGE_SRCS_COMMON += COPYING.txt
 PACKAGE_SRCS_COMMON += docs
@@ -83,18 +87,36 @@ PACKAGE_SRCS_COMMON += package.xdc
 PACKAGE_SRCS_COMMON += package.xs
 PACKAGE_SRCS_COMMON += sciclient_component.mk
 PACKAGE_SRCS_COMMON += sciclient.h
+PACKAGE_SRCS_COMMON += sciserver.h
+PACKAGE_SRCS_COMMON += sciserver_tirtos.h
 PACKAGE_SRCS_COMMON += sciclientver.h
 PACKAGE_SRCS_COMMON += sciclientver.h.xdt
 PACKAGE_SRCS_COMMON += Settings.xdc.xdt
 PACKAGE_SRCS_COMMON += soc/sciclient_soc_priv.h
 PACKAGE_SRCS_COMMON += soc/$(SCICLIENT_SOCVER)
 PACKAGE_SRCS_COMMON += soc/sysfw
-PACKAGE_SRCS_COMMON += src
 PACKAGE_SRCS_COMMON += tools
+PACKAGE_SRCS_COMMON += src/boardcfg_makefile
+PACKAGE_SRCS_COMMON += src/build.inc
+PACKAGE_SRCS_COMMON += src/priv
+PACKAGE_SRCS_COMMON += src/rm_pm_hal_build.mk
+PACKAGE_SRCS_COMMON += src/rm_pm_hal_makefile
+PACKAGE_SRCS_COMMON += src/sciclient
+PACKAGE_SRCS_COMMON += src/sciclient_direct_makefile
+PACKAGE_SRCS_COMMON += src/sciclient_indirect_makefile
+PACKAGE_SRCS_COMMON += src/sciserver
+PACKAGE_SRCS_COMMON += src/sciserver_makefile
+PACKAGE_SRCS_COMMON += src/rm_pm_hal/Kconfig
+PACKAGE_SRCS_COMMON += src/rm_pm_hal/Makefile
+PACKAGE_SRCS_COMMON += src/rm_pm_hal/build
+PACKAGE_SRCS_COMMON += src/rm_pm_hal/build.mk
+PACKAGE_SRCS_COMMON += src/rm_pm_hal/common
+PACKAGE_SRCS_COMMON += src/rm_pm_hal/include
+PACKAGE_SRCS_COMMON += src/rm_pm_hal/pm
+PACKAGE_SRCS_COMMON += src/rm_pm_hal/rm
+PACKAGE_SRCS_COMMON += src/rm_pm_hal/scripts
+PACKAGE_SRCS_COMMON += src/rm_pm_hal/utils
 
-ifeq ($(BUILD_HS),yes)
-CFLAGS_LOCAL_COMMON += -DBUILD_HS
-endif
 
 # Core/SoC/platform specific source files and CFLAGS
 # Example:

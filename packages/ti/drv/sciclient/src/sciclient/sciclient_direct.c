@@ -69,8 +69,8 @@
 /*                          Function Declarations                             */
 /* ========================================================================== */
 
-static int32_t process_rm_message(void *tx_msg);
-static int32_t process_pm_message (void *tx_msg);
+int32_t Sciclient_ProcessRmMessage(void *tx_msg);
+int32_t Sciclient_ProcessPmMessage (void *tx_msg);
 static int32_t board_config_pm_handler(uint32_t *msg_recv);
 
 /* ========================================================================== */
@@ -102,65 +102,77 @@ int32_t Sciclient_service (const Sciclient_ReqPrm_t *pReqPrm,
         ret = Sciclient_servicePrepareHeader(pReqPrm, &localSeqId,
                  contextId, &hdr);
     }
-
-    switch (msgType) {
-        case TISCI_MSG_BOARD_CONFIG_PM:
-        case TISCI_MSG_SET_CLOCK:
-        case TISCI_MSG_GET_CLOCK:
-        case TISCI_MSG_SET_CLOCK_PARENT:
-        case TISCI_MSG_GET_CLOCK_PARENT:
-        case TISCI_MSG_GET_NUM_CLOCK_PARENTS:
-        case TISCI_MSG_SET_FREQ:
-        case TISCI_MSG_QUERY_FREQ:
-        case TISCI_MSG_GET_FREQ:
-        case TISCI_MSG_SET_DEVICE:
-        case TISCI_MSG_GET_DEVICE:
-        case TISCI_MSG_SET_DEVICE_RESETS:
-            memcpy(message, pReqPrm->pReqPayload, pReqPrm->reqPayloadSize);
-            ret = process_pm_message(message);
-            memcpy(pRespPrm->pRespPayload, message, pRespPrm->respPayloadSize);
-            break;
-        case TISCI_MSG_BOARD_CONFIG_RM:
-        case TISCI_MSG_RM_GET_RESOURCE_RANGE:
-        case TISCI_MSG_RM_IRQ_SET:
-        case TISCI_MSG_RM_IRQ_RELEASE:
-        case TISCI_MSG_RM_RING_CFG:
-        case TISCI_MSG_RM_RING_MON_CFG:
-        case TISCI_MSG_RM_UDMAP_TX_CH_CFG:
-        case TISCI_MSG_RM_UDMAP_RX_CH_CFG:
-        case TISCI_MSG_RM_UDMAP_FLOW_CFG:
-        case TISCI_MSG_RM_UDMAP_FLOW_SIZE_THRESH_CFG:
-        case TISCI_MSG_RM_UDMAP_FLOW_DELEGATE:
-        case TISCI_MSG_RM_UDMAP_GCFG_CFG:
-        case TISCI_MSG_RM_PSIL_PAIR:
-        case TISCI_MSG_RM_PSIL_UNPAIR:
-        case TISCI_MSG_RM_PSIL_READ:
-        case TISCI_MSG_RM_PSIL_WRITE:
-        case TISCI_MSG_RM_PROXY_CFG:
-            memcpy(message, pReqPrm->pReqPayload, pReqPrm->reqPayloadSize);
-            ret = process_rm_message(message);
-            memcpy(pRespPrm->pRespPayload, message, pRespPrm->respPayloadSize);
-            break;
-        default:
-            ret = Sciclient_serviceSecureProxy(pReqPrm, pRespPrm);
+    if (CSL_PASS == ret)
+    {
+        switch (msgType) {
+            case TISCI_MSG_BOARD_CONFIG_PM:
+            case TISCI_MSG_SET_CLOCK:
+            case TISCI_MSG_GET_CLOCK:
+            case TISCI_MSG_SET_CLOCK_PARENT:
+            case TISCI_MSG_GET_CLOCK_PARENT:
+            case TISCI_MSG_GET_NUM_CLOCK_PARENTS:
+            case TISCI_MSG_SET_FREQ:
+            case TISCI_MSG_QUERY_FREQ:
+            case TISCI_MSG_GET_FREQ:
+            case TISCI_MSG_SET_DEVICE:
+            case TISCI_MSG_GET_DEVICE:
+            case TISCI_MSG_SET_DEVICE_RESETS:
+                memcpy(message, pReqPrm->pReqPayload, pReqPrm->reqPayloadSize);
+                ret = Sciclient_ProcessPmMessage(message);
+                if (pRespPrm->pRespPayload != NULL)
+                {
+                    memcpy(pRespPrm->pRespPayload, message, pRespPrm->respPayloadSize);
+                }
+                hdr = (struct tisci_header *) &message;
+                pRespPrm->flags = hdr->flags;
+                break;
+            case TISCI_MSG_BOARD_CONFIG_RM:
+            case TISCI_MSG_RM_GET_RESOURCE_RANGE:
+            case TISCI_MSG_RM_IRQ_SET:
+            case TISCI_MSG_RM_IRQ_RELEASE:
+            case TISCI_MSG_RM_RING_CFG:
+            case TISCI_MSG_RM_RING_MON_CFG:
+            case TISCI_MSG_RM_UDMAP_TX_CH_CFG:
+            case TISCI_MSG_RM_UDMAP_RX_CH_CFG:
+            case TISCI_MSG_RM_UDMAP_FLOW_CFG:
+            case TISCI_MSG_RM_UDMAP_FLOW_SIZE_THRESH_CFG:
+            case TISCI_MSG_RM_UDMAP_FLOW_DELEGATE:
+            case TISCI_MSG_RM_UDMAP_GCFG_CFG:
+            case TISCI_MSG_RM_PROXY_CFG:
+                memcpy(message, pReqPrm->pReqPayload, pReqPrm->reqPayloadSize);
+                ret = Sciclient_ProcessRmMessage(message);
+                if (pRespPrm->pRespPayload != NULL)
+                {
+                    memcpy(pRespPrm->pRespPayload, message, pRespPrm->respPayloadSize);
+                }
+                hdr = (struct tisci_header *) &message;
+                pRespPrm->flags = hdr->flags;
+                break;
+            case TISCI_MSG_RM_PSIL_PAIR:
+            case TISCI_MSG_RM_PSIL_UNPAIR:
+            case TISCI_MSG_RM_PSIL_READ:
+            case TISCI_MSG_RM_PSIL_WRITE:
+            default:
+                ret = Sciclient_serviceSecureProxy(pReqPrm, pRespPrm);
+        }
     }
 
     return ret;
 }
 
-/* -------------------------------------------------------------------------- */
-/*                 Internal Function Definitions                              */
-/* -------------------------------------------------------------------------- */
-
-static void tisci_msg_set_ack_resp(struct tisci_header *hdr)
+void Sciclient_TisciMsgSetAckResp(struct tisci_header *hdr)
 {
     hdr->flags |= TISCI_MSG_FLAG_ACK;
 }
 
-static void tisci_msg_set_nak_resp(struct tisci_header *hdr)
+void Sciclient_TisciMsgSetNakResp(struct tisci_header *hdr)
 {
     hdr->flags &= (~TISCI_MSG_FLAG_ACK);
 }
+
+/* -------------------------------------------------------------------------- */
+/*                 Internal Function Definitions                              */
+/* -------------------------------------------------------------------------- */
 
 static int32_t board_config_pm_handler(uint32_t *msg_recv)
 {
@@ -181,7 +193,7 @@ static int32_t board_config_pm_handler(uint32_t *msg_recv)
     return ret;
 }
 
-static int32_t process_pm_message (void *tx_msg)
+int32_t Sciclient_ProcessPmMessage (void *tx_msg)
 {
     int32_t ret = CSL_PASS;
     uint32_t msg_inval = 0U;
@@ -218,9 +230,9 @@ static int32_t process_pm_message (void *tx_msg)
     }
     if ((flags & TISCI_MSG_FLAG_AOP) != 0UL) {
         if (ret == CSL_PASS) {
-            tisci_msg_set_ack_resp((struct tisci_header *) tx_msg);
+            Sciclient_TisciMsgSetAckResp((struct tisci_header *) tx_msg);
         } else {
-            tisci_msg_set_nak_resp((struct tisci_header *) tx_msg);
+            Sciclient_TisciMsgSetNakResp((struct tisci_header *) tx_msg);
         }
     }
     /*
@@ -256,7 +268,7 @@ static int32_t tisci_msg_board_config_rm_handler(uint32_t *msg_recv)
     return r;
 }
 
-int32_t process_rm_message(void *tx_msg)
+int32_t Sciclient_ProcessRmMessage(void *tx_msg)
 {
     int32_t r = CSL_PASS;
     uint32_t msg_inval = 0U;
@@ -299,18 +311,6 @@ int32_t process_rm_message(void *tx_msg)
         case TISCI_MSG_RM_UDMAP_GCFG_CFG:
             r = rm_udmap_gcfg_cfg((uint32_t *)tx_msg);
             break;
-        case TISCI_MSG_RM_PSIL_PAIR:
-            r = rm_psil_pair((uint32_t *)tx_msg);
-            break;
-        case TISCI_MSG_RM_PSIL_UNPAIR:
-            r = rm_psil_unpair((uint32_t *)tx_msg);
-            break;
-        case TISCI_MSG_RM_PSIL_READ:
-            r = rm_psil_read((uint32_t *)tx_msg, (uint32_t *)tx_msg);
-            break;
-        case TISCI_MSG_RM_PSIL_WRITE:
-            r = rm_psil_write((uint32_t *)tx_msg);
-            break;
         case TISCI_MSG_RM_PROXY_CFG:
             r = rm_proxy_cfg((uint32_t *)tx_msg);
             break;
@@ -322,9 +322,9 @@ int32_t process_rm_message(void *tx_msg)
 
     if ((((struct tisci_header *) tx_msg)->flags & TISCI_MSG_FLAG_AOP) != 0) {
         if (r != CSL_PASS) {
-            tisci_msg_set_nak_resp((struct tisci_header *)tx_msg);
+            Sciclient_TisciMsgSetNakResp((struct tisci_header *)tx_msg);
         } else {
-            tisci_msg_set_ack_resp((struct tisci_header *)tx_msg);
+            Sciclient_TisciMsgSetAckResp((struct tisci_header *)tx_msg);
         }
     }
 

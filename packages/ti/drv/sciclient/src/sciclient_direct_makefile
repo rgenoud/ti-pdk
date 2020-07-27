@@ -16,7 +16,6 @@ MODULE_NAME = sciclient$(HS_SUFFIX)_direct
 
 SRCDIR = src/sciclient
 INCDIR = soc/sysfw/include src/sciclient
-PACKAGE_SRCS_COMMON =
 
 # SoC Specific source files
 ifeq ($(SOC),$(filter $(SOC), am65xx))
@@ -68,46 +67,9 @@ ifeq ($(BOARD),$(filter $(BOARD), j721e_hostemu j721e_loki))
 endif
 
 CFLAGS_LOCAL_COMMON = $(PDK_CFLAGS) $(SCICLIENT_CFLAGS)
-PACKAGE_SRCS_COMMON += sciclient.h sciclient_component.mk makefile .gitignore
-PACKAGE_SRCS_COMMON += include docs tools $(SRCDIR) soc/sciclient_soc_priv.h
-PACKAGE_SRCS_COMMON += config_mk.bld package.bld package.xdc package.xs
-PACKAGE_SRCS_COMMON += Settings.xdc.xdt sciclientver.h sciclientver.h.xdt
-
-# Selectively package sysfw components
-PACKAGE_SRCS_COMMON += soc/sysfw/binaries/system-firmware-public-documentation
-PACKAGE_SRCS_COMMON += soc/sysfw/include
-
-ifeq ($(SOC),$(filter $(SOC), am65xx))
-PACKAGE_SRCS_COMMON += soc/sysfw/binaries/ti-sci-firmware-am65x-gp.bin
-PACKAGE_SRCS_COMMON += soc/sysfw/binaries/ti-sci-firmware-am65x_sr2-gp.bin
-PACKAGE_SRCS_COMMON += soc/sysfw/binaries/ti-sci-firmware-am65x-hs-cert.bin
-PACKAGE_SRCS_COMMON += soc/sysfw/binaries/ti-sci-firmware-am65x-hs-enc.bin
 
 ifeq ($(BUILD_HS),yes)
 CFLAGS_LOCAL_COMMON += -DBUILD_HS
-endif
-
-endif
-
-ifeq ($(SOC),$(filter $(SOC), j721e))
-PACKAGE_SRCS_COMMON += soc/sysfw/binaries/ti-sci-firmware-j721e-gp.bin
-PACKAGE_SRCS_COMMON += soc/sysfw/binaries/ti-sci-firmware-j721e-hs-cert.bin
-PACKAGE_SRCS_COMMON += soc/sysfw/binaries/ti-sci-firmware-j721e-hs-enc.bin
-
-ifeq ($(BUILD_HS),yes)
-CFLAGS_LOCAL_COMMON += -DBUILD_HS
-endif
-
-endif
-
-ifeq ($(SOC),$(filter $(SOC), j7200))
-PACKAGE_SRCS_COMMON += soc/sysfw/binaries/ti-sci-firmware-j7200-gp-vlab.bin
-PACKAGE_SRCS_COMMON += soc/sysfw/binaries/ti-sci-firmware-j7200-gp-zebu.bin
-endif
-
-ifeq ($(SOC),$(filter $(SOC), am64x))
-PACKAGE_SRCS_COMMON += soc/sysfw/binaries/ti-sci-firmware-am64x-gp-vlab.bin
-PACKAGE_SRCS_COMMON += soc/sysfw/binaries/ti-sci-firmware-am64x-gp-zebu.bin
 endif
 
 include $(PDK_INSTALL_PATH)/ti/drv/sciclient/src/rm_pm_hal_build.mk

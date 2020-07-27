@@ -143,8 +143,8 @@
  * |Type | Byte Index| Data Type| Header
  * |:----|:---------:|:--------:|:------
  * |TISCI Header| [0:1]| U16| Message_type
- * || [2]| U8| Host
- * || [3]| U8| Sequence_id
+ * || [2]| uint8_t| Host
+ * || [3]| uint8_t| Sequence_id
  * || [4:7]| U32| Flags
  * |Payload | Depends on type of message||Payload Fields|
  */
@@ -570,6 +570,24 @@ int32_t Sciclient_getDefaultBoardCfgInfo(Sciclient_DefaultBoardCfgInfo_t *pBoard
  *
  */
 static inline void Sciclient_configPrmsInit(Sciclient_ConfigPrms_t *pCfgPrms);
+
+/**
+ *  \brief Send the Response in Ack. Used only with Sciserver or
+ *         Sciclient Direct
+ *
+ *  \param hdr     [IN] Pointer to #tisci_header structure.
+ *
+ */
+void Sciclient_TisciMsgSetAckResp(struct tisci_header *hdr);
+
+/**
+ *  \brief Send the Response in NAK. Used only with Sciserver or
+ *         Sciclient Direct
+ *
+ *  \param hdr     [IN] Pointer to #tisci_header structure.
+ *
+ */
+void Sciclient_TisciMsgSetNakResp(struct tisci_header *hdr);
 
 /* ========================================================================== */
 /*                       Static Function Definitions                          */

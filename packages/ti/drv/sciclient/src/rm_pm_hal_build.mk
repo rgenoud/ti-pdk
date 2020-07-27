@@ -143,4 +143,5 @@ CFLAGS_LOCAL_COMMON += $(cppflags-y)
 CFLAGS_LOCAL_COMMON += -I$(srctree)/rm_pm_hal/pm/soc/$(TARGET_SOC)/include
 CFLAGS_LOCAL_COMMON += -I$(srctree)/rm_pm_hal/include
 CFLAGS_LOCAL_COMMON += -I$(PDK_INSTALL_PATH)/ti/drv/sciclient/soc/$(SCICLIENT_SOCVER)
-CFLAGS_LOCAL_COMMON += -I$(PDK_INSTALL_PATH)/ti/drv/sciclient/include
+CFLAGS_LOCAL_COMMON += -I$(PDK_INSTALL_PATH)/ti/drv/sciclient/src/priv
+CFLAGS_LOCAL_COMMON += -I$(PDK_INSTALL_PATH)/ti/osal

@@ -65,9 +65,13 @@
 #define CONFIG_BOARDCFG (1)
 #define CONFIG_BOARDCFG_SECURITY (1)
 
+/* PM Init is specifically done as the DDR init needs to happen afetr this
+ * The sciserver may do pm init again. But that is harmless.
+ */
+#define CONFIG_BOARDCFG_PM (1)
+
 #if defined(SOC_AM65XX) || defined (SOC_AM64X)
 #define CONFIG_BOARDCFG_RM (1)
-#define CONFIG_BOARDCFG_PM (1)
 #endif
 
 #if defined (SOC_AM65XX) || defined (SOC_J721E) || defined (SOC_J7200)
@@ -226,7 +230,6 @@ int32_t main(void)
 static int32_t App_getRevisionTest(void)
 {
     int32_t status = CSL_EFAIL;
-    Board_initCfg   boardCfg;
     Sciclient_ConfigPrms_t        config =
     {
         SCICLIENT_SERVICE_OPERATION_MODE_POLLED,
@@ -252,9 +255,6 @@ static int32_t App_getRevisionTest(void)
 
     /* Sciclient CCS Init to start the operation. Call this beforr board init */
     status = Sciclient_init(&config);
-    boardCfg = BOARD_INIT_UNLOCK_MMR |
-                       BOARD_INIT_PINMUX_CONFIG;
-    Board_init(boardCfg);
     if (CSL_PASS == status)
     {
         printf ("Sciclient_Init Passed.\n");
@@ -402,16 +402,6 @@ static int32_t Sciclient_ccs_init_send_boardcfg (uint8_t devgrp_curr)
         {
             printf("FAILED\n");
         }
-    }
-    if (status == CSL_PASS)
-    {
-        dmtimer0_read();
-        status = Sciclient_boardCfgSec(NULL) ;
-        dmtimer0_read();
-    }
-    if (status != CSL_PASS) 
-    {
-        printf("\nSciclient Security Board Configuration has failed \n");
     }
 #endif
     /* RM Board configuration to define the use of Resources allocated

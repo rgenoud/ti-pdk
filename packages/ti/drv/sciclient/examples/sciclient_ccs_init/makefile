@@ -14,10 +14,16 @@ INCDIR = .
 
 # List all the external components/interfaces, whose interface header files
 # need to be included for this component
-INCLUDE_EXTERNAL_INTERFACES = pdk sciclient osal_nonos board
+INCLUDE_EXTERNAL_INTERFACES = pdk sciclient_direct osal_nonos board
 
 # List all the components required by the application
-COMP_LIST_COMMON  = $(PDK_COMMON_BAREMETAL_COMP)
+COMP_LIST_COMMON_TEST = $(PDK_COMMON_BAREMETAL_COMP)
+ifeq ($(SOC),$(filter $(SOC), j721e))
+  COMP_LIST_COMMON = $(subst sciclient,sciclient_direct,$(COMP_LIST_COMMON_TEST))
+  COMP_LIST_COMMON += rm_pm_hal
+else
+  COMP_LIST_COMMON = $(COMP_LIST_COMMON_TEST)
+endif
 
 # Common source files and CFLAGS across all platforms and cores
 SRCS_COMMON = sciclient_ccs_init_main.c

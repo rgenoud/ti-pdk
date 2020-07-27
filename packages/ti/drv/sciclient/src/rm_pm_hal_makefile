@@ -11,26 +11,12 @@ MODULE_NAME = rm_pm_hal
 
 SRCDIR = src/rm_pm_hal
 INCDIR = src/rm_pm_hal src/
-PACKAGE_SRCS_COMMON =
 
 # List all the external components/interfaces, whose interface header files
 # need to be included for this component
 INCLUDE_EXTERNAL_INTERFACES = pdk osal
 
-# Common source files and CFLAGS across all platforms and cores
-ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200 am64x))
-# Keep the sciclient.c the first file in this list. This is used to trigger
-# the generation of the header files from the firware binary file.
-endif
-
-#Use CSL implementation to bypass DMSC
-# ifeq ($(SOC),$(filter $(SOC), j721e j7200))
-# SRCS_COMMON = sciclient_rm_csl.c sciclient_dummy.c
-# endif
-
 CFLAGS_LOCAL_COMMON = $(PDK_CFLAGS)
-PACKAGE_SRCS_COMMON += rm_pm_hal
-PACKAGE_SRCS_COMMON += rm_pm_hal_makefile
 
 include $(PDK_INSTALL_PATH)/ti/drv/sciclient/src/rm_pm_hal_build.mk
 SRCS_COMMON = $(foreach f, $(obj-y), $(subst .o,.c,$(f)))

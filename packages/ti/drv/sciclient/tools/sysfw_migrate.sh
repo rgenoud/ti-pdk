@@ -127,6 +127,7 @@ if [ "$SKIP_CHECKOUT" != "YES" ]; then
     $RM -fr binaries/am64
     $RM -fr binaries/j7200
     $RM -fr binaries/memory
+    $RM -fr binaries/ti-sci-firmware-j721e-gp.bin
     $RM -fr docs/BUILD.md
     $RM -fr reports
     $MV System_Controller_Firmware_MISRAC_Report.xlsx docs/
@@ -199,7 +200,7 @@ if [ "$SKIP_GEN_BIN" != "YES" ];  then
     ./firmwareHeaderGen.sh am65x-hs
     ./firmwareHeaderGen.sh am65x_sr2
     ./firmwareHeaderGen.sh am65x_sr2-hs
-    ./firmwareHeaderGen.sh j721e
+    ./firmwareHeaderGen.sh j721e-no-pm-rm
     ./firmwareHeaderGen.sh j721e-hs
     ./firmwareHeaderGen.sh am64x-vlab
     ./firmwareHeaderGen.sh am64x-zebu

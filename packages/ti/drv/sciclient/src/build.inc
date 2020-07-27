@@ -1,12 +1,3 @@
-#
-# Build include file for various includes used for build
-#
-# Copyright (C) 2017-2020 Texas Instruments Incorporated - http://www.ti.com/
-# ALL RIGHTS RESERVED
-#
-
-# Initial variables 
-
 yn-files := obj extra prepare_headers target
 yn-paths := subdirs
 yn-vars := $(yn-files) $(yn-paths)
