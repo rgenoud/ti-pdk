@@ -35,7 +35,7 @@
  */
 #include <ti/osal/SemaphoreP.h>
 #include <ti/osal/osal.h>
-
+#include <pthread.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -46,35 +46,61 @@
 #include <errno.h>
 #include <string.h>
 
+typedef struct SemaphoreP_Struct_s {
+    SemaphoreP_Mode mode;
+    union {
+        sem_t *sem_handle;
+        pthread_mutex_t *mutex_handle;
+    }type;
+} SemaphoreP_Struct;
+
 /*
  *  ======== SemaphoreP_create ========
  */
 SemaphoreP_Handle SemaphoreP_create(uint32_t count,
                                     const SemaphoreP_Params *params)
 {
-    sem_t *handle;
     struct timespec ts;
     char sem_name[128];
+    SemaphoreP_Struct *handle = NULL;
 
-    /* Assign a name if one is not specified */
-    if(params->name == NULL)
+    handle = (SemaphoreP_Struct *)calloc(1, sizeof(SemaphoreP_Struct));
+    if (handle == NULL) return NULL;
+    if (params->mode == SemaphoreP_Mode_COUNTING)
     {
-       static int counter = 0;
-       clock_gettime(CLOCK_REALTIME, &ts);
-       sprintf(sem_name,"qnx_sem_%ld_%ld_%d", (long int)getpid(), ts.tv_nsec, counter++);
-    }
-    else
-    {
-        strcpy(sem_name, params->name);
-    }
-    
+        handle->mode = SemaphoreP_Mode_COUNTING;
+        /* Assign a name if one is not specified */
+        if(params->name == NULL)
+        {
+           static int counter = 0;
+           clock_gettime(CLOCK_REALTIME, &ts);
+           sprintf(sem_name,"qnx_sem_%ld_%ld_%d", (long int)getpid(), ts.tv_nsec, counter++);
+        }
+        else
+        {
+            strcpy(sem_name, params->name);
+        }
 
-    /* Creates a COUNTING semaphore */
-    handle = sem_open(sem_name, O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH, count);
-    if (handle == SEM_FAILED)
+        /* Creates a COUNTING semaphore */
+        handle->type.sem_handle = sem_open(sem_name, O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH, count);
+        if (handle->type.sem_handle == SEM_FAILED)
+        {
+            printf("%s: for QNX Failed\n",__FUNCTION__);
+            free(handle);
+            return NULL;
+        }
+    }
+    else if (params->mode == SemaphoreP_Mode_BINARY)
     {
-        printf("%s: for QNX Failed\n",__FUNCTION__);
-        return NULL;
+        handle->mode = SemaphoreP_Mode_BINARY;
+
+        handle->type.mutex_handle = (pthread_mutex_t *)calloc(1, sizeof(pthread_mutex_t));
+        if (EOK != pthread_mutex_init((pthread_mutex_t *) handle->type.mutex_handle, NULL))
+        {
+            free(handle->type.mutex_handle);
+            free(handle);
+            return (NULL);
+        }
     }
     return ((SemaphoreP_Handle)handle);
 }
@@ -87,13 +113,18 @@ SemaphoreP_Status SemaphoreP_delete(SemaphoreP_Handle handle)
 {
     OSAL_Assert((handle == NULL));
 
-    int ret;
+    SemaphoreP_Struct *int_handle = (SemaphoreP_Struct *)handle;
 
-    ret = sem_close((sem_t *)handle);
-    if (ret < 0) {
-        return SemaphoreP_FAILURE;
+    if (int_handle->mode == SemaphoreP_Mode_COUNTING)
+    {
+        sem_close((sem_t *)int_handle->type.sem_handle);
     }
-
+    else if (int_handle->mode == SemaphoreP_Mode_BINARY)
+    {
+        pthread_mutex_destroy((pthread_mutex_t*) int_handle->type.mutex_handle);
+        free (int_handle->type.mutex_handle);
+    }
+    free(int_handle);
     return (SemaphoreP_OK);
 }
 
@@ -115,24 +146,46 @@ SemaphoreP_Status SemaphoreP_pend(SemaphoreP_Handle handle, uint32_t timeout)
 {
     OSAL_Assert((handle == NULL));
 
-    int ret;
+    int ret = 0;
     struct timespec ts;
     int timeout_ns = timeout*1000;
+    SemaphoreP_Struct *int_handle = (SemaphoreP_Struct *)handle;
 
-    if (timeout == SemaphoreP_WAIT_FOREVER) {
-        ret = sem_wait((sem_t *)handle);
-    } else {
+    if (timeout == SemaphoreP_WAIT_FOREVER)
+    {
+        if (int_handle->mode == SemaphoreP_Mode_COUNTING)
+        {
+            ret = sem_wait((sem_t *)int_handle->type.sem_handle);
+        }
+        else if (int_handle->mode == SemaphoreP_Mode_BINARY)
+        {
+            ret = pthread_mutex_lock((pthread_mutex_t *)int_handle->type.mutex_handle);
+        }
+    } 
+    else
+    {
         clock_gettime(CLOCK_REALTIME, &ts);
         ts.tv_sec += (timeout_ns)/1000000000;
         ts.tv_nsec += timeout_ns%1000000000;
 
-        ret = sem_timedwait((sem_t *)handle, &ts);
+        if (int_handle->mode == SemaphoreP_Mode_COUNTING)
+        {
+            ret = sem_timedwait((sem_t *)int_handle->type.sem_handle, &ts);
+        }
+        else if (int_handle->mode == SemaphoreP_Mode_BINARY)
+        {
+            ret = pthread_mutex_timedlock((pthread_mutex_t *)int_handle->type.mutex_handle, &ts);
+        }
     }
-    if (ret < 0) {
-        if (errno == ETIMEDOUT) {
-                return (SemaphoreP_TIMEOUT);
-        } else {
-                return (SemaphoreP_FAILURE);
+    if (ret < 0)
+    {
+        if (errno == ETIMEDOUT)
+        {
+            return (SemaphoreP_TIMEOUT);
+        }
+        else
+        {
+            return (SemaphoreP_FAILURE);
         }
     }
 
@@ -146,10 +199,20 @@ SemaphoreP_Status SemaphoreP_post(SemaphoreP_Handle handle)
 {
     OSAL_Assert((handle == NULL));
 
-    int ret;
+    int ret = 0;
+    SemaphoreP_Struct *int_handle = (SemaphoreP_Struct *)handle;
 
-    ret = sem_post((sem_t *)handle);
-    if (ret < 0) {
+    if (int_handle->mode == SemaphoreP_Mode_COUNTING)
+    {
+        ret = sem_post((sem_t *)int_handle->type.sem_handle);
+    }
+    else if (int_handle->mode == SemaphoreP_Mode_BINARY)
+    {
+        ret = pthread_mutex_unlock((pthread_mutex_t *)int_handle->type.mutex_handle);
+    }
+
+    if (ret < 0)
+    {
         return (SemaphoreP_FAILURE);
     }
 
