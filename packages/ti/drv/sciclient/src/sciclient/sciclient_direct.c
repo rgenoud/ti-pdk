@@ -133,19 +133,14 @@ int32_t Sciclient_service (const Sciclient_ReqPrm_t *pReqPrm,
                 hdr = (struct tisci_header *) &message;
                 pRespPrm->flags = hdr->flags;
                 break;
+            /* RM messages processed solely by RM within DM on MCU R5F */
             case TISCI_MSG_BOARD_CONFIG_RM:
             case TISCI_MSG_RM_GET_RESOURCE_RANGE:
-            case TISCI_MSG_RM_IRQ_SET:
             case TISCI_MSG_RM_IRQ_RELEASE:
-            case TISCI_MSG_RM_RING_CFG:
-            case TISCI_MSG_RM_RING_MON_CFG:
-            case TISCI_MSG_RM_UDMAP_TX_CH_CFG:
-            case TISCI_MSG_RM_UDMAP_RX_CH_CFG:
             case TISCI_MSG_RM_UDMAP_FLOW_CFG:
             case TISCI_MSG_RM_UDMAP_FLOW_SIZE_THRESH_CFG:
             case TISCI_MSG_RM_UDMAP_FLOW_DELEGATE:
             case TISCI_MSG_RM_UDMAP_GCFG_CFG:
-            case TISCI_MSG_RM_PROXY_CFG:
                 memcpy(message, pReqPrm->pReqPayload, pReqPrm->reqPayloadSize);
                 ret = Sciclient_ProcessRmMessage(message);
                 if (pRespPrm->pRespPayload != NULL)
@@ -155,6 +150,32 @@ int32_t Sciclient_service (const Sciclient_ReqPrm_t *pReqPrm,
                 hdr = (struct tisci_header *) &message;
                 pRespPrm->flags = hdr->flags;
                 break;
+            /*
+             * RM messages processed by RM within DM on MCU R5F and Secure
+             * RM within TIFS on M3
+             */
+            case TISCI_MSG_RM_IRQ_SET:
+            case TISCI_MSG_RM_RING_CFG:
+            case TISCI_MSG_RM_RING_MON_CFG:
+            case TISCI_MSG_RM_UDMAP_TX_CH_CFG:
+            case TISCI_MSG_RM_UDMAP_RX_CH_CFG:
+            case TISCI_MSG_RM_PROXY_CFG:
+                memcpy(message, pReqPrm->pReqPayload, pReqPrm->reqPayloadSize);
+                ret = Sciclient_ProcessRmMessage(message);
+                if (pRespPrm->pRespPayload != NULL)
+                {
+                    memcpy(pRespPrm->pRespPayload, message, pRespPrm->respPayloadSize);
+                }
+                hdr = (struct tisci_header *) &message;
+                pRespPrm->flags = hdr->flags;
+
+                if (ret == CSL_PASS)
+                {
+                    ret = Sciclient_serviceSecureProxy(pReqPrm, pRespPrm);
+                }
+
+                break;
+            /* RM messages processed by Secure RM within TIFS on M3 */
             case TISCI_MSG_RM_PSIL_PAIR:
             case TISCI_MSG_RM_PSIL_UNPAIR:
             case TISCI_MSG_RM_PSIL_READ:
