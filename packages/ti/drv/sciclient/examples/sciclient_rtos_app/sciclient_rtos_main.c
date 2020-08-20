@@ -85,9 +85,7 @@
 /*                 Internal Function Declarations                             */
 /* ========================================================================== */
 
-void GetRevisionTest1(UArg arg0, UArg arg1);
-void GetRevisionTest2(UArg arg0, UArg arg1);
-
+void GetClkFreq(UArg arg0, UArg arg1);
 void appReset(void);
 
 /**
@@ -115,63 +113,59 @@ void appReset(void)
 
 int main(void)
 {
-    Task_Handle task1,task2;
-    Task_Params taskParams1,taskParams2;
+    Task_Handle task;
+    Task_Params taskParams;
+    Task_Params_init(&taskParams);
+    taskParams.priority = 15;
     Error_Block eb;
 
     App_SciclientC7xPreInit();
 
     uint32_t    retVal = CSL_PASS;
 
-    Task_Params_init(&taskParams1);
-    Task_Params_init(&taskParams2);
-    taskParams1.priority = 14;
-    taskParams2.priority = 15;
-
     Error_init(&eb);
-    App_sciclientConsoleInit();
     App_sciclientC66xIntrConfig();
 
-    task1 = Task_create(GetRevisionTest1, &taskParams1, &eb);
-    if (task1 == NULL)
+    task = Task_create(GetClkFreq, &taskParams, &eb);
+    if (task == NULL)
     {
-        App_sciclientPrintf("Task_create() GetRevisionTest1 failed!\n");
         BIOS_exit(0);
     }
-
-    task2 = Task_create(GetRevisionTest2, &taskParams2, &eb);
-    if (task2 == NULL)
-    {
-        App_sciclientPrintf("Task_create() GetRevisionTest2 failed!\n");
-        BIOS_exit(0);
-    }
-
     /* Start BIOS */
     BIOS_start();
 
     return retVal;
 }
 
-void GetRevisionTest1(UArg arg0, UArg arg1)
+void GetClkFreq(UArg arg0, UArg arg1)
 {
     int32_t status = CSL_PASS;
     volatile uint32_t loopForever = 1U;
+
+    uint32_t modId = 83; //J721E_DEV_EHRPWM0;
+    uint8_t clkId = 0; //J721E_DEV_EHRPWM0_VBUSP_CLK;
+    uint32_t freqHz;
+
     Sciclient_ConfigPrms_t        config =
     {
         SCICLIENT_SERVICE_OPERATION_MODE_POLLED,
-        NULL
+        NULL,
+        1
     };
-    struct tisci_msg_version_req request;
+
+    struct tisci_msg_get_freq_req request;
+    request.device = (uint32_t) modId;
+    request.clk    = (uint8_t) clkId;
     const Sciclient_ReqPrm_t      reqPrm =
     {
-        TISCI_MSG_VERSION,
+        TISCI_MSG_GET_FREQ,
         TISCI_MSG_FLAG_AOP,
         (uint8_t *) &request,
         sizeof(request),
         SCICLIENT_SERVICE_WAIT_FOREVER
     };
 
-    struct tisci_msg_version_resp response;
+    struct tisci_msg_get_freq_resp response;
     Sciclient_RespPrm_t           respPrm =
     {
         0,
@@ -179,108 +173,23 @@ void GetRevisionTest1(UArg arg0, UArg arg1)
         sizeof (response)
     };
 
-    App_sciclientPrintf("SCIClient RTOS Test App1\n\n");
     status = Sciclient_init(&config);
     if (status == CSL_PASS)
     {
+        App_sciclientConsoleInit();
+        App_sciclientPrintf("SCIClient GetClkFreq\n");
+
         status = Sciclient_service(&reqPrm, &respPrm);
-        if (CSL_PASS == status)
-        {
-            if (respPrm.flags == TISCI_MSG_FLAG_ACK)
-            {
-                status = CSL_PASS;
-                App_sciclientPrintf(
-                                  " DMSC Firmware Version 1 %s\n",
-                                  (char *) response.str);
-                App_sciclientPrintf(
-                                  " Firmware revision 0x%x\n", response.version);
-                App_sciclientPrintf(
-                                  " ABI revision %d.%d\n", response.abi_major,
-                                  response.abi_minor);
-            }
-            else
-            {
-                App_sciclientPrintf(
-                                  " DMSC Firmware Get Version failed \n");
-            }
-        }
-        else
-        {
-            App_sciclientPrintf(
-                              " DMSC Firmware Get Version failed \n");
-        }
-    }
-    if (status == CSL_PASS)
-    {
-        status = Sciclient_deinit();
-    }
-    while (loopForever) {;}
-}
+        freqHz = (uint32_t) (response.freq_hz & 0xFFFFFFFF);
+        UART_printf("Freq = %d MHz\n", freqHz / 1000000);
 
-void GetRevisionTest2(UArg arg0, UArg arg1)
-{
-    int32_t status = CSL_PASS;
-    volatile uint32_t loopForever = 1U;
-    Sciclient_ConfigPrms_t        config =
-    {
-        SCICLIENT_SERVICE_OPERATION_MODE_POLLED,
-        NULL
-    };
-    struct tisci_msg_version_req request;
-    const Sciclient_ReqPrm_t      reqPrm =
-    {
-        TISCI_MSG_VERSION,
-        TISCI_MSG_FLAG_AOP,
-        (uint8_t *) &request,
-        sizeof(request),
-        SCICLIENT_SERVICE_WAIT_FOREVER
-    };
+        request.device = 264; //J721E_DEV_SA2_UL0
+        request.clk = 0; //J721E_DEV_SA2_UL0_X2_CLK
 
-    struct tisci_msg_version_resp response;
-    Sciclient_RespPrm_t           respPrm =
-    {
-        0,
-        (uint8_t *) &response,
-        sizeof (response)
-    };
-
-    App_sciclientPrintf("SCIClient RTOS Test App2\n\n");
-    status = Sciclient_init(&config);
-    if (status == CSL_PASS)
-    {
         status = Sciclient_service(&reqPrm, &respPrm);
-        if (CSL_PASS == status)
-        {
-            if (respPrm.flags == TISCI_MSG_FLAG_ACK)
-            {
-                status = CSL_PASS;
-                App_sciclientPrintf(
-                                  " DMSC Firmware Version 2 %s\n",
-                                  (char *) response.str);
-                App_sciclientPrintf(
-                                  " Firmware revision 0x%x\n", response.version);
-                App_sciclientPrintf(
-                                  " ABI revision %d.%d\n", response.abi_major,
-                                  response.abi_minor);
-                Task_sleep(100);
-            }
-            else
-            {
-                App_sciclientPrintf(
-                                  " DMSC Firmware Get Version failed \n");
-            }
-        }
-        else
-        {
-            App_sciclientPrintf(
-                              " DMSC Firmware Get Version failed \n");
-        }
+        freqHz = (uint32_t) (response.freq_hz & 0xFFFFFFFF);
+        UART_printf("Freq2 = %d MHz\n", freqHz / 1000000);
     }
-    if (status == CSL_PASS)
-    {
-        status = Sciclient_deinit();
-    }
-    while (loopForever) {;}
 }
 
 #if defined(BUILD_MPU) || defined (__C7100__)
