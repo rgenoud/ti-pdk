@@ -48,6 +48,7 @@
 #include <sciserver_secproxyConfigData.h>
 #include <sciserver_secproxyTransfer.h>
 #include <sciserver_hwiData.h>
+#include <ti/drv/uart/UART_stdio.h>
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
@@ -265,6 +266,7 @@ int32_t Sciserver_processtask(Sciserver_taskData *utd)
 
     if (utd->state->state == SCISERVER_TASK_PROCESSING_USER_MSG)
     {
+        UART_printf("processtask: UserProcessMsg\n");
         ret = Sciserver_UserProcessMsg(
                 utd->hw_msg_buffer_list[utd->state->current_buffer_idx],
                 &respMsgSize);
@@ -389,6 +391,7 @@ int32_t Sciserver_ProcessForwardedMessage(uint32_t *msg_recv,
 
     if ((CSL_PASS == ret) && (respPrm.flags == TISCI_MSG_FLAG_ACK))
     {
+        UART_printf("Sciserver_ProcessForwardedMessage: success type=%d\n", hdr->type);
         memcpy(msg_recv, respMsgBuffer, respMsgSize);
 
         /* Must restore the seq field. When forwarded message is processed by
@@ -397,6 +400,7 @@ int32_t Sciserver_ProcessForwardedMessage(uint32_t *msg_recv,
     }
     else
     {
+        UART_printf("Sciserver_ProcessForwardedMessage: failed type=%d\n", hdr->type);
         ret = CSL_EFAIL;
     }
 
@@ -411,6 +415,8 @@ static int32_t Sciserver_UserProcessMsg(uint32_t *msg_recv,
     int32_t isRmMsg = 0, isPmMsg = 0, isFwdMsg = 0;
     int32_t reqMsgSize;
     int32_t respMsgSize;
+
+    UART_printf("hdr->type = %d\n", hdr->type);
 
     switch (hdr->type)
     {
@@ -572,6 +578,13 @@ static int32_t Sciserver_UserProcessMsg(uint32_t *msg_recv,
     {
         extern int32_t Sciclient_ProcessPmMessage(void *tx_msg);
         ret = Sciclient_ProcessPmMessage(msg_recv);
+    }
+
+    if (hdr->type == TISCI_MSG_GET_FREQ)
+    {
+        struct tisci_msg_get_freq_resp *respGetFreq = (struct tisci_msg_get_freq_resp *) msg_recv;
+        uint32_t freq = respGetFreq->freq_hz & 0xFFFFFFFF;
+        UART_printf("GET_FREQ = %d MHz\n", freq/1000000);
     }
 
     *pRespMsgSize = respMsgSize;

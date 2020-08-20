@@ -64,8 +64,6 @@ static uint32_t user_lo_msg_buffer[SCISERVER_HW_QUEUE_SIZE];
 static uint32_t user_hi_main_msg_buffer[SCISERVER_HW_QUEUE_SIZE];
 #pragma DATA_SECTION(user_lo_main_msg_buffer,".data_user");
 static uint32_t user_lo_main_msg_buffer[SCISERVER_HW_QUEUE_SIZE];
-#pragma DATA_SECTION(dmsc2dm_msg_buffer,".data_user");
-static uint32_t dmsc2dm_msg_buffer[SCISERVER_HW_QUEUE_SIZE];
 
 #pragma DATA_SECTION(user_hi_msg_state,".data_user");
 static Sciserver_taskState user_hi_msg_state;
@@ -80,8 +78,6 @@ static Sciserver_msgData user_lo_msg_data;
 static Sciserver_msgData user_hi_main_msg_data;
 #pragma DATA_SECTION(user_lo_main_msg_data,".data_user");
 static Sciserver_msgData user_lo_main_msg_data;
-#pragma DATA_SECTION(dmsc2dm_msg_data,".data_user");
-static Sciserver_msgData dmsc2dm_msg_data;
 
 /* Task stack memory regions */
 #pragma DATA_SECTION(user_hi_task_stack,".data_user");
@@ -150,16 +146,6 @@ static const Sciserver_hwiData sciserver_hwi_list[] = {
         .semaphore_id = SCISERVER_SEMAPHORE_USER_LO,
         .user_msg_data = &user_lo_main_msg_data,
     },
-    /* DMSC2DM */
-    {
-        .irq_num =
-            CSLR_MCU_R5FSS0_CORE0_INTR_MCU_NAVSS0_INTR_ROUTER_0_OUTL_INTR_4,
-        .hw_msg_queue_id =
-            J721E_MCU_NAVSS0_SEC_PROXY0_RX_DMSC2DM_RESPONSE_THR026_CONF065,
-        .hw_msg_buffer = dmsc2dm_msg_buffer,
-        .semaphore_id = SCISERVER_SEMAPHORE_USER_DM,
-        .user_msg_data = &dmsc2dm_msg_data,
-    }
 };
 
 static const Sciserver_taskData gSciserverTaskList[SCISERVER_TASK_MAX_CNT] = {

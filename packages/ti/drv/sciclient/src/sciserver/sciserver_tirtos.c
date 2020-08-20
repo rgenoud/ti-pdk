@@ -66,6 +66,8 @@
 
 #include <sciserver_hwiData.h>
 #include "sciserver_secproxyTransfer.h"
+#include <ti/drv/uart/UART_stdio.h>
+#include <ti/drv/sciclient/examples/common/sciclient_appCommon.h>
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
@@ -128,6 +130,12 @@ int32_t Sciserver_tirtosInit(Sciserver_TirtosCfgPrms_t *pAppPrms)
         ret = Sciserver_init(&prms);
     }
 
+    /* Enable UART console print*/
+    if (ret == CSL_PASS)
+    {
+        App_sciclientConsoleInit();
+    }
+
     /* Create a semaphore for the Sciserver Task */
     if (ret == CSL_PASS)
     {
@@ -163,6 +171,7 @@ void Sciserver_tirtosUserMsgHwiFxn(uintptr_t arg)
     bool soft_error = false;
 
     Osal_DisableInterrupt(0, (int32_t) uhd->irq_num);
+    UART_printf("userMsgHwiFxn: IRQ = %d\n", uhd->irq_num);
 
     ret = Sciserver_interruptHandler(uhd, &soft_error);
 
@@ -222,6 +231,8 @@ void Sciserver_tirtosUserMsgTask(uintptr_t arg0, uintptr_t arg1)
     {
         SemaphoreP_pend(gSciserverUserSemHandles[utd->semaphore_id],
                         SemaphoreP_WAIT_FOREVER);
+
+        UART_printf("userMsgTask: sem = %d\n", utd->semaphore_id);
 
         ret = Sciserver_processtask (utd);
 
@@ -283,6 +294,7 @@ static int32_t Sciserver_tirtosInitHwis(void)
             gSciserverHwiHandles[i] = NULL_PTR;
             break;
         } else {
+            UART_printf("initHwis: register IRQ %d\n", sciserver_hwi_list[i].irq_num);
             Osal_EnableInterrupt(intrPrms.corepacConfig.corepacEventNum,
                                  intrPrms.corepacConfig.intVecNum);
         }
