@@ -82,7 +82,7 @@ static void Sciserver_TisciMsgClearFlags(struct tisci_header *hdr);
 static int32_t Sciserver_TisciMsgResponse(uint8_t   response_host,
                                    uint32_t  *response,
                                    uint32_t  size);
-
+static void Sciserver_SetMsgHostId(uint32_t *msg, uint8_t hostId);
 /* ========================================================================== */
 /*                            Global Variables                                */
 /* ========================================================================== */
@@ -281,16 +281,22 @@ int32_t Sciserver_processtask(Sciserver_taskData *utd)
     if (ret == CSL_PASS)
     {
         Sciclient_TisciMsgSetAckResp(respMsgHeader);
-        respHost = utd->user_msg_data[utd->state->current_buffer_idx]->host;
-        ret = Sciserver_TisciMsgResponse(respHost, respMsg, respMsgSize);
     }
     else if ((respMsgHeader->flags & TISCI_MSG_FLAG_AOP) != 0)
     {
         Sciserver_TisciMsgClearFlags(respMsgHeader);
         Sciclient_TisciMsgSetNakResp(respMsgHeader);
-        respHost = utd->user_msg_data[utd->state->current_buffer_idx]->host;
-        ret = Sciserver_TisciMsgResponse(respHost, respMsg, respMsgSize);
     }
+
+    respHost = utd->user_msg_data[utd->state->current_buffer_idx]->host;
+    if (respHost == TISCI_HOST_ID_DMSC2DM)
+    {
+        /* DMSC2DM is processed by DM. Need to update response message value
+         * so the host verification on TIFS can succeed */
+        Sciserver_SetMsgHostId(respMsg, TISCI_HOST_ID_DM);
+    }
+
+    ret = Sciserver_TisciMsgResponse(respHost, respMsg, respMsgSize);
 
     if (ret == CSL_PASS)
     {
@@ -358,6 +364,12 @@ static int32_t Sciserver_TisciMsgResponse(uint8_t   response_host,
     }
 
     return ret;
+}
+
+static void Sciserver_SetMsgHostId(uint32_t *msg, uint8_t hostId)
+{
+    struct tisci_header *hdr = (struct tisci_header *) msg;
+    hdr->host = hostId;
 }
 
 int32_t Sciserver_ProcessForwardedMessage(uint32_t *msg_recv,
