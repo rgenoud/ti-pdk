@@ -221,6 +221,38 @@ static int32_t board_config_pm_handler(uint32_t *msg_recv)
     return ret;
 }
 
+static int32_t Sciclient_pmSetMsgProxy(u32 *msg_recv, u32 procId)
+{
+    int32_t ret = CSL_PASS;
+    /* Special device handling when performing the LPSC config for
+     * MCU R5.
+     */
+    struct tisci_msg_set_device_req *req =
+        (struct tisci_msg_set_device_req *) msg_recv;
+    u8 state = req->state;
+    
+    switch (state) {
+        case TISCI_MSG_VALUE_DEVICE_SW_STATE_AUTO_OFF:
+            Sciclient_procBootSetSequenceCtrl(procId,
+                                              0, 
+                                              TISCI_MSG_VAL_PROC_BOOT_CTRL_FLAG_R5_LPSC,
+                                              0,
+                                              SCICLIENT_SERVICE_WAIT_FOREVER);
+            break;
+        case TISCI_MSG_VALUE_DEVICE_SW_STATE_ON:
+            Sciclient_procBootSetSequenceCtrl(procId, 
+                                              TISCI_MSG_VAL_PROC_BOOT_CTRL_FLAG_R5_LPSC,
+                                              0,
+                                              0,
+                                              SCICLIENT_SERVICE_WAIT_FOREVER);
+            break;
+        default:
+            ret = -EINVAL;
+            break;
+    }
+    return ret;
+}
+
 int32_t Sciclient_ProcessPmMessage (void *tx_msg)
 {
     int32_t ret = CSL_PASS;
@@ -248,7 +280,25 @@ int32_t Sciclient_ProcessPmMessage (void *tx_msg)
         case TISCI_MSG_GET_FREQ                :
             ret = get_freq_handler((uint32_t*)tx_msg); break;
         case TISCI_MSG_SET_DEVICE              :
-            ret = set_device_handler((uint32_t*)tx_msg); break;
+            {
+                struct tisci_msg_set_device_req *req =
+                    (struct tisci_msg_set_device_req *) tx_msg;
+                u32 id = req->id;
+                switch (id)
+                {
+                    case SCICLIENT_DEV_MCU_R5FSS0_CORE0:
+                        ret = Sciclient_pmSetMsgProxy((uint32_t*)tx_msg,
+                                SCICLIENT_DEV_MCU_R5FSS0_CORE0_PROCID);
+                    break;
+                    case SCICLIENT_DEV_MCU_R5FSS0_CORE1:
+                        ret = Sciclient_pmSetMsgProxy((uint32_t*)tx_msg,
+                                SCICLIENT_DEV_MCU_R5FSS0_CORE1_PROCID);
+                    break;
+                    default: 
+                        ret = set_device_handler((uint32_t*)tx_msg);
+                }
+            }
+            break;
         case TISCI_MSG_GET_DEVICE              :
             ret = get_device_handler((uint32_t*)tx_msg); break;
         case TISCI_MSG_SET_DEVICE_RESETS       :

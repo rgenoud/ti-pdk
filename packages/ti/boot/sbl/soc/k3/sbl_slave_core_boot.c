@@ -265,7 +265,7 @@ static void SBL_RequestAllCores(void)
     return;
 }
 
-static void SBL_ReleaseCore(cpu_core_id_t core_id)
+static void SBL_ReleaseCore (cpu_core_id_t core_id, uint32_t reqFlag)
 {
 #if !defined(SBL_SKIP_BRD_CFG_BOARD) && !defined(SBL_SKIP_SYSFW_INIT)
     int32_t proc_id = sbl_slave_core_info[core_id].tisci_proc_id;
@@ -284,7 +284,7 @@ static void SBL_ReleaseCore(cpu_core_id_t core_id)
     if(proc_id != 0xBAD00000)
     {
         SBL_log(SBL_LOG_MAX, "Sciclient_procBootReleaseProcessor, ProcId 0x%x...\n", proc_id);
-        status = Sciclient_procBootReleaseProcessor(proc_id, TISCI_MSG_FLAG_AOP, SCICLIENT_SERVICE_WAIT_FOREVER);
+        status = Sciclient_procBootReleaseProcessor(proc_id, reqFlag, SCICLIENT_SERVICE_WAIT_FOREVER);
 
         if (status != CSL_PASS)
         {
@@ -307,7 +307,7 @@ static void SBL_ReleaseAllCores(void)
 
     for (core_id = 0; core_id < num_cores; core_id++)
     {
-        SBL_ReleaseCore(core_id);
+        SBL_ReleaseCore(core_id, TISCI_MSG_FLAG_AOP);
     }
 
     SBL_ADD_PROFILE_POINT;
@@ -804,14 +804,14 @@ void SBL_SlaveCoreBoot(cpu_core_id_t core_id, uint32_t freqHz, sblEntryPoint_t *
             /* Release the CPU and branch to app */
             if (requestCoresFlag == SBL_REQUEST_CORE)
             {
-                SBL_ReleaseCore(core_id);
+                SBL_ReleaseCore(core_id, TISCI_MSG_FLAG_AOP);
             }
 
             SBL_log(SBL_LOG_MAX, "Starting app, branching to 0x0 \n");
             /* Branch to start of ATCM */
             ((void(*)(void))0x0)();
 #else
-	    /* Request MCU1_0 */
+            /* Request MCU1_0 */
             if (requestCoresFlag == SBL_REQUEST_CORE)
             {
                 SBL_RequestCore(core_id - 1);
@@ -836,13 +836,6 @@ void SBL_SlaveCoreBoot(cpu_core_id_t core_id, uint32_t freqHz, sblEntryPoint_t *
                 Sciclient_procBootSetSequenceCtrl(SBL_PROC_ID_MCU1_CPU1, 0, TISCI_MSG_VAL_PROC_BOOT_CTRL_FLAG_R5_CORE_HALT, 0, SCICLIENT_SERVICE_WAIT_FOREVER);
             }
 
-            /* Notifying SYSFW that the SBL is relinquishing the MCU cluster running the SBL */
-            if (requestCoresFlag == SBL_REQUEST_CORE)
-            {
-                Sciclient_procBootReleaseProcessor(SBL_PROC_ID_MCU1_CPU0, 0, SCICLIENT_SERVICE_WAIT_FOREVER);
-                Sciclient_procBootReleaseProcessor(SBL_PROC_ID_MCU1_CPU1, 0, SCICLIENT_SERVICE_WAIT_FOREVER);
-            }
-
             /* Power up cores as needed */
 #if defined(SOC_AM64X) || defined(SOC_J7200)
             /* AM64X & J7200 have a different Power on sequence than other K3 SOCs.
@@ -858,7 +851,7 @@ void SBL_SlaveCoreBoot(cpu_core_id_t core_id, uint32_t freqHz, sblEntryPoint_t *
             {
                 /* Multicore image has valid images for core 0 and no image for core 1 */ 
                 Sciclient_pmSetModuleState(SBL_DEV_ID_MCU1_CPU0, TISCI_MSG_VALUE_DEVICE_SW_STATE_ON, 0, SCICLIENT_SERVICE_WAIT_FOREVER);
-            }	
+            }        
 #else
             Sciclient_pmSetModuleState(SBL_DEV_ID_MCU1_CPU0, TISCI_MSG_VALUE_DEVICE_SW_STATE_ON, 0, SCICLIENT_SERVICE_WAIT_FOREVER);
             if (pAppEntry->CpuEntryPoint[core_id] <  SBL_INVALID_ENTRY_ADDR)
@@ -867,7 +860,13 @@ void SBL_SlaveCoreBoot(cpu_core_id_t core_id, uint32_t freqHz, sblEntryPoint_t *
                 Sciclient_pmSetModuleState(SBL_DEV_ID_MCU1_CPU1, TISCI_MSG_VALUE_DEVICE_SW_STATE_ON, 0, SCICLIENT_SERVICE_WAIT_FOREVER);
             }
 #endif
-            
+            /* Notifying SYSFW that the SBL is relinquishing the MCU cluster running the SBL */
+            /* This is done at the end as the PM set module state relies on the fact the SBL is the owner of MCU1_0 and MCU1_1 */
+            if (requestCoresFlag == SBL_REQUEST_CORE)
+            {
+                Sciclient_procBootReleaseProcessor(SBL_PROC_ID_MCU1_CPU0, 0, SCICLIENT_SERVICE_WAIT_FOREVER);
+                Sciclient_procBootReleaseProcessor(SBL_PROC_ID_MCU1_CPU1, 0, SCICLIENT_SERVICE_WAIT_FOREVER);
+            }
             /* Execute a WFI */
             asm volatile ("    wfi");
 #endif
@@ -907,7 +906,7 @@ void SBL_SlaveCoreBoot(cpu_core_id_t core_id, uint32_t freqHz, sblEntryPoint_t *
             /* Release core */
             if (requestCoresFlag == SBL_REQUEST_CORE)
             {
-                SBL_ReleaseCore(core_id);
+                SBL_ReleaseCore(core_id, TISCI_MSG_FLAG_AOP);
             }
 
             SBL_ADD_PROFILE_POINT;
@@ -924,7 +923,7 @@ void SBL_SlaveCoreBoot(cpu_core_id_t core_id, uint32_t freqHz, sblEntryPoint_t *
             /* Release core */
             if (requestCoresFlag == SBL_REQUEST_CORE)
             {
-                SBL_ReleaseCore(core_id);
+                SBL_ReleaseCore(core_id, TISCI_MSG_FLAG_AOP);
             }
 
             SBL_ADD_PROFILE_POINT;
@@ -938,7 +937,7 @@ void SBL_SlaveCoreBoot(cpu_core_id_t core_id, uint32_t freqHz, sblEntryPoint_t *
             /* Release core */
             if (requestCoresFlag == SBL_REQUEST_CORE)
             {
-                SBL_ReleaseCore(core_id);
+                SBL_ReleaseCore(core_id, TISCI_MSG_FLAG_AOP);
             }
 
             SBL_ADD_PROFILE_POINT;

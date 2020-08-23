@@ -95,7 +95,12 @@ int main(void)
 
     if (ret == CSL_PASS)
     {
+        App_sciclientPrintf("Starting Sciserver..... PASSED\n");
         BIOS_start();
+    }
+    else
+    {
+        App_sciclientPrintf("Starting Sciserver..... FAILED\n");
     }
     return ret;
 }

@@ -103,6 +103,8 @@ void SBL_SciClientInit(void)
     Sciclient_ConfigPrms_t        config =
     {
         SCICLIENT_SERVICE_OPERATION_MODE_POLLED,
+        NULL,
+        1
     };
 #endif
 
