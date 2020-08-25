@@ -429,6 +429,7 @@ static int32_t Sciserver_UserProcessMsg(uint32_t *msg_recv,
     int32_t respMsgSize;
 
     UART_printf("hdr->type = %d\n", hdr->type);
+    UART_printf("hdr->host = %d\n", hdr->host);
 
     switch (hdr->type)
     {
@@ -571,6 +572,23 @@ static int32_t Sciserver_UserProcessMsg(uint32_t *msg_recv,
             isPmMsg = 0;
             isPmMsg = 0;
             respMsgSize = sizeof(struct tisci_header);
+            break;
+    }
+
+    switch (hdr->type)
+    {
+        case TISCI_MSG_RM_IRQ_SET:
+        case TISCI_MSG_RM_RING_CFG:
+        case TISCI_MSG_RM_RING_MON_CFG:
+        case TISCI_MSG_RM_UDMAP_TX_CH_CFG:
+        case TISCI_MSG_RM_UDMAP_RX_CH_CFG:
+        case TISCI_MSG_RM_PROXY_CFG:
+            if (hdr->host == TISCI_HOST_ID_DMSC2DM)
+            {
+                UART_printf("Skip forward: type = %d\n", hdr->type);
+                isFwdMsg = 0;
+                isRmMsg = 1;
+            }
             break;
     }
 
