@@ -60,7 +60,6 @@ typedef struct SemaphoreP_Struct_s {
 SemaphoreP_Handle SemaphoreP_create(uint32_t count,
                                     const SemaphoreP_Params *params)
 {
-    struct timespec ts;
     char sem_name[128];
     SemaphoreP_Struct *handle = NULL;
 
@@ -73,8 +72,7 @@ SemaphoreP_Handle SemaphoreP_create(uint32_t count,
         if(params->name == NULL)
         {
            static int counter = 0;
-           clock_gettime(CLOCK_REALTIME, &ts);
-           sprintf(sem_name,"qnx_sem_%ld_%ld_%d", (long int)getpid(), ts.tv_nsec, counter++);
+           sprintf(sem_name,"qnx_sem_%ld_%ld_%d", (long int)getpid(), (long int)gettid(), counter++);
         }
         else
         {
@@ -161,7 +159,7 @@ SemaphoreP_Status SemaphoreP_pend(SemaphoreP_Handle handle, uint32_t timeout)
         {
             ret = pthread_mutex_lock((pthread_mutex_t *)int_handle->type.mutex_handle);
         }
-    } 
+    }
     else
     {
         clock_gettime(CLOCK_REALTIME, &ts);
