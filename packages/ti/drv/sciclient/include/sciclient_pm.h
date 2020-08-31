@@ -155,6 +155,11 @@ int32_t Sciclient_pmGetModuleState(uint32_t  moduleId,
 int32_t Sciclient_pmSetModuleRst(uint32_t moduleId,
                                  uint32_t resetBit,
                                  uint32_t timeout);
+
+int32_t Sciclient_pmSetModuleRst_flags(uint32_t moduleId,
+                                       uint32_t resetBit,
+                                       uint32_t reqFlag,
+                                       uint32_t timeout);
 /**
  *  \brief    Message to set the clock state:
  *  This requests for finer control of hardware device's clocks. This allows
