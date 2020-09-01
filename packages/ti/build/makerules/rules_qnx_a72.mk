@@ -42,10 +42,10 @@
 
 # Set compiler/archiver/linker commands and include paths
 CODEGEN_INCLUDE = $(TOOLCHAIN_PATH_QNX_A72)/arm-none-eabi/include
-CC = $(TOOLCHAIN_PATH_QNX_A72)/aarch64-unknown-nto-qnx7.0.0-gcc
-AR = $(TOOLCHAIN_PATH_QNX_A72)/aarch64-unknown-nto-qnx7.0.0-ar
-LNK = $(TOOLCHAIN_PATH_QNX_A72)/aarch64-unknown-nto-qnx7.0.0-gcc
-SIZE = $(TOOLCHAIN_PATH_QNX_A72)/aarch64-unknown-nto-qnx7.0.0-size
+CC = $(TOOLCHAIN_PATH_QNX_A72)/$(QNX_CROSS_COMPILER_TOOL)gcc
+AR = $(TOOLCHAIN_PATH_QNX_A72)/$(QNX_CROSS_COMPILER_TOOL)ar
+LNK = $(TOOLCHAIN_PATH_QNX_A72)/$(QNX_CROSS_COMPILER_TOOL)gcc
+SIZE = $(TOOLCHAIN_PATH_QNX_A72)/$(QNX_CROSS_COMPILER_TOOL)size
 
 # Derive a part of RTS Library name based on ENDIAN: little/big
 ifeq ($(ENDIAN),little)
