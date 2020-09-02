@@ -40,11 +40,14 @@ MEMORY
         RESET_VECTORS (X)                          : origin=0x41C00100 length=0x100
 
     /* MCU0 memory used for SBL. Available to app for dynamic use ~160KB */
-    /* RBL uses 0x41C58000 and beyond. SBL, at load cannot cross this */
-    OCMRAM_SBL    (RWIX)   : origin=0x41C00200 length=0x41000-0x200
+    /* RBL uses 0x41CC0000 and beyond. SBL, at load cannot cross this */
+    OCMRAM_SBL    (RWIX)   : origin=0x41C00200 length=0x80000-0x200
 
     /* Used by SBL at runtime to load SYSFW. Available to app for dynamic use */
-    OCMRAM_SBL_SYSFW (RWIX)   : origin=0x41C41000 length=0x40000
+    OCMRAM_SBL_SYSFW (RWIX)   : origin=0x41C80000 length=0x40000
+
+    /* This is the maximum required by custom boot app. Do not use. */
+    OCMRAM_SBL_RESERVED_CUST_BOOT (RWIX)   : origin=0x41CC0000 length=0x40000
 
 }  /* end of MEMORY */
 
