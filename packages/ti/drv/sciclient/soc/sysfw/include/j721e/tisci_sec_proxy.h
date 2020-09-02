@@ -56,191 +56,6 @@
 #define J721E_TISCI_SEC_PROXY_H
 
 /*
- * Secure Proxy configurations for DM host
- */
-#if 0
-/** Thread ID macro for DM nonsec_high_priority_rx */
-#define TISCI_SEC_PROXY_DM_READ_NONSEC_HIGH_PRIORITY_RX_THREAD_ID (138U)
-/** Num messages macro for DM nonsec_high_priority_rx */
-#define TISCI_SEC_PROXY_DM_READ_NONSEC_HIGH_PRIORITY_RX_NUM_MESSAGES (22U)
-
-/** Thread ID macro for DM nonsec_low_priority_rx */
-#define TISCI_SEC_PROXY_DM_READ_NONSEC_LOW_PRIORITY_RX_THREAD_ID (137U)
-/** Num messages macro for DM nonsec_low_priority_rx */
-#define TISCI_SEC_PROXY_DM_READ_NONSEC_LOW_PRIORITY_RX_NUM_MESSAGES (67U)
-
-/** Thread ID macro for DM nonsec_notify_resp_rx */
-#define TISCI_SEC_PROXY_DM_READ_NONSEC_NOTIFY_RESP_RX_THREAD_ID (136U)
-/** Num messages macro for DM nonsec_notify_resp_rx */
-#define TISCI_SEC_PROXY_DM_READ_NONSEC_NOTIFY_RESP_RX_NUM_MESSAGES (22U)
-#endif
-
-/** Thread ID macro for DM nonsec_high_priority_rx */
-#define TISCI_SEC_PROXY_DM_READ_NONSEC_HIGH_PRIORITY_RX_THREAD_ID (80U)
-/** Num messages macro for DM nonsec_high_priority_rx */
-#define TISCI_SEC_PROXY_DM_READ_NONSEC_HIGH_PRIORITY_RX_NUM_MESSAGES (5U)
-
-/** Thread ID macro for DM nonsec_low_priority_rx */
-#define TISCI_SEC_PROXY_DM_READ_NONSEC_LOW_PRIORITY_RX_THREAD_ID (79U)
-/** Num messages macro for DM nonsec_low_priority_rx */
-#define TISCI_SEC_PROXY_DM_READ_NONSEC_LOW_PRIORITY_RX_NUM_MESSAGES (8U)
-
-/** Thread ID macro for DM nonsec_notify_resp_rx */
-#define TISCI_SEC_PROXY_DM_READ_NONSEC_NOTIFY_RESP_RX_THREAD_ID (78U)
-/** Num messages macro for DM nonsec_notify_resp_rx */
-#define TISCI_SEC_PROXY_DM_READ_NONSEC_NOTIFY_RESP_RX_NUM_MESSAGES (5U)
-
-/** Thread ID macro for DM nonsec_A72_2_notify_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_A72_2_NOTIFY_TX_THREAD_ID (135U)
-/** Num messages macro for DM nonsec_A72_2_notify_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_A72_2_NOTIFY_TX_NUM_MESSAGES (2U)
-
-/** Thread ID macro for DM nonsec_A72_2_response_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_A72_2_RESPONSE_TX_THREAD_ID (134U)
-/** Num messages macro for DM nonsec_A72_2_response_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_A72_2_RESPONSE_TX_NUM_MESSAGES (22U)
-
-/** Thread ID macro for DM nonsec_A72_3_notify_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_A72_3_NOTIFY_TX_THREAD_ID (133U)
-/** Num messages macro for DM nonsec_A72_3_notify_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_A72_3_NOTIFY_TX_NUM_MESSAGES (2U)
-
-/** Thread ID macro for DM nonsec_A72_3_response_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_A72_3_RESPONSE_TX_THREAD_ID (132U)
-/** Num messages macro for DM nonsec_A72_3_response_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_A72_3_RESPONSE_TX_NUM_MESSAGES (7U)
-
-/** Thread ID macro for DM nonsec_A72_4_notify_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_A72_4_NOTIFY_TX_THREAD_ID (131U)
-/** Num messages macro for DM nonsec_A72_4_notify_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_A72_4_NOTIFY_TX_NUM_MESSAGES (2U)
-
-/** Thread ID macro for DM nonsec_A72_4_response_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_A72_4_RESPONSE_TX_THREAD_ID (130U)
-/** Num messages macro for DM nonsec_A72_4_response_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_A72_4_RESPONSE_TX_NUM_MESSAGES (7U)
-
-/** Thread ID macro for DM nonsec_C7X_1_notify_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_C7X_1_NOTIFY_TX_THREAD_ID (129U)
-/** Num messages macro for DM nonsec_C7X_1_notify_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_C7X_1_NOTIFY_TX_NUM_MESSAGES (2U)
-
-/** Thread ID macro for DM nonsec_C7X_1_response_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_C7X_1_RESPONSE_TX_THREAD_ID (128U)
-/** Num messages macro for DM nonsec_C7X_1_response_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_C7X_1_RESPONSE_TX_NUM_MESSAGES (7U)
-
-/** Thread ID macro for DM nonsec_C6X_0_1_notify_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_C6X_0_1_NOTIFY_TX_THREAD_ID (127U)
-/** Num messages macro for DM nonsec_C6X_0_1_notify_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_C6X_0_1_NOTIFY_TX_NUM_MESSAGES (2U)
-
-/** Thread ID macro for DM nonsec_C6X_0_1_response_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_C6X_0_1_RESPONSE_TX_THREAD_ID (126U)
-/** Num messages macro for DM nonsec_C6X_0_1_response_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_C6X_0_1_RESPONSE_TX_NUM_MESSAGES (7U)
-
-/** Thread ID macro for DM nonsec_C6X_1_1_notify_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_C6X_1_1_NOTIFY_TX_THREAD_ID (125U)
-/** Num messages macro for DM nonsec_C6X_1_1_notify_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_C6X_1_1_NOTIFY_TX_NUM_MESSAGES (2U)
-
-/** Thread ID macro for DM nonsec_C6X_1_1_response_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_C6X_1_1_RESPONSE_TX_THREAD_ID (124U)
-/** Num messages macro for DM nonsec_C6X_1_1_response_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_C6X_1_1_RESPONSE_TX_NUM_MESSAGES (7U)
-
-/** Thread ID macro for DM nonsec_GPU_0_notify_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_GPU_0_NOTIFY_TX_THREAD_ID (123U)
-/** Num messages macro for DM nonsec_GPU_0_notify_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_GPU_0_NOTIFY_TX_NUM_MESSAGES (2U)
-
-/** Thread ID macro for DM nonsec_GPU_0_response_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_GPU_0_RESPONSE_TX_THREAD_ID (122U)
-/** Num messages macro for DM nonsec_GPU_0_response_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_GPU_0_RESPONSE_TX_NUM_MESSAGES (7U)
-
-/** Thread ID macro for DM nonsec_MAIN_0_R5_0_notify_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_MAIN_0_R5_0_NOTIFY_TX_THREAD_ID (121U)
-/** Num messages macro for DM nonsec_MAIN_0_R5_0_notify_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_MAIN_0_R5_0_NOTIFY_TX_NUM_MESSAGES (2U)
-
-/** Thread ID macro for DM nonsec_MAIN_0_R5_0_response_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_MAIN_0_R5_0_RESPONSE_TX_THREAD_ID (120U)
-/** Num messages macro for DM nonsec_MAIN_0_R5_0_response_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_MAIN_0_R5_0_RESPONSE_TX_NUM_MESSAGES (7U)
-
-/** Thread ID macro for DM nonsec_MAIN_0_R5_2_notify_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_MAIN_0_R5_2_NOTIFY_TX_THREAD_ID (119U)
-/** Num messages macro for DM nonsec_MAIN_0_R5_2_notify_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_MAIN_0_R5_2_NOTIFY_TX_NUM_MESSAGES (1U)
-
-/** Thread ID macro for DM nonsec_MAIN_0_R5_2_response_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_MAIN_0_R5_2_RESPONSE_TX_THREAD_ID (118U)
-/** Num messages macro for DM nonsec_MAIN_0_R5_2_response_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_MAIN_0_R5_2_RESPONSE_TX_NUM_MESSAGES (2U)
-
-/** Thread ID macro for DM nonsec_MAIN_1_R5_0_notify_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_MAIN_1_R5_0_NOTIFY_TX_THREAD_ID (117U)
-/** Num messages macro for DM nonsec_MAIN_1_R5_0_notify_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_MAIN_1_R5_0_NOTIFY_TX_NUM_MESSAGES (2U)
-
-/** Thread ID macro for DM nonsec_MAIN_1_R5_0_response_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_MAIN_1_R5_0_RESPONSE_TX_THREAD_ID (116U)
-/** Num messages macro for DM nonsec_MAIN_1_R5_0_response_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_MAIN_1_R5_0_RESPONSE_TX_NUM_MESSAGES (7U)
-
-/** Thread ID macro for DM nonsec_MAIN_1_R5_2_notify_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_MAIN_1_R5_2_NOTIFY_TX_THREAD_ID (115U)
-/** Num messages macro for DM nonsec_MAIN_1_R5_2_notify_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_MAIN_1_R5_2_NOTIFY_TX_NUM_MESSAGES (1U)
-
-/** Thread ID macro for DM nonsec_MAIN_1_R5_2_response_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_MAIN_1_R5_2_RESPONSE_TX_THREAD_ID (114U)
-/** Num messages macro for DM nonsec_MAIN_1_R5_2_response_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_MAIN_1_R5_2_RESPONSE_TX_NUM_MESSAGES (2U)
-
-/** Thread ID macro for DM nonsec_ICSSG_0_notify_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_ICSSG_0_NOTIFY_TX_THREAD_ID (113U)
-/** Num messages macro for DM nonsec_ICSSG_0_notify_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_ICSSG_0_NOTIFY_TX_NUM_MESSAGES (2U)
-
-/** Thread ID macro for DM nonsec_ICSSG_0_response_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_ICSSG_0_RESPONSE_TX_THREAD_ID (112U)
-/** Num messages macro for DM nonsec_ICSSG_0_response_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_ICSSG_0_RESPONSE_TX_NUM_MESSAGES (7U)
-
-/** Thread ID macro for DM nonsec_MCU_0_R5_0_notify_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_MCU_0_R5_0_NOTIFY_TX_THREAD_ID (77U)
-/** Num messages macro for DM nonsec_MCU_0_R5_0_notify_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_MCU_0_R5_0_NOTIFY_TX_NUM_MESSAGES (2U)
-
-/** Thread ID macro for DM nonsec_MCU_0_R5_0_response_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_MCU_0_R5_0_RESPONSE_TX_THREAD_ID (76U)
-/** Num messages macro for DM nonsec_MCU_0_R5_0_response_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_MCU_0_R5_0_RESPONSE_TX_NUM_MESSAGES (7U)
-
-/** Thread ID macro for DM nonsec_MCU_0_R5_2_notify_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_MCU_0_R5_2_NOTIFY_TX_THREAD_ID (75U)
-/** Num messages macro for DM nonsec_MCU_0_R5_2_notify_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_MCU_0_R5_2_NOTIFY_TX_NUM_MESSAGES (1U)
-
-/** Thread ID macro for DM nonsec_MCU_0_R5_2_response_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_MCU_0_R5_2_RESPONSE_TX_THREAD_ID (74U)
-/** Num messages macro for DM nonsec_MCU_0_R5_2_response_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_MCU_0_R5_2_RESPONSE_TX_NUM_MESSAGES (2U)
-
-/** Thread ID macro for DM nonsec_DMSC2DM_notify_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_DMSC2DM_NOTIFY_TX_THREAD_ID (73U)
-/** Num messages macro for DM nonsec_DMSC2DM_notify_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_DMSC2DM_NOTIFY_TX_NUM_MESSAGES (2U)
-
-/** Thread ID macro for DM nonsec_DMSC2DM_response_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_DMSC2DM_RESPONSE_TX_THREAD_ID (72U)
-/** Num messages macro for DM nonsec_DMSC2DM_response_tx */
-#define TISCI_SEC_PROXY_DM_WRITE_NONSEC_DMSC2DM_RESPONSE_TX_NUM_MESSAGES (4U)
-
-/*
  * Secure Proxy configurations for MCU_0_R5_0 host
  */
 
@@ -252,17 +67,17 @@
 /** Thread ID macro for MCU_0_R5_0 response */
 #define TISCI_SEC_PROXY_MCU_0_R5_0_READ_RESPONSE_THREAD_ID (1U)
 /** Num messages macro for MCU_0_R5_0 response */
-#define TISCI_SEC_PROXY_MCU_0_R5_0_READ_RESPONSE_NUM_MESSAGES (7U)
+#define TISCI_SEC_PROXY_MCU_0_R5_0_READ_RESPONSE_NUM_MESSAGES (20U)
 
 /** Thread ID macro for MCU_0_R5_0 high_priority */
 #define TISCI_SEC_PROXY_MCU_0_R5_0_WRITE_HIGH_PRIORITY_THREAD_ID (2U)
 /** Num messages macro for MCU_0_R5_0 high_priority */
-#define TISCI_SEC_PROXY_MCU_0_R5_0_WRITE_HIGH_PRIORITY_NUM_MESSAGES (2U)
+#define TISCI_SEC_PROXY_MCU_0_R5_0_WRITE_HIGH_PRIORITY_NUM_MESSAGES (10U)
 
 /** Thread ID macro for MCU_0_R5_0 low_priority */
 #define TISCI_SEC_PROXY_MCU_0_R5_0_WRITE_LOW_PRIORITY_THREAD_ID (3U)
 /** Num messages macro for MCU_0_R5_0 low_priority */
-#define TISCI_SEC_PROXY_MCU_0_R5_0_WRITE_LOW_PRIORITY_NUM_MESSAGES (5U)
+#define TISCI_SEC_PROXY_MCU_0_R5_0_WRITE_LOW_PRIORITY_NUM_MESSAGES (10U)
 
 /** Thread ID macro for MCU_0_R5_0 notify_resp */
 #define TISCI_SEC_PROXY_MCU_0_R5_0_WRITE_NOTIFY_RESP_THREAD_ID (4U)
@@ -281,17 +96,17 @@
 /** Thread ID macro for MCU_0_R5_1 response */
 #define TISCI_SEC_PROXY_MCU_0_R5_1_READ_RESPONSE_THREAD_ID (6U)
 /** Num messages macro for MCU_0_R5_1 response */
-#define TISCI_SEC_PROXY_MCU_0_R5_1_READ_RESPONSE_NUM_MESSAGES (7U)
+#define TISCI_SEC_PROXY_MCU_0_R5_1_READ_RESPONSE_NUM_MESSAGES (20U)
 
 /** Thread ID macro for MCU_0_R5_1 high_priority */
 #define TISCI_SEC_PROXY_MCU_0_R5_1_WRITE_HIGH_PRIORITY_THREAD_ID (7U)
 /** Num messages macro for MCU_0_R5_1 high_priority */
-#define TISCI_SEC_PROXY_MCU_0_R5_1_WRITE_HIGH_PRIORITY_NUM_MESSAGES (2U)
+#define TISCI_SEC_PROXY_MCU_0_R5_1_WRITE_HIGH_PRIORITY_NUM_MESSAGES (10U)
 
 /** Thread ID macro for MCU_0_R5_1 low_priority */
 #define TISCI_SEC_PROXY_MCU_0_R5_1_WRITE_LOW_PRIORITY_THREAD_ID (8U)
 /** Num messages macro for MCU_0_R5_1 low_priority */
-#define TISCI_SEC_PROXY_MCU_0_R5_1_WRITE_LOW_PRIORITY_NUM_MESSAGES (5U)
+#define TISCI_SEC_PROXY_MCU_0_R5_1_WRITE_LOW_PRIORITY_NUM_MESSAGES (10U)
 
 /** Thread ID macro for MCU_0_R5_1 notify_resp */
 #define TISCI_SEC_PROXY_MCU_0_R5_1_WRITE_NOTIFY_RESP_THREAD_ID (9U)
