@@ -448,6 +448,7 @@ static int32_t Sciserver_UserProcessMsg(uint32_t *msg_recv,
             respMsgSize = sizeof(struct tisci_msg_rm_get_resource_range_resp);
             break;
         case TISCI_MSG_RM_IRQ_SET:
+            isRmMsg = 1;
             isFwdMsg = 1;
             reqMsgSize = sizeof(struct tisci_msg_rm_irq_set_req);
             respMsgSize = sizeof(struct tisci_msg_rm_irq_set_resp);
@@ -457,21 +458,25 @@ static int32_t Sciserver_UserProcessMsg(uint32_t *msg_recv,
             respMsgSize = sizeof(struct tisci_msg_rm_irq_release_resp);
             break;
         case TISCI_MSG_RM_RING_CFG:
+            isRmMsg = 1;
             isFwdMsg = 1;
             reqMsgSize = sizeof(struct tisci_msg_rm_ring_cfg_req);
             respMsgSize = sizeof(struct tisci_msg_rm_ring_cfg_resp);
             break;
         case TISCI_MSG_RM_RING_MON_CFG:
+            isRmMsg = 1;
             isFwdMsg = 1;
             reqMsgSize = sizeof(struct tisci_msg_rm_ring_mon_cfg_req);
             respMsgSize = sizeof(struct tisci_msg_rm_ring_mon_cfg_resp);
             break;
         case TISCI_MSG_RM_UDMAP_TX_CH_CFG:
+            isRmMsg = 1;
             isFwdMsg = 1;
             reqMsgSize = sizeof(struct tisci_msg_rm_udmap_tx_ch_cfg_req);
             respMsgSize = sizeof(struct tisci_msg_rm_udmap_tx_ch_cfg_resp);
             break;
         case TISCI_MSG_RM_UDMAP_RX_CH_CFG:
+            isRmMsg = 1;
             isFwdMsg = 1;
             reqMsgSize = sizeof(struct tisci_msg_rm_udmap_rx_ch_cfg_req);
             respMsgSize = sizeof(struct tisci_msg_rm_udmap_rx_ch_cfg_resp);
@@ -592,12 +597,6 @@ static int32_t Sciserver_UserProcessMsg(uint32_t *msg_recv,
             break;
     }
 
-    if (isFwdMsg)
-    {
-        ret = Sciserver_ProcessForwardedMessage(msg_recv,
-                                                reqMsgSize, respMsgSize);
-    }
-
     if (isRmMsg)
     {
         extern int32_t Sciclient_ProcessRmMessage(void *tx_msg);
@@ -608,6 +607,12 @@ static int32_t Sciserver_UserProcessMsg(uint32_t *msg_recv,
     {
         extern int32_t Sciclient_ProcessPmMessage(void *tx_msg);
         ret = Sciclient_ProcessPmMessage(msg_recv);
+    }
+
+    if (isFwdMsg)
+    {
+        ret = Sciserver_ProcessForwardedMessage(msg_recv,
+                                                reqMsgSize, respMsgSize);
     }
 
     if (hdr->type == TISCI_MSG_GET_FREQ)

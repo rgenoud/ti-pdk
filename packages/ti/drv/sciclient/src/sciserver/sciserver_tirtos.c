@@ -93,6 +93,8 @@ static int32_t Sciserver_tirtosInitHwis(void);
 static int32_t Sciserver_tirtosInitSemaphores(void);
 static int32_t Sciserver_tirtosInitUserTasks(Sciserver_TirtosCfgPrms_t *pPrms);
 
+static void App_printNum(const char *str, uint32_t num);
+
 /* ========================================================================== */
 /*                            Global Variables                                */
 /* ========================================================================== */
@@ -171,7 +173,6 @@ void Sciserver_tirtosUserMsgHwiFxn(uintptr_t arg)
     bool soft_error = false;
 
     Osal_DisableInterrupt(0, (int32_t) uhd->irq_num);
-    UART_printf("userMsgHwiFxn: IRQ = %d\n", uhd->irq_num);
 
     ret = Sciserver_interruptHandler(uhd, &soft_error);
 
@@ -232,7 +233,7 @@ void Sciserver_tirtosUserMsgTask(uintptr_t arg0, uintptr_t arg1)
         SemaphoreP_pend(gSciserverUserSemHandles[utd->semaphore_id],
                         SemaphoreP_WAIT_FOREVER);
 
-        UART_printf("userMsgTask: sem = %d\n", utd->semaphore_id);
+        App_printNum("userMsgTask: sem = %d\n", utd->semaphore_id);
 
         ret = Sciserver_processtask (utd);
 
@@ -294,7 +295,7 @@ static int32_t Sciserver_tirtosInitHwis(void)
             gSciserverHwiHandles[i] = NULL_PTR;
             break;
         } else {
-            UART_printf("initHwis: register IRQ %d\n", sciserver_hwi_list[i].irq_num);
+            App_printNum("initHwis: register IRQ %d\n", sciserver_hwi_list[i].irq_num);
             Osal_EnableInterrupt(intrPrms.corepacConfig.corepacEventNum,
                                  intrPrms.corepacConfig.intVecNum);
         }
@@ -327,3 +328,12 @@ static int32_t Sciserver_tirtosInitUserTasks(Sciserver_TirtosCfgPrms_t *pPrms)
     return ret;
 }
 
+static void App_printNum(const char *str, uint32_t num)
+{
+    static char printBuf[200U];
+
+    snprintf(printBuf, 200U, str, num);
+    UART_printf("%s", printBuf);
+
+    return;
+}
