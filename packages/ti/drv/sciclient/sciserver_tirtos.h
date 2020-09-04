@@ -53,26 +53,6 @@
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-/** \brief Semaphore Ids to be used for the user and DM tasks */
-enum Sciserver_SemaphoreIds {
-    SCISERVER_SEMAPHORE_USER_HI = 0,
-    /**< User High Priority Semaphore */
-    SCISERVER_SEMAPHORE_USER_LO = 1,
-    /**< User Low Priority Semaphore */
-    SCISERVER_SEMAPHORE_MAX_CNT = 2,
-    /**< Max Semaphore */
-};
-
-/** \brief Task Ids to be used for the user and DM tasks */
-enum Sciserver_TaskIds {
-    SCISERVER_TASK_USER_HI = 0,
-    /**< User High priority Task ID */
-    SCISERVER_TASK_USER_LO = 1,
-    /**< User Low priority Task ID */
-    SCISERVER_TASK_MAX_CNT = 2,
-    /**< User Max Task ID */
-};
-
 /* ========================================================================== */
 /*                         Structure Declarations                             */
 /* ========================================================================== */
