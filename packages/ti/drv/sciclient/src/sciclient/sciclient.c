@@ -48,6 +48,7 @@
 #endif
 #include <ti/csl/csl_rat.h>
 
+#include <ti/drv/sciclient/sciserver.h>
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
@@ -360,13 +361,27 @@ int32_t Sciclient_serviceGetThreadIds (const Sciclient_ReqPrm_t *pReqPrm,
     }
     if(*contextId < SCICLIENT_CONTEXT_MAX_NUM)
     {
-        /* Derive the thread ID from the context */
+        /*
+         * Derive the thread ID from the context. If the message is to be
+         * forwarded, use the dedicated DM2DMSC queue. Otherwise, use the queue
+         * determined by the global map.
+         */
+        if (pReqPrm->forwardStatus == SCISERVER_FORWARD_MSG)
+        {
+            *txThread = TISCI_SEC_PROXY_DM2DMSC_WRITE_HIGH_PRIORITY_THREAD_ID;
+            *rxThread = TISCI_SEC_PROXY_DM2DMSC_READ_RESPONSE_THREAD_ID;
+        }
+        else
+        {
 #if defined (SOC_AM64X)
-        *txThread = gSciclientMap[*contextId].reqLowPrioThreadId;
+            *txThread = gSciclientMap[*contextId].reqLowPrioThreadId;
 #else
-        *txThread = gSciclientMap[*contextId].reqHighPrioThreadId;
+            *txThread = gSciclientMap[*contextId].reqHighPrioThreadId;
 #endif
-        *rxThread = gSciclientMap[*contextId].respThreadId;
+            *rxThread = gSciclientMap[*contextId].respThreadId;
+        }
+
+
         /* Find the Secure Message Header Size from the Context */
         if (gSciclientMap[*contextId].context == SCICLIENT_SECURE_CONTEXT)
         {
@@ -423,7 +438,17 @@ int32_t Sciclient_servicePrepareHeader(const Sciclient_ReqPrm_t *pReqPrm,
         Sciclient_utilByteCopy((uint8_t *)&(pReqPrm->messageType),
                                (uint8_t *)&((*header)->type),
                                sizeof(pReqPrm->messageType));
-        (*header)->host = (uint8_t) gSciclientMap[contextId].hostId;
+
+        /*
+         * If the message is to be forwarded, do not override the host id
+         * already present in the header.
+         */
+        if (pReqPrm->forwardStatus != SCISERVER_FORWARD_MSG)
+        {
+            /* Set host if this is not a forwarded message */
+            (*header)->host = (uint8_t) gSciclientMap[contextId].hostId;
+        }
+
         (*header)->seq = (uint8_t) gSciclientHandle.currSeqId;
         *localSeqId = gSciclientHandle.currSeqId;
         /* This is done in such a fashion as the C66x does not honor a non word aligned

@@ -416,6 +416,10 @@ typedef struct
     uint32_t       timeout;
     /**< [IN] Timeout(number of iterations) for receiving response
      *        (Refer \ref Sciclient_ServiceOperationTimeout) */
+    uint8_t        forwardStatus;
+    /**< [IN] Indicates whether the request is being forwarded to another
+     *        service provider. Only to be set internally by sciserver, if
+     *        integrated into this build. Unused otherwise. */
 } Sciclient_ReqPrm_t;
 
 /**

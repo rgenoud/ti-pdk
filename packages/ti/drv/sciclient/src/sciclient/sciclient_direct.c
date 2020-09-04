@@ -52,6 +52,7 @@
  */
 #include <ti/drv/sciclient/sciclient.h>
 #include <ti/drv/sciclient/src/sciclient/sciclient_priv.h>
+#include <ti/drv/sciclient/sciserver.h>
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
@@ -90,6 +91,7 @@ int32_t Sciclient_service (const Sciclient_ReqPrm_t *pReqPrm,
     uint32_t msgType = pReqPrm->messageType;
     uint32_t message[20] = {0};
     struct tisci_header *hdr;
+    uint8_t *fwdStatus = (uint8_t *)&pReqPrm->forwardStatus;
     uint8_t localSeqId;
     uint32_t contextId;
     uint32_t txThread __attribute__((unused));
@@ -99,6 +101,12 @@ int32_t Sciclient_service (const Sciclient_ReqPrm_t *pReqPrm,
     {
         ret = CSL_EBADARGS;
     }
+
+    /*
+     * Below functions serve only to check the context and format the header for
+     * local processing. If the message is to be forwarded, then these functions
+     * will be called again to obtain the necessary transfer parameters.
+     */
     if (CSL_PASS == ret)
     {
         ret = Sciclient_serviceGetThreadIds (pReqPrm, &contextId, &txThread,
@@ -171,6 +179,11 @@ int32_t Sciclient_service (const Sciclient_ReqPrm_t *pReqPrm,
 
                 if (ret == CSL_PASS)
                 {
+                    /*
+                     * This message is forwarded to DMSC for continued
+                     * processing of secure RM configuration.
+                     */
+                    *fwdStatus = SCISERVER_FORWARD_MSG;
                     ret = Sciclient_serviceSecureProxy(pReqPrm, pRespPrm);
                 }
 
@@ -181,9 +194,22 @@ int32_t Sciclient_service (const Sciclient_ReqPrm_t *pReqPrm,
             case TISCI_MSG_RM_PSIL_READ:
             case TISCI_MSG_RM_PSIL_WRITE:
             default:
+                /*
+                 * This message is forwarded to DMSC for complete processing of
+                 * secure RM configuration, as well as any other
+                 * security-related services.
+                 */
+                *fwdStatus = SCISERVER_FORWARD_MSG;
                 ret = Sciclient_serviceSecureProxy(pReqPrm, pRespPrm);
         }
     }
+
+    /*
+     * Reset the forward status. This prevents possible accidental reuse of
+     * stack memory with flag previously set and not properly cleared by the
+     * application.
+     */
+    *fwdStatus = SCISERVER_NO_FORWARD_MSG;
 
     return ret;
 }

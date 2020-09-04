@@ -42,6 +42,7 @@
 
 #include <ti/drv/sciclient/sciclient.h>
 #include <ti/drv/sciclient/src/sciclient/sciclient_priv.h>
+#include <ti/drv/sciclient/sciserver.h>
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
@@ -74,6 +75,13 @@
 int32_t Sciclient_service (const Sciclient_ReqPrm_t *pReqPrm,
                            Sciclient_RespPrm_t      *pRespPrm)
 {
+    uint8_t *fwdStatus = (uint8_t *)&pReqPrm->forwardStatus;
+    /*
+     * Never forward messages for this build. Set this flag explicitly to
+     * prevent accidental setting by the application.
+     */
+    *fwdStatus = SCISERVER_NO_FORWARD_MSG;
+
     return Sciclient_serviceSecureProxy(pReqPrm, pRespPrm);
 }
 

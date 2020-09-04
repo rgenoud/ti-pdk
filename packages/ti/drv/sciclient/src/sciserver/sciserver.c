@@ -54,8 +54,6 @@
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-/* None */
-
 /* ========================================================================== */
 /*                         Structure Declarations                             */
 /* ========================================================================== */
@@ -396,6 +394,12 @@ int32_t Sciserver_ProcessForwardedMessage(uint32_t *msg_recv,
     reqPrm.pReqPayload = (const uint8_t *)reqMsgBuffer;
     reqPrm.reqPayloadSize = reqMsgSize;
     reqPrm.timeout = SCICLIENT_SERVICE_WAIT_FOREVER;
+
+    /*
+     * If here, the message is intended to be forwarded to another service
+     * provider.
+     */
+    reqPrm.forwardStatus = SCISERVER_FORWARD_MSG;
 
     respPrm.flags = 0;
     respPrm.pRespPayload = (uint8_t *) respMsgBuffer;

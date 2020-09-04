@@ -118,6 +118,18 @@
  */
 #define SCISERVER_PROCESS_STATE_RUN     (0xA5)
 
+/**
+ * Macro do indicate whether the message is being forwarded to another service
+ * provider.
+ */
+#define SCISERVER_FORWARD_MSG           (0x5A)
+
+/**
+ * Macro do indicate whether the message is NOT being forwarded to another
+ * service provider.
+ */
+#define SCISERVER_NO_FORWARD_MSG        (0xA5)
+
 /** Macro to indicate if the SCISERVER is initialized */
 #define SCISERVER_INIT_DONE             (0x69)
 
