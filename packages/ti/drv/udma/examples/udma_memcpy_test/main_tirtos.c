@@ -120,11 +120,6 @@ static Void taskFxn(UArg a0, UArg a1)
 {
     Board_initCfg           boardCfg;
 
-    Sciclient_ConfigPrms_t config;
-    Sciclient_configPrmsInit(&config);
-    config.isSecureMode = 1;
-    Sciclient_init(&config);
-
     boardCfg = BOARD_INIT_PINMUX_CONFIG |
                BOARD_INIT_UART_STDIO;
     Board_init(boardCfg);
