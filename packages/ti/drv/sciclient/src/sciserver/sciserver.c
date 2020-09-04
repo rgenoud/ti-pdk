@@ -76,7 +76,8 @@ typedef struct {
 
 static int32_t Sciserver_MsgVerifyHost(uint32_t *msg, uint8_t known_host);
 static int32_t Sciserver_UserProcessMsg(uint32_t *msg_recv,
-                                        int32_t *pRespMsgSize);
+                                        int32_t *pRespMsgSize,
+                                        uint8_t hw_host);
 
 static void Sciserver_TisciMsgClearFlags(struct tisci_header *hdr);
 static int32_t Sciserver_TisciMsgResponse(uint8_t   response_host,
@@ -269,7 +270,8 @@ int32_t Sciserver_processtask(Sciserver_taskData *utd)
         UART_printf("processtask: UserProcessMsg\n");
         ret = Sciserver_UserProcessMsg(
                 utd->hw_msg_buffer_list[utd->state->current_buffer_idx],
-                &respMsgSize);
+                &respMsgSize,
+                utd->user_msg_data[utd->state->current_buffer_idx]->host);
         respMsg = utd->hw_msg_buffer_list[utd->state->current_buffer_idx];
         respMsgHeader = (struct tisci_header *) respMsg;
     }
@@ -420,7 +422,8 @@ int32_t Sciserver_ProcessForwardedMessage(uint32_t *msg_recv,
 }
 
 static int32_t Sciserver_UserProcessMsg(uint32_t *msg_recv,
-                                        int32_t *pRespMsgSize)
+                                        int32_t *pRespMsgSize,
+                                        uint8_t hw_host_id)
 {
     int32_t ret = CSL_PASS;
     struct  tisci_header *hdr = (struct tisci_header *) msg_recv;
@@ -429,7 +432,7 @@ static int32_t Sciserver_UserProcessMsg(uint32_t *msg_recv,
     int32_t respMsgSize;
 
     UART_printf("hdr->type = %d\n", hdr->type);
-    UART_printf("hdr->host = %d\n", hdr->host);
+    UART_printf("hdr->host = %d\n", hw_host_id);
 
     switch (hdr->type)
     {
@@ -588,7 +591,7 @@ static int32_t Sciserver_UserProcessMsg(uint32_t *msg_recv,
         case TISCI_MSG_RM_UDMAP_TX_CH_CFG:
         case TISCI_MSG_RM_UDMAP_RX_CH_CFG:
         case TISCI_MSG_RM_PROXY_CFG:
-            if (hdr->host == TISCI_HOST_ID_DMSC2DM)
+            if (hw_host_id == TISCI_HOST_ID_DMSC2DM)
             {
                 UART_printf("Skip forward: type = %d\n", hdr->type);
                 isFwdMsg = 0;
