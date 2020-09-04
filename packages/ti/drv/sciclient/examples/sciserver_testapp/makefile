@@ -24,8 +24,6 @@ COMP_LIST_COMMON  = $(PDK_COMMON_TIRTOS_COMP) bios xdc
 TMP_COMP_LIST_COMMON := $(COMP_LIST_COMMON)
 COMP_LIST_COMMON = $(filter-out sciclient, $(TMP_COMP_LIST_COMMON))
 COMP_LIST_COMMON += sciserver_tirtos
-COMP_LIST_COMMON += sciclient_direct
-COMP_LIST_COMMON += rm_pm_hal
 
 # Common source files and CFLAGS across all platforms and cores
 SRCS_COMMON = sciserver_testapp_main.c \
