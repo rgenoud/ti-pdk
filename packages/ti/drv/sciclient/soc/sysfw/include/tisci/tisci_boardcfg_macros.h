@@ -84,6 +84,7 @@
 #define TISCI_BOARDCFG_SA2UL_CFG_MAGIC_NUM                            (0xB4FDU)
 #define TISCI_BOARDCFG_SA2UL_CFG_MAGIC_NUM_RSVD                       (0x23BEU)
 #define TISCI_BOARDCFG_SEC_DBG_CTRL_MAGIC_NUM                         (0x42AFU)
+#define TISCI_BOARDCFG_SEC_HANDOVER_CFG_MAGIC_NUM                     (0x608FU)
 
 #endif
 
