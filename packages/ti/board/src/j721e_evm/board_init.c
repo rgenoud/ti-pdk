@@ -58,6 +58,7 @@
 #include "board_utils.h"
 #include "board_serdes_cfg.h"
 #include <ti/drv/sciclient/sciclient.h>
+#include <ti/drv/sciclient/sciserver.h>
 
 static bool gBoardSysInitDone = 0;
 
@@ -72,12 +73,28 @@ static Board_STATUS Board_sysInit(void)
     Board_STATUS status = BOARD_SOK;
     int32_t ret;
     Sciclient_ConfigPrms_t config;
+#if defined (BUILD_MCU1_0)
+    Sciserver_CfgPrms_t prms;
+#endif
 
     if(gBoardSysInitDone == 0)
     {
         Sciclient_configPrmsInit(&config);
 
         ret = Sciclient_init(&config);
+
+#if defined (BUILD_MCU1_0)
+        /* Initialize the Init Parameters for the Sciserver */
+        if (ret == CSL_PASS)
+        {
+            ret = Sciserver_initPrms_Init(&prms);
+        }
+        /* Initialize the Sciserver */
+        if (ret == CSL_PASS)
+        {
+            ret = Sciserver_init(&prms);
+        }
+#endif
 
         if(ret != 0)
         {

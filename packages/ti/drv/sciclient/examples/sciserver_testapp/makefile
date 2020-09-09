@@ -20,11 +20,6 @@ INCLUDE_EXTERNAL_INTERFACES = pdk sciclient osal_tirtos board uart bios xdc
 # List all the components required by the application
 COMP_LIST_COMMON  = $(PDK_COMMON_TIRTOS_COMP) bios xdc
 
-# mcu1_0 has DM, which uses local (direct) sciclient calls
-TMP_COMP_LIST_COMMON := $(COMP_LIST_COMMON)
-COMP_LIST_COMMON = $(filter-out sciclient, $(TMP_COMP_LIST_COMMON))
-COMP_LIST_COMMON += sciserver_tirtos
-
 # Common source files and CFLAGS across all platforms and cores
 SRCS_COMMON = sciserver_testapp_main.c \
               sciclient_appCommon.c
