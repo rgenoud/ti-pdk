@@ -321,9 +321,19 @@ static int32_t Sciserver_MsgVerifyHost(uint32_t *msg, uint8_t known_host)
         ret = CSL_EFAIL;
     }
 
-    if (ret == CSL_PASS) {
-        if (hdr->host != known_host) {
-            ret = CSL_EFAIL;
+    if (ret == CSL_PASS) { if (hdr->host != known_host) {
+            /*
+             * We check the header against the queue id to verify that the host
+             * has not spoofed the request. The special case is when a message
+             * is sent via the forwarded DMSC2DM queue, then by design the
+             * header host does not match the host assigned to the queue. We
+             * rely on the host id from the message header to allow us to
+             * process the message on behalf of the host who made the original
+             * request.
+             */
+            if (known_host != TISCI_HOST_ID_DMSC2DM) {
+                ret = CSL_EFAIL;
+            }
         }
     }
 
