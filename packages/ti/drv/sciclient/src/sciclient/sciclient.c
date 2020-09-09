@@ -338,6 +338,22 @@ int32_t Sciclient_init(const Sciclient_ConfigPrms_t *pCfgPrms)
             status = Sciclient_C66xRatMap(SCICLIENT_RAT_ENTRY_DEFAULT);
         }
 #endif
+#if defined(BUILD_MCU1_0) && (defined(SOC_J721E) || defined(SOC_J7200))
+        /*
+         * On j721e and j7200 devices, all services sent on non-secure queues
+         * are first processed by the Sciserver instance on MCU R5F0 and
+         * forwarded to DMSC if security-related configurations are required.
+         *
+         * In a similar manner, all applications running locally on MCU R5F0
+         * will be handled directly and only forwarded to DMSC for additional
+         * security-related processing if necessary.
+         *
+         * All service forwarding to DMSC is performed over the secure queue.
+         * Therefore, we force Sciclient to use secure mode in this build
+         * configuration.
+         */
+        gSciclientHandle.isSecureMode = 1U;
+#endif
     }
     return status;
 }
