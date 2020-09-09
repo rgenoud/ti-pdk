@@ -107,7 +107,7 @@ static Ipc_ProcInfo g_Ipc_mp_procInfo[IPC_MAX_PROCS] =
 };
 
 /* Mailbox Cluster Base Address */
-static uint32_t  g_IPC_Mailbox_BaseAddr[IPC_MAILBOX_CLUSTER_CNT] =
+static uintptr_t g_IPC_Mailbox_BaseAddr[IPC_MAILBOX_CLUSTER_CNT] =
 {
     CSL_NAVSS_MAIN_MAILBOX_REGS_0_BASE,     /* Mailbox - cluster0   */
     CSL_NAVSS_MAIN_MAILBOX_REGS_1_BASE,     /* Mailbox - cluster1   */
@@ -187,9 +187,9 @@ int32_t Ipc_getMailboxInfoRx(uint32_t selfId, uint32_t remoteId,
 
 }
 
-uint32_t Ipc_getMailboxBaseAddr(uint32_t clusterId)
+uintptr_t Ipc_getMailboxBaseAddr(uint32_t clusterId)
 {
-    uint32_t baseAddr = 0x00000000U;
+    uintptr_t baseAddr = 0x00000000U;
 
     if( clusterId < IPC_MAILBOX_CLUSTER_CNT)
     {
