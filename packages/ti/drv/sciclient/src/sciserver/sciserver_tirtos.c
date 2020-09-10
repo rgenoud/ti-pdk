@@ -66,7 +66,6 @@
 
 #include <sciserver_hwiData.h>
 #include "sciserver_secproxyTransfer.h"
-#include <ti/drv/uart/UART_stdio.h>
 #include <ti/drv/sciclient/examples/common/sciclient_appCommon.h>
 
 /* ========================================================================== */
@@ -92,8 +91,6 @@ void Sciserver_tirtosUserMsgTask(uintptr_t arg0, uintptr_t arg1);
 static int32_t Sciserver_tirtosInitHwis(void);
 static int32_t Sciserver_tirtosInitSemaphores(void);
 static int32_t Sciserver_tirtosInitUserTasks(Sciserver_TirtosCfgPrms_t *pPrms);
-
-static void App_printNum(const char *str, uint32_t num);
 
 /* ========================================================================== */
 /*                            Global Variables                                */
@@ -130,12 +127,6 @@ int32_t Sciserver_tirtosInit(Sciserver_TirtosCfgPrms_t *pAppPrms)
     if (ret == CSL_PASS)
     {
         ret = Sciserver_init(&prms);
-    }
-
-    /* Enable UART console print*/
-    if (ret == CSL_PASS)
-    {
-        App_sciclientConsoleInit();
     }
 
     /* Create a semaphore for the Sciserver Task */
@@ -233,8 +224,6 @@ void Sciserver_tirtosUserMsgTask(uintptr_t arg0, uintptr_t arg1)
         SemaphoreP_pend(gSciserverUserSemHandles[utd->semaphore_id],
                         SemaphoreP_WAIT_FOREVER);
 
-        App_printNum("userMsgTask: sem = %d\n", utd->semaphore_id);
-
         ret = Sciserver_processtask (utd);
 
         if (ret != CSL_PASS)
@@ -295,7 +284,6 @@ static int32_t Sciserver_tirtosInitHwis(void)
             gSciserverHwiHandles[i] = NULL_PTR;
             break;
         } else {
-            App_printNum("initHwis: register IRQ %d\n", sciserver_hwi_list[i].irq_num);
             Osal_EnableInterrupt(intrPrms.corepacConfig.corepacEventNum,
                                  intrPrms.corepacConfig.intVecNum);
         }
@@ -328,12 +316,3 @@ static int32_t Sciserver_tirtosInitUserTasks(Sciserver_TirtosCfgPrms_t *pPrms)
     return ret;
 }
 
-static void App_printNum(const char *str, uint32_t num)
-{
-    static char printBuf[200U];
-
-    snprintf(printBuf, 200U, str, num);
-    UART_printf("%s", printBuf);
-
-    return;
-}

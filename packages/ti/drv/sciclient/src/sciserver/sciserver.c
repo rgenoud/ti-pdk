@@ -48,7 +48,16 @@
 #include <sciserver_secproxyConfigData.h>
 #include <sciserver_secproxyTransfer.h>
 #include <sciserver_hwiData.h>
+
+/* Set VERBOSE to 1 for trace information on message routing */
+#define VERBOSE 0
+
+#if VERBOSE
 #include <ti/drv/uart/UART_stdio.h>
+#define Sciserver_printf UART_printf
+#else
+#define Sciserver_printf(...)
+#endif
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
@@ -265,7 +274,7 @@ int32_t Sciserver_processtask(Sciserver_taskData *utd)
 
     if (utd->state->state == SCISERVER_TASK_PROCESSING_USER_MSG)
     {
-        UART_printf("processtask: UserProcessMsg\n");
+        Sciserver_printf("processtask: UserProcessMsg\n");
         ret = Sciserver_UserProcessMsg(
                 utd->hw_msg_buffer_list[utd->state->current_buffer_idx],
                 &respMsgSize,
@@ -419,7 +428,7 @@ int32_t Sciserver_ProcessForwardedMessage(uint32_t *msg_recv,
 
     if ((CSL_PASS == ret) && (respPrm.flags == TISCI_MSG_FLAG_ACK))
     {
-        UART_printf("Sciserver_ProcessForwardedMessage: success type=%d\n", hdr->type);
+        Sciserver_printf("Sciserver_ProcessForwardedMessage: success type=%d\n", hdr->type);
         memcpy(msg_recv, respMsgBuffer, respMsgSize);
 
         /* Must restore the seq field. When forwarded message is processed by
@@ -428,7 +437,7 @@ int32_t Sciserver_ProcessForwardedMessage(uint32_t *msg_recv,
     }
     else
     {
-        UART_printf("Sciserver_ProcessForwardedMessage: failed type=%d\n", hdr->type);
+        Sciserver_printf("Sciserver_ProcessForwardedMessage: failed type=%d\n", hdr->type);
         ret = CSL_EFAIL;
     }
 
@@ -445,8 +454,8 @@ static int32_t Sciserver_UserProcessMsg(uint32_t *msg_recv,
     int32_t reqMsgSize;
     int32_t respMsgSize;
 
-    UART_printf("hdr->type = %d\n", hdr->type);
-    UART_printf("hdr->host = %d\n", hw_host_id);
+    Sciserver_printf("hdr->type = %d\n", hdr->type);
+    Sciserver_printf("hdr->host = %d\n", hw_host_id);
 
     switch (hdr->type)
     {
@@ -607,7 +616,7 @@ static int32_t Sciserver_UserProcessMsg(uint32_t *msg_recv,
         case TISCI_MSG_RM_PROXY_CFG:
             if (hw_host_id == TISCI_HOST_ID_DMSC2DM)
             {
-                UART_printf("Skip forward: type = %d\n", hdr->type);
+                Sciserver_printf("Skip forward: type = %d\n", hdr->type);
                 isFwdMsg = 0;
                 isRmMsg = 1;
             }
@@ -630,13 +639,6 @@ static int32_t Sciserver_UserProcessMsg(uint32_t *msg_recv,
     {
         ret = Sciserver_ProcessForwardedMessage(msg_recv,
                                                 reqMsgSize, respMsgSize);
-    }
-
-    if (hdr->type == TISCI_MSG_GET_FREQ)
-    {
-        struct tisci_msg_get_freq_resp *respGetFreq = (struct tisci_msg_get_freq_resp *) msg_recv;
-        uint32_t freq = respGetFreq->freq_hz & 0xFFFFFFFF;
-        UART_printf("GET_FREQ = %d MHz\n", freq/1000000);
     }
 
     *pRespMsgSize = respMsgSize;
