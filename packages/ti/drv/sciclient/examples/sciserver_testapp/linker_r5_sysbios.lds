@@ -55,7 +55,8 @@ __SVC_STACK_SIZE = 0x100;
 MEMORY
 {
     /* Bottom 256 KB used by SBL */
-    RESET_VECTORS(X)    : ORIGIN = 0x41c80000 , LENGTH = 0x100
+    RESET_VECTORS(X)    : ORIGIN = 0x00000000 , LENGTH = 0x100
+    R5F_TCMA0(RWIX)     : ORIGIN = 0x00000100 , LENGTH = 0x00008000 - 0x100
     R5F_TCMB0(RWIX)     : ORIGIN = 0x41010000 , LENGTH = 0x00008000
     OCMC_RAM (RWIX)     : ORIGIN = 0x41C80100 , LENGTH = 0x80000 - 0x100
 }
@@ -67,11 +68,11 @@ SECTIONS
     } palign(8) > RESET_VECTORS
     .text_boot {
         *boot.aer5f*<*boot.o*>(.text)
-     }  palign(8)   > R5F_TCMB0
-    .text:xdc_runtime_Startup_reset__I     : {} palign(8) > R5F_TCMB0
-    .text:ti_sysbios_family_arm_v7r_Cache* : {} palign(8) > R5F_TCMB0
-    .text:ti_sysbios_family_arm_MPU*       : {} palign(8) > R5F_TCMB0
-    .utilsCopyVecsToAtcm                   : {} palign(8) > R5F_TCMB0
+     }  palign(8)   > R5F_TCMA0
+    .text:xdc_runtime_Startup_reset__I     : {} palign(8) > R5F_TCMA0
+    .text:ti_sysbios_family_arm_v7r_Cache* : {} palign(8) > R5F_TCMA0
+    .text:ti_sysbios_family_arm_MPU*       : {} palign(8) > R5F_TCMA0
+    .utilsCopyVecsToAtcm                   : {} palign(8) > R5F_TCMA0
 
     .text           : {} palign(8)   > OCMC_RAM
     .cinit          : {} palign(8)   > OCMC_RAM

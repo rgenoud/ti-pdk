@@ -119,19 +119,19 @@ __attribute__(( aligned(128), section(".boardcfg_data") )) =
             .magic = TISCI_BOARDCFG_DBG_CFG_MAGIC_NUM,
             .size = (uint16_t) sizeof(struct tisci_boardcfg_dbg_cfg),
         },
-        .trace_dst_enables = 0,
-        .trace_src_enables = 0,
+        /* .trace_dst_enables = 0,
+        .trace_src_enables = 0, */
         /* This enables the trace for DMSC logging. Should be used only for
          * debug. Comment below if sysfw trace is not needed */
-        /* .trace_dst_enables = (TISCI_BOARDCFG_TRACE_DST_UART0 | */
-        /*                       TISCI_BOARDCFG_TRACE_DST_ITM | */
-        /*                       TISCI_BOARDCFG_TRACE_DST_MEM), */
-        /* .trace_src_enables = (TISCI_BOARDCFG_TRACE_SRC_PM | */
-        /*                       TISCI_BOARDCFG_TRACE_SRC_RM | */
-        /*                       TISCI_BOARDCFG_TRACE_SRC_SEC | */
-        /*                       TISCI_BOARDCFG_TRACE_SRC_BASE | */
-        /*                       TISCI_BOARDCFG_TRACE_SRC_USER | */
-        /*                       TISCI_BOARDCFG_TRACE_SRC_SUPR), */
+        .trace_dst_enables = (TISCI_BOARDCFG_TRACE_DST_UART0 |
+                              TISCI_BOARDCFG_TRACE_DST_ITM |
+                              TISCI_BOARDCFG_TRACE_DST_MEM),
+        .trace_src_enables = (TISCI_BOARDCFG_TRACE_SRC_PM |
+                              TISCI_BOARDCFG_TRACE_SRC_RM |
+                              TISCI_BOARDCFG_TRACE_SRC_SEC |
+                              TISCI_BOARDCFG_TRACE_SRC_BASE |
+                              TISCI_BOARDCFG_TRACE_SRC_USER |
+                              TISCI_BOARDCFG_TRACE_SRC_SUPR),
     },
 };
 #endif
