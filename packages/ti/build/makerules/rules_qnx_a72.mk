@@ -62,7 +62,7 @@ endif
 
 # Internal CFLAGS - normally doesn't change
 CFLAGS_INTERNAL = -Wimplicit -Wall -Wunused -Wunknown-pragmas -ffunction-sections -fdata-sections -c -mcpu=cortex-a72+fp+simd -g -mabi=lp64 -mstrict-align -std=gnu99 -fms-extensions
-CFLAGS_INTERNAL += -mfix-cortex-a53-835769 -mfix-cortex-a53-843419
+CFLAGS_INTERNAL += -mfix-cortex-a53-835769 -mfix-cortex-a53-843419 -fPIC
 ifeq ($(TREAT_WARNINGS_AS_ERROR), yes)
   CFLAGS_INTERNAL += -Werror
   LNKFLAGS_INTERNAL_COMMON += -Werror
