@@ -52,6 +52,13 @@
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
+#define SCISERVER_DEBUG_LOG_LEVEL_0     (0U)
+/** Disables debug logs */
+#define SCISERVER_DEBUG_LOG_LEVEL_1     (1U)
+/** Enables level 1 of debug logs */
+
+#define SCISERVER_EN_DEBUG_LOG_LEVEL    (SCISERVER_DEBUG_LOG_LEVEL_0)
+/**< Enable SCI server logs */
 
 /* ========================================================================== */
 /*                         Structure Declarations                             */
