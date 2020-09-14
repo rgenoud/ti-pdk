@@ -107,6 +107,26 @@ static Sciserver_InternalState_t gSciserverState = {
 /*                          Function Definitions                              */
 /* ========================================================================== */
 
+int32_t Sciserver_initPrms_Init(Sciserver_CfgPrms_t *pPrms)
+{
+    int32_t ret = CSL_PASS;
+    Sciclient_DefaultBoardCfgInfo_t boardCfgInfo;
+    ret = Sciclient_getDefaultBoardCfgInfo(&boardCfgInfo);
+    if (ret == CSL_PASS)
+    {
+        pPrms->inPmPrms.boardConfigLow = *boardCfgInfo.boardCfgLowPm;
+        pPrms->inPmPrms.boardConfigHigh = 0U;
+        pPrms->inPmPrms.boardConfigSize = boardCfgInfo.boardCfgLowPmSize;
+        pPrms->inPmPrms.devGrp = DEVGRP_ALL;
+
+        pPrms->inRmPrms.boardConfigLow = *boardCfgInfo.boardCfgLowRm;
+        pPrms->inRmPrms.boardConfigHigh = 0U;
+        pPrms->inRmPrms.boardConfigSize = boardCfgInfo.boardCfgLowRmSize;
+        pPrms->inRmPrms.devGrp = DEVGRP_ALL;
+    }
+    return ret;
+}
+
 int32_t Sciserver_init(Sciserver_CfgPrms_t *pPrms)
 {
     int32_t ret = CSL_PASS;

@@ -346,34 +346,17 @@ int32_t Sciserver_interruptHandler(Sciserver_hwiData *uhd, bool* soft_error);
  */
 int32_t Sciserver_processtask(Sciserver_taskData *utd);
 
-/* ========================================================================== */
-/*                       Static Function Definitions                          */
-/* ========================================================================== */
-
 /** \brief Initialize the init params for SCISERVER.
  *  \param pPrms Pointer to the init parameters.
  *  \return CSL_PASS if init Params are initilized with some default.
  *          CSL_EFAIL otherwise.
  */
-static int32_t Sciserver_initPrms_Init(Sciserver_CfgPrms_t *pPrms)
-{
-    int32_t ret = CSL_PASS;
-    Sciclient_DefaultBoardCfgInfo_t boardCfgInfo;
-    ret = Sciclient_getDefaultBoardCfgInfo(&boardCfgInfo);
-    if (ret == CSL_PASS)
-    {
-        pPrms->inPmPrms.boardConfigLow = (uint32_t) boardCfgInfo.boardCfgLowPm;
-        pPrms->inPmPrms.boardConfigHigh = 0U;
-        pPrms->inPmPrms.boardConfigSize = boardCfgInfo.boardCfgLowPmSize;
-        pPrms->inPmPrms.devGrp = DEVGRP_ALL;
-        
-        pPrms->inRmPrms.boardConfigLow = (uint32_t) boardCfgInfo.boardCfgLowRm;
-        pPrms->inRmPrms.boardConfigHigh = 0U;
-        pPrms->inRmPrms.boardConfigSize = boardCfgInfo.boardCfgLowRmSize;
-        pPrms->inRmPrms.devGrp = DEVGRP_ALL;
-    }
-    return ret;
-}
+int32_t Sciserver_initPrms_Init(Sciserver_CfgPrms_t *pPrms);
+
+/* ========================================================================== */
+/*                       Static Function Definitions                          */
+/* ========================================================================== */
+/* None */
 
 #endif /* #ifndef SCISERVER_H_ */
 
