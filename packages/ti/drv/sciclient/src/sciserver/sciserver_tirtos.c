@@ -104,6 +104,8 @@ SemaphoreP_Handle gSciserverUserSemHandles[SCISERVER_SEMAPHORE_MAX_CNT];
 TaskP_Handle gSciserverUserTaskHandles[SCISERVER_TASK_MAX_CNT];
 TaskP_Params gSciserverUserTaskParams[SCISERVER_TASK_MAX_CNT];
 
+uint8_t hwiMasked = 1U;
+
 /* ========================================================================== */
 /*                          Function Definitions                              */
 /* ========================================================================== */
@@ -209,6 +211,8 @@ void Sciserver_tirtosDeinit()
 
 void Sciserver_tirtosUserMsgTask(uintptr_t arg0, uintptr_t arg1)
 {
+    uintptr_t key;
+    uint32_t i = 0U;
     int32_t ret;
     volatile uint32_t loopForever = 1U;
     Sciserver_taskData *utd = (Sciserver_taskData *) arg0;
@@ -218,6 +222,26 @@ void Sciserver_tirtosUserMsgTask(uintptr_t arg0, uintptr_t arg1)
 
     /* Set the pending State first */
     utd->state->state = SCISERVER_TASK_PENDING;
+
+    /* Enter critical section */
+    key = HwiP_disable();
+
+    /*
+     * Here we check if all Hwi are still masked. We do this in order to control
+     * when we enable the interrupts for the secure proxy messages in the case
+     * there are pending messages queued prior to the task starting up. This
+     * only should be done once, so we protect access with the global state.
+     */
+    if (hwiMasked == 1)
+    {
+        hwiMasked = 0;
+        for (i = 0U; i < SCISERVER_ARRAY_SIZE(sciserver_hwi_list); i++) {
+            Osal_EnableInterrupt(0, sciserver_hwi_list[i].irq_num);
+        }
+    }
+
+    /* Leave critical section */
+    HwiP_restore(key);
 
     while(loopForever)
     {
@@ -284,7 +308,11 @@ static int32_t Sciserver_tirtosInitHwis(void)
             gSciserverHwiHandles[i] = NULL_PTR;
             break;
         } else {
-            Osal_EnableInterrupt(intrPrms.corepacConfig.corepacEventNum,
+            /*
+             * There is no way to register interrupts in Osal layer without also
+             * enabling. Disable here in order to enable later.
+             */
+            Osal_DisableInterrupt(intrPrms.corepacConfig.corepacEventNum,
                                  intrPrms.corepacConfig.intVecNum);
         }
     }
