@@ -114,12 +114,12 @@ int32_t Sciserver_initPrms_Init(Sciserver_CfgPrms_t *pPrms)
     ret = Sciclient_getDefaultBoardCfgInfo(&boardCfgInfo);
     if (ret == CSL_PASS)
     {
-        pPrms->inPmPrms.boardConfigLow = *boardCfgInfo.boardCfgLowPm;
+        pPrms->inPmPrms.boardConfigLow = (uintptr_t)boardCfgInfo.boardCfgLowPm;
         pPrms->inPmPrms.boardConfigHigh = 0U;
         pPrms->inPmPrms.boardConfigSize = boardCfgInfo.boardCfgLowPmSize;
         pPrms->inPmPrms.devGrp = DEVGRP_ALL;
 
-        pPrms->inRmPrms.boardConfigLow = *boardCfgInfo.boardCfgLowRm;
+        pPrms->inRmPrms.boardConfigLow = (uintptr_t)boardCfgInfo.boardCfgLowRm;
         pPrms->inRmPrms.boardConfigHigh = 0U;
         pPrms->inRmPrms.boardConfigSize = boardCfgInfo.boardCfgLowRmSize;
         pPrms->inRmPrms.devGrp = DEVGRP_ALL;
