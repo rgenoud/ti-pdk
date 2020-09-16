@@ -377,10 +377,15 @@ int32_t Sciclient_serviceGetThreadIds (const Sciclient_ReqPrm_t *pReqPrm,
     }
     if(*contextId < SCICLIENT_CONTEXT_MAX_NUM)
     {
+#if defined (SOC_J721E)
         /*
          * Derive the thread ID from the context. If the message is to be
          * forwarded, use the dedicated DM2DMSC queue. Otherwise, use the queue
          * determined by the global map.
+         *
+         * We should only ever get here in MCU1_0 builds. Otherwise there is an
+         * error with the forwarding state, and we will see a firewall exception
+         * when attempting to write to the queue.
          */
         if (pReqPrm->forwardStatus == SCISERVER_FORWARD_MSG)
         {
@@ -389,13 +394,16 @@ int32_t Sciclient_serviceGetThreadIds (const Sciclient_ReqPrm_t *pReqPrm,
         }
         else
         {
+#endif
 #if defined (SOC_AM64X)
             *txThread = gSciclientMap[*contextId].reqLowPrioThreadId;
 #else
             *txThread = gSciclientMap[*contextId].reqHighPrioThreadId;
 #endif
             *rxThread = gSciclientMap[*contextId].respThreadId;
+#if defined (SOC_J721E)
         }
+#endif
 
 
         /* Find the Secure Message Header Size from the Context */
