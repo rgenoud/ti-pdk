@@ -135,6 +135,15 @@ SECTIONS
         __RESOURCE_TABLE = .;
     } > MCU1_0_EXT_DATA_BASE
 
+    .const.devgroup.MCU_WAKEUP    : {} align(4)      > MCU1_0_DDR_SPACE
+    .const.devgroup.MAIN          : {} align(4)      > MCU1_0_DDR_SPACE
+    .const.devgroup.DMSC_INTERNAL : {} align(4)      > MCU1_0_DDR_SPACE
+    .bss.devgroup.MAIN            : {} align(4)      > MCU1_0_DDR_SPACE
+    .bss.devgroup.MCU_WAKEUP      : {} align(4)      > MCU1_0_DDR_SPACE
+    .bss.devgroup.DMSC_INTERNAL   : {} align(4)      > MCU1_0_DDR_SPACE
+    .data_user                    : {} align(4)      > MCU1_0_DDR_SPACE
+    .boardcfg_data                : {} align(4)      > MCU1_0_DDR_SPACE
+
     .tracebuf   : {}			> MCU1_0_EXT_DATA
 
 }  /* end of SECTIONS */
