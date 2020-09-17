@@ -620,14 +620,13 @@ static const uint16_t map_src_id[] =
     TISCI_DEV_NAVSS0_MAILBOX_11,
 };
 
+#ifndef QNX_OS
+
 /* Indexed list of host ids */
 static const uint16_t map_host_id[] =
 {
-#ifndef QNX_OS
+
     TISCI_HOST_ID_A72_0,
-#else
-    TISCI_HOST_ID_A72_2,
-#endif
     TISCI_HOST_ID_R5_0,
     TISCI_HOST_ID_R5_2,
     TISCI_HOST_ID_MAIN_0_R5_0,
@@ -638,6 +637,8 @@ static const uint16_t map_host_id[] =
     TISCI_HOST_ID_C6X_1_1,
     TISCI_HOST_ID_C7X_1
 };
+#endif
+
 /* Indexed list of req type */
 static const uint16_t req_type[] =
 {
