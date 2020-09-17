@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018-2020, Texas Instruments Incorporated
+ * Copyright (c) 2020, Texas Instruments Incorporated
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 /**
  *  \file config.h
  *
- *  \brief Configuration header for J721E
+ *  \brief Configuration header for J7200
  */
 
 #ifndef _CONFIG_H_
@@ -41,8 +41,8 @@
 
 #define CONFIG_KEYSTONE3 1
 
-#define CONFIG_J721E 1
-#define CONFIG_SOC_FOLDER_STRING "j721e"
+#define CONFIG_J7200 1
+#define CONFIG_SOC_FOLDER_STRING "j7200"
 #define CONFIG_R5 1
 
 #define CONFIG_ADDR_REMAP_OFFSET 0x00000000

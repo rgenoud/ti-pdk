@@ -44,7 +44,7 @@ ifeq ($(SOC),$(filter $(SOC), am65xx j721e))
 sciclient_LIB_LIST += sciclient_hs
 endif
 
-ifeq ($(SOC),$(filter $(SOC), j721e))
+ifeq ($(SOC),$(filter $(SOC), j721e j7200))
 sciclient_LIB_LIST += rm_pm_hal 
 sciclient_LIB_LIST += sciserver_tirtos
 sciclient_LIB_LIST += sciserver_baremetal

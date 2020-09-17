@@ -14,7 +14,12 @@ INCDIR = .
 
 # List all the external components/interfaces, whose interface header files
 # need to be included for this component
-INCLUDE_EXTERNAL_INTERFACES = pdk sciclient_direct osal_nonos board
+INCLUDE_EXTERNAL_INTERFACES = pdk sciclient osal_nonos board
+ifeq ($(SOC),$(filter $(SOC), j721e))
+INCLUDE_EXTERNAL_INTERFACES += sciclient_direct
+else
+INCLUDE_EXTERNAL_INTERFACES += sciclient
+endif
 
 # List all the components required by the application
 COMP_LIST_COMMON = $(PDK_COMMON_BAREMETAL_COMP)
