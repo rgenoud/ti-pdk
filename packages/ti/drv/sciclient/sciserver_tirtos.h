@@ -68,6 +68,9 @@
 typedef struct {
     uint32_t taskPriority[SCISERVER_TASK_MAX_CNT];
     /**< Task Priorities */
+    uint8_t  bypassLocalBoardCfg;
+    /**< Bool value set to true if RM and PM board configurations are received
+     *  from the TISCI message instead of processed using local structures */
 } Sciserver_TirtosCfgPrms_t ;
 
 /* ========================================================================== */
@@ -97,6 +100,9 @@ static int32_t Sciserver_tirtosInitPrms_Init(Sciserver_TirtosCfgPrms_t *pPrms)
     {
         pPrms->taskPriority[SCISERVER_TASK_USER_LO] = 1U;
         pPrms->taskPriority[SCISERVER_TASK_USER_HI] = 3U;
+
+        /* By default, we assume the board configuration is local. */
+        pPrms->bypassLocalBoardCfg = FALSE;
     }
     else
     {
