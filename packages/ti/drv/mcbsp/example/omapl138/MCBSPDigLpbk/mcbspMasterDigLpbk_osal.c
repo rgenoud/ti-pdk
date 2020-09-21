@@ -63,11 +63,6 @@
 #include <ti/csl/csl_cacheAux.h>
 #include <ti/csl/csl_xmcAux.h>
 #endif
-/* IPC includes */ 
-#include <ti/ipc/GateMP.h>
-#include <ti/ipc/Ipc.h>
-#include <ti/ipc/ListMP.h>
-#include <ti/ipc/SharedRegion.h>
 
 /**********************************************************************
  ************************** Local Definitions *************************
