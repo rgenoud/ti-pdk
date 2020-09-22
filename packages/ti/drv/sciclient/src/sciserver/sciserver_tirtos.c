@@ -182,6 +182,7 @@ void Sciserver_tirtosUserMsgHwiFxn(uintptr_t arg)
     }
     else
     {
+        Osal_ClearInterrupt(0, (int32_t) uhd->irq_num);
         (void) SemaphoreP_post(gSciserverUserSemHandles[uhd->semaphore_id]);
     }
 
@@ -302,25 +303,16 @@ static int32_t Sciserver_tirtosInitHwis(void)
         Osal_RegisterInterrupt_initParams(&intrPrms);
         intrPrms.corepacConfig.arg  = (uintptr_t) &sciserver_hwi_list[i];
         intrPrms.corepacConfig.isrRoutine = &Sciserver_tirtosUserMsgHwiFxn;
+        intrPrms.corepacConfig.enableIntr = FALSE;
         intrPrms.corepacConfig.corepacEventNum  = 0;
         intrPrms.corepacConfig.intVecNum = (int32_t)
             sciserver_hwi_list[i].irq_num;
-        /* Clear Interrupt */
-        Osal_ClearInterrupt(intrPrms.corepacConfig.corepacEventNum,
-                            intrPrms.corepacConfig.intVecNum);
         /* Register interrupts */
         ret = Osal_RegisterInterrupt(&intrPrms,
                                      &gSciserverHwiHandles[i]);
         if(OSAL_INT_SUCCESS != ret) {
             gSciserverHwiHandles[i] = NULL_PTR;
             break;
-        } else {
-            /*
-             * There is no way to register interrupts in Osal layer without also
-             * enabling. Disable here in order to enable later.
-             */
-            Osal_DisableInterrupt(intrPrms.corepacConfig.corepacEventNum,
-                                 intrPrms.corepacConfig.intVecNum);
         }
     }
 
