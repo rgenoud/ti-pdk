@@ -212,7 +212,7 @@ int32_t Sciclient_init(const Sciclient_ConfigPrms_t *pCfgPrms)
                 Sciclient_flush(rxThread, gSciclient_maxMsgSizeBytes);
                 Osal_RegisterInterrupt_initParams(&intrPrms);
                 /* Populate the interrupt parameters */
-                intrPrms.corepacConfig.arg              = (uintptr_t) &(gSciclientMap[contextId].respIntrNum);
+                intrPrms.corepacConfig.arg              = (uintptr_t) contextId;
                 intrPrms.corepacConfig.isrRoutine       = &Sciclient_ISR;
                 #if defined (_TMS320C6X)
                 /* On C66x, we use Event Combiner to map the interrupt to the CPU Intc.  To
@@ -268,7 +268,7 @@ int32_t Sciclient_init(const Sciclient_ConfigPrms_t *pCfgPrms)
                 Sciclient_flush(rxThread, gSciclient_maxMsgSizeBytes);
                 Osal_RegisterInterrupt_initParams(&intrPrms);
                 /* Populate the interrupt parameters */
-                intrPrms.corepacConfig.arg              = (uintptr_t) &(gSciclientMap[contextId].respIntrNum);
+                intrPrms.corepacConfig.arg              = (uintptr_t) contextId;
                 intrPrms.corepacConfig.isrRoutine       = &Sciclient_ISR;
                 #if defined (_TMS320C6X)
                 /* On C66x, we use Event Combiner to map the interrupt to the CPU Intc.  To
@@ -868,7 +868,7 @@ uint32_t Sciclient_getCurrentContext(uint16_t messageType)
 
 static void Sciclient_ISR(uintptr_t arg)
 {
-    int32_t contextId = Sciclient_contextIdFromIntrNum(*(uint32_t *)(arg));
+    int32_t contextId = (int32_t )(arg);
     if(contextId  >= 0)
     {
         uint32_t rxThread = gSciclientMap[contextId].respThreadId;
