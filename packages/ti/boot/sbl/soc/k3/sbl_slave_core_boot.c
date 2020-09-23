@@ -873,6 +873,8 @@ void SBL_SlaveCoreBoot(cpu_core_id_t core_id, uint32_t freqHz, sblEntryPoint_t *
             /* AM65x case (can't use local reset flags): Power down core running SBL */
             Sciclient_pmSetModuleState(SBL_DEV_ID_MCU1_CPU0, TISCI_MSG_VALUE_DEVICE_SW_STATE_AUTO_OFF, 0, SCICLIENT_SERVICE_WAIT_FOREVER);
 #endif
+
+#if !defined(SOC_J721E) && !defined(SOC_J7200)
             /**
              * Notify SYSFW that the SBL is relinquishing the MCU cluster running the SBL
              */
@@ -881,6 +883,7 @@ void SBL_SlaveCoreBoot(cpu_core_id_t core_id, uint32_t freqHz, sblEntryPoint_t *
                 Sciclient_procBootReleaseProcessor(SBL_PROC_ID_MCU1_CPU0, 0, SCICLIENT_SERVICE_WAIT_FOREVER);
                 Sciclient_procBootReleaseProcessor(SBL_PROC_ID_MCU1_CPU1, 0, SCICLIENT_SERVICE_WAIT_FOREVER);
             }
+#endif
 
             /**
              * MCU1_0 and (optionally) MCU1_1 leave reset
@@ -903,6 +906,8 @@ void SBL_SlaveCoreBoot(cpu_core_id_t core_id, uint32_t freqHz, sblEntryPoint_t *
                 Sciclient_pmSetModuleState(SBL_DEV_ID_MCU1_CPU1, TISCI_MSG_VALUE_DEVICE_SW_STATE_ON, 0, SCICLIENT_SERVICE_WAIT_FOREVER);
             }
 #endif
+
+#if defined(SOC_J721E) || defined(SOC_J7200)
             /* Notifying SYSFW that the SBL is relinquishing the MCU cluster running the SBL */
             /* This is done at the end as the PM set module state relies on the fact the SBL is the owner of MCU1_0 and MCU1_1 */
             if (requestCoresFlag == SBL_REQUEST_CORE)
@@ -910,6 +915,7 @@ void SBL_SlaveCoreBoot(cpu_core_id_t core_id, uint32_t freqHz, sblEntryPoint_t *
                 Sciclient_procBootReleaseProcessor(SBL_PROC_ID_MCU1_CPU0, 0, SCICLIENT_SERVICE_WAIT_FOREVER);
                 Sciclient_procBootReleaseProcessor(SBL_PROC_ID_MCU1_CPU1, 0, SCICLIENT_SERVICE_WAIT_FOREVER);
             }
+#endif
             /* Execute a WFI */
             asm volatile ("    wfi");
 #endif

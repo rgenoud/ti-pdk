@@ -279,6 +279,38 @@ static int32_t Sciclient_pmSetMsgProxy(u32 *msg_recv, u32 procId)
     return ret;
 }
 
+static int32_t Sciclient_pmSetCpuResetMsgProxy(u32 *msg_recv, u32 procId)
+{
+    int32_t ret = CSL_PASS;
+    /* Special device handling when performing targeted CPU resets
+     * for MCU R5.
+     */
+    struct tisci_msg_set_device_resets_req *req =
+        (struct tisci_msg_set_device_resets_req *) msg_recv;
+    u32 reset = req->resets;
+
+    switch (reset) {
+        case 0: /* Take CPU out of RESET */
+            Sciclient_procBootSetSequenceCtrl(procId,
+                                              0,
+                                              TISCI_MSG_VAL_PROC_BOOT_CTRL_FLAG_R5_RESET,
+                                              0,
+                                              SCICLIENT_SERVICE_WAIT_FOREVER);
+            break;
+        case 1: /* Put CPU into RESET */
+            Sciclient_procBootSetSequenceCtrl(procId,
+                                              TISCI_MSG_VAL_PROC_BOOT_CTRL_FLAG_R5_RESET,
+                                              0,
+                                              0,
+                                              SCICLIENT_SERVICE_WAIT_FOREVER);
+            break;
+        default:
+            ret = -EINVAL;
+            break;
+    }
+    return ret;
+}
+
 int32_t Sciclient_ProcessPmMessage (void *tx_msg)
 {
     int32_t ret = CSL_PASS;
@@ -328,7 +360,25 @@ int32_t Sciclient_ProcessPmMessage (void *tx_msg)
         case TISCI_MSG_GET_DEVICE              :
             ret = get_device_handler((uint32_t*)tx_msg); break;
         case TISCI_MSG_SET_DEVICE_RESETS       :
-            ret = set_device_resets_handler((uint32_t*)tx_msg); break;
+            {
+                struct tisci_msg_set_device_resets_req *req =
+                    (struct tisci_msg_set_device_resets_req *) tx_msg;
+                u32 id = req->id;
+                switch (id)
+                {
+                    case SCICLIENT_DEV_MCU_R5FSS0_CORE0:
+                        ret = Sciclient_pmSetCpuResetMsgProxy((uint32_t*)tx_msg,
+                                SCICLIENT_DEV_MCU_R5FSS0_CORE0_PROCID);
+                    break;
+                    case SCICLIENT_DEV_MCU_R5FSS0_CORE1:
+                        ret = Sciclient_pmSetCpuResetMsgProxy((uint32_t*)tx_msg,
+                                SCICLIENT_DEV_MCU_R5FSS0_CORE1_PROCID);
+                    break;
+                    default:
+                        ret = set_device_resets_handler((uint32_t*)tx_msg);
+                }
+            }
+            break;
         default:
             ret = CSL_EFAIL; msg_inval = 1U;
     }
