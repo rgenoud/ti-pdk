@@ -176,12 +176,9 @@ int32_t Sciclient_init(const Sciclient_ConfigPrms_t *pCfgPrms)
     }
     if(1U == b_doInit)
     {
-        gSciclientHandle.isSecureMode = 0U;
-        /* Register interrupts irrespective of polled and interrupt mode to
-         * allow for the case to switch between polled and interrupt mode at
-         * run time.
-         */
-        if (status == CSL_PASS)
+        if ((gSciclientHandle.opModeFlag ==
+                    SCICLIENT_SERVICE_OPERATION_MODE_INTERRUPT) &&
+                (status == CSL_PASS))
         {
             SemaphoreP_Params semParams = {NULL,
                                            SemaphoreP_Mode_BINARY,
