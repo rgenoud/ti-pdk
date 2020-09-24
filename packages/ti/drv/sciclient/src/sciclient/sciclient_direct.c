@@ -70,8 +70,6 @@
 /*                          Function Declarations                             */
 /* ========================================================================== */
 
-int32_t Sciclient_ProcessRmMessage(void *tx_msg);
-int32_t Sciclient_ProcessPmMessage (void *tx_msg);
 static int32_t board_config_pm_handler(uint32_t *msg_recv);
 
 /* ========================================================================== */
@@ -133,7 +131,7 @@ int32_t Sciclient_service (const Sciclient_ReqPrm_t *pReqPrm,
             case TISCI_MSG_GET_DEVICE:
             case TISCI_MSG_SET_DEVICE_RESETS:
                 memcpy(message, pReqPrm->pReqPayload, pReqPrm->reqPayloadSize);
-                ret = Sciclient_ProcessPmMessage(message);
+                ret = Sciclient_ProcessPmMessage(pReqPrm->flags, message);
                 if (pRespPrm->pRespPayload != NULL)
                 {
                     memcpy(pRespPrm->pRespPayload, message, pRespPrm->respPayloadSize);
@@ -248,7 +246,7 @@ static int32_t board_config_pm_handler(uint32_t *msg_recv)
     return ret;
 }
 
-static int32_t Sciclient_pmSetMsgProxy(u32 *msg_recv, u32 procId)
+static int32_t Sciclient_pmSetMsgProxy(u32 *msg_recv, uint32_t reqFlags, u32 procId)
 {
     int32_t ret = CSL_PASS;
     /* Special device handling when performing the LPSC config for
@@ -261,16 +259,16 @@ static int32_t Sciclient_pmSetMsgProxy(u32 *msg_recv, u32 procId)
     switch (state) {
         case TISCI_MSG_VALUE_DEVICE_SW_STATE_AUTO_OFF:
             Sciclient_procBootSetSequenceCtrl(procId,
-                                              0, 
-                                              TISCI_MSG_VAL_PROC_BOOT_CTRL_FLAG_R5_LPSC,
                                               0,
+                                              TISCI_MSG_VAL_PROC_BOOT_CTRL_FLAG_R5_LPSC,
+                                              reqFlags,
                                               SCICLIENT_SERVICE_WAIT_FOREVER);
             break;
         case TISCI_MSG_VALUE_DEVICE_SW_STATE_ON:
-            Sciclient_procBootSetSequenceCtrl(procId, 
+            Sciclient_procBootSetSequenceCtrl(procId,
                                               TISCI_MSG_VAL_PROC_BOOT_CTRL_FLAG_R5_LPSC,
                                               0,
-                                              0,
+                                              reqFlags,
                                               SCICLIENT_SERVICE_WAIT_FOREVER);
             break;
         default:
@@ -312,7 +310,7 @@ static int32_t Sciclient_pmSetCpuResetMsgProxy(u32 *msg_recv, u32 procId)
     return ret;
 }
 
-int32_t Sciclient_ProcessPmMessage (void *tx_msg)
+int32_t Sciclient_ProcessPmMessage(const uint32_t reqFlags, void *tx_msg)
 {
     int32_t ret = CSL_PASS;
     uint32_t msg_inval = 0U;
@@ -347,10 +345,12 @@ int32_t Sciclient_ProcessPmMessage (void *tx_msg)
                 {
                     case SCICLIENT_DEV_MCU_R5FSS0_CORE0:
                         ret = Sciclient_pmSetMsgProxy((uint32_t*)tx_msg,
+                                reqFlags,
                                 SCICLIENT_DEV_MCU_R5FSS0_CORE0_PROCID);
                     break;
                     case SCICLIENT_DEV_MCU_R5FSS0_CORE1:
                         ret = Sciclient_pmSetMsgProxy((uint32_t*)tx_msg,
+                                reqFlags,
                                 SCICLIENT_DEV_MCU_R5FSS0_CORE1_PROCID);
                     break;
                     default: 

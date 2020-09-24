@@ -48,6 +48,7 @@
 #include <sciserver_secproxyConfigData.h>
 #include <sciserver_secproxyTransfer.h>
 #include <sciserver_hwiData.h>
+#include <ti/drv/sciclient/src/sciclient/sciclient_priv.h>
 
 /* Set VERBOSE to 1 for trace information on message routing */
 #define VERBOSE 0
@@ -653,14 +654,12 @@ static int32_t Sciserver_UserProcessMsg(uint32_t *msg_recv,
 
     if (isRmMsg)
     {
-        extern int32_t Sciclient_ProcessRmMessage(void *tx_msg);
         ret = Sciclient_ProcessRmMessage(msg_recv);
     }
 
     if (isPmMsg)
     {
-        extern int32_t Sciclient_ProcessPmMessage(void *tx_msg);
-        ret = Sciclient_ProcessPmMessage(msg_recv);
+        ret = Sciclient_ProcessPmMessage(0, msg_recv);
     }
 
     if (isFwdMsg)

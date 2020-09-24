@@ -370,6 +370,10 @@ int32_t Sciclient_servicePrepareHeader(const Sciclient_ReqPrm_t *pReqPrm,
                                        uint8_t *localSeqId,
                                        uint32_t contextId,
                                        struct tisci_header **header);
+
+int32_t Sciclient_ProcessRmMessage(void *tx_msg);
+int32_t Sciclient_ProcessPmMessage(const uint32_t reqFlags, void *tx_msg);
+
 #ifdef __cplusplus
 }
 #endif
