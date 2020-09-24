@@ -195,11 +195,12 @@ int32_t Sciclient_service (const Sciclient_ReqPrm_t *pReqPrm,
             case TISCI_MSG_RM_PSIL_WRITE:
             default:
                 /*
-                 * This message is forwarded to DMSC for complete processing of
-                 * secure RM configuration, as well as any other
-                 * security-related services.
+                 * These RM messages and all baseport and security messages are
+                 * entirely processed on DMSC. When called on mcu1_0 directly,
+                 * these are treated as native calls to DMSC. If these requests
+                 * are made from other CPUs, the sciserver will take care of
+                 * setting the forward status prior to calling this function.
                  */
-                *fwdStatus = SCISERVER_FORWARD_MSG;
                 ret = Sciclient_serviceSecureProxy(pReqPrm, pRespPrm);
         }
     }
