@@ -128,13 +128,6 @@ int32_t Sciserver_tirtosInit(Sciserver_TirtosCfgPrms_t *pAppPrms)
     /* Initialize the Sciserver */
     if (ret == CSL_PASS)
     {
-        /*
-         * The integrating application will decide where board configurations
-         * should be received. This configuration detail must be passed from the
-         * OS-based wrapper to the sciserver.
-         */
-        prms.bypassLocalBoardCfg = pAppPrms->bypassLocalBoardCfg;
-
         ret = Sciserver_init(&prms);
     }
 

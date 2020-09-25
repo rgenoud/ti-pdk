@@ -174,13 +174,6 @@ typedef struct {
     /**< Power Management Board Config Input Parameters */
     Sciclient_BoardCfgPrms_t inRmPrms;
     /**< Resource Management Board Config Input Parameters */
-    uint8_t bypassLocalBoardCfg;
-    /**< Bool value to bypass local boardcfg processing. This must be set if the
-     *   sciserver-integrated application is to be boot as a blackbox firmware
-     *   outside of the PDK environment (e.g. Linux SPL)
-     */
-    void *ptr;
-    /**< reserved for future use */
 } Sciserver_CfgPrms_t ;
 
 /**

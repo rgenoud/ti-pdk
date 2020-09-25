@@ -125,10 +125,6 @@ int32_t Sciserver_initPrms_Init(Sciserver_CfgPrms_t *pPrms)
         pPrms->inRmPrms.boardConfigSize = boardCfgInfo.boardCfgLowRmSize;
         pPrms->inRmPrms.devGrp = DEVGRP_ALL;
     }
-
-    /* By default, we assume the board configuration is local. */
-    pPrms->bypassLocalBoardCfg = FALSE;
-
     return ret;
 }
 
@@ -151,20 +147,16 @@ int32_t Sciserver_init(Sciserver_CfgPrms_t *pPrms)
         {
             ret = Sciclient_init(&config);
         }
-
-        if (!pPrms->bypassLocalBoardCfg) {
-            /* Run pm_init */
-            if (CSL_PASS == ret)
-            {
-                ret = Sciclient_boardCfgPm(&pPrms->inPmPrms);
-            }
-            /* Run rm_init */
-            if (CSL_PASS == ret)
-            {
-                ret = Sciclient_boardCfgRm(&pPrms->inRmPrms);
-            }
+        /* Run pm_init */
+        if (CSL_PASS == ret)
+        {
+            ret = Sciclient_boardCfgPm(&pPrms->inPmPrms);
         }
-
+        /* Run rm_init */
+        if (CSL_PASS == ret)
+        {
+            ret = Sciclient_boardCfgRm(&pPrms->inRmPrms);
+        }
         if (CSL_PASS == ret)
         {
             gSciserverState.ctrlState = SCISERVER_CTRL_CMD_HALT;
