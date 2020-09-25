@@ -176,15 +176,16 @@ void Sciserver_tirtosUserMsgHwiFxn(uintptr_t arg)
 
     ret = Sciserver_interruptHandler(uhd, &soft_error);
 
-    if (ret != CSL_PASS)
+    if ((ret != CSL_PASS) && (soft_error == true))
     {
         Osal_EnableInterrupt(0, (int32_t) uhd->irq_num);
     }
     else
     {
-        Osal_ClearInterrupt(0, (int32_t) uhd->irq_num);
         (void) SemaphoreP_post(gSciserverUserSemHandles[uhd->semaphore_id]);
     }
+
+    Osal_ClearInterrupt(0, (int32_t) uhd->irq_num);
 
     if ((ret != CSL_PASS) && (soft_error != true)) {
         /* At this point secure proxy is broken so halt */
