@@ -281,7 +281,6 @@ static int32_t Sciserver_tirtosInitSemaphores(void)
 
     for (i = 0U; i < SCISERVER_SEMAPHORE_MAX_CNT; i++) {
         SemaphoreP_Params_init(&gSciserverUserSemParams[i]);
-        gSciserverUserSemParams[i].mode = SemaphoreP_Mode_BINARY;
         gSciserverUserSemHandles[i] = SemaphoreP_create(0U, &gSciserverUserSemParams[i]);
 
         if (gSciserverUserSemHandles[i] == NULL) {
