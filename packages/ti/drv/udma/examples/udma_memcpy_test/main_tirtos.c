@@ -52,8 +52,6 @@
 
 #include <ti/drv/udma/examples/udma_apputils/udma_apputils.h>
 #include <ti/drv/sciclient/sciclient.h>
-#include <ti/drv/sciclient/sciserver.h>
-
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
@@ -121,29 +119,12 @@ int main(void)
 static Void taskFxn(UArg a0, UArg a1)
 {
     Board_initCfg           boardCfg;
-#if defined (BUILD_MCU1_0) && defined (SOC_J721E)
-    int32_t status = CSL_PASS;
-    Sciserver_CfgPrms_t serverParms;
-#endif
 
     boardCfg = BOARD_INIT_PINMUX_CONFIG |
                BOARD_INIT_UART_STDIO;
     Board_init(boardCfg);
 
     Udma_appC66xIntrConfig();
-
-#if defined (BUILD_MCU1_0) && defined (SOC_J721E)
-    /* Initialize the Init Parameters for the Sciserver */
-    if (status == CSL_PASS)
-    {
-        status = Sciserver_initPrms_Init(&serverParms);
-    }
-    /* Initialize the Sciserver */
-    if (status == CSL_PASS)
-    {
-        status = Sciserver_init(&serverParms);
-    }
-#endif
 
     Udma_memcpyTest();
 
