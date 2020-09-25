@@ -347,15 +347,6 @@ void Ipc_setupSciServer(void)
     appPrms.taskPriority[SCISERVER_TASK_USER_HI] =
                                             IPC_SETUP_SCISERVER_TASK_PRI_HIGH;
 
-#if defined (A72_LINUX_OS)
-    /*
-     * If this is running within a Linux context, SPL will send board
-     * configurations to the server. Bypass processing using the local data
-     * structures.
-     */
-    appPrms.bypassLocalBoardCfg = TRUE;
-#endif
-
     if (ret == CSL_PASS)
     {
         ret = Sciserver_tirtosInit(&appPrms);
