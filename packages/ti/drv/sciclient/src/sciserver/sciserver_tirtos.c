@@ -266,7 +266,13 @@ void Sciserver_tirtosUserMsgTask(uintptr_t arg0, uintptr_t arg1)
         }
         else
         {
-            Osal_EnableInterrupt(0, sciserver_hwi_list[utd->state->current_buffer_idx].irq_num);
+            /*
+             * This is a bit of a hack... using the task ID to pick the offset
+             * for the gloabl interrupt data array. This is functional but can
+             * be cleaned up.
+             */
+            Osal_EnableInterrupt(0, sciserver_hwi_list[2U * utd->task_id +
+                    utd->state->current_buffer_idx].irq_num);
         }
     }
 }
