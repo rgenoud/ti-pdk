@@ -138,6 +138,9 @@ SECTIONS
     } > MCU1_0_EXT_DATA_BASE
 
     .tracebuf   : {}			> MCU1_0_EXT_DATA
+    .bss.devgroup*  : {} align(4)       > MCU1_0_DDR_SPACE
+    .const.devgroup*: {} align(4)       > MCU1_0_DDR_SPACE
+    .boardcfg_data  : {} align(4)       > MCU1_0_DDR_SPACE
 
 }  /* end of SECTIONS */
 

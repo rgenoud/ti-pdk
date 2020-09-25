@@ -140,6 +140,8 @@ SECTIONS
     .bss.devgroup.DMSC_INTERNAL   : {} align(4)      > MCU1_0_DDR_SPACE
     .data_user                    : {} align(4)      > MCU1_0_DDR_SPACE
     .boardcfg_data                : {} align(4)      > MCU1_0_DDR_SPACE
+    .bss.devgroup*                : {} align(4)      > MCU1_0_DDR_SPACE
+    .const.devgroup*              : {} align(4)      > MCU1_0_DDR_SPACE
 
     .resource_table : {
         __RESOURCE_TABLE = .;
