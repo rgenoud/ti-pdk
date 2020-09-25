@@ -137,6 +137,44 @@ extern CSL_SecProxyCfg gSciclient_secProxyCfg;
 /*                          Function Definitions                              */
 /* ========================================================================== */
 
+int32_t Sciclient_configPrmsInit(Sciclient_ConfigPrms_t *pCfgPrms)
+{
+    int32_t ret = CSL_PASS;
+
+    if(NULL != pCfgPrms)
+    {
+#if defined(BUILD_MCU1_0) && (defined(SOC_J721E) || defined(SOC_J7200))
+        Sciclient_DefaultBoardCfgInfo_t boardCfgInfo;
+
+        /* populate the default board configuration */
+        ret = Sciclient_getDefaultBoardCfgInfo(&boardCfgInfo);
+        if (ret == CSL_PASS)
+        {
+            pCfgPrms->inPmPrms.boardConfigLow = (uintptr_t)boardCfgInfo.boardCfgLowPm;
+            pCfgPrms->inPmPrms.boardConfigHigh = 0U;
+            pCfgPrms->inPmPrms.boardConfigSize = boardCfgInfo.boardCfgLowPmSize;
+            pCfgPrms->inPmPrms.devGrp = DEVGRP_ALL;
+
+            pCfgPrms->inRmPrms.boardConfigLow = (uintptr_t)boardCfgInfo.boardCfgLowRm;
+            pCfgPrms->inRmPrms.boardConfigHigh = 0U;
+            pCfgPrms->inRmPrms.boardConfigSize = boardCfgInfo.boardCfgLowRmSize;
+            pCfgPrms->inRmPrms.devGrp = DEVGRP_ALL;
+        }
+#endif
+        pCfgPrms->opModeFlag     = SCICLIENT_SERVICE_OPERATION_MODE_POLLED;
+        pCfgPrms->pBoardCfgPrms  = NULL;
+        pCfgPrms->isSecureMode   = 0U;
+        pCfgPrms->c66xRatRegion  = 15U;
+    }
+    else
+    {
+        ret = CSL_EFAIL;
+    }
+
+    return ret;
+}
+
+
 int32_t Sciclient_init(const Sciclient_ConfigPrms_t *pCfgPrms)
 {
     int32_t   status = CSL_PASS;
@@ -167,6 +205,18 @@ int32_t Sciclient_init(const Sciclient_ConfigPrms_t *pCfgPrms)
         {
             status = CSL_EBADARGS;
         }
+#if defined(BUILD_MCU1_0) && (defined(SOC_J721E) || defined(SOC_J7200))
+        /* Run pm_init */
+        if (status == CSL_PASS)
+        {
+            status = Sciclient_boardCfgPm(&pCfgPrms->inPmPrms);
+        }
+        /* Run rm_init */
+        if (status == CSL_PASS)
+        {
+            status = Sciclient_boardCfgRm(&pCfgPrms->inRmPrms);
+        }
+#endif
     }
     else
     {

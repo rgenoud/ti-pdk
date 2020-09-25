@@ -170,11 +170,9 @@ enum Sciserver_TaskIds {
 
 /** \brief Sciserver Configuration Parameters */
 typedef struct {
-    Sciclient_BoardCfgPrms_t inPmPrms;
-    /**< Power Management Board Config Input Parameters */
-    Sciclient_BoardCfgPrms_t inRmPrms;
-    /**< Resource Management Board Config Input Parameters */
-} Sciserver_CfgPrms_t ;
+    void *ptr;
+    /**< reserved for future use */
+} Sciserver_CfgPrms_t;
 
 /**
  * \struct Sciserver_msgData

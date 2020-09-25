@@ -78,9 +78,21 @@
 int main(void)
 {
     int32_t ret = CSL_PASS;
+    Sciclient_ConfigPrms_t clientPrms;
     Sciserver_TirtosCfgPrms_t appPrms;
 
-    ret = Sciserver_tirtosInitPrms_Init(&appPrms);
+    /* Sciclient needs to be initialized before Sciserver. Sciserver depends on
+     * Sciclient API to execute message forwarding */
+    ret = Sciclient_configPrmsInit(&clientPrms);
+    if (ret == CSL_PASS)
+    {
+        ret = Sciclient_init(&clientPrms);
+    }
+
+    if (ret == CSL_PASS)
+    {
+        ret = Sciserver_tirtosInitPrms_Init(&appPrms);
+    }
 
     if (ret == CSL_PASS)
     {

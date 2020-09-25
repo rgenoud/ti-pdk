@@ -111,51 +111,19 @@ static Sciserver_InternalState_t gSciserverState = {
 int32_t Sciserver_initPrms_Init(Sciserver_CfgPrms_t *pPrms)
 {
     int32_t ret = CSL_PASS;
-    Sciclient_DefaultBoardCfgInfo_t boardCfgInfo;
-    ret = Sciclient_getDefaultBoardCfgInfo(&boardCfgInfo);
-    if (ret == CSL_PASS)
-    {
-        pPrms->inPmPrms.boardConfigLow = (uintptr_t)boardCfgInfo.boardCfgLowPm;
-        pPrms->inPmPrms.boardConfigHigh = 0U;
-        pPrms->inPmPrms.boardConfigSize = boardCfgInfo.boardCfgLowPmSize;
-        pPrms->inPmPrms.devGrp = DEVGRP_ALL;
 
-        pPrms->inRmPrms.boardConfigLow = (uintptr_t)boardCfgInfo.boardCfgLowRm;
-        pPrms->inRmPrms.boardConfigHigh = 0U;
-        pPrms->inRmPrms.boardConfigSize = boardCfgInfo.boardCfgLowRmSize;
-        pPrms->inRmPrms.devGrp = DEVGRP_ALL;
-    }
     return ret;
 }
 
 int32_t Sciserver_init(Sciserver_CfgPrms_t *pPrms)
 {
     int32_t ret = CSL_PASS;
-    Sciclient_ConfigPrms_t        config =
-    {
-        SCICLIENT_SERVICE_OPERATION_MODE_POLLED,
-        NULL,
-        1
-    };
+
     if (gSciserverState.initDone == SCISERVER_INIT_NOT_DONE)
     {
         if (pPrms == NULL)
         {
             ret = CSL_EBADARGS;
-        }
-        if (CSL_PASS == ret)
-        {
-            ret = Sciclient_init(&config);
-        }
-        /* Run pm_init */
-        if (CSL_PASS == ret)
-        {
-            ret = Sciclient_boardCfgPm(&pPrms->inPmPrms);
-        }
-        /* Run rm_init */
-        if (CSL_PASS == ret)
-        {
-            ret = Sciclient_boardCfgRm(&pPrms->inRmPrms);
         }
         if (CSL_PASS == ret)
         {

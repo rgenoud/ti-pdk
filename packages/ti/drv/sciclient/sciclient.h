@@ -396,6 +396,10 @@ typedef struct
      */
     uint32_t              c66xRatRegion;
     /**< C66x Rat region to use for mapping the IR */
+    Sciclient_BoardCfgPrms_t inPmPrms;
+    /**< Power Management Board Config Input Parameters */
+    Sciclient_BoardCfgPrms_t inRmPrms;
+    /**< Resource Management Board Config Input Parameters */
 } Sciclient_ConfigPrms_t;
 
 /**
@@ -573,7 +577,7 @@ int32_t Sciclient_getDefaultBoardCfgInfo(Sciclient_DefaultBoardCfgInfo_t *pBoard
  *  \param pCfgPrms     [IN] Pointer to #Sciclient_ConfigPrms_t structure.
  *
  */
-static inline void Sciclient_configPrmsInit(Sciclient_ConfigPrms_t *pCfgPrms);
+int32_t Sciclient_configPrmsInit(Sciclient_ConfigPrms_t *pCfgPrms);
 
 /**
  *  \brief Send the Response in Ack. Used only with Sciserver or
@@ -596,17 +600,6 @@ void Sciclient_TisciMsgSetNakResp(struct tisci_header *hdr);
 /* ========================================================================== */
 /*                       Static Function Definitions                          */
 /* ========================================================================== */
-
-static inline void Sciclient_configPrmsInit(Sciclient_ConfigPrms_t *pCfgPrms)
-{
-    if(NULL != pCfgPrms)
-    {
-        pCfgPrms->opModeFlag     = SCICLIENT_SERVICE_OPERATION_MODE_POLLED;
-        pCfgPrms->pBoardCfgPrms  = NULL;
-        pCfgPrms->isSecureMode   = 0U;
-        pCfgPrms->c66xRatRegion  = 15U;
-    }
-}
 
 #ifdef __cplusplus
 }
