@@ -1162,7 +1162,7 @@ endif
 ifeq ($(SOC),$(filter $(SOC), j721e))
   PDK_COMMON_COMP += udma
   ifeq ($(CORE),mcu1_0)
-    PDK_COMMON_COMP += sciserver_tirtos sciclient_direct rm_pm_hal
+    PDK_COMMON_COMP += sciclient_direct rm_pm_hal
   else
     PDK_COMMON_COMP += sciclient
   endif

@@ -18,7 +18,7 @@ INCDIR = . ../common
 INCLUDE_EXTERNAL_INTERFACES = pdk sciclient osal_tirtos board uart bios xdc
 
 # List all the components required by the application
-COMP_LIST_COMMON  = $(PDK_COMMON_TIRTOS_COMP) bios xdc
+COMP_LIST_COMMON  = $(PDK_COMMON_TIRTOS_COMP) sciserver_tirtos bios xdc
 
 # Common source files and CFLAGS across all platforms and cores
 SRCS_COMMON = sciserver_testapp_main.c \
