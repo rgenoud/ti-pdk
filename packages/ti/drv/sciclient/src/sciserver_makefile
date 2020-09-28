@@ -37,7 +37,7 @@ INCDIR += src/rm_pm_hal/rm
 INCLUDE_EXTERNAL_INTERFACES = pdk osal
 
 # Common source files and CFLAGS across all platforms and cores
-ifeq ($(SOC),$(filter $(SOC), j721e))
+ifeq ($(SOC),$(filter $(SOC), j721e j7200))
     SRCS_COMMON  = sciserver.c
     SRCS_COMMON += sciserver_secproxyTransfer.c
     SRCS_COMMON += sciserver_secproxyRoutingDescription.c

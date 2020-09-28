@@ -1159,7 +1159,7 @@ ifneq ($(CORE),$(filter $(CORE), c7x-hostemu))
 endif
 
 
-ifeq ($(SOC),$(filter $(SOC), j721e))
+ifeq ($(SOC),$(filter $(SOC), j721e j7200))
   PDK_COMMON_COMP += udma
   ifeq ($(CORE),mcu1_0)
     PDK_COMMON_COMP += sciclient_direct rm_pm_hal
@@ -1167,7 +1167,7 @@ ifeq ($(SOC),$(filter $(SOC), j721e))
     PDK_COMMON_COMP += sciclient
   endif
 endif
-ifeq ($(SOC),$(filter $(SOC), am65xx am64x j7200))
+ifeq ($(SOC),$(filter $(SOC), am65xx am64x))
   ifeq ($(CORE),$(filter $(CORE), mpu1_0 mcu1_0 mcu1_1))
     PDK_COMMON_COMP += sciclient udma
   endif
