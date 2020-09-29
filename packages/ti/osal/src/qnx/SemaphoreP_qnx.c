@@ -62,6 +62,7 @@ SemaphoreP_Handle SemaphoreP_create(uint32_t count,
 {
     char sem_name[128];
     SemaphoreP_Struct *handle = NULL;
+    int ret = 0;
 
     handle = (SemaphoreP_Struct *)calloc(1, sizeof(SemaphoreP_Struct));
     if (handle == NULL) return NULL;
@@ -98,6 +99,19 @@ SemaphoreP_Handle SemaphoreP_create(uint32_t count,
             free(handle->type.mutex_handle);
             free(handle);
             return (NULL);
+        }
+
+        if (count == 0)
+        {
+            // locking the mutex in case the count is 0
+            ret = pthread_mutex_lock((pthread_mutex_t *) handle->type.mutex_handle);
+            if (ret < 0)
+            {
+                pthread_mutex_destroy((pthread_mutex_t*) handle->type.mutex_handle);
+                free (handle->type.mutex_handle);
+                free(handle);
+                return (NULL);
+            }
         }
     }
     return ((SemaphoreP_Handle)handle);
