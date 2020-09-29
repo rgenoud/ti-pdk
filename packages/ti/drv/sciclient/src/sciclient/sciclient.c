@@ -205,6 +205,14 @@ int32_t Sciclient_init(const Sciclient_ConfigPrms_t *pCfgPrms)
         {
             status = CSL_EBADARGS;
         }
+    }
+    else
+    {
+        gSciclientHandle.opModeFlag =
+                SCICLIENT_SERVICE_OPERATION_MODE_POLLED;
+    }
+    if(1U == b_doInit)
+    {
 #if defined(BUILD_MCU1_0) && (defined(SOC_J721E) || defined(SOC_J7200))
         /* Run pm_init */
         if (status == CSL_PASS)
@@ -217,15 +225,6 @@ int32_t Sciclient_init(const Sciclient_ConfigPrms_t *pCfgPrms)
             status = Sciclient_boardCfgRm(&pCfgPrms->inRmPrms);
         }
 #endif
-    }
-    else
-    {
-        gSciclientHandle.opModeFlag =
-                SCICLIENT_SERVICE_OPERATION_MODE_POLLED;
-        gSciclientHandle.isSecureMode = 0U;
-    }
-    if(1U == b_doInit)
-    {
         if ((gSciclientHandle.opModeFlag ==
                     SCICLIENT_SERVICE_OPERATION_MODE_INTERRUPT) &&
                 (status == CSL_PASS))
@@ -375,16 +374,10 @@ int32_t Sciclient_init(const Sciclient_ConfigPrms_t *pCfgPrms)
                 status = CSL_EBADARGS;
             }
         }
-#if defined(_TMS320C6X)
-        if (pCfgPrms != NULL)
-        {
-            status = Sciclient_C66xRatMap(pCfgPrms->c66xRatRegion);
-        }
         else
         {
-            status = Sciclient_C66xRatMap(SCICLIENT_RAT_ENTRY_DEFAULT);
+            gSciclientHandle.isSecureMode = 0U;
         }
-#endif
 #if defined(BUILD_MCU1_0) && (defined(SOC_J721E) || defined(SOC_J7200))
         /*
          * On j721e and j7200 devices, all services sent on non-secure queues
@@ -400,6 +393,16 @@ int32_t Sciclient_init(const Sciclient_ConfigPrms_t *pCfgPrms)
          * configuration.
          */
         gSciclientHandle.isSecureMode = 1U;
+#endif
+#if defined(_TMS320C6X)
+        if (pCfgPrms != NULL)
+        {
+            status = Sciclient_C66xRatMap(pCfgPrms->c66xRatRegion);
+        }
+        else
+        {
+            status = Sciclient_C66xRatMap(SCICLIENT_RAT_ENTRY_DEFAULT);
+        }
 #endif
     }
     return status;
