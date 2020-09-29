@@ -104,7 +104,9 @@ void SBL_SciClientInit(void)
     {
         SCICLIENT_SERVICE_OPERATION_MODE_POLLED,
         NULL,
-        1
+        1,
+        0,
+        TRUE
     };
 #endif
 

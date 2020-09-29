@@ -165,6 +165,7 @@ int32_t Sciclient_configPrmsInit(Sciclient_ConfigPrms_t *pCfgPrms)
         pCfgPrms->pBoardCfgPrms  = NULL;
         pCfgPrms->isSecureMode   = 0U;
         pCfgPrms->c66xRatRegion  = 15U;
+        pCfgPrms->skipLocalBoardCfgProcess = FALSE;
     }
     else
     {
@@ -214,15 +215,18 @@ int32_t Sciclient_init(const Sciclient_ConfigPrms_t *pCfgPrms)
     if(1U == b_doInit)
     {
 #if defined(BUILD_MCU1_0) && (defined(SOC_J721E) || defined(SOC_J7200))
-        /* Run pm_init */
-        if (status == CSL_PASS)
+        if (pCfgPrms->skipLocalBoardCfgProcess == FALSE)
         {
-            status = Sciclient_boardCfgPm(&pCfgPrms->inPmPrms);
-        }
-        /* Run rm_init */
-        if (status == CSL_PASS)
-        {
-            status = Sciclient_boardCfgRm(&pCfgPrms->inRmPrms);
+            /* Run pm_init */
+            if (status == CSL_PASS)
+            {
+                status = Sciclient_boardCfgPm(&pCfgPrms->inPmPrms);
+            }
+            /* Run rm_init */
+            if (status == CSL_PASS)
+            {
+                status = Sciclient_boardCfgRm(&pCfgPrms->inRmPrms);
+            }
         }
 #endif
         if ((gSciclientHandle.opModeFlag ==

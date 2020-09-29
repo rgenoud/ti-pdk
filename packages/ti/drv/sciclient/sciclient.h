@@ -396,6 +396,9 @@ typedef struct
      */
     uint32_t              c66xRatRegion;
     /**< C66x Rat region to use for mapping the IR */
+    uint8_t skipLocalBoardCfgProcess;
+    /**< Skip processing of local RM/PM board configurations during
+     *   initialization */
     Sciclient_BoardCfgPrms_t inPmPrms;
     /**< Power Management Board Config Input Parameters */
     Sciclient_BoardCfgPrms_t inRmPrms;
