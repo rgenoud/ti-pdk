@@ -53,21 +53,19 @@ SemaphoreP_Handle SemaphoreP_create(uint32_t count,
                                     const SemaphoreP_Params *params)
 {
     sem_t *handle;
-    struct timespec ts;
     char sem_name[128];
 
     /* Assign a name if one is not specified */
     if(params->name == NULL)
     {
        static int counter = 0;
-       clock_gettime(CLOCK_REALTIME, &ts);
-       sprintf(sem_name,"qnx_sem_%ld_%ld_%d", (long int)getpid(), ts.tv_nsec, counter++);
+       sprintf(sem_name,"qnx_sem_%ld_%ld_%d", (long int)getpid(), (long int)gettid(), counter++);
     }
     else
     {
         strcpy(sem_name, params->name);
     }
-    
+
 
     /* Creates a COUNTING semaphore */
     handle = sem_open(sem_name, O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH, count);
