@@ -274,6 +274,18 @@ ifneq ($(udma_EXAMPLE_LIST),)
 endif
 
 # - used to ignore include if component not present
+-include $(PDK_CPSW_COMP_PATH)/cpsw_component.mk
+ifneq ($(cpsw_LIB_LIST),)
+  pdk_LIB_LIST += $(cpsw_LIB_LIST)
+endif
+ifneq ($(cpsw_APP_LIB_LIST),)
+  pdk_APP_LIB_LIST += $(cpsw_APP_LIB_LIST)
+endif
+ifneq ($(cpsw_EXAMPLE_LIST),)
+  pdk_EXAMPLE_LIST += $(cpsw_EXAMPLE_LIST)
+endif
+
+# - used to ignore include if component not present
 -include $(PDK_ENET_COMP_PATH)/enet_component.mk
 ifneq ($(enet_LIB_LIST),)
   pdk_LIB_LIST += $(enet_LIB_LIST)
