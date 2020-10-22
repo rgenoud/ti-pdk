@@ -311,7 +311,6 @@ int32_t Udma_chConfigTx(Udma_ChHandle chHandle, const Udma_ChTxPrms *txPrms)
 
         /* Copy params */
         rmUdmaTxReq.valid_params        = TISCI_MSG_VALUE_RM_UDMAP_CH_PAUSE_ON_ERR_VALID |
-                                          TISCI_MSG_VALUE_RM_UDMAP_CH_ATYPE_VALID |
                                           TISCI_MSG_VALUE_RM_UDMAP_CH_CHAN_TYPE_VALID |
                                           TISCI_MSG_VALUE_RM_UDMAP_CH_FETCH_SIZE_VALID |
                                           TISCI_MSG_VALUE_RM_UDMAP_CH_CQ_QNUM_VALID |
@@ -329,7 +328,6 @@ int32_t Udma_chConfigTx(Udma_ChHandle chHandle, const Udma_ChTxPrms *txPrms)
         rmUdmaTxReq.tx_pause_on_err     = txPrms->pauseOnError;
         rmUdmaTxReq.tx_filt_einfo       = txPrms->filterEinfo;
         rmUdmaTxReq.tx_filt_pswords     = txPrms->filterPsWords;
-        rmUdmaTxReq.tx_atype            = txPrms->addrType;
         rmUdmaTxReq.tx_chan_type        = txPrms->chanType;
         rmUdmaTxReq.tx_fetch_size       = txPrms->fetchWordSize;
         rmUdmaTxReq.tx_priority         = txPrms->busPriority;
@@ -339,6 +337,11 @@ int32_t Udma_chConfigTx(Udma_ChHandle chHandle, const Udma_ChTxPrms *txPrms)
         rmUdmaTxReq.tx_burst_size       = txPrms->burstSize;
         rmUdmaTxReq.tx_sched_priority   = txPrms->dmaPriority;
         rmUdmaTxReq.tx_credit_count     = txPrms->txCredit;
+        if(UDMA_DEFAULT_CH_ATYPE_INVALID != txPrms->addrType)
+        {
+            rmUdmaTxReq.valid_params |= TISCI_MSG_VALUE_RM_UDMAP_CH_ATYPE_VALID;
+            rmUdmaTxReq.tx_atype      = txPrms->addrType;
+        }
         /* This workaround is to support Config of BCDMA Block Copy channel using same Sciclient API.
         *
         *  In case of BCDMA, the channels are spread across three MMR regions tchan, rchan, and bchan.
@@ -425,7 +428,6 @@ int32_t Udma_chConfigRx(Udma_ChHandle chHandle, const Udma_ChRxPrms *rxPrms)
 
             /* Copy params */
             rmUdmaRxReq.valid_params        = TISCI_MSG_VALUE_RM_UDMAP_CH_PAUSE_ON_ERR_VALID |
-                                              TISCI_MSG_VALUE_RM_UDMAP_CH_ATYPE_VALID |
                                               TISCI_MSG_VALUE_RM_UDMAP_CH_CHAN_TYPE_VALID |
                                               TISCI_MSG_VALUE_RM_UDMAP_CH_FETCH_SIZE_VALID |
                                               TISCI_MSG_VALUE_RM_UDMAP_CH_CQ_QNUM_VALID |
@@ -441,7 +443,6 @@ int32_t Udma_chConfigRx(Udma_ChHandle chHandle, const Udma_ChRxPrms *rxPrms)
             rmUdmaRxReq.nav_id              = drvHandle->devIdUdma;
             rmUdmaRxReq.index               = (uint16_t)chHandle->rxChNum;
             rmUdmaRxReq.rx_pause_on_err     = rxPrms->pauseOnError;
-            rmUdmaRxReq.rx_atype            = rxPrms->addrType;
             rmUdmaRxReq.rx_chan_type        = rxPrms->chanType;
             rmUdmaRxReq.rx_fetch_size       = rxPrms->fetchWordSize;
             rmUdmaRxReq.rx_priority         = rxPrms->busPriority;
@@ -453,6 +454,12 @@ int32_t Udma_chConfigRx(Udma_ChHandle chHandle, const Udma_ChRxPrms *rxPrms)
             rmUdmaRxReq.rx_ignore_short     = rxPrms->ignoreShortPkts;
             rmUdmaRxReq.rx_ignore_long      = rxPrms->ignoreLongPkts;
             rmUdmaRxReq.rx_burst_size       = rxPrms->burstSize;
+
+            if(UDMA_DEFAULT_CH_ATYPE_INVALID != rxPrms->addrType)
+            {
+                rmUdmaRxReq.valid_params |= TISCI_MSG_VALUE_RM_UDMAP_CH_ATYPE_VALID;
+                rmUdmaRxReq.rx_atype      = rxPrms->addrType;
+            }
             if(NULL_PTR != chHandle->tdCqRing)
             {
                 Udma_assert(drvHandle,
@@ -1620,7 +1627,7 @@ void UdmaChTxPrms_init(Udma_ChTxPrms *txPrms, uint32_t chType)
         txPrms->pauseOnError    = TISCI_MSG_VALUE_RM_UDMAP_CH_PAUSE_ON_ERROR_DISABLED;
         txPrms->filterEinfo     = TISCI_MSG_VALUE_RM_UDMAP_TX_CH_FILT_EINFO_DISABLED;
         txPrms->filterPsWords   = TISCI_MSG_VALUE_RM_UDMAP_TX_CH_FILT_PSWORDS_DISABLED;
-        txPrms->addrType        = TISCI_MSG_VALUE_RM_UDMAP_CH_ATYPE_PHYS;
+        txPrms->addrType        = UDMA_DEFAULT_CH_ATYPE_INVALID;
         txPrms->chanType        = TISCI_MSG_VALUE_RM_UDMAP_CH_TYPE_PACKET;
         if((chType & UDMA_CH_FLAG_BLK_COPY) == UDMA_CH_FLAG_BLK_COPY)
         {
@@ -1658,7 +1665,7 @@ void UdmaChRxPrms_init(Udma_ChRxPrms *rxPrms, uint32_t chType)
     if(NULL_PTR != rxPrms)
     {
         rxPrms->pauseOnError        = TISCI_MSG_VALUE_RM_UDMAP_CH_PAUSE_ON_ERROR_DISABLED;
-        rxPrms->addrType            = TISCI_MSG_VALUE_RM_UDMAP_CH_ATYPE_PHYS;
+        rxPrms->addrType            = UDMA_DEFAULT_CH_ATYPE_INVALID;
         rxPrms->chanType            = TISCI_MSG_VALUE_RM_UDMAP_CH_TYPE_PACKET;
         if((chType & UDMA_CH_FLAG_BLK_COPY) == UDMA_CH_FLAG_BLK_COPY)
         {
