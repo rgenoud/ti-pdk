@@ -121,6 +121,9 @@ extern "C" {
 /** \brief Default ring order ID */
 #define UDMA_DEFAULT_RING_ORDER_ID          (0U)
 
+/** \brief Default channel address type */
+#define UDMA_DEFAULT_CH_ATYPE_INVALID       (0xFF)
+
 /** \brief Default TX channel DMA priority */
 #define UDMA_DEFAULT_TX_CH_DMA_PRIORITY                                     \
                                     (TISCI_MSG_VALUE_RM_UDMAP_CH_SCHED_PRIOR_MEDHIGH)
