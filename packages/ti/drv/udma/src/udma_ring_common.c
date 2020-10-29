@@ -191,6 +191,7 @@ int32_t Udma_ringAlloc(Udma_DrvHandle drvHandle,
         {
             rmRingReq.valid_params |= TISCI_MSG_VALUE_RM_RING_VIRTID_VALID;
             rmRingReq.virtid        = ringPrms->virtId;
+            Udma_printf(drvHandle, "%s: rmRingReq.virtid=ringPrms->virtId;=0x%x\n",__FUNCTION__, rmRingReq.virtid);
         }
 
         retVal = Sciclient_rmRingCfg(
