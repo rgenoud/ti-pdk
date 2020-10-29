@@ -341,6 +341,7 @@ int32_t Udma_chConfigTx(Udma_ChHandle chHandle, const Udma_ChTxPrms *txPrms)
         {
             rmUdmaTxReq.valid_params |= TISCI_MSG_VALUE_RM_UDMAP_CH_ATYPE_VALID;
             rmUdmaTxReq.tx_atype      = txPrms->addrType;
+            Udma_printf(drvHandle, "%s: rmUdmaTxReq.tx_atype=txPrms->addrType=0x%x\n",__FUNCTION__, rmUdmaTxReq.tx_atype);
         }
         /* This workaround is to support Config of BCDMA Block Copy channel using same Sciclient API.
         *
@@ -459,6 +460,7 @@ int32_t Udma_chConfigRx(Udma_ChHandle chHandle, const Udma_ChRxPrms *rxPrms)
             {
                 rmUdmaRxReq.valid_params |= TISCI_MSG_VALUE_RM_UDMAP_CH_ATYPE_VALID;
                 rmUdmaRxReq.rx_atype      = rxPrms->addrType;
+                Udma_printf(drvHandle, "%s: rmUdmaTxReq.tx_atype=txPrms->addrType=0x%x\n",__FUNCTION__, rmUdmaRxReq.rx_atype);
             }
             if(NULL_PTR != chHandle->tdCqRing)
             {
