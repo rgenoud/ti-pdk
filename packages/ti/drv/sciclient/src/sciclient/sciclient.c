@@ -531,10 +531,12 @@ int32_t Sciclient_init(const Sciclient_ConfigPrms_t *pCfgPrms)
         }
 #endif
     }
+#ifndef QNX_OS
     if (status == CSL_PASS)
     {
         status = Sciclient_abiCheck();
     }
+#endif
     return status;
 }
 
