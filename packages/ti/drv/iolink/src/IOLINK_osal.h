@@ -323,7 +323,7 @@ extern "C" {
  *  @n  Parameters   Pointer to the software interrupt's parameter structure.
  *
  */
-#define IOLINK_osalSwiParamsInit(X) (HwiP_Params_init(X))
+#define IOLINK_osalSwiParamsInit(X) (SwiP_Params_init(X))
 
 /**
  * @brief  Function to create a software interrupt
