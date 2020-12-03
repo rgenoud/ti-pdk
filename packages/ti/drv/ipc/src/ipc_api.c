@@ -577,7 +577,7 @@ static int32_t RPMessage_processAnnounceMsg(RPMessage_Announcement *amsg, uint32
             p = &module.nameEntry[module.nameEntryCnt];
             p->endPt = amsg->endPt;
             p->procId = procId;
-            strncpy(p->name, amsg->name, SERVICENAMELEN);
+            strncpy(p->name, amsg->name, SERVICENAMELEN-1);
             p->name[SERVICENAMELEN-1] = '\0';
             module.nameEntryCnt++;
 
@@ -1071,6 +1071,10 @@ int32_t RPMessage_lateInit(uint32_t proc)
 
         /* setup the sending path */
         module.tx_VQs[proc] = Virtio_getHandle(proc, VIRTIO_TX);
+
+#ifndef IPC_EXCLUDE_INTERRUPT_REG
+        Ipc_mailboxEnableNewMsgInt(Ipc_mpGetSelfId(), proc);
+#endif /* IPC_EXCLUDE_INTERRUPT_REG */
     }
     else
     {
@@ -1156,6 +1160,10 @@ int32_t RPMessage_init(RPMessage_Params *params)
 
                 /* setup the sending path */
                 module.tx_VQs[p] = Virtio_getHandle(p, VIRTIO_TX);
+
+#ifndef IPC_EXCLUDE_INTERRUPT_REG
+                Ipc_mailboxEnableNewMsgInt(Ipc_mpGetSelfId(), p);
+#endif /* IPC_EXCLUDE_INTERRUPT_REG */
             }
             else
             {
