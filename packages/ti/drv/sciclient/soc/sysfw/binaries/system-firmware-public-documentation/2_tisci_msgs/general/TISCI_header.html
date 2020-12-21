@@ -8,12 +8,12 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Texas Instruments System Controller Interface (TISCI) &mdash; TISCI User Guide</title>
+  <title>Texas Instruments System Controller Interface (TISCI) &mdash; System Firmware Documentation</title>
   
 
   
   
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
   
 
   
@@ -26,24 +26,24 @@
 
   
   
-    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   
 
   
-    <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/theme_overrides.css" type="text/css" />
   
 
   
         <link rel="index" title="Index"
-              href="../../genindex.html"/>
-        <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="TISCI User Guide" href="../../index.html"/>
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="System Firmware Documentation" href="../../../index.html"/>
         <link rel="up" title="Chapter 2: TISCI Message Documentation" href="../index.html"/>
         <link rel="next" title="TISCI General Message API Documentation" href="core.html"/>
         <link rel="prev" title="Chapter 2: TISCI Message Documentation" href="../index.html"/> 
 
   
-  <script src="../../_static/js/modernizr.min.js"></script>
+  <script src="../../../_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -53,7 +53,7 @@
       <ul>
         <li id="top_logo">
           <a href="http://www.ti.com">
-            <img src="../../_static/img/ti_logo.png"/>
+            <img src="../../../_static/img/ti_logo.png"/>
           </a>
         </li>
       </ul>
@@ -69,7 +69,7 @@
           
 
           
-            <a href="../../index.html" class="icon icon-home"> TISCI
+            <a href="../../../index.html" class="icon icon-home"> System Firmware
           
 
           
@@ -82,7 +82,7 @@
 
           
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -96,40 +96,47 @@
           
             
             
-                <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../../1_intro/index.html">Chapter 1: Introduction</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Chapter 2: TISCI Message Documentation</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Texas Instruments System Controller Interface (TISCI)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#communicating-with-the-system-controller-entity">Communicating with the System Controller Entity</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#power-and-clock-management">Power and Clock Management</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#resource-management">Resource Management</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#foundational-security-management">Foundational Security Management</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#tisci-general-messages">TISCI General Messages</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#tisci-generic-messaging-header">TISCI Generic Messaging Header</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#request-flags">Request flags</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#response-flags">Response flags</a></li>
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../PROCESS_TOP.html">System Firmware Process Documentation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../design/index.html">System Firmware Design Documentation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../soc/am6x/soc_am6x_int_top.html">System Firmware AM6 Internal SOC Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../soc/am65x_sr2/soc_am65x_sr2_int_top.html">System Firmware AM65x SR2 Internal SOC Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../soc/am64x/soc_am6x_int_top.html">System Firmware AM6 Internal SOC Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../soc/j721e/soc_j721e_int_top.html">System Firmware J721E Internal SOC Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../soc/j721e_legacy/soc_j721e_legacy_int_top.html">System Firmware J721E Internal SOC Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../soc/j7200/soc_j7200_int_top.html">System Firmware J7200 Internal SOC Data</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">TISCI User Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../1_intro/index.html">Chapter 1: Introduction</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Chapter 2: TISCI Message Documentation</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Texas Instruments System Controller Interface (TISCI)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#communicating-with-the-system-controller-entity">Communicating with the System Controller Entity</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#power-and-clock-management">Power and Clock Management</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#resource-management">Resource Management</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#foundational-security-management">Foundational Security Management</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tisci-general-messages">TISCI General Messages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tisci-generic-messaging-header">TISCI Generic Messaging Header</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#secure-messaging-header">Secure Messaging Header</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tisci-message-eligibility-for-secure-vs-non-secure-transport">TISCI Message Eligibility for Secure vs Non-secure transport</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#secure-messaging-header">Secure Messaging Header</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#secure-header-in-the-request-path">Secure header in the request path</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#secure-header-in-the-response-path">Secure header in the response path</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#secure-header-on-a-gp-device-vs-a-hs-device">Secure header on a GP device vs a HS device</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#secure-header-integrity-check-calculation">Secure header integrity check calculation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#general">General</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#power-management-pm">Power Management (PM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#resource-management-rm">Resource Management (RM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#secure-management">Secure Management</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#tisci-message-eligibility-for-secure-vs-non-secure-transport">TISCI Message Eligibility for Secure vs Non-secure transport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../3_boardcfg/index.html">Chapter 3: Board Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../4_trace/index.html">Chapter 4: Interpreting Trace Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../5_soc_doc/index.html">Chapter 5: SoC Family Specific Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../6_topic_user_guides/index.html">Chapter 6: Topic User Guides</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../index.html#general">General</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../index.html#power-management-pm">Power Management (PM)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../index.html#resource-management-rm">Resource Management (RM)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../index.html#secure-management">Secure Management</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../3_boardcfg/index.html">Chapter 3: Board Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../4_trace/index.html">Chapter 4: Interpreting Trace Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../5_soc_doc/index.html">Chapter 5: SoC Family Specific Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../6_topic_user_guides/index.html">Chapter 6: Topic User Guides</a></li>
 </ul>
 
             
@@ -143,7 +150,7 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../index.html">TISCI</a>
+        <a href="../../../index.html">System Firmware</a>
       </nav>
 
 
@@ -158,7 +165,9 @@
 
 <div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../../index.html">Docs</a> &raquo;</li>
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">TISCI User Guide</a> &raquo;</li>
       
           <li><a href="../index.html">Chapter 2: TISCI Message Documentation</a> &raquo;</li>
       
@@ -217,21 +226,21 @@ integration in Processor SDK for an example.</p>
 <p>On devices with distributed TIFS and DM services across multiple cores,
 the interaction between the hosts and the security and device manager is as below:</p>
 <div class="figure" id="id1">
-<img alt="../../_images/softwareInteraction.png" src="../../_images/softwareInteraction.png" />
-<p class="caption"><span class="caption-number">Fig. 4 </span><span class="caption-text">Software on different cores  and secure proxy communication channels</span></p>
+<img alt="../../../_images/softwareInteraction.png" src="../../../_images/softwareInteraction.png" />
+<p class="caption"><span class="caption-number">Fig. 40 </span><span class="caption-text">Software on different cores  and secure proxy communication channels</span></p>
 </div>
 <p>The communication mechanism for different cores is as below</p>
 <p>For secure cores the communication mechanism is as below:</p>
 <div class="figure">
-<img alt="../../_images/SeqDiagram_Secure.png" src="../../_images/SeqDiagram_Secure.png" />
+<img alt="../../../_images/SeqDiagram_Secure.png" src="../../../_images/SeqDiagram_Secure.png" />
 </div>
 <p>For messages running from MCU R5F the communication mechanism is as below:</p>
 <div class="figure">
-<img alt="../../_images/SeqDiagram_NonSecure_R5.png" src="../../_images/SeqDiagram_NonSecure_R5.png" />
+<img alt="../../../_images/SeqDiagram_NonSecure_R5.png" src="../../../_images/SeqDiagram_NonSecure_R5.png" />
 </div>
 <p>For messages running from other non-secure cores the communication mechanism is as below:</p>
 <div class="figure">
-<img alt="../../_images/SeqDiagram_NonSecure_other.png" src="../../_images/SeqDiagram_NonSecure_other.png" />
+<img alt="../../../_images/SeqDiagram_NonSecure_other.png" src="../../../_images/SeqDiagram_NonSecure_other.png" />
 </div>
 <p>The following subsections gives a high level overview of the different
 APIs and functions available via the TISCI interface.</p>
@@ -407,8 +416,8 @@ contain the secure messaging header.</p>
 </table>
 </p>
 <div class="figure" id="id2">
-<img alt="../../_images/secure-header.png" src="../../_images/secure-header.png" />
-<p class="caption"><span class="caption-number">Fig. 5 </span><span class="caption-text">Secure Messaging Header format</span></p>
+<img alt="../../../_images/secure-header.png" src="../../../_images/secure-header.png" />
+<p class="caption"><span class="caption-number">Fig. 41 </span><span class="caption-text">Secure Messaging Header format</span></p>
 </div>
 <ol class="arabic simple">
 <li>The Secure header is mandatory for all messages that are received via secure
@@ -430,8 +439,8 @@ initialized to zero.</li>
 Of these 8 bytes are taken up by the standard TISCI header, 4 bytes by the
 secure header leaving 44 bytes for the payload.</p>
 <div class="figure" id="id3">
-<img alt="../../_images/user-integrity-check-calculation.png" src="../../_images/user-integrity-check-calculation.png" />
-<p class="caption"><span class="caption-number">Fig. 6 </span><span class="caption-text">Integrity Check calculation in the request path</span></p>
+<img alt="../../../_images/user-integrity-check-calculation1.png" src="../../../_images/user-integrity-check-calculation1.png" />
+<p class="caption"><span class="caption-number">Fig. 42 </span><span class="caption-text">Integrity Check calculation in the request path</span></p>
 </div>
 <p>The user is expected to</p>
 <ol class="arabic simple">
@@ -540,16 +549,16 @@ message is limited to being sent over secure queues only.</p>
 
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
+            URL_ROOT:'../../../',
             VERSION:'',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
         };
     </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
       <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
     <script src="http://www.ti.com/assets/js/headerfooter/analytics.js" type="text/javascript" charset="utf-8"></script>
@@ -558,7 +567,7 @@ message is limited to being sent over secure queues only.</p>
 
   
   
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
   
 
   

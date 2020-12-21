@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>AM6 Processor Descriptions &mdash; System Firmware Documentation</title>
+  <title>OTP Keywriter TISCI Description &mdash; System Firmware Documentation</title>
   
 
   
@@ -38,9 +38,9 @@
               href="../../../genindex.html"/>
         <link rel="search" title="Search" href="../../../search.html"/>
     <link rel="top" title="System Firmware Documentation" href="../../../index.html"/>
-        <link rel="up" title="Chapter 5: SoC Family Specific Documentation" href="../index.html"/>
-        <link rel="next" title="AM6 Runtime Keystore" href="runtime_keystore.html"/>
-        <link rel="prev" title="AM6 Secure Proxy Descriptions" href="sec_proxy.html"/> 
+        <link rel="up" title="Chapter 2: TISCI Message Documentation" href="../index.html"/>
+        <link rel="next" title="Chapter 3: Board Configuration" href="../../3_boardcfg/index.html"/>
+        <link rel="prev" title="Security Handover Message Description" href="security_handover.html"/> 
 
   
   <script src="../../../_static/js/modernizr.min.js"></script>
@@ -113,36 +113,28 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">TISCI User Guide</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../1_intro/index.html">Chapter 1: Introduction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../2_tisci_msgs/index.html">Chapter 2: TISCI Message Documentation</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Chapter 2: TISCI Message Documentation</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../general/TISCI_header.html">Texas Instruments System Controller Interface (TISCI)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#general">General</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#power-management-pm">Power Management (PM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#resource-management-rm">Resource Management (RM)</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html#secure-management">Secure Management</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="sec_cert_format.html">Security X509 Certificate Documentation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="PROC_BOOT.html">Processor Boot Management TISCI Description</a></li>
+<li class="toctree-l4"><a class="reference internal" href="firewall_api.html">Firewall TISCI Description</a></li>
+<li class="toctree-l4"><a class="reference internal" href="sec_ap_data_transfer.html">Secure AP Command Interface</a></li>
+<li class="toctree-l4"><a class="reference internal" href="runtime_debug.html">Runtime Debug TISCI Description</a></li>
+<li class="toctree-l4"><a class="reference internal" href="extended_otp.html">Extended OTP TISCI Description</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dkek_management.html">Derived KEK TISCI Description</a></li>
+<li class="toctree-l4"><a class="reference internal" href="security_handover.html">Security Handover Message Description</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">OTP Keywriter TISCI Description</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../3_boardcfg/index.html">Chapter 3: Board Configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../4_trace/index.html">Chapter 4: Interpreting Trace Data</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Chapter 5: SoC Family Specific Documentation</a><ul class="current">
-<li class="toctree-l3 current"><a class="reference internal" href="../index.html#am65x-sr1">AM65x SR1</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="hosts.html">AM6 Host Descriptions</a></li>
-<li class="toctree-l4"><a class="reference internal" href="devices.html">AM6 Devices Descriptions</a></li>
-<li class="toctree-l4"><a class="reference internal" href="clocks.html">AM6 Clock Identifiers</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pll_data.html">AM6 PLL Defaults</a></li>
-<li class="toctree-l4"><a class="reference internal" href="resasg_types.html">AM6 Board Configuration Resource Assignment Type Descriptions</a></li>
-<li class="toctree-l4"><a class="reference internal" href="interrupt_cfg.html">AM6 Interrupt Management Device Descriptions</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ra_cfg.html">AM6 Ring Accelerator Device Descriptions</a></li>
-<li class="toctree-l4"><a class="reference internal" href="dma_cfg.html">AM6 DMA Device Descriptions</a></li>
-<li class="toctree-l4"><a class="reference internal" href="psil_cfg.html">AM6 PSI-L Device Descriptions</a></li>
-<li class="toctree-l4"><a class="reference internal" href="proxy_cfg.html">AM6 Proxy Device Descriptions</a></li>
-<li class="toctree-l4"><a class="reference internal" href="sec_proxy.html">AM6 Secure Proxy Descriptions</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">AM6 Processor Descriptions</a></li>
-<li class="toctree-l4"><a class="reference internal" href="runtime_keystore.html">AM6 Runtime Keystore</a></li>
-<li class="toctree-l4"><a class="reference internal" href="firewalls.html">AM6 Firewall Descriptions</a></li>
-<li class="toctree-l4"><a class="reference internal" href="soc_devgrps.html">AM6 Device Group descriptions</a></li>
-<li class="toctree-l4"><a class="reference internal" href="extended_otp.html">AM65x Extended OTP Information</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../index.html#am65x-sr2">AM65x SR2</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../index.html#am64x">AM64x</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../index.html#j721e">J721E</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../index.html#j721e-legacy">J721E Legacy</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../index.html#j7200">J7200</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="../../5_soc_doc/index.html">Chapter 5: SoC Family Specific Documentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../6_topic_user_guides/index.html">Chapter 6: Topic User Guides</a></li>
 </ul>
 </li>
@@ -178,9 +170,9 @@
       
           <li><a href="../../index.html">TISCI User Guide</a> &raquo;</li>
       
-          <li><a href="../index.html">Chapter 5: SoC Family Specific Documentation</a> &raquo;</li>
+          <li><a href="../index.html">Chapter 2: TISCI Message Documentation</a> &raquo;</li>
       
-    <li>AM6 Processor Descriptions</li>
+    <li>OTP Keywriter TISCI Description</li>
       <li class="wy-breadcrumbs-aside">
         
           
@@ -192,56 +184,118 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="am6-processor-descriptions">
-<h1>AM6 Processor Descriptions<a class="headerlink" href="#am6-processor-descriptions" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="introduction">
-<span id="soc-doc-am6-public-proc-desc-intro"></span><h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
-<p>This chapter provides information of Processor and Host IDs that are permitted
-in the AM6 SoC. These Processor IDs represent an actual physical processor on
-the SoC</p>
-<p>NOTE: This should not be confused with HOST_ID.</p>
-</div>
-<div class="section" id="enumeration-of-processor-ids">
-<span id="soc-doc-am6-public-proc-desc-processors-list"></span><h2>Enumeration of Processor IDs<a class="headerlink" href="#enumeration-of-processor-ids" title="Permalink to this headline">¶</a></h2>
+  <div class="section" id="otp-keywriter-tisci-description">
+<h1>OTP Keywriter TISCI Description<a class="headerlink" href="#otp-keywriter-tisci-description" title="Permalink to this headline">¶</a></h1>
+<p>This chapter provides information on TISCI message for programming customer keys
+into eFuse array on K3 devices.</p>
 <table border="1" class="docutils">
 <colgroup>
-<col width="20%" />
-<col width="22%" />
-<col width="59%" />
+<col width="19%" />
+<col width="81%" />
 </colgroup>
 <thead valign="bottom">
-<tr class="row-odd"><th class="head">Processor ID</th>
-<th class="head">Processor Name</th>
-<th class="head">Location in SoC</th>
+<tr class="row-odd"><th class="head">TISCI Message ID</th>
+<th class="head">Message Name</th>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td>0x20</td>
-<td>A53_CL0_C0</td>
-<td>COMPUTE_CLUSTER_MSMC0: (Cluster 0 Processor 0)</td>
-</tr>
-<tr class="row-odd"><td>0x21</td>
-<td>A53_CL0_C1</td>
-<td>COMPUTE_CLUSTER_MSMC0: (Cluster 0 Processor 1)</td>
-</tr>
-<tr class="row-even"><td>0x22</td>
-<td>A53_CL1_C0</td>
-<td>COMPUTE_CLUSTER_MSMC0: (Cluster 1 Processor 0)</td>
-</tr>
-<tr class="row-odd"><td>0x23</td>
-<td>A53_CL1_C1</td>
-<td>COMPUTE_CLUSTER_MSMC0: (Cluster 1 Processor 1)</td>
-</tr>
-<tr class="row-even"><td>0x01</td>
-<td>R5_CL0_C0</td>
-<td>MCU_SEC_MMR0: (Cluster 0 Processor 0)</td>
-</tr>
-<tr class="row-odd"><td>0x02</td>
-<td>R5_CL0_C1</td>
-<td>MCU_SEC_MMR0: (Cluster 0 Processor 1)</td>
+<tr class="row-even"><td>0x9031</td>
+<td><a class="reference internal" href="#sec-api-keywr-program-keys"><span class="std std-ref">TISCI_MSG_KEY_WRITER</span></a></td>
 </tr>
 </tbody>
 </table>
+<p>This document must be read alongside <a class="reference internal" href="../../6_topic_user_guides/key_writer.html"><span class="doc">Key  Writer</span></a></p>
+<div class="section" id="api-description">
+<h2>API Description<a class="headerlink" href="#api-description" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="tisci-msg-key-writer-key-writer">
+<span id="sec-api-keywr-program-keys"></span><h3>TISCI_MSG_KEY_WRITER - Key writer<a class="headerlink" href="#tisci-msg-key-writer-key-writer" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="usage">
+<h4>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h4>
+<table border="1" class="docutils">
+<colgroup>
+<col width="75%" />
+<col width="25%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><strong>Message Type</strong></td>
+<td>Secure</td>
+</tr>
+<tr class="row-even"><td><strong>Secure Queue Only?</strong></td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="tisci-message-id">
+<h4>TISCI Message ID<a class="headerlink" href="#tisci-message-id" title="Permalink to this headline">¶</a></h4>
+<p><code class="docutils literal"><span class="pre">TISCI_MSG_KEY_WRITER</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">(0x9031U)</span></code></p>
+<p><p><strong>struct tisci_msg_keywriter_req</strong></p>
+<p>Request message for keywriter</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="16%" />
+<col width="23%" />
+<col width="61%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Parameter</th>
+<th class="head">Type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>hdr</td>
+<td>struct tisci_header</td>
+<td>standard TISCI header</td>
+</tr>
+<tr class="row-odd"><td>image_addr_lo</td>
+<td>u32</td>
+<td>Lower 32 bit address (in LE format) of the certificate</td>
+</tr>
+<tr class="row-even"><td>image_addr_hi</td>
+<td>u32</td>
+<td>Higher 32 bit address (in LE format) of the certificate</td>
+</tr>
+<tr class="row-odd"><td>key_prog_mask</td>
+<td>u32</td>
+<td>Reserved for future use</td>
+</tr>
+</tbody>
+</table>
+</p>
+<p>Address of the <a class="reference internal" href="../../6_topic_user_guides/key_writer.html#keywriter-cert-gen-procedure"><span class="std std-ref">certificate</span></a> containing customer key information is given as input to the
+API.</p>
+<p><p><strong>struct tisci_msg_keywriter_resp</strong></p>
+<p>Response message for keywriter</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="23%" />
+<col width="30%" />
+<col width="46%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Parameter</th>
+<th class="head">Type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>hdr</td>
+<td>struct tisci_header</td>
+<td>standard TISCI header</td>
+</tr>
+<tr class="row-odd"><td>debug_response</td>
+<td>u32</td>
+<td>debug code for success/failure</td>
+</tr>
+</tbody>
+</table>
+</p>
+<p>A <code class="docutils literal"><span class="pre">debug_response</span></code> of 0x0 means the key programming was successful, other
+response codes indicate the point of failure, which can be referred from PDK documentation
+for OTP Keywriter.</p>
+</div>
+</div>
 </div>
 </div>
 
@@ -252,10 +306,10 @@ the SoC</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="runtime_keystore.html" class="btn btn-neutral float-right" title="AM6 Runtime Keystore" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../../3_boardcfg/index.html" class="btn btn-neutral float-right" title="Chapter 3: Board Configuration" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="sec_proxy.html" class="btn btn-neutral" title="AM6 Secure Proxy Descriptions" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="security_handover.html" class="btn btn-neutral" title="Security Handover Message Description" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

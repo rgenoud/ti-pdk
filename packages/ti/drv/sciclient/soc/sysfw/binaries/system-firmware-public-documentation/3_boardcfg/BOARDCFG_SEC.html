@@ -8,12 +8,12 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Security Board Configuration &mdash; TISCI User Guide</title>
+  <title>Security Board Configuration &mdash; System Firmware Documentation</title>
   
 
   
   
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
   
 
   
@@ -26,24 +26,24 @@
 
   
   
-    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   
 
   
-    <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
   
 
   
         <link rel="index" title="Index"
-              href="../genindex.html"/>
-        <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="TISCI User Guide" href="../index.html"/>
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="System Firmware Documentation" href="../../index.html"/>
         <link rel="up" title="Chapter 3: Board Configuration" href="index.html"/>
         <link rel="next" title="Power Management Board Configuration" href="BOARDCFG_PM.html"/>
         <link rel="prev" title="Resource Management Board Configuration" href="BOARDCFG_RM.html"/> 
 
   
-  <script src="../_static/js/modernizr.min.js"></script>
+  <script src="../../_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -53,7 +53,7 @@
       <ul>
         <li id="top_logo">
           <a href="http://www.ti.com">
-            <img src="../_static/img/ti_logo.png"/>
+            <img src="../../_static/img/ti_logo.png"/>
           </a>
         </li>
       </ul>
@@ -69,7 +69,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> TISCI
+            <a href="../../index.html" class="icon icon-home"> System Firmware
           
 
           
@@ -82,7 +82,7 @@
 
           
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -96,33 +96,39 @@
           
             
             
-                <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../1_intro/index.html">Chapter 1: Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../2_tisci_msgs/index.html">Chapter 2: TISCI Message Documentation</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">Chapter 3: Board Configuration</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="BOARDCFG.html">Board Configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="BOARDCFG_RM.html">Resource Management Board Configuration</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Security Board Configuration</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#security-configuration-in-system-firmware">Security Configuration in System Firmware</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#tisci-api-for-security-board-config">TISCI API for Security Board Config</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#configuration-substructure-enumeration">Configuration substructure enumeration</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#processor-access-list">Processor Access List</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#host-hierarchy">Host Hierarchy</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#extended-otp-array-configuration">Extended OTP array configuration</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#derived-kek-management">Derived KEK Management</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#reserved-entry">Reserved Entry</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#secure-debug-unlock">Secure Debug Unlock</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#security-handover">Security Handover</a></li>
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../PROCESS_TOP.html">System Firmware Process Documentation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../design/index.html">System Firmware Design Documentation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../soc/am6x/soc_am6x_int_top.html">System Firmware AM6 Internal SOC Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../soc/am65x_sr2/soc_am65x_sr2_int_top.html">System Firmware AM65x SR2 Internal SOC Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../soc/am64x/soc_am6x_int_top.html">System Firmware AM6 Internal SOC Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../soc/j721e/soc_j721e_int_top.html">System Firmware J721E Internal SOC Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../soc/j721e_legacy/soc_j721e_legacy_int_top.html">System Firmware J721E Internal SOC Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../soc/j7200/soc_j7200_int_top.html">System Firmware J7200 Internal SOC Data</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">TISCI User Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../1_intro/index.html">Chapter 1: Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2_tisci_msgs/index.html">Chapter 2: TISCI Message Documentation</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Chapter 3: Board Configuration</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="BOARDCFG.html">Board Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="BOARDCFG_RM.html">Resource Management Board Configuration</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Security Board Configuration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#security-configuration-in-system-firmware">Security Configuration in System Firmware</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="BOARDCFG_PM.html">Power Management Board Configuration</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="BOARDCFG_PM.html">Power Management Board Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4_trace/index.html">Chapter 4: Interpreting Trace Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5_soc_doc/index.html">Chapter 5: SoC Family Specific Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6_topic_user_guides/index.html">Chapter 6: Topic User Guides</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../4_trace/index.html">Chapter 4: Interpreting Trace Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../5_soc_doc/index.html">Chapter 5: SoC Family Specific Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../6_topic_user_guides/index.html">Chapter 6: Topic User Guides</a></li>
 </ul>
 
             
@@ -136,7 +142,7 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../index.html">TISCI</a>
+        <a href="../../index.html">System Firmware</a>
       </nav>
 
 
@@ -151,7 +157,9 @@
 
 <div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../index.html">Docs</a> &raquo;</li>
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../index.html">TISCI User Guide</a> &raquo;</li>
       
           <li><a href="index.html">Chapter 3: Board Configuration</a> &raquo;</li>
       
@@ -801,16 +809,16 @@ be transferred</p>
 
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
+            URL_ROOT:'../../',
             VERSION:'',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
         };
     </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
       <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
     <script src="http://www.ti.com/assets/js/headerfooter/analytics.js" type="text/javascript" charset="utf-8"></script>
@@ -819,7 +827,7 @@ be transferred</p>
 
   
   
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
   
 
   

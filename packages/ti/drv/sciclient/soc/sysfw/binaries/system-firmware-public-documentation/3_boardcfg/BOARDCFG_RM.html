@@ -8,12 +8,12 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Resource Management Board Configuration &mdash; TISCI User Guide</title>
+  <title>Resource Management Board Configuration &mdash; System Firmware Documentation</title>
   
 
   
   
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
   
 
   
@@ -26,24 +26,24 @@
 
   
   
-    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   
 
   
-    <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
   
 
   
         <link rel="index" title="Index"
-              href="../genindex.html"/>
-        <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="TISCI User Guide" href="../index.html"/>
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="System Firmware Documentation" href="../../index.html"/>
         <link rel="up" title="Chapter 3: Board Configuration" href="index.html"/>
         <link rel="next" title="Security Board Configuration" href="BOARDCFG_SEC.html"/>
         <link rel="prev" title="Board Configuration" href="BOARDCFG.html"/> 
 
   
-  <script src="../_static/js/modernizr.min.js"></script>
+  <script src="../../_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -53,7 +53,7 @@
       <ul>
         <li id="top_logo">
           <a href="http://www.ti.com">
-            <img src="../_static/img/ti_logo.png"/>
+            <img src="../../_static/img/ti_logo.png"/>
           </a>
         </li>
       </ul>
@@ -69,7 +69,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> TISCI
+            <a href="../../index.html" class="icon icon-home"> System Firmware
           
 
           
@@ -82,7 +82,7 @@
 
           
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -96,47 +96,41 @@
           
             
             
-                <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../1_intro/index.html">Chapter 1: Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../2_tisci_msgs/index.html">Chapter 2: TISCI Message Documentation</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">Chapter 3: Board Configuration</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="BOARDCFG.html">Board Configuration</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Resource Management Board Configuration</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#introduction">Introduction</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#device-groups-for-resource-management-board-configuration">Device Groups for Resource Management Board Configuration</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#static-resource-assignment-configurations">Static Resource Assignment Configurations</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#high-level-parts-of-rm-board-configuration">High Level Parts of RM Board Configuration</a></li>
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../PROCESS_TOP.html">System Firmware Process Documentation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../design/index.html">System Firmware Design Documentation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../soc/am6x/soc_am6x_int_top.html">System Firmware AM6 Internal SOC Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../soc/am65x_sr2/soc_am65x_sr2_int_top.html">System Firmware AM65x SR2 Internal SOC Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../soc/am64x/soc_am6x_int_top.html">System Firmware AM6 Internal SOC Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../soc/j721e/soc_j721e_int_top.html">System Firmware J721E Internal SOC Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../soc/j721e_legacy/soc_j721e_legacy_int_top.html">System Firmware J721E Internal SOC Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../soc/j7200/soc_j7200_int_top.html">System Firmware J7200 Internal SOC Data</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">TISCI User Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../1_intro/index.html">Chapter 1: Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2_tisci_msgs/index.html">Chapter 2: TISCI Message Documentation</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Chapter 3: Board Configuration</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="BOARDCFG.html">Board Configuration</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Resource Management Board Configuration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pc-based-pre-processing-the-rm-board-configuration">PC based Pre-processing the RM Board Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#resource-management-initialization-after-receiving-board-configuration">Resource Management Initialization after receiving board configuration</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#pc-based-pre-processing-the-rm-board-configuration">PC based Pre-processing the RM Board Configuration</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#resource-assignment-validation">Resource Assignment Validation</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#tisci-api-for-resource-management-board-config">TISCI API for Resource Management Board Config</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#ti-sci-api-for-get-resource-assignment-range">TI-SCI API for Get Resource Assignment Range</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id1">Usage</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id2">TISCI Message ID</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id3">Message Data Structures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="BOARDCFG_SEC.html">Security Board Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="BOARDCFG_PM.html">Power Management Board Configuration</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#resource-management-initialization-after-receiving-board-configuration">Resource Management Initialization after receiving board configuration</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#board-configuration-receive-and-validate">Board Configuration Receive and Validate</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#rm-core-initialization">RM Core Initialization</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#rm-irq-initialization">RM IRQ Initialization</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#rm-ring-accelerator-initialization">RM Ring Accelerator initialization</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#rm-dma-initialization">RM DMA Initialization</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#rm-psil-initialization">RM PSIL Initialization</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#rm-proxy-initialization">RM Proxy Initialization</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#osal-rm-subsystem-init">OSAL RM Subsystem Init</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4_trace/index.html">Chapter 4: Interpreting Trace Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5_soc_doc/index.html">Chapter 5: SoC Family Specific Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6_topic_user_guides/index.html">Chapter 6: Topic User Guides</a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="BOARDCFG_SEC.html">Security Board Configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="BOARDCFG_PM.html">Power Management Board Configuration</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../4_trace/index.html">Chapter 4: Interpreting Trace Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../5_soc_doc/index.html">Chapter 5: SoC Family Specific Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../6_topic_user_guides/index.html">Chapter 6: Topic User Guides</a></li>
 </ul>
 
             
@@ -150,7 +144,7 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../index.html">TISCI</a>
+        <a href="../../index.html">System Firmware</a>
       </nav>
 
 
@@ -165,7 +159,9 @@
 
 <div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../index.html">Docs</a> &raquo;</li>
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../index.html">TISCI User Guide</a> &raquo;</li>
       
           <li><a href="index.html">Chapter 3: Board Configuration</a> &raquo;</li>
       
@@ -349,7 +345,7 @@ ascending start_resource value order. The user must ensure the RM board
 configuration is sorted based on the flow shown below before sending this to the
 System Firmware. The overall flow for creating the board configuration and generating
 the pre-sorted and validated RM board configuration binary blob is as shown below.</p>
-<img alt="../_images/RM_BRD_CFG_1.JPG" src="../_images/RM_BRD_CFG_1.JPG" />
+<img alt="../../_images/RM_BRD_CFG_1.JPG" src="../../_images/RM_BRD_CFG_1.JPG" />
 <p>Details on how to use the sysfw_boardcfg_validator.py can be found by using the
 “–help” option to the script. The details on how to use this script is as shown
 below:</p>
@@ -944,7 +940,7 @@ is validated for ABI check and size checks.</p>
 to be pre-sorted and validated using the script sysfw_boardcfg_validator.py.
 If the data is not pre-sorted the behavior of the RM functionality is undefined.</p>
 </div>
-<img alt="../_images/RM_BRD_CFG_2.JPG" src="../_images/RM_BRD_CFG_2.JPG" />
+<img alt="../../_images/RM_BRD_CFG_2.JPG" src="../../_images/RM_BRD_CFG_2.JPG" />
 </div>
 <div class="section" id="rm-core-initialization">
 <h3>RM Core Initialization<a class="headerlink" href="#rm-core-initialization" title="Permalink to this headline">¶</a></h3>
@@ -953,7 +949,7 @@ initialization. This involves initialization of software structures to create an
 index to the resource assignment local copy for faster run time access. In addition
 the code also registers the software handler for the
 <a class="reference internal" href="#pub-boardcfg-resasg-get-tisci"><span class="std std-ref">TISCI_MSG_RM_GET_RESOURCE_RANGE</span></a> message.</p>
-<img alt="../_images/RM_BRD_CFG_3.JPG" src="../_images/RM_BRD_CFG_3.JPG" />
+<img alt="../../_images/RM_BRD_CFG_3.JPG" src="../../_images/RM_BRD_CFG_3.JPG" />
 </div>
 <div class="section" id="rm-irq-initialization">
 <h3>RM IRQ Initialization<a class="headerlink" href="#rm-irq-initialization" title="Permalink to this headline">¶</a></h3>
@@ -971,9 +967,9 @@ the code also registers the software handler for the</p>
 of ir_instance. This is a SoC specific System Firmware internal structure which is
 used to manage the Interrupt Router resource.</p>
 <p>The IR initialization sequence is as below:</p>
-<img alt="../_images/RM_BRD_CFG_4.JPG" src="../_images/RM_BRD_CFG_4.JPG" />
+<img alt="../../_images/RM_BRD_CFG_4.JPG" src="../../_images/RM_BRD_CFG_4.JPG" />
 <p>The IA initialization sequence is as below:</p>
-<img alt="../_images/RM_BRD_CFG_5.JPG" src="../_images/RM_BRD_CFG_5.JPG" />
+<img alt="../../_images/RM_BRD_CFG_5.JPG" src="../../_images/RM_BRD_CFG_5.JPG" />
 </div>
 <div class="section" id="rm-ring-accelerator-initialization">
 <h3>RM Ring Accelerator initialization<a class="headerlink" href="#rm-ring-accelerator-initialization" title="Permalink to this headline">¶</a></h3>
@@ -989,7 +985,7 @@ the code also registers the software handler for the</p>
 <p>It also initializes software state information capture in the internal structures
 of ra_instance. This is a SoC specific System Firmware internal structure which is
 used to manage the ring accelerator resource.</p>
-<img alt="../_images/RM_BRD_CFG_6.JPG" src="../_images/RM_BRD_CFG_6.JPG" />
+<img alt="../../_images/RM_BRD_CFG_6.JPG" src="../../_images/RM_BRD_CFG_6.JPG" />
 </div>
 <div class="section" id="rm-dma-initialization">
 <h3>RM DMA Initialization<a class="headerlink" href="#rm-dma-initialization" title="Permalink to this headline">¶</a></h3>
@@ -1006,7 +1002,7 @@ the code also registers the software handler for the</p>
 <li><a class="reference internal" href="../2_tisci_msgs/rm/rm_udmap.html#pub-rm-public-udmap-flow-cfg"><span class="std std-ref">TISCI_MSG_RM_UDMAP_FLOW_CFG</span></a> message</li>
 <li><a class="reference internal" href="../2_tisci_msgs/rm/rm_udmap.html#pub-rm-public-udmap-flow-size-thresh-cfg"><span class="std std-ref">TISCI_MSG_RM_UDMAP_FLOW_SIZE_THRESH_CFG</span></a> message</li>
 </ul>
-<img alt="../_images/RM_BRD_CFG_7.JPG" src="../_images/RM_BRD_CFG_7.JPG" />
+<img alt="../../_images/RM_BRD_CFG_7.JPG" src="../../_images/RM_BRD_CFG_7.JPG" />
 </div>
 <div class="section" id="rm-psil-initialization">
 <h3>RM PSIL Initialization<a class="headerlink" href="#rm-psil-initialization" title="Permalink to this headline">¶</a></h3>
@@ -1018,7 +1014,7 @@ PSIL initialization. At this step the code registers the software handler for th
 <li><a class="reference internal" href="../2_tisci_msgs/rm/rm_psil.html#pub-rm-public-psil-read"><span class="std std-ref">TISCI_MSG_RM_PSIL_READ</span></a> message</li>
 <li><a class="reference internal" href="../2_tisci_msgs/rm/rm_psil.html#pub-rm-public-psil-write"><span class="std std-ref">TISCI_MSG_RM_PSIL_WRITE</span></a> message</li>
 </ul>
-<img alt="../_images/RM_BRD_CFG_8.JPG" src="../_images/RM_BRD_CFG_8.JPG" />
+<img alt="../../_images/RM_BRD_CFG_8.JPG" src="../../_images/RM_BRD_CFG_8.JPG" />
 </div>
 <div class="section" id="rm-proxy-initialization">
 <h3>RM Proxy Initialization<a class="headerlink" href="#rm-proxy-initialization" title="Permalink to this headline">¶</a></h3>
@@ -1029,7 +1025,7 @@ Output Event Steering software handlers.</p>
 <ul class="simple">
 <li><a class="reference internal" href="../2_tisci_msgs/rm/rm_proxy.html#pub-rm-public-proxy-cfg"><span class="std std-ref">TISCI_MSG_RM_PROXY_CFG</span></a> message</li>
 </ul>
-<img alt="../_images/RM_BRD_CFG_9.JPG" src="../_images/RM_BRD_CFG_9.JPG" />
+<img alt="../../_images/RM_BRD_CFG_9.JPG" src="../../_images/RM_BRD_CFG_9.JPG" />
 </div>
 <div class="section" id="osal-rm-subsystem-init">
 <h3>OSAL RM Subsystem Init<a class="headerlink" href="#osal-rm-subsystem-init" title="Permalink to this headline">¶</a></h3>
@@ -1038,7 +1034,7 @@ state is updated to reflect the resource management is initialized and now
 can accept resource management messages.</p>
 <p>After this step the host response is sent. If for any reason any of the above
 steps fail the API would return with a NACK.</p>
-<img alt="../_images/RM_BRD_CFG_10.JPG" src="../_images/RM_BRD_CFG_10.JPG" />
+<img alt="../../_images/RM_BRD_CFG_10.JPG" src="../../_images/RM_BRD_CFG_10.JPG" />
 </div>
 </div>
 </div>
@@ -1083,16 +1079,16 @@ steps fail the API would return with a NACK.</p>
 
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
+            URL_ROOT:'../../',
             VERSION:'',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
         };
     </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
       <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
     <script src="http://www.ti.com/assets/js/headerfooter/analytics.js" type="text/javascript" charset="utf-8"></script>
@@ -1101,7 +1097,7 @@ steps fail the API would return with a NACK.</p>
 
   
   
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
   
 
   

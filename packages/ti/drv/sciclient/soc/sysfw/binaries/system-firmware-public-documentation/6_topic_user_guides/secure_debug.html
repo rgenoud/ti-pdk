@@ -8,12 +8,12 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Secure Debug User Guide &mdash; TISCI User Guide</title>
+  <title>Secure Debug User Guide &mdash; System Firmware Documentation</title>
   
 
   
   
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
   
 
   
@@ -26,23 +26,24 @@
 
   
   
-    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   
 
   
-    <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
   
 
   
         <link rel="index" title="Index"
-              href="../genindex.html"/>
-        <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="TISCI User Guide" href="../index.html"/>
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="System Firmware Documentation" href="../../index.html"/>
         <link rel="up" title="Chapter 6: Topic User Guides" href="index.html"/>
+        <link rel="next" title="Key Writer" href="key_writer.html"/>
         <link rel="prev" title="Performing Security Handover" href="security_handover.html"/> 
 
   
-  <script src="../_static/js/modernizr.min.js"></script>
+  <script src="../../_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -52,7 +53,7 @@
       <ul>
         <li id="top_logo">
           <a href="http://www.ti.com">
-            <img src="../_static/img/ti_logo.png"/>
+            <img src="../../_static/img/ti_logo.png"/>
           </a>
         </li>
       </ul>
@@ -68,7 +69,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> TISCI
+            <a href="../../index.html" class="icon icon-home"> System Firmware
           
 
           
@@ -81,7 +82,7 @@
 
           
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -95,41 +96,46 @@
           
             
             
-                <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../1_intro/index.html">Chapter 1: Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../2_tisci_msgs/index.html">Chapter 2: TISCI Message Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../3_boardcfg/index.html">Chapter 3: Board Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../4_trace/index.html">Chapter 4: Interpreting Trace Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../5_soc_doc/index.html">Chapter 5: SoC Family Specific Documentation</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">Chapter 6: Topic User Guides</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="devgrp_usage.html">Device Group Primer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="domgrp_usage.html">Domain Group Primer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="secure_boot_signing.html">Signing binaries for Secure Boot on HS Devices</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hs_boardcfg_signing.html">Signing Board Configuration on HS devices</a></li>
-<li class="toctree-l2"><a class="reference internal" href="extended_otp.html">Using Extended OTP on HS devices</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dkek_management.html">Using Derived KEK on HS devices</a></li>
-<li class="toctree-l2"><a class="reference internal" href="firewall_faq.html">Firewall FAQ</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sa2ul_access.html">SA2UL Access Outside of SYSFW</a></li>
-<li class="toctree-l2"><a class="reference internal" href="security_handover.html">Performing Security Handover</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Secure Debug User Guide</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#introduction">Introduction</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#creating-a-debug-certificate">Creating a debug certificate</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#certificate-validation-done-by-sysfw">Certificate validation done by System Firmware</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#populating-the-fields-in-the-certificate">Populating the fields in the certificate</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#example-certificate-configuration">Example certificate configuration</a></li>
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../PROCESS_TOP.html">System Firmware Process Documentation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../design/index.html">System Firmware Design Documentation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../soc/am6x/soc_am6x_int_top.html">System Firmware AM6 Internal SOC Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../soc/am65x_sr2/soc_am65x_sr2_int_top.html">System Firmware AM65x SR2 Internal SOC Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../soc/am64x/soc_am6x_int_top.html">System Firmware AM6 Internal SOC Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../soc/j721e/soc_j721e_int_top.html">System Firmware J721E Internal SOC Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../soc/j721e_legacy/soc_j721e_legacy_int_top.html">System Firmware J721E Internal SOC Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../soc/j7200/soc_j7200_int_top.html">System Firmware J7200 Internal SOC Data</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">TISCI User Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../1_intro/index.html">Chapter 1: Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2_tisci_msgs/index.html">Chapter 2: TISCI Message Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3_boardcfg/index.html">Chapter 3: Board Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4_trace/index.html">Chapter 4: Interpreting Trace Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5_soc_doc/index.html">Chapter 5: SoC Family Specific Documentation</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Chapter 6: Topic User Guides</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="devgrp_usage.html">Device Group Primer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="domgrp_usage.html">Domain Group Primer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="secure_boot_signing.html">Signing binaries for Secure Boot on HS Devices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hs_boardcfg_signing.html">Signing Board Configuration on HS devices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="extended_otp.html">Using Extended OTP on HS devices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dkek_management.html">Using Derived KEK on HS devices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="firewall_faq.html">Firewall FAQ</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sa2ul_access.html">SA2UL Access Outside of SYSFW</a></li>
+<li class="toctree-l3"><a class="reference internal" href="security_handover.html">Performing Security Handover</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Secure Debug User Guide</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#creating-a-debug-certificate">Creating a debug certificate</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sending-debug-certificate-to-sysfw">Sending debug certificate to System Firmware</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#retrieveing-soc-uid">Retrieveing SOC UID</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#controlling-debug-via-board-configuration">Controlling Debug via Board Configuration</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#sending-debug-certificate-to-sysfw">Sending debug certificate to System Firmware</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#using-tisci-api">Using TISCI API</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#over-the-jtag-interface">Over the JTAG interface</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#retrieveing-soc-uid">Retrieveing SOC UID</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#retrieving-the-soc-uid-over-jtag">Retrieving the SOC UID over JTAG</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#retrieving-the-soc-uid-over-uart">Retrieving the SOC UID over UART</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#controlling-debug-via-board-configuration">Controlling Debug via Board Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="key_writer.html">Key  Writer</a></li>
 </ul>
 </li>
 </ul>
@@ -147,7 +153,7 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../index.html">TISCI</a>
+        <a href="../../index.html">System Firmware</a>
       </nav>
 
 
@@ -162,7 +168,9 @@
 
 <div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../index.html">Docs</a> &raquo;</li>
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../index.html">TISCI User Guide</a> &raquo;</li>
       
           <li><a href="index.html">Chapter 6: Topic User Guides</a> &raquo;</li>
       
@@ -218,7 +226,7 @@
 <p>On K3 High Security - Security Enforced (HS-SE) devices, the JTAG port is closed by default.
 The below table shows the default state of the JTAG on various device types.</p>
 <table border="1" class="docutils" id="id1">
-<caption><span class="caption-number">Table 3 </span><span class="caption-text">JTAG Default state on various device types</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-number">Table 17 </span><span class="caption-text">JTAG Default state on various device types</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
 <colgroup>
 <col width="25%" />
 <col width="28%" />
@@ -708,6 +716,8 @@ to unlock the jtag port by using a special host id. Please refer to
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
+        <a href="key_writer.html" class="btn btn-neutral float-right" title="Key Writer" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
       
         <a href="security_handover.html" class="btn btn-neutral" title="Performing Security Handover" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
@@ -739,16 +749,16 @@ to unlock the jtag port by using a special host id. Please refer to
 
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
+            URL_ROOT:'../../',
             VERSION:'',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
         };
     </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
       <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
     <script src="http://www.ti.com/assets/js/headerfooter/analytics.js" type="text/javascript" charset="utf-8"></script>
@@ -757,7 +767,7 @@ to unlock the jtag port by using a special host id. Please refer to
 
   
   
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
   
 
   

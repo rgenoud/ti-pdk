@@ -8,12 +8,12 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Using Derived KEK on HS devices &mdash; TISCI User Guide</title>
+  <title>Using Derived KEK on HS devices &mdash; System Firmware Documentation</title>
   
 
   
   
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
   
 
   
@@ -26,24 +26,24 @@
 
   
   
-    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   
 
   
-    <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
   
 
   
         <link rel="index" title="Index"
-              href="../genindex.html"/>
-        <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="TISCI User Guide" href="../index.html"/>
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="System Firmware Documentation" href="../../index.html"/>
         <link rel="up" title="Chapter 6: Topic User Guides" href="index.html"/>
         <link rel="next" title="Firewall FAQ" href="firewall_faq.html"/>
         <link rel="prev" title="Using Extended OTP on HS devices" href="extended_otp.html"/> 
 
   
-  <script src="../_static/js/modernizr.min.js"></script>
+  <script src="../../_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -53,7 +53,7 @@
       <ul>
         <li id="top_logo">
           <a href="http://www.ti.com">
-            <img src="../_static/img/ti_logo.png"/>
+            <img src="../../_static/img/ti_logo.png"/>
           </a>
         </li>
       </ul>
@@ -69,7 +69,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> TISCI
+            <a href="../../index.html" class="icon icon-home"> System Firmware
           
 
           
@@ -82,7 +82,7 @@
 
           
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -96,32 +96,45 @@
           
             
             
-                <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../1_intro/index.html">Chapter 1: Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../2_tisci_msgs/index.html">Chapter 2: TISCI Message Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../3_boardcfg/index.html">Chapter 3: Board Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../4_trace/index.html">Chapter 4: Interpreting Trace Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../5_soc_doc/index.html">Chapter 5: SoC Family Specific Documentation</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">Chapter 6: Topic User Guides</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="devgrp_usage.html">Device Group Primer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="domgrp_usage.html">Domain Group Primer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="secure_boot_signing.html">Signing binaries for Secure Boot on HS Devices</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hs_boardcfg_signing.html">Signing Board Configuration on HS devices</a></li>
-<li class="toctree-l2"><a class="reference internal" href="extended_otp.html">Using Extended OTP on HS devices</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Using Derived KEK on HS devices</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#key-derivation-method">Key Derivation Method</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#using-derived-kek">Using Derived KEK</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#approach-1-dkek-programmed-into-sa2ul">Approach 1 - DKEK programmed into SA2UL</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#approach-2-dkek-supplied-via-tisci">Approach 2 - DKEK supplied via TISCI</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#comparing-the-two-approaches">Comparing the two approaches</a></li>
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../PROCESS_TOP.html">System Firmware Process Documentation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../design/index.html">System Firmware Design Documentation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../soc/am6x/soc_am6x_int_top.html">System Firmware AM6 Internal SOC Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../soc/am65x_sr2/soc_am65x_sr2_int_top.html">System Firmware AM65x SR2 Internal SOC Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../soc/am64x/soc_am6x_int_top.html">System Firmware AM6 Internal SOC Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../soc/j721e/soc_j721e_int_top.html">System Firmware J721E Internal SOC Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../soc/j721e_legacy/soc_j721e_legacy_int_top.html">System Firmware J721E Internal SOC Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../soc/j7200/soc_j7200_int_top.html">System Firmware J7200 Internal SOC Data</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">TISCI User Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../1_intro/index.html">Chapter 1: Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2_tisci_msgs/index.html">Chapter 2: TISCI Message Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3_boardcfg/index.html">Chapter 3: Board Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4_trace/index.html">Chapter 4: Interpreting Trace Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5_soc_doc/index.html">Chapter 5: SoC Family Specific Documentation</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Chapter 6: Topic User Guides</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="devgrp_usage.html">Device Group Primer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="domgrp_usage.html">Domain Group Primer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="secure_boot_signing.html">Signing binaries for Secure Boot on HS Devices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hs_boardcfg_signing.html">Signing Board Configuration on HS devices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="extended_otp.html">Using Extended OTP on HS devices</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Using Derived KEK on HS devices</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#key-derivation-method">Key Derivation Method</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#using-derived-kek">Using Derived KEK</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="firewall_faq.html">Firewall FAQ</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sa2ul_access.html">SA2UL Access Outside of SYSFW</a></li>
+<li class="toctree-l3"><a class="reference internal" href="security_handover.html">Performing Security Handover</a></li>
+<li class="toctree-l3"><a class="reference internal" href="secure_debug.html">Secure Debug User Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="key_writer.html">Key  Writer</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="firewall_faq.html">Firewall FAQ</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sa2ul_access.html">SA2UL Access Outside of SYSFW</a></li>
-<li class="toctree-l2"><a class="reference internal" href="security_handover.html">Performing Security Handover</a></li>
-<li class="toctree-l2"><a class="reference internal" href="secure_debug.html">Secure Debug User Guide</a></li>
 </ul>
 </li>
 </ul>
@@ -137,7 +150,7 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../index.html">TISCI</a>
+        <a href="../../index.html">System Firmware</a>
       </nav>
 
 
@@ -152,7 +165,9 @@
 
 <div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../index.html">Docs</a> &raquo;</li>
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../index.html">TISCI User Guide</a> &raquo;</li>
       
           <li><a href="index.html">Chapter 6: Topic User Guides</a> &raquo;</li>
       
@@ -250,17 +265,17 @@ performing encryption/decryption.</p>
 <p>In this approach, host requests System Firmware to derive a DKEK and program it into the
 SA2UL DKEK registers using the <a class="reference internal" href="../2_tisci_msgs/security/dkek_management.html#sec-api-sa2ul-set-dkek"><span class="std std-ref">TISCI_MSG_SA2UL_SET_DKEK</span></a> API.</p>
 <div class="figure">
-<img alt="../_images/dkek_approach1_set_dkek.svg" src="../_images/dkek_approach1_set_dkek.svg" /></div>
+<img alt="../../_images/dkek_approach1_set_dkek.svg" src="../../_images/dkek_approach1_set_dkek.svg" /></div>
 <p>DKEK is not directly made available to the host. The host can use DKEK for
 encryption/decryption by setting the <code class="docutils literal"><span class="pre">USE_DKEK</span></code> flag in the SA2UL security
 context.</p>
 <div class="figure">
-<img alt="../_images/dkek_approach1_use_dkek.svg" src="../_images/dkek_approach1_use_dkek.svg" /></div>
+<img alt="../../_images/dkek_approach1_use_dkek.svg" src="../../_images/dkek_approach1_use_dkek.svg" /></div>
 <p>When the host is done with the use of DKEK, it can release the DKEK registers
 by using the <a class="reference internal" href="../2_tisci_msgs/security/dkek_management.html#sec-api-sa2ul-release-dkek"><span class="std std-ref">TISCI_MSG_SA2UL_RELEASE_DKEK</span></a>
 API.</p>
 <div class="figure">
-<img alt="../_images/dkek_approach1_release_dkek.svg" src="../_images/dkek_approach1_release_dkek.svg" /></div>
+<img alt="../../_images/dkek_approach1_release_dkek.svg" src="../../_images/dkek_approach1_release_dkek.svg" /></div>
 <div class="section" id="caveat-on-approach-1">
 <h4>Caveat on Approach 1<a class="headerlink" href="#caveat-on-approach-1" title="Permalink to this headline">¶</a></h4>
 <p>When the <code class="docutils literal"><span class="pre">USE_DKEK</span></code> flag is used in SA2UL security context, SA2UL checks if the
@@ -282,18 +297,18 @@ Alternatively approach 2 described below can be used.</p>
 response using the <a class="reference internal" href="../2_tisci_msgs/security/dkek_management.html#sec-api-sa2ul-get-dkek"><span class="std std-ref">TISCI_MSG_SA2UL_GET_DKEK</span></a> API.
 The host is responsible for maintaining the secrecy of the DKEK supplied by System Firmware.</p>
 <div class="figure">
-<img alt="../_images/dkek_approach2_get_dkek.svg" src="../_images/dkek_approach2_get_dkek.svg" /></div>
+<img alt="../../_images/dkek_approach2_get_dkek.svg" src="../../_images/dkek_approach2_get_dkek.svg" /></div>
 <p>Once DKEK is available, the host can perform encryption/decryption with it in
 the same manner as any other symmetric key.</p>
 <div class="figure">
-<img alt="../_images/dkek_approach2_use_dkek.svg" src="../_images/dkek_approach2_use_dkek.svg" /></div>
+<img alt="../../_images/dkek_approach2_use_dkek.svg" src="../../_images/dkek_approach2_use_dkek.svg" /></div>
 <p>As the SA2UL DKEK registers are not being used, there is no release DKEK API
 required in this approach.</p>
 </div>
 <div class="section" id="comparing-the-two-approaches">
 <h3>Comparing the two approaches<a class="headerlink" href="#comparing-the-two-approaches" title="Permalink to this headline">¶</a></h3>
 <table border="1" class="docutils" id="id1">
-<caption><span class="caption-number">Table 2 </span><span class="caption-text">Comparison</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-number">Table 16 </span><span class="caption-text">Comparison</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
 <colgroup>
 <col width="50%" />
 <col width="50%" />
@@ -388,16 +403,16 @@ in this approach.</td>
 
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
+            URL_ROOT:'../../',
             VERSION:'',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
         };
     </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
       <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
     <script src="http://www.ti.com/assets/js/headerfooter/analytics.js" type="text/javascript" charset="utf-8"></script>
@@ -406,7 +421,7 @@ in this approach.</td>
 
   
   
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
   
 
   

@@ -8,12 +8,12 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Power Management Board Configuration &mdash; TISCI User Guide</title>
+  <title>Power Management Board Configuration &mdash; System Firmware Documentation</title>
   
 
   
   
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
   
 
   
@@ -26,24 +26,24 @@
 
   
   
-    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   
 
   
-    <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
   
 
   
         <link rel="index" title="Index"
-              href="../genindex.html"/>
-        <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="TISCI User Guide" href="../index.html"/>
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="System Firmware Documentation" href="../../index.html"/>
         <link rel="up" title="Chapter 3: Board Configuration" href="index.html"/>
         <link rel="next" title="Chapter 4: Interpreting Trace Data" href="../4_trace/index.html"/>
         <link rel="prev" title="Security Board Configuration" href="BOARDCFG_SEC.html"/> 
 
   
-  <script src="../_static/js/modernizr.min.js"></script>
+  <script src="../../_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -53,7 +53,7 @@
       <ul>
         <li id="top_logo">
           <a href="http://www.ti.com">
-            <img src="../_static/img/ti_logo.png"/>
+            <img src="../../_static/img/ti_logo.png"/>
           </a>
         </li>
       </ul>
@@ -69,7 +69,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> TISCI
+            <a href="../../index.html" class="icon icon-home"> System Firmware
           
 
           
@@ -82,7 +82,7 @@
 
           
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -96,38 +96,40 @@
           
             
             
-                <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../1_intro/index.html">Chapter 1: Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../2_tisci_msgs/index.html">Chapter 2: TISCI Message Documentation</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">Chapter 3: Board Configuration</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="BOARDCFG.html">Board Configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="BOARDCFG_RM.html">Resource Management Board Configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="BOARDCFG_SEC.html">Security Board Configuration</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Power Management Board Configuration</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#introduction">Introduction</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#device-groups-for-power-management-board-configuration">Device Groups for Power Management Board Configuration</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#tisci-api-for-power-management-board-config">TISCI API for Power Management Board Config</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#boardcfg-pm-structure">boardcfg_pm structure</a></li>
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../PROCESS_TOP.html">System Firmware Process Documentation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../design/index.html">System Firmware Design Documentation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../soc/am6x/soc_am6x_int_top.html">System Firmware AM6 Internal SOC Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../soc/am65x_sr2/soc_am65x_sr2_int_top.html">System Firmware AM65x SR2 Internal SOC Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../soc/am64x/soc_am6x_int_top.html">System Firmware AM6 Internal SOC Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../soc/j721e/soc_j721e_int_top.html">System Firmware J721E Internal SOC Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../soc/j721e_legacy/soc_j721e_legacy_int_top.html">System Firmware J721E Internal SOC Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../soc/j7200/soc_j7200_int_top.html">System Firmware J7200 Internal SOC Data</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">TISCI User Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../1_intro/index.html">Chapter 1: Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2_tisci_msgs/index.html">Chapter 2: TISCI Message Documentation</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Chapter 3: Board Configuration</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="BOARDCFG.html">Board Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="BOARDCFG_RM.html">Resource Management Board Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="BOARDCFG_SEC.html">Security Board Configuration</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Power Management Board Configuration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#power-management-initialization-after-receiving-board-configuration">Power Management Initialization after receiving board configuration</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#power-management-initialization-after-receiving-board-configuration">Power Management Initialization after receiving board configuration</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#board-configuration-receive-and-validate">Board Configuration Receive and Validate</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pm-initialization-dmsc-init">PM Initialization - DMSC Init</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pm-initialization-clock-init">PM Initialization - Clock Init</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pm-initialization-device-init">PM Initialization - Device Init</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pm-initialization-clock-messages-init">PM Initialization - Clock Messages Init</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pm-initialization-device-messages-init">PM Initialization - Device Messages Init</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pm-initialization-core-messages-init">PM Initialization - Core Messages Init</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#osal-pm-subsystem-init">OSAL PM Subsystem Init</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../4_trace/index.html">Chapter 4: Interpreting Trace Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5_soc_doc/index.html">Chapter 5: SoC Family Specific Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../6_topic_user_guides/index.html">Chapter 6: Topic User Guides</a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../4_trace/index.html">Chapter 4: Interpreting Trace Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../5_soc_doc/index.html">Chapter 5: SoC Family Specific Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../6_topic_user_guides/index.html">Chapter 6: Topic User Guides</a></li>
 </ul>
 
             
@@ -141,7 +143,7 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../index.html">TISCI</a>
+        <a href="../../index.html">System Firmware</a>
       </nav>
 
 
@@ -156,7 +158,9 @@
 
 <div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../index.html">Docs</a> &raquo;</li>
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../index.html">TISCI User Guide</a> &raquo;</li>
       
           <li><a href="index.html">Chapter 3: Board Configuration</a> &raquo;</li>
       
@@ -337,7 +341,7 @@ performs the following operations:</p>
 <h3>Board Configuration Receive and Validate<a class="headerlink" href="#board-configuration-receive-and-validate" title="Permalink to this headline">¶</a></h3>
 <p>The first step after receiving the board configuration by the
 tisci_msg_board_config_pm_handler is to identify which DEVGRP the message is for.</p>
-<img alt="../_images/PM_BRD_CFG_2.JPG" src="../_images/PM_BRD_CFG_2.JPG" />
+<img alt="../../_images/PM_BRD_CFG_2.JPG" src="../../_images/PM_BRD_CFG_2.JPG" />
 </div>
 <div class="section" id="pm-initialization-dmsc-init">
 <h3>PM Initialization - DMSC Init<a class="headerlink" href="#pm-initialization-dmsc-init" title="Permalink to this headline">¶</a></h3>
@@ -345,7 +349,7 @@ tisci_msg_board_config_pm_handler is to identify which DEVGRP the message is for
 initialization. This involves multiple steps starting with DMSC initialization.
 The DMSC initialization involves unlocking the WKUP and MAIN CTRL MMRs. This is
 SoC specific.</p>
-<img alt="../_images/PM_BRD_CFG_3.JPG" src="../_images/PM_BRD_CFG_3.JPG" />
+<img alt="../../_images/PM_BRD_CFG_3.JPG" src="../../_images/PM_BRD_CFG_3.JPG" />
 </div>
 <div class="section" id="pm-initialization-clock-init">
 <h3>PM Initialization - Clock Init<a class="headerlink" href="#pm-initialization-clock-init" title="Permalink to this headline">¶</a></h3>
@@ -355,7 +359,7 @@ as per the OFC for the input device group. The UART is re-initialized after the
 PLL is locked. The software reference counts for the clocks initialized at power
 up is updated.</p>
 <p>The Clock init initialization sequence is as below:</p>
-<img alt="../_images/PM_BRD_CFG_4.JPG" src="../_images/PM_BRD_CFG_4.JPG" />
+<img alt="../../_images/PM_BRD_CFG_4.JPG" src="../../_images/PM_BRD_CFG_4.JPG" />
 </div>
 <div class="section" id="pm-initialization-device-init">
 <h3>PM Initialization - Device Init<a class="headerlink" href="#pm-initialization-device-init" title="Permalink to this headline">¶</a></h3>
@@ -366,7 +370,7 @@ the device PSC is captured. The module clock default flags are initialized in th
 function. After this the API clears the software state of the modules and clocks
 enabled at power up.</p>
 <p>The Device init initialization sequence is as below:</p>
-<img alt="../_images/PM_BRD_CFG_5.JPG" src="../_images/PM_BRD_CFG_5.JPG" />
+<img alt="../../_images/PM_BRD_CFG_5.JPG" src="../../_images/PM_BRD_CFG_5.JPG" />
 </div>
 <div class="section" id="pm-initialization-clock-messages-init">
 <h3>PM Initialization - Clock Messages Init<a class="headerlink" href="#pm-initialization-clock-messages-init" title="Permalink to this headline">¶</a></h3>
@@ -382,7 +386,7 @@ register the software handler for the</p>
 <li><a class="reference internal" href="../2_tisci_msgs/pm/clocks.html#pm-clocks-msg-query-freq"><span class="std std-ref">TISCI_MSG_QUERY_FREQ</span></a> message</li>
 <li><a class="reference internal" href="../2_tisci_msgs/pm/clocks.html#pm-clocks-msg-get-freq"><span class="std std-ref">TISCI_MSG_GET_FREQ</span></a> message</li>
 </ul>
-<img alt="../_images/PM_BRD_CFG_6.JPG" src="../_images/PM_BRD_CFG_6.JPG" />
+<img alt="../../_images/PM_BRD_CFG_6.JPG" src="../../_images/PM_BRD_CFG_6.JPG" />
 </div>
 <div class="section" id="pm-initialization-device-messages-init">
 <h3>PM Initialization - Device Messages Init<a class="headerlink" href="#pm-initialization-device-messages-init" title="Permalink to this headline">¶</a></h3>
@@ -393,7 +397,7 @@ register the software handler for the</p>
 <li><a class="reference internal" href="../2_tisci_msgs/pm/devices.html#pm-devices-msg-get-device"><span class="std std-ref">TISCI_MSG_GET_DEVICE</span></a> message</li>
 <li><a class="reference internal" href="../2_tisci_msgs/pm/devices.html#pm-devices-msg-set-device-resets"><span class="std std-ref">TISCI_MSG_SET_DEVICE_RESETS</span></a> message</li>
 </ul>
-<img alt="../_images/PM_BRD_CFG_7.JPG" src="../_images/PM_BRD_CFG_7.JPG" />
+<img alt="../../_images/PM_BRD_CFG_7.JPG" src="../../_images/PM_BRD_CFG_7.JPG" />
 </div>
 <div class="section" id="pm-initialization-core-messages-init">
 <h3>PM Initialization - Core Messages Init<a class="headerlink" href="#pm-initialization-core-messages-init" title="Permalink to this headline">¶</a></h3>
@@ -402,7 +406,7 @@ register the software handler for the</p>
 <ul class="simple">
 <li><a class="reference internal" href="../2_tisci_msgs/pm/sysreset.html#pm-sysreset-msg-sys-reset"><span class="std std-ref">TISCI_MSG_SYS_RESET</span></a> message</li>
 </ul>
-<img alt="../_images/PM_BRD_CFG_8.JPG" src="../_images/PM_BRD_CFG_8.JPG" />
+<img alt="../../_images/PM_BRD_CFG_8.JPG" src="../../_images/PM_BRD_CFG_8.JPG" />
 </div>
 <div class="section" id="osal-pm-subsystem-init">
 <h3>OSAL PM Subsystem Init<a class="headerlink" href="#osal-pm-subsystem-init" title="Permalink to this headline">¶</a></h3>
@@ -413,7 +417,7 @@ state is updated to reflect the power management is initialized and now
 can accept power management messages.</p>
 <p>After this step the host response is sent. If for any reason any of the above
 steps fail the API would return with a NACK.</p>
-<img alt="../_images/PM_BRD_CFG_9.JPG" src="../_images/PM_BRD_CFG_9.JPG" />
+<img alt="../../_images/PM_BRD_CFG_9.JPG" src="../../_images/PM_BRD_CFG_9.JPG" />
 </div>
 </div>
 </div>
@@ -458,16 +462,16 @@ steps fail the API would return with a NACK.</p>
 
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
+            URL_ROOT:'../../',
             VERSION:'',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
         };
     </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
       <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
     <script src="http://www.ti.com/assets/js/headerfooter/analytics.js" type="text/javascript" charset="utf-8"></script>
@@ -476,7 +480,7 @@ steps fail the API would return with a NACK.</p>
 
   
   
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
   
 
   
