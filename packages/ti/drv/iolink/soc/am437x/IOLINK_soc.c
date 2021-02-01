@@ -63,7 +63,7 @@ IOLINK_v0_SwAttrs iolinkInitCfg[IOLINK_SWIP_MAX_CNT] =
             SOC_PRU_ICSS0_U_DATA_RAM0, /* dataMemBaseAddr */
             SOC_PRU_ICSS0_U_INTC_REG   /* intcBaseAddr */
         },
-        /* cycleCounterIntConfig */
+        /* cycleCounterIntConfig todo: will not be used anymore*/
         {
             191, /* coreIntNum */
             7,   /* socEvId */
@@ -80,6 +80,14 @@ IOLINK_v0_SwAttrs iolinkInitCfg[IOLINK_SWIP_MAX_CNT] =
             192, /* coreIntNum */
             16,  /* socEvId */
             1    /* intPrio */
+#ifdef PRU_STARTUP
+        },
+        /* pruStartupCompleteIntConfig */
+        {
+            191, /* coreIntNum */
+            7,  /* socEvId */
+            1    /* intPrio */
+#endif            
         }
     },
 };
@@ -192,6 +200,29 @@ void IOLINK_pruIcssPinMuxCfg(void)
     *((uint32_t *) 0x44E10968)      =  ((1<<16) | 0x7);     /* MUX GPIO1_8 to L25, register uart0_ctsn; IDK Pin18 */
 }
 
+#ifdef PRU_STARTUP
+void IOLINK_StartupIntrInit(void){
+    /* ICSS0 INTC configuration */
+    /* Set the interrupt polarity of system event 17 to active high */
+    *((uint32_t*) (SOC_PRU_ICSS0_U_INTC_REG + CSL_ICSSM_INTC_SIPR0)) |= (1<<17);
+    /* Set the type of system event 17 to level or pulse interrupt */
+    *((uint32_t*) (SOC_PRU_ICSS0_U_INTC_REG + CSL_ICSSM_INTC_SITR0)) &= ~(1<<17);
+    /* map system event with index 17 to channel 2 */
+    *((uint32_t*) (SOC_PRU_ICSS0_U_INTC_REG + CSL_ICSSM_INTC_CMR4)) &= ~(CSL_ICSSM_INTC_CMR4_CH_MAP_17_MASK);
+    *((uint32_t*) (SOC_PRU_ICSS0_U_INTC_REG + CSL_ICSSM_INTC_CMR4)) |= (0x2<<CSL_ICSSM_INTC_CMR4_CH_MAP_17_SHIFT);
+    /* map channel 2 to interrupt with index 2 */
+    *((uint32_t*) (SOC_PRU_ICSS0_U_INTC_REG + CSL_ICSSM_INTC_HMR0)) &= ~(CSL_ICSSM_INTC_HMR0_HINT_MAP_2_MASK);
+    *((uint32_t*) (SOC_PRU_ICSS0_U_INTC_REG + CSL_ICSSM_INTC_HMR0)) |= (0x2<<CSL_ICSSM_INTC_HMR0_HINT_MAP_2_SHIFT);
+    /* clear the system event with index 17  (pr0_pru_mst_intr1_intr_req) */
+    *((uint32_t*) (SOC_PRU_ICSS0_U_INTC_REG + CSL_ICSSM_INTC_SICR)) = 17;
+    /* enable the system event with index 17  (pr0_pru_mst_intr1_intr_req) */
+    *((uint32_t*) (SOC_PRU_ICSS0_U_INTC_REG + CSL_ICSSM_INTC_EISR)) = 17;
+    /* enable host interrupt output with index 2 */
+    *((uint32_t*) (SOC_PRU_ICSS0_U_INTC_REG + CSL_ICSSM_INTC_HIEISR)) = 0x2;
+    /* globally enable all interrupts */
+    *((uint32_t*) (SOC_PRU_ICSS0_U_INTC_REG + CSL_ICSSM_INTC_GER)) = 0x1;
+
+#else
 /* TBD: need to check if can use timer apis in osal */
 void IOLINK_cTimerInit(void)
 {
@@ -229,6 +260,7 @@ void IOLINK_cTimerInit(void)
     *((uint32_t*) (SOC_PRU_ICSS0_U_INTC_REG + CSL_ICSSM_INTC_HIEISR)) = 0x2;
     /* globally enable all interrupts */
     *((uint32_t*) (SOC_PRU_ICSS0_U_INTC_REG + CSL_ICSSM_INTC_GER)) = 0x1;
+#endif
 #endif
 }
 
@@ -269,6 +301,7 @@ void IOLINK_adjustableTimerStop(void)
     *((uint32_t*) (ADJUSTABLE_TIMER_ADR + TIMER_TCLR)) &= ~(1<<TIMER_TCLR_ST_SHIFT);
 }
 
+#ifndef PRU_STARTUP
 void IOLINK_clearCycleTimerInt(void)
 {
     /* Clear all compare match status bits */
@@ -276,12 +309,20 @@ void IOLINK_clearCycleTimerInt(void)
     /* clear the system event with index 7  (pr0_iep_tim_cap_cmp_pend) */
     *((uint32_t*) (SOC_PRU_ICSS0_U_INTC_REG + CSL_ICSSM_INTC_SICR)) = 0x7;
 }
+#endif
 
 void IOLINK_clearAdjTimerInt(void)
 {
     /* clear pending compare match events */
     *((uint32_t*) (ADJUSTABLE_TIMER_ADR + TIMER_IRQSTATUS)) |= (1<<TIMER_IRQSTATUS_MAT_IT_FLAG_SHIFT);
 }
+
+#ifdef PRU_STARTUP
+void IOLINK_StartupIntrClear(void){
+    /* clear the system event with index 16  (pr0_iep_tim_cap_cmp_pend) */
+    *((uint32_t*) (SOC_PRU_ICSS0_U_INTC_REG + CSL_ICSSM_INTC_SICR)) = 17;
+}
+#endif
 
 void IOLINK_clearPruCompInt(void)
 {

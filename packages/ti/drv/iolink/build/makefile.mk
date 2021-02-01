@@ -62,7 +62,7 @@ ifeq ($(SOC),$(filter $(SOC), am437x))
   INCDIR += src/v0
   SRCS_COMMON += IOLINK_v0.c
   PACKAGE_SRCS_COMMON += src/v0 soc/IOLINK_v0.h
-  CFLAGS_LOCAL_COMMON += -DPRU_ICSS_FW
+  CFLAGS_LOCAL_COMMON += -DPRU_ICSS_FW -DPRU_STARTUP
 endif
 
 ifeq ($(SOC),$(filter $(SOC), am437x))

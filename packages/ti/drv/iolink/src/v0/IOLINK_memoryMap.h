@@ -134,6 +134,13 @@
 #define averagingfilterAdr  (0x0E00U)
 #define paritylutAdr        (0x0F00U)
 
+/* These registers are on the second pru */
+#define CycleTimerCtrl      0x0
+
+/* these are bit offsets in the CycleTimerCtrl register */
+#define StartSeqCtrlOffset      0x8
+#define StartSeqStatusOffset    0x16
+
 
 /*
  * PRU pin configuration

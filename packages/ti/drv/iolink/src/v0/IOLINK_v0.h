@@ -162,27 +162,23 @@ extern "C" {
  */
 #define IOLINK_COMMAND_STARTPULSE       (0U)
 #define IOLINK_COMMAND_SETCOM           (1U)
-
+#ifdef PRU_STARTUP
+#define IOLINK_COMMAND_STARTSEQ         (2U)
+#endif
 /*!
  *  @brief IO-Link timer types
  */
-#define IOLINK_TIMER_TYPE_10MS          (0U)
-#define IOLINK_TIMER_TYPE_ADJ           (1U)
+#define IOLINK_TIMER_TYPE_10MS          (0U) //Not used
+#define IOLINK_TIMER_TYPE_ADJ           (1U) //Not used
 #define IOLINK_TIMER_TYPE_CYCLE         (2U)
 
 /*!
  *  @brief IO-Link adjuster timer types
  */
-#define IOLINK_TIMER_ADJ_TREN           (0U)
-#define IOLINK_TIMER_ADJ_TDMT           (1U)
+#define IOLINK_TIMER_ADJ_TREN           (0U) //Not used
+#define IOLINK_TIMER_ADJ_TDMT           (1U) //Not used
 
 /* @} */
-
-/*!
- *  @brief Enable PRUCYCLETIMER  - comment this out to disable PRUCYCLETIMER
- *  feature
- */
-#define PRUCYCLETIMER
 
 /**
  *  \addtogroup IOLINK_V0_DATASTRUCT
@@ -249,6 +245,10 @@ typedef struct IOLINK_v0_SwAttrs_s
     IOLINK_PruIcssHwiAttrs    adjustableTimerIntConfig;
     /*! HWI config attrs of IO-Link PRU complete        */
     IOLINK_PruIcssHwiAttrs    pruCompleteIntConfig;
+#ifdef PRU_STARTUP  
+    /*! HWI config attrs of IO-Link PRU startup        */
+    IOLINK_PruIcssHwiAttrs    pruStartupCompleteIntConfig;
+#endif    
     
 } IOLINK_v0_SwAttrs;
 
@@ -356,6 +356,21 @@ typedef void (*IOLINK_xferRspCallbackFxn)(IOLINK_Handle handle, uint32_t channel
  */
 typedef void (*IOLINK_xferErrRspCallbackFxn)(IOLINK_Handle handle, uint32_t channel);
 
+#ifdef PRU_STARTUP
+/*!
+ *  @brief      The definition of a callback function for data transfer error
+ *
+ *  @param      IOLINK_Handle           IO-Link handle #
+ *
+ *  @param      channel                 IO-Link channel #
+ *
+ *  @param      result                  result of startup seq: no response, COM1, COM2, COM3
+ *
+ */
+typedef void (*IOLINK_StartupCallback)(IOLINK_Handle handle, uint32_t channel, uint32_t result);
+
+#endif
+
 /*!
  *  @brief  IOLINK callback function pointers data structure
  */
@@ -371,6 +386,10 @@ typedef struct IOLINK_v0_Callbacks_s
     IOLINK_xferRspCallbackFxn    xferRspCallback;
     /*! data transfer error response callback function pointer */
     IOLINK_xferErrRspCallbackFxn xferErrRspCallback;
+#ifdef PRU_STARTUP    
+    /*! startup response callback function pointer */
+    IOLINK_StartupCallback StartupCallback;
+#endif    
 
 } IOLINK_v0_Callbacks;
 
@@ -392,6 +411,10 @@ typedef struct IOLINK_v0_Object_s
     void                 *adjustableTimerHwi;
     /*! PRU transfer complete h/w interrupt handler */
     void                 *pruCompleteHwi;
+#ifdef PRU_STARTUP    
+    /*! PRU startup complete h/w interrupt handler */
+    void                 *pruStartupCompleteHwi;
+#endif    
 
     /*! Software timer s/w interrupt handler */
     void                 *softwareTimerSwi;
@@ -404,6 +427,11 @@ typedef struct IOLINK_v0_Object_s
     void                 *cycleTimerElapsedSwi[IOLINK_MAX_NUM_CHN];
     /*! PRU transfer complete s/w interrupt handler */
     void                 *pruCompleteSwi[IOLINK_MAX_NUM_CHN];
+
+#ifdef PRU_STARTUP
+    /*! PRU startup complete s/w interrupt handler */
+    void                 *pruStartupCompleteSwi[IOLINK_MAX_NUM_CHN];
+#endif
 
     /*! Timer configuration data */
     IOLINK_TimerConfig    timerConfig;
@@ -432,12 +460,17 @@ extern const IOLINK_FxnTable IOLINK_v0_FxnTable;
 extern void IOLINK_pruIcssPinMuxCfg(void);
 
 /* TBD: need to move to osal */
+#ifdef PRU_STARTUP
+extern void IOLINK_StartupIntrInit(void);
+extern void IOLINK_StartupIntrClear(void);
+#else
 extern void IOLINK_cTimerInit(void);
 extern void IOLINK_adjustableTimerInit(void);
 extern void IOLINK_adjustableTimerStart(uint32_t compare);
 extern void IOLINK_adjustableTimerStop(void);
 extern void IOLINK_clearCycleTimerInt(void);
 extern void IOLINK_clearAdjTimerInt(void);
+#endif
 extern void IOLINK_clearPruCompInt(void);
 
 extern void IOLINK_registerSwi(uintptr_t arg0, uintptr_t arg1, void *isrFnPtr, void *swi);

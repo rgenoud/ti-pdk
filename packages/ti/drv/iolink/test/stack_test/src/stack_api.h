@@ -60,6 +60,9 @@ extern "C" {
  */
 #define IO_LINK_COMMAND_STARTPULSE       ((uint8_t)IOLINK_COMMAND_STARTPULSE)
 #define IO_LINK_COMMAND_SETCOM           ((uint8_t)IOLINK_COMMAND_SETCOM)
+#ifdef PRU_STARTUP
+#define IO_LINK_COMMAND_STARTSEQ         ((uint8_t)IOLINK_COMMAND_STARTSEQ)
+#endif
 
 /**
  *  \brief IO-Link adjuster timer types
@@ -275,6 +278,20 @@ extern void IO_Link_xferRspCallback(IOLINK_Handle handle, uint32_t channel);
  *
  */
 extern void IO_Link_xferErrRspCallback(IOLINK_Handle handle, uint32_t channel);
+
+#ifdef PRU_STARTUP
+/*!
+ *  @brief      The definition of a callback function for data transfer error
+ *
+ *  @param      IOLINK_Handle           IO-Link handle #
+ *
+ *  @param      channel                 IO-Link channel #
+ *
+ *  @param      result                  result of startup seq: no response, COM1, COM2, COM3
+ *
+ */
+void IO_Link_StartupCallback(IOLINK_Handle handle, uint32_t channel, uint32_t result);
+#endif
 
 #ifdef __cplusplus
 }

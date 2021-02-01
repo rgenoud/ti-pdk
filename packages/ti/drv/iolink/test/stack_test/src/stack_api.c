@@ -43,14 +43,18 @@
 #include <ti/drv/iolink/test/stack_test/src/stack_api.h>
 #include <mst_pl.h>
 
-
 IOLINK_v0_Callbacks iolinkCallbacks =
 {
     IO_Link_cycleTimerCallback,
     IO_Link_swTimerCallback,
     IO_Link_adjTimerCallback,
     IO_Link_xferRspCallback,
+#ifdef PRU_STARTUP
+    IO_Link_xferErrRspCallback,
+    IO_Link_StartupCallback
+#else
     IO_Link_xferErrRspCallback
+#endif   
 };
 
 /* ========================================================================== */
@@ -69,7 +73,11 @@ int8_t IO_Link_sendCommand(uint8_t instance, uint8_t port, uint8_t command, uint
         retVal = -1;
     }
 
+#ifdef PRU_STARTUP
+    if ((command != IO_LINK_COMMAND_STARTPULSE) && ((command != IO_LINK_COMMAND_SETCOM)) && ((command != IO_LINK_COMMAND_STARTSEQ)))
+#else
     if ((command != IO_LINK_COMMAND_STARTPULSE) && ((command != IO_LINK_COMMAND_SETCOM)))
+#endif    
     {
         retVal = -1;
     }
@@ -119,6 +127,7 @@ void IO_Link_sendBuffer(uint8_t instance, uint8_t port)
     }
 }
 
+#ifndef PRU_STARTUP
 void IO_Link_start10msTimer(uint8_t instance, uint8_t port)
 {
     uint32_t data[4] = {0, };
@@ -142,6 +151,7 @@ void IO_Link_stop10msTimer(uint8_t instance, uint8_t port)
         IOLINK_control(iolinkHandles[instance], IOLINK_CTRL_STOP_TIMER, (void *)data);
     }
 }
+#endif
 
 void IO_Link_setCycleTimer(uint8_t instance, uint8_t port, uint32_t delay)
 {
@@ -178,7 +188,7 @@ void IO_Link_stopCycleTimer(uint8_t instance, uint8_t port)
         IOLINK_control(iolinkHandles[instance], IOLINK_CTRL_STOP_TIMER, (void *)data);
     }
 }
-
+#ifndef PRU_STARTUP
 void IO_Link_startAdjustableTimer(uint8_t instance, uint8_t port, uint8_t type, double t)
 {
     uint32_t data[4] = {0, };
@@ -199,19 +209,25 @@ void IO_Link_stopAdjustableTimer()
 
     IOLINK_control(iolinkHandles[0], IOLINK_CTRL_STOP_TIMER, (void *)&timerType);
 }
+#endif
 
 void IO_Link_cycleTimerCallback(IOLINK_Handle handle, uint32_t channel)
 {
+#ifndef PRU_STARTUP
     MPL_TimerCallback((uint8_t)channel, MPL_CYCLE_TIMER_DELAY);
+#endif
 }
 
 void IO_Link_swTimerCallback(IOLINK_Handle handle, uint32_t channel)
 {
+#ifndef PRU_STARTUP
     MPL_SWTimerCallback((uint8_t)channel);
+#endif
 }
 
 void IO_Link_adjTimerCallback(IOLINK_Handle handle, uint32_t channel, uint32_t delayType)
 {
+#ifndef PRU_STARTUP
     if (delayType == IOLINK_TIMER_ADJ_TREN)
     {
         MPL_TimerCallback((uint8_t)channel, MPL_TREN_MASTER_MESSAGE_DELAY);
@@ -220,21 +236,27 @@ void IO_Link_adjTimerCallback(IOLINK_Handle handle, uint32_t channel, uint32_t d
     {
         MPL_TimerCallback((uint8_t)channel, MPL_TDMT_MASTER_MESSAGE_DELAY);
     }
+#endif
 }
 
 void IO_Link_xferRspCallback(IOLINK_Handle handle, uint32_t channel)
 {
-#ifdef PRUCYCLETIMER
-    MPL_TimerCallback(channel, MPL_CYCLE_TIMER_DELAY); //todo has to be called with cycle timer, do not stop cycle time
-#endif
+#ifndef PRU_STARTUP
     MPL_SendRecv_rsp((uint8_t)channel);
+#endif
 }
 
 void IO_Link_xferErrRspCallback(IOLINK_Handle handle, uint32_t channel)
 {
-#ifdef PRUCYCLETIMER
-    MPL_TimerCallback(channel, MPL_CYCLE_TIMER_DELAY); //todo has to be called with cycle timer
-#endif
-    MPL_StopTimer(channel, MPL_CYCLE_TIMER_DELAY);
+#ifndef PRU_STARTUP
     MPL_SendRecvError_rsp((uint8_t)channel);
+#endif    
 }
+
+#ifdef PRU_STARTUP
+void IO_Link_StartupCallback(IOLINK_Handle handle, uint32_t channel, uint32_t result){
+    if(result){
+        IO_Link_LEDs(channel, 0, 2);
+    }
+}
+#endif
