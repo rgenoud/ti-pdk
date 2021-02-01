@@ -178,6 +178,12 @@ extern "C" {
 
 /* @} */
 
+/*!
+ *  @brief Enable PRUCYCLETIMER  - comment this out to disable PRUCYCLETIMER
+ *  feature
+ */
+#define PRUCYCLETIMER
+
 /**
  *  \addtogroup IOLINK_V0_DATASTRUCT
  *  @{

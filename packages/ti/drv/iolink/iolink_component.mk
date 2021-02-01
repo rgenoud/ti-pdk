@@ -83,7 +83,7 @@ drviolink_LIB_LIST = $(iolink_LIB_LIST)
 # All the firmware mentioned in list are built when build target is called
 # List below all firmware for allowed values
 ############################
-iolink_FIRM_LIST = icss_iolink
+iolink_FIRM_LIST = icss_iolink icss_timer
 drviolink_FIRM_LIST = $(iolink_FIRM_LIST)
 
 ############################
@@ -242,6 +242,39 @@ export icss_iolink_SOCLIST
 #icss_iolink_$(SOC)_CORELIST = $(drviolink_$(SOC)_CORELIST)
 icss_iolink_$(SOC)_CORELIST = pru_0
 export icss_iolink_$(SOC)_CORELIST
+
+#
+# IOLINK Timer Firmwares
+#
+icss_timer_COMP_LIST = icss_timer
+# temporary fix for nightly build
+# icss_timer_RELPATH = ti/drv/iolink/firmware/icss_iolink
+icss_timer_RELPATH = icss_iolink
+icss_timer_PATH = $(PDK_IOLINK_COMP_PATH)/firmware/icss_iolink
+icss_timer_HEADERNAME = icss_iolink
+export icss_timer_HEADERNAME
+icss_timer_HEADERPATH = $(icss_timer_PATH)/bin
+export icss_timer_HEADERPATH
+icss_timer_OBJPATH = $(icss_timer_RELPATH)
+export icss_timer_OBJPATH
+icss_timer_MAKEFILE = -f ../../build/makefile_icss_timer.mk
+export icss_timer_MAKEFILE
+icss_timer_BOARD_DEPENDENCY = no
+icss_timer_CORE_DEPENDENCY = yes
+icss_timer_SOC_DEPENDENCY = yes
+export icss_timer_COMP_LIST
+export icss_timer_BOARD_DEPENDENCY
+export icss_timer_CORE_DEPENDENCY
+export icss_timer_SOC_DEPENDENCY
+icss_timer_PKG_LIST = icss_timer
+export icss_timer_PKG_LIST
+icss_timer_INCLUDE = $(icss_timer_PATH)
+icss_timer_SOCLIST = am437x
+export icss_timer_SOCLIST
+#icss_timer_$(SOC)_CORELIST = $(drviolink_$(SOC)_CORELIST)
+icss_timer_$(SOC)_CORELIST = pru_1
+export icss_timer_$(SOC)_CORELIST
+
 
 #
 # IOLINK Examples

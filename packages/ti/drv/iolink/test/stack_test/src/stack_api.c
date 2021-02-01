@@ -224,10 +224,17 @@ void IO_Link_adjTimerCallback(IOLINK_Handle handle, uint32_t channel, uint32_t d
 
 void IO_Link_xferRspCallback(IOLINK_Handle handle, uint32_t channel)
 {
+#ifdef PRUCYCLETIMER
+    MPL_TimerCallback(channel, MPL_CYCLE_TIMER_DELAY); //todo has to be called with cycle timer, do not stop cycle time
+#endif
     MPL_SendRecv_rsp((uint8_t)channel);
 }
 
 void IO_Link_xferErrRspCallback(IOLINK_Handle handle, uint32_t channel)
 {
+#ifdef PRUCYCLETIMER
+    MPL_TimerCallback(channel, MPL_CYCLE_TIMER_DELAY); //todo has to be called with cycle timer
+#endif
+    MPL_StopTimer(channel, MPL_CYCLE_TIMER_DELAY);
     MPL_SendRecvError_rsp((uint8_t)channel);
 }

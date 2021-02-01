@@ -44,15 +44,19 @@
 /*                             Include Files                                  */
 /* ========================================================================== */
 
-/*#include <ti/sysbios/hal/Hwi.h>
+#include <ti/drv/pruss/soc/pruicss_v1.h>
+
+#include <ti/starterware/include/hw/am437x.h>
+
+#include <xdc/runtime/Types.h>
 #include <xdc/runtime/Error.h>
-#include <ti/sysbios/knl/Swi.h>
-#include <ti/sysbios/knl/Task.h>
-#include <ti/sysbios/knl/Semaphore.h>*/ /* TBD: call osal.h */
 
 #include <ti/drv/iolink/src/v0/IOLINK_v0.h>
 #include <ti/drv/iolink/src/v0/IOLINK_memoryMap.h>
 #include <ti/drv/iolink/src/v0/IOLINK_fw_pru0.h>
+#ifdef PRUCYCLETIMER
+#include <ti/drv/iolink/src/v0/IOLINK_fw_pru1.h>
+#endif
 
 #define IOLINK_v0 IO_LINK_FIRMWARE_PRU0
 
@@ -90,10 +94,17 @@ static void IOLINK_adjustableTimerHwi(void *arg);
 static void IOLINK_pruCompleteHwi(void *arg);
 
 static void IOLINK_softwareTimerSwiFxn(void *arg0, void *arg1);
+#ifdef PRUCYCLETIMER
+static void IOLINK_softwareTimerSwiFxn2(void *arg0, void *arg1);
+#endif
 static void IOLINK_cycleTimerSwiFxn(void *arg0, void *arg1);
 static void IOLINK_tRenTimerSwiFxn(void *arg0, void *arg1);
 static void IOLINK_tDmtTimerSwiFxn(void *arg0, void *arg1);
 static void IOLINK_pruCompleteSwiFxn(void *arg0, void *arg1);
+
+#ifdef PRUCYCLETIMER
+extern void MPL_SWTimerCallback(int port);
+#endif
 
 /* IOLINK function table for IOLINK master driver implementation */
 const IOLINK_FxnTable IOLINK_v0_FxnTable =
@@ -104,6 +115,9 @@ const IOLINK_FxnTable IOLINK_v0_FxnTable =
     &IOLINK_control_v0
 };
 
+#ifdef PRUCYCLETIMER
+static Timer_Handle timer;
+#endif
 /*
  *  ======== IOLINK_init_v0 ========
  */
@@ -330,6 +344,13 @@ static IOLINK_Handle IOLINK_open_v0(IOLINK_Handle handle, const IOLINK_Params *p
                 handle = NULL;
             }
         }
+#ifdef PRUCYCLETIMER
+    Clock_Params clockParams;
+    clockParams.period = 10000/500;
+        clockParams.startflag = TRUE;
+        clockParams.arg = (void*)&(object->timerConfig.swTimer);
+        IOLINK_osalClockCreate ((void*)IOLINK_softwareTimerSwiFxn2, 50, &clockParams);
+#endif
     }
 
     return (handle);
@@ -661,11 +682,36 @@ static IOLINK_STATUS IOLINK_pruInit(IOLINK_Handle handle)
 
         if (status == IOLINK_STATUS_SUCCESS)
         {
+#ifdef PRUCYCLETIMER
+            /* load the Timer into the PRU data memory */
+            if (PRUICSS_pruWriteMemory(object->pruIcssHandle,
+                                   /*swAttrs->pruIcssConfig.instMem_timer,*/
+                                   PRU_ICSS_IRAM(1),
+                                   0,
+                                   (uint32_t *)PRU_Timer_FW_PRU1,
+                                   sizeof(PRU_Timer_FW_PRU1)) == 0)
+            {
+                status = IOLINK_STATUS_ERROR;
+            }
+        }
+
+        if (status == IOLINK_STATUS_SUCCESS)
+        {
+#endif
             if (PRUICSS_pruEnable(object->pruIcssHandle, swAttrs->pruIcssConfig.pruNum) != 0)
             {
                 status = IOLINK_STATUS_ERROR;
             }
         }
+#ifdef PRUCYCLETIMER
+        if (status == IOLINK_STATUS_SUCCESS)
+        {
+            if (PRUICSS_pruEnable(object->pruIcssHandle, 1) != 0)
+            {
+                status = IOLINK_STATUS_ERROR;
+            }
+        }
+#endif
     }
 
     return (status);
@@ -847,12 +893,16 @@ static void IOLINK_stop10msTimer(IOLINK_Handle handle, uint32_t channel)
  */
 static void IOLINK_setCycleTimer(IOLINK_Handle handle, uint32_t channel, uint32_t delay)
 {
+#ifdef PRUCYCLETIMER
+    *(volatile int*)(SOC_PRU_ICSS0_U_DATA_RAM1+4 + channel*4) = delay - 1; // write cycle time to pru memory
+#else
     IOLINK_v0_Object        *object;
 
     /* Get the pointer to the object */
     object  = (IOLINK_v0_Object *)handle->object;
 
     object->timerConfig.cycleTimer.delay[channel] = delay;
+#endif
 }
 
 /*
@@ -860,6 +910,20 @@ static void IOLINK_setCycleTimer(IOLINK_Handle handle, uint32_t channel, uint32_
  */
 static void IOLINK_startCycleTimer(IOLINK_Handle handle, uint32_t channel)
 {
+#ifdef PRUCYCLETIMER
+    //*(volatile unsigned int*)(SOC_PRU_ICSS0_U_DATA_RAM1+6 + channel*4) = 0; // clear counter
+    *(volatile int*)(SOC_PRU_ICSS0_U_DATA_RAM1) |= (1<<channel); // set bit according to channel to activate it
+
+    if(channel == 0){
+        static int flag=0;
+        flag ^= 1;
+        if(flag)
+            *(volatile int*)(0x48320190) = (1<<28);
+        else
+            *(volatile int*)(0x48320194) = (1<<28);
+    }
+
+#else
     IOLINK_v0_Object        *object;
 
     /* Get the pointer to the object */
@@ -867,6 +931,7 @@ static void IOLINK_startCycleTimer(IOLINK_Handle handle, uint32_t channel)
 
     object->timerConfig.cycleTimer.timer[channel] = 0;
     object->timerConfig.cycleTimer.enable[channel] = true;
+#endif
 }
 
 /*
@@ -874,12 +939,16 @@ static void IOLINK_startCycleTimer(IOLINK_Handle handle, uint32_t channel)
  */
 void IOLINK_stopCycleTimer(IOLINK_Handle handle, uint32_t channel)
 {
+#ifdef PRUCYCLETIMER
+    *(volatile int*)(SOC_PRU_ICSS0_U_DATA_RAM1) &= ~(1<<channel); // clear bit according to channel to stop it
+#else
     IOLINK_v0_Object        *object;
 
     /* Get the pointer to the object */
     object  = (IOLINK_v0_Object *)handle->object;
 
     object->timerConfig.cycleTimer.enable[channel] = false;
+#endif
 }
 
 /*
@@ -1026,8 +1095,12 @@ static void IOLINK_softwareTimerSwiFxn(void *arg0, void *arg1)
     IOLINK_v0_Object        *object;
     uint32_t                 i;
 
+#ifdef PRUCYCLETIMER
+    object = (IOLINK_v0_Object *)handle->fxnTablePtr;
+#else
     /* Get the pointer to the object */
     object  = (IOLINK_v0_Object *)handle->object;
+#endif
 
     for(i = 0; i < IOLINK_MAX_NUM_CHN; i++)
     {
@@ -1037,6 +1110,23 @@ static void IOLINK_softwareTimerSwiFxn(void *arg0, void *arg1)
         }
     }
 }
+
+#ifdef PRUCYCLETIMER
+static void IOLINK_softwareTimerSwiFxn2(void *arg0, void *arg1)
+{
+    IOLINK_swTimerConfig          *handle = (IOLINK_swTimerConfig *)arg0;
+    uint32_t                 i;
+
+    for(i = 0; i < IOLINK_MAX_NUM_CHN; i++)
+    {
+        if(handle->enable[i] == true)
+        {
+            //object->callbacks.swTimerCallback(handle, i);
+            MPL_SWTimerCallback(i);
+        }
+    }
+}
+#endif
 
 /*
  * ======== IOLINK_cycleTimerSwiFxn ========

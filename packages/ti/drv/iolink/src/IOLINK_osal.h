@@ -71,6 +71,7 @@
 /* include TI OSAL library interface header files */
 #include <ti/osal/osal.h>
 #include <ti/osal/SwiP.h>
+#include <ti/osal/ClockP.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -381,6 +382,9 @@ extern "C" {
  *  @n  status of operation
  */
 #define IOLINK_osalSoftwareIntPost(X) (SwiP_post(X))
+
+
+#define IOLINK_osalClockCreate(X, Y, Z) (ClockP_create((X), (Y), (Z)))
 
 #ifdef __cplusplus
 }

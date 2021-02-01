@@ -195,6 +195,7 @@ void IOLINK_pruIcssPinMuxCfg(void)
 /* TBD: need to check if can use timer apis in osal */
 void IOLINK_cTimerInit(void)
 {
+#ifndef PRUCYCLETIMER
     /* Set the counters default increment value to 5 */
     *((uint32_t*) (SOC_PRU_ICSS0_U_IEP_REG + CSL_ICSSM_IEP_GLOBAL_CFG)) &= ~(CSL_ICSSM_IEP_GLOBAL_CFG_DEFAULT_INC_MASK);
     *((uint32_t*) (SOC_PRU_ICSS0_U_IEP_REG + CSL_ICSSM_IEP_GLOBAL_CFG)) |= (0x5<<CSL_ICSSM_IEP_GLOBAL_CFG_DEFAULT_INC_SHIFT);
@@ -228,6 +229,7 @@ void IOLINK_cTimerInit(void)
     *((uint32_t*) (SOC_PRU_ICSS0_U_INTC_REG + CSL_ICSSM_INTC_HIEISR)) = 0x2;
     /* globally enable all interrupts */
     *((uint32_t*) (SOC_PRU_ICSS0_U_INTC_REG + CSL_ICSSM_INTC_GER)) = 0x1;
+#endif
 }
 
 #define ADJUSTABLE_TIMER_ADR    SOC_DMTIMER7_REG
