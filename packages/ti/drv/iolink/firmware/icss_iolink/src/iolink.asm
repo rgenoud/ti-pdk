@@ -339,7 +339,7 @@ flagClear:
 	qbeq startpulse, state, idle_startpulse
 	qbeq startpulseCount, state, idle_startpulseCount
 	nopx 2
-	qbeq txStop, state, tx_complete
+	;qbeq txStop, state, tx_complete
 	nopx 2
 	qbeq startpulseClrTxEn, state, idle_startpulseFin
 	nopx 9
