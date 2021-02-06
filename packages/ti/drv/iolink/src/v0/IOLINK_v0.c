@@ -260,6 +260,7 @@ static IOLINK_Handle IOLINK_open_v0(IOLINK_Handle handle, const IOLINK_Params *p
             if (status == IOLINK_STATUS_SUCCESS)
             {
                 /* Register pruCompleteSwi */
+                SwiP_Params_init(&swiParams);
                 for (i = 0; i < IOLINK_MAX_NUM_CHN; i++)
                 {
                     swiParams.arg0 = (uintptr_t)handle;
@@ -277,6 +278,7 @@ static IOLINK_Handle IOLINK_open_v0(IOLINK_Handle handle, const IOLINK_Params *p
             if (status == IOLINK_STATUS_SUCCESS)
             {
                 /* Register pruStartupCompleteSwi */
+                SwiP_Params_init(&swiParams);
                 for (i = 0; i < IOLINK_MAX_NUM_CHN; i++)
                 {
                     swiParams.arg0 = (uintptr_t)handle;
@@ -1286,7 +1288,7 @@ static void IOLINK_pruStartupCompleteHwi(void *arg)
         if(startupState & (1<<i)){ // check if we have requested startup of that port and it's not yet finished
             startupCtrlRegister = (*((uint32_t*) (baseAddrStartup)) >> StartSeqCtrlOffset) & 0xff;
             if((startupCtrlRegister & (1<<i)) == 0){ // completed on this port
-                startupState &= ~i;
+                startupState &= ~(1<<i);
                 IOLINK_osalSoftwareIntPost(object->pruStartupCompleteSwi[i]);
             }
         }
