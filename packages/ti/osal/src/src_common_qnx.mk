@@ -4,7 +4,7 @@ INCDIR = . src/qnx
 
 SRCS_COMMON += HwiP_qnx.c SwiP_qnx.c Utils_qnx.c SemaphoreP_qnx.c RegisterIntr_qnx.c TaskP_qnx.c Queue_qnx.c
 
-ifeq ($(SOC),$(filter $(SOC), am65xx j721e))
+ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200))
   SRCDIR      += soc/$(SOC)
   SRCS_COMMON +=
 endif

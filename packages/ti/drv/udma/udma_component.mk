@@ -50,6 +50,7 @@ drvudma_am64x_example_CORELIST  = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mpu1_0 #m4f for ba
 endif
 ifeq ($(BUILD_OS_TYPE), qnx)
 drvudma_j721e_CORELIST += qnx_mpu1_0
+drvudma_j7200_CORELIST += qnx_mpu1_0
 endif
 
 ############################

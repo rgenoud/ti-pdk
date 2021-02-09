@@ -42,7 +42,7 @@ MODULE_NAME = osal_qnx
 
 SRCDIR = src/qnx/
 
-ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7))
+ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200))
 #SRCS_COMMON += TimerP_qnx.c Utils_qnx.c SemaphoreP_qnx.c HwiP_qnx.c delay.c RegisterIntr_qnx.c TaskP_qnx.c delay.c CacheP_nonos.c
 SRCS_COMMON += delay.c CacheP_nonos.c
 endif

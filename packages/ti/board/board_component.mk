@@ -97,6 +97,7 @@ board_lib_tpr12_CORELIST  = mcu1_0 c66xdsp_1
 
 ifeq ($(BUILD_OS_TYPE), qnx)
 board_lib_j721e_CORELIST += qnx_mpu1_0
+board_lib_j7200_CORELIST += qnx_mpu1_0
 endif
 
 ############################
