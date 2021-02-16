@@ -53,7 +53,9 @@ extern "C" {
 
 #include <stdio.h>
 #include <stdint.h>
+#ifndef QNX_OS
 #include <stdlib.h>
+#endif
 #include <string.h>
 
 /* Input command for single port IO expander */
