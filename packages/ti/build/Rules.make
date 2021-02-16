@@ -37,6 +37,13 @@ export OS ?= linux
 SDK_INSTALL_PATH ?= $(abspath ../../../../)
 TOOLS_INSTALL_PATH ?= $(SDK_INSTALL_PATH)
 
+ifeq ($(BUILD_OS_TYPE), qnx)
+#PDK under different folder for QNX
+SDK_INSTALL_PATH ?= $(abspath ../../../../../)
+export PDK_INSTALL_PATH ?= $(SDK_INSTALL_PATH)/psdkqa/pdk$(PDK_VERSION_STR)/packages
+export QNX_INSTALL_PATH ?= $(SDK_INSTALL_PATH)/qnx
+endif
+
 #Default BUILD_OS_TYPE (tirtos/baremetal/qnx)
 export BUILD_OS_TYPE ?= tirtos
 
