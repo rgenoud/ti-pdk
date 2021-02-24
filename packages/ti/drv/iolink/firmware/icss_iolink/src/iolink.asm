@@ -340,7 +340,7 @@ flagClear:
 	qbeq startpulseCount, state, idle_startpulseCount
 	nopx 2
 	;qbeq txStop, state, tx_complete
-	nopx 2
+	nopx 3
 	qbeq startpulseClrTxEn, state, idle_startpulseFin
 	nopx 9
 	jmp cyclefinish
@@ -377,7 +377,9 @@ checkt2:
 	ADD idle_count, idle_count, 1
 	qblt rxFinish, idle_count, t2Reg
 	;threshold not reached, continue with startbitdet
-	nopx 5
+	add gp_r0, bfr_ptr, 1
+	qbeq rxFinish, gp_r0, bfr_length
+	nopx 3
 	jmp cyclefinish
 	;8 cycles
 

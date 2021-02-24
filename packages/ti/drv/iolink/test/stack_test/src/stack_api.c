@@ -160,7 +160,7 @@ void IO_Link_setCycleTimer(uint8_t instance, uint8_t port, uint32_t delay)
     if ((iolinkHandles[instance] != NULL) && (port < (uint8_t)IOLINK_MAX_NUM_CHN))
     {
         data[0] = (uint32_t)port;
-        data[1] = delay;
+        data[1] = ((delay*10000)/10416)+1;
         IOLINK_control(iolinkHandles[instance], IOLINK_CTRL_SET_CYCLE_TIMER, (void *)data);
     }
 }
@@ -257,6 +257,7 @@ void IO_Link_xferErrRspCallback(IOLINK_Handle handle, uint32_t channel)
 void IO_Link_StartupCallback(IOLINK_Handle handle, uint32_t channel, uint32_t result){
     if(result){
         IO_Link_LEDs(channel, 0, 2);
-    }
+	}
 }
 #endif
+

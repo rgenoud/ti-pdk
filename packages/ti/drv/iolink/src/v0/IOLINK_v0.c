@@ -256,11 +256,12 @@ static IOLINK_Handle IOLINK_open_v0(IOLINK_Handle handle, const IOLINK_Params *p
                 }
             }
 
+            SwiP_Params_init(&swiParams);
+
             /* Register S/W interrupts */
             if (status == IOLINK_STATUS_SUCCESS)
             {
                 /* Register pruCompleteSwi */
-                SwiP_Params_init(&swiParams);
                 for (i = 0; i < IOLINK_MAX_NUM_CHN; i++)
                 {
                     swiParams.arg0 = (uintptr_t)handle;
@@ -278,7 +279,6 @@ static IOLINK_Handle IOLINK_open_v0(IOLINK_Handle handle, const IOLINK_Params *p
             if (status == IOLINK_STATUS_SUCCESS)
             {
                 /* Register pruStartupCompleteSwi */
-                SwiP_Params_init(&swiParams);
                 for (i = 0; i < IOLINK_MAX_NUM_CHN; i++)
                 {
                     swiParams.arg0 = (uintptr_t)handle;
@@ -317,6 +317,8 @@ static IOLINK_Handle IOLINK_open_v0(IOLINK_Handle handle, const IOLINK_Params *p
                 }
             }
 
+            SwiP_Params_init(&swiParams);
+
             if (status == IOLINK_STATUS_SUCCESS)
             {
                 /* Register adjustableTimerHwi */
@@ -336,7 +338,6 @@ static IOLINK_Handle IOLINK_open_v0(IOLINK_Handle handle, const IOLINK_Params *p
             if (status == IOLINK_STATUS_SUCCESS)
             {
                 /* Register softwareTimerSwi */
-                SwiP_Params_init(&swiParams);
                 swiParams.arg0 = (uintptr_t)handle;
                 swiParams.arg1 = (uintptr_t)0;
                 object->softwareTimerSwi = IOLINK_osalSwiCreate((SwiP_Fxn)&IOLINK_softwareTimerSwiFxn,
@@ -702,6 +703,17 @@ static IOLINK_STATUS IOLINK_pruInit(IOLINK_Handle handle)
         *((uint32_t*) (baseAddr + channel6mem + 12U)) = channel6TxEnGpioPin;
         *((uint32_t*) (baseAddr + channel7mem + 12U)) = channel7TxEnGpioPin;
 
+        *((uint32_t*) (baseAddr + ctrlCh0)) = 0x0200;
+        *((uint32_t*) (baseAddr + ctrlCh1)) = 0x0200;
+        *((uint32_t*) (baseAddr + ctrlCh2)) = 0x0200;
+        *((uint32_t*) (baseAddr + ctrlCh3)) = 0x0200;
+        *((uint32_t*) (baseAddr + ctrlCh4)) = 0x0200;
+        *((uint32_t*) (baseAddr + ctrlCh5)) = 0x0200;
+        *((uint32_t*) (baseAddr + ctrlCh6)) = 0x0200;
+        *((uint32_t*) (baseAddr + ctrlCh7)) = 0x0200;
+
+        *(volatile int*)(SOC_PRU_ICSS0_U_DATA_RAM1) = 0;
+
         /* Initialize the PRU's pinmux */
         IOLINK_pruIcssPinMuxCfg();
 
@@ -787,7 +799,7 @@ static IOLINK_STATUS IOLINK_pruInit(IOLINK_Handle handle)
 
         if (status == IOLINK_STATUS_SUCCESS)
         {
-#endif
+#endif	
             if (PRUICSS_pruEnable(object->pruIcssHandle, swAttrs->pruIcssConfig.pruNum) != 0)
             {
                 status = IOLINK_STATUS_ERROR;
@@ -801,7 +813,7 @@ static IOLINK_STATUS IOLINK_pruInit(IOLINK_Handle handle)
                 status = IOLINK_STATUS_ERROR;
             }
         }
-#endif
+#endif        
     }
 
     return (status);
@@ -1041,12 +1053,17 @@ static void IOLINK_startCycleTimer(IOLINK_Handle handle, uint32_t channel)
  */
 void IOLINK_stopCycleTimer(IOLINK_Handle handle, uint32_t channel)
 {
+#ifdef PRU_STARTUP
+    *(volatile int*)(SOC_PRU_ICSS0_U_DATA_RAM1) &= ~(1<<channel); // clear bit according to channel to deactivate it
+#else
     IOLINK_v0_Object        *object;
 
     /* Get the pointer to the object */
     object  = (IOLINK_v0_Object *)handle->object;
 
     object->timerConfig.cycleTimer.enable[channel] = false;
+#endif
+
 }
 
 #ifndef PRU_STARTUP
@@ -1181,7 +1198,7 @@ static void IOLINK_pruCompleteHwi(void *arg)
 #ifdef PRU_STARTUP            
             if(!(startupState & (1<<i)))
 #endif
-            IOLINK_osalSoftwareIntPost(object->pruCompleteSwi[i]);
+                IOLINK_osalSoftwareIntPost(object->pruCompleteSwi[i]);
         }
     }
 }
