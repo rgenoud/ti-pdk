@@ -75,7 +75,15 @@ int32_t Udma_init(Udma_DrvHandle drvHandle, const Udma_InitPrms *initPrms)
 {
     int32_t                             retVal = UDMA_SOK;
 #if (UDMA_SOC_CFG_PROXY_PRESENT == 1)
+#ifndef QNX_OS
     struct tisci_msg_rm_proxy_cfg_req   req;
+#endif
+#endif
+#ifdef QNX_OS
+    /* We need to have IO PRIV to access UDMA Channel/Ring registers */
+    if (ThreadCtl(_NTO_TCTL_IO_PRIV, NULL) == -1) {
+        retVal = UDMA_EALLOC;
+    }
 #endif
 
     if((drvHandle == NULL_PTR) || (initPrms == NULL_PTR))
@@ -119,6 +127,7 @@ int32_t Udma_init(Udma_DrvHandle drvHandle, const Udma_InitPrms *initPrms)
         }
 
 #if (UDMA_SOC_CFG_PROXY_PRESENT == 1)
+#ifndef QNX_OS
         if(UDMA_SOK == retVal)
         {
             /* Setup channelized firewall for default core proxy */
@@ -131,6 +140,7 @@ int32_t Udma_init(Udma_DrvHandle drvHandle, const Udma_InitPrms *initPrms)
                 Udma_printf(drvHandle, "[Error] SciClient Set proxy config failed!!!\n");
             }
         }
+#endif
 #endif
 
         if(UDMA_SOK == retVal)
