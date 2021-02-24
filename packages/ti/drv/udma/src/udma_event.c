@@ -42,6 +42,9 @@
 /* ========================================================================== */
 
 #include <ti/drv/udma/src/udma_priv.h>
+#ifdef QNX_OS
+#include <udma_resmgr.h>
+#endif
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
@@ -696,7 +699,11 @@ static int32_t Udma_eventAllocResource(Udma_DrvHandle drvHandle,
     /* Allocate event irrespective of all modes except global master event */
     if(UDMA_EVENT_TYPE_MASTER != eventPrms->eventType)
     {
+#ifdef QNX_OS
+        eventHandle->globalEvent = Udma_resmgr_rmAllocEvent(drvHandle);
+#else
         eventHandle->globalEvent = Udma_rmAllocEvent(drvHandle);
+#endif
         if(UDMA_EVENT_INVALID == eventHandle->globalEvent)
         {
             retVal = UDMA_EALLOC;
@@ -717,7 +724,11 @@ static int32_t Udma_eventAllocResource(Udma_DrvHandle drvHandle,
             ((UDMA_EVENT_MODE_SHARED == eventPrms->eventMode) &&
                 (NULL_PTR == eventPrms->masterEventHandle)))
         {
+#ifdef QNX_OS
+            eventHandle->vintrNum = Udma_resmgr_rmAllocVintr(drvHandle);
+#else
             eventHandle->vintrNum = Udma_rmAllocVintr(drvHandle);
+#endif
             if(UDMA_EVENT_INVALID == eventHandle->vintrNum)
             {
                 retVal = UDMA_EALLOC;
@@ -731,7 +742,11 @@ static int32_t Udma_eventAllocResource(Udma_DrvHandle drvHandle,
         /* Allocate IA bit for all event modes except global master event */
         if(UDMA_EVENT_TYPE_MASTER != eventPrms->eventType)
         {
+#ifdef QNX_OS
+            eventHandle->vintrBitNum = Udma_resmgr_rmAllocVintrBit(drvHandle, eventHandle);
+#else
             eventHandle->vintrBitNum = Udma_rmAllocVintrBit(eventHandle);
+#endif
             if(UDMA_EVENT_INVALID == eventHandle->vintrBitNum)
             {
                 retVal = UDMA_EALLOC;
@@ -759,12 +774,16 @@ static int32_t Udma_eventAllocResource(Udma_DrvHandle drvHandle,
             }
             if(UDMA_INTR_INVALID != preferredIrIntrNum)
             {
+#ifdef QNX_OS
+                eventHandle->irIntrNum =
+                    Udma_resmgr_rmAllocIrIntr(preferredIrIntrNum, drvHandle);
+#else
                 eventHandle->irIntrNum =
                     Udma_rmAllocIrIntr(preferredIrIntrNum, drvHandle);
+#endif
                 if(UDMA_INTR_INVALID != eventHandle->irIntrNum)
                 {
                     eventHandle->coreIntrNum = Udma_rmTranslateIrOutput(drvHandle, eventHandle->irIntrNum);
-                    
                 }
             }
             if(UDMA_INTR_INVALID == eventHandle->coreIntrNum)
@@ -875,7 +894,11 @@ static void Udma_eventFreeResource(Udma_DrvHandle drvHandle,
     }
     if(UDMA_INTR_INVALID != eventHandle->irIntrNum)
     {
+#ifdef QNX_OS
+        Udma_resmgr_rmFreeIrIntr(eventHandle->irIntrNum, drvHandle);
+#else
         Udma_rmFreeIrIntr(eventHandle->irIntrNum, drvHandle);
+#endif
         eventHandle->irIntrNum = UDMA_INTR_INVALID;
         eventHandle->coreIntrNum = UDMA_INTR_INVALID;
     }
@@ -884,17 +907,29 @@ static void Udma_eventFreeResource(Udma_DrvHandle drvHandle,
     {
         /* Reset steering */
         Udma_eventResetSteering(drvHandle, eventHandle);
+#ifdef QNX_OS
+        Udma_resmgr_rmFreeEvent(eventHandle->globalEvent, drvHandle);
+#else
         Udma_rmFreeEvent(eventHandle->globalEvent, drvHandle);
+#endif
         eventHandle->globalEvent = UDMA_EVENT_INVALID;
     }
     if(UDMA_EVENT_INVALID != eventHandle->vintrBitNum)
     {
+#ifdef QNX_OS
+        Udma_resmgr_rmFreeVintrBit(eventHandle->vintrBitNum, drvHandle, eventHandle);
+#else
         Udma_rmFreeVintrBit(eventHandle->vintrBitNum, drvHandle, eventHandle);
+#endif
         eventHandle->vintrBitNum = UDMA_EVENT_INVALID;
     }
     if(UDMA_EVENT_INVALID != eventHandle->vintrNum)
     {
+#ifdef QNX_OS
+        Udma_resmgr_rmFreeVintr(eventHandle->vintrNum, drvHandle);
+#else
         Udma_rmFreeVintr(eventHandle->vintrNum, drvHandle);
+#endif
         eventHandle->vintrNum = UDMA_EVENT_INVALID;
     }
 
