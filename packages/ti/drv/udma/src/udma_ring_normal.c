@@ -91,8 +91,13 @@ void Udma_ringSetCfgNormal(Udma_DrvHandle drvHandle,
     ringCfg = &ringHandle->cfg;
     if(NULL_PTR != ringPrms)
     {
+#ifdef QNX_OS
+        ringCfg->physBase    =
+            Udma_virtToPhyFxn(ringPrms->ringMem, ringPrms->ringMemSize, drvHandle, (Udma_ChHandle) NULL_PTR);
+#else
         ringCfg->physBase    =
             Udma_virtToPhyFxn(ringPrms->ringMem, drvHandle, (Udma_ChHandle) NULL_PTR);
+#endif
         ringCfg->virtBase    = (void *) ringPrms->ringMem;
         ringCfg->mode        = ringPrms->mode;
         ringCfg->elCnt       = ringPrms->elemCnt;
@@ -106,7 +111,11 @@ void Udma_ringSetCfgNormal(Udma_DrvHandle drvHandle,
         addrLo = CSL_REG32_FEXT(&ringHandle->pCfgRegs->BA_LO, RINGACC_CFG_RING_BA_LO_ADDR_LO);
         ringCfg->physBase    = (uint64_t)((((uint64_t) addrHi) << 32UL) |
                                             ((uint64_t) addrLo));
+#ifdef QNX_OS
+        ringCfg->virtBase    = Udma_phyToVirtFxn(ringCfg->physBase, /*TODO*/4096, drvHandle, (Udma_ChHandle) NULL_PTR);
+#else
         ringCfg->virtBase    = Udma_phyToVirtFxn(ringCfg->physBase, drvHandle, (Udma_ChHandle) NULL_PTR);
+#endif
         ringCfg->mode        = CSL_REG32_FEXT(&ringHandle->pCfgRegs->SIZE, RINGACC_CFG_RING_SIZE_QMODE);
         ringCfg->elCnt       = CSL_REG32_FEXT(&ringHandle->pCfgRegs->SIZE, RINGACC_CFG_RING_SIZE_ELCNT);
         elemSize             = CSL_REG32_FEXT(&ringHandle->pCfgRegs->SIZE, RINGACC_CFG_RING_SIZE_ELSIZE);
