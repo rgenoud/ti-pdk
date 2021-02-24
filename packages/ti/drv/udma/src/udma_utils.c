@@ -150,6 +150,7 @@ uint32_t UdmaUtils_getTrSizeBytes(uint32_t trType)
     return (trSize);
 }
 
+#ifndef QNX_OS
 uint64_t Udma_virtToPhyFxn(const void *virtAddr,
                            Udma_DrvHandle drvHandle,
                            Udma_ChHandle chHandle)
@@ -201,6 +202,75 @@ void *Udma_phyToVirtFxn(uint64_t phyAddr,
 
     return (virtAddr);
 }
+#else
+uint64_t Udma_virtToPhyFxn(const void *virtAddr,
+                           uint32_t virtAddrSize,
+                           Udma_DrvHandle drvHandle,
+                           Udma_ChHandle chHandle)
+{
+    uint32_t    chNum = UDMA_DMA_CH_INVALID;
+    void *      appData = &virtAddrSize;
+    uint64_t    phyAddr = 0;
+
+    if(NULL_PTR != chHandle)
+    {
+        chNum   = chHandle->chPrms.chNum;
+    }
+
+    //Udma_printf(drvHandle, "Udma_phyToVirtFxn - 0x%x- %d!\n", virtAddr, virtAddrSize);
+    if((Udma_VirtToPhyFxn) NULL_PTR != drvHandle->initPrms.virtToPhyFxn)
+    {
+        phyAddr = drvHandle->initPrms.virtToPhyFxn(virtAddr, chNum, appData);
+
+        if (phyAddr == 0) 
+        {
+            Udma_printf(drvHandle, "Error: virtToPhyFxn FAILED!\n");
+            Udma_assert(drvHandle, FALSE);
+        }
+    }
+    else
+    {
+        Udma_printf(drvHandle, "Error: virtToPhyFxn not set!\n");
+        Udma_assert(drvHandle, FALSE);
+    }
+
+    return (phyAddr);
+}
+
+void *Udma_phyToVirtFxn(uint64_t phyAddr,
+                        uint32_t phyAddrSize,
+                        Udma_DrvHandle drvHandle,
+                        Udma_ChHandle chHandle)
+{
+    uint32_t    chNum = UDMA_DMA_CH_INVALID;
+    void *      appData = &phyAddrSize;
+    void *      virtAddr = NULL;
+
+    if(NULL_PTR != chHandle)
+    {
+        chNum   = chHandle->chPrms.chNum;
+    }
+
+    //Udma_printf(drvHandle, "Udma_phyToVirtFxn - 0x%lx- %d!\n", phyAddr, phyAddrSize);
+    if((Udma_PhyToVirtFxn) NULL_PTR != drvHandle->initPrms.phyToVirtFxn)
+    {
+        virtAddr = drvHandle->initPrms.phyToVirtFxn(phyAddr, chNum, appData);
+
+        if (virtAddr == 0) 
+        {
+            Udma_printf(drvHandle, "Error: phyToVirtFxn FAILED!\n");
+            Udma_assert(drvHandle, FALSE);
+        }
+    }
+    else
+    {
+        Udma_printf(drvHandle, "Error: phyToVirtFxn not set!\n");
+        Udma_assert(drvHandle, FALSE);
+    }
+
+    return (virtAddr);
+}
+#endif
 
 void Udma_printf(Udma_DrvHandle drvHandle, const char *format, ...)
 {
