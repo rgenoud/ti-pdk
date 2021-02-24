@@ -42,6 +42,9 @@
 /* ========================================================================== */
 
 #include <ti/drv/udma/src/udma_priv.h>
+#ifdef QNX_OS
+#include <udma_resmgr.h>
+#endif
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
@@ -720,7 +723,11 @@ static int32_t Udma_eventAllocResource(Udma_DrvHandle drvHandle,
     /* Allocate event irrespective of all modes except global master event */
     if(UDMA_EVENT_TYPE_MASTER != eventPrms->eventType)
     {
+#ifdef QNX_OS
+        eventHandle->globalEvent = Udma_resmgr_rmAllocEvent(drvHandle);
+#else
         eventHandle->globalEvent = Udma_rmAllocEvent(drvHandle);
+#endif
         if(UDMA_EVENT_INVALID == eventHandle->globalEvent)
         {
             retVal = UDMA_EALLOC;
@@ -728,6 +735,9 @@ static int32_t Udma_eventAllocResource(Udma_DrvHandle drvHandle,
         }
         else
         {
+#ifdef QNX_OS
+            Udma_printf(drvHandle, "eventHandle->globalEvent = %d!!!\n", eventHandle->globalEvent);
+#endif
             Udma_assert(drvHandle, drvHandle->iaRegs.pImapRegs != NULL_PTR);
             eventHandle->pIaGeviRegs =
                 &drvHandle->iaRegs.pImapRegs->GEVI[eventHandle->globalEvent];
@@ -741,12 +751,22 @@ static int32_t Udma_eventAllocResource(Udma_DrvHandle drvHandle,
             ((UDMA_EVENT_MODE_SHARED == eventPrms->eventMode) &&
                 (NULL_PTR == eventPrms->masterEventHandle)))
         {
+#ifdef QNX_OS
+            eventHandle->vintrNum = Udma_resmgr_rmAllocVintr(drvHandle);
+#else
             eventHandle->vintrNum = Udma_rmAllocVintr(drvHandle);
+#endif
             if(UDMA_EVENT_INVALID == eventHandle->vintrNum)
             {
                 retVal = UDMA_EALLOC;
                 Udma_printf(drvHandle, "[Error] VINTR alloc failed!!!\n");
             }
+#ifdef QNX_OS
+            else
+            {
+                Udma_printf(drvHandle, "eventHandle->vintrNum = %d!!!\n", eventHandle->vintrNum);
+            }
+#endif
         }
     }
 
@@ -755,12 +775,22 @@ static int32_t Udma_eventAllocResource(Udma_DrvHandle drvHandle,
         /* Allocate IA bit for all event modes except global master event */
         if(UDMA_EVENT_TYPE_MASTER != eventPrms->eventType)
         {
+#ifdef QNX_OS
+            eventHandle->vintrBitNum = Udma_resmgr_rmAllocVintrBit(drvHandle, eventHandle);
+#else
             eventHandle->vintrBitNum = Udma_rmAllocVintrBit(eventHandle);
+#endif
             if(UDMA_EVENT_INVALID == eventHandle->vintrBitNum)
             {
                 retVal = UDMA_EALLOC;
                 Udma_printf(drvHandle, "[Error] VINTR bit alloc failed!!!\n");
             }
+#ifdef QNX_OS
+            else
+            {
+                Udma_printf(drvHandle, "eventHandle->vintrBitNum = %d!!!\n", eventHandle->vintrBitNum);
+            }
+#endif
         }
     }
 
@@ -775,7 +805,11 @@ static int32_t Udma_eventAllocResource(Udma_DrvHandle drvHandle,
         {
             if(UDMA_CORE_INTR_ANY != eventPrms->preferredCoreIntrNum)
             {
+#ifdef QNX_OS
+                preferredIrIntrNum = Udma_resmgr_rmTranslateCoreIntrInput(drvHandle, eventPrms->preferredCoreIntrNum);
+#else
                 preferredIrIntrNum = Udma_rmTranslateCoreIntrInput(drvHandle, eventPrms->preferredCoreIntrNum);
+#endif
             }
             else
             {
@@ -783,12 +817,20 @@ static int32_t Udma_eventAllocResource(Udma_DrvHandle drvHandle,
             }
             if(UDMA_INTR_INVALID != preferredIrIntrNum)
             {
+#ifdef QNX_OS
+                eventHandle->irIntrNum =
+                    Udma_resmgr_rmAllocIrIntr(preferredIrIntrNum, drvHandle);
+#else
                 eventHandle->irIntrNum =
                     Udma_rmAllocIrIntr(preferredIrIntrNum, drvHandle);
+#endif
                 if(UDMA_INTR_INVALID != eventHandle->irIntrNum)
                 {
+#ifdef QNX_OS
+                    eventHandle->coreIntrNum = Udma_resmgr_rmTranslateIrOutput(drvHandle, eventHandle->irIntrNum);
+#else
                     eventHandle->coreIntrNum = Udma_rmTranslateIrOutput(drvHandle, eventHandle->irIntrNum);
-                    
+#endif
                 }
             }
             if(UDMA_INTR_INVALID == eventHandle->coreIntrNum)
@@ -796,6 +838,13 @@ static int32_t Udma_eventAllocResource(Udma_DrvHandle drvHandle,
                 retVal = UDMA_EALLOC;
                 Udma_printf(drvHandle, "[Error] Core intr alloc failed!!!\n");
             }
+#ifdef QNX_OS
+            else
+            {
+                Udma_printf(drvHandle, "eventHandle->irIntrNum = %d!!!\n", eventHandle->irIntrNum);
+                Udma_printf(drvHandle, "eventHandle->coreIntrNum = %d!!!\n", eventHandle->coreIntrNum);
+            }
+#endif
         }
     }
 
@@ -899,7 +948,11 @@ static void Udma_eventFreeResource(Udma_DrvHandle drvHandle,
     }
     if(UDMA_INTR_INVALID != eventHandle->irIntrNum)
     {
+#ifdef QNX_OS
+        Udma_resmgr_rmFreeIrIntr(eventHandle->irIntrNum, drvHandle);
+#else
         Udma_rmFreeIrIntr(eventHandle->irIntrNum, drvHandle);
+#endif
         eventHandle->irIntrNum = UDMA_INTR_INVALID;
         eventHandle->coreIntrNum = UDMA_INTR_INVALID;
     }
@@ -908,17 +961,29 @@ static void Udma_eventFreeResource(Udma_DrvHandle drvHandle,
     {
         /* Reset steering */
         Udma_eventResetSteering(drvHandle, eventHandle);
+#ifdef QNX_OS
+        Udma_resmgr_rmFreeEvent(eventHandle->globalEvent, drvHandle);
+#else
         Udma_rmFreeEvent(eventHandle->globalEvent, drvHandle);
+#endif
         eventHandle->globalEvent = UDMA_EVENT_INVALID;
     }
     if(UDMA_EVENT_INVALID != eventHandle->vintrBitNum)
     {
+#ifdef QNX_OS
+        Udma_resmgr_rmFreeVintrBit(eventHandle->vintrBitNum, drvHandle, eventHandle);
+#else
         Udma_rmFreeVintrBit(eventHandle->vintrBitNum, drvHandle, eventHandle);
+#endif
         eventHandle->vintrBitNum = UDMA_EVENT_INVALID;
     }
     if(UDMA_EVENT_INVALID != eventHandle->vintrNum)
     {
+#ifdef QNX_OS
+        Udma_resmgr_rmFreeVintr(eventHandle->vintrNum, drvHandle);
+#else
         Udma_rmFreeVintr(eventHandle->vintrNum, drvHandle);
+#endif
         eventHandle->vintrNum = UDMA_EVENT_INVALID;
     }
 
@@ -934,7 +999,7 @@ static int32_t Udma_eventConfig(Udma_DrvHandle drvHandle,
     Udma_ChHandle       chHandle;
     Udma_RingHandle     ringHandle;
 #if (UDMA_SOC_CFG_RING_MON_PRESENT == 1)
-    Udma_RingMonHandle  monHandle;
+    Udma_RingMonHandle  monHandle = NULL_PTR;
 #endif
     Udma_EventPrms     *eventPrms;
     struct tisci_msg_rm_irq_set_req     rmIrqReq;
