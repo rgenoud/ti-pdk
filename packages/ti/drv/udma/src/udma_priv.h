@@ -46,6 +46,12 @@
 /* This is needed for memset/memcpy */
 #include <string.h>
 #include <ti/drv/udma/udma.h>
+#ifdef QNX_OS
+#include <stdio.h>
+#include <sys/mman.h>
+#include <unistd.h>
+#include <hw/inout.h>
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -355,12 +361,24 @@ int32_t Udma_rmSetSharedResRmInitPrms(const Udma_RmSharedResPrms *rmSharedResPrm
 #endif
 
 /* Utils APIs */
+#ifdef QNX_OS
+uint64_t Udma_virtToPhyFxn(const void *virtAddr,
+                           uint32_t virtAddrSize,
+                           Udma_DrvHandle drvHandle,
+                           Udma_ChHandle chHandle);
+void *Udma_phyToVirtFxn(uint64_t phyAddr,
+                        uint32_t phyAddrSize,
+                        Udma_DrvHandle drvHandle,
+                        Udma_ChHandle chHandle);
+#else
 uint64_t Udma_virtToPhyFxn(const void *virtAddr,
                            Udma_DrvHandle drvHandle,
                            Udma_ChHandle chHandle);
 void *Udma_phyToVirtFxn(uint64_t phyAddr,
                         Udma_DrvHandle drvHandle,
                         Udma_ChHandle chHandle);
+#endif
+
 /**
  *  \brief Prints to Shared memory and CCS console
  *
