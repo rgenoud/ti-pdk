@@ -1256,7 +1256,7 @@ static void hostEmulation_triggerDMA(struct Udma_DrvObj * udmaDrvHandle)
           {
             totalSrcCnt = origTransferRecord->icnt0 * origTransferRecord->icnt1 * origTransferRecord->icnt2 * origTransferRecord->icnt3;
       		  totalDstCnt = origTransferRecord->dicnt0 * origTransferRecord->dicnt1 * origTransferRecord->dicnt2 * origTransferRecord->dicnt3;
-			      int32_t dataTobeTransferred = (( totalSrcCnt < totalDstCnt )? totalSrcCnt : totalDstCnt) * ((sectrPtr->data[1] >> 16) & 0xFFFF) * (sectrPtr->data[1] & 0xFFFF);
+			      int32_t dataTobeTransferred = (( totalSrcCnt < totalDstCnt )? totalSrcCnt : totalDstCnt) * ((sectrPtr->data[1] >> 16) & 0xFFFF) * (sectrPtr->data[1] & 0xFFFF) * 16;
 			      float compressedBitstreamLength = float(nextSBStartOffset);
             float compresionFactor = compressedBitstreamLength / float(dataTobeTransferred);
             //DmaUtilsAutoInc3d_printf(autoIncrementContext, 0,"Compression Factor: (%d  / %d ) %f \n", nextSBStartOffset, dataTobeTransferred, compresionFactor);
