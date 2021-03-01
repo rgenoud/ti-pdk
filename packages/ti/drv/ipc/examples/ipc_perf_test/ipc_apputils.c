@@ -51,7 +51,7 @@
 #include <ti/drv/ipc/ipc.h>
 #include <ti/drv/sciclient/sciclient.h>
 #include "ipc_apputils.h"
-#if defined (__C7100__)
+#if defined (__C7120__)
 #include <ti/csl/csl_clec.h>
 #include <ti/csl/arch/csl_arch.h>
 #endif
@@ -149,7 +149,7 @@ void *Ipc_appPhyToVirtFxn(uint64_t phyAddr, uint32_t chNum, void *appData)
 {
     void       *virtAddr;
 
-#if defined (__aarch64__) || defined (__C7100__)
+#if defined (__aarch64__) || defined (__C7120__)
     virtAddr = (void *) phyAddr;
 #else
     uint32_t temp;

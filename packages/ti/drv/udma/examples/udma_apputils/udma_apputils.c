@@ -44,7 +44,7 @@
 #include <ti/drv/udma/udma.h>
 #include <ti/drv/sciclient/sciclient.h>
 #include <ti/drv/udma/examples/udma_apputils/udma_apputils.h>
-#if defined (__C7100__)
+#if defined (__C7120__)
 #include <ti/csl/csl_clec.h>
 #include <ti/csl/arch/csl_arch.h>
 #endif
@@ -141,7 +141,7 @@ void *Udma_appPhyToVirtFxn(uint64_t phyAddr, uint32_t chNum, void *appData)
 {
     void       *virtAddr;
 
-#if defined (__aarch64__) || defined (__C7100__)
+#if defined (__aarch64__) || defined (__C7120__)
     virtAddr = (void *) phyAddr;
 #else
     uint32_t temp;
@@ -228,7 +228,7 @@ void Udma_appC66xIntrConfig(void)
 
 void Udma_appC7xPreInit(void)
 {
-#if defined (__C7100__)
+#if defined (__C7120__)
     CSL_ClecEventConfig cfgClec;
     CSL_CLEC_EVTRegs   *clecBaseAddr = (CSL_CLEC_EVTRegs*) CSL_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
     uint32_t            i, maxInputs = 2048U;

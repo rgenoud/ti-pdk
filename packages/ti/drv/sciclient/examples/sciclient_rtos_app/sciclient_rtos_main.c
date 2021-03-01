@@ -65,7 +65,7 @@
 #include <sciclient_appCommon.h>
 #include <ti/sysbios/knl/Clock.h>
 
-#if defined (__C7100__)
+#if defined (__C7120__)
 #include <ti/sysbios/family/c7x/Mmu.h>
 #endif
 
@@ -283,7 +283,7 @@ void GetRevisionTest2(UArg arg0, UArg arg1)
     while (loopForever) {;}
 }
 
-#if defined(BUILD_MPU) || defined (__C7100__)
+#if defined(BUILD_MPU) || defined (__C7120__)
 extern void Osal_initMmuDefault(void);
 void InitMmu(void)
 {

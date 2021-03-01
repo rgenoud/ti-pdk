@@ -614,7 +614,7 @@ GPMC_Tests Gpmc_tests[] =
 
 
 #ifdef USE_BIOS
-#if defined(BUILD_MPU) || defined (__C7100__)
+#if defined(BUILD_MPU) || defined (__C7120__)
 extern void Osal_initMmuDefault(void);
 void InitMmu(void)
 {

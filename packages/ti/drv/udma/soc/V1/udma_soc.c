@@ -293,7 +293,7 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
 #ifndef CC_QT_BUILD
     /* Fill other SOC specific parameters by reading from UDMA config
      * registers */
-    CSL_udmapGetCfg(pUdmapRegs);
+    //CSL_udmapGetCfg(pUdmapRegs);
 #endif
 
     /*
@@ -377,7 +377,7 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
     pIaRegs->pGcntRtiRegs   = (CSL_intaggr_gcntrtiRegs *) UDMA_NAVSS0_UDMASS_INTA0_CFG_GCNTRTI_BASE;
     /* UDMA not present in CC QT build. Only DRU is present */
 #ifndef CC_QT_BUILD
-    CSL_intaggrGetCfg(pIaRegs);
+//    CSL_intaggrGetCfg(pIaRegs);
 #endif
 
     drvHandle->iaGemOffset  = CSL_NAVSS_GEM_MAIN_UDMA_INTA0_SEVI_OFFSET;

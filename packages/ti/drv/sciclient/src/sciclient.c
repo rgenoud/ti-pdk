@@ -495,7 +495,7 @@ int32_t Sciclient_init(const Sciclient_ConfigPrms_t *pCfgPrms)
                 intrPrms.corepacConfig.corepacEventNum  = 0;
                 intrPrms.corepacConfig.intVecNum        = (int32_t) gSciclientMap[contextId].respIntrNum;
                 #endif
-                #if defined (__C7100__)
+                #if defined (__C7120__)
                 {
                     CSL_CLEC_EVTRegs * regs = (CSL_CLEC_EVTRegs *) CSL_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
                     CSL_ClecEventConfig evtCfg;
@@ -551,7 +551,7 @@ int32_t Sciclient_init(const Sciclient_ConfigPrms_t *pCfgPrms)
                 intrPrms.corepacConfig.corepacEventNum  = 0;
                 intrPrms.corepacConfig.intVecNum        = (int32_t) gSciclientMap[contextId].respIntrNum;
                 #endif
-                #if defined (__C7100__)
+                #if defined (__C7120__)
                 {
                     CSL_CLEC_EVTRegs * regs = (CSL_CLEC_EVTRegs *) CSL_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
                     CSL_ClecEventConfig evtCfg;
@@ -1108,7 +1108,7 @@ static int32_t Sciclient_waitThread(uint32_t thread, uint32_t timeout)
     return status;
 }
 
-#if defined (__C7100__)
+#if defined (__C7120__)
 #ifdef __cplusplus
 #pragma FUNCTION_OPTIONS("--opt_level=off")
 #else

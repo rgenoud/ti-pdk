@@ -74,10 +74,11 @@
 int32_t Udma_init(Udma_DrvHandle drvHandle, const Udma_InitPrms *initPrms)
 {
     int32_t                             retVal = UDMA_SOK;
+#if 0 //CC BUILD
 #if (UDMA_SOC_CFG_PROXY_PRESENT == 1)
     struct tisci_msg_rm_proxy_cfg_req   req;
 #endif
-
+#endif
     if((drvHandle == NULL_PTR) || (initPrms == NULL_PTR))
     {
         retVal = UDMA_EBADARGS;
@@ -117,7 +118,7 @@ int32_t Udma_init(Udma_DrvHandle drvHandle, const Udma_InitPrms *initPrms)
                 Udma_printf(drvHandle, "[Error] RM init failed!!!\n");
             }
         }
-
+#if 0 //FOR CC BUILD
 #if (UDMA_SOC_CFG_PROXY_PRESENT == 1)
         if(UDMA_SOK == retVal)
         {
@@ -132,7 +133,7 @@ int32_t Udma_init(Udma_DrvHandle drvHandle, const Udma_InitPrms *initPrms)
             }
         }
 #endif
-
+#endif
         if(UDMA_SOK == retVal)
         {
             drvHandle->drvInitDone = UDMA_INIT_DONE;
@@ -237,7 +238,7 @@ void UdmaInitPrms_init(uint32_t instId, Udma_InitPrms *initPrms)
         UdmaRmInitPrms_init(instId, &initPrms->rmInitPrms);
         UdmaOsalPrms_init(&initPrms->osalPrms);
         initPrms->skipRmOverlapCheck    = FALSE;
-        initPrms->skipGlobalEventReg    = FALSE;
+        initPrms->skipGlobalEventReg    = TRUE; /////Changed for AVV?
         initPrms->virtToPhyFxn          = &Udma_defaultVirtToPhyFxn;
         initPrms->phyToVirtFxn          = &Udma_defaultPhyToVirtFxn;
         initPrms->printFxn              = (Udma_PrintFxn) NULL_PTR;

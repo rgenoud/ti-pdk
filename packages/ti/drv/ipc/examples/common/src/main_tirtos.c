@@ -53,7 +53,7 @@
 #include <ti/sysbios/knl/Task.h>
 
 #include "ipc_utils.h"
-#if defined (__C7100__)
+#if defined (__C7120__)
 #include <ti/sysbios/family/c7x/Mmu.h>
 #endif
 
@@ -161,11 +161,11 @@ static Void taskFxn(UArg a0, UArg a1)
 #endif
 }
 
-#if defined(BUILD_MPU) || defined (__C7100__)
+#if defined(BUILD_MPU) || defined (__C7120__)
 extern void Osal_initMmuDefault(void);
 void InitMmu(void)
 {
-#if defined (__C7100__)
+#if defined (__C7120__)
     Mmu_MapAttrs attrs;
 
     Mmu_initMapAttrs(&attrs);

@@ -47,7 +47,7 @@
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-#if defined (__C7100__)
+#if defined (__C7120__)
 /* UART not yet supported */
 #else
 #define APPUTILS_UART_INPUT

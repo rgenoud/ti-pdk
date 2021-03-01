@@ -45,7 +45,7 @@
 #if defined (BUILD_MPU)
 #include <ti/sysbios/family/arm/v8a/Mmu.h>
 #endif
-#if defined (__C7100__)
+#if defined (__C7120__)
 #include <ti/sysbios/family/c7x/Mmu.h>
 #endif
 
@@ -77,7 +77,7 @@ void Osal_initMmuDefault(void);
 /*                          Function Definitions                              */
 /* ========================================================================== */
 
-#if defined(BUILD_MPU) || defined (__C7100__)
+#if defined(BUILD_MPU) || defined (__C7120__)
 void Osal_initMmuDefault(void)
 {
     Mmu_MapAttrs    attrs;

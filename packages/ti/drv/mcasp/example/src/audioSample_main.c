@@ -73,7 +73,7 @@
 
 #include <ti/drv/mcasp/soc/mcasp_soc.h>
 
-#if defined(BUILD_MPU) || defined (__C7100__)
+#if defined(BUILD_MPU) || defined (__C7120__)
 extern void Osal_initMmuDefault(void);
 Void InitMmu()
 {

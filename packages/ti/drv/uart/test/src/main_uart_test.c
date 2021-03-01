@@ -79,7 +79,7 @@
 #include <ti/csl/csl_clec.h>
 #endif
 
-#if defined (__C7100__)
+#if defined (__C7120__)
 #include <ti/csl/arch/csl_arch.h>
 #endif
 
@@ -1121,7 +1121,7 @@ static bool UART_test_simultaneous_rw(bool dmaMode)
     Task_Params_init(&writeTaskParams);
     writeTaskParams.arg0 = (UArg)uart;
     writeTaskParams.arg1 = (UArg)dmaMode;
-#if defined (__C7100__)
+#if defined (__C7120__)
     writeTaskParams.stackSize = 1024*16;
 #else
     writeTaskParams.stackSize = 1024*8;
@@ -3513,7 +3513,7 @@ static EDMA_Handle UartApp_edmaInit(void)
 #endif
 #endif
 
-#if defined(BUILD_MPU) || defined (__C7100__)
+#if defined(BUILD_MPU) || defined (__C7120__)
 extern void Osal_initMmuDefault(void);
 void InitMmu(void)
 {
@@ -3523,7 +3523,7 @@ void InitMmu(void)
 
 void Uart_appC7xPreInit(void)
 {
-#if defined (__C7100__) && !defined (SOC_J7200)
+#if defined (__C7120__) && !defined (SOC_J7200)
     CSL_ClecEventConfig cfgClec;
 	CSL_CLEC_EVTRegs   *clecBaseAddr = (CSL_CLEC_EVTRegs*) CSL_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
 

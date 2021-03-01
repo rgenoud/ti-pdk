@@ -78,7 +78,7 @@
 
 #include <ti/csl/soc.h>
 
-#if defined (__C7100__)
+#if defined (__C7120__)
 #include <ti/csl/csl_clec.h>
 #include <ti/csl/arch/csl_arch.h>
 #endif
@@ -1617,7 +1617,7 @@ int main(void)
     return (0);
 }
 
-#if defined(BUILD_MPU) || defined (__C7100__)
+#if defined(BUILD_MPU) || defined (__C7120__)
 extern void Osal_initMmuDefault(void);
 void InitMmu(void)
 {
@@ -1627,7 +1627,7 @@ void InitMmu(void)
 
 void Osal_appC7xPreInit(void)
 {
-#if defined (__C7100__)
+#if defined (__C7120__)
     CSL_ClecEventConfig cfgClec;
     CSL_CLEC_EVTRegs   *clecBaseAddr = (CSL_CLEC_EVTRegs*) CSL_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
     uint32_t            i, maxInputs = 2048U;

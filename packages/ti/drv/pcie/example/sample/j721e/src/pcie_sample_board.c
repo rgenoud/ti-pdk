@@ -1163,7 +1163,7 @@ void PlatformPCIESSSerdesConfig(int32_t serdes, int32_t iface)
 
 /* Nothing past this point */
 
-#if defined(BUILD_MPU) || defined (__C7100__)
+#if defined(BUILD_MPU) || defined (__C7120__)
 extern void Osal_initMmuDefault(void);
 void InitMmu(void)
 {
