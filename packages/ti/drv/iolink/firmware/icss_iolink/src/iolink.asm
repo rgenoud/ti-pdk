@@ -785,6 +785,15 @@ chselect:
 	jmp run
 wraparound:
 	ldi substate, 0
-	nopx 4 ;cycle compensation
+	nop
+	qbne skip_timer_int, TimerCounter, 2
+	ldi R31.b0, ((1<<5) | 2) ; generate timer IRQ
+	ldi TimerCounter, 0
+	nop
+	jmp run
+
+skip_timer_int:
+	add TimerCounter, TimerCounter, 1
+	nopx 2
 	jmp run
 	;6.5 cycles on average

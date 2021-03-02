@@ -96,6 +96,7 @@
 	.asg "0x28", PRU_ICSS_INTC_EISR
 	.asg "0x34", PRU_ICSS_INTC_HIEISR
 	.asg "0x280", PRU_ICSS_INTC_SECR0
+	.asg "0x410", PRU_ICSS_INTC_CMR4
 	.asg "0xD80", PRU_ICSS_INTC_SITR0
 
     .asg "R0", gp_r0    ;general purpose register
@@ -137,41 +138,25 @@ main:
 	zero &R0, 120 ;clear R0 to R29
 	sbco &gp_r0, c24, 0, 68 ; clear data mem
 
-
 	; clear standby_init bit to enable access to ocp master port
 	lbco &R0, c4, 4, 4
     clr  r0.t4
     sbco &R0, c4, 4, 4
 
-	;configure iep timer
-	;reset iep count increment to 5 and disable it
-	ldi gp_r0, 0x550
-	sbco &gp_r0, c26, PRU_ICSS_IEP_TMR_GLB_CFG, 4		; store content of r0 to c26 (IEP global timer cfg)
-	ldi gp_r0, 0x1
-	sbco &gp_r0, c26, PRU_ICSS_IEP_TMR_GLB_STS, 4		; set glb_sts cnt_ovf to 1 to clear counter overflow
-	ldi gp_r0, 0x3
-	sbco &gp_r0, c26, PRU_ICSS_IEP_TMR_CMP_CFG, 4		; enable event on compare 0, and enable counter reset
-	ldi gp_r0, 0xff
-	sbco &gp_r0, c26, PRU_ICSS_IEP_TMR_CMP_STS, 4		; clear compare status
-	ldi gp_r0, 13015									; 13.015 µs timebase
-	sbco &gp_r0, c26, PRU_ICSS_IEP_TMR_CMP0, 4			; write 13015 to cmp register 0
-	ldi gp_r0, 0x551
-	sbco &gp_r0, c26, PRU_ICSS_IEP_TMR_GLB_CFG, 4		; start timer
-
-	; intc event system 7 to host 0
+	; intc event system 18 to host 0
 	; map system event 2 to channel 0
 	; PRU_ICSS_INTC_CMR1 = 0x0;
 	; PRU_ICSS_INTC_HMR0  = 0x0
 
-	; PRU_ICSS_INTC_EISR = 7
+	; PRU_ICSS_INTC_EISR = 18
 	; PRU_ICSS_INTC_HIEISR = 0
 	; PRU_ICSS_INTC_GER = 1
 
-	ldi gp_r0, 0x80
+	ldi32 gp_r0, (1<<18)
 	ldi gp_r1, PRU_ICSS_INTC_SITR0
 	sbco &gp_r0, c0, gp_r1, 4							; set to edge detect
-	ldi gp_r0, 7
-	sbco &gp_r0, c0, PRU_ICSS_INTC_EISR, 4				; enable event 7
+	ldi gp_r0, 18
+	sbco &gp_r0, c0, PRU_ICSS_INTC_EISR, 4				; enable event 18
 	ldi gp_r0, 0
 	sbco &gp_r0, c0, PRU_ICSS_INTC_HIEISR, 4 			; enable host channel 0
 	ldi gp_r0, 1
@@ -183,15 +168,15 @@ main:
 timer_loop:												; always takes xyz cycles
 	wbs r31, 30
 
-	ldi gp_r0, 0x80
+	ldi32 gp_r0, (1<<18)
 	ldi gp_r1, PRU_ICSS_INTC_SECR0
 	sbco &gp_r0, c0, gp_r1, 4							; clear system event
 	ldi gp_r0, 0x00
 	sbco &gp_r0, c0, PRU_ICSS_INTC_SICR, 4				; clear event status
-	ldi gp_r0, 0x01
-	sbco &gp_r0, c26, PRU_ICSS_IEP_TMR_CMP_STS, 4		; clear compare status
 
 	add timer_100us, timer_100us, 1						; increment 100 us counter --> is actually 104.16 µs
+	qblt cycle_counter_timer_loop, timer_100us, 7		; jump to cycyle counter handling when 8x 13.02 us = 104.16 reached
+wakeup_check:
 	lbco &gp_r0, c24, 1, 1								; load config register
 	qbbc finish_wakeup_handling, gp_r0, wakeup_ch		; check if enable bit is cleared -> channel handling finished
 	lbco &wakeup_counter, c24, wakeup_addr, 4			; channel is enabled, so load state and counters for this channel
@@ -221,7 +206,6 @@ statehandling_send_com3:
 	ldi gp_r0.b0, 2										; prepare tx buffer
 	ldi gp_r0.b1, 2
 	ldi gp_r0.w2, 0x00a2
-	;ldi gp_r0.w1, 0xa202								; prepare tx buffer
 	add gp_r1, wakeup_ch, 5								; prepare address
 	lsl gp_r1, gp_r1, 8									; prepare address
 	sbco &gp_r0, c25, gp_r1, 4							; copy data to tx buffer
@@ -276,16 +260,10 @@ statehandling_retry:
 	lsl gp_r1, gp_r1, 7									; rx buffer address
 	lbco &gp_r0, c25, gp_r1, 1							; load number of received bytes to gp_r0
 	qbeq com_found, gp_r0.b0, 2							; if rx bytes is 2, we have received something --> baud rate found
-	;lbco &gp_r0, c24, 1, 2								; load config register
-	;clr gp_r0.b1, gp_r0.b1, wakeup_ch					; clear the channel coresponding status bit
-	;clr gp_r0.b0, gp_r0.b0, wakeup_ch					; disable establish com on this channel
-	;sbco &gp_r0, c24, 1, 2								; write back to memory
-	;ldi wakeup_counter, 0								; set timer to 0
-	;ldi wakeup_state, state_idle						; move state machine to idle
 	; we havent received a response... increment retry counter; need to check retry counter; wait Tdwu and start over
 	add wakeup_state, wakeup_state, 0x10				; increment wakeup retry counter
 	qbeq no_response, wakeup_state, 0x30				; after 3 retries we stop
-	ldi wakeup_counter, (360-1)							; wait 50 ms for retry
+	ldi wakeup_counter, (219-1)							; wait 50 ms for retry
 	or wakeup_state, wakeup_state, state_idle			; move state machine to idle
 	jmp writeback_finish								; jump to end of statemachine and write back state and counter
 
@@ -318,14 +296,14 @@ finish_wakeup_handling:
 	add wakeup_addr, wakeup_addr, 4						; increment address to next channel
 	add io_link_addr, io_link_addr, 8					; increment to next io-link channel address
 	qblt clear_restart_wakeup_ch, wakeup_ch, 7			; we are on the last channel, clear and restart
-	qblt cycle_counter_timer_loop, timer_100us, 7		; jump to cycyle counter handling when 8x 13.02 us = 104.16 reached
+	;qblt cycle_counter_timer_loop, timer_100us, 7		; jump to cycyle counter handling when 8x 13.02 us = 104.16 reached
 	jmp timer_loop										; start again
 
 clear_restart_wakeup_ch:
 	and wakeup_ch, wakeup_ch, 0							; clear wakeup_ch to 0
 	ldi wakeup_addr, 0x24								; prepare state address to channel 0
 	ldi io_link_addr, 4									; prepare io-link address to channel 0
-	qblt cycle_counter_timer_loop, timer_100us, 7		; jump to cycyle counter handling when 8x 13.02 us = 104.16 reached
+	;qblt cycle_counter_timer_loop, timer_100us, 7		; jump to cycyle counter handling when 8x 13.02 us = 104.16 reached
 	jmp timer_loop										; start again
 
 cycle_counter_timer_loop:
@@ -358,7 +336,8 @@ increment_and_restart:
 	add timer_ch, timer_ch, 1							; increment channel index by 1
 	add timer_addr, timer_addr, 4						; every channel has 32 bit
 	add enable_addr, enable_addr, 8						; channels are spaced in 8 byte/channel
-	qblt timer_loop, timer_ch, 7						; if last channel processed restart timer loop
+	qblt wakeup_check, timer_ch, 7						; if last channel processed restart timer loop
+	;qblt timer_loop, timer_ch, 7						; if last channel processed restart timer loop
 	jmp channel_loop
 
 	halt ; should never reach this
@@ -367,9 +346,6 @@ trigger_channel:
 	; ch0 address 0x04 set bit 0 to start
 	; ch1 0x0c
 	; ch2 0x14 ...
-;	ldi32 gp_r0, 0x48320190
-;	ldi32 gp_r1, (1<<28)
-;	sbbo &gp_r1, gp_r0, 0, 4
 	ldi gp_r0, 1										; load 1 to register
 	sbco &gp_r0, c25, enable_addr, 1					; set bit 0 in memory of pru0 to start a new transmission
 
