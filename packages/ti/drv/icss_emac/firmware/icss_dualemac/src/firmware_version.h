@@ -95,9 +95,9 @@ FIRMWARE_VERSION_INTERNAL    	.set    1
 ; bit30..24    major version number
 FIRMWARE_VERSION_MAJOR    		.set        0x03
 ; bit23..16        minor version number
-FIRMWARE_VERSION_MINOR    		.set            0x00
+FIRMWARE_VERSION_MINOR    		.set            0x01
 ; bit15..0        build number
-FIRMWARE_VERSION_BUILD    		.set            0x03
+FIRMWARE_VERSION_BUILD    		.set            0x04
     .endif
 
     .if $defined("ICSS_DUAL_EMAC_BUILD")
