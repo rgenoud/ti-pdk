@@ -126,7 +126,7 @@ void SBL_SciClientInit(void)
     {
         SCICLIENT_SERVICE_OPERATION_MODE_POLLED,
         NULL,
-        1,
+        0, /* default board cfg is for non-secure mode */
         0,
         TRUE
     };
