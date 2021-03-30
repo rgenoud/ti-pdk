@@ -89,13 +89,6 @@ int32_t Sciclient_service (const Sciclient_ReqPrm_t *pReqPrm,
     iov_t   siov[1], riov[1];
     int rc = EOK;
 
-    /* Get IO priveleges */
-    if (ThreadCtl(_NTO_TCTL_IO_PRIV, NULL) == -1) {
-         perror("ThreadCtl(_NTO_TCTL_IO_PRIV");
-         status = CSL_EFAIL;
-         return status;
-    }
-
     /* Open up resource manager */
     fd = open(devname, O_RDWR);
     if (fd < 0) {

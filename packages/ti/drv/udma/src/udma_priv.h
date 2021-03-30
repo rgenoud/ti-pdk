@@ -51,6 +51,7 @@
 #include <sys/mman.h>
 #include <unistd.h>
 #include <hw/inout.h>
+#include <sys/neutrino.h>
 #endif
 
 #ifdef __cplusplus

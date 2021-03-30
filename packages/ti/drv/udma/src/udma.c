@@ -79,6 +79,12 @@ int32_t Udma_init(Udma_DrvHandle drvHandle, const Udma_InitPrms *initPrms)
     struct tisci_msg_rm_proxy_cfg_req   req;
 #endif
 #endif
+#ifdef QNX_OS
+    /* We need to have IO PRIV to access UDMA Channel/Ring registers */
+    if (ThreadCtl(_NTO_TCTL_IO_PRIV, NULL) == -1) {
+        retVal = UDMA_EALLOC;
+    }
+#endif
 
     if((drvHandle == NULL_PTR) || (initPrms == NULL_PTR))
     {
