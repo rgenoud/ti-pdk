@@ -115,6 +115,7 @@
     .asg "R25", paritylut_adr       ;stores a 32bit address for faster access with LBBO (used for LUT's)
 
     .asg "R26", globalCtrlRegAdr    ;globalCtrlRegAdr
+    .asg "R27.b0", TimerCounter     ;counter register for 13.02 us timer on PRU1
 
     .asg "R31", rxr                 ;receive pin register (r31 is mapped to the PRU's GPI pins)
     .asg "R30", txr                 ;transmit pin register (r30 is mapped to the PRU's GPO pins)
