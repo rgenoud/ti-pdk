@@ -59,7 +59,7 @@ endif
 
 CFLAGS_DIROPTS = -fr=$(OBJDIR) -fs=$(OBJDIR)
 
-LNKFLAGS_INTERNAL_BUILD_PROFILE = -v3 -g --endian=$(ENDIAN) --define=$(SOC) --diag_wrap=off --diag_warning=225 --display_error_number --hardware_mac=on -z --stack_size=0 --heap_size=0 --reread_libs --warn_sections
+LNKFLAGS_INTERNAL_BUILD_PROFILE = -v3 -g --endian=$(ENDIAN) --define=$(SOC) --diag_wrap=off --diag_warning=225 --display_error_number --hardware_mac=on -z --stack_size=0 --heap_size=0 --reread_libs --warn_sections --disable_auto_rts
 
 CFLAGS_INTERNAL += --diag_wrap=off --diag_warning=225 --display_error_number --hardware_mac=on --preproc_with_compile -eo.$(OBJEXT) 
 
@@ -74,6 +74,7 @@ else
     _CFLAGS += $(CFLAGS_LOCAL_$(SOC)) $(CFLAGS_GLOBAL_$(SOC))
   endif
 endif
+   _CFLAGS +=  --asm_listing --code_address_listing_unit=word 
 
 ifeq ($(CORE),pru_0)
     ifeq ($(HOSTCORE), $(filter $(HOSTCORE), c66x))
@@ -109,7 +110,7 @@ _LNKFLAGS = $(LNKFLAGS_INTERNAL_BUILD_PROFILE) $(LNKFLAGS_INTERNAL_COMMON) $(LNK
 
 LINK_PATHS += $(CL_PRU_INSTALL_PATH)/lib/libc.a
 
-LNK_INCLUDES = $(addprefix -l,$(LINK_PATHS))
+#LNK_INCLUDES = $(addprefix -l,$(LINK_PATHS))
 
 LNK_OUTPUT_FILE = $(OBJDIR)/$(HEADERNAME)
 

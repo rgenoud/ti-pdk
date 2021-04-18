@@ -61,5 +61,27 @@ ifeq ($(MAKERULEDIR), )
 endif
 include $(MAKERULEDIR)/common.mk
 
+ifeq ($(CORE),pru_0)
+    ifeq ($(HOSTCORE), $(filter $(HOSTCORE), a8host a9host a15_0 ipu1_0))
+        HEX_LNKCMD_FILE = $(PDK_INSTALL_PATH)/ti/drv/iolink/build/PRU0_to_ARRAY.cmd
+    endif
+endif
+ifeq ($(CORE),pru_1)
+    ifeq ($(HOSTCORE), $(filter $(HOSTCORE), a8host a9host a15_0 ipu1_0))
+        HEX_LNKCMD_FILE = $(PDK_INSTALL_PATH)/ti/drv/iolink/build/PRU1_to_ARRAY.cmd
+    endif
+endif
+
+$(HEADERDIR)/$(HEADERNAME).$(HEADEREXT) : $(LNK_OUTPUT_FILE) | $(HEADERDIR)
+	$(ECHO) \#
+	$(ECHO) \# Generating output header into $(PRINT_MESSAGE)...
+	$(ECHO) \#
+ifeq ($(CORE),pru_0)
+	$(HEX) $(HEX_LNKCMD_FILE) $(OBJDIR)/$(HEADERNAME).$(OUTEXT) -o $(PDK_INSTALL_PATH)/ti/drv/iolink/src/v0/IOLINK_fw_pru0.h
+endif
+ifeq ($(CORE),pru_1)
+	$(HEX) $(HEX_LNKCMD_FILE) $(OBJDIR)/$(HEADERNAME).$(OUTEXT) -o $(PDK_INSTALL_PATH)/ti/drv/iolink/src/v0/IOLINK_fw_pru1.h
+endif
+
 # Nothing beyond this point
 

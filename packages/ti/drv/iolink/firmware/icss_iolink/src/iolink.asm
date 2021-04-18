@@ -45,7 +45,7 @@
  	.include "./include/io_link_master/defines.inc"
 
 	.global	main
-	.sect	".text:main"
+	;.sect	".text:main"
 
 ;program entry point:
 
