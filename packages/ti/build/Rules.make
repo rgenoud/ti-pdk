@@ -34,11 +34,13 @@
 #if nothing is defined, default to linux as in windows this variable is defined
 export OS ?= linux
 
-SDK_INSTALL_PATH ?= $(abspath ../../../../)
+#SDK_INSTALL_PATH ?= $(abspath ../../../../)
+SDK_INSTALL_PATH ?= C:/ti/
 TOOLS_INSTALL_PATH ?= $(SDK_INSTALL_PATH)
 
 #Default BUILD_OS_TYPE (tirtos/baremetal/qnx/freertos)
-export BUILD_OS_TYPE ?= tirtos
+#export BUILD_OS_TYPE ?= tirtos
+export BUILD_OS_TYPE ?= baremetal
 
 include $(PDK_INSTALL_PATH)/ti/build/procsdk_defs.mk
 

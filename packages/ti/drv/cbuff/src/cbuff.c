@@ -54,6 +54,9 @@
 #include <ti/osal/osal.h>
 #include <ti/csl/hw_types.h>
 
+CBUFF_DriverMCB    g_cbuffDriver = {0};
+CBUFF_Session      g_cbuffSession[CBUFF_MAX_NUM_SESSION] = {0u};
+
 /* ========================================================================== */
 /*                          Function Declarations                             */
 /* ========================================================================== */
@@ -97,7 +100,9 @@ static void CBUFF_deregisterFrameDone (CBUFF_DriverMCB* ptrDriverMCB);
  **************************************************************************/
 static void CBUFF_ISR (uintptr_t arg);
 static void CBUFF_ErrorISR (uintptr_t arg);
+#if 0
 static void CBUFF_FrameStartISR (uintptr_t arg);
+#endif
 
 /* ========================================================================== */
 /*                          Function Definitions                              */
@@ -733,6 +738,11 @@ static void CBUFF_ErrorISR (uintptr_t arg)
 
     /* Increment the error counter */
     ptrDriverMCB->totalNumErrorInterrupts++;
+
+	/* Clear error interrupts */
+    ptrDriverMCB->ptrCBUFFReg->CLR_CBUFF_REG1 = CSL_FINSR (ptrDriverMCB->ptrCBUFFReg->CLR_CBUFF_REG1, 16U, 16U, 1U);
+    ptrDriverMCB->ptrCBUFFReg->CLR_CBUFF_REG1 = CSL_FINSR (ptrDriverMCB->ptrCBUFFReg->CLR_CBUFF_REG1, 17U, 17U, 1U);
+
     return;
 }
 
@@ -750,6 +760,7 @@ static void CBUFF_ErrorISR (uintptr_t arg)
  *  @retval
  *      Not applicable
  */
+#if 0
 static void CBUFF_FrameStartISR (uintptr_t arg)
 {
     CBUFF_DriverMCB*        ptrDriverMCB;
@@ -764,7 +775,7 @@ static void CBUFF_FrameStartISR (uintptr_t arg)
     ptrDriverMCB->totalNumFrameStart++;
     return;
 }
-
+#endif
 /**
  *  @b Description
  *  @n
@@ -1497,7 +1508,9 @@ CBUFF_Handle CBUFF_init (CBUFF_InitCfg* ptrInitCfg, int32_t* errCode)
     CBUFF_Handle            retHandle = NULL;
     CBUFF_DriverMCB*        ptrDriverMCB = NULL;
     OsalRegisterIntrParams_t    intrPrms;
+#if 0
     SOC_SysIntListenerCfg   listenerCfg;
+#endif
     int32_t                 tmpErrCode;
     uint8_t                 index;
     CBUFF_Session*          ptrSession;
@@ -1515,7 +1528,8 @@ CBUFF_Handle CBUFF_init (CBUFF_InitCfg* ptrInitCfg, int32_t* errCode)
     }
 
     /* Allocate memory for the CBUFF Driver: */
-    ptrDriverMCB = (CBUFF_DriverMCB*)MemoryP_ctrlAlloc (sizeof(CBUFF_DriverMCB), 0);
+    // ptrDriverMCB = (CBUFF_DriverMCB*)MemoryP_ctrlAlloc (sizeof(CBUFF_DriverMCB), 0);
+    ptrDriverMCB = &g_cbuffDriver;
     if (ptrDriverMCB == NULL)
     {
         /* Error: Out of memory */
@@ -1532,7 +1546,8 @@ CBUFF_Handle CBUFF_init (CBUFF_InitCfg* ptrInitCfg, int32_t* errCode)
     memset ((void *)ptrDriverMCB, 0, sizeof(CBUFF_DriverMCB));
 
     /* Allocate memory for the sessions: */
-    ptrDriverMCB->ptrSessionTable = (CBUFF_Session*) MemoryP_ctrlAlloc ((sizeof(CBUFF_Session) * ptrInitCfg->maxSessions), 0);
+    // ptrDriverMCB->ptrSessionTable = (CBUFF_Session*) MemoryP_ctrlAlloc ((sizeof(CBUFF_Session) * ptrInitCfg->maxSessions), 0);
+    ptrDriverMCB->ptrSessionTable = &g_cbuffSession[0];
     if (ptrDriverMCB->ptrSessionTable == NULL)
     {
         /* Error: Out of memory */
@@ -1638,6 +1653,7 @@ CBUFF_Handle CBUFF_init (CBUFF_InitCfg* ptrInitCfg, int32_t* errCode)
      * We do not want to overwhelm the system with a large number of interrupts. */
      if (ptrDriverMCB->initCfg.enableDebugMode == true)
      {
+#if 0
         /* Register the CBUFF Frame Start Listener: */
         memset ((void*)&listenerCfg, 0, sizeof(SOC_SysIntListenerCfg));
         listenerCfg.systemInterrupt = gCBUFFHwAttribute.frameStartInterrupt;
@@ -1648,6 +1664,7 @@ CBUFF_Handle CBUFF_init (CBUFF_InitCfg* ptrInitCfg, int32_t* errCode)
             /* Error: Unable to register the frame start listener. Error code is already setup.*/
             return retHandle;
         }
+#endif
 
         /* Debug Mode: Enable the Chirp & Frame Done Interrupt: */
         CBUFF_enableChirpDoneInt (ptrDriverMCB->ptrCBUFFReg);
@@ -1949,7 +1966,7 @@ int32_t CBUFF_deinit (CBUFF_Handle cBuffHandle, int32_t* errCode)
         }
 
         /* Cleanup the memory for the allocated session table */
-        MemoryP_ctrlFree (ptrDriverMCB->ptrSessionTable, (sizeof(CBUFF_Session) * ptrDriverMCB->initCfg.maxSessions));
+        // MemoryP_ctrlFree (ptrDriverMCB->ptrSessionTable, (sizeof(CBUFF_Session) * ptrDriverMCB->initCfg.maxSessions));
     }
 
     /* Deregister the CBUFF Error ISR Handler only if had been registered */
@@ -1972,7 +1989,7 @@ int32_t CBUFF_deinit (CBUFF_Handle cBuffHandle, int32_t* errCode)
     }
 
     /* Cleanup the memory */
-    MemoryP_ctrlFree (ptrDriverMCB, sizeof(CBUFF_DriverMCB));
+    // MemoryP_ctrlFree (ptrDriverMCB, sizeof(CBUFF_DriverMCB));
 
     /* CBUFF has been deinitialized successfully. */
     retVal = 0;

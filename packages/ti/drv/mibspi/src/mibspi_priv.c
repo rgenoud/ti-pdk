@@ -102,7 +102,8 @@ static void MIBSPI_dataTransfer
     uint8_t *srcData,
     uint8_t *dstData,
     uint16_t dataElemSize,
-    uint8_t group
+    uint8_t group,
+    uint8_t usePrevRxRamPointer
 );
 
 static void MIBSPI_ISR(uintptr_t arg);
@@ -127,7 +128,10 @@ static void MIBSPI_dmaCtrlGroupDisable(CSL_mss_spiRegs *ptrMibSpiReg, uint8_t dm
 /**************************************************************************
  ************************** Global Variables **********************************
  **************************************************************************/
-/* NONE */
+volatile uint16_t gRxRamReadPointer;
+volatile uint8_t gFirstByteForDebug;
+volatile uint32_t gFirstByteAddrForDebug;
+
 
 /**************************************************************************
  ************************* MibSPI Driver Local Functions ************************
@@ -1357,8 +1361,7 @@ static void MIBSPI_ISR (uintptr_t arg)
                 if((ptrMibSpiReg->DMACTRL[group] & 0x3FU) != 0)
                 {
                     MIBSPI_transferGroupEnable(ptrMibSpiReg, group);
-              
- }
+                }
 #endif
             }
         }
@@ -1431,13 +1434,16 @@ static void MIBSPI_dataTransfer
     uint8_t *srcData,
     uint8_t *dstData,
     uint16_t dataElemSize,
-    uint8_t group
+    uint8_t group,
+    uint8_t usePrevRxRamPointer
 )
 {
     MibSpi_HwCfg  const  *ptrHwCfg;
     CSL_mss_spiRegs      *ptrMibSpiReg;
     uint8_t         ramOffset = 0U;
+    uint8_t         additionalRamOffset;
     uint16_t        bufId = 0U;
+    uint16_t        physical_bufId = 0U;
     uint8_t         iCount = 0U;
 
     /* Get MibSpi driver hardware config */
@@ -1449,23 +1455,36 @@ static void MIBSPI_dataTransfer
     /* Put SPI in active mode */
     MIBSPI_SPIEnable(ptrMibSpiReg);
 
+    //printf("MIBSPI_dataTransfer: usePrevRxRamPointer: %d prev_gRxRamReadPointer: %d Pcurrent: %d\n\r", usePrevRxRamPointer, gRxRamReadPointer, CSL_FEXT(ptrMibSpiReg->TGCTRL[group], SPI_TGCTRL_PCURRENT));
+
+    /* Re-use RX RAM read pointer for RX transfers if specified by user (typically re-used when extra RX data is expected to have been received) */
+    if ((usePrevRxRamPointer == 1U) && (dstData != NULL))
+    {
+        additionalRamOffset = gRxRamReadPointer;
+    }
+    else
+    {
+        additionalRamOffset = 0U;
+        gRxRamReadPointer = 0U;
+    }
+
     /* Find out bufId and RAM offset */
     if(ptrMibSpiDriver->params.mode == MIBSPI_SLAVE)
     {
-        ramOffset = 0U;
+        ramOffset = additionalRamOffset;
 
         /* Find out iCount and bufid */
         if (dataElemSize > MIBSPI_RAM_MAX_ELEM)
         {
             /* (iCount + 1) transfer of size MIBSPI_RAM_MAX_ELEM */
-            iCount = (uint8_t)(dataElemSize / MIBSPI_RAM_MAX_ELEM - 1U);
+            iCount = (uint8_t)(dataElemSize / (MIBSPI_RAM_MAX_ELEM - additionalRamOffset) - 1U);
             bufId = (uint16_t)(MIBSPI_RAM_MAX_ELEM -1U);
         }
         else
         {
             /* One transfer of dataElemSize */
             iCount = (uint8_t)0U;
-            bufId = (uint16_t)(dataElemSize -1U);
+            bufId = (uint16_t)(dataElemSize + additionalRamOffset -1U);
         }
     }
     else
@@ -1473,8 +1492,8 @@ static void MIBSPI_dataTransfer
         uint8_t    ramLen = 0;
 
         Mibspi_assert(group < MIBSPI_UTILS_ARRAYSIZE(ptrMibSpiDriver->rambufStart));
-        ramOffset = ptrMibSpiDriver->rambufStart[group];
-        ramLen =  ptrMibSpiDriver->params.u.masterParams.slaveProf[group].ramBufLen;
+        ramOffset = ptrMibSpiDriver->rambufStart[group] + additionalRamOffset;
+        ramLen =  ptrMibSpiDriver->params.u.masterParams.slaveProf[group].ramBufLen - additionalRamOffset;
 
         /* Find out iCound and bufid */
         if (dataElemSize > ramLen)
@@ -1491,14 +1510,31 @@ static void MIBSPI_dataTransfer
         }
     }
 
-    /* Initialize transfer group start offset */
-    MIBSPI_transferSetPStart(ptrMibSpiReg, group, ramOffset);
+    /* Use max size physical bufId for RX transfers to avoid RX data overrun when extra data comes */
+    if (dstData != NULL)
+    {
+        /* RX data transfer */
+        physical_bufId = (uint16_t)(MIBSPI_RAM_MAX_ELEM -1U);
+    }
+    else
+    {
+        /* TX data transfer */
+        physical_bufId = bufId;
+    }
+
+    /* Only initialize start pointer if this is not a continuation of an RX transaction */
+    if ((dstData == NULL) ||  // TX data transfer
+        (usePrevRxRamPointer != 1U))  // user did not specify to re-use prev RX RAM data pointer
+    {
+        /* Initialize transfer group start offset */
+        MIBSPI_transferSetPStart(ptrMibSpiReg, group, ramOffset);
+    }
 
     /* This is only needed for XWR16xx/XWR18xx/XWR68xx device */
-    MIBSPI_transferSetPStart(ptrMibSpiReg, (uint8_t)(group + 1U), (uint8_t)(bufId + 1U));
+    MIBSPI_transferSetPStart(ptrMibSpiReg, (uint8_t)(group + 1U), (uint8_t)(physical_bufId + 1U));
 
     /* Initialize transfer groups end pointer */
-    CSL_FINS(ptrMibSpiReg->LTGPEND,SPI_LTGPEND_LPEND, (uint32_t)bufId);
+    CSL_FINS(ptrMibSpiReg->LTGPEND,SPI_LTGPEND_LPEND, (uint32_t)physical_bufId);
 
 #ifdef MIBSPI_DMA_ENABLE
      /* Configure DMA in the following 3 cases
@@ -1554,7 +1590,7 @@ static void MIBSPI_dataTransfer
         {
             dmaXferInfo.size.elemSize =  2;
         }
-        dmaXferInfo.size.elemCnt = bufId + 1U;
+        dmaXferInfo.size.elemCnt = bufId - additionalRamOffset + 1U;
         dmaXferInfo.size.frameCnt = iCount + 1U;
         Mibspi_assert(MIBSPI_dmaTransfer(ptrMibSpiDriver->mibspiHandle, &dmaXferInfo) == MIBSPI_STATUS_SUCCESS);;
 
@@ -1573,10 +1609,41 @@ static void MIBSPI_dataTransfer
 
         Mibspi_assert(MIBSPI_dmaStartTransfer(ptrMibSpiDriver->mibspiHandle, group) == MIBSPI_STATUS_SUCCESS);
 
-        MIBSPI_dmaCtrlGroupStart(ptrMibSpiReg, group, MIBSPI_DMACTRL_CH_BOTH);
+        /* Only (re)enable TGENA bit if this is not a continuation of an RX transaction */
+        /* (setting this bit triggers the copying of PSTART into PCURRENT which would corrupt the extra RX data) */
+        if ((dstData == NULL) ||  // TX data transfer
+            (usePrevRxRamPointer != 1U))  // user did not specify to re-use prev RX RAM data pointer
+        {
+            /* Enable DMA SPI_DMACTRL_TXDMAENA/SPI_DMACTRL_RXDMAENA bits */
+            MIBSPI_dmaCtrlGroupStart(ptrMibSpiReg, group, MIBSPI_DMACTRL_CH_BOTH);
 
-        /* Start TG group transfer */
-        MIBSPI_transferGroupEnable(ptrMibSpiReg, group);
+            /* Start TG group transfer */
+            MIBSPI_transferGroupEnable(ptrMibSpiReg, group);
+        }
+        else
+        {
+            /* Wait until requested amount of RX data is available */
+            /* (cannot use automatic DMA initiation from MIBSPI since RX data may have arrived before this function was called) */
+            while (CSL_FEXT(ptrMibSpiReg->TGCTRL[group], SPI_TGCTRL_PCURRENT) < (bufId + 1));
+
+            /* Save first byte for debug */
+            gFirstByteAddrForDebug = (uint32_t)rxRAMAddr;
+            gFirstByteForDebug = *(uint8_t *)rxRAMAddr;
+
+            /* Enable DMA SPI_DMACTRL_TXDMAENA/SPI_DMACTRL_RXDMAENA bits */
+            MIBSPI_dmaCtrlGroupStart(ptrMibSpiReg, group, MIBSPI_DMACTRL_CH_BOTH);
+
+            /* Manually trigger RX DMA transfer (TX was already triggered when SPI_DMACTRL_TXDMAENA bit was enabled) */
+            MibSpi_HwCfg const *hwAttrs;
+            hwAttrs = ptrMibSpiDriver->ptrHwCfg;
+            int32_t edmaStatus = EDMA_startDmaTransfer(ptrMibSpiDriver->params.dmaHandle, hwAttrs->dmaReqlineCfg[group].rxDmaReqLine);
+            if (EDMA_NO_ERROR != edmaStatus)
+            {
+                // ERROR
+                //printf("EDMA_startDmaTransfer returned error: %d", edmaStatus);
+                Mibspi_assert(0);
+            }
+        }
 
 
     }
@@ -1637,10 +1704,12 @@ static void MIBSPI_dataTransfer
             srcData = (srcData == (uint8_t *)NULL)? (uint8_t *)NULL : (uint8_t *)(srcData + size * ptrMibSpiDriver->params.dataSize / 8U);
             dstData = (dstData == (uint8_t *)NULL)? (uint8_t *)NULL : (uint8_t *)(dstData + size * ptrMibSpiDriver->params.dataSize / 8U);
 
+            /* Transfer finished, unblock the thread */
+            SemaphoreP_post(ptrMibSpiDriver->transferCompleteSem);
         }
-        /* Transfer finished, unblock the thread */
-        SemaphoreP_post(ptrMibSpiDriver->transferCompleteSem);
     }
+
+    //printf("MIBSPI_dataTransfer end: gRxRamReadPointer: %d Pcurrent: %d\n\r", gRxRamReadPointer, CSL_FEXT(ptrMibSpiReg->TGCTRL[group], SPI_TGCTRL_PCURRENT));
 
     return;
 }
@@ -2065,6 +2134,9 @@ static void MIBSPI_initTransactionState(Mibspi_transactionState_t *transactionSt
     transactionState->transferErr = MIBSPI_XFER_ERR_NONE;
     transactionState->transaction = transaction;
     transactionState->transaction->status = MIBSPI_TRANSFER_STARTED;
+    transactionState->remainSize = 0U;
+    transactionState->dataLength = 0U;
+    transactionState->dataSizeInBytes = 0U;
 
     HwiP_restore(key);
 }
@@ -2078,6 +2150,9 @@ static void MIBSPI_resetTransactionState(Mibspi_transactionState_t *transactionS
     transactionState->edmaCbCheck = MIBSPI_NONE_EDMA_CALLBACK_OCCURED;
     transactionState->transferErr = MIBSPI_XFER_ERR_NONE;
     transactionState->transaction = NULL;
+    transactionState->remainSize = 0U;
+    transactionState->dataLength = 0U;
+    transactionState->dataSizeInBytes = 0U;
 
     HwiP_restore(key);
 }
@@ -2135,11 +2210,11 @@ bool MIBSPI_transferCore(MIBSPI_Handle handle, MIBSPI_Transaction *transaction)
 #ifndef SPI_MULT_ICOUNT_SUPPORT
         if(ptrMibSpiDriver->params.mode == MIBSPI_SLAVE)
         {
-            MIBSPI_dataTransfer(ptrMibSpiDriver, transaction->txBuf, transaction->rxBuf, dataLength, MIBSPI_SLAVEMODE_TRANS_GROUP);
+            MIBSPI_dataTransfer(ptrMibSpiDriver, transaction->txBuf, transaction->rxBuf, dataLength, MIBSPI_SLAVEMODE_TRANS_GROUP, transaction->usePrevRxRamPointer);
         }
         else
         {
-            MIBSPI_dataTransfer(ptrMibSpiDriver, transaction->txBuf, transaction->rxBuf, dataLength, transaction->slaveIndex);
+            MIBSPI_dataTransfer(ptrMibSpiDriver, transaction->txBuf, transaction->rxBuf, dataLength, transaction->slaveIndex, transaction->usePrevRxRamPointer);
         }
 
         if (ptrMibSpiDriver->params.transferMode == MIBSPI_MODE_BLOCKING)
@@ -2203,13 +2278,22 @@ bool MIBSPI_transferCore(MIBSPI_Handle handle, MIBSPI_Transaction *transaction)
                 dataLength -= remainSize;
             }
 
+            if (ptrMibSpiDriver->params.transferMode == MIBSPI_MODE_CALLBACK)
+            {
+                /* Tell ISR function how much data there is remaining after this transfer
+                 * (if remainSize > 0 then this is the first of two transfers) */
+                ptrMibSpiDriver->transactionState.remainSize = remainSize;
+                ptrMibSpiDriver->transactionState.dataLength = dataLength;
+                ptrMibSpiDriver->transactionState.dataSizeInBytes = dataSizeInBytes;
+            }
+
             if(ptrMibSpiDriver->params.mode == MIBSPI_SLAVE)
             {
-                MIBSPI_dataTransfer(ptrMibSpiDriver, (uint8_t *)transaction->txBuf, (uint8_t *)transaction->rxBuf, dataLength, MIBSPI_SLAVEMODE_TRANS_GROUP);
+                MIBSPI_dataTransfer(ptrMibSpiDriver, (uint8_t *)transaction->txBuf, (uint8_t *)transaction->rxBuf, dataLength, MIBSPI_SLAVEMODE_TRANS_GROUP, transaction->usePrevRxRamPointer);
             }
             else
             {
-                MIBSPI_dataTransfer(ptrMibSpiDriver, (uint8_t *)transaction->txBuf, (uint8_t *)transaction->rxBuf, dataLength, transaction->slaveIndex);
+                MIBSPI_dataTransfer(ptrMibSpiDriver, (uint8_t *)transaction->txBuf, (uint8_t *)transaction->rxBuf, dataLength, transaction->slaveIndex, transaction->usePrevRxRamPointer);
             }
 
             if (ptrMibSpiDriver->params.transferMode == MIBSPI_MODE_BLOCKING)
@@ -2231,10 +2315,9 @@ bool MIBSPI_transferCore(MIBSPI_Handle handle, MIBSPI_Transaction *transaction)
             }
             else
             {
-                /* Execution should not reach here */
-                transaction->status = MIBSPI_TRANSFER_FAILED;
-                ret = false;
-                remainSize = 0;
+                /* Return success status if non-blocking mode */
+                ret = true;
+                return ret;
             }
 
             /* Check if transfer finished */
@@ -2251,11 +2334,11 @@ bool MIBSPI_transferCore(MIBSPI_Handle handle, MIBSPI_Transaction *transaction)
             /* Transfer the remaining size */
             if(ptrMibSpiDriver->params.mode == MIBSPI_SLAVE)
             {
-                MIBSPI_dataTransfer(ptrMibSpiDriver, (uint8_t *)transaction->txBuf, (uint8_t *)transaction->rxBuf, dataLength, MIBSPI_SLAVEMODE_TRANS_GROUP);
+                MIBSPI_dataTransfer(ptrMibSpiDriver, (uint8_t *)transaction->txBuf, (uint8_t *)transaction->rxBuf, dataLength, MIBSPI_SLAVEMODE_TRANS_GROUP, transaction->usePrevRxRamPointer);
             }
             else
             {
-                MIBSPI_dataTransfer(ptrMibSpiDriver, (uint8_t *)transaction->txBuf, (uint8_t *)transaction->rxBuf, dataLength, transaction->slaveIndex);
+                MIBSPI_dataTransfer(ptrMibSpiDriver, (uint8_t *)transaction->txBuf, (uint8_t *)transaction->rxBuf, dataLength, transaction->slaveIndex, transaction->usePrevRxRamPointer);
             }
 
             if (ptrMibSpiDriver->params.transferMode == MIBSPI_MODE_BLOCKING)
@@ -2389,19 +2472,86 @@ void MIBSPI_dmaDoneCb(MIBSPI_Handle mibspiHandle)
     {
         if (ptrMibSpiDriver->transactionState.transaction != NULL)
         {
-            /* Call the transfer completion callback function */
+            /* Debug check for manually initiated DMA transfer */
+            if ((ptrMibSpiDriver->transactionState.transaction->usePrevRxRamPointer == 1U) &&
+                (ptrMibSpiDriver->transactionState.transaction->rxBuf != NULL))
+            {
+                if (gFirstByteForDebug != *(uint8_t *)ptrMibSpiDriver->transactionState.transaction->rxBuf)
+                {
+                    printf("MIBSPI DMA ERROR:  Data read manually (0x%2.2X from address 0x%8.8X) does not match data moved by DMA (0x%2.2X from address 0x%8.8X)\n\r",
+                        gFirstByteForDebug, gFirstByteAddrForDebug,
+                        *(uint8_t *)ptrMibSpiDriver->transactionState.transaction->rxBuf,
+                        (uint32_t)ptrMibSpiDriver->transactionState.transaction->rxBuf);
+                    Mibspi_assert(0);
+                }
+            }
+
+            /* Check if transfer is done or if second transfer is required (multi-icount case) */
             if ((ptrMibSpiDriver->transactionState.transaction->status == MIBSPI_TRANSFER_STARTED) &&
+                (ptrMibSpiDriver->transactionState.transferErr == MIBSPI_XFER_ERR_NONE) &&
+                (ptrMibSpiDriver->transactionState.remainSize > 0U))
+            {
+                /* Change buffer pointer and data size for the second transfer */
+                ptrMibSpiDriver->transactionState.transaction->txBuf = (void *)((ptrMibSpiDriver->transactionState.transaction->txBuf == NULL) ?
+                    NULL : (uint8_t *)ptrMibSpiDriver->transactionState.transaction->txBuf + 
+                    ptrMibSpiDriver->transactionState.dataLength * (ptrMibSpiDriver->transactionState.dataSizeInBytes));
+                ptrMibSpiDriver->transactionState.transaction->rxBuf = (void *)((ptrMibSpiDriver->transactionState.transaction->rxBuf == NULL) ?
+                    NULL : (uint8_t *)ptrMibSpiDriver->transactionState.transaction->rxBuf +
+                    ptrMibSpiDriver->transactionState.dataLength * (ptrMibSpiDriver->transactionState.dataSizeInBytes));
+                ptrMibSpiDriver->transactionState.dataLength = ptrMibSpiDriver->transactionState.remainSize;
+                ptrMibSpiDriver->transactionState.remainSize = 0U;
+
+                /* Transfer the remaining size */
+                if(ptrMibSpiDriver->params.mode == MIBSPI_SLAVE)
+                {
+                    MIBSPI_dataTransfer(ptrMibSpiDriver, (uint8_t *)ptrMibSpiDriver->transactionState.transaction->txBuf,
+                        (uint8_t *)ptrMibSpiDriver->transactionState.transaction->rxBuf, ptrMibSpiDriver->transactionState.dataLength, MIBSPI_SLAVEMODE_TRANS_GROUP,
+                        ptrMibSpiDriver->transactionState.transaction->usePrevRxRamPointer);
+                }
+                else
+                {
+                    MIBSPI_dataTransfer(ptrMibSpiDriver, (uint8_t *)ptrMibSpiDriver->transactionState.transaction->txBuf,
+                        (uint8_t *)ptrMibSpiDriver->transactionState.transaction->rxBuf, ptrMibSpiDriver->transactionState.dataLength, ptrMibSpiDriver->transactionState.transaction->slaveIndex,
+                        ptrMibSpiDriver->transactionState.transaction->usePrevRxRamPointer);
+                }
+            }
+            else if ((ptrMibSpiDriver->transactionState.transaction->status == MIBSPI_TRANSFER_STARTED) &&
                 (ptrMibSpiDriver->transactionState.transferErr == MIBSPI_XFER_ERR_NONE))
             {
+                /* Update status*/
                 ptrMibSpiDriver->transactionState.transaction->status = MIBSPI_TRANSFER_COMPLETED;
             }
             else
             {
+                /* Update status */
                 ptrMibSpiDriver->transactionState.transaction->status = MIBSPI_TRANSFER_FAILED;
             }
 
-            ptrMibSpiDriver->params.transferCallbackFxn(mibspiHandle, ptrMibSpiDriver->transactionState.transaction);
-            MIBSPI_resetTransactionState(&ptrMibSpiDriver->transactionState);
+            /* Update RX RAM read pointer (only used if extra RX data was received) */
+            if ((ptrMibSpiDriver->transactionState.transaction->status == MIBSPI_TRANSFER_COMPLETED) &&
+                (ptrMibSpiDriver->transactionState.transaction->rxBuf != NULL))
+            {
+                gRxRamReadPointer += ptrMibSpiDriver->transactionState.dataLength;
+                if (ptrMibSpiDriver->params.mode == MIBSPI_SLAVE)
+                {
+                    gRxRamReadPointer = gRxRamReadPointer % MIBSPI_RAM_MAX_ELEM;
+                }
+                else
+                {
+                    gRxRamReadPointer = gRxRamReadPointer %
+                        ptrMibSpiDriver->params.u.masterParams.slaveProf[ptrMibSpiDriver->transactionState.transaction->slaveIndex].ramBufLen;
+                }
+            }
+
+            if ((ptrMibSpiDriver->transactionState.transaction->status == MIBSPI_TRANSFER_COMPLETED) ||
+                (ptrMibSpiDriver->transactionState.transaction->status == MIBSPI_TRANSFER_FAILED))
+            {
+                /* Call transferCallbackFxn */
+                ptrMibSpiDriver->params.transferCallbackFxn(mibspiHandle, ptrMibSpiDriver->transactionState.transaction);
+
+                /* Reset transaction state */
+                MIBSPI_resetTransactionState(&ptrMibSpiDriver->transactionState);
+            }
         }
     }
 }

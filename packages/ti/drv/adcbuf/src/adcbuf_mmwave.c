@@ -43,6 +43,8 @@
 #include <ti/osal/HwiP.h>
 #include <ti/csl/cslr.h>
 
+
+ADCBufMMWave_Object         g_adcBufDriver;
 /*
  * =============================================================================
  * Local Definitions
@@ -202,17 +204,17 @@ static void ADCBUFContinuousModeCtrl(CSL_rss_ctrlRegs  *ptrRssCtrlRegBase, uint3
  */
 static void ADCBUFContinuousModeStart(CSL_rss_ctrlRegs  *ptrRssCtrlRegBase,   uint16_t numSamples)
 {
-    /* Starts the continuous mode operation */
-    CSL_REG32_FINS_RAW(&ptrRssCtrlRegBase->ADCBUFCFG1, 
-                       CSL_RSS_CTRL_ADCBUFCFG1_ADCBUFCFG1_ADCBUFCONTSTRTPL_MASK,
-                       CSL_RSS_CTRL_ADCBUFCFG1_ADCBUFCFG1_ADCBUFCONTSTRTPL_SHIFT,
-                       1U);
-
     /* Setup the sample count */
     CSL_REG32_FINS_RAW(&ptrRssCtrlRegBase->ADCBUFCFG4, 
                        CSL_RSS_CTRL_ADCBUFCFG4_ADCBUFCFG4_ADCBUFSAMPCNT_MASK,
                        CSL_RSS_CTRL_ADCBUFCFG4_ADCBUFCFG4_ADCBUFSAMPCNT_SHIFT,
                        (uint32_t) numSamples);
+
+    /* Starts the continuous mode operation */
+    CSL_REG32_FINS_RAW(&ptrRssCtrlRegBase->ADCBUFCFG1, 
+                       CSL_RSS_CTRL_ADCBUFCFG1_ADCBUFCFG1_ADCBUFCONTSTRTPL_MASK,
+                       CSL_RSS_CTRL_ADCBUFCFG1_ADCBUFCFG1_ADCBUFCONTSTRTPL_SHIFT,
+                       1U);
 }
 
 /**
@@ -554,10 +556,10 @@ static void ADCBUFTestPatternConfig(CSL_rss_ctrlRegs  *ptrRssCtrlRegBase, const 
 static void ADCBUFTestPatternStart(CSL_rss_ctrlRegs  *ptrRssCtrlRegBase)
 {
     /* Lower the clock */
-    CSL_REG32_FINS_RAW(&ptrRssCtrlRegBase->TESTPATTERNVLDCFG, 
-                        CSL_RSS_CTRL_TESTPATTERNVLDCFG_TESTPATTERNVLDCFG_TSTPATVLDCNT_MASK,
-                        CSL_RSS_CTRL_TESTPATTERNVLDCFG_TESTPATTERNVLDCFG_TSTPATVLDCNT_SHIFT,
-                        0x32U);
+    //CSL_REG32_FINS_RAW(&ptrRssCtrlRegBase->TESTPATTERNVLDCFG, 
+    //                    CSL_RSS_CTRL_TESTPATTERNVLDCFG_TESTPATTERNVLDCFG_TSTPATVLDCNT_MASK,
+    //                    CSL_RSS_CTRL_TESTPATTERNVLDCFG_TESTPATTERNVLDCFG_TSTPATVLDCNT_SHIFT,
+    //                    0x32U);
 
     /* Test pattern start */
     CSL_REG32_FINS_RAW(&ptrRssCtrlRegBase->TESTPATTERNVLDCFG, 
@@ -915,7 +917,8 @@ ADCBuf_Handle ADCBUF_MMWave_open(ADCBuf_Handle handle, const ADCBuf_Params *para
         else
         {
             /* Allocate memory for the driver: */
-            ptrADCBufObject = (ADCBufMMWave_Object* )MemoryP_ctrlAlloc ((uint32_t)sizeof(ADCBufMMWave_Object), 0);
+            // ptrADCBufObject = (ADCBufMMWave_Object* )MemoryP_ctrlAlloc ((uint32_t)sizeof(ADCBufMMWave_Object), 0);
+            ptrADCBufObject = &g_adcBufDriver;
             if (ptrADCBufObject == NULL)
             {
                 /* Error: memory allocation failed */
@@ -984,7 +987,7 @@ void ADCBUF_MMWave_close(ADCBuf_Handle handle)
     ptrADCBufObject->isOpen = false;
 
     /* Free the memory */
-    MemoryP_ctrlFree (ptrADCBufObject, (uint32_t)sizeof(ADCBufMMWave_Object));
+    // MemoryP_ctrlFree (ptrADCBufObject, (uint32_t)sizeof(ADCBufMMWave_Object));
 
     /* Reset the object handle : */
     handle->object = NULL;
@@ -1120,10 +1123,10 @@ int_fast16_t ADCBUF_MMWave_control(ADCBuf_Handle handle, uint_fast8_t cmd, void 
             ADCBUFTestPatternStart(ptrRssCtrlRegBase);
 
             /* The following is for test pattern test only, in other cases, this value should not be touched. */
-            ptrRssCtrlRegBase->ADCBUFCFG1 = CSL_FINSR(ptrRssCtrlRegBase->ADCBUFCFG1,
-                                                   31U,
-                                                   17U,
-                                                   0U);
+            //ptrRssCtrlRegBase->ADCBUFCFG1 = CSL_FINSR(ptrRssCtrlRegBase->ADCBUFCFG1,
+            //                                       31U,
+            //                                       17U,
+            //                                       0U);
             status = ADCBUF_STATUS_SUCCESS;
             break;
 
@@ -1199,6 +1202,8 @@ uint32_t ADCBUF_MMWave_getChanBufAddr(ADCBuf_Handle handle, uint8_t channel, int
     *errCode = ADCBUF_STATUS_SUCCESS;
 
     /* Check if the channel is enabled? */
+    /*if(CSL_FEXTR(ptrRssCtrlRegBase->ADCBUFCFG1, ADCBUFCFG1_RX0EN_BIT_END + channel,
+                 ADCBUFCFG1_RX0EN_BIT_START + channel) != (uint32_t)0U)*/
     if(isChannelEnabled(ptrRssCtrlRegBase, channel) != (uint32_t)0U)
     {
         uint32_t addrOffset;

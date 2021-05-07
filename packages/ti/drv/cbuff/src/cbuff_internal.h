@@ -466,17 +466,17 @@ typedef struct CBUFF_Session_t
      * - Software Triggered Execution Mode
      *   This is always set to 1.
      */
-    uint32_t                        numChirpsPerFrame;
+    volatile uint32_t                        numChirpsPerFrame;
 
     /**
      * @brief   Number of frame done interrupts received
      */
-    uint32_t                        numFrameDone;
+    volatile uint32_t                        numFrameDone;
 
     /**
      * @brief   Number of chirp done interrupts received
      */
-    uint32_t                        numChirpDone;
+    volatile uint32_t                        numChirpDone;
 }CBUFF_Session;
 
 /**
@@ -540,27 +540,27 @@ typedef struct CBUFF_DriverMCB_t
     /**
      * @brief   Total number of frame start interrupts received
      */
-    uint32_t                        totalNumFrameStart;
+    volatile uint32_t                        totalNumFrameStart;
 
     /**
      * @brief   Total number of frame done interrupts received
      */
-    uint32_t                        totalNumFrameDone;
+    volatile uint32_t                        totalNumFrameDone;
 
     /**
      * @brief   Total number of chirp done interrupts received
      */
-    uint32_t                        totalNumChirpDone;
+    volatile uint32_t                        totalNumChirpDone;
 
     /**
      * @brief   Number of interrupts received when there is no active session
      */
-    uint32_t                        totalNumNonActiveSessionInterrupts;
+    volatile uint32_t                        totalNumNonActiveSessionInterrupts;
 
     /**
      * @brief   Total number of error interrupts received
      */
-    uint32_t                        totalNumErrorInterrupts;
+    volatile uint32_t                        totalNumErrorInterrupts;
 }CBUFF_DriverMCB;
 
 /**
