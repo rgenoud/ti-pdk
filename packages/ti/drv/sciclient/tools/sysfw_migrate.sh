@@ -178,6 +178,7 @@ if [ "$SKIP_BUILD" != "YES" ]; then
     make -j -s sciserver_testapp BOARD=j721e_evm
     $COPY $ROOTDIR/ti/binary/sciclient_ccs_init/bin/j721e/sciclient_ccs_init_mcu1_0_release.xer5f $SCI_CLIENT_DIR/tools/ccsLoadDmsc/j721e/
     $COPY $ROOTDIR/ti/binary/sciserver_testapp/bin/j721e/sciserver_testapp_mcu1_0_release.xer5f $SCI_CLIENT_DIR/tools/ccsLoadDmsc/j721e/
+    $COPY $ROOTDIR/ti/binary/sciserver_testapp/bin/j721e/sciserver_testapp_mcu1_0_release.rprc $SCI_CLIENT_DIR/tools/ccsLoadDmsc/j721e/
 
     # AM65xx
     make -j -s allclean
@@ -186,7 +187,7 @@ if [ "$SKIP_BUILD" != "YES" ]; then
     make -j -s sciclient_ccs_init_clean BOARD=am65xx_evm
     make -j -s sciclient_ccs_init BOARD=am65xx_evm
     $COPY $ROOTDIR/ti/binary/sciclient_ccs_init/bin/am65xx/sciclient_ccs_init_mcu1_0_release.xer5f $SCI_CLIENT_DIR/tools/ccsLoadDmsc/am65xx/
-   
+
     # AM64xx
     make -j -s allclean
     make -j -s sciclient_boardcfg BOARD=am64x_evm
@@ -194,7 +195,7 @@ if [ "$SKIP_BUILD" != "YES" ]; then
     make -j -s sciclient_ccs_init_clean BOARD=am64x_evm
     make -j -s sciclient_ccs_init BOARD=am64x_evm
     $COPY $ROOTDIR/ti/binary/sciclient_ccs_init/bin/am64x/sciclient_ccs_init_mcu1_0_release.xer5f $SCI_CLIENT_DIR/tools/ccsLoadDmsc/am64x/
- 
+
     # J7200
     make -j -s allclean
     make -j -s sciclient_boardcfg BOARD=j7200_evm
@@ -205,6 +206,7 @@ if [ "$SKIP_BUILD" != "YES" ]; then
     make -j -s sciserver_testapp BOARD=j7200_evm
     $COPY $ROOTDIR/ti/binary/sciclient_ccs_init/bin/j7200/sciclient_ccs_init_mcu1_0_release.xer5f $SCI_CLIENT_DIR/tools/ccsLoadDmsc/j7200/
     $COPY $ROOTDIR/ti/binary/sciserver_testapp/bin/j7200/sciserver_testapp_mcu1_0_release.xer5f $SCI_CLIENT_DIR/tools/ccsLoadDmsc/j7200/
+    $COPY $ROOTDIR/ti/binary/sciserver_testapp/bin/j7200/sciserver_testapp_mcu1_0_release.rprc $SCI_CLIENT_DIR/tools/ccsLoadDmsc/j7200/
 
     cd -
 fi
@@ -220,8 +222,8 @@ if [ "$SKIP_GEN_BIN" != "YES" ];  then
     ./firmwareHeaderGen.sh am65x_sr2-hs
     ./firmwareHeaderGen.sh j721e
     ./firmwareHeaderGen.sh j721e-hs
-    ./firmwareHeaderGen.sh am64x-vlab
-    ./firmwareHeaderGen.sh am64x-zebu
+    ./firmwareHeaderGen.sh j721e_sr1_1-hs
+    ./firmwareHeaderGen.sh am64x
     ./firmwareHeaderGen.sh j7200
 
 fi
