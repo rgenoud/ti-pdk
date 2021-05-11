@@ -1,0 +1,2 @@
+60e2b96b81663c3d75ef0a7521d52066  TIFS-v2020.08e-installer.exe
+79b79362f5b54cc58c2ee80b629e211c  TIFS-v2020.08e-installer.run
