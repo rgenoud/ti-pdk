@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021, Texas Instruments Incorporated
+ * Copyright (c) 2015-2021, Texas Instruments Incorporated
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,24 +30,75 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*
- *  ======== Utils_qnx.c ========
+ *  ======== DebugP_tirtos.c ========
  */
-
+#include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include <stdio.h>
+#include <string.h>
 #include <assert.h>
+#include <sys/slog.h>
+#include <sys/slogcodes.h>
 
 #include <ti/osal/osal.h>
+#include <ti/osal/DebugP.h>
 
+#define _SLOGC_PRIVATE_OSAL (_SLOGC_PRIVATE_START + 100)
+
+#if DebugP_ASSERT_ENABLED
 /*
- *  ======== Osal_DebugP_assert ========
+ *  ======== _DebugP_assert ========
  */
-void Osal_DebugP_assert(int32_t expression, const char *file, int32_t line);  /*for misra warnings*/
-void Osal_DebugP_assert(int32_t expression, const char *file, int32_t line)
+void Osal_DebugP_assert_fcn(bool expression, const char *file, int32_t line)
 {
-    if (expression) Osal_DebugP_assert_fcn((bool)expression, file, line);
+    if (expression) 
+    {
+        slogf(_SLOGC_PRIVATE_OSAL, _SLOG_DEBUG1,"Assert in the file %s at line %d...Calling Abort!", file, line);
+        abort();
+    }
+}
+#endif
+
+#if DebugP_LOG_ENABLED
+/*
+ *  ======== DebugP_log0 ========
+ */
+void DebugP_log0(const char *format)
+{
+    slogf(_SLOGC_PRIVATE_OSAL, _SLOG_DEBUG1, format);
 }
 
+/*
+ *  ======== DebugP_log1 ========
+ */
+void DebugP_log1(const char *format, uintptr_t p1)
+{
+     slogf(_SLOGC_PRIVATE_OSAL, _SLOG_DEBUG1, format, p1);
+}
+
+/*
+ *  ======== DebugP_log2 ========
+ */
+void DebugP_log2(const char *format, uintptr_t p1, uintptr_t p2)
+{
+     slogf(_SLOGC_PRIVATE_OSAL, _SLOG_DEBUG1, format, p1, p2);
+}
+/*
+ *  ======== DebugP_log3 ========
+ */
+void DebugP_log3(const char *format, uintptr_t p1, uintptr_t p2, uintptr_t p3)
+{
+     slogf(_SLOGC_PRIVATE_OSAL, _SLOG_DEBUG1, format, p1, p2, p3);
+}
+/*
+ *  ======== DebugP_log4 ========
+ */
+void DebugP_log4(const char *format, uintptr_t p1, uintptr_t p2, uintptr_t p3, uintptr_t p4)
+{
+    slogf(_SLOGC_PRIVATE_OSAL, _SLOG_DEBUG1, format, p1, p2, p3, p4);
+}
+#endif
+
 /* Nothing past this point */
+

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-present, Texas Instruments Incorporated
+ * Copyright (c) 2020-2021, Texas Instruments Incorporated
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,7 +30,7 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*
- *  ======== Queue_qnx.c ========
+ *  ======== QueueP_qnx.c ========
  */
 
 #include <stdint.h>
@@ -40,69 +40,63 @@
 #include <ti/osal/QueueP.h>
 #include <ti/osal/HwiP.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /*
- *  ======== Osal_Queue_Params_init ========
+ *  ======== QueueP_Params_init ========
  */
-void Osal_Queue_Params_init(const Osal_Queue_Params * queueParams)
+void QueueP_Params_init(QueueP_Params *params)
 {
+    if (params != NULL)
+    {
+        params->pErrBlk =  NULL;
+    }
     return;
 }
 
 /*
- *  ======== Osal_Queue_create ========
+ *  ======== QueueP_create ========
  */
-Osal_Queue_Handle Osal_Queue_create(const  Osal_Queue_Params * queueParams, void * eb)
+QueueP_Handle QueueP_create(const QueueP_Params *params)
 {
-    Osal_Queue_Elem *obj = NULL;
+    QueueP_Elem *obj = NULL;
 
-    obj = calloc(1, sizeof(Osal_Queue_Elem));
+    obj = calloc(1, sizeof(QueueP_Elem));
     if (obj != NULL)
     {
-        obj->next = (struct Osal_QueueElem *)obj;
-        obj->prev = (struct Osal_QueueElem *)obj;
+        obj->next = (QueueP_Elem *)obj;
+        obj->prev = (QueueP_Elem *)obj;
     }
-    return obj;
+    return (QueueP_Handle)obj;
 }
 
 /*
- *  ======== Osal_Queue_empty ========
+ *  ======== QueueP_delete ========
  */
-uint32_t Osal_Queue_empty(Osal_Queue_Handle queueHandle)
+QueueP_Status QueueP_delete(QueueP_Handle queueHandle)
 {
-    uint32_t status = 1U;
-    Osal_Queue_Elem *obj = (Osal_Queue_Elem *) queueHandle;
-
-    if (obj != NULL)
+    if (queueHandle != NULL)
     {
-        if(obj->next != (struct Osal_QueueElem*)obj)
-        {
-            status = 0U;
-        }
+        free(queueHandle);
     }
 
-    return status;
+    return QueueP_OK;
 }
 
 /*
- *  ======== Osal_Queue_get ========
+ *  ======== QueueP_get ========
  */
-void * Osal_Queue_get(Osal_Queue_Handle queueHandle)
+void * QueueP_get(QueueP_Handle queueHandle)
 {
-    Osal_Queue_Elem *elem = NULL;
-    Osal_Queue_Elem *obj = (Osal_Queue_Elem *) queueHandle;
+    QueueP_Elem *elem = NULL;
+    QueueP_Elem *obj = (QueueP_Elem *)queueHandle;
     uintptr_t key;
 
     if (obj != NULL)
     {
         key = HwiP_disable();
 
-        elem = (Osal_Queue_Elem*)obj->next;
+        elem = (QueueP_Elem*)obj->next;
         obj->next = elem->next;
-        ((Osal_Queue_Elem*)(elem->next))->prev = (struct Osal_QueueElem*)obj;
+        ((QueueP_Elem*)(elem->next))->prev = (QueueP_Elem*)obj;
 
         HwiP_restore(key);
     }
@@ -111,43 +105,56 @@ void * Osal_Queue_get(Osal_Queue_Handle queueHandle)
 }
 
 /*
- *  ======== Osal_Queue_put ========
+ *  ======== QueueP_put ========
  */
-void Osal_Queue_put(Osal_Queue_Handle queueHandle,Osal_Queue_Elem *elem)
+QueueP_Status QueueP_put(QueueP_Handle queueHandle, void *new)
 {
     uintptr_t key;
-    Osal_Queue_Elem *obj = (Osal_Queue_Elem *) queueHandle;
+    QueueP_Elem *obj = (QueueP_Elem *)queueHandle;
+    QueueP_Elem *elem = (QueueP_Elem *)new;
 
     if ((obj != NULL) && (elem != NULL))
     {
         key = HwiP_disable();
 
-        elem->next = (struct Osal_QueueElem*)obj;
+        elem->next = (QueueP_Elem*)obj;
         elem->prev = obj->prev;
-        ((Osal_Queue_Elem*)(obj->prev))->next = (struct Osal_QueueElem*)elem;
-        obj->prev = (struct Osal_QueueElem*)elem;
+        ((QueueP_Elem*)(obj->prev))->next = (QueueP_Elem*)elem;
+        obj->prev = (QueueP_Elem*)elem;
 
         HwiP_restore(key);
     }
 
-    return;
+    return QueueP_OK;
 }
 
 /*
- *  ======== Osal_Queue_delete ========
+ *  ======== QueueP_isEmpty ========
  */
-void Osal_Queue_delete(Osal_Queue_Handle queueHandle)
+QueueP_State QueueP_isEmpty(QueueP_Handle queueHandle)
 {
-    if (queueHandle != NULL)
+    QueueP_State state = QueueP_EMPTY;
+    QueueP_Elem *obj = (QueueP_Elem *) queueHandle;
+
+    if (obj != NULL)
     {
-        free(queueHandle);
+        if(obj->next != (QueueP_Elem*)obj)
+        {
+            state = QueueP_NOTEMPTY;
+        }
     }
 
-    return;
+    return state;
+}
+
+/*
+ *  ======== QueueP_getQPtr ========
+ */
+void * QueueP_getQPtr(QueueP_Handle handle)
+{
+    /* For QNX, queue pointer is the handle itself */
+    return handle;
 }
 
 /* Nothing past this point */
 
-#ifdef __cplusplus
-}
-#endif

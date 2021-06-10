@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017-present, Texas Instruments Incorporated
+ * Copyright (c) 2017-2021, Texas Instruments Incorporated
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,10 +38,6 @@
 #include <ti/osal/RegisterIntr.h>
 #include <ti/csl/csl.h>
 #include <ti/csl/tistdtypes.h>
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 /*
  *  ======== Osal_RegisterInterrupt_initParams ========
@@ -191,7 +187,3 @@ void Osal_ClearInterrupt(int32_t corepacEvent,int32_t interruptNum)
 }
 
 /* Nothing past this point */
-
-#ifdef __cplusplus
-}
-#endif

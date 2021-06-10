@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017-present, Texas Instruments Incorporated
+ * Copyright (c) 2017-2021, Texas Instruments Incorporated
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,16 +38,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 
 /* Nothing to be supported on QNX */
 
 
 /* Nothing past this point */
-  
-#ifdef __cplusplus
-}
-#endif

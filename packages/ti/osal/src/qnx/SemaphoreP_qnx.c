@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-present, Texas Instruments Incorporated
+ * Copyright (c) 2016-2021, Texas Instruments Incorporated
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -46,9 +46,6 @@
 #include <errno.h>
 #include <string.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 /*
  *  ======== SemaphoreP_create ========
@@ -57,25 +54,23 @@ SemaphoreP_Handle SemaphoreP_create(uint32_t count,
                                     const SemaphoreP_Params *params)
 {
     sem_t *handle;
-    char sem_name[128];
+    int oflag;
 
     /* Assign a name if one is not specified */
     if(params->name == NULL)
     {
-       static int counter = 0;
-       sprintf(sem_name,"qnx_sem_%ld_%ld_%d", (long int)getpid(), (long int)gettid(), counter++);
+        oflag = O_ANON;
     }
     else
     {
-        strcpy(sem_name, params->name);
+        oflag = O_CREAT;
     }
 
-
-    /* Creates a COUNTING semaphore */
-    handle = sem_open(sem_name, O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH, count);
+    /* Creates a COUNTING named semaphore */
+    handle = sem_open(params->name, oflag, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH, count);
     if (handle == SEM_FAILED)
     {
-        printf("%s: for QNX Failed\n",__FUNCTION__);
+        DebugP_log1("sem_open for QNX Failed - errno-%d", errno);
         return NULL;
     }
     return ((SemaphoreP_Handle)handle);
@@ -87,12 +82,13 @@ SemaphoreP_Handle SemaphoreP_create(uint32_t count,
  */
 SemaphoreP_Status SemaphoreP_delete(SemaphoreP_Handle handle)
 {
-    OSAL_Assert((handle == NULL));
+    OSAL_Assert(handle == NULL);
 
     int ret;
 
     ret = sem_close((sem_t *)handle);
     if (ret < 0) {
+        DebugP_log1("sem_close for QNX Failed - errno-%d", errno);
         return SemaphoreP_FAILURE;
     }
 
@@ -115,7 +111,7 @@ void SemaphoreP_Params_init(SemaphoreP_Params *params)
  */
 SemaphoreP_Status SemaphoreP_pend(SemaphoreP_Handle handle, uint32_t timeout)
 {
-    OSAL_Assert((handle == NULL));
+    OSAL_Assert(handle == NULL);
 
     int ret;
     struct timespec ts;
@@ -146,7 +142,7 @@ SemaphoreP_Status SemaphoreP_pend(SemaphoreP_Handle handle, uint32_t timeout)
  */
 SemaphoreP_Status SemaphoreP_post(SemaphoreP_Handle handle)
 {
-    OSAL_Assert((handle == NULL));
+    OSAL_Assert(handle == NULL);
 
     int ret;
 
@@ -176,6 +172,3 @@ SemaphoreP_Status SemaphoreP_postFromISR(SemaphoreP_Handle handle)
 
 /* Nothing past this point */
 
-#ifdef __cplusplus
-}
-#endif

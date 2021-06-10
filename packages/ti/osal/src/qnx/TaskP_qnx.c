@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-present, Texas Instruments Incorporated
+ * Copyright (c) 2019-2021, Texas Instruments Incorporated
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,10 +38,6 @@
 #include <pthread.h>
 #include <unix.h>
 #include <sched.h>
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 /*
  *  ======== TaskP_create ========
@@ -173,6 +169,3 @@ uint32_t TaskP_isTerminated(TaskP_Handle handle)
 
 /* Nothing past this point */
 
-#ifdef __cplusplus
-}
-#endif

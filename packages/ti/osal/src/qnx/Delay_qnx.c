@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017-present, Texas Instruments Incorporated
+ * Copyright (c) 2017-2021, Texas Instruments Incorporated
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -41,9 +41,6 @@
 #include <unistd.h>
 #include <ti/osal/osal.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 /*
  *  ======== Osal_delay ========
@@ -56,7 +53,3 @@ int32_t Osal_delay(uint32_t nMilliSec)
 }
 
 /* Nothing past this point */
-
-#ifdef __cplusplus
-}
-#endif

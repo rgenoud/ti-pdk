@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018-present, Texas Instruments Incorporated
+ * Copyright (c) 2018-2021, Texas Instruments Incorporated
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -39,9 +39,6 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 /*
  *  ======== SwiP_create ========
@@ -80,7 +77,3 @@ SwiP_Status SwiP_post(SwiP_Handle handle)
 }
 
 /* Nothing past this point */
-
-#ifdef __cplusplus
-}
-#endif

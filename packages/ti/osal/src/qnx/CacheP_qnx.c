@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Texas Instruments Incorporated
+ * Copyright (c) 2015-2021, Texas Instruments Incorporated
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -40,9 +40,6 @@
 
 #include <ti/osal/CacheP.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 /*
  *  ======== CacheP_wb ========
@@ -73,6 +70,3 @@ void CacheP_Inv(const void * addr, int32_t size)
 
 /* Nothing past this point */
 
-#ifdef __cplusplus
-}
-#endif

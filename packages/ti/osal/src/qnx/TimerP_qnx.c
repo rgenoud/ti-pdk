@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-present, Texas Instruments Incorporated
+ * Copyright (c) 2016-2021, Texas Instruments Incorporated
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -40,9 +40,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 /*
  *  ======== TimerP_Params_init ========
@@ -92,7 +89,3 @@ TimerP_Status TimerP_stop(TimerP_Handle timerHandle)
 }
 
 /* Nothing past this point */
-
-#ifdef __cplusplus
-}
-#endif

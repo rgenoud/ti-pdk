@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-present, Texas Instruments Incorporated
+ * Copyright (c) 2016-2021, Texas Instruments Incorporated
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -90,12 +90,12 @@ void *isr_thread (void *arg)
                     }
                     break;
                 default:
-                    printf("%s: Rx Unknown pulse %d received\n",__func__, pulse.code);
+                    DebugP_log1("Rx Unknown pulse %d received",pulse.code);
                     break;
             }
         }
         else {
-            printf("%s: MsgReceivePulse failed\n",__func__);
+            DebugP_log0("MsgReceivePulse failed");
             delay(20);
         }
     }
@@ -129,8 +129,8 @@ HwiP_Handle HwiP_create(int32_t coreIntrNum, HwiP_Fxn hwiFxn,
     intrPriority = 21;
 
     if (g_currIntrCount > QNX_OSAL_MAX_INTR_COUNT) {
-        printf("%s: MAXed out on the hwi structure\n", __FUNCTION__);
-        OSAL_Assert(0);
+        DebugP_log0("MAXed out on the hwi structure");
+        OSAL_Assert(1);
     }
     g_currIntrCount++;
     hwi = &g_hwi[g_currIntrCount];
@@ -139,8 +139,8 @@ HwiP_Handle HwiP_create(int32_t coreIntrNum, HwiP_Fxn hwiFxn,
     hwi->chid = ChannelCreate( _NTO_CHF_DISCONNECT | _NTO_CHF_UNBLOCK);
     if(hwi->chid == -1)
     {
-        printf("%s: failed to create chid/%d\n", __FUNCTION__, hwi->chid);
-        OSAL_Assert(0);
+        DebugP_log1("Failed to create chid:%d", hwi->chid);
+        OSAL_Assert(1);
     }
 
     pthread_attr_init(&thread_attr);
@@ -149,8 +149,8 @@ HwiP_Handle HwiP_create(int32_t coreIntrNum, HwiP_Fxn hwiFxn,
     pthread_attr_setschedparam(&thread_attr, &param);
 
     if (pthread_create(&tid, &thread_attr, (void *)isr_thread, (void *)hwi) != EOK) {
-        printf("%s: Unable to create isr thread\n", __FUNCTION__);
-        OSAL_Assert(0);
+        DebugP_log0("Unable to create isr thread");
+        OSAL_Assert(1);
     }
     sprintf(threadName, "IntrThread_%d",coreIntrNum);
     pthread_setname_np(tid, threadName);
@@ -178,8 +178,8 @@ HwiP_Handle HwiP_create(int32_t coreIntrNum, HwiP_Fxn hwiFxn,
     hwi->evtId = InterruptAttachEvent (coreIntrNum, &hwi->isr_event,  0 /*_NTO_INTR_FLAGS_NO_UNMASK*/);
     if(hwi->evtId == -1)
     {
-       printf("%s: InterruptAttachEvent failed\n",__FUNCTION__);
-       OSAL_Assert(0);
+       DebugP_log0("InterruptAttachEvent failed");
+       OSAL_Assert(1);
     }
     else
     {
@@ -206,8 +206,6 @@ HwiP_Status HwiP_delete(HwiP_Handle handle)
  */
 uintptr_t HwiP_disable(void)
 {
-    //printf("%s: InterruptLock \n",__FUNCTION__);
-
     intrspin_t *spinlock_ptr = NULL;
 
     /* Create a spinLock and lock interrupts */
@@ -226,7 +224,6 @@ uintptr_t HwiP_disable(void)
 void HwiP_restore(uintptr_t key)
 {
     /* Enable interrupts */
-    //printf("%s: InterruptUnlock \n",__FUNCTION__);
 
     OSAL_Assert((intrspin_t *) key == NULL);
     InterruptUnlock((intrspin_t *) key);
@@ -259,7 +256,3 @@ void HwiP_clearInterrupt(int32_t interruptNum)
 }
 
 /* Nothing past this point */
-
-#ifdef __cplusplus
-}
-#endif

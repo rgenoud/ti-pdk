@@ -3,7 +3,7 @@ SRCDIR = . src/qnx
 INCDIR = . src/qnx
 
 SRCS_COMMON += HwiP_qnx.c SwiP_qnx.c Utils_qnx.c SemaphoreP_qnx.c RegisterIntr_qnx.c \
-               TaskP_qnx.c Queue_qnx.c Delay_qnx.c CacheP_qnx.c
+               TaskP_qnx.c QueueP_qnx.c Delay_qnx.c CacheP_qnx.c DebugP_qnx.c
 
 ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200))
   SRCDIR      += soc/$(SOC)
@@ -16,6 +16,6 @@ ifeq ($(CORE),mpu1_0)
 endif
 
 PACKAGE_SRCS_COMMON = makefile HwiP.h SwiP.h MuxIntcP.h osal.h osal_component.mk SemaphoreP.h CacheP.h \
-                      TimerP.h RegisterIntr.h EventCombinerP.h Queue.h TaskP.h EventP.h \
+                      TimerP.h RegisterIntr.h EventCombinerP.h QueueP.h TaskP.h EventP.h DebugP.h \
                       arch soc src/qnx src/src_common_qnx.mk \
                       build/makefile_qnx.mk
