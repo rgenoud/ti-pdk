@@ -68,9 +68,9 @@ ifeq ($(osal_component_make_include), )
 
 libosal_RTOS_LIST = $(DEFAULT_RTOS_LIST)
 
-libosal_BOARDLIST  = j721e_evm j7200_evm j721s2_evm j784s4_evm
+libosal_BOARDLIST  = j721e_evm j7200_evm j721s2_evm j784s4_evm am62x_evm
 
-libosal_SOCLIST   =  j721e j7200 j721s2 j784s4
+libosal_SOCLIST   =  j721e j7200 j721s2 j784s4 am62x
 
 libosal_freertos_BOARDLIST  = j721e_evm j7200_evm j721s2_evm j784s4_evm
 libosal_freertos_SOCLIST    = j721e j7200 j721s2 j784s4
@@ -84,6 +84,7 @@ libosal_freertos_$(SOC)_CORELIST = $(filter-out mpu%, $(libosal_$(SOC)_CORELIST)
 endif
 
 libosal_safertos_j721e_CORELIST   = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 c66xdsp_1 c66xdsp_2 c7x_1
+libosal_am62x_CORELIST = $(DEFAULT_am62x_CORELIST)
 
 ############################
 # osal package
@@ -248,6 +249,10 @@ endif
 ifeq ($(SOC),$(filter $(SOC), j784s4))
  OSAL_Baremetal_TestApp_$(SOC)_CORELIST = mpu1_0 mcu1_0 mcu2_0 mcu3_0 mcu4_0
  OSAL_TestApp_freertos_$(SOC)_CORELIST = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mcu4_0 mcu4_1 c7x_1 c7x_2 c7x_3 c7x_4
+endif
+
+ifeq ($(SOC),$(filter $(SOC), am62x))
+ OSAL_Baremetal_TestApp_$(SOC)_CORELIST = mcu1_0 
 endif
 
 export OSAL_Baremetal_TestApp_$(SOC)_CORELIST
