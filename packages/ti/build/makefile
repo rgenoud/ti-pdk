@@ -11,7 +11,7 @@ BOARD_LIST_ALL += $(BOARD_LIST_J6_TDA)
 BOARD_LIST_ALL += $(BOARD_LIST_J7_TDA)
 BOARD_LIST_ALL += $(BOARD_LIST_TPR12)
 BOARD_LIST_ALL += $(BOARD_LIST_AWR294X)
-BOARD_LIST_ALL += am64x_evm am64x_svb
+BOARD_LIST_ALL += am64x_evm am64x_svb am62x_evm
 else
   # If LIMIT_BOARDS is defined use it
   BOARD_LIST_ALL = $(LIMIT_BOARDS)
@@ -40,6 +40,9 @@ ifeq ($(LIMIT_CORES),)
   endif
   ifeq ($(BOARD),$(filter $(BOARD), awr294x_evm))
     CORE_LIST_ALL = $(CORE_LIST_awr294x)
+  endif
+  ifeq ($(BOARD),$(filter $(BOARD), am62x_evm))
+    CORE_LIST_ALL = $(CORE_LIST_am62x)
   endif
 ifeq ($(BOARD),$(filter $(BOARD), am64x_evm am64x_svb))
   CORE_LIST_ALL = $(CORE_LIST_am64x)
