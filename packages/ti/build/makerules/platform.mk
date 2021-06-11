@@ -197,6 +197,11 @@ ifeq ($(BOARD),$(filter $(BOARD), j784s4_evm j784s4_hostemu))
  SBL_DEV_ID=55
 endif
 
+# AM62X
+ifeq ($(BOARD),$(filter $(BOARD), am62x_evm ))
+ SOC = am62x
+endif
+
 # SBL related macro
 export SBL_CERT_KEY_HS=$(ROOTDIR)/ti/build/makerules/k3_dev_mpk.pem
 export SBL_CERT_KEY=$(ROOTDIR)/ti/build/makerules/rom_degenerateKey.pem

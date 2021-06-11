@@ -1372,6 +1372,15 @@ ifeq ($(SOC),$(filter $(SOC), j721s2 j784s4))
   endif
 endif
 
+ifeq ($(SOC),$(filter $(SOC), am62x))
+  PDK_COMMON_COMP = csl board
+  ifeq ($(CORE),mcu1_0)
+  #  PDK_COMMON_COMP +=  sciclient_direct rm_pm_hal
+  else
+    PDK_COMMON_COMP += sciclient
+  endif
+endif
+
 PDK_COMMON_BAREMETAL_COMP = $(PDK_COMMON_COMP) osal_nonos
 ifeq ($(ARCH),c66x)
   PDK_COMMON_BAREMETAL_COMP += csl_intc
