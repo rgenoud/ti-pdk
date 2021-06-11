@@ -110,7 +110,7 @@
 #endif
 #include <ti/csl/arch/csl_arch.h>
 
-#if   defined (SOC_AM571x) || defined (SOC_AM572x) || defined (SOC_AM574x)
+#if   defined (SOC_AM571x) || defined (SOC_AM572x) || defined (SOC_AM574x) || defined (SOC_AM62X)
 #undef  TWO_TIMER_INTERRUPT_TEST
 #define TWO_TIMER_INTERRUPT_TEST 1
 #endif
@@ -468,6 +468,14 @@ UT_Timer_Type_t  timer_type =             UT_Timer_TIMER64;
     #define OSAL_TEST_TIMER_ID2               (2U)
     #define OSAL_TEST_TIMER_PERIOD            (5000U)
   #endif
+#elif defined(SOC_AM62X)
+  UT_Timer_Type_t  timer_type    =          UT_Timer_DMTIMER;
+  #if defined(BUILD_MCU)
+    #define OSAL_TEST_TIMER_ID                (0U)
+    #define OSAL_TEST_TIMER_ID2               (1U)
+    #define OSAL_TEST_TIMER_PERIOD            (5000U)
+  #endif
+  
 #elif (defined(SOC_TPR12) || defined (SOC_AWR294X))
     UT_Timer_Type_t  timer_type =           UT_Timer_RTITIMER;
 #define OSAL_TEST_TIMER_ID                    (TimerP_ANY)
