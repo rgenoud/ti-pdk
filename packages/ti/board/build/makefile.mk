@@ -157,6 +157,12 @@ include $(PDK_BOARD_COMP_PATH)/src/flash/src_files_flash.mk
 PACKAGE_SRCS_COMMON += src/$(BOARD)
 endif
 
+ifeq ($(BOARD),$(filter $(BOARD), am62x_evm ))
+CFLAGS_LOCAL_COMMON = $(PDK_CFLAGS)
+include $(PDK_BOARD_COMP_PATH)/src/$(BOARD)/src_files_$(BOARD).mk
+PACKAGE_SRCS_COMMON += src/$(BOARD)
+endif
+
 # List all the external components/interfaces, whose interface header files
 #  need to be included for this component
 INCLUDE_EXTERNAL_INTERFACES = pdk edma
