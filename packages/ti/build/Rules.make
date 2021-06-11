@@ -68,7 +68,7 @@ endif
 ifeq ($(BOARD),$(filter $(BOARD), evmAM572x idkAM572x idkAM571x idkAM574x))
   CORE ?= a15_0
 endif
-ifeq ($(BOARD),$(filter $(BOARD), am65xx_sim am65xx_evm am65xx_idk j721e_sim j721e_vhwazebu j721e_qt j721e_evm j7200_evm j7200_sim j721s2_evm am64x_evm am64x_svb))
+ifeq ($(BOARD),$(filter $(BOARD), am65xx_sim am65xx_evm am65xx_idk j721e_sim j721e_vhwazebu j721e_qt j721e_evm j7200_evm j7200_sim j721s2_evm am64x_evm am64x_svb am62x_evm))
   CORE ?= mcu1_0
 endif
 ifeq ($(BOARD),$(filter $(BOARD), j721e_ccqt j721e_loki))

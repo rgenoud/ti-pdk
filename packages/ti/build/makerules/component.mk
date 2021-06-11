@@ -1314,6 +1314,15 @@ ifeq ($(SOC),$(filter $(SOC), tpr12))
   PDK_COMMON_COMP = csl uart i2c board gpio edma
 endif
 
+ifeq ($(SOC),$(filter $(SOC), am62x))
+  PDK_COMMON_COMP = csl board
+  ifeq ($(CORE),mcu1_0)
+  #  PDK_COMMON_COMP +=  sciclient_direct rm_pm_hal
+  else
+    PDK_COMMON_COMP += sciclient
+  endif
+endif
+
 ifeq ($(SOC),$(filter $(SOC), awr294x))
   PDK_COMMON_COMP = csl uart  board  edma
   ifeq ($(CORE),$(filter $(CORE), mcu1_0 mcu1_1))

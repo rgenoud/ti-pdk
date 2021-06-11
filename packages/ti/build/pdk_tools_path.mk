@@ -26,7 +26,7 @@ endif
   CGT_ARP32_VERSION=1.0.8
   CG_XML_VERSION=2.61.00
 
-ifeq ($(BOARD),$(filter $(BOARD), tpr12_evm tpr12_qt awr294x_evm))
+ifeq ($(BOARD),$(filter $(BOARD), tpr12_evm tpr12_qt awr294x_evm am62x_evm))
   CGT_ARM_VERSION=20.2.2.LTS
 endif
 

@@ -197,6 +197,11 @@ ifeq ($(BOARD),$(filter $(BOARD), am64x_evm am64x_svb))
  SBL_DEV_ID=55
 endif
 
+# AM62X
+ifeq ($(BOARD),$(filter $(BOARD), am62x_evm ))
+ SOC = am62x
+endif
+
 # TPR12
 ifeq ($(BOARD),$(filter $(BOARD), tpr12_evm tpr12_qt))
  SOC = tpr12
