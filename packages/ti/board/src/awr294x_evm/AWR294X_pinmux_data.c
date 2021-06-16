@@ -180,7 +180,7 @@ static pinmuxPerCfg_t gMymss_gpio13PinCfg[] =
 static pinmuxModuleCfg_t gMss_gpioPinCfg[] =
 {
     { 0, TRUE, gMymss_gpio0PinCfg},
-    { 1, TRUE, gMymss_gpio1PinCfg},
+    { 1, FALSE, gMymss_gpio1PinCfg},
     { 2, TRUE, gMymss_gpio2PinCfg},
     { 3, TRUE, gMymss_gpio3PinCfg},
     { 4, TRUE, gMymss_gpio4PinCfg},
@@ -188,7 +188,7 @@ static pinmuxModuleCfg_t gMss_gpioPinCfg[] =
     { 6, TRUE, gMymss_gpio6PinCfg},
     { 7, TRUE, gMymss_gpio7PinCfg},
     { 8, TRUE, gMymss_gpio8PinCfg},
-    { 9, TRUE, gMymss_gpio9PinCfg},
+    { 9, FALSE, gMymss_gpio9PinCfg},
     { 10, TRUE, gMymss_gpio10PinCfg},
     { 11, TRUE, gMymss_gpio11PinCfg},
     { 12, TRUE, gMymss_gpio12PinCfg},
