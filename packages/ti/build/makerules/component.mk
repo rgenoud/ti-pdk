@@ -95,12 +95,12 @@ DEFAULT_RTOS_LIST = freertos
 
 # The below defines the DEFAULT_SOCLIST_<rtos_type> for various RTOS types(freertos/safertos)
 DEFAULT_SOCLIST_tirtos   =
-DEFAULT_SOCLIST_freertos = j721e j7200 j721s2 j784s4
+DEFAULT_SOCLIST_freertos = j721e j7200 j721s2 j784s4 am62x
 DEFAULT_SOCLIST_safertos = j721e
 
 # The below defines the DEFAULT_BOARDLIST_<rtos_type> for various RTOS types(freertos/safertos)
 DEFAULT_BOARDLIST_tirtos   =
-DEFAULT_BOARDLIST_freertos = j721e_evm j7200_evm j721s2_evm j784s4_evm
+DEFAULT_BOARDLIST_freertos = j721e_evm j7200_evm j721s2_evm j784s4_evm am62x_evm
 DEFAULT_BOARDLIST_safertos = j721e_evm
 
 # The below defines the DEFAULT_$(SOC)_CORELIST_<rtos_type> for various RTOS types(tirtos/freertos/safertos)
@@ -1390,7 +1390,7 @@ else
   endif
 endif
 
-ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 am62x))
   PDK_COMMON_FREERTOS_COMP = $(PDK_COMMON_COMP) osal_freertos
   PDK_COMMON_FREERTOS_COMP += freertos
   PDK_COMMON_SAFERTOS_COMP = $(PDK_COMMON_COMP) osal_safertos

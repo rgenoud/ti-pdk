@@ -19,7 +19,7 @@ PACKAGE_SRCS_COMMON = makefile HwiP.h SwiP.h MuxIntcP.h osal.h osal_component.mk
                       build \
                       osalver.h
 
-ifeq ($(SOC),$(filter $(SOC), j721e j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721e j721s2 j784s4 am62x))
   SRCDIR      += soc/$(SOC)
   SRCS_COMMON += TimerP_default.c CycleprofilerP_nonos.c
 endif
