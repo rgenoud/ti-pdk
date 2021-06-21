@@ -308,7 +308,7 @@ else
 endif
 
 ifeq ($(BUILD_OS_TYPE),freertos)
-  ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200 j721s2))
+  ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200 j721s2 am62x))
     ifeq ($(CONFIG_BLD_XDC_r5f),)
         CONFIG_BLD_LNK_r5f   = $(pdk_PATH)/ti/build/$(SOC)/linker_r5_freertos.lds
     endif 
