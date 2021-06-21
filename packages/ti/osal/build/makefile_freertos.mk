@@ -39,13 +39,13 @@ MUXINTCP = src/nonos/muxintcp
 TIMER    = src/nonos/timer
 
 
-ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 am62x))
   SRCDIR += $(TIMER)/v1
   INCDIR += $(TIMER)/v1
   PACKAGE_SRCS_COMMON += $(TIMER)/v1
 endif
 
-ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 am62x))
 SRCS_COMMON += TimerP_nonos.c
 endif
 
