@@ -86,6 +86,10 @@ extern void UART_socInitFwCfg(void);
 #endif
 #endif
 
+#if defined(SOC_AM62X)
+#define UART_MODULE_CLOCK    (48000000U)
+#endif
+
 #ifdef __cplusplus
 }
 #endif
