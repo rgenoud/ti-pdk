@@ -66,13 +66,14 @@
 #
 ifeq ($(freertos_component_make_include), )
 
-freertos_BOARDLIST       = tpr12_evm j721e_evm j7200_evm am65xx_evm am65xx_idk awr294x_evm
-freertos_SOCLIST         = tpr12 j721e j7200 am65xx awr294x
+freertos_BOARDLIST       = tpr12_evm j721e_evm j7200_evm am65xx_evm am65xx_idk awr294x_evm am62x_evm
+freertos_SOCLIST         = tpr12 j721e j7200 am65xx awr294x am62x
 freertos_tpr12_CORELIST   = c66xdsp_1 mcu1_0 mcu1_1
 freertos_awr294x_CORELIST   = c66xdsp_1 mcu1_0 mcu1_1
 freertos_j721e_CORELIST   = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 c66xdsp_1 c66xdsp_2 c7x_1
 freertos_j7200_CORELIST   = mcu1_0 mcu1_1 mcu2_0 mcu2_1
 freertos_am65xx_CORELIST   = mcu1_0 mcu1_1
+freertos_am62x_CORELIST   = mcu1_0
 
 ############################
 # freertos package
@@ -164,7 +165,11 @@ freertos_test_task_switch_BOARDLIST = $(freertos_BOARDLIST)
 export freertos_test_task_switch_BOARDLIST
 freertos_test_task_switch_$(SOC)_CORELIST = $(freertos_$(SOC)_CORELIST)
 export freertos_test_task_switch_$(SOC)_CORELIST
-export freertos_test_task_switch_SBL_APPIMAGEGEN = yes
+ifeq ($(SOC),$(filter $(SOC), am62x))
+  export freertos_test_ut_SBL_APPIMAGEGEN = no
+else
+  export freertos_test_ut_SBL_APPIMAGEGEN = yes
+endif
 
 # freertos rtos unit test app
 freertos_test_ut_COMP_LIST = freertos_test_ut
@@ -186,7 +191,12 @@ freertos_test_ut_BOARDLIST = $(freertos_BOARDLIST)
 export freertos_test_ut_BOARDLIST
 freertos_test_ut_$(SOC)_CORELIST = $(freertos_$(SOC)_CORELIST)
 export freertos_test_ut_$(SOC)_CORELIST
-export freertos_test_ut_SBL_APPIMAGEGEN = yes
+ifeq ($(SOC),$(filter $(SOC), am62x))
+  export freertos_test_ut_SBL_APPIMAGEGEN = no
+else
+  export freertos_test_ut_SBL_APPIMAGEGEN = yes
+endif
+
 
 # freertos rtos posix test app
 freertos_test_posix_COMP_LIST = freertos_test_posix

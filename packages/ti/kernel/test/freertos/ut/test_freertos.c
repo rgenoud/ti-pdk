@@ -62,8 +62,11 @@
  * 
  * One MUST not return out of a FreeRTOS task instead one MUST call vTaskDelete instead.
  */
-
-#define NUM_TASK_SWITCHES (1000000u)
+#if defined (SIM_BUILD)
+     #define NUM_TASK_SWITCHES (1000u)
+#else
+    #define NUM_TASK_SWITCHES (1000000u)
+#endif
 
 #if defined (SOC_TPR12) || defined (SOC_AWR294X)
     #if defined(BUILD_MCU1_0) || defined(BUILD_MCU1_1)
@@ -82,6 +85,13 @@
     #if defined (BUILD_MCU1_0) || defined (BUILD_MCU1_1)
         #define PING_INT_NUM           (CSL_MCU0_INTR_MAIN2MCU_LVL_INTR0_OUTL_0)
         #define PONG_INT_NUM           (CSL_MCU0_INTR_MAIN2MCU_LVL_INTR0_OUTL_1)
+    #endif
+#endif
+
+#ifdef SOC_AM62X
+    #if defined (BUILD_MCU1_0)
+        #define PING_INT_NUM           (CSLR_R5FSS0_CORE0_INTR_WKUP_MCU_GPIOMUX_INTROUTER0_OUTP_0)
+        #define PONG_INT_NUM           (CSLR_R5FSS0_CORE0_INTR_WKUP_MCU_GPIOMUX_INTROUTER0_OUTP_1)
     #endif
 #endif
 
@@ -512,7 +522,11 @@ void ping_main(void *args)
     {
         FREERTOS_log("\r\n");
         FREERTOS_log("All tests have passed!!\r\n");
+    }else
+    {
+        FREERTOS_log("Some Tests FAILED\n");
     }
+
     /* One MUST not return out of a FreeRTOS task instead one MUST call vTaskDelete */
     vTaskDelete(NULL);
 }
@@ -527,7 +541,6 @@ void pong_main(void *args)
         xSemaphoreTake(gPongSem, portMAX_DELAY); /* wait for ping to signal */
         xSemaphoreGive(gPingSem);                /* wakeup ping task */
     }
-
     count = NUM_TASK_SWITCHES;
     while (count--)
     {
