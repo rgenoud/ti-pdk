@@ -155,6 +155,7 @@ CFLAGS_GLOBAL_awr294x        = -DSOC_AWR294X
 # The below flags are only defined for testing on VLAB or QT/Zebu and will need to be removed when testing on EVM
 CFLAGS_GLOBAL_am64x_svb     += -DSIM_BUILD
 CFLAGS_GLOBAL_tpr12_qt      += -DSIM_BUILD
+CFLAGS_GLOBAL_am62x_evm     += -DSIM_BUILD
 
 #
 # Core specific options

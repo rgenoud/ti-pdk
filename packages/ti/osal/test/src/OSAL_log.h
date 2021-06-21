@@ -48,11 +48,7 @@ extern "C" {
 
 #include <stdio.h>
 
-#if defined (SOC_AM62X)
-#undef  UART_CONSOLE
-#else
 #define UART_CONSOLE
-#endif
 
 #if defined(UART_CONSOLE)
         /* UART Header files */
