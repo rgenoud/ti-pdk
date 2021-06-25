@@ -49,14 +49,14 @@ TimerP_dmTimerDefault gDmTimerPInfoTbl[TimerP_numTimerDevices] = {
   {
     "DMTimer0",        /* Timer Name */
      CSL_WKUP_TIMER0_CFG_BASE,  /* base address */
-     CSLR_PULSAR_UL0_R5_0_INTR_WKUP_TIMER0_INTR_PEND_0,           /* Interrupt Number */
+     CSLR_R5FSS0_CORE0_INTR_WKUP_TIMER0_INTR_PEND_0,           /* Interrupt Number */
      TIMERP_EVENT_NOT_AVAILABLE               /* Event Id */
   },  
   /* Timer ID 1 */
   {
     "DMTimer1",        /* Timer Name */
      CSL_WKUP_TIMER1_CFG_BASE,  /* base address */
-     CSLR_PULSAR_UL0_R5_0_INTR_WKUP_TIMER1_INTR_PEND_0,               /* Interrupt Number */
+     CSLR_R5FSS0_CORE0_INTR_WKUP_TIMER1_INTR_PEND_0,               /* Interrupt Number */
      TIMERP_EVENT_NOT_AVAILABLE               /* Event Id */
   }
 };
