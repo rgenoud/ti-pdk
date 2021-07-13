@@ -57,22 +57,20 @@ SemaphoreP_Handle SemaphoreP_create(uint32_t count,
                                     const SemaphoreP_Params *params)
 {
     sem_t *handle;
-    char sem_name[128];
+    int oflag;
 
     /* Assign a name if one is not specified */
     if(params->name == NULL)
     {
-       static int counter = 0;
-       sprintf(sem_name,"qnx_sem_%ld_%ld_%d", (long int)getpid(), (long int)gettid(), counter++);
+        oflag = O_ANON;
     }
     else
     {
-        strcpy(sem_name, params->name);
+        oflag = O_CREAT;
     }
 
-
-    /* Creates a COUNTING semaphore */
-    handle = sem_open(sem_name, O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH, count);
+    /* Creates a COUNTING named semaphore */
+    handle = sem_open(params->name, oflag, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH, count);
     if (handle == SEM_FAILED)
     {
         printf("%s: for QNX Failed\n",__FUNCTION__);
