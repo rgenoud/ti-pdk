@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-present, Texas Instruments Incorporated
+ * Copyright (c) 2016-2021, Texas Instruments Incorporated
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -57,7 +57,7 @@ typedef struct
     uintptr_t arg;
 } qnx_osal_hwi_info;
 
-#define QNX_OSAL_MAX_INTR_COUNT           (5)
+#define QNX_OSAL_MAX_INTR_COUNT           (16)
 #define ISR_PULSE                          _PULSE_CODE_MINAVAIL
 
 static qnx_osal_hwi_info      g_hwi[QNX_OSAL_MAX_INTR_COUNT];
@@ -128,12 +128,12 @@ HwiP_Handle HwiP_create(int32_t coreIntrNum, HwiP_Fxn hwiFxn,
     // NOTE: Override the interrupt priority pass as params->priority
     intrPriority = 21;
 
-    if (g_currIntrCount > QNX_OSAL_MAX_INTR_COUNT) {
+    if (g_currIntrCount >= QNX_OSAL_MAX_INTR_COUNT) {
         printf("%s: MAXed out on the hwi structure\n", __FUNCTION__);
         OSAL_Assert(0);
     }
-    g_currIntrCount++;
     hwi = &g_hwi[g_currIntrCount];
+    g_currIntrCount++;
 
 
     hwi->chid = ChannelCreate( _NTO_CHF_DISCONNECT | _NTO_CHF_UNBLOCK);
