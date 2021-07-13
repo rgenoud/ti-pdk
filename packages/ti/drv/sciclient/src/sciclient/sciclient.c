@@ -53,6 +53,7 @@
 
 #ifdef QNX_OS
 #include <ti/drv/sciclient/src/sciclient/sciclient_qnx.h>
+#include <errno.h>
 #endif
 
 /* ========================================================================== */
@@ -153,8 +154,9 @@ uint64_t Sciclient_qnxVirtToPhyFxn(const void *virtAddr,
                                    void *appData)
 {
     int ret;
-    off64_t    phyAddr;
+    off64_t    phyAddr = 0;
     uint32_t   length;
+    int errno;
 
     if(appData != NULL_PTR) {
         length = (uint32_t) *((uint32_t *) appData);
@@ -166,8 +168,13 @@ uint64_t Sciclient_qnxVirtToPhyFxn(const void *virtAddr,
 
     /* Get destination physical address */
     ret = mem_offset64(virtAddr, NOFD, length, &phyAddr, NULL);
-    if (ret) {
-        printf("%s:Error from mem_offset\n",__func__);
+    if (ret != 0) {
+        if (errno != EAGAIN) {
+            printf("%s:Error from mem_offset - errno=%d\n", __func__, errno);
+        }
+        else if (phyAddr == 0) {
+            printf("%s:Error from mem_offset - errno=%d and phyAddr is NULL \n", __func__, errno);
+        }
     }
 
     QNX_DEBUG_PRINT("%s: physical/0x%lx virtual/%p\n",__func__,phyAddr,virtAddr);
