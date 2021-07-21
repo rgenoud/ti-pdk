@@ -819,7 +819,7 @@ static bool UART_test_fifo_trglvl(bool dmaMode)
 {
     bool     ret = true;
     uint32_t i;
-#if defined(SOC_AM574x) || defined(SOC_AM572x)|| defined(SOC_AM571x) || defined (SOC_DRA72x)  || defined (SOC_DRA75x) || defined (SOC_DRA78x) || defined (SOC_AM335X) || defined (SOC_AM437X) || defined (SOC_AM65XX) || defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_AM64X) || defined(SOC_J721S2) || defined(SOC_J784S4)
+#if defined(SOC_AM574x) || defined(SOC_AM572x)|| defined(SOC_AM571x) || defined (SOC_DRA72x)  || defined (SOC_DRA75x) || defined (SOC_DRA78x) || defined (SOC_AM335X) || defined (SOC_AM437X) || defined (SOC_AM65XX) || defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_AM64X) || defined(SOC_J721S2) || defined(SOC_J784S4)  || defined(SOC_AM62X)
     UART_TxTrigLvl txTrgLvl[UART_NUM_TRIG_LVL] =
     {
         UART_TXTRIGLVL_8,
