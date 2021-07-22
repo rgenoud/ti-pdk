@@ -35,7 +35,9 @@ CONFIG_UDMAP_TX_CHANNEL_TEARDOWN_TYPE=y
 CONFIG_UDMAP_UDMA=y
 # CONFIG_UDMAP_BCDMA is not set
 # CONFIG_UDMAP_PKTDMA is not set
-CONFIG_RM_PROXY=y
+ifneq ($(SOC),$(filter $(SOC), am62x))
+  CONFIG_RM_PROXY=y
+endif
 # end of Resource Manager Feature Support
 
 #
@@ -60,6 +62,11 @@ ifeq ($(SOC),$(filter $(SOC), j721s2))
 CONFIG_SOC_FOLDER_STRING="j721s2"
 endif
 
+ifeq ($(SOC),$(filter $(SOC), am62x))
+CONFIG_SOC_FOLDER_STRING="am62x"
+CONFIG_CLK_PLL_16FFT_FRACF_CALIBRATION=y
+endif
+
 # SoC Specific source files
 ifeq ($(SOC),$(filter $(SOC), j721e))
   SCICLIENT_SOCVER = V1
@@ -69,6 +76,9 @@ ifeq ($(SOC),$(filter $(SOC), j7200))
 endif
 ifeq ($(SOC),$(filter $(SOC), j721s2))
   SCICLIENT_SOCVER = V4
+endif
+ifeq ($(SOC),$(filter $(SOC), am62x))
+  SCICLIENT_SOCVER = V5
 endif
 
 TARGET_SOC = $(shell echo $(CONFIG_SOC_FOLDER_STRING))

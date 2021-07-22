@@ -18,6 +18,9 @@ endif
 ifeq ($(SOC),$(filter $(SOC), j721s2))
   SCISERVER_SOCVER = V4
 endif
+ifeq ($(SOC),$(filter $(SOC), am62x))
+  SCISERVER_SOCVER = V5
+endif
 
 SRCDIR = src/sciserver
 SRCDIR += src/sciserver/$(SOC)
@@ -37,7 +40,7 @@ INCDIR += src/rm_pm_hal/rm
 INCLUDE_EXTERNAL_INTERFACES = pdk osal
 
 # Common source files and CFLAGS across all platforms and cores
-ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2))
+ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 am62x))
     SRCS_COMMON  = sciserver.c
     SRCS_COMMON += sciserver_secproxyTransfer.c
     SRCS_COMMON += sciserver_secproxyRoutingDescription.c
@@ -52,6 +55,11 @@ endif
 endif
 
 CFLAGS_LOCAL_COMMON = $(PDK_CFLAGS) $(SCICLIENT_CFLAGS)
+
+# for am62x same thread will be used for giving respose and notification for sciclient request
+ifeq ($(SOC),am62x)
+CFLAGS_LOCAL_COMMON += -DCONFIG_OSAL_MINIMAL_QUEUES
+endif
 
 # Core/SoC/platform specific source files and CFLAGS
 # Example:

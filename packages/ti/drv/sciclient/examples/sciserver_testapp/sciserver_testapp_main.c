@@ -53,7 +53,7 @@
 /* ========================================================================== */
 
 /** \brief Aligned address at which the X509 header is placed. */
-#define SCISERVER_COMMON_X509_HEADER_ADDR (0x41cffb00)
+#define SCISERVER_COMMON_X509_HEADER_ADDR (0x43c3f960)
 
 /* ========================================================================== */
 /*                         Structures and Enums                               */

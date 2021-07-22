@@ -108,7 +108,7 @@ DEFAULT_BOARDLIST_safertos = tpr12_evm awr294x_evm
 DEFAULT_$(SOC)_CORELIST_tirtos = $(DEFAULT_$(SOC)_CORELIST)
 
 
-ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 am65xx tpr12 awr294x))
+ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 am65xx tpr12 awr294x am62x))
 DEFAULT_CORELIST_EXCLUDE_CORES_freertos =
 ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 am65xx))
 # FreeRTOS is not supported on mpu core
@@ -1317,7 +1317,7 @@ endif
 ifeq ($(SOC),$(filter $(SOC), am62x))
   PDK_COMMON_COMP = csl board uart
   ifeq ($(CORE),mcu1_0)
-  #  PDK_COMMON_COMP +=  sciclient_direct rm_pm_hal
+    PDK_COMMON_COMP +=  sciclient_direct rm_pm_hal
   else
     PDK_COMMON_COMP += sciclient
   endif
