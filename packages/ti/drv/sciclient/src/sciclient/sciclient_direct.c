@@ -526,11 +526,13 @@ int32_t Sciclient_ProcessPmMessage(const uint32_t reqFlags, void *tx_msg)
                                 reqFlags,
                                 SCICLIENT_DEV_MCU_R5FSS0_CORE0_PROCID);
                     break;
+#if !defined(SOC_AM62X)
                     case SCICLIENT_DEV_MCU_R5FSS0_CORE1:
                         ret = Sciclient_pmSetMsgProxy((uint32_t*)tx_msg,
                                 reqFlags,
                                 SCICLIENT_DEV_MCU_R5FSS0_CORE1_PROCID);
                     break;
+#endif
                     default:
                         ret = set_device_handler((uint32_t*)tx_msg);
                 }
@@ -549,10 +551,12 @@ int32_t Sciclient_ProcessPmMessage(const uint32_t reqFlags, void *tx_msg)
                         ret = Sciclient_pmSetCpuResetMsgProxy((uint32_t*)tx_msg,
                                 SCICLIENT_DEV_MCU_R5FSS0_CORE0_PROCID);
                     break;
+#if !defined(SOC_AM62X)
                     case SCICLIENT_DEV_MCU_R5FSS0_CORE1:
                         ret = Sciclient_pmSetCpuResetMsgProxy((uint32_t*)tx_msg,
                                 SCICLIENT_DEV_MCU_R5FSS0_CORE1_PROCID);
                     break;
+#endif
                     default:
                         ret = set_device_resets_handler((uint32_t*)tx_msg);
                 }

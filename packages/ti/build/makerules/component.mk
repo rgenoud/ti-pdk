@@ -108,7 +108,7 @@ DEFAULT_BOARDLIST_safertos = j721e_evm
 # DEFAULT_$(SOC)_CORELIST_<rtos_type> is a subset of all the cores and is used for building components for the particular 'rtos_type'.
 
 
-ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 am62x))
 # FreeRTOS is not supported on mpu core
 DEFAULT_CORELIST_EXCLUDE_CORES_freertos += mpu1_0
 else
@@ -1375,7 +1375,7 @@ endif
 ifeq ($(SOC),$(filter $(SOC), am62x))
   PDK_COMMON_COMP = csl board uart
   ifeq ($(CORE),mcu1_0)
-  #  PDK_COMMON_COMP +=  sciclient_direct rm_pm_hal
+    PDK_COMMON_COMP +=  sciclient_direct rm_pm_hal
   else
     PDK_COMMON_COMP += sciclient
   endif
