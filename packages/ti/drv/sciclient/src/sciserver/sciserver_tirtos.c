@@ -160,8 +160,13 @@ int32_t Sciserver_tirtosInit(Sciserver_TirtosCfgPrms_t *pAppPrms)
     {
         #include <tisci_devices.h>
         #include <tisci_clocks.h>
+     #if defined (SOC_AM62X)
+        Sciclient_pmSetModuleClkFreq(TISCI_DEV_WKUP_GTC0, TISCI_DEV_WKUP_GTC0_GTC_CLK,
+            200000000, 0x0, SCICLIENT_SERVICE_WAIT_FOREVER);
+#else
         Sciclient_pmSetModuleClkFreq(TISCI_DEV_GTC0, TISCI_DEV_GTC0_GTC_CLK,
             200000000, 0x0, SCICLIENT_SERVICE_WAIT_FOREVER);
+#endif
     }
 
     return ret;
