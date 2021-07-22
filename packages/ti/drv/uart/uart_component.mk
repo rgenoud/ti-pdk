@@ -102,7 +102,7 @@ drvuart_am64x_CORELIST = $(DEFAULT_am64x_CORELIST)
 drvuart_am64x_CORELISTARM = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1
 drvuart_tpr12_CORELIST = mcu1_0 c66xdsp_1
 drvuart_awr294x_CORELIST = mcu1_0 c66xdsp_1
-drvuart_am62x_CORELIST = mcu1_0
+drvuart_am62x_CORELIST = mcu1_0 m4f_0
 
 
 define DRV_UART_RTOS_BOARDLIST_RULE
