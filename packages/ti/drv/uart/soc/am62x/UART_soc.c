@@ -52,10 +52,13 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
     {
         /* UART0 on the Main domain */
 
+#if defined (BUILD_M4F)
+        CSL_UART0_BASE + UART_RAT_MAP_ADDR, /* baseAddr */
+        0,
+#else
         CSL_UART0_BASE,                     /* baseAddr */
-
-        CSLR_R5FSS0_CORE0_INTR_UART0_USART_IRQ_0, /* IRQ*/
-
+        CSLR_R5FSS0_CORE0_INTR_UART0_USART_IRQ_0,
+#endif
         0U,                                 /* eventId, not used for am64x */
         UART_MODULE_CLOCK,                  /* frequency, default 48MHz */
         CSL_PDMA_CH_UART0_CH0_RX,           /* rxDmaEventNumber, used as UART PDMA RX
@@ -72,8 +75,11 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
         UART_TXTRIGLVL_56,                  /* txTrigLvl */
         FALSE,                              /* dmaMode */
         FALSE,                              /* loopback */
-        TRUE,                               /* enableInterrupt, enable interrupt for A53F cores */
-
+#if defined (BUILD_MPU) || defined (BUILD_MCU)  /* enableInterrupt, enable interrupt for A53F cores */
+        TRUE,
+#else
+        FALSE,
+#endif
         UART16x_OPER_MODE,                  /* operMode, 16x over sampling mode by default */
         NULL,                               /* dmaInfo */
         NULL,                               /* configSocIntrPath */
@@ -82,11 +88,13 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
     },
     {
         /* UART1 on the Main domain */
-
+#if defined (BUILD_M4F)
+        CSL_UART1_BASE + UART_RAT_MAP_ADDR, /* baseAddr */
+        0,
+#else
         CSL_UART1_BASE,                     /* baseAddr */
-
-        CSLR_R5FSS0_CORE0_INTR_UART1_USART_IRQ_0, /* IRQ*/
-
+        CSLR_R5FSS0_CORE0_INTR_UART1_USART_IRQ_0,
+#endif
         0U,                                 /* eventId, not used for am64x */
         UART_MODULE_CLOCK,                  /* frequency, default 48MHz */
         CSL_PDMA_CH_UART1_CH0_RX,           /* rxDmaEventNumber, used as UART PDMA RX
@@ -103,8 +111,11 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
         UART_TXTRIGLVL_56,                  /* txTrigLvl */
         FALSE,                              /* dmaMode */
         FALSE,                              /* loopback */
-        TRUE,                               /* enableInterrupt, enable interrupt for A53F cores */
-
+#if defined (BUILD_MPU) || defined (BUILD_MCU)  /* enableInterrupt, enable interrupt for A53F cores */
+        TRUE,
+#else
+        FALSE,
+#endif
         UART16x_OPER_MODE,                  /* operMode, 16x over sampling mode by default */
         NULL,                               /* dmaInfo */
         NULL,                               /* configSocIntrPath */
@@ -114,10 +125,14 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
     {
         /* UART1 on the Main domain */
 
+#if defined (BUILD_M4F)
+        CSL_UART2_BASE + UART_RAT_MAP_ADDR, /* baseAddr */
+        0,
+#else
         CSL_UART2_BASE,                     /* baseAddr */
-
         CSLR_R5FSS0_CORE0_INTR_UART2_USART_IRQ_0, /* IRQ*/
 
+#endif
         0U,                                 /* eventId, not used for am64x */
         UART_MODULE_CLOCK,                  /* frequency, default 48MHz */
         CSL_PDMA_CH_UART2_CH0_RX,           /* rxDmaEventNumber, used as UART PDMA RX
@@ -134,8 +149,11 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
         UART_TXTRIGLVL_56,                  /* txTrigLvl */
         FALSE,                              /* dmaMode */
         FALSE,                              /* loopback */
-        TRUE,                               /* enableInterrupt, enable interrupt for A53F cores */
-
+#if defined (BUILD_MPU) || defined (BUILD_MCU)  /* enableInterrupt, enable interrupt for A53F cores */
+        TRUE,
+#else
+        FALSE,
+#endif
         UART16x_OPER_MODE,                  /* operMode, 16x over sampling mode by default */
         NULL,                               /* dmaInfo */
         NULL,                               /* configSocIntrPath */
@@ -145,10 +163,13 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
     {
         /* UART1 on the Main domain */
 
+#if defined (BUILD_M4F)
+        CSL_UART3_BASE + UART_RAT_MAP_ADDR, /* baseAddr */
+        0,
+#else
         CSL_UART3_BASE,                     /* baseAddr */
-
-        CSLR_R5FSS0_CORE0_INTR_UART3_USART_IRQ_0, /* IRQ*/
-
+        CSLR_R5FSS0_CORE0_INTR_UART3_USART_IRQ_0,  /* IRQ*/
+#endif
         0U,                                 /* eventId, not used for am64x */
         UART_MODULE_CLOCK,                  /* frequency, default 48MHz */
         CSL_PDMA_CH_UART3_CH0_RX,           /* rxDmaEventNumber, used as UART PDMA RX
@@ -165,8 +186,11 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
         UART_TXTRIGLVL_56,                  /* txTrigLvl */
         FALSE,                              /* dmaMode */
         FALSE,                              /* loopback */
-        TRUE,                               /* enableInterrupt, enable interrupt for A53F cores */
-
+#if defined (BUILD_MPU) || defined (BUILD_MCU)  /* enableInterrupt, enable interrupt for A53F cores */
+        TRUE,
+#else
+        FALSE,
+#endif
         UART16x_OPER_MODE,                  /* operMode, 16x over sampling mode by default */
         NULL,                               /* dmaInfo */
         NULL,                               /* configSocIntrPath */
@@ -176,10 +200,13 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
     {
         /* UART1 on the Main domain */
 
+#if defined (BUILD_M4F)
+        CSL_UART4_BASE + UART_RAT_MAP_ADDR, /* baseAddr */
+        0,
+#else
         CSL_UART4_BASE,                     /* baseAddr */
-
-        CSLR_R5FSS0_CORE0_INTR_UART4_USART_IRQ_0, /* IRQ*/
-
+        CSLR_R5FSS0_CORE0_INTR_UART4_USART_IRQ_0,  /* IRQ*/
+#endif
         0U,                                 /* eventId, not used for am64x */
         UART_MODULE_CLOCK,                  /* frequency, default 48MHz */
         CSL_PDMA_CH_UART4_CH0_RX,           /* rxDmaEventNumber, used as UART PDMA RX
@@ -196,8 +223,11 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
         UART_TXTRIGLVL_56,                  /* txTrigLvl */
         FALSE,                              /* dmaMode */
         FALSE,                              /* loopback */
-        TRUE,                               /* enableInterrupt, enable interrupt for A53F cores */
-
+#if defined (BUILD_MPU) || defined (BUILD_MCU)  /* enableInterrupt, enable interrupt for A53F cores */
+        TRUE,
+#else
+        FALSE,
+#endif
         UART16x_OPER_MODE,                  /* operMode, 16x over sampling mode by default */
         NULL,                               /* dmaInfo */
         NULL,                               /* configSocIntrPath */
@@ -206,11 +236,13 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
     },
     {
         /* UART0 on the MCU domain */
-
+#if defined (BUILD_M4F)
+        CSL_MCU_UART0_BASE + UART_RAT_MAP_ADDR, /* baseAddr */
+        CSLR_MCU_M4FSS0_CORE0_NVIC_MCU_UART0_USART_IRQ_0,
+#else
         CSL_MCU_UART0_BASE,                     /* baseAddr */
-
-        CSLR_R5FSS0_CORE0_INTR_MCU_UART0_USART_IRQ_0, /* IRQ*/
-
+        CSLR_MCU_M4FSS0_CORE0_NVIC_MCU_UART0_USART_IRQ_0,
+#endif
         0U,                                 /* eventId, not used for am64x */
         UART_MODULE_CLOCK,                  /* frequency, default 48MHz */
         0U,                                 /* TBD, no PDMA support for MCU_UART0 */
@@ -235,11 +267,13 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
     },
     {
         /* UART0 on the WKUP domain */
-
+#if defined (BUILD_M4F)
+        CSL_WKUP_UART0_BASE + UART_RAT_MAP_ADDR, /* baseAddr */
+        0,
+#else
         CSL_WKUP_UART0_BASE,                     /* baseAddr */
-
-        CSLR_R5FSS0_CORE0_INTR_WKUP_UART0_USART_IRQ_0, /* IRQ*/
-
+        CSLR_R5FSS0_CORE0_INTR_WKUP_UART0_USART_IRQ_0,
+#endif
         0U,                                 /* eventId, not used for am64x */
         UART_MODULE_CLOCK,                  /* frequency, default 48MHz */
         0U,                                 /* TBD, no PDMA support for MCU_UART0 */
@@ -254,8 +288,11 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
         UART_TXTRIGLVL_56,                  /* txTrigLvl */
         FALSE,                              /* dmaMode */
         FALSE,                              /* loopback */
-        TRUE,                               /* enableInterrupt, enable interrupt for A53F cores */
-
+#if defined (BUILD_MPU) || defined (BUILD_MCU)  /* enableInterrupt, enable interrupt for A53F cores */
+        TRUE,
+#else
+        FALSE,
+#endif
         UART16x_OPER_MODE,                  /* operMode, 16x over sampling mode by default */
         NULL,                               /* dmaInfo */
         NULL,                               /* configSocIntrPath */

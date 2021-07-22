@@ -68,7 +68,7 @@ ifeq ($(CORE),$(filter $(CORE), c7x_1 c7x-hostemu))
 endif
 
 ifeq ($(CORE),$(filter $(CORE), ipu1_0 m4f_0))
-  ifeq ($(SOC),$(filter $(SOC),am571x am572x am574x dra72x dra75x dra78x am64x))
+  ifeq ($(SOC),$(filter $(SOC),am571x am572x am574x dra72x dra75x dra78x am64x am62x))
     SRCDIR += arch/core/m4
     SRCS_COMMON += CacheP_nonos.c Arch_util.c
     PACKAGE_SRCS_COMMON += arch/core/m4

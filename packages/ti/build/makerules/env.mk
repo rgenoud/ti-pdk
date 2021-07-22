@@ -344,7 +344,7 @@ ifeq ($(BUILD_OS_TYPE),baremetal)
         CONFIG_BLD_LNK_a53   = $(pdk_PATH)/ti/build/$(SOC)/linker_a53.lds
     endif
   endif
-  ifeq ($(SOC),$(filter $(SOC), am64x))
+  ifeq ($(SOC),$(filter $(SOC), am64x am62x))
     ifeq ($(CONFIG_BLD_XDC_m4f),)
         CONFIG_BLD_LNK_m4f   = $(pdk_PATH)/ti/build/$(SOC)/linker_m4f.lds
     endif
