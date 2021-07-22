@@ -49,4 +49,67 @@ ifeq ($(CORE),$(filter $(CORE), c7x_1 c7x_2 c7x_3 c7x_4 c7x-hostemu))
   PACKAGE_SRCS_COMMON += arch/core/c7x
 endif
 
+ifeq ($(CORE),$(filter $(CORE), ipu1_0 m4f_0))
+  ifeq ($(SOC),$(filter $(SOC),am571x am572x am574x dra72x dra75x dra78x am64x am62x))
+    SRCDIR += arch/core/m4
+    SRCS_COMMON += CacheP_nonos.c Arch_util.c
+    PACKAGE_SRCS_COMMON += arch/core/m4
+  endif
+
+  ifeq ($(SOC),$(filter $(SOC),am571x am572x am574x dra72x dra75x dra78x))
+    CFLAGS_LOCAL_COMMON += -DUNICACHE_ENABLED
+  endif
+endif
+
+ifeq ($(SOC),$(filter $(SOC),am437x am335x))
+SRCS_COMMON += cache_arm.c \
+				cpu.c
+
+SRCS_ASM_COMMON += cp15.asm
+SRCDIR+=$(PDK_INSTALL_PATH)/ti/starterware/soc \
+	$(PDK_INSTALL_PATH)/ti/starterware/soc/armv7a \
+	$(PDK_INSTALL_PATH)/ti/starterware/soc/armv7a/gcc
+
+INCDIR +=   $(PDK_INSTALL_PATH)/ti/starterware/include \
+            $(PDK_INSTALL_PATH)/ti/starterware/include/hw \
+            $(PDK_INSTALL_PATH)/ti/starterware/board \
+            $(PDK_INSTALL_PATH)/ti/starterware/device \
+            $(PDK_INSTALL_PATH)/ti/starterware/include/utils \
+            $(PDK_INSTALL_PATH)/ti/starterware/utils \
+            $(PDK_INSTALL_PATH)/ti/starterware/soc \
+            $(PDK_INSTALL_PATH)/ti/starterware/include/armv7a \
+            $(PDK_INSTALL_PATH)/ti/starterware/soc/armv7a \
+            $(PDK_INSTALL_PATH)/ti/starterware/soc/armv7a/gcc
+
+
+
+ifeq ($(SOC),$(filter $(SOC),am437x))
+  SRCS_COMMON += pl310.c CacheP_nonos.c osalgic.c Arch_util.c
+  SRCDIR += arch/core/a9
+  SRCS_ASM_COMMON += pub2mon.asm
+  SRCS_ASM_COMMON += TimestampProvider_asm.asm
+  CFLAGS_LOCAL_COMMON += -DOUTER_CACHE_ENABLE
+  INCDIR += $(PDK_INSTALL_PATH)/ti/starterware/soc/am43xx/am437x \
+		$(PDK_INSTALL_PATH)/ti/starterware/board/am43xx \
+        $(PDK_INSTALL_PATH)/ti/starterware/soc/am43xx \
+        $(PDK_INSTALL_PATH)/ti/starterware/include/am43xx \
+        $(PDK_INSTALL_PATH)/ti/starterware/include/am43xx/am437x
+  PACKAGE_SRCS_COMMON += arch/core/a9
+endif
+
+
+ifeq ($(SOC),$(filter $(SOC),am335x))
+  SRCS_COMMON += pl310.c CacheP_nonos.c osalintc.c Arch_util.c
+  SRCDIR += arch/core/a8
+  SRCS_ASM_COMMON += TimestampProvider_asm.asm
+  INCDIR += $(PDK_INSTALL_PATH)/ti/starterware/soc/am33xx/am335x \
+		$(PDK_INSTALL_PATH)/ti/starterware/board/am33xx \
+        $(PDK_INSTALL_PATH)/ti/starterware/soc/am33xx \
+        $(PDK_INSTALL_PATH)/ti/starterware/include/am33xx \
+        $(PDK_INSTALL_PATH)/ti/starterware/include/am33xx/am335x
+  PACKAGE_SRCS_COMMON += arch/core/a8
+endif
+
+
+endif
 

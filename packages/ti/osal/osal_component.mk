@@ -253,7 +253,7 @@ ifeq ($(SOC),$(filter $(SOC), j784s4))
 endif
 
 ifeq ($(SOC),$(filter $(SOC), am62x))
- OSAL_Baremetal_TestApp_$(SOC)_CORELIST = mcu1_0
+ OSAL_Baremetal_TestApp_$(SOC)_CORELIST = mcu1_0 m4f_0
  OSAL_TestApp_freertos_$(SOC)_CORELIST = mcu1_0
 endif
 

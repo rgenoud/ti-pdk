@@ -314,6 +314,9 @@ ifeq ($(BUILD_OS_TYPE),baremetal)
     ifeq ($(CONFIG_BLD_XDC_r5f),)
         CONFIG_BLD_LNK_r5f   = $(pdk_PATH)/ti/build/$(SOC)/linker_r5.lds
     endif
+    ifeq ($(CONFIG_BLD_XDC_m4f),)
+        CONFIG_BLD_LNK_m4f   = $(pdk_PATH)/ti/build/$(SOC)/linker_m4f.lds
+    endif  
   endif
 endif
 

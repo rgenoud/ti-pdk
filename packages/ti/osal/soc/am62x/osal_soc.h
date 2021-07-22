@@ -55,6 +55,10 @@ extern "C" {
   #define TimerP_numTimerDevices        ((uint32_t) 2 )
   #define TIMERP_ANY_MASK               ((uint32_t) 0x000F)
   #define TIMERP_AVAILABLE_MASK       ((uint32_t)(0x000F))
+#else  
+  #define TimerP_numTimerDevices        ((uint32_t) 4 )
+  #define TIMERP_ANY_MASK               ((uint32_t) 0x000F)
+  #define TIMERP_AVAILABLE_MASK       ((uint32_t)(0x000F))
 #endif
 
 /* Max number of semaphores for NonOs */
