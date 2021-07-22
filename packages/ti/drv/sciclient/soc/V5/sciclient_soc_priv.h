@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2018-2021 Texas Instruments Incorporated
+ *  Copyright (C) 2021 Texas Instruments Incorporated
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -28,23 +28,31 @@
  *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+/**
+ *  \file V5/sciclient_soc_priv.h
+ *
+ *  \brief Private AM62X specific SOC file
  */
 
+#ifndef SCICLIENT_SOC_PRIV_H_
+#define SCICLIENT_SOC_PRIV_H_
 
-#ifndef TI_FREERTOS_MCU1_0_CONFIG_H
-#define TI_FREERTOS_MCU1_0_CONFIG_H
+#include <ti/drv/sciclient/soc/V5/sciclient_irq_rm.h>
+#include <ti/drv/sciclient/soc/V5/sciclient_defaultBoardcfg_hex.h>
+#include <ti/drv/sciclient/soc/V5/sciclient_defaultBoardcfg_rm_hex.h>
+#include <ti/drv/sciclient/soc/V5/sciclient_defaultBoardcfg_pm_hex.h>
+#include <ti/drv/sciclient/soc/V5/sciclient_defaultBoardcfg_security_hex.h>
 
+#if defined (BUILD_MCU1_0)
+#define SCICLIENT_CONTEXT_NONSEC    (SCICLIENT_CONTEXT_R5_NONSEC_0)
+#define SCICLIENT_CONTEXT_SEC       (SCICLIENT_CONTEXT_R5_SEC_0)
+#endif
+#if defined (BUILD_M4F_0)
+/* TBD */
+#define SCICLIENT_CONTEXT_NONSEC    (SCICLIENT_CONTEXT_M4_NONSEC_0)
+#define SCICLIENT_CONTEXT_SEC       (SCICLIENT_CONTEXT_M4_NONSEC_0)
+#endif
 
-/*-----------------------------------------------------------
- * Application specific definitions.
- *
- * These definitions should be adjusted for your particular hardware and
- * application requirements.
- *
- * THESE PARAMETERS ARE DESCRIBED WITHIN THE 'CONFIGURATION' SECTION OF THE
- * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE AND IN THE
- * FreeRTOS REFERENCE MANUAL.
- *----------------------------------------------------------*/
-
-#define configTIMER_ID                                                    (1)
-#endif /* TI_FREERTOS_MCU1_0_CONFIG_H */
+#endif /* SCICLIENT_SOC_PRIV_H_ */
