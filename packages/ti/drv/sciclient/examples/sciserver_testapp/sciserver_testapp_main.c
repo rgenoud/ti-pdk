@@ -42,6 +42,8 @@
 /*                             Include Files                                  */
 /* ========================================================================== */
 
+#include <string.h>
+
 #include <ti/board/board.h>
 #include <ti/drv/sciclient/sciserver_tirtos.h>
 #include <ti/drv/sciclient/examples/common/sciclient_appCommon.h>
@@ -84,6 +86,10 @@ int main(void)
     char *version_str = NULL;
     char *rmpmhal_version_str = NULL;
 
+#if defined (SOC_AM62X)
+    void _freertosresetvectors (void);
+    memcpy((void *)0x0, (void *)_freertosresetvectors , 0x40);
+#endif
     OS_init();
 
     /* Sciclient needs to be initialized before Sciserver. Sciserver depends on
@@ -129,8 +135,13 @@ int main(void)
        App_sciclientPrintf("Starting Sciserver..... PASSED\n");
 
         uint32_t freqHz;
+#if defined (SOC_AM62X)
+        Sciclient_pmGetModuleClkFreq(TISCI_DEV_WKUP_GTC0, TISCI_DEV_WKUP_GTC0_GTC_CLK,
+            (uint64_t *) &freqHz, SCICLIENT_SERVICE_WAIT_FOREVER);
+#else
         Sciclient_pmGetModuleClkFreq(TISCI_DEV_GTC0, TISCI_DEV_GTC0_GTC_CLK,
             (uint64_t *) &freqHz, SCICLIENT_SERVICE_WAIT_FOREVER);
+#endif
        App_sciclientPrintf("GTC freq: %d\n", freqHz);
 
         OS_start();
