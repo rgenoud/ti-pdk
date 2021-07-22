@@ -133,6 +133,7 @@ if [ "$SKIP_CHECKOUT" != "YES" ]; then
     $RM -fr binaries/am65x_sr2
     $RM -fr binaries/j721e
     $RM -fr binaries/am64
+    $RM -fr binaries/am62
     $RM -fr binaries/j7200
     $RM -fr binaries/j721s2
     $RM -fr binaries/memory
@@ -220,6 +221,12 @@ if [ "$SKIP_BUILD" != "YES" ]; then
     # $COPY $ROOTDIR/ti/binary/sciserver_testapp_freertos/bin/j721s2/sciserver_testapp_tirtos_mcu1_0_release.xer5f $SCI_CLIENT_DIR/tools/ccsLoadDmsc/j721s2/
     # $COPY $ROOTDIR/ti/binary/sciserver_testapp_freertos/bin/j721s2/sciserver_testapp_tirtos_mcu1_0_release.rprc $SCI_CLIENT_DIR/tools/ccsLoadDmsc/j721s2/
 
+    # AM62xx
+    make -j -s allclean
+    make -j -s sciclient_boardcfg BOARD=am62x_evm
+    make -j -s sciserver_testapp_freertos_clean BOARD=am62x_evm
+    make -j -s sciserver_testapp_freertos BOARD=am62x_evm
+
     cd -
 fi
 
@@ -239,6 +246,7 @@ if [ "$SKIP_GEN_BIN" != "YES" ];  then
     ./firmwareHeaderGen.sh j7200
     ./firmwareHeaderGen.sh j7200-hs
     # ./firmwareHeaderGen.sh j721s2-zebu
+    ./firmwareHeaderGen.sh am62x
 
 fi
 

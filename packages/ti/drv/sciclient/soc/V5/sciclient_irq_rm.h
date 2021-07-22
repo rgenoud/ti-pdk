@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2018-2021 Texas Instruments Incorporated
+ *  Copyright (C) 2021 Texas Instruments Incorporated
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -28,23 +28,43 @@
  *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+/**
+ *  \file V5/sciclient_irq_rm.h
+ *
+ *  \brief Private am62x Family specific RM interrupt data
  */
 
+#ifndef SCICLIENT_IRQ_RM_H_
+#define SCICLIENT_IRQ_RM_H_
 
-#ifndef TI_FREERTOS_MCU1_0_CONFIG_H
-#define TI_FREERTOS_MCU1_0_CONFIG_H
+/* ========================================================================== */
+/*                             Include Files                                  */
+/* ========================================================================== */
 
+#include <stdint.h>
 
-/*-----------------------------------------------------------
- * Application specific definitions.
- *
- * These definitions should be adjusted for your particular hardware and
- * application requirements.
- *
- * THESE PARAMETERS ARE DESCRIBED WITHIN THE 'CONFIGURATION' SECTION OF THE
- * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE AND IN THE
- * FreeRTOS REFERENCE MANUAL.
- *----------------------------------------------------------*/
+/* ========================================================================== */
+/*                           Macros & Typedefs                                */
+/* ========================================================================== */
 
-#define configTIMER_ID                                                    (1)
-#endif /* TI_FREERTOS_MCU1_0_CONFIG_H */
+#define SCICLIENT_RM_IA_NUM_INST 2
+
+#define SCICLIENT_RM_IR_NUM_INST 4
+
+#define SCICLIENT_IRQ_MAX_ROUTE_DEPTH 3
+
+/* ========================================================================== */
+/*                         Structure Declarations                             */
+/* ========================================================================== */
+
+/* None */
+
+/* ========================================================================== */
+/*                            Global Variables                                */
+/* ========================================================================== */
+
+/* None */
+
+#endif /* SCICLIENT_IRQ_RM_H_ */

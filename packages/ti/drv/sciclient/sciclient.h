@@ -336,6 +336,12 @@ typedef uint8_t devgrp_t;
 #define TISCI_SEC_PROXY_DM2DMSC_READ_RESPONSE_THREAD_ID \
 	TISCI_SEC_PROXY_DM2TIFS_READ_RESPONSE_THREAD_ID
 #endif
+#if defined (SOC_AM62X)
+#include <ti/drv/sciclient/soc/sysfw/include/am62x/tisci_resasg_types.h>
+#include <ti/drv/sciclient/soc/sysfw/include/am62x/tisci_hosts.h>
+#include <ti/drv/sciclient/soc/sysfw/include/am62x/tisci_sec_proxy.h>
+#include <ti/drv/sciclient/soc/sysfw/include/am62x/tisci_boardcfg_constraints.h>
+#endif
 
 #include <ti/drv/sciclient/soc/sysfw/include/tisci/security/tisci_sec_macros.h>
 #include <ti/drv/sciclient/soc/sysfw/include/tisci/security/tisci_dkek.h>
