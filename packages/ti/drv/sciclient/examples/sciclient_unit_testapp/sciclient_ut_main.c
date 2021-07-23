@@ -117,12 +117,14 @@ static uint8_t  gAppTskStackMain[32*1024] __attribute__((aligned(8192)));
 
 int main(void)
 {
+#if !defined(BAREMETAL)
     TaskP_Handle task;
     TaskP_Params taskParams;
+#endif
 
     uint32_t retVal = CSL_PASS;
 
-    /*  This should be called before any other OS calls (like Task creation, OS_start, etc..) */
+#if !defined(BAREMETAL)
     OS_init();
 
     memset( gAppTskStackMain, 0xFF, sizeof( gAppTskStackMain ) );
@@ -138,6 +140,9 @@ int main(void)
 
     OS_start();
 
+#else
+    mainTask(NULL, NULL);
+#endif
     return retVal;
 }
 

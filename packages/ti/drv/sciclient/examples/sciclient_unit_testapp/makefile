@@ -42,6 +42,13 @@ ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4))
   endif
 endif
 
+ifeq ($(BUILD_OS_TYPE),baremetal)
+CFLAGS_LOCAL_COMMON = -DBAREMETAL
+# List all the components required by the application
+COMP_LIST_COMMON  = $(PDK_COMMON_COMP)
+COMP_LIST_COMMON += osal_nonos csl_init
+endif
+
 # List all the external components/interfaces, whose interface header files
 # need to be included for this component
 INCLUDE_EXTERNAL_INTERFACES = pdk sciclient board uart $(EXTERNAL_INTERFACES)
