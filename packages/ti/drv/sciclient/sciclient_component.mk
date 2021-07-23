@@ -328,6 +328,21 @@ SCICLIENT_UNIT_TESTAPP_MACRO_LIST := $(foreach curos, $(drvsciclient_RTOS_LIST),
 
 $(eval ${SCICLIENT_UNIT_TESTAPP_MACRO_LIST})
 
+#sciclient ut baremetal
+export sciclient_unit_testapp_baremetal_COMP_LIST = sciclient_unit_testapp_baremetal
+export sciclient_unit_testapp_baremetal_RELPATH = ti/drv/sciclient/examples/sciclient_unit_testapp
+export sciclient_unit_testapp_baremetal_PATH = $(PDK_SCICLIENT_COMP_PATH)/examples/sciclient_unit_testapp
+export sciclient_unit_testapp_baremetal_BOARD_DEPENDENCY = no
+export sciclient_unit_testapp_baremetal_CORE_DEPENDENCY = yes
+export sciclient_unit_testapp_baremetal_PKG_LIST = sciclient_unit_testapp_baremetal
+export sciclient_unit_testapp_baremetal_INCLUDE = $(sciclient_unit_testapp_baremetal_PATH)
+export sciclient_unit_testapp_baremetal_BOARDLIST = am62x_evm
+export sciclient_unit_testapp_baremetal_SOCLIST = am62x
+export sciclient_unit_testapp_baremetal_$(SOC)_CORELIST = m4f_0
+export sciclient_unit_testapp_baremetal_SBL_APPIMAGEGEN = no
+export sciclient_unit_testapp_baremetal_SBL_IMAGEGEN = no
+export sciclient_unit_testapp_baremetal_MAKEFILE = -f makefile BUILD_OS_TYPE=baremetal
+sciclient_EXAMPLE_LIST += sciclient_unit_testapp_baremetal
 
 # SCISERVER RTOS Apps
 define SCISERVER_TESTAPP_RULE

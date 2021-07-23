@@ -96,7 +96,9 @@ static int32_t App_rmGetResourceRange(void);
 /* ========================================================================== */
 
 static volatile int32_t gTestStatus;
+#if !defined(BAREMETAL)
 static uint8_t  gAppTskStackMain[16*1024] __attribute__((aligned(8192)));;
+#endif
 /* IMPORTANT NOTE: For C7x,
  * - stack size and stack ptr MUST be 8KB aligned
  * - AND min stack size MUST be 16KB
@@ -110,8 +112,10 @@ static uint8_t  gAppTskStackMain[16*1024] __attribute__((aligned(8192)));;
 
 int main(void)
 {
+#if !defined(BAREMETAL)
     TaskP_Handle task;
     TaskP_Params taskParams;
+#endif
 
     App_SciclientC7xPreInit();
 
@@ -136,6 +140,7 @@ int main(void)
     }
     #endif
 
+#if !defined(BAREMETAL)    
     OS_init();
 
     TaskP_Params_init(&taskParams);
@@ -149,6 +154,9 @@ int main(void)
 
     OS_start();
 
+#else
+    mainTask(NULL, NULL);
+#endif
     return retVal;
 }
 

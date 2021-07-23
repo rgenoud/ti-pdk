@@ -237,7 +237,7 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
     {
         /* UART0 on the MCU domain */
 #if defined (BUILD_M4F)
-        CSL_MCU_UART0_BASE + UART_RAT_MAP_ADDR, /* baseAddr */
+        CSL_MCU_UART0_BASE, /* baseAddr */
         CSLR_MCU_M4FSS0_CORE0_NVIC_MCU_UART0_USART_IRQ_0,
 #else
         CSL_MCU_UART0_BASE,                     /* baseAddr */
