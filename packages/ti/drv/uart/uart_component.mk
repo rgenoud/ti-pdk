@@ -108,6 +108,7 @@ drvuart_am62x_CORELIST = mcu1_0 m4f_0
 define DRV_UART_RTOS_BOARDLIST_RULE
 
 drvuart_$(1)_BOARDLIST = $(filter $(DEFAULT_BOARDLIST_$(1)), $(drvuart_BOARDLIST))
+drvuart_dma_$(1)_BOARDLIST = $(filter $(DEFAULT_BOARDLIST_$(1)), $(drvuart_dma_BOARDLIST))
 
 endef
 
@@ -504,7 +505,7 @@ export UART_DMA_TestApp_$(1)_XDC_CONFIGURO =  $(if $(findstring tirtos,$(1)),yes
 export UART_DMA_TestApp_$(1)_MAKEFILE = -f makefile BUILD_OS_TYPE=$(1) DMA=enable
 UART_DMA_TestApp_$(1)_PKG_LIST = UART_DMA_TestApp_$(1)
 UART_DMA_TestApp_$(1)_INCLUDE = $(UART_DMA_TestApp_$(1)_PATH)
-export UART_DMA_TestApp_$(1)_BOARDLIST = $(drvuart_$(1)_BOARDLIST)
+export UART_DMA_TestApp_$(1)_BOARDLIST = $(drvuart_dma_$(1)_BOARDLIST)
 ifeq ($(SOC),$(filter $(SOC), j721e j7200 am64x))
 export UART_DMA_TestApp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), $(drvuart_$(SOC)_CORELISTARM))
 else
@@ -540,7 +541,7 @@ export UART_DMA_SMP_TestApp_$(1)_XDC_CONFIGURO =  $(if $(findstring tirtos,$(1))
 export UART_DMA_SMP_TestApp_$(1)_MAKEFILE = -f makefile BUILD_OS_TYPE=$(1) DMA=enable SMP=enable
 UART_DMA_SMP_TestApp_$(1)_PKG_LIST = UART_DMA_SMP_TestApp_$(1)
 UART_DMA_SMP_TestApp_$(1)_INCLUDE = $(UART_DMA_SMP_TestApp_$(1)_PATH)
-export UART_DMA_SMP_TestApp_$(1)_BOARDLIST = $(drvuart_$(1)_BOARDLIST)
+export UART_DMA_SMP_TestApp_$(1)_BOARDLIST = $(drvuart_dma_$(1)_BOARDLIST)
 export UART_DMA_SMP_TestApp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), mpu1_0)
 ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200 am64x tpr12 awr294x))
 export UART_DMA_SMP_TestApp_$(1)_SBL_APPIMAGEGEN = yes
