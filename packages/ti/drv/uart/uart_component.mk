@@ -399,6 +399,38 @@ UART_DMA_TESTAPP_MACRO_LIST := $(foreach curos,$(drvuart_RTOS_LIST),$(call UART_
 $(eval ${UART_DMA_TESTAPP_MACRO_LIST})
 
 
+# UART DMA RTOS Unit Test Apps with SMP enabled
+define UART_DMA_SMP_TESTAPP_RULE
+
+export UART_DMA_SMP_TestApp_$(1)_COMP_LIST = UART_DMA_SMP_TestApp_$(1)
+export UART_DMA_SMP_TestApp_$(1)_RELPATH = ti/drv/uart/test
+export UART_DMA_SMP_TestApp_$(1)_PATH = $(PDK_UART_COMP_PATH)/test
+export UART_DMA_SMP_TestApp_$(1)_BOARD_DEPENDENCY = yes
+export UART_DMA_SMP_TestApp_$(1)_CORE_DEPENDENCY = no
+export UART_DMA_SMP_TestApp_$(1)_XDC_CONFIGURO =  $(if $(findstring tirtos,$(1)),yes,no)
+export UART_DMA_SMP_TestApp_$(1)_MAKEFILE = -f makefile BUILD_OS_TYPE=$(1) DMA=enable SMP=enable
+UART_DMA_SMP_TestApp_$(1)_PKG_LIST = UART_DMA_SMP_TestApp_$(1)
+UART_DMA_SMP_TestApp_$(1)_INCLUDE = $(UART_DMA_SMP_TestApp_$(1)_PATH)
+export UART_DMA_SMP_TestApp_$(1)_BOARDLIST = $(drvuart_dma_$(1)_BOARDLIST)
+export UART_DMA_SMP_TestApp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), mpu1_0)
+ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200 am64x tpr12 awr294x))
+export UART_DMA_SMP_TestApp_$(1)_SBL_APPIMAGEGEN = yes
+endif
+ifneq ($(1),$(filter $(1), safertos))
+uart_EXAMPLE_LIST += UART_DMA_SMP_TestApp_$(1)
+else
+ifneq ($(wildcard $(SAFERTOS_KERNEL_INSTALL_PATH)),)
+uart_EXAMPLE_LIST += UART_DMA_SMP_TestApp_$(1)
+endif
+endif
+
+endef
+
+UART_DMA_SMP_TESTAPP_MACRO_LIST := $(foreach curos,$(drvuart_RTOS_LIST),$(call UART_DMA_SMP_TESTAPP_RULE,$(curos)))
+
+$(eval ${UART_DMA_SMP_TESTAPP_MACRO_LIST})
+
+
 # UART Polling mode Test app
 export UART_BasicExample_Polling_ExampleProject_COMP_LIST = UART_BasicExample_Polling_ExampleProject
 UART_BasicExample_Polling_ExampleProject_RELPATH = ti/drv/uart/example/UART_BasicExample_Polling_ExampleProject
