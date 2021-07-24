@@ -19,7 +19,7 @@
 #include <sciserver_secproxySocData.h>
 #include <sciserver_ringAcelSocData.h>
 
-const u8 soc_secure_proxy_instances_num = SOC_MAX_SEC_PROXY_INSTANCES;
+const uint8_t Sciserver_SecureProxyInstancesNum  = SOC_MAX_SEC_PROXY_INSTANCES;
 
 const struct Sciserver_SecureProxy gSciserverSecureProxyInstances[SOC_MAX_SEC_PROXY_INSTANCES] = {
 	/*
