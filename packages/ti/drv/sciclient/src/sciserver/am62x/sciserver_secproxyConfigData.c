@@ -23,9 +23,6 @@
 /** SAFE_EVENT Does NOT generate an IRQ or an event onto ETL */
 #define SOC_SAFE_EVENT (0xFFFFU)
 
-const u16 soc_secure_proxy_tx_dm_config_idx = AM62X_DMASS0_SEC_PROXY_0_TX_DMSC2DM_LOW_PRIORITY_THR025_CONF025;
-const u16 soc_secure_proxy_rx_dm_config_idx = AM62X_DMASS0_SEC_PROXY_0_RX_DMSC2DM_RESPONSE_THR024_CONF015;
-
 const uint16_t Sciserver_SecureProxyTxConfigNum = SOC_MAX_SPT_TX_CONFIG_INSTANCES;
 
 const struct Sciserver_SecureProxyTxThreadConfig Sciserver_SecureProxyTxConfigurations[SOC_MAX_SPT_TX_CONFIG_INSTANCES] = {
