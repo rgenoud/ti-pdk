@@ -118,6 +118,10 @@ ifeq ($(SOC),$(filter $(SOC), j721e j721s2))
 # FreeRTOS is not currently supported on J7 c66x/c7x cores
 DEFAULT_CORELIST_EXCLUDE_CORES_freertos += c66xdsp_1 c66xdsp_2 c7x_1 c7x_2 c7x-hostemu
 endif
+ifeq ($(SOC),$(filter $(SOC), am62x))
+# FreeRTOS is not currently supported on m4 core
+DEFAULT_CORELIST_EXCLUDE_CORES_freertos += m4f_0
+endif
 else
 #FreeRTOS is not supported on other SOCs
 DEFAULT_CORELIST_EXCLUDE_CORES_freertos = $(DEFAULT_$(SOC)_CORELIST)

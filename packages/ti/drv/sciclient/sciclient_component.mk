@@ -61,7 +61,7 @@ drvsciclient_j721e_CORELIST = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 c
 drvsciclient_j7200_CORELIST = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1
 drvsciclient_j721s2_CORELIST = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 c7x_1 c7x_2
 drvsciclient_am64x_CORELIST = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 m4f_0
-drvsciclient_am62x_CORELIST = mcu1_0 
+drvsciclient_am62x_CORELIST = mcu1_0 m4f_0
 drvsciclient_DISABLE_PARALLEL_MAKE = yes
 
 define DRV_SCICLIENT_RTOS_BOARDLIST_RULE
