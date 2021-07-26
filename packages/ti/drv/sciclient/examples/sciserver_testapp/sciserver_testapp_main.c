@@ -56,6 +56,11 @@
 
 /* None */
 
+/**< Main application stack size */
+#define APP_TSK_STACK_MAIN              (32U * 1024U)
+#define APP_TSK_STACK_MAIN_PRI         (6)
+
+
 /* ========================================================================== */
 /*                         Structures and Enums                               */
 /* ========================================================================== */
@@ -66,13 +71,15 @@
 /*                 Internal Function Declarations                             */
 /* ========================================================================== */
 
-/* None */
+static void taskFxn(void* a0, void* a1);
 
 /* ========================================================================== */
 /*                            Global Variables                                */
 /* ========================================================================== */
 
-/* None */
+/* Main task application stack */
+static uint8_t  gAppTskStackMain[APP_TSK_STACK_MAIN]
+__attribute__ ((aligned(8192)));
 
 /* ========================================================================== */
 /*                          Function Definitions                              */
@@ -80,11 +87,8 @@
 
 int main(void)
 {
-    int32_t ret = CSL_PASS;
-    Sciclient_ConfigPrms_t clientPrms;
-    Sciserver_TirtosCfgPrms_t appPrms;
-    char *version_str = NULL;
-    char *rmpmhal_version_str = NULL;
+    TaskP_Handle task;
+    TaskP_Params taskParams;
 
 #if defined (SOC_AM62X)
     void _freertosresetvectors (void);
@@ -92,6 +96,31 @@ int main(void)
 #endif
     OS_init();
 
+        /* Initialize the task params */
+    TaskP_Params_init(&taskParams);
+    /* Set the task priority higher than the default priority (1) */
+    taskParams.priority     = APP_TSK_STACK_MAIN_PRI;
+    taskParams.stack        = gAppTskStackMain;
+    taskParams.stacksize    = sizeof (gAppTskStackMain);
+
+    task = TaskP_create(taskFxn, &taskParams);
+    if(NULL == task)
+    {
+        OS_stop();
+    }
+    OS_start();    /* does not return */
+
+    return(0);
+}
+
+
+static void taskFxn(void* a0, void* a1)
+{
+    int32_t ret = CSL_PASS;
+    Sciclient_ConfigPrms_t clientPrms;
+    Sciserver_TirtosCfgPrms_t appPrms;
+    char *version_str = NULL;
+    char *rmpmhal_version_str = NULL;
     /* Sciclient needs to be initialized before Sciserver. Sciserver depends on
      * Sciclient API to execute message forwarding */
     ret = Sciclient_configPrmsInit(&clientPrms);
@@ -144,13 +173,12 @@ int main(void)
 #endif
        App_sciclientPrintf("GTC freq: %d\n", freqHz);
 
-        OS_start();
     }
     else
     {
         App_sciclientPrintf("Starting Sciserver..... FAILED\n");
     }
-    return ret;
+    return;
 }
 
 /* ========================================================================== */
