@@ -41,6 +41,10 @@
 #include <ti/csl/soc.h>
 #include <ti/osal/src/nonos/Nonos_config.h>
 
+#if defined (BUILD_M4F)
+#define TIMER_RAT_MAP_ADDR   (0x60000000U) /* RAT map address for UART */
+#endif
+
 /* This information is derived from sysbios timer implmentation for multiple SoCs */
 /* Below defines are for R5 Cores */
 #if defined (BUILD_MCU)
@@ -124,28 +128,28 @@ TimerP_dmTimerDefault gDmTimerPInfoTbl[TimerP_numTimerDevices] = {
   /* Timer ID 0 */
   {
     "DMTimer0",        /* Timer Name */
-     CSL_MCU_TIMER0_CFG_BASE ,  /* base address */
+     CSL_MCU_TIMER0_CFG_BASE + TIMER_RAT_MAP_ADDR ,  /* base address */
      CSLR_MCU_M4FSS0_CORE0_NVIC_MCU_TIMER0_INTR_PEND_0,           /* Interrupt Number */
      TIMERP_EVENT_NOT_AVAILABLE               /* Event Id */
   },
   /* Timer ID 1 */
   {
     "DMTimer1",        /* Timer Name */
-     CSL_MCU_TIMER1_CFG_BASE,  /* base address */
+     CSL_MCU_TIMER1_CFG_BASE + TIMER_RAT_MAP_ADDR,  /* base address */
      CSLR_MCU_M4FSS0_CORE0_NVIC_MCU_TIMER1_INTR_PEND_0,               /* Interrupt Number */
      TIMERP_EVENT_NOT_AVAILABLE               /* Event Id */
   },
   /* Timer ID 3 */
   {
     "DMTimer2",        /* Timer Name */
-     CSL_MCU_TIMER2_CFG_BASE,  /* base address */
+     CSL_MCU_TIMER2_CFG_BASE + TIMER_RAT_MAP_ADDR,  /* base address */
      CSLR_MCU_M4FSS0_CORE0_NVIC_MCU_TIMER2_INTR_PEND_0,               /* Interrupt Number */
      TIMERP_EVENT_NOT_AVAILABLE               /* Event Id */
   },
   /* Timer ID 4 */
   {
     "DMTimer3",        /* Timer Name */
-     CSL_MCU_TIMER3_CFG_BASE,  /* base address */
+     CSL_MCU_TIMER3_CFG_BASE + TIMER_RAT_MAP_ADDR,  /* base address */
      CSLR_MCU_M4FSS0_CORE0_NVIC_MCU_TIMER3_INTR_PEND_0,               /* Interrupt Number */
      TIMERP_EVENT_NOT_AVAILABLE               /* Event Id */
   }
