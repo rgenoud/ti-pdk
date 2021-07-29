@@ -100,7 +100,7 @@ DEFAULT_SOCLIST_safertos = tpr12 awr294x
 # The below defines the DEFAULT_BOARDLIST_<rtos_type> for various RTOS types(tirtos/freertos/safertos)
 # Disable SYSBIOS(TI-RTOS)
 # DEFAULT_BOARDLIST_tirtos   = evmDRA72x evmDRA75x evmDRA78x evmAM572x idkAM572x idkAM571x idkAM574x $(BOARD_LIST_J6_TDA) $(BOARD_LIST_J7_TDA) $(BOARD_LIST_TPR12) am64x_evm am64x_svb
-DEFAULT_BOARDLIST_tirtos   = 
+DEFAULT_BOARDLIST_tirtos   =
 DEFAULT_BOARDLIST_freertos = am65xx_evm am65xx_idk j721e_evm j7200_evm tpr12_evm awr294x_evm j721s2_evm
 DEFAULT_BOARDLIST_safertos = tpr12_evm awr294x_evm
 
@@ -108,12 +108,27 @@ DEFAULT_BOARDLIST_safertos = tpr12_evm awr294x_evm
 # This is derived from the DEFAULT_$(SOC)_CORELIST defined above.
 # DEFAULT_$(SOC)_CORELIST_<rtos_type> is a subset of all the cores and is used for building components for the particular 'rtos_type'.
 
+ifeq ($(SOC),$(filter $(SOC), j721s2))
+# SysBIOS(TI-RTOS) is not supported on J721S2 C7x cores
+DEFAULT_CORELIST_EXCLUDE_CORES_tirtos = c7x_1 c7x_2 c7x-hostemu
+endif
+
+DEFAULT_$(SOC)_CORELIST_tirtos =  $(filter-out $(DEFAULT_CORELIST_EXCLUDE_CORES_tirtos), $(DEFAULT_$(SOC)_CORELIST))
 
 ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 am65xx tpr12 awr294x))
 DEFAULT_CORELIST_EXCLUDE_CORES_freertos =
 ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 am65xx))
 # FreeRTOS is not supported on mpu core
 DEFAULT_CORELIST_EXCLUDE_CORES_freertos += mpu1_0
+# Excluding R5 cores from build for TIRTOS as this won't be supported for TI ARM CLANG Toolchain
+DEFAULT_CORELIST_EXCLUDE_CORES_tirtos += mcu1_0 mcu1_1
+endif
+
+ifeq ($(SOC),$(filter $(SOC), j721e j721s2))
+# FreeRTOS is not currently supported on J7 c66x/c7x cores
+DEFAULT_CORELIST_EXCLUDE_CORES_freertos += c7x_2 c7x-hostemu
+# Excluding R5 cores from build for TIRTOS as this won't be supported for TI ARM CLANG Toolchain
+DEFAULT_CORELIST_EXCLUDE_CORES_tirtos += mcu2_0 mcu2_1 mcu3_0 mcu3_1
 endif
 else
 # FreeRTOS is not supported on other SOCs
@@ -736,16 +751,16 @@ ifneq ($(timeSync_EXAMPLE_LIST),)
 endif
 
 # - used to ignore include if component not present
--include $(PDK_NIMU_COMP_PATH)/nimu_component.mk
-ifneq ($(nimu_LIB_LIST),)
-  pdk_LIB_LIST += $(nimu_LIB_LIST)
-endif
-ifneq ($(nimu_APP_LIB_LIST),)
-  pdk_APP_LIB_LIST += $(nimu_APP_LIB_LIST)
-endif
-ifneq ($(nimu_EXAMPLE_LIST),)
-  pdk_EXAMPLE_LIST += $(nimu_EXAMPLE_LIST)
-endif
+#-include $(PDK_NIMU_COMP_PATH)/nimu_component.mk
+#ifneq ($(nimu_LIB_LIST),)
+#  pdk_LIB_LIST += $(nimu_LIB_LIST)
+#endif
+#ifneq ($(nimu_APP_LIB_LIST),)
+#  pdk_APP_LIB_LIST += $(nimu_APP_LIB_LIST)
+#endif
+#ifneq ($(nimu_EXAMPLE_LIST),)
+#  pdk_EXAMPLE_LIST += $(nimu_EXAMPLE_LIST)
+#endif
 
 # - used to ignore include if component not present
 -include $(PDK_FATFS_COMP_PATH)/fatfs_component.mk

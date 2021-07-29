@@ -422,7 +422,7 @@ UT_Timer_Type_t  timer_type =             UT_Timer_TIMER64;
 
 #elif defined(SOC_AM65XX)
   UT_Timer_Type_t  timer_type    =          UT_Timer_DMTIMER;
-  #if defined (__TI_ARM_V7R4__)
+  #if (__ARM_ARCH == 7) && (__ARM_ARCH_PROFILE == 'R') 
     #define OSAL_TEST_TIMER_ID                (1U)
     #define OSAL_TEST_TIMER_PERIOD            (5000U)
   #else
@@ -434,7 +434,7 @@ UT_Timer_Type_t  timer_type =             UT_Timer_TIMER64;
   #if defined (BUILD_MCU1_0)
     #define OSAL_TEST_TIMER_ID                (2U)
     #define OSAL_TEST_TIMER_PERIOD            (5000U)
-  #elif defined (__TI_ARM_V7R4__)
+  #elif (__ARM_ARCH == 7) && (__ARM_ARCH_PROFILE == 'R') 
     #define OSAL_TEST_TIMER_ID                (1U)
     #define OSAL_TEST_TIMER_PERIOD            (5000U)
   #elif defined (BUILD_C66X_1)
@@ -473,7 +473,7 @@ UT_Timer_Type_t  timer_type =             UT_Timer_TIMER64;
   #if defined (BUILD_MCU1_0)
     #define OSAL_TEST_TIMER_ID                (2U)
     #define OSAL_TEST_TIMER_PERIOD            (5000U)
-  #elif defined (__TI_ARM_V7R4__)
+  #elif (__ARM_ARCH == 7) && (__ARM_ARCH_PROFILE == 'R') 
     #define OSAL_TEST_TIMER_ID                (1U)
     #define OSAL_TEST_TIMER_PERIOD            (5000U)
   #else

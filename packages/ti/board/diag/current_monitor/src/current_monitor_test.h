@@ -118,7 +118,7 @@ extern "C" {
  *  \brief Structure defining INA Device calibration parameters.
  */
 typedef struct  CalibrationParams{
-    uint8_t maxRShunt;
+    float maxRShunt;
     float shuntVolLsb;
     float busVolLsb;
     float powerLsb;
