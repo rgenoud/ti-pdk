@@ -2766,7 +2766,8 @@
                         "max_resource_entries": 900
                     }
                 ]
-            },"am62x": {
+            },
+            "am62x": {
                 "values": [
                     {
                         "name": "RESASG_UTYPE(AM62X_DEV_CMP_EVENT_INTROUTER0, RESASG_SUBTYPE_IR_OUTPUT)",
@@ -2860,43 +2861,43 @@
                     },
                     {
                         "name": "RESASG_UTYPE(AM62X_DEV_DMASS0_INTAGGR_0, RESASG_SUBTYPE_IA_TIMERMGR_EVT_OES)",
-                        "type": 1823,
+                        "type": 1807,
                         "start_resource": 0,
                         "num_resource": 1024
                     },
                     {
                         "name": "RESASG_UTYPE(AM62X_DEV_DMASS0_INTAGGR_0, RESASG_SUBTYPE_IA_PKTDMA_TX_CHAN_ERROR_OES)",
-                        "type": 1824,
+                        "type": 1808,
                         "start_resource": 4096,
                         "num_resource": 29
                     },
                     {
                         "name": "RESASG_UTYPE(AM62X_DEV_DMASS0_INTAGGR_0, RESASG_SUBTYPE_IA_PKTDMA_TX_FLOW_COMPLETION_OES)",
-                        "type": 1825,
+                        "type": 1809,
                         "start_resource": 4608,
                         "num_resource": 99
                     },
                     {
                         "name": "RESASG_UTYPE(AM62X_DEV_DMASS0_INTAGGR_0, RESASG_SUBTYPE_IA_PKTDMA_RX_CHAN_ERROR_OES)",
-                        "type": 1826,
+                        "type": 1810,
                         "start_resource": 5120,
                         "num_resource": 24
                     },
                     {
                         "name": "RESASG_UTYPE(AM62X_DEV_DMASS0_INTAGGR_0, RESASG_SUBTYPE_IA_PKTDMA_RX_FLOW_COMPLETION_OES)",
-                        "type": 1827,
+                        "type": 1811,
                         "start_resource": 5632,
                         "num_resource": 51
                     },
                     {
                         "name": "RESASG_UTYPE(AM62X_DEV_DMASS0_INTAGGR_0, RESASG_SUBTYPE_IA_PKTDMA_RX_FLOW_STARVATION_OES)",
-                        "type": 1828,
+                        "type": 1812,
                         "start_resource": 6144,
                         "num_resource": 51
                     },
                     {
                         "name": "RESASG_UTYPE(AM62X_DEV_DMASS0_INTAGGR_0, RESASG_SUBTYPE_IA_PKTDMA_RX_FLOW_FIREWALL_OES)",
-                        "type": 1829,
+                        "type": 1813,
                         "start_resource": 6656,
                         "num_resource": 51
                     },
@@ -3148,43 +3149,43 @@
                     },
                     {
                         "name": "RESASG_UTYPE(AM62X_DEV_SA3_SS0_INTAGGR_0, RESASG_SUBTYPE_IA_TIMERMGR_EVT_OES)",
-                        "type": 4319,
+                        "type": 4303,
                         "start_resource": 0,
                         "num_resource": 1024
                     },
                     {
                         "name": "RESASG_UTYPE(AM62X_DEV_SA3_SS0_INTAGGR_0, RESASG_SUBTYPE_IA_PKTDMA_TX_CHAN_ERROR_OES)",
-                        "type": 4320,
+                        "type": 4304,
                         "start_resource": 4096,
                         "num_resource": 2
                     },
                     {
                         "name": "RESASG_UTYPE(AM62X_DEV_SA3_SS0_INTAGGR_0, RESASG_SUBTYPE_IA_PKTDMA_TX_FLOW_COMPLETION_OES)",
-                        "type": 4321,
+                        "type": 4305,
                         "start_resource": 4608,
                         "num_resource": 8
                     },
                     {
                         "name": "RESASG_UTYPE(AM62X_DEV_SA3_SS0_INTAGGR_0, RESASG_SUBTYPE_IA_PKTDMA_RX_CHAN_ERROR_OES)",
-                        "type": 4322,
+                        "type": 4306,
                         "start_resource": 5120,
                         "num_resource": 4
                     },
                     {
                         "name": "RESASG_UTYPE(AM62X_DEV_SA3_SS0_INTAGGR_0, RESASG_SUBTYPE_IA_PKTDMA_RX_FLOW_COMPLETION_OES)",
-                        "type": 4323,
+                        "type": 4307,
                         "start_resource": 5632,
                         "num_resource": 16
                     },
                     {
                         "name": "RESASG_UTYPE(AM62X_DEV_SA3_SS0_INTAGGR_0, RESASG_SUBTYPE_IA_PKTDMA_RX_FLOW_STARVATION_OES)",
-                        "type": 4324,
+                        "type": 4308,
                         "start_resource": 6144,
                         "num_resource": 16
                     },
                     {
                         "name": "RESASG_UTYPE(AM62X_DEV_SA3_SS0_INTAGGR_0, RESASG_SUBTYPE_IA_PKTDMA_RX_FLOW_FIREWALL_OES)",
-                        "type": 4325,
+                        "type": 4309,
                         "start_resource": 6656,
                         "num_resource": 16
                     },
