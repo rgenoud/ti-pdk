@@ -96,7 +96,7 @@ App_sciclientTestParams_t gSciclientTestcaseParams[] =
         /** testType **/
         (APP_SCICLIENT_TEST_TYPE_SANITY)
     },
-
+#ifndef SOC_AM62X
     {
         /** enableTest **/
         TEST_ENABLE,
@@ -132,6 +132,7 @@ App_sciclientTestParams_t gSciclientTestcaseParams[] =
         /** testType **/
         (APP_SCICLIENT_TEST_TYPE_SANITY)
     },
+#endif    
     {
         /** enableTest **/
         TEST_ENABLE,
@@ -262,6 +263,110 @@ App_sciclientTestParams_t gSciclientTestcaseParams[] =
 
         /** *passFailCriteria **/
         "Sciclient_Get coniguration should return correctly for PG1.0 and PG2.0 ",
+
+        /** cpuID **/
+        APP_SCICLIENT_R5F,
+
+        /** sciclientConfigParams **/
+        {},
+
+        /** printEnable **/
+        PRINT_ENABLE,
+
+        /** testType **/
+        (APP_SCICLIENT_TEST_TYPE_SANITY)
+    }
+#endif
+#if defined(SOC_AM62X)
+    {
+        /** enableTest **/
+        TEST_ENABLE,
+
+        /** testCaseId **/
+        6U,
+
+        /** *reqId **/
+        "PDK:2145",
+
+        /** *testCaseName **/
+        "SCICLIENT RM Get Configuruation Test",
+
+        /** *userInfo **/
+        "None",
+
+        /** *disableReason **/
+        "None",
+
+        /** *passFailCriteria **/
+        "Sciclient_Get coniguration should return correctly for PG1.0 and PG2.0 ",
+
+        /** cpuID **/
+        APP_SCICLIENT_R5F,
+
+        /** sciclientConfigParams **/
+        {},
+
+        /** printEnable **/
+        PRINT_ENABLE,
+
+        /** testType **/
+        (APP_SCICLIENT_TEST_TYPE_SANITY)
+    }
+    ,{
+        /** enableTest **/
+        TEST_ENABLE,
+
+        /** testCaseId **/
+        7U,
+
+        /** *reqId **/
+        "PDK:XXX",
+
+        /** *testCaseName **/
+        "SCICLIENT PM Get Frequency Test",
+
+        /** *userInfo **/
+        "None",
+
+        /** *disableReason **/
+        "None",
+
+        /** *passFailCriteria **/
+        "Get Frequency for the particular clock ",
+
+        /** cpuID **/
+        APP_SCICLIENT_R5F,
+
+        /** sciclientConfigParams **/
+        {},
+
+        /** printEnable **/
+        PRINT_ENABLE,
+
+        /** testType **/
+        (APP_SCICLIENT_TEST_TYPE_SANITY)
+    },
+    {
+        /** enableTest **/
+        TEST_ENABLE,
+
+        /** testCaseId **/
+        8U,
+
+        /** *reqId **/
+        "PDK:XXX",
+
+        /** *testCaseName **/
+        "SCICLIENT PM Set Frequency Test",
+
+        /** *userInfo **/
+        "None",
+
+        /** *disableReason **/
+        "None",
+
+        /** *passFailCriteria **/
+        "Set Frequency for the particular clock ",
 
         /** cpuID **/
         APP_SCICLIENT_R5F,

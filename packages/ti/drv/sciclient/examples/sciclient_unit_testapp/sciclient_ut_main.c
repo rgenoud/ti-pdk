@@ -90,6 +90,12 @@ static int32_t App_msmcQueryTest(void);
 #if defined(SOC_AM65XX)
 static int32_t App_rmGetResourceRange(void);
 #endif
+#if defined(SOC_AM62X)
+static int32_t App_pmGetFrequency(void);
+static int32_t App_pmSetFrequency(void);
+static int32_t App_rmGetResourceRangeWithSecHost(void);
+#endif
+
 
 /* ========================================================================== */
 /*                            Global Variables                                */
@@ -201,6 +207,17 @@ int32_t App_sciclientTestMain(App_sciclientTestParams_t *testParams)
 #if defined (SOC_AM65XX)
         case 6:
             testParams->testResult = App_rmGetResourceRange();
+            break;
+#endif
+#if defined (SOC_AM62X)
+        case 6:
+            testParams->testResult = App_rmGetResourceRangeWithSecHost();
+            break;
+        case 7:
+            testParams->testResult = App_pmGetFrequency();
+            break;
+        case 8:
+            testParams->testResult = App_pmSetFrequency();
             break;
 #endif
         default:
@@ -690,6 +707,225 @@ static int32_t App_rmGetResourceRange(void)
 }
 #endif
 
+#if defined (SOC_AM62X)
+struct appSciclientRmGetRangeTest
+{
+    uint16_t           type;
+    uint8_t            subtype;
+    int32_t            expectedResult;
+    int32_t            secondary_host;
+};
+struct appSciclientRmGetRangeTest gAppSciclientTstParams [] =
+{
+    {TISCI_DEV_DMASS0_INTAGGR_0, TISCI_RESASG_SUBTYPE_GLOBAL_EVENT_SEVT, CSL_PASS, TISCI_HOST_ID_MAIN_0_R5_1},
+    {TISCI_DEV_MAIN_GPIOMUX_INTROUTER0, TISCI_RESASG_SUBTYPE_IR_OUTPUT, CSL_PASS, TISCI_HOST_ID_MAIN_0_R5_1},
+    {TISCI_DEV_MAIN_GPIOMUX_INTROUTER0, 32, CSL_PASS, 0},
+    {(TISCI_RESASG_TYPE_MASK >>TISCI_RESASG_TYPE_SHIFT) + 1, TISCI_RESASG_SUBTYPE_IR_OUTPUT, CSL_EFAIL, 0},
+    {TISCI_DEV_DMASS0_INTAGGR_0, (TISCI_RESASG_SUBTYPE_MASK >>TISCI_RESASG_SUBTYPE_SHIFT) + 1, CSL_EFAIL, 0}
+};
+
+static int32_t App_rmGetResourceRangeWithSecHost(void)
+{
+    int32_t status = CSL_EFAIL;
+    uint32_t i = 0U;
+    Sciclient_ConfigPrms_t        config =
+    {
+        SCICLIENT_SERVICE_OPERATION_MODE_POLLED,
+        NULL,
+        0 /* isSecure = 0 un secured for all cores */
+    };
+    /* This is only needed as this test case is running back to back Sciclient
+     * Init and de-inits.
+     */
+    while (gSciclientHandle.initCount != 0)
+    {
+        status = Sciclient_deinit();
+    }
+    status = Sciclient_init(&config);
+    
+    for (i = 0U; i < sizeof (gAppSciclientTstParams)/sizeof (struct appSciclientRmGetRangeTest); i++)
+    {
+        struct tisci_msg_rm_get_resource_range_resp res;
+        struct tisci_msg_rm_get_resource_range_req  req;
+        if (status == CSL_PASS)
+        {
+            req.type           = gAppSciclientTstParams[i].type;
+            req.subtype        = gAppSciclientTstParams[i].subtype;
+            if(gAppSciclientTstParams[i].secondary_host ==0){
+                req.secondary_host = TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST;
+            }else{
+               req.secondary_host = gAppSciclientTstParams[i].secondary_host;
+            }
+
+            /* Get interrupt number range */
+            status =  Sciclient_rmGetResourceRange(
+                        &req,
+                        &res,
+                        0xFFFFFFFFU);
+        }
+        if (status == CSL_PASS)
+        {
+            App_sciclientPrintf("\n\rType: %d, Subtype : %d, SecHost: %d, Start: %d, Num: %d, sec_stat: %d, sec_count: %d",
+                                gAppSciclientTstParams[i].type,
+                                gAppSciclientTstParams[i].subtype,
+                                gAppSciclientTstParams[i].secondary_host,
+                                res.range_start,
+                                res.range_num,
+                                res.range_start_sec,
+                                res.range_num_sec);
+        }
+        else
+        {
+            if (status == gAppSciclientTstParams[i].expectedResult)
+            {
+                App_sciclientPrintf("\n\rType: %d, Subtype : %d, Expected Failure",
+                                gAppSciclientTstParams[i].type,
+                                gAppSciclientTstParams[i].subtype);
+                status = CSL_PASS;
+            }
+            else
+            {
+                App_sciclientPrintf("\n\rType: %d, Subtype : %d, Unexpected Failure!!!!!!!",
+                                gAppSciclientTstParams[i].type,
+                                gAppSciclientTstParams[i].subtype);
+            }
+        }
+    }
+    
+    if (status == CSL_PASS)
+    {
+        status = Sciclient_deinit();
+    }
+    return status;
+}
+int32_t App_pmGetFrequency(void)
+{
+    int32_t status = CSL_EFAIL;
+    Sciclient_ConfigPrms_t        config =
+    {
+        SCICLIENT_SERVICE_OPERATION_MODE_POLLED,
+        NULL,
+        0 /* isSecure = 0 un secured for all cores */
+    };   
+    /* This is only needed as this test case is running back to back Sciclient
+     * Init and de-inits.
+     */
+    while (gSciclientHandle.initCount != 0)
+    {
+        status = Sciclient_deinit();
+    }
+    
+    status = Sciclient_init(&config);
+
+    if (status == CSL_PASS)
+    {
+        uint32_t freqHz;
+        status = Sciclient_pmGetModuleClkFreq(TISCI_DEV_WKUP_GTC0, TISCI_DEV_WKUP_GTC0_GTC_CLK,
+            (uint64_t *) &freqHz, SCICLIENT_SERVICE_WAIT_FOREVER);
+        
+
+        if (CSL_PASS == status)
+        {
+            status = CSL_PASS;
+            App_sciclientPrintf(" GTC Frequency  %d\n", freqHz);
+        }
+        else
+        {
+            App_sciclientPrintf(" DMSC Firmware Get Frequency failed \n");
+        }
+    }
+    if (status == CSL_PASS)
+    {
+        status = Sciclient_deinit();
+    }
+    return status;
+}
+
+int32_t App_pmSetFrequency(void)
+{
+    int32_t status = CSL_EFAIL;
+    Sciclient_ConfigPrms_t        config =
+    {
+        SCICLIENT_SERVICE_OPERATION_MODE_POLLED,
+        NULL,
+        0 /* isSecure = 0 un secured for all cores */
+    };   
+    /* This is only needed as this test case is running back to back Sciclient
+     * Init and de-inits.
+     */
+    while (gSciclientHandle.initCount != 0)
+    {
+        status = Sciclient_deinit();
+    }
+    
+    status = Sciclient_init(&config);
+
+    if (status == CSL_PASS)
+    {
+        uint64_t freqHz;
+        status = Sciclient_pmGetModuleClkFreq(TISCI_DEV_MCU_I2C0, TISCI_DEV_MCU_I2C0_PISYS_CLK,
+            (uint64_t *) &freqHz, SCICLIENT_SERVICE_WAIT_FOREVER);        
+
+        if (CSL_PASS == status)
+        {
+            status = CSL_PASS;
+            App_sciclientPrintf(" Current Frequency %d\n", freqHz);
+        }
+        else
+        {
+            App_sciclientPrintf(" DMSC Firmware Get Frequency failed \n");
+        }
+
+        uint64_t targetFreHz = 0x02dc6c00;
+        status = Sciclient_pmQueryModuleClkFreq(TISCI_DEV_MCU_I2C0, TISCI_DEV_MCU_I2C0_PISYS_CLK,targetFreHz,
+            (uint64_t *) &freqHz, SCICLIENT_SERVICE_WAIT_FOREVER);        
+
+        if (CSL_PASS == status)
+        {
+            status = CSL_PASS;
+            App_sciclientPrintf(" Query Response Frequency %d\n", freqHz);
+        }
+        else
+        {
+            App_sciclientPrintf(" DMSC Firmware Query Frequency failed \n");
+        }
+
+       
+        status = Sciclient_pmSetModuleClkFreq(TISCI_DEV_MCU_I2C0, TISCI_DEV_MCU_I2C0_PISYS_CLK,
+            freqHz,TISCI_MSG_FLAG_AOP,SCICLIENT_SERVICE_WAIT_FOREVER);        
+
+        if (CSL_PASS == status)
+        {
+            status = CSL_PASS;
+            App_sciclientPrintf(" Set  Frequency success\n");
+        }
+        else
+        {
+            App_sciclientPrintf(" DMSC Firmware Set Frequency failed \n");
+        }
+        
+        status = Sciclient_pmGetModuleClkFreq(TISCI_DEV_MCU_I2C0, TISCI_DEV_MCU_I2C0_PISYS_CLK,
+            (uint64_t *) &freqHz, SCICLIENT_SERVICE_WAIT_FOREVER);        
+
+        if (CSL_PASS == status)
+        {
+            status = CSL_PASS;
+            App_sciclientPrintf(" New Frequency %d\n", freqHz);
+        }
+        else
+        {
+            App_sciclientPrintf(" DMSC Firmware Get Frequency failed \n");
+        }
+
+    }
+    if (status == CSL_PASS)
+    {
+        status = Sciclient_deinit();
+    }
+    return status;
+}
+
+#endif
 #if defined(BUILD_MPU) || defined (__C7100__)
 extern void Osal_initMmuDefault(void);
 void InitMmu(void)

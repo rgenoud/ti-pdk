@@ -559,7 +559,7 @@ uint32_t App_sciclientGetNum()
 void App_sciclientConsoleInit()
 {
     Board_initCfg   boardCfg;
-#if defined (SOC_AM64X) || defined (SOC_AM62X)
+#if defined (SOC_AM64X)
     boardCfg = BOARD_INIT_UNLOCK_MMR |
                BOARD_INIT_PINMUX_CONFIG |
                BOARD_INIT_UART_STDIO;
