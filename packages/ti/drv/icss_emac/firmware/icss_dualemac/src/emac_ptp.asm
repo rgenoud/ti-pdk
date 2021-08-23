@@ -80,8 +80,9 @@ ____pn_gPtp_asm    .set    1
 
     .global  FN_PTP_BACKGROUND_TASK
     .global  FN_TIMESTAMP_GPTP_PACKET
+    .global  FN_CHECK_AND_CLR_PTP_FWD_FLAG
+    .global  FN_CHECK_AND_CLR_PTP_FWD_FLAG_L2
     .global  FN_PTP_TX_ADD_DELAY
-    .global  FN_TIMESTAMP_GPTP_PACKET_UDP
     .global  FN_PTP_TX_ADD_DELAY_UDP
     .global  FN_COMPARE_DELAY_RESP_ID
 
@@ -133,138 +134,12 @@ FN_TIMESTAMP_GPTP_PACKET:
 
     MOV     R11.w2, R13.w2
     QBBC    FN_TIMESTAMP_GPTP_PACKET_EXIT, R22, RX_IS_PTP_BIT
-    CLR     R22, R22, RX_IS_PTP_BIT
-
-    ;domain number check disabled for now. Will be enabled later
-    ;LBCO    &R21, ICSS_SHARED_CONST, GPTP_DOMAIN_NUMBER_LIST, GPTP_NUM_DOMAINS
-    ;QBEQ    GPTP_OFFSET_LOAD, Ethernet.ProtWord3, R21.b0                ; Check gPTP domain number
-    ;QBNE    FN_TIMESTAMP_GPTP_PACKET_EXIT, Ethernet.ProtWord3, R21.b1                 ; Check gPTP domain number
-
-GPTP_OFFSET_LOAD:
-    LDI     R1.b0, &R5.b2
-    QBNE    NO_VLAN_RX, R5.w0, VLAN_EtherType
-    ADD     R1.b0, R1.b0, 4
-NO_VLAN_RX:
-    MVIB    R20.b0, *R1.b0
-    ;check for link local vs non link local frame
-    ;non link local frames have the lower 4 bytes as 0
-    QBNE    PTP_LINK_LOCAL_FRAME, R3.w0, 0
-    ;check for sync frame
-    QBNE    CHECK_FOLLOW_UP, R20.b0, PTP_SYNC_MSG_ID
-    ;-------------------process sync frames------------------;
-    ;Below is a combined load to save cycles.
-    ;R20.b0 tells if DUT is master. R20.b1 tells which port is connected to master
-    ;and R20.w2 and R21 tell the MAC ID of the master selected by BMCA
-    LBCO    &R20.w0, ICSS_SHARED_CONST, DUT_IS_MASTER_OFFSET, 8
-    QBNE    DUT_IS_SLAVE_SYNC, R20.b0, 1    ; exit if DUT is configured as master, also discard frame
-    CLR     MII_RCV.rx_flags, MII_RCV.rx_flags, host_rcv_flag_shift    ; Don't forward to host
-    SET     R22, R22, PTP_RELEASE_HOST_QUEUE_BIT
-    QBA     FN_TIMESTAMP_GPTP_PACKET_EXIT
-
-DUT_IS_SLAVE_SYNC:
-
-    ;Master MAC ID is now in R20.w2 and R21
-    ;Check against Master MAC address. R3.w2 and R4 contain source MAC address
-    QBNE    FRAME_NOT_FROM_MASTER, R20.w2, R3.w2
-    QBNE    FRAME_NOT_FROM_MASTER, R21, R4
-
-    ;check for dual master on two ports.
-    ;The logic works like this....initially the memory location is empty
-    ;whenever the first sync arrives, the corresponding port number is written into
-    ;memory location. Subsequent sync frames check against this value and they are discarded
-    ;if the value in memory does not match the port number.
-    QBEQ    FIRST_SYNC_FRAME, R20.b1, 0
-    QBA     PTP_CHECK_FORCED_2_STEP
-
-FIRST_SYNC_FRAME:               ;whichever port receives the sync first is assigned as master port
+    
 
     .if $defined (PRU0)
-    LDI     R20.b1, 1
+        LDI     R11.w0, RX_TIMESTAMP_OFFSET_P1
     .else
-    LDI     R20.b1, 2
-    .endif
-    SBCO    &R20.b1, ICSS_SHARED_CONST, MASTER_PORT_NUM_OFFSET, 1
-PTP_CHECK_FORCED_2_STEP:
-    ;check if this is a 1-step, if it's set and if the force 2-step bit is also set then we 
-    ;don't forward the frame. Instead we send it to host which flips the two-step flag bit
-    QBEQ    VLAN_TAGGED_RX, R5.w0, VLAN_EtherType
-    QBBS    LOAD_TS_OFFSET_ADDR_SYNC, two_step_reg, GPTP_802_3_two_step_bit
-    QBA     DONE_VLAN_CHECK_RX
-VLAN_TAGGED_RX:
-    QBBS    LOAD_TS_OFFSET_ADDR_SYNC, two_step_reg_vlan, GPTP_802_3_two_step_bit
-DONE_VLAN_CHECK_RX:
-    ;check if the forced 2-step bit is set. It's bit 1 of the value written at the location GPTP_CTRL_VAR_OFFSET
-    LBCO    &R20.b0, ICSS_SHARED_CONST, TIMESYNC_CTRL_VAR_OFFSET, 1
-    QBBC    LOAD_TS_OFFSET_ADDR_SYNC, R20, 1
-    ;set the 2-step bit which forces setting the 2-step flag on forward path
-    ;SET     R22, R22, PTP_FORCED_2_STEP_BIT
-LOAD_TS_OFFSET_ADDR_SYNC:
-
-    .if $defined (PRU0)
-    LDI     R11.w0, RX_SYNC_TIMESTAMP_OFFSET_P1    ; load sync timestamp offset
-    .else
-    LDI     R11.w0, RX_SYNC_TIMESTAMP_OFFSET_P2
-    .endif
-    QBA     GPTP_STORE_TIMESTAMP    ; with the offset loaded, store the Rx timestamp
-
-DISCARD_PTP_FRAME_RX:
-
-    ;set error flag
-    SET     MII_RCV.rx_flags, MII_RCV.rx_flags, 4
-
-FRAME_NOT_FROM_MASTER:                                  ;if frame is not from master, it's not processed
-
-    CLR     MII_RCV.rx_flags, MII_RCV.rx_flags, host_rcv_flag_shift    ; Don't forward to host
-    SET     R22, R22, PTP_RELEASE_HOST_QUEUE_BIT
-    QBA     FN_TIMESTAMP_GPTP_PACKET_EXIT
-
-CHECK_FOLLOW_UP:
-
-    QBNE    FN_TIMESTAMP_GPTP_PACKET_EXIT, R20.b0, PTP_FOLLOW_UP_MSG_ID
-    ;load the value indicating whether PTP is in uninitialized state
-    LBCO    &R20.b0, ICSS_SHARED_CONST, TIMESYNC_CTRL_VAR_OFFSET, 1 
-    QBEQ    DISCARD_PTP_FRAME_RX, R20.b0, 0
-    ;Below is a combined load to save cycles.
-    ;R20.b0 tells if DUT is master. R20.b1 tells which port is connected to master
-    ;and R20.w2 and R21 tell the MAC ID of the master selected by BMCA
-    LBCO    &R20.w0, ICSS_SHARED_CONST, DUT_IS_MASTER_OFFSET, 8
-    QBNE    DUT_IS_SLAVE_FLW_UP, R20.b0, 1    ; exit if DUT is configured as master
-    CLR     MII_RCV.rx_flags, MII_RCV.rx_flags, host_rcv_flag_shift    ; Don't forward to host
-    SET     R22, R22, PTP_RELEASE_HOST_QUEUE_BIT
-    QBA     FN_TIMESTAMP_GPTP_PACKET_EXIT
-
-DUT_IS_SLAVE_FLW_UP:
-
-    ;forwarding only applies to HSR
-    .if $defined (HSR)
-    CLR     MII_RCV.rx_flags, MII_RCV.rx_flags, fwd_flag_shift    ; Don't forward to other port
-    SET     R22, R22, PTP_RELEASE_PORT_QUEUE_BIT
-    .endif ;HSR
-    ;Master MAC ID is now in R20.w2 and R21
-    ;Check against Master MAC address. R3.w2 and R4 contain source MAC address
-    QBNE    FRAME_NOT_FROM_MASTER, R20.w2, R3.w2
-    QBNE    FRAME_NOT_FROM_MASTER, R21, R4
-    QBA     FN_TIMESTAMP_GPTP_PACKET_EXIT
-
-PTP_LINK_LOCAL_FRAME:
-PTP_LL_LOAD_PACKET_TYPE:
-CHECK_PDELAY_REQ:
-
-    QBNE    CHECK_PDELAY_RESP, R20.b0, PTP_PDLY_REQ_MSG_ID    ; Check gPTP messageType: Pdelay_Req
-    .if $defined (PRU0)
-    LDI     R11.w0, RX_PDELAY_REQ_TIMESTAMP_OFFSET_P1
-    .else
-    LDI     R11.w0, RX_PDELAY_REQ_TIMESTAMP_OFFSET_P2
-    .endif
-    QBA     GPTP_STORE_TIMESTAMP
-
-CHECK_PDELAY_RESP:
-
-    QBNE    FN_TIMESTAMP_GPTP_PACKET_EXIT, R20.b0, PTP_PDLY_RSP_MSG_ID    ; Check gPTP messageType: Pdelay_Resp
-    .if $defined (PRU0)
-    LDI     R11.w0, RX_PDELAY_RESP_TIMESTAMP_OFFSET_P1
-    .else
-    LDI     R11.w0, RX_PDELAY_RESP_TIMESTAMP_OFFSET_P2
+        LDI     R11.w0, RX_TIMESTAMP_OFFSET_P2
     .endif
 
 GPTP_STORE_TIMESTAMP:
@@ -344,6 +219,7 @@ FN_TIMESTAMP_GPTP_PACKET_EXIT:
 
 FN_GET_TX_TIMESTAMP:
 
+    .if $defined("ICSS_REV1")
     ;we need to make sure that the timestamp here is actual value
     ;this we do by comparing with Tx SOF of previous frame
     .if $defined("ICSS_SWITCH_BUILD")
@@ -369,6 +245,7 @@ FN_GET_TX_TIMESTAMP:
     .endif ; switch build
 
 LOAD_TX_SOF_TS:
+    .endif ;ICSS_REV1
 
     .if $defined("ICSS_SWITCH_BUILD")
     .if $defined (PRU0)
@@ -383,8 +260,9 @@ LOAD_TX_SOF_TS:
     LBCO    &R4, IEP_CONST, CAP_RISE_TX_SOF_PORT2_OFFSET, 4
     .endif
     .endif
-
-    QBEQ    LOAD_TX_SOF_TS, R4, R5
+    .if $defined("ICSS_REV1")
+        QBEQ    LOAD_TX_SOF_TS, R4, R5
+    .endif ;ICSS_REV1
 
     ;This also loads 2 bytes in R3.w0
     LBCO    &R2, ICSS_SHARED_CONST, TIMESYNC_SECONDS_COUNT_OFFSET, 6
@@ -437,14 +315,13 @@ NO_WRAPAROUND_TX:
 ;                        2. In Sync frames
 ;                        3. For Pdelay Response frames
 ;                        4. For storing Tx timestamp for Sync and Pdelay Req frames
-;     Cycles           : 75 PRU cycles (worst case)
+;     Cycles           : 40 PRU cycles (worst case)
 ;     Register Usage   : R22 (flags), R0, R13, R25, R26, R28, R29
 ;     Pseudocode       :
 ;22 bytes have been put in Tx FIFO
 ;if ptp frame:
 ;   load tx SOF timestamp
 ;   do phy delay correction on tx SOF
-;   if link local frame:
 ;       if Pdelay Request frame:
 ;           store tx SOF TS
 ;           indicate that this is a Pdelay request frame (by writing into shared memory)
@@ -453,56 +330,14 @@ NO_WRAPAROUND_TX:
 ;           store tx SOF TS
 ;           indicate that this is a Pdelay response frame (by writing into shared memory)
 ;           set flag for Tx callback interrupt
-;    else: Not a link local frame
-;       if sync frame:
-;           if not two-step:
-;               store tx SOF TS
-;               indicate that this is a sync frame (by writing into shared memory)
-;               set flag for Tx callback interrupt
-;
-;           else: single step
-;               if DUT is master:
-;                   if frame is from some other device:
-;                       exit
-;                   else:
-;                       add origin timestamp (see logic below)
-;               else:
-;                   Do Bridge delay computation
-;                   calculate BD from Tx SOF and Rx timestamp
-;                   Multiply by RCF
-;                   Add peer delay and store back
-;
+;       elif sync frame:
+;           store tx SOF TS
+;           indicate that this is a Sync frame (by writing into shared memory)
+;           set flag for Tx callback interrupt
+;       else:
+;           exit
 ;else:
 ;   exit
-
-;--------------Logic for adding 1-step origin Timestamp----------
-;
-;   The logic here works like this
-;   Assume three timestamps Y, Y' and Z
-;   Y--------------Y'----------------Z
-;    Z is the start of the seconds cycle i.e. nanoseconds value of 0
-;    Y denotes current time inside this function which is invoked
-;    just before transmitting the sync frame. Y' is the actual Tx SOF timestamp
-;    and is guaranteed to be within few microsends/miliseconds ahead of Y.
-;    Now three possible cases exist
-;    Y-----Z-----Y' in which case Y' lies in the next cycle
-;    Y-----Y'----Z  in which case Y' is in current cycle
-;    corner cases in which Y == Z and Y' == Z also fall under the above 2
-;
-;    In firmware the timestamp Y' is compared against Z and it is determined
-;    whether it falls in next or previous cycle. The corresponding seconds value
-;    of Z is then used to get the seconds value. Nanoseconds value is obtained by
-;    subtraction and long division and reminder operation is avoided.
-;
-;    Compare the timestamps and determine the cycle
-;    if current cycle:
-;       subtract 1 from stored value to get seconds
-;       get nanoseconds value by subtracting from stored value and then from 1x10^9
-;    else:
-;       stored value is the seconds value
-;       subtract from stored value to get nanoseconds value
-;    store second and nanoseconds values
-;
 ;
 ;
 ;***************************************************************************
@@ -518,8 +353,6 @@ FN_PTP_TX_ADD_DELAY:
     ADD     R1.b0, R1.b0, 4
 NO_VLAN_TX:
     MVIB    R25.b0, *R1.b0
-    ;check if non link local
-    QBEQ    PTP_NOT_LINK_LOCAL, R3.w0, 0
 
 NO_HSR_TAG_TX:
 
@@ -552,7 +385,7 @@ NO_HSR_TAG_TX:
 
 NOT_PDELAY_REQ_TX:
 
-    QBNE    EXIT_PTP_TX_ADD_DELAY, R25.b0, PTP_PDLY_RSP_MSG_ID
+    QBNE    NOT_PDELAY_RES_TX, R25.b0, PTP_PDLY_RSP_MSG_ID
 
     ;***************************PDELAY RES PACKET PROCESSING***************************
     ;Load the Delay Request Timestamp to compute T3 - T2
@@ -581,18 +414,10 @@ NOT_PDELAY_REQ_TX:
     ;Store the Tx TS, set flag for
     QBA     STORE_TX_TS_SET_FLAG_EXIT
 
-PTP_NOT_LINK_LOCAL:
+NOT_PDELAY_RES_TX:
 
-    QBNE    EXIT_PTP_TX_ADD_DELAY, R25.b0, PTP_SYNC_MSG_ID
+    QBNE    EXIT_PTP_TX_ADD_DELAY, R25.b0, PTP_SYNC_MSG_ID    
     ;***************************SYNC PACKET PROCESSING***************************
-    ;check for two-step
-    QBEQ    VLAN_TAGGED_TX, R5.w0, VLAN_EtherType
-    QBBC    DUT_IS_SINGLE_STEP, two_step_reg, GPTP_802_3_two_step_bit
-    QBA     DONE_VLAN_CHECK_TX
-VLAN_TAGGED_TX:
-    QBBC    DUT_IS_SINGLE_STEP, two_step_reg_vlan, GPTP_802_3_two_step_bit
-DONE_VLAN_CHECK_TX:
-
     ;processing two-step sync frame
     ;Irrespective of slave/master status we just store timestamp and
     ;set flag to give a callback interrupt
@@ -618,183 +443,6 @@ DONE_VLAN_CHECK_TX:
     .endif
 
     ;Store the Tx TS, set flag for
-    QBA     STORE_TX_TS_SET_FLAG_EXIT
-
-DUT_IS_SINGLE_STEP:
-
-    ;check if we are in master mode, if yes then set flag and exit
-    QBBC    SYNC_SLAVE_PROCESSING, R22, DUT_IS_MASTER_BIT
-    ;check if the frame is from host, else we exit. TODO : Do it using Buffer desc
-    LDI     R25.w0, PORT_MAC_ADDR
-    LBCO    &R25.w2, PRU_CROSS_DMEM, R25.w0, 6
-    QBNE    EXIT_PTP_TX_ADD_DELAY, R25.w2, R3.w2
-    QBNE    EXIT_PTP_TX_ADD_DELAY, R26, R4
-
-STORE_TS_IN_FRAME:
-
-    ;Since we are in the first 32 bytes of the frame, we need
-    ;to write the outoing origin TS in L3 memory since it lies
-    ;in the 32-64 byte offset of the frame
-    ;get the timestamp
-    JAL     R0.w2, FN_GET_TX_TIMESTAMP
-
-    ;load the offset for the correction field in L3
-    MOV     R0.w2, BUFFER_INDEX
-    ADD     R0.w2, R0.w2, 32
-
-    QBNE    NO_QUEUE_WRAP_XMT_PTP_1, BUFFER_DESC_OFFSET, TOP_MOST_BUFFER_DESC_OFFSET
-    QBBS    NO_QUEUE_WRAP_XMT_PTP_1, R13, 2    ; PACKET_FROM_COLL_QUEUE
-    MOV     R0.w2, BUFFER_OFFSET
-
-NO_QUEUE_WRAP_XMT_PTP_1:
-
-    ;Add offset to reach the start of origin timestamp
-    ;from the start of 32 byte block. This offset differs
-    ;for HSR and PRP due to presence of HSR tag
-
-    .if $defined (HSR)
-    ADD     R0.w2, R0.w2, 22
-    .endif ;HSR
-
-    .if $defined (PRP)
-    ADD     R0.w2, R0.w2, 16
-    .endif ;PRP
-
-    ;We need to convert to big endian to write back
-
-    ;Registers R5.w2, R6 and R10 are free
-
-    ;convert seconds to big endian first
-    MOV     R6.b3, R2.b0
-    MOV     R6.b2, R2.b1
-    MOV     R6.b1, R2.b2
-    MOV     R6.b0, R2.b3
-    MOV     R5.b3, R3.b0
-    MOV     R5.b2, R3.b1
-
-    ;store nanoseconds to big endian next
-    MOV     R10.b3, R4.b0
-    MOV     R10.b2, R4.b1
-    MOV     R10.b1, R4.b2
-    MOV     R10.b0, R4.b3
-
-    ;First write the seconds part
-    SBCO    &R5.b2, L3_OCMC_RAM_CONST, R0.w2, 6
-    ADD     R0.w2, R0.w2, 6
-    ;write nanoseconds
-    SBCO    &R10, L3_OCMC_RAM_CONST, R0.w2, 4
-
-    QBA     EXIT_PTP_TX_ADD_DELAY
-
-SYNC_SLAVE_PROCESSING:
-
-    ;In PRP there is no forwarding and hence no bridge delay to calculate
-    .if $defined (PRP)
-    QBA     EXIT_PTP_TX_ADD_DELAY
-    .endif ;PRP
-
-    ;check against master MAC ID, if no match then exit
-    ;else we do bridge delay correction here
-    LBCO    &R25.w2, ICSS_SHARED_CONST, SYNC_MASTER_MAC_OFFSET, 6
-    ;master MAC is in R25.w2 and R26
-    QBNE    EXIT_PTP_TX_ADD_DELAY, R25.w2, R3.w2
-    QBNE    EXIT_PTP_TX_ADD_DELAY, R26, R4
-
-    ;get the timestamp
-    JAL     R0.w2, FN_GET_TX_TIMESTAMP
-
-    .if $defined (PRU0)
-    LBCO    &R25, ICSS_SHARED_CONST, RX_SYNC_TIMESTAMP_OFFSET_P1, 4
-    .else
-    LBCO    &R25, ICSS_SHARED_CONST, RX_SYNC_TIMESTAMP_OFFSET_P2, 4
-    .endif
-
-CALC_BD_PTP_TX_PRE_PROC:
-
-    ;calculate bridge delay, taking care of wraparound
-    ;bridge delay is in R10 after this
-    QBGE    TX_TS_NO_WRAPAROUND, R25, R4
-    ; Fill with saturation value for wraparound calc
-    LDI32     R26, IEP_WRAP_AROUND_VAL
-    ADD     R4, R26, R4
-
-TX_TS_NO_WRAPAROUND:
-
-    SUB     R10, R4, R25
-
-MULTIPLY_WITH_RCF:
-
-    ;multiply with syntonization factor
-    ;RCF is stored in the form of RCF * 1024 in
-    ;TIMESYNC_TC_RCF_OFFSET. A division by 1024 is done at the end
-    ;to get the result as BD * RCF.
-    ;Use the MAC unit of PRU to do the multiplication
-    ADD     R28, R10, 0
-    LDI     R29.w0, TIMESYNC_TC_RCF_OFFSET
-    LBCO    &R29, ICSS_SHARED_CONST, R29.w0, 4
-    LDI     R25, 0
-    XOUT    0, &R25, 1
-    XIN     0, &R26, 8
-    LSR     R10, R26, 10
-
-SYNC_ADD_PEER_DELAY:
-
-    ;load the peer delay for the other port and add to the bridge delay in R10
-    ;R10 has BD + Peer delay after this
-    .if $defined (PRU0)
-    LBCO    &R25, ICSS_SHARED_CONST, P1_SMA_LINE_DELAY_OFFSET, 4
-    .else
-    LBCO    &R25, ICSS_SHARED_CONST, P2_SMA_LINE_DELAY_OFFSET, 4
-    .endif
-    ADD     R10, R10, R25
-
-ADD_CORR_FIELD_PTP_TX_PRE_PROC:
-
-    ;add BD to the correction field of sync frame
-    ;copy the correction in R10 in little endian format, add and then put it back in big endian format
-    ;Since for HSR the correction field lies across the 32 byte boundary we load
-    ;the correction field from L3 memory, modify the upper 4 bytes which are within the
-    ;first 32 bytes and the remaining 2 bytes are modified and stored back in L3 memory
-
-    ;load the correction field from memory
-    MOV     R25.w2, BUFFER_INDEX
-    ADD     R25.w2, R25.w2, 32
-
-    QBNE    NO_QUEUE_WRAP_XMT_PTP, BUFFER_DESC_OFFSET, TOP_MOST_BUFFER_DESC_OFFSET
-    QBBS    NO_QUEUE_WRAP_XMT_PTP, R13, 2    ; PACKET_FROM_COLL_QUEUE
-    MOV     R25.w2, BUFFER_OFFSET
-
-NO_QUEUE_WRAP_XMT_PTP:
-
-    ;load 2 bytes of correction field which lie in 32-64 byte segment
-    LBCO    &R0.w2, L3_OCMC_RAM_CONST, R25.w2, 2
-
-    ;reorder (big to little endian) correction field and add the bridge delay
-    MOV     R21.b3, R9.b2
-    MOV     R21.b2, R9.b3
-    MOV     R21.b1, R0.b2
-    MOV     R21.b0, R0.b3
-
-    MOV     R20.b1, R9.b0
-    MOV     R20.b0, R9.b1
-
-    ;add and get the value
-    LDI     R13.w0, 0
-    ADD     R10, R10, R21
-    ADC     R0.w2, R20.w0, R13.w0
-
-    ;store the 4 partial values which lie in 0-32 byte segment
-    MOV     R9.b3, R10.b2
-    MOV     R9.b2, R10.b3
-    MOV     R9.b1, R0.b2
-    MOV     R9.b0, R0.b3
-
-    ;store back the 2-bytes in 32-64 byte segment
-    ;the firmware will pick it up later and put it on the wire
-    MOV     R25.b0, R10.b1
-    MOV     R25.b1, R10.b0
-    SBCO    &R25.w0, L3_OCMC_RAM_CONST, R25.w2, 2
-    QBA     EXIT_PTP_TX_ADD_DELAY
 
 STORE_TX_TS_SET_FLAG_EXIT:
 
@@ -939,142 +587,12 @@ EXIT_PTP_BACKGROUND_TASK:
 
 FN_TIMESTAMP_GPTP_PACKET:
     QBBC    FN_TIMESTAMP_GPTP_PACKET_EXIT, R22, RX_IS_PTP_BIT
-    CLR     R22, R22, RX_IS_PTP_BIT
-
-    ;domain number check disabled for now. Will be enabled later
-    ;LBCO    &R21, ICSS_SHARED_CONST, GPTP_DOMAIN_NUMBER_LIST, GPTP_NUM_DOMAINS
-    ;QBEQ    GPTP_OFFSET_LOAD, Ethernet.ProtWord3, R21.b0                ; Check gPTP domain number
-    ;QBNE    FN_TIMESTAMP_GPTP_PACKET_EXIT, Ethernet.ProtWord3, R21.b1                 ; Check gPTP domain number
-
-GPTP_OFFSET_LOAD:
     
 
-    LDI     R1.b0, &R5.b2
-    QBNE    NO_VLAN_RX, R5.w0, VLAN_EtherType
-    ADD     R1.b0, R1.b0, 4
-NO_VLAN_RX:
-    MVIB    R20.b0, *R1.b0
-    ;check for link local vs non link local frame
-    ;non link local frames have the lower 4 bytes as 0
-    QBNE    PTP_LINK_LOCAL_FRAME, R3.w0, 0
-    ;check for sync frame
-    QBNE    CHECK_FOLLOW_UP, R20.b0, PTP_SYNC_MSG_ID
-    ;--------------------process sync frames------------------;
-    ;Below is a combined load to save cycles.
-    ;R20.b0 tells if DUT is master. R20.b1 tells which port is connected to master
-    ;and R20.w2 and R21 tell the MAC ID of the master selected by BMCA
-    LBCO    &R20.w0, ICSS_SHARED_CONST, DUT_IS_MASTER_OFFSET, 8
-    QBNE    DUT_IS_SLAVE_SYNC, R20.b0, 1    ; exit if DUT is configured as master, also discard frame
-    CLR     MII_RCV.rx_flags, MII_RCV.rx_flags, host_rcv_flag_shift    ; Don't forward to host
-    SET     R22, R22, PTP_RELEASE_HOST_QUEUE_BIT
-    QBA     FN_TIMESTAMP_GPTP_PACKET_EXIT
-
-DUT_IS_SLAVE_SYNC:
-
-    ;Master MAC ID is now in R20.w2 and R21
-    ;Check against Master MAC address. R3.w2 and R4 contain source MAC address
-    QBNE    FRAME_NOT_FROM_MASTER, R20.w2, R3.w2
-    QBNE    FRAME_NOT_FROM_MASTER, R21, R4
-
-    ;check for dual master on two ports.
-    ;The logic works like this....initially the memory location is empty
-    ;whenever the first sync arrives, the corresponding port number is written into
-    ;memory location. Subsequent sync frames check against this value and they are discarded
-    ;if the value in memory does not match the port number.
-    QBEQ    FIRST_SYNC_FRAME, R20.b1, 0
-    QBA     PTP_CHECK_FORCED_2_STEP
-
-FIRST_SYNC_FRAME:               ;whichever port receives the sync first is assigned as master port
-
-    .if $isdefed("PRU0")
-    LDI     R20.b1, 1
+    .if $defined (PRU0)
+        LDI     R13.w0, RX_TIMESTAMP_OFFSET_P1
     .else
-    LDI     R20.b1, 2
-    .endif 
-    SBCO    &R20.b1, ICSS_SHARED_CONST, MASTER_PORT_NUM_OFFSET, 1
-    
-PTP_CHECK_FORCED_2_STEP:
-    ;check if this is a 1-step, if it's set and if the force 2-step bit is also set then we 
-    ;don't forward the frame. Instead we send it to host which flips the two-step flag bit
-    QBEQ    VLAN_TAGGED_RX, R5.w0, VLAN_EtherType
-    QBBS    LOAD_TS_OFFSET_ADDR_SYNC, two_step_reg, GPTP_802_3_two_step_bit
-    QBA     DONE_VLAN_CHECK_RX
-VLAN_TAGGED_RX:
-    QBBS    LOAD_TS_OFFSET_ADDR_SYNC, two_step_reg_vlan, GPTP_802_3_two_step_bit
-DONE_VLAN_CHECK_RX:
-    ;check if the forced 2-step bit is set. It's bit 1 of the value written at the location GPTP_CTRL_VAR_OFFSET
-    LBCO    &R20.b0, ICSS_SHARED_CONST, TIMESYNC_CTRL_VAR_OFFSET, 1
-    QBBC    LOAD_TS_OFFSET_ADDR_SYNC, R20, 1
-    ;set the 2-step bit which forces setting the 2-step flag on forward path
-    ;SET     R22, R22, PTP_FORCED_2_STEP_BIT
-
-LOAD_TS_OFFSET_ADDR_SYNC:
-
-    .if $isdefed("PRU0")
-    LDI     R13.w0, RX_SYNC_TIMESTAMP_OFFSET_P1    ; load sync timestamp offset
-    .else
-    LDI     R13.w0, RX_SYNC_TIMESTAMP_OFFSET_P2
-    .endif        
-    QBA     GPTP_STORE_TIMESTAMP    ; with the offset loaded, store the Rx timestamp
-
-DISCARD_PTP_FRAME_RX:
-
-    ;set error flag
-    SET     MII_RCV.rx_flags, MII_RCV.rx_flags, rx_frame_error_shift
-
-FRAME_NOT_FROM_MASTER:                                  ;if frame is not from master, it's not processed
-
-    CLR     MII_RCV.rx_flags, MII_RCV.rx_flags, host_rcv_flag_shift    ; Don't forward to host
-    SET     R22, R22, PTP_RELEASE_HOST_QUEUE_BIT
-    QBA     FN_TIMESTAMP_GPTP_PACKET_EXIT
-
-CHECK_FOLLOW_UP:
-
-    QBNE    FN_TIMESTAMP_GPTP_PACKET_EXIT, R20.b0, PTP_FOLLOW_UP_MSG_ID
-    ;load the value indicating whether PTP is in uninitialized state
-    LBCO    &R20.b0, ICSS_SHARED_CONST, TIMESYNC_CTRL_VAR_OFFSET, 1 
-    QBEQ    DISCARD_PTP_FRAME_RX, R20.b0, 0
-    ;Below is a combined load to save cycles.
-    ;R20.b0 tells if DUT is master. R20.b1 tells which port is connected to master
-    ;and R20.w2 and R21 tell the MAC ID of the master selected by BMCA
-    LBCO    &R20.w0, ICSS_SHARED_CONST, DUT_IS_MASTER_OFFSET, 8
-    QBNE    DUT_IS_SLAVE_FLW_UP, R20.b0, 1    ; exit if DUT is configured as master
-    CLR     MII_RCV.rx_flags, MII_RCV.rx_flags, host_rcv_flag_shift    ; Don't forward to host
-    SET     R22, R22, PTP_RELEASE_HOST_QUEUE_BIT
-    QBA     FN_TIMESTAMP_GPTP_PACKET_EXIT
-
-DUT_IS_SLAVE_FLW_UP:
-
-    ;forwarding only applies to HSR
-    .if $defined(HSR)
-    CLR     MII_RCV.rx_flags, MII_RCV.rx_flags, fwd_flag_shift    ; Don't forward to other port
-    SET     R22, R22, PTP_RELEASE_PORT_QUEUE_BIT
-    .endif ;HSR
-    ;Master MAC ID is now in R20.w2 and R21
-    ;Check against Master MAC address. R3.w2 and R4 contain source MAC address
-    QBNE    FRAME_NOT_FROM_MASTER, R20.w2, R3.w2
-    QBNE    FRAME_NOT_FROM_MASTER, R21, R4
-    QBA     FN_TIMESTAMP_GPTP_PACKET_EXIT
-
-PTP_LINK_LOCAL_FRAME:
-PTP_LL_LOAD_PACKET_TYPE:
-CHECK_PDELAY_REQ:
-
-    QBNE    CHECK_PDELAY_RESP, R20.b0, PTP_PDLY_REQ_MSG_ID    ; Check gPTP messageType: Pdelay_Req
-    .if $isdefed("PRU0")
-    LDI     R13.w0, RX_PDELAY_REQ_TIMESTAMP_OFFSET_P1
-    .else
-    LDI     R13.w0, RX_PDELAY_REQ_TIMESTAMP_OFFSET_P2
-    .endif
-    QBA     GPTP_STORE_TIMESTAMP
-
-CHECK_PDELAY_RESP:
-
-    QBNE    FN_TIMESTAMP_GPTP_PACKET_EXIT, R20.b0, PTP_PDLY_RSP_MSG_ID    ; Check gPTP messageType: Pdelay_Resp
-    .if $isdefed("PRU0")
-    LDI     R13.w0, RX_PDELAY_RESP_TIMESTAMP_OFFSET_P1
-    .else
-    LDI     R13.w0, RX_PDELAY_RESP_TIMESTAMP_OFFSET_P2
+        LDI     R13.w0, RX_TIMESTAMP_OFFSET_P2
     .endif
 
 GPTP_STORE_TIMESTAMP:
@@ -1103,14 +621,13 @@ FN_TIMESTAMP_GPTP_PACKET_EXIT:
 ;                        2. In Sync frames
 ;                        3. For Pdelay Response frames
 ;                        4. For storing Tx timestamp for Sync and Pdelay Req frames
-;     Cycles           : 75 PRU cycles (worst case)
+;     Cycles           : 40 PRU cycles (worst case)
 ;     Register Usage   : R22 (flags), R0, R13, R25, R26, R28, R29
 ;     Pseudocode       :
 ;22 bytes have been put in Tx FIFO
 ;if ptp frame:
 ;   load tx SOF timestamp
 ;   do phy delay correction on tx SOF
-;   if link local frame:
 ;       if Pdelay Request frame:
 ;           store tx SOF TS
 ;           indicate that this is a Pdelay request frame (by writing into shared memory)
@@ -1119,56 +636,14 @@ FN_TIMESTAMP_GPTP_PACKET_EXIT:
 ;           store tx SOF TS
 ;           indicate that this is a Pdelay response frame (by writing into shared memory)
 ;           set flag for Tx callback interrupt
-;    else: Not a link local frame
-;       if sync frame:
-;           if not two-step:
-;               store tx SOF TS
-;               indicate that this is a sync frame (by writing into shared memory)
-;               set flag for Tx callback interrupt
-;
-;           else: single step
-;               if DUT is master:
-;                   if frame is from some other device:
-;                       exit
-;                   else:
-;                       add origin timestamp (see logic below)
-;               else:
-;                   Do Bridge delay computation
-;                   calculate BD from Tx SOF and Rx timestamp
-;                   Multiply by RCF
-;                   Add peer delay and store back
-;
+;       elif sync frame:
+;           store tx SOF TS
+;           indicate that this is a Sync frame (by writing into shared memory)
+;           set flag for Tx callback interrupt
+;       else:
+;           exit
 ;else:
 ;   exit
-
-;---------------Logic for adding 1-step origin Timestamp----------
-;
-;   The logic here works like this
-;   Assume three timestamps Y, Y' and Z
-;   Y--------------Y'----------------Z
-;    Z is the start of the seconds cycle i.e. nanoseconds value of 0
-;    Y denotes current time inside this function which is invoked
-;    just before transmitting the sync frame. Y' is the actual Tx SOF timestamp
-;    and is guaranteed to be within few microsends/miliseconds ahead of Y.
-;    Now three possible cases exist
-;    Y-----Z-----Y' in which case Y' lies in the next cycle
-;    Y-----Y'----Z  in which case Y' is in current cycle
-;    corner cases in which Y == Z and Y' == Z also fall under the above 2
-;
-;    In firmware the timestamp Y' is compared against Z and it is determined
-;    whether it falls in next or previous cycle. The corresponding seconds value
-;    of Z is then used to get the seconds value. Nanoseconds value is obtained by
-;    subtraction and long division and reminder operation is avoided.
-;
-;    Compare the timestamps and determine the cycle
-;    if current cycle:
-;       subtract 1 from stored value to get seconds
-;       get nanoseconds value by subtracting from stored value and then from 1x10^9
-;    else:
-;       stored value is the seconds value
-;       subtract from stored value to get nanoseconds value
-;    store second and nanoseconds values
-;
 ;
 ;
 ;****************************************************************************
@@ -1176,16 +651,6 @@ FN_TIMESTAMP_GPTP_PACKET_EXIT:
 FN_PTP_TX_ADD_DELAY:
     QBBC    EXIT_PTP_TX_ADD_DELAY, R22, TX_IS_PTP_BIT
     CLR     R22, R22, TX_IS_PTP_BIT
-
-    ;we need to make sure that the timestamp here is actual value
-    ;this we do by comparing with Tx SOF of previous frame
-    .if    $isdefed("PRU0")
-    LDI     R20.w0, PTP_PREV_TX_TIMESTAMP_P1
-    .else
-    LDI     R20.w0, PTP_PREV_TX_TIMESTAMP_P2
-    .endif
-    LBCO    &R20, ICSS_SHARED_CONST, R20.w0, 8
-    ;get the timestamp
 
 LOAD_TX_SOF_TS:
     
@@ -1203,11 +668,6 @@ LOAD_TX_SOF_TS:
     .endif
     .endif
 
-    QBNE    TX_SOF_OK, R10, R20
-    QBEQ    LOAD_TX_SOF_TS, R11, R21
-
-TX_SOF_OK:
-
     ;Do phy delay correction here
     LDI     R0.w2, MII_TX_CORRECTION_OFFSET
     LBCO    &R25.w0, ICSS_SHARED_CONST, R0.w2, 2
@@ -1219,8 +679,6 @@ TX_SOF_OK:
     ADD     R1.b0, R1.b0, 4
 NO_VLAN_TX:
     MVIB    R25.b0, *R1.b0
-    ;check if non link local
-    QBEQ    PTP_NOT_LINK_LOCAL, R3.w0, 0
 
 NO_HSR_TAG_TX:
 
@@ -1266,7 +724,7 @@ NO_HSR_TAG_TX:
 
 NOT_PDELAY_REQ_TX:
 
-    QBNE    EXIT_PTP_TX_ADD_DELAY, R25.b0, PTP_PDLY_RSP_MSG_ID
+    QBNE    NOT_PDELAY_RES_TX, R25.b0, PTP_PDLY_RSP_MSG_ID
 
     ;****************************PDELAY RES PACKET PROCESSING***************************
     ;Load the Delay Request Timestamp to compute T3 - T2
@@ -1306,19 +764,10 @@ NOT_PDELAY_REQ_TX:
     SET     R22, R22, TX_CALLBACK_INTERRUPT_BIT
     QBA     EXIT_PTP_TX_ADD_DELAY
 
-PTP_NOT_LINK_LOCAL:
+NOT_PDELAY_RES_TX:
 
     QBNE    EXIT_PTP_TX_ADD_DELAY, R25.b0, PTP_SYNC_MSG_ID
     ;****************************SYNC PACKET PROCESSING***************************
-    ;check for two-step
-    QBEQ    VLAN_TAGGED_TX, R5.w0, VLAN_EtherType
-    QBBC    DUT_IS_SINGLE_STEP, two_step_reg, GPTP_802_3_two_step_bit
-    QBA     DONE_VLAN_CHECK_TX
-VLAN_TAGGED_TX:
-    QBBC    DUT_IS_SINGLE_STEP, two_step_reg_vlan, GPTP_802_3_two_step_bit
-DONE_VLAN_CHECK_TX:
-
-    ;processing two-step sync frame
     ;Irrespective of slave/master status we just store timestamp and
     ;set flag to give a callback interrupt
 
@@ -1353,218 +802,6 @@ DONE_VLAN_CHECK_TX:
     .endif
     ;set tx callback interrupt. The interrupt is set upon successful transmission
     SET     R22, R22, TX_CALLBACK_INTERRUPT_BIT
-    QBA     EXIT_PTP_TX_ADD_DELAY
-
-DUT_IS_SINGLE_STEP:
-
-    ;check if we are in master mode, if yes then set flag and exit
-    QBBC    SYNC_SLAVE_PROCESSING, R22, DUT_IS_MASTER_BIT
-    ;check if the frame is from host, else we exit. TODO : Do it using Buffer desc
-    LDI     R25.w0, PORT_MAC_ADDR
-    LBCO    &R25.w2, PRU_CROSS_DMEM, R25.w0, 6
-    QBNE    EXIT_PTP_TX_ADD_DELAY, R25.w2, R3.w2
-    QBNE    EXIT_PTP_TX_ADD_DELAY, R26, R4
-
-    .if    $defined("ICSS_SWITCH_BUILD")
-    ;Do single step processing here
-    .if    $isdefed("PRU0")
-    LDI     R0.w2, SINGLE_STEP_IEP_OFFSET_P2
-    .else
-    LDI     R0.w2, SINGLE_STEP_IEP_OFFSET_P1
-    .endif 
-    .else
-    .if    $isdefed("PRU0")
-    LDI     R0.w2, SINGLE_STEP_IEP_OFFSET_P1
-    .else
-    LDI     R0.w2, SINGLE_STEP_IEP_OFFSET_P2
-    .endif
-    .endif 
-    ;R25 contains the lower 4 bytes of stored IEP
-    ;and R26 contains the upper 4 bytes
-    LBCO    &R25, ICSS_SHARED_CONST, R0.w2, 8
-    ADD     R0.w2, R0.w2, 8
-    ;Compare R25 and R26 with R10 and R11 values to find out
-    ;whether it's in the current cycle or the next
-    QBGT    TX_TS_IN_NEXT_CYCLE, R26, R11
-    QBNE    TX_TS_IN_CURRENT_CYCLE, R26, R11
-    QBGE    TX_TS_IN_NEXT_CYCLE, R25, R10
-
-TX_TS_IN_CURRENT_CYCLE:
-
-    ;Means that timestamp is lower than stored IEP value
-    ;Difference is less than 1s so we only subtract lower 4 bytes
-    SUB     R25, R25, R10
-    LDI32   R11, SEC_TO_NS
-    SUB     R25, R11, R25
-    LBCO    &R10, ICSS_SHARED_CONST, R0.w2, 8
-    SUB     R10, R10, 1
-    SUC     R11, R11, 0
-    QBA     STORE_TS_IN_FRAME
-
-TX_TS_IN_NEXT_CYCLE:
-
-    ;Means that timestamp is higher than stored IEP value
-    ;Difference is less than 1s so we only subtract lower 4 bytes
-    SUB     R25, R10, R25
-    LBCO    &R10, ICSS_SHARED_CONST, R0.w2, 8
-
-STORE_TS_IN_FRAME:
-
-    ;Since we are in the first 32 bytes of the frame, we need
-    ;to write the outoing origin TS in L3 memory since it lies
-    ;in the 32-64 byte offset of the frame
-
-    ;load the offset for the correction field in L3
-    MOV     R0.w2, BUFFER_INDEX
-    ADD     R0.w2, R0.w2, 32
-
-    QBNE    NO_QUEUE_WRAP_XMT_PTP_1, BUFFER_DESC_OFFSET, TOP_MOST_BUFFER_DESC_OFFSET
-    QBBS    NO_QUEUE_WRAP_XMT_PTP_1, R13, 2    ; PACKET_FROM_COLL_QUEUE
-    MOV     R0.w2, BUFFER_OFFSET
-
-NO_QUEUE_WRAP_XMT_PTP_1:
-
-    ;Add offset to reach the start of origin timestamp
-    ;from the start of 32 byte block. This offset differs
-    ;for HSR and PRP due to presence of HSR tag
-
-    .if $defined(HSR)
-    ADD     R0.w2, R0.w2, 22
-    .endif ;HSR
-
-    .if $defined(PRP)
-    ADD     R0.w2, R0.w2, 16
-    .endif ;PRP
-
-    ;We need to convert to big endian to write back
-
-    ;Since we have already pushed 22 bytes into the FIFO
-    ;registers R2-R5 are free
-
-    ;convert seconds to big endian first
-    MOV     R3.b3, R10.b0
-    MOV     R3.b2, R10.b1
-    MOV     R3.b1, R10.b2
-    MOV     R3.b0, R10.b3
-    MOV     R2.b3, R11.b0
-    MOV     R2.b2, R11.b1
-
-    ;store nanoseconds to big endian next
-    MOV     R4.b3, R25.b0
-    MOV     R4.b2, R25.b1
-    MOV     R4.b1, R25.b2
-    MOV     R4.b0, R25.b3
-
-    ;write 10 bytes (seconds + nanoseconds) at one go into memory
-    SBCO    &R2.b2, L3_OCMC_RAM_CONST, R0.w2, 10
-
-    QBA     EXIT_PTP_TX_ADD_DELAY
-
-SYNC_SLAVE_PROCESSING:
-
-    ;In PRP there is no forwarding and hence no bridge delay to calculate
-    .if $defined(PRP)
-    QBA     EXIT_PTP_TX_ADD_DELAY
-    .endif ;PRP
-    ;check against master MAC ID, if no match then exit
-    ;else we do bridge delay correction here
-    LBCO    &R25.w2, ICSS_SHARED_CONST, SYNC_MASTER_MAC_OFFSET, 6
-    ;master MAC is in R25.w2 and R26
-    QBNE    EXIT_PTP_TX_ADD_DELAY, R25.w2, R3.w2
-    QBNE    EXIT_PTP_TX_ADD_DELAY, R26, R4
-
-    .if    $isdefed("PRU0")
-    LBCO    &R25, ICSS_SHARED_CONST, RX_SYNC_TIMESTAMP_OFFSET_P1, 8
-    .else
-    LBCO    &R25, ICSS_SHARED_CONST, RX_SYNC_TIMESTAMP_OFFSET_P2, 8
-    .endif
-
-CALC_BD_PTP_TX_PRE_PROC:
-
-    ;this subtraction code takes care of lower word overflow situation
-    ;bridge delay is in R10 after this
-    QBNE    TX_TS_OVERFLOW, R26, R11
-    SUB     R10, R10, R25
-    QBA     MULTIPLY_WITH_RCF
-
-TX_TS_OVERFLOW:
-
-    ; Fill with saturation value for overflow calc
-    FILL    &R26, 4
-    SUB     R25, R26, R25
-    ADD     R10, R25, R10   
-    
-MULTIPLY_WITH_RCF:    
-;multiply with syntonization factor
-;RCF is stored in the form of RCF * 1024 in 
-;TIMESYNC_TC_RCF_OFFSET. A division by 1024 is done at the end
-;to get the result as BD * RCF. 
-;Use the MAC unit of PRU to do the multiplication
-    ADD      R28, R10, 0
-    LDI      R29.w0, TIMESYNC_TC_RCF_OFFSET
-    LBCO     &R29, ICSS_SHARED_CONST, R29.w0, 4
-    LDI      R25, 0
-    XOUT     0, &R25, 1
-    XIN      0, &R26, 8
-    LSR      R10, R26, 10
-    
-SYNC_ADD_PEER_DELAY:
-
-    ;load the peer delay for the other port and add to the bridge delay in R10
-    ;R10 has BD + Peer delay after this
-    .if    $isdefed("PRU0")
-    LBCO    &R25, ICSS_SHARED_CONST, P1_SMA_LINE_DELAY_OFFSET, 4
-    .else
-    LBCO    &R25, ICSS_SHARED_CONST, P2_SMA_LINE_DELAY_OFFSET, 4
-    .endif    
-    ADD     R10, R10, R25
-
-ADD_CORR_FIELD_PTP_TX_PRE_PROC:
-
-    ;add BD to the correction field of sync frame
-    ;copy the correction in R10 in little endian format, add and then put it back in big endian format
-    ;Since for HSR the correction field lies across the 32 byte boundary we load
-    ;the correction field from L3 memory, modify the upper 4 bytes which are within the
-    ;first 32 bytes and the remaining 2 bytes are modified and stored back in L3 memory
-
-    ;load the correction field from memory
-    MOV     R25.w2, BUFFER_INDEX
-    ADD     R25.w2, R25.w2, 32
-
-    QBNE    NO_QUEUE_WRAP_XMT_PTP, BUFFER_DESC_OFFSET, TOP_MOST_BUFFER_DESC_OFFSET
-    QBBS    NO_QUEUE_WRAP_XMT_PTP, R13, 2    ; PACKET_FROM_COLL_QUEUE
-    MOV     R25.w2, BUFFER_OFFSET
-
-NO_QUEUE_WRAP_XMT_PTP:
-
-    ;load 2 bytes of correction field which lie in 32-64 byte segment
-    LBCO    &R0.w2, L3_OCMC_RAM_CONST, R25.w2, 2
-
-    ;reorder (big to little endian) correction field and add the bridge delay
-    MOV     R21.b3, R9.b2
-    MOV     R21.b2, R9.b3
-    MOV     R21.b1, R0.b2
-    MOV     R21.b0, R0.b3
-
-    MOV     R20.b1, R9.b0
-    MOV     R20.b0, R9.b1
-
-    ;add and get the value
-    LDI     R13.w0, 0
-    ADD     R10, R10, R21
-    ADC     R0.w2, R20.w0, R13.w0
-
-    ;store the 4 partial values which lie in 0-32 byte segment
-    MOV     R9.b3, R10.b2
-    MOV     R9.b2, R10.b3
-    MOV     R9.b1, R0.b2
-    MOV     R9.b0, R0.b3
-
-    ;store back the 2-bytes in 32-64 byte segment
-    ;the firmware will pick it up later and put it on the wire
-    MOV     R25.b0, R10.b1
-    MOV     R25.b1, R10.b0
-    SBCO    &R25.w0, L3_OCMC_RAM_CONST, R25.w2, 2
 
 EXIT_PTP_TX_ADD_DELAY:
 
@@ -1646,237 +883,6 @@ EXIT_PTP_BACKGROUND_TASK:
 
 ;****************************************************************************
 ;
-;     NAME             : FN_TIMESTAMP_GPTP_PACKET_UDP
-;     DESCRIPTION      : Store timestamp for PTP frames.
-;                        It is called during Rx
-;     Cycles           : 
-;     Register Usage   : R22 (flags), R20, R21, R10, R11, R13
-;     Pseudocode       :  
-;if PTP frame:
-;   if not link local
-;       if sync frame:
-;           if PTP not enabled:
-;               discard frame
-;           else:
-;               if not from master:
-;                   do not forward to host
-;               else:
-;                   if first sync:
-;                       update the master port 
-;                   take timestamp()
-;       elif follow up 
-;           if PTP not enabled:
-;               discard frame
-;           else:
-;               if not from master:
-;                   do not forward to host
-;               else:
-;                   clear fwd_flag
-;                   exit without timestamp
-;           
-;   else:
-;       if pdelay req frame or pdelay response frame:
-;           take timestamp()
-;def take_timestamp()
-;   load SFD timestamp
-;   exit       
-;else:
-;   exit                     
-;
-;****************************************************************************
-FN_TIMESTAMP_GPTP_PACKET_UDP:
-    QBBC    FN_TIMESTAMP_GPTP_PACKET_EXIT_UDP, R22, RX_IS_UDP_PTP_BIT 
-    CLR    R22, R22, RX_IS_UDP_PTP_BIT
-
-CHECK_UDP_PORT:
-    QBBS    CHECK_UDP_PORT_VLAN, R22, RX_IS_VLAN_BIT
-    LDI     R20.w0, UDP_PTP_PORT_319
-    QBEQ    GPTP_OFFSET_LOAD_UDP, UDP_SRC_PORT_REG, R20.w0
-    LDI     R20.w0, UDP_PTP_PORT_320
-    QBNE    FN_TIMESTAMP_GPTP_PACKET_EXIT_UDP, UDP_SRC_PORT_REG, R20.w0
-    QBA     GPTP_OFFSET_LOAD_UDP
-CHECK_UDP_PORT_VLAN:
-    CLR     R22, R22, RX_IS_VLAN_BIT
-    LDI     R20.w0, UDP_PTP_PORT_319
-    QBEQ    GPTP_OFFSET_LOAD_UDP, UDP_SRC_PORT_VLAN_REG, R20.w0
-    LDI     R20.w0, UDP_PTP_PORT_320
-    QBNE    FN_TIMESTAMP_GPTP_PACKET_EXIT_UDP, UDP_SRC_PORT_VLAN_REG, R20.w0
-
-    ;domain number check disabled for now. Will be enabled later
-    ;LBCO    R21, ICSS_SHARED_CONST, GPTP_DOMAIN_NUMBER_LIST, GPTP_NUM_DOMAINS
-    ;QBEQ    GPTP_OFFSET_LOAD, Ethernet.ProtWord3, R21.b0                // Check gPTP domain number
-    ;QBNE    FN_TIMESTAMP_GPTP_PACKET_EXIT, Ethernet.ProtWord3, R21.b1                 // Check gPTP domain number
-GPTP_OFFSET_LOAD_UDP:
-    ;load the value indicating whether PTP is in uninitialized state
-    LBCO    &R20.b0, ICSS_SHARED_CONST, TIMESYNC_CTRL_VAR_OFFSET, 1    
-    ;check for sync frame
-    QBNE    CHECK_FOLLOW_UP_UDP, PTP_MSG_ID_REG_UDP, PTP_SYNC_MSG_ID   
-
-    ;--------------------process sync frames------------------//
-    ;discard frame if in initial state
-    QBEQ    DISCARD_PTP_FRAME_RX_UDP, R20.b0, 0    
-    ;Below is a combined load to save cycles.
-    ;R20.b0 tells if DUT is master. R20.b1 tells which port is connected to master
-    ;and R20.w2 and R21 tell the MAC ID of the master selected by BMCA
-    LBCO    &R20.w0, ICSS_SHARED_CONST, DUT_IS_MASTER_OFFSET, 8    
-    QBNE    DUT_IS_SLAVE_SYNC_UDP, R20.b0, 1    ;exit if DUT is configured as master, also discard frame
-    CLR    MII_RCV.rx_flags, MII_RCV.rx_flags, host_rcv_flag_shift ; Don't forward to host
-    SET    R22, R22, PTP_RELEASE_HOST_QUEUE_BIT 
-    QBA     FN_TIMESTAMP_GPTP_PACKET_EXIT_UDP
-DUT_IS_SLAVE_SYNC_UDP:
-    ;Check against Master MAC address. R3.w2 and R4 contain source MAC address
-    ; QBBC    FRAME_NOT_FROM_MASTER, R22, PTP_PKT_FROM_MASTER_RX 
-    ; CLR     R22, R22, PTP_PKT_FROM_MASTER_RX
-    
-    ;check for dual master on two ports.
-    ;The logic works like this....initially the memory location is empty
-    ;whenever the first sync arrives, the corresponding port number is written into
-    ;memory location. Subsequent sync frames check against this value and they are discarded
-    ;if the value in memory does not match the port number.
-    QBEQ    FIRST_SYNC_FRAME_UDP, R20.b1, 0    
-    QBA      LOAD_TS_OFFSET_ADDR_SYNC_UDP
-    
-FIRST_SYNC_FRAME_UDP:               ;whichever port receives the sync first is assigned as master port
-    .if $isdefed("PRU0")    
-    LDI    R20.b1, 1    
-    .else    ; "PRU0"
-    LDI    R20.b1, 2    
-    .endif    ; "PRU0"
-    SBCO    &R20.b1, ICSS_SHARED_CONST, MASTER_PORT_NUM_OFFSET, 1    
-    
-LOAD_TS_OFFSET_ADDR_SYNC_UDP:
-    .if $isdefed("PRU0")    
-    LDI    R11.w0, RX_SYNC_TIMESTAMP_OFFSET_P1    ;load sync timestamp offset    
-    .else    ; "PRU0"
-    LDI    R11.w0, RX_SYNC_TIMESTAMP_OFFSET_P2    
-    .endif    ; "PRU0"
-    QBA     GPTP_STORE_TIMESTAMP_UDP                     ;with the offset loaded, store the Rx timestamp
-DISCARD_PTP_FRAME_RX_UDP:
-    ;set error flag
-    SET    MII_RCV.rx_flags, MII_RCV.rx_flags, rx_frame_error_shift
-FRAME_NOT_FROM_MASTER_UDP:                                  ;if frame is not from master, it's not processed
-    CLR    MII_RCV.rx_flags, MII_RCV.rx_flags, host_rcv_flag_shift ; Don't forward to host
-    SET    R22, R22, PTP_RELEASE_HOST_QUEUE_BIT 
-    QBA     FN_TIMESTAMP_GPTP_PACKET_EXIT_UDP
-    
-CHECK_FOLLOW_UP_UDP:
-    QBNE    CHECK_DELAY_RESP_UDP, PTP_MSG_ID_REG_UDP, PTP_FOLLOW_UP_MSG_ID    
-    QBEQ    DISCARD_PTP_FRAME_RX_UDP, R20.b0, 0    
-    ;Below is a combined load to save cycles.
-    ;R20.b0 tells if DUT is master. R20.b1 tells which port is connected to master
-    ;and R20.w2 and R21 tell the MAC ID of the master selected by BMCA
-    LBCO    &R20.w0, ICSS_SHARED_CONST, DUT_IS_MASTER_OFFSET, 8    
-    QBNE    DUT_IS_SLAVE_FLW_UP_UDP, R20.b0, 1    ;exit if DUT is configured as master
-    CLR    MII_RCV.rx_flags, MII_RCV.rx_flags, host_rcv_flag_shift ; Don't forward to host
-    SET    R22, R22, PTP_RELEASE_HOST_QUEUE_BIT 
-    QBA     FN_TIMESTAMP_GPTP_PACKET_EXIT_UDP
-DUT_IS_SLAVE_FLW_UP_UDP:
-    CLR    MII_RCV.rx_flags, MII_RCV.rx_flags, fwd_flag_shift ; Don't forward to other port
-    SET    R22, R22, PTP_RELEASE_PORT_QUEUE_BIT 
-    ;Check against Master MAC address. R3.w2 and R4 contain source MAC address
-    QBBC    FRAME_NOT_FROM_MASTER, R22, PTP_PKT_FROM_MASTER_RX 
-    CLR     R22, R22, PTP_PKT_FROM_MASTER_RX 
-    QBA     FN_TIMESTAMP_GPTP_PACKET_EXIT
-    
-CHECK_DELAY_RESP_UDP:
-    QBNE    CHECK_DELAY_REQ_UDP, PTP_MSG_ID_REG_UDP, PTP_DLY_RESP_MSG_ID    
-    ;set a flag so we can compare the delay response against the
-    ;source port identity and make sure this is for us. The source port
-    ;identity comes after 64 bytes.
-    ;This is required because there may be hundreds of devices in the network
-    ;and it's no point sending all the delay responses (meant for others) up to the host
-    SET    R22, R22, PTP_CHECK_PDELAY_RESP 
-    QBA     FN_TIMESTAMP_GPTP_PACKET_EXIT_UDP
-    
-CHECK_DELAY_REQ_UDP:
-    QBNE    FN_TIMESTAMP_GPTP_PACKET_EXIT_UDP, PTP_MSG_ID_REG_UDP, PTP_DLY_REQ_MSG_ID    
-    QBEQ    DISCARD_PTP_FRAME_RX_UDP, R20.b0, 0    
-    ;clear the host receive flag, only master processes delay request frames
-    ;and PTP master capability is not enabled for EIP
-    CLR    MII_RCV.rx_flags, MII_RCV.rx_flags, host_rcv_flag_shift ; Don't forward to host
-    SET    R22, R22, PTP_RELEASE_HOST_QUEUE_BIT 
-    .if $isdefed("PRU0")    
-    LDI    R11.w0, RX_PDELAY_REQ_TIMESTAMP_OFFSET_P1    
-    .else    ; "PRU0"
-    LDI    R11.w0, RX_PDELAY_REQ_TIMESTAMP_OFFSET_P2    
-    .endif    ; "PRU0"
-    
-GPTP_STORE_TIMESTAMP_UDP:
-    .if $isdefed("ICSS_V_1_0")    
-    
-    ;This also loads 2 bytes in RCV_TEMP_REG_2.w0
-    LBCO    &RCV_TEMP_REG_1, ICSS_SHARED_CONST, TIMESYNC_SECONDS_COUNT_OFFSET, 6    
-    .if $isdefed("PRU0")    
-    LBCO    &R13, IEP_CONST, CAP_RISE_RX_SFD_PORT1_OFFSET, 4    
-    .else    ; "PRU0"
-    LBCO    &R13, IEP_CONST, CAP_RISE_RX_SFD_PORT2_OFFSET, 4    
-    .endif    ; "PRU0"
-    ;current IEP counter value
-    LBCO    &R12, IEP_CONST, IEP_COUNTER_OFFSET, 4    
-    ;check if counter has been incremented
-    LBCO    &R10.b0, IEP_CONST, ICSS_IEP_CMP_STATUS_REG, 1    
-    ;check if there has been a wrap around
-    QBGT    NO_WRAPAROUND_SINCE_RX_UDP, R13, R12    
-    ;make sure counter has not incremented
-    QBBS    COMPENSATION_DONE_RX_UDP, R10, 0     ;replaced: QBBS   COMPENSATION_DONE_RX, R10.t0 
-    LBCO    &R10, ICSS_SHARED_CONST, TIMESYNC_IEP_VAL_CYCLE_COUNTER, 4    
-    QBGT    COMPENSATION_DONE_RX_UDP, R12, R10    
-    SUB    RCV_TEMP_REG_1, RCV_TEMP_REG_1, 1    
-    SUC    RCV_TEMP_REG_2.w0, RCV_TEMP_REG_2.w0, 0    
-    QBA    COMPENSATION_DONE_RX_UDP
-    
-NO_WRAPAROUND_SINCE_RX_UDP:
-    ;make sure that counter has incremented
-    QBBC    COMPENSATION_DONE_RX_UDP, R10, 0     ;replaced: QBBC   COMPENSATION_DONE_RX, R10.t0 
-    LBCO    &R10, ICSS_SHARED_CONST, TIMESYNC_IEP_VAL_CYCLE_COUNTER, 4    
-    QBGT    COMPENSATION_DONE_RX_UDP, R10, R12    
-    ADD    RCV_TEMP_REG_1, RCV_TEMP_REG_1, 1    
-    ADC    RCV_TEMP_REG_2.w0, RCV_TEMP_REG_2.w0, 0    
-    
-COMPENSATION_DONE_RX_UDP:
-    ;Do PHY compensation
-    LBCO    &R12.w0, ICSS_SHARED_CONST, MII_RX_CORRECTION_OFFSET, 2    
-    QBLE    NO_WRAPAROUND_RX_UDP, R13, R12.w0    
-    ;The seconds timestamp should be decremented by 1
-    SUB    RCV_TEMP_REG_1, RCV_TEMP_REG_1, 1    
-    SUC    RCV_TEMP_REG_2.w0, RCV_TEMP_REG_2.w0, 0    
-    LDI    R10.w0, IEP_WRAP_AROUND_VAL & 0xFFFF
-    LDI    R10.w2, IEP_WRAP_AROUND_VAL >> 16
-    ADD    R13, R13, R10    
-    
-NO_WRAPAROUND_RX_UDP:
-    SUB    R13, R13, R12.w0    
-PHY_COMPENSATION_DONE_UDP:
-    
-    ;store nanoseconds TS
-    SBCO    &R13, ICSS_SHARED_CONST, R11.w0, 4    
-    ADD    R11.w0, R11.w0, 4    
-    ;store seconds TS
-    SBCO    &RCV_TEMP_REG_1, ICSS_SHARED_CONST, R11.w0, 6    
-    
-    .else    ; "ICSS_V_1_0"
-    ;R12 contains the lower 4 bytes and R13 contains the upper 4 bytes of IEP
-    .if $isdefed("PRU0")    
-    LBCO    &R12, IEP_CONST, CAP_RISE_RX_SFD_PORT1_OFFSET, 8    
-    .else    ; "PRU0"
-    LBCO    &R12, IEP_CONST, CAP_RISE_RX_SFD_PORT2_OFFSET, 8    
-    .endif    ; "PRU0"
-    
-    ;Do PHY compensation. Rx PHY delay is in R20.w0
-    LBCO    &R20.w0, ICSS_SHARED_CONST, MII_RX_CORRECTION_OFFSET, 2    
-    
-    ;Subtract PHY delay from timestamp to get the actual delay
-    SUB    R12, R12, R20.w0    
-    SUC    R13, R13, 0    
-    
-    ;store TS in memory
-    SBCO    &R12, ICSS_SHARED_CONST, R11.w0, 8    
-    .endif    ; "ICSS_V_1_0"
-FN_TIMESTAMP_GPTP_PACKET_EXIT_UDP:
-    JMP   R11.w2
-
-;****************************************************************************
-;
 ;     NAME             : FN_PTP_TX_ADD_DELAY_UDP
 ;     DESCRIPTION      : 1. Function for measuring bridge delay 
 ;                        2. In Sync frames
@@ -1887,9 +893,8 @@ FN_TIMESTAMP_GPTP_PACKET_EXIT_UDP:
 ;     Pseudocode       :  
 ;22 bytes have been put in Tx FIFO
 ;if ptp frame:
-;   load tx SOF timestamp 
+;   load tx SOF timestamp
 ;   do phy delay correction on tx SOF
-;   if link local frame:
 ;       if Pdelay Request frame:
 ;           store tx SOF TS
 ;           indicate that this is a Pdelay request frame (by writing into shared memory)
@@ -1898,56 +903,14 @@ FN_TIMESTAMP_GPTP_PACKET_EXIT_UDP:
 ;           store tx SOF TS
 ;           indicate that this is a Pdelay response frame (by writing into shared memory)
 ;           set flag for Tx callback interrupt
-;    else: #Not a link local frame
-;       if sync frame:
-;           if not two-step:
-;               store tx SOF TS
-;               indicate that this is a sync frame (by writing into shared memory)
-;               set flag for Tx callback interrupt
-;
-;           else: #single step
-;               if DUT is master:
-;                   if frame is from some other device:
-;                       exit
-;                   else:
-;                       add origin timestamp (see logic below)
-;               else:
-;                   #Do Bridge delay computation   
-;                   calculate BD from Tx SOF and Rx timestamp
-;                   Multiply by RCF
-;                   Add peer delay and store back
-;    
+;       elif sync frame:
+;           store tx SOF TS
+;           indicate that this is a Sync frame (by writing into shared memory)
+;           set flag for Tx callback interrupt
+;       else:
+;           exit
 ;else:
-;   exit                     
-    
-;---------------Logic for adding 1-step origin Timestamp----------
-;
-;   The logic here works like this
-;   Assume three timestamps Y, Y' and Z
-;   Y--------------Y'----------------Z
-;    Z is the start of the seconds cycle i.e. nanoseconds value of 0
-;    Y denotes current time inside this function which is invoked
-;    just before transmitting the sync frame. Y' is the actual Tx SOF timestamp
-;    and is guaranteed to be within few microsends/miliseconds ahead of Y.
-;    Now three possible cases exist
-;    Y-----Z-----Y' in which case Y' lies in the next cycle
-;    Y-----Y'----Z  in which case Y' is in current cycle
-;    corner cases in which Y == Z and Y' == Z also fall under the above 2
-;    
-;    In firmware the timestamp Y' is compared against Z and it is determined
-;    whether it falls in next or previous cycle. The corresponding seconds value
-;    of Z is then used to get the seconds value. Nanoseconds value is obtained by
-;    subtraction and long division and reminder operation is avoided.
-;
-;    Compare the timestamps and determine the cycle
-;    if current cycle:
-;       subtract 1 from stored value to get seconds
-;       get nanoseconds value by subtracting from stored value and then from 1x10^9
-;    else:
-;       stored value is the seconds value
-;       subtract from stored value to get nanoseconds value
-;    store second and nanoseconds values
-;
+;   exit
 ;
 ;
 ;****************************************************************************
@@ -1970,17 +933,17 @@ CHECK_UDP_PORT_TX_VLAN:
     QBEQ    DONE_UDP_CHECK, UDP_SRC_PORT_VLAN_REG, R20.w0
     LDI     R20.w0, UDP_PTP_PORT_320
     QBNE    EXIT_PTP_TX_ADD_DELAY_UDP, UDP_SRC_PORT_VLAN_REG, R20.w0
+
 DONE_UDP_CHECK:
 
-    ;we need to make sure that the timestamp here is actual value
-    ;this we do by comparing with Tx SOF of previous frame
-    .if    $isdefed("PRU0")
-    LDI     R20.w0, PTP_PREV_TX_TIMESTAMP_P1
-    .else
-    LDI     R20.w0, PTP_PREV_TX_TIMESTAMP_P2
-    .endif
-    LBCO    &R20, ICSS_SHARED_CONST, R20.w0, 8
-    ;get the timestamp
+    ;forcibly set 2-step flag. We don't support 1-step
+    QBBS    PTP_TX_IS_VLAN_UDP, R22, TX_IS_VLAN_BIT
+    ;forcibly set 2-step flag for no vlan case
+    SET     two_step_reg_udp, two_step_reg_udp, GPTP_802_3_two_step_bit
+    QBA     PTP_TX_UDP_GET_TS
+PTP_TX_IS_VLAN_UDP:
+    SET     two_step_reg_udp_vlan, two_step_reg_udp_vlan, GPTP_802_3_two_step_bit
+PTP_TX_UDP_GET_TS:
 
 LOAD_TX_SOF_TS_UDP:
     
@@ -1997,10 +960,7 @@ LOAD_TX_SOF_TS_UDP:
     LBCO    &R10, IEP_CONST, CAP_RISE_TX_SOF_PORT2_OFFSET, 8
     .endif
     .endif
-
-    QBNE    TX_SOF_OK_UDP, R10, R20
-    QBEQ    LOAD_TX_SOF_TS_UDP, R11, R21
-
+    
 TX_SOF_OK_UDP:
     
     QBNE    NOT_DELAY_REQ_TX_UDP, PTP_MSG_ID_REG_UDP, PTP_DLY_REQ_MSG_ID    
@@ -2015,14 +975,6 @@ TX_SOF_OK_UDP:
     JAL    R0.w2, FN_GET_TX_TIMESTAMP
     
     .else    ; "ICSS_V_1_0"
-
-    ;check if the frame is from self
-    .if $isdefed("ICSS_SWITCH_BUILD")
-    LDI    R10.w0, PORT_MAC_ADDR
-    LBCO    &R20.w2, PRU_DMEM_ADDR, R10.w0, 6    ;6 bytes of Interface MAC Addr in R20.w2 and R21
-    QBNE    DELAY_REQ_NOT_FROM_DUT_UDP, R20.w2, R3.w2    
-    QBNE    DELAY_REQ_NOT_FROM_DUT_UDP, R21, R4
-    .endif 
 
     .if    $defined("ICSS_SWITCH_BUILD")
     .if $isdefed("PRU0")    
@@ -2060,69 +1012,22 @@ TX_SOF_OK_UDP:
     ;Store the Tx TS, set flag for
     QBA       STORE_TX_TS_SET_FLAG_EXIT_UDP
     
-DELAY_REQ_NOT_FROM_DUT_UDP:
-    ;load the Rx timestamp and calculate BD
-    .if $isdefed("ICSS_V_1_0")  
-    .if    $defined("ICSS_SWITCH_BUILD")
-    .if $isdefed("PRU0")    
-    LBCO    &R25, ICSS_SHARED_CONST, RX_PDELAY_REQ_TIMESTAMP_OFFSET_P1, 4    
-    .else    ; "PRU0"
-    LBCO    &R25, ICSS_SHARED_CONST, RX_PDELAY_REQ_TIMESTAMP_OFFSET_P2, 4    
-    .endif    ; "PRU0"
-    .else
-    .if $isdefed("PRU0")    
-    LBCO    &R25, ICSS_SHARED_CONST, RX_PDELAY_REQ_TIMESTAMP_OFFSET_P2, 4    
-    .else    ; "PRU0"
-    LBCO    &R25, ICSS_SHARED_CONST, RX_PDELAY_REQ_TIMESTAMP_OFFSET_P1, 4    
-    .endif    ; "PRU0"
-    .endif    ; "ICSS_SWITCH_BUILD"
-    .else    ; "ICSS_V_1_0"
-    .if    $defined("ICSS_SWITCH_BUILD")
-    .if $isdefed("PRU0")    
-    LBCO    &R25, ICSS_SHARED_CONST, RX_PDELAY_REQ_TIMESTAMP_OFFSET_P1, 8    
-    .else    ; "PRU0"
-    LBCO    &R25, ICSS_SHARED_CONST, RX_PDELAY_REQ_TIMESTAMP_OFFSET_P2, 8    
-    .endif    ; "PRU0"
-    .else
-    .if $isdefed("PRU0")    
-    LBCO    &R25, ICSS_SHARED_CONST, RX_PDELAY_REQ_TIMESTAMP_OFFSET_P2, 8    
-    .else    ; "PRU0"
-    LBCO    &R25, ICSS_SHARED_CONST, RX_PDELAY_REQ_TIMESTAMP_OFFSET_P1, 8    
-    .endif    ; "PRU0"
-    .endif    ; "ICSS_SWITCH_BUILD"
-    .endif    ; "ICSS_V_1_0"
-    ;branch and calculate BD and add it to outoing frame
-    ;This part of code is common to both sync and delay request frames
-    QBA     CALC_BD_PTP_TX_PRE_PROC_UDP
-    
 NOT_DELAY_REQ_TX_UDP:
     QBNE    NOT_DELAY_RESP_UDP, PTP_MSG_ID_REG_UDP, PTP_DLY_RESP_MSG_ID    
     
     ;****************************DELAY RES PACKET PROCESSING***************************
     ;Nothing to be done here. Add code here when master is implemented
     
-    ;Store the Tx TS, set flag for
     QBA       EXIT_PTP_TX_ADD_DELAY_UDP
     
 NOT_DELAY_RESP_UDP:
     QBNE    EXIT_PTP_TX_ADD_DELAY_UDP, PTP_MSG_ID_REG_UDP, PTP_SYNC_MSG_ID    
     ;****************************SYNC PACKET PROCESSING***************************
     
-    ;check against master MAC ID, if no match then exit
-    ;else we do bridge delay correction here
-    ; LBCO    &R25.w2, ICSS_SHARED_CONST, SYNC_MASTER_MAC_OFFSET, 6
-    ; ;master MAC is in R25.w2 and R26
-    ; QBNE    EXIT_PTP_TX_ADD_DELAY, R25.w2, R3.w2
-    ; QBNE    EXIT_PTP_TX_ADD_DELAY, R26, R4
-
-    ;check for two-step
-    QBBC    DUT_IS_SINGLE_STEP_UDP, R6, 1     ;replaced: QBBC    DUT_IS_SINGLE_STEP, IF_TWO_STEP_CLK_UDP 
-    
     ;processing two-step sync frame
     ;Irrespective of slave/master status we just store timestamp and
     ;set flag to give a callback interrupt
     
-    ;JAL   R0.w2, FN_GET_TX_TIMESTAMP
     .if $isdefed("ICSS_V_1_0")    
     JAL    R0.w2, FN_GET_TX_TIMESTAMP
     .else    ; "ICSS_V_1_0"
@@ -2158,145 +1063,8 @@ NOT_DELAY_RESP_UDP:
     LDI    R10.w2, TX_TS_NOTIFICATION_OFFSET_SYNC_P2
     .endif    ; "PRU0"
     .endif
-    
-    ;Store the Tx TS, set flag for
-    QBA       STORE_TX_TS_SET_FLAG_EXIT_UDP
-    
-DUT_IS_SINGLE_STEP_UDP:
-    
-SYNC_SLAVE_PROCESSING_UDP:
-    
+
     .if $isdefed("ICSS_V_1_0")    
-    ;get the timestamp
-    JAL    R0.w2, FN_GET_TX_TIMESTAMP 
-    
-    .if    $defined("ICSS_SWITCH_BUILD")
-    .if $isdefed("PRU0")    
-    LBCO    &R25, ICSS_SHARED_CONST, RX_SYNC_TIMESTAMP_OFFSET_P1, 4    
-    .else    ; "PRU0"
-    LBCO    &R25, ICSS_SHARED_CONST, RX_SYNC_TIMESTAMP_OFFSET_P2, 4    
-    .endif    ; "PRU0"
-    .else
-    .if $isdefed("PRU0")    
-    LBCO    &R25, ICSS_SHARED_CONST, RX_SYNC_TIMESTAMP_OFFSET_P2, 4    
-    .else    ; "PRU0"
-    LBCO    &R25, ICSS_SHARED_CONST, RX_SYNC_TIMESTAMP_OFFSET_P1, 4    
-    .endif    ; "PRU0"
-    .endif    ; "ICSS_SWITCH_BUILD"
-    
-CALC_BD_PTP_TX_PRE_PROC_UDP:
-    ;calculate bridge delay, taking care of wraparound
-    ;bridge delay is in R10 after this
-    QBGE    TX_TS_NO_WRAPAROUND_UDP, R25, R4    
-    ; Fill with saturation value for wraparound calc
-    LDI    R26.w0, IEP_WRAP_AROUND_VAL & 0xFFFF
-    LDI    R26.w2, IEP_WRAP_AROUND_VAL >> 16
-    ADD    R4, R26, R4    
-TX_TS_NO_WRAPAROUND_UDP:
-    SUB    R10, R4, R25    
-    .else    ; "ICSS_V_1_0"
-    ;get the timestamp
-    ;JAL     R0.w2, FN_GET_TX_TIMESTAMP
-    .if    $defined("ICSS_SWITCH_BUILD")
-    .if $isdefed("PRU0")    
-    LBCO    &R20, IEP_CONST, CAP_RISE_TX_SOF_PORT2_OFFSET, 8    
-    .else    ; "PRU0"
-    LBCO    &R20, IEP_CONST, CAP_RISE_TX_SOF_PORT1_OFFSET, 8    
-    .endif    ; "PRU0"
-    .else
-    .if $isdefed("PRU0")    
-    LBCO    &R20, IEP_CONST, CAP_RISE_TX_SOF_PORT1_OFFSET, 8    
-    .else    ; "PRU0"
-    LBCO    &R20, IEP_CONST, CAP_RISE_TX_SOF_PORT2_OFFSET, 8    
-    .endif    ; "PRU0"
-    .endif    ; "ICSS_SWITCH_BUILD"
-    
-    .if    $defined("ICSS_SWITCH_BUILD")
-    .if $isdefed("PRU0")    
-    LBCO    &R25, ICSS_SHARED_CONST, RX_SYNC_TIMESTAMP_OFFSET_P1, 8    
-    .else    ; "PRU0"
-    LBCO    &R25, ICSS_SHARED_CONST, RX_SYNC_TIMESTAMP_OFFSET_P2, 8    
-    .endif    ; "PRU0"
-    .else
-    .if $isdefed("PRU0")    
-    LBCO    &R25, ICSS_SHARED_CONST, RX_SYNC_TIMESTAMP_OFFSET_P2, 8    
-    .else    ; "PRU0"
-    LBCO    &R25, ICSS_SHARED_CONST, RX_SYNC_TIMESTAMP_OFFSET_P1, 8    
-    .endif    ; "PRU0"
-    .endif    ; "ICSS_SWITCH_BUILD"
-    
-CALC_BD_PTP_TX_PRE_PROC_UDP:
-    ;this subtraction code takes care of lower word overflow situation
-    ;bridge delay is in R10 after this
-    QBNE    TX_TS_OVERFLOW_UDP, R26, R21    
-    SUB    R10, R20, R25    
-    QBA     MULTIPLY_WITH_RCF_UDP
-TX_TS_OVERFLOW_UDP:
-    ; Fill with saturation value for overflow calc
-    FILL    &R26, 4
-    SUB    R25, R26, R25    
-    ADD    R10, R25, R20    
-    .endif    ; "ICSS_V_1_0"
-    
-MULTIPLY_WITH_RCF_UDP:
-;multiply with syntonization factor
-;RCF is stored in the form of RCF * 1024 in 
-;TIMESYNC_TC_RCF_OFFSET. A division by 1024 is done at the end
-;to get the result as BD * RCF. 
-;Use the MAC unit of PRU to do the multiplication
-    ADD    R28, R10, 0    
-    LDI    R29.w0, TIMESYNC_TC_RCF_OFFSET    
-    LBCO    &R29, ICSS_SHARED_CONST, R29.w0, 4    
-    LDI    R25, 0    
-    XOUT    0, &R25, 1    
-    XIN    0, &R26, 8    
-    LSR    R10, R26, 10    
-    
-ADD_CORR_FIELD_PTP_TX_PRE_PROC_UDP:
-    ;add BD to the correction field of sync or delay request frame
-    ;copy the correction in R10 in little endian format, add and then put it back in big endian format
-    ;The correction field is in registers (correction field 6 bytes: [R6.w2:R7])
-    
-NO_QUEUE_WRAP_XMT_PTP_UDP:
-    ; convert big-endian mode (correction field 6 bytes: [R6.w2:R7]) to little endian mode(R11)
-    AND R20.b0, R7.b3, R7.b3
-    AND R20.b1, R7.b2, R7.b2
-    AND R20.b2, R7.b1, R7.b1
-    AND R20.b3, R7.b0, R7.b0
-    
-    AND R21.b0, R6.b3, R6.b3
-    AND R21.b1, R6.b2, R6.b2
-    
-    ; add BD to it (BD is in R10)
-    ADD    R20, R20, R10    
-    ADC    R21.w0, R21.w0, 0    
-    
-    ;reorder and store back
-    AND R7.b3, R20.b0, R20.b0
-    AND R7.b2, R20.b1, R20.b1
-    AND R7.b1, R20.b2, R20.b2
-    AND R7.b0, R20.b3, R20.b3
-    
-    AND R6.b3, R21.b0, R21.b0
-    AND R6.b2, R21.b1, R21.b1
-    
-    AND R11.w0, BUFFER_INDEX, BUFFER_INDEX
-    ADD    R11.w0, R11.w0, 18    
-    SBCO    &R6.w2, L3_OCMC_RAM_CONST, R11.w0, 6    
-    ;Make UDP checksum 0
-    LDI    R12, 0x0000
-    AND R11.w0, BUFFER_INDEX, BUFFER_INDEX
-    ADD    R11.w0, R11.w0, 8    
-    SBCO    &R12, L3_OCMC_RAM_CONST, R11.w0, 2    
-    LDI    R4.w0, 0x00
-    
-    .if $isdefed("ICSS_V_1_0")    
-    ;restore R2-R5 bytes. The timestamps have been consumed
-    LDI    R10.w0, PTP_SCRATCH_MEM    
-    LBCO    &R2, ICSS_SHARED_CONST, R10.w0, 16    
-    
-    QBA     EXIT_PTP_TX_ADD_DELAY_UDP
-    
 STORE_TX_TS_SET_FLAG_EXIT_UDP:
     ;nanoseconds in R4, Seconds in R2 and R3.w0
     ;TS offset is in R10.w0 and notification offset in R10.w2
@@ -2314,7 +1082,6 @@ STORE_TX_TS_SET_FLAG_EXIT_UDP:
     LDI    R10.w0, PTP_SCRATCH_MEM    
     LBCO    &R2, ICSS_SHARED_CONST, R10.w0, 16    
     .else    ; "ICSS_V_1_0"
-    QBA     EXIT_PTP_TX_ADD_DELAY_UDP
     
 STORE_TX_TS_SET_FLAG_EXIT_UDP:
     ;Timestamp is in R20 + R21 (8 bytes of IEP)
@@ -2333,6 +1100,59 @@ STORE_TX_TS_SET_FLAG_EXIT_UDP:
     .endif    ; "ICSS_V_1_0"
     
 EXIT_PTP_TX_ADD_DELAY_UDP:
-    JMP    R0.w0    
+    JMP    R0.w0
+
+;****************************************************************************
+;
+;     NAME             : FN_CHECK_AND_CLR_PTP_FWD_FLAG
+;     DESCRIPTION      : Check if the PTP-UDP packet is Pdelay Req/Response 
+;                        so it's not forwarded. Called when 32-64 bytes are in R2-R9
+;     Cycles           : TBD
+;     Register Usage   : R22 (flags), R20, R21, R10, R11, R13
+;     Pseudocode       :
+;***************************************************************************
+
+FN_CHECK_AND_CLR_PTP_FWD_FLAG:
+    QBBS   PTP_RX_IS_VLAN, R22, RX_IS_VLAN_BIT
+    AND    R20.b0, R4.b2, 0xF          ;check PTP message ID type 
+    QBA    PTP_CHECK_UDP_RX_LINK_LOCAL
+PTP_RX_IS_VLAN:
+    AND    R20.b0, R5.b2, 0xF          ;check PTP message ID type 
+PTP_CHECK_UDP_RX_LINK_LOCAL:
+    QBNE   PTP_CHECK_PDLY_RESP_MSG_ID, R20.b0, PTP_PDLY_REQ_MSG_ID
+    SET    R22, R22, PTP_RELEASE_PORT_QUEUE_BIT
+    QBA    EXIT_FN_CHECK_AND_CLR_PTP_FWD_FLAG
+PTP_CHECK_PDLY_RESP_MSG_ID:
+    QBNE   PTP_CHECK_FLW_UP_MSG_ID, R20.b0, PTP_PDLY_RSP_MSG_ID
+    SET    R22, R22, PTP_RELEASE_PORT_QUEUE_BIT
+PTP_CHECK_FLW_UP_MSG_ID:
+    QBNE   EXIT_FN_CHECK_AND_CLR_PTP_FWD_FLAG, R20.b0, PTP_FOLLOW_UP_MSG_ID
+    SET    R22, R22, PTP_RELEASE_PORT_QUEUE_BIT
+EXIT_FN_CHECK_AND_CLR_PTP_FWD_FLAG:
+    JMP    RCV_TEMP_REG_3.w2
+
+;****************************************************************************
+;
+;     NAME             : FN_CHECK_AND_CLR_PTP_FWD_FLAG_L2
+;     DESCRIPTION      : Check if the PTP-UDP packet is Follow Up 
+;                        so it's not forwarded. Called when 0-32 bytes are in R2-R9
+;     Cycles           : TBD
+;     Register Usage   : R22 (flags), R20, R21, R10, R11, R13
+;     Pseudocode       :
+;***************************************************************************
+
+FN_CHECK_AND_CLR_PTP_FWD_FLAG_L2:
+    QBBC    EXIT_FN_CHECK_AND_CLR_PTP_FWD_FLAG_L2, R22, RX_IS_PTP_BIT
+    LDI     R1.b0, &R5.b2
+    QBNE    NO_VLAN_RX_L2, R5.w0, VLAN_EtherType
+    ADD     R1.b0, R1.b0, 4
+NO_VLAN_RX_L2:
+    MVIB    R20.b0, *R1.b0
+    ;check for follow up frame
+    QBNE    EXIT_FN_CHECK_AND_CLR_PTP_FWD_FLAG_L2, R20.b0, PTP_FOLLOW_UP_MSG_ID
+    SET     R22, R22, PTP_RELEASE_PORT_QUEUE_BIT
+EXIT_FN_CHECK_AND_CLR_PTP_FWD_FLAG_L2:    
+    JMP    RCV_TEMP_REG_3.w2
+
 
     .endif    ;____pn_gPtp_asm

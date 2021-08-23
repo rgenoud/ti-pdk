@@ -243,10 +243,10 @@ uint8_t ICSS_EMAC_testLclMac1[6]= {0x02, 0xb3, 0xc2, 0xd4, 0xe4, 0xff};;
 uint8_t ICSS_EMAC_testLclMac2[6] = {0x02, 0xb4, 0xc3, 0xdd, 0xee, 0xff};
 uint8_t ICSS_EMAC_testLclMac3[6] = {0x02, 0xb5, 0xc4, 0xd4, 0xe4, 0xff};
 
-uint8_t ICSS_EMAC_testPacketArrayInstance1[256] = {0};
-uint8_t ICSS_EMAC_testPacketArrayInstance1_1[256] = {0};
-uint8_t ICSS_EMAC_testPacketArrayInstance2[256] = {0};
-uint8_t ICSS_EMAC_testPacketArrayInstance2_1[256] = {0};
+uint8_t ICSS_EMAC_testPacketArrayInstance1[ICSS_EMAC_MAXMTU] = {0};
+uint8_t ICSS_EMAC_testPacketArrayInstance1_1[ICSS_EMAC_MAXMTU] = {0};
+uint8_t ICSS_EMAC_testPacketArrayInstance2[ICSS_EMAC_MAXMTU] = {0};
+uint8_t ICSS_EMAC_testPacketArrayInstance2_1[ICSS_EMAC_MAXMTU] = {0};
 
 uint32_t ICSS_EMAC_testPacketTxCompletePort0 = 0;
 uint32_t ICSS_EMAC_testPacketTxCompletePort1 = 0;

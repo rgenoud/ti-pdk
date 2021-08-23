@@ -67,6 +67,7 @@ __firmware_version_h	.set	1
 ; ICSS_FIRMWARE_RELEASE_1: 
 ; bit 31..16 reserved
 ; bit15..8	device number
+ICSS_FIRMWARE_RELEASE_1_OFFSET     .set    0x0000
 FIRMWARE_DEVICE_ICSS_REV1	.set	0	
 FIRMWARE_DEVICE_ICSS_REV2	.set	1	
 
@@ -82,9 +83,9 @@ FIRMWARE_VERSION_RELEASE		.set	1
 ; bit30..24	major version number									;For major IP changes.
 FIRMWARE_VERSION_MAJOR			.set	0x05	
 ; bit23..16	minor version number									;For feature additions to firmware.
-FIRMWARE_VERSION_MINOR			.set	0x02
+FIRMWARE_VERSION_MINOR			.set	0x06
 ; bit15..0		build number											;For all other minor changes.
-FIRMWARE_VERSION_BUILD			.set	0x07
+FIRMWARE_VERSION_BUILD			.set	0x10
     .endif
 
     .if $defined("ICSS_SWITCH_BUILD")
@@ -95,9 +96,9 @@ FIRMWARE_VERSION_INTERNAL    	.set    1
 ; bit30..24    major version number
 FIRMWARE_VERSION_MAJOR    		.set        0x03
 ; bit23..16        minor version number
-FIRMWARE_VERSION_MINOR    		.set            0x01
+FIRMWARE_VERSION_MINOR    		.set            0x02
 ; bit15..0        build number
-FIRMWARE_VERSION_BUILD    		.set            0x04
+FIRMWARE_VERSION_BUILD    		.set            0x0A
     .endif
 
     .if $defined("ICSS_DUAL_EMAC_BUILD")

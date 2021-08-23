@@ -101,7 +101,8 @@ __mii_rcv_p	.set	1
         .global  XMT_QUEUE
         .global  TASK_EXECUTION_FINISHED
         .global  FN_TIMESTAMP_GPTP_PACKET
-        .global  FN_TIMESTAMP_GPTP_PACKET_UDP
+        .global  FN_CHECK_AND_CLR_PTP_FWD_FLAG
+        .global  FN_CHECK_AND_CLR_PTP_FWD_FLAG_L2
         .global  FN_COMPARE_DELAY_RESP_ID
 
     
@@ -123,6 +124,7 @@ FN_RCV_FB:
     .if    $defined("TWO_PORT_CFG")    
     ZERO    &MII_RCV_PORT, $sizeof(MII_RCV_PORT)    ; init MII_RCV parameter  (R14....R17)
     .endif
+	
     ; Check if RX port is enabled (information provided by host)
     LDI	R10.w0 , PORT_CONTROL_ADDR
     LBCO	&R10, PRU_DMEM_ADDR, R10.w0, 10	; 4 + 6 bytes of Interface MAC Addr
@@ -172,7 +174,7 @@ CONTINUE_PROCESSING:
 ;******************************************************************************************	
     .if $defined("ICSS_DUAL_EMAC_BUILD")
 ;check for SFD Errors    
-    .if $defined("HALF_DUPLEX_ENABLED")	
+    .if $defined("RX_ERROR_HANDLING")	
 ; below code not needed for Full Duple
     .if $defined("PRU0")	
     LBCO	&RCV_TEMP_REG_3.b0, MII_RT_CFG_CONST, ICSS_MIIRT_RXERR0, 1      ;read the PRUSS_MII_RT_RX_ERR0 register	
@@ -211,7 +213,7 @@ CHECK_FOR_SHORT_SFD:
     LDI	RCV_TEMP_REG_3 , RX_ERROR_OFFSET
     QBA     COUNT_RX_STATS
     ; Check if SA matches with Slave's Interface MAC addr
-    .endif  ;HALF_DUPLEX_ENABLED
+    .endif  ;RX_ERROR_HANDLING
     .endif  ;ICSS_DUAL_EMAC_BUILD
 CONTINUE_PROCESSING_PKT:
 
@@ -277,10 +279,10 @@ DROP_PKT:
     LDI	RCV_TEMP_REG_3 , RX_DROPPED_FRAMES_OFFSET       ; else drop frame and increase the stats
     QBA     COUNT_RX_STATS
     ;QBA     EXIT_FB
-    .if $defined("HALF_DUPLEX_ENABLED")	
+    .if $defined("RX_ERROR_HANDLING")	
 COUNT_SFD_ERROR:
     LDI	RCV_TEMP_REG_3 , SFD_ERROR_OFFSET
-    .endif	;HALF_DUPLEX_ENABLED
+    .endif	;RX_ERROR_HANDLING
     
 COUNT_RX_STATS:
 ;count statistics based on offset set in RCV_TEMP_REG_3
@@ -510,6 +512,15 @@ FB_BROADCAST_CHECK_CT:
 
 FB_SKIP_VLAN_FLTR:
     .endif
+
+    ;PINDSW-4577: Fix to avoid cut-through packets from going via Storm Prevention
+    ;Storm prevention is done only if host receive flag is set
+    LDI     RCV_TEMP_REG_3.w2, DISABLE_STORM_PREV_FOR_HOST
+    LBCO    &RCV_TEMP_REG_3.b0, PRU_DMEM_ADDR, RCV_TEMP_REG_3.w2, 1   ; load the control value
+    ;This check is for maintaining backward compatibility, driver needs to write non-zero value for enabling
+    QBEQ    FB_SKIP_HOST_CHECK_STORM_PREV, RCV_TEMP_REG_3.b0, 0       
+    QBBC    FB_CONT_CT_CHECK, MII_RCV.rx_flags , host_rcv_flag_shift
+FB_SKIP_HOST_CHECK_STORM_PREV:
     
     ; Storm Prevention
     QBBC    FB_STORM_NOT_MC, R22, RX_MC_FRAME
@@ -814,6 +825,7 @@ FB_FILL_RCV_CONTEXT_PORT_QUEUE:
     LBCO     &MII_RCV_PORT.base_buffer_index, PRU1_DMEM_CONST, RX_PORT_CONTEXT_OFFSET, 8
 FB_PKT_NOT_FORWARDED:
     .endif ;TWO_PORT_CFG
+
     ; OPT: If R0.b0 is not changed then remove below instruction. it is to make sure at R0.b0 is 0
     LDI	R0.b0, SHIFT_NONE	
     .if $defined("PRU0")	
@@ -1088,9 +1100,8 @@ NB_RCV_PORT_CONTEXT_INITIALIZED_WITH_COLLISION:
     
 NB_PROCESS_32BYTES_CHECK_FLAGS:
     
-    .if $defined("ICSS_SWITCH_BUILD")
-    QBBC    NB_PROCESS_32BYTES_CHECK_FWD_FLAG, MII_RCV.rx_flags, host_rcv_flag_shift     ; MII_RCV.rx_flags.host_rcv_flag
-    .endif
+    ;Common for both the use cases i.e. switch and dual mac
+    QBBC    NB_PROCESS_32BYTES_CHECK_FWD_FLAG, MII_RCV.rx_flags, host_rcv_flag_shift  
 
     QBGE    LESS_THAN_64_BYTES_RCVD, MII_RCV.byte_cntr,  32
     QBA        EXIT_PREPROCESSING_NB
@@ -1103,7 +1114,10 @@ LESS_THAN_64_BYTES_RCVD:
     LDI    RCV_TEMP_REG_3.w2, PTP_IPV4_UDP_E2E_ENABLE
     LBCO   &RCV_TEMP_REG_3.b2, ICSS_SHARED_CONST, RCV_TEMP_REG_3.w2, 1
     QBEQ   PTP_NOT_ENABLED_RX_B2, RCV_TEMP_REG_3.b2, 0
-    JAL    R11.w2, FN_TIMESTAMP_GPTP_PACKET_UDP
+    QBBC   PTP_NOT_ENABLED_RX_B2, R22, RX_IS_UDP_PTP_BIT
+    CLR    R22, R22, RX_IS_UDP_PTP_BIT
+    JAL    RCV_TEMP_REG_3.w2, FN_TIMESTAMP_GPTP_PACKET
+    JAL    RCV_TEMP_REG_3.w2, FN_CHECK_AND_CLR_PTP_FWD_FLAG
 PTP_NOT_ENABLED_RX_B2:
     .endif    ; "PTP"
     QBA       EXIT_PREPROCESSING_NB
@@ -1111,13 +1125,11 @@ PTP_NOT_ENABLED_RX_B2:
 LESS_THAN_32_BYTES_RCVD:
 
     .if $defined(PTP)
+    ;we don't want to execute this for UDP frames, since this will be executed again later
+    QBBS    PTP_SKIP_EARLY_TS_FOR_UDP_1, R22, RX_IS_UDP_PTP_BIT
+    JAL     RCV_TEMP_REG_3.w2, FN_CHECK_AND_CLR_PTP_FWD_FLAG_L2
     JAL     RCV_TEMP_REG_3.w2, FN_TIMESTAMP_GPTP_PACKET
-
-    LDI    RCV_TEMP_REG_3.w2, PTP_IPV4_UDP_E2E_ENABLE
-    LBCO   &RCV_TEMP_REG_3.b2, ICSS_SHARED_CONST, RCV_TEMP_REG_3.w2, 1
-    QBEQ   PTP_NOT_ENABLED_RX_B1, RCV_TEMP_REG_3.b2, 0
-    M_GPTP_CHECK_AND_SET_FLAGS_L4
-PTP_NOT_ENABLED_RX_B1:
+PTP_SKIP_EARLY_TS_FOR_UDP_1:
     .endif    ;PTP 
 
 EXIT_PREPROCESSING_NB:
@@ -1140,14 +1152,16 @@ RCV_NB_QUEUE_WRAPPED:
     
     CLR	MII_RCV.rx_flags , MII_RCV.rx_flags , host_rcv_flag_shift
     SET	MII_RCV.rx_flags_extended , MII_RCV.rx_flags_extended , host_queue_overflow_shift
+
     .if $defined("ICSS_DUAL_EMAC_BUILD")
     ;For EMAC mode, set rx_frame_error bit. This saves cycles in FN_RCV_LB.
     SET	MII_RCV.rx_flags , MII_RCV.rx_flags , 4 
     .endif
     
 NB_PROCESS_32BYTES_CHECK_FLAGS_QUEUE_NOT_FULL:
-    .if $defined("ICSS_SWITCH_BUILD")
+    
 NB_PROCESS_32BYTES_CHECK_FWD_FLAG:
+    .if $defined("ICSS_SWITCH_BUILD")
     .if    $defined("TWO_PORT_CFG")
 
     QBBC    NB_PROCESS_32BYTES_CHECK_FLAG_DONE, MII_RCV.rx_flags, 1    ;MII_RCV.rx_flags.fwd_flag
@@ -1342,7 +1356,7 @@ NO_CRC_ERROR_CT:
 ;
 ;****************************************************************************
 FN_RCV_LB:
-    
+
     ; Check if RCV_Active is set. If not drop the frame. It handles the case of undersize errors
     QBBS	RCV_LB_PROCESS_NORMAL, R23, Rcv_active
     
@@ -1353,7 +1367,7 @@ LB_CHECK_ERRORS:
     ADD	RCV_TEMP_REG_2, RCV_TEMP_REG_2, 1	
     SBCO	&RCV_TEMP_REG_2, PRU_DMEM_ADDR, RCV_TEMP_REG_3, 4	
     .if $defined("ICSS_DUAL_EMAC_BUILD")
-    .if $defined("HALF_DUPLEX_ENABLED")	
+    .if $defined("RX_ERROR_HANDLING")	
     ;check R31 error
     QBBC	NO_R31_ERROR, R31, 19       ; if cleared so no error and continue normal operation
     ;else clear the error
@@ -1393,7 +1407,7 @@ COUNT_SFD_ERROR1:
     LBCO	&RCV_TEMP_REG_2, PRU_DMEM_ADDR, RCV_TEMP_REG_3, 4	
     ADD	RCV_TEMP_REG_2, RCV_TEMP_REG_2, 1	
     SBCO	&RCV_TEMP_REG_2, PRU_DMEM_ADDR, RCV_TEMP_REG_3, 4	
-    .endif ;HALF_DUPLEX_ENABLED
+    .endif ;RX_ERROR_HANDLING
     .endif ;ICSS_DUAL_EMAC_BUILD
 NO_PREAMBLE_ERROR:
     
@@ -1445,8 +1459,11 @@ LB_XIN_UPPER_BANK:
     .if $defined("PTP")   
     LDI    RCV_TEMP_REG_1.w0, PTP_IPV4_UDP_E2E_ENABLE
     LBCO   &RCV_TEMP_REG_1.b0, ICSS_SHARED_CONST, RCV_TEMP_REG_1.w0, 1
-    QBEQ   PTP_NOT_ENABLED_RX_LB, RCV_TEMP_REG_1.b0, 0 
-    JAL    R11.w2, FN_TIMESTAMP_GPTP_PACKET_UDP
+    QBEQ   PTP_NOT_ENABLED_RX_LB, RCV_TEMP_REG_1.b0, 0
+    QBBC   PTP_NOT_ENABLED_RX_LB, R22, RX_IS_UDP_PTP_BIT
+    CLR    R22, R22, RX_IS_UDP_PTP_BIT
+    JAL    RCV_TEMP_REG_3.w2, FN_TIMESTAMP_GPTP_PACKET
+    JAL    RCV_TEMP_REG_3.w2, FN_CHECK_AND_CLR_PTP_FWD_FLAG
 PTP_NOT_ENABLED_RX_LB:
     .endif    ; "PTP"
     
@@ -1454,17 +1471,61 @@ PTP_NOT_ENABLED_RX_LB:
     QBLE	LB_XIN_STORE_LESS_THAN_32_FROM_UPPER_BANK, R18_RCV_BYTECOUNT, 32	
     
 LB_STORE_FIRST_32_BYTES:
-    .if $defined("ICSS_SWITCH_BUILD")
-    QBBC    LB_PROCESS_32BYTES_CHECK_FWD_FLAG, MII_RCV.rx_flags, host_rcv_flag_shift    ;MII_RCV.rx_flags.host_rcv_flag
-    .endif
+    QBBC    LB_PROCESS_32BYTES_CHECK_PORT_RCV, MII_RCV.rx_flags, host_rcv_flag_shift
+
     .if $defined(PTP)
     ADD     RCV_TEMP_REG_3.w2, MII_RCV.byte_cntr, 32
     QBLT    MORE_THAN_32_BYTES_RCVD, RCV_TEMP_REG_3.w2, 32
+
+    ;we don't want to execute this for UDP frames, since this will be executed again later
+    QBBS    MORE_THAN_32_BYTES_RCVD, R22, RX_IS_UDP_PTP_BIT
+    JAL     RCV_TEMP_REG_3.w2, FN_CHECK_AND_CLR_PTP_FWD_FLAG_L2
     JAL     RCV_TEMP_REG_3.w2, FN_TIMESTAMP_GPTP_PACKET
 
 MORE_THAN_32_BYTES_RCVD:
     .endif ;PTP
     SBCO	&Ethernet, L3_OCMC_RAM_CONST, MII_RCV.buffer_index, 32	
+LB_PROCESS_32BYTES_CHECK_PORT_RCV:
+
+    .if $defined("ICSS_SWITCH_BUILD")
+    .if    $defined("TWO_PORT_CFG")
+    QBBC    LB_PROCESS_32BYTES_CHECK_FLAG_DONE_OPT, MII_RCV.rx_flags, fwd_flag_shift    ;MII_RCV.rx_flags.fwd_flag
+    
+    SBCO    &Ethernet, L3_OCMC_RAM_CONST, MII_RCV_PORT.buffer_index, 32
+LB_PROCESS_32BYTES_CHECK_FLAG_DONE_OPT:
+    .endif ;TWO_PORT_CFG
+    .endif ;ICSS_SWITCH_BUILD
+
+    QBBC    LB_STORE_UPPER_DATA_OPT, MII_RCV.rx_flags, rx_bank_index_shift    
+
+    ; get and store lower data
+    XIN     RX_L2_BANK0_ID, &R2, RANGE_R2_R9
+    QBA     LB_XIN_DATA_OPT
+
+LB_STORE_UPPER_DATA_OPT:
+
+    ; get and store upper data
+    XIN     RX_L2_BANK1_ID, &R2, RANGE_R2_R13
+
+LB_XIN_DATA_OPT:
+
+    ; Check for CRC Error in the received frame
+    LDI     RCV_TEMP_REG_1.w0, 0x0204
+    LBCO    &RCV_TEMP_REG_2, ICSS_INTC_CONST, RCV_TEMP_REG_1.w0, 4
+    .if $defined(PRU0)
+    LBCO    &RCV_TEMP_REG_2.b3, MII_RT_CFG_CONST, ICSS_MIIRT_RXERR0, 1
+    .else    ; PRU0
+    LBCO    &RCV_TEMP_REG_2.b3, MII_RT_CFG_CONST, ICSS_MIIRT_RXERR1, 1
+    .endif    ; PRU0
+    QBBS    LB_CHECK_RX_ERRORS_OPT, MII_RCV.rx_flags, host_rcv_flag_shift    
+    QBBC    LB_RESET_RX_FIFO, MII_RCV.rx_flags, fwd_flag_shift    
+
+LB_CHECK_RX_ERRORS_OPT:
+    ; reset RX fifo, this places the R18 counter back to position 0
+    M_SET_CMD	D_RESET_RXFIFO
+
+    QBBC    LB_PROCESS_32BYTES_CHECK_FWD_FLAG, MII_RCV.rx_flags, host_rcv_flag_shift
+
     ADD		MII_RCV.byte_cntr, MII_RCV.byte_cntr,  32
     
     ; Update the buffer descriptor for the received packet
@@ -1483,17 +1544,18 @@ RCV_LB_QUEUE_WRAPPED_LOWER:
     QBNE	LB_PROCESS_32BYTES_CHECK_FLAGS_QUEUE_NOT_FULL_1, MII_RCV.wrkng_wr_ptr, MII_RCV.rd_ptr
     CLR	MII_RCV.rx_flags , MII_RCV.rx_flags , host_rcv_flag_shift
     SET	MII_RCV.rx_flags_extended , MII_RCV.rx_flags_extended , host_queue_overflow_shift 
+
     .if $defined("ICSS_DUAL_EMAC_BUILD")
     ;For EMAC mode, set rx_frame_error bit.
     SET	MII_RCV.rx_flags , MII_RCV.rx_flags , 4	
     .endif
 LB_PROCESS_32BYTES_CHECK_FLAGS_QUEUE_NOT_FULL_1:
-    .if $defined("ICSS_SWITCH_BUILD")
+
 LB_PROCESS_32BYTES_CHECK_FWD_FLAG:
+    .if $defined("ICSS_SWITCH_BUILD")
     .if    $defined("TWO_PORT_CFG")
     QBBC    LB_PROCESS_32BYTES_CHECK_FLAG_DONE, MII_RCV.rx_flags, fwd_flag_shift    ;MII_RCV.rx_flags.fwd_flag
     
-    SBCO    &Ethernet, L3_OCMC_RAM_CONST, MII_RCV_PORT.buffer_index, 32
     ADD        MII_RCV_PORT.byte_cntr, MII_RCV_PORT.byte_cntr, 32
 
     ; Update the buffer descriptor for the received packet
@@ -1517,79 +1579,68 @@ LB_PROCESS_32BYTES_CHECK_FLAGS_PORT_QUEUE_NOT_FULL_1:
 LB_PROCESS_32BYTES_CHECK_FLAG_DONE:    
     .endif ;TWO_PORT_CFG
     .endif ;ICSS_SWITCH_BUILD
-    QBBC	LB_STORE_UPPER_DATA, MII_RCV.rx_flags, rx_bank_index_shift
-    
-    ; get and store lower data
-    XIN	RX_L2_BANK0_ID, &R2, RANGE_R2_R9	; recieve the remaining data
-    QBA	LB_XIN_STORE_LESS_THAN_32_FROM_LOWER_BANK
-LB_STORE_UPPER_DATA:
-    ; get and store upper data
-    XIN	RX_L2_BANK1_ID, &R2, RANGE_R2_R13       ; recieve the remaining data	
-    
-LB_XIN_STORE_LESS_THAN_32_FROM_UPPER_BANK:
-    SUB	R0.b1, R18, 32          ; count remaining data	
-    QBA	LB_STORE_FROM_UPPER_BUFFER
-LB_XIN_STORE_LESS_THAN_32_FROM_LOWER_BANK:
-    AND R0.b1 , R18 , R18
-LB_STORE_FROM_UPPER_BUFFER:
-    ; Check if 0 bytes are there to store
-    QBEQ	LB_PROCESS_CHECK_FWD_FLAG, R0.b1, 0	
-    
-    ; Receive for Host Queue
-    .if $defined("ICSS_SWITCH_BUILD")
-    QBBC    LB_PROCESS_CHECK_FWD_FLAG, MII_RCV.rx_flags, host_rcv_flag_shift    ;MII_RCV.rx_flags.host_rcv_flag
-    .endif
-    SBCO	&Ethernet, L3_OCMC_RAM_CONST, MII_RCV.buffer_index, b1	
-    
-    ADD	MII_RCV.byte_cntr, MII_RCV.byte_cntr, R0.b1     ; increment the count by R1 bytes	
-    QBGE	LB_PROCESS_CHECK_FWD_FLAG, R0.b1, 4	
-    QBNE	RCV_LB_NO_QUEUE_WRAP_2, MII_RCV.wrkng_wr_ptr, MII_RCV.top_most_buffer_desc_offset
-    AND MII_RCV.wrkng_wr_ptr , MII_RCV.base_buffer_desc_offset , MII_RCV.base_buffer_desc_offset
-    QBA		RCV_LB_QUEUE_WRAPPED_2
-RCV_LB_NO_QUEUE_WRAP_2:
-    ADD		MII_RCV.wrkng_wr_ptr,  MII_RCV.wrkng_wr_ptr,  4
-RCV_LB_QUEUE_WRAPPED_2:
-    .if $defined("ICSS_DUAL_EMAC_BUILD")
-    ; Check if the queue got completely filled with the last few bytes.
-    ;If yes, the wr_ptr and rd_prt might become equal and there could be
-    ;possible data overwrite when the next packet arrives.
-    ;This has been verfied by dry run.
-    QBNE	LB_PROCESS_CHECK_FLAGS_QUEUE_NOT_FULL, MII_RCV.wrkng_wr_ptr, MII_RCV.rd_ptr
-    CLR	MII_RCV.rx_flags , MII_RCV.rx_flags , 0 
-    SET	MII_RCV.rx_flags_extended , MII_RCV.rx_flags_extended , 6 
-    ;For EMAC mode, set rx_frame_error bit
-    SET	MII_RCV.rx_flags , MII_RCV.rx_flags , 4 
-    
-LB_PROCESS_CHECK_FLAGS_QUEUE_NOT_FULL:
-    .endif ;ICSS_DUAL_EMAC_BUILD
-LB_PROCESS_CHECK_FWD_FLAG:
-    .if $defined("ICSS_SWITCH_BUILD")	
-    ; Receive for Port Queue
-    .if    $defined("TWO_PORT_CFG")
-    QBBC    LB_CLEAR_RX_FIFO, MII_RCV.rx_flags, fwd_flag_shift    ;MII_RCV.rx_flags.fwd_flag
-    SBCO    &Ethernet, L3_OCMC_RAM_CONST, MII_RCV_PORT.buffer_index, b1
-    ADD        MII_RCV_PORT.byte_cntr, MII_RCV_PORT.byte_cntr, R0.b1
-    QBGE    LB_CLEAR_RX_FIFO, R0.b1, 4
-    QBNE    RCV_LB_NO_PORT_QUEUE_WRAP_2, MII_RCV_PORT.wrkng_wr_ptr, MII_RCV_PORT.top_most_buffer_desc_offset
-    AND MII_RCV_PORT.wrkng_wr_ptr , MII_RCV_PORT.base_buffer_desc_offset , MII_RCV_PORT.base_buffer_desc_offset	;Warning: converted from MOV
-    QBA        RCV_LB_PORT_QUEUE_WRAPPED_2    
-RCV_LB_NO_PORT_QUEUE_WRAP_2:
-    ADD        MII_RCV_PORT.wrkng_wr_ptr,  MII_RCV_PORT.wrkng_wr_ptr, 4
-RCV_LB_PORT_QUEUE_WRAPPED_2:
-    .endif ;TWO_PORT_CFG
-    
-LB_CLEAR_RX_FIFO:
 
-    QBBS    LB_CHECK_RX_ERRORS, MII_RCV.rx_flags, host_rcv_flag_shift    ;MII_RCV.rx_flags.host_rcv_flag
-    QBBC    LB_RESET_RX_FIFO, MII_RCV.rx_flags, fwd_flag_shift    ;MII_RCV.rx_flags.fwd_flag
-    
-LB_CHECK_RX_ERRORS: 
-    .endif  ;ICSS_SWITCH_BUILD
+    QBBC    LB_XIN_STORE_LESS_THAN_32_FROM_UPPER_BANK_OPT, MII_RCV.rx_flags, rx_bank_index_shift    
+    QBA     LB_XIN_STORE_LESS_THAN_32_FROM_LOWER_BANK_OPT
+
+LB_XIN_STORE_LESS_THAN_32_FROM_UPPER_BANK:
+
     ; Check for CRC Error in the received frame
-    LDI	RCV_TEMP_REG_1.w0, 0x0204	
-    LBCO	&RCV_TEMP_REG_2, ICSS_INTC_CONST, RCV_TEMP_REG_1.w0, 4      ;load value of INTC_SRSR1	
+    LDI     RCV_TEMP_REG_1.w0, 0x0204
+    LBCO    &RCV_TEMP_REG_2, ICSS_INTC_CONST, RCV_TEMP_REG_1.w0, 4
+    .if $defined(PRU0)
+    LBCO    &RCV_TEMP_REG_2.b3, MII_RT_CFG_CONST, ICSS_MIIRT_RXERR0, 1
+    .else    ; PRU0
+    LBCO    &RCV_TEMP_REG_2.b3, MII_RT_CFG_CONST, ICSS_MIIRT_RXERR1, 1
+    .endif    ; PRU0
+    QBBS    LB_CHECK_RX_ERRORS_1, MII_RCV.rx_flags, host_rcv_flag_shift    
+    QBBC    LB_RESET_RX_FIFO, MII_RCV.rx_flags, fwd_flag_shift    
+
+LB_CHECK_RX_ERRORS_1:
+    ; reset RX fifo, this places the R18 counter back to position 0
+    M_SET_CMD	D_RESET_RXFIFO
+
+LB_XIN_STORE_LESS_THAN_32_FROM_UPPER_BANK_OPT:
+    SUB     R0.b1, R18, 32
+    QBA     CHECK_MISALIGNMENT_ERROR
+
+LB_XIN_STORE_LESS_THAN_32_FROM_LOWER_BANK:
+
+    ; Check for CRC Error in the received frame
+    LDI     RCV_TEMP_REG_1.w0, 0x0204
+    LBCO    &RCV_TEMP_REG_2, ICSS_INTC_CONST, RCV_TEMP_REG_1.w0, 4
+    .if $defined(PRU0)
+    LBCO    &RCV_TEMP_REG_2.b3, MII_RT_CFG_CONST, ICSS_MIIRT_RXERR0, 1
+    .else    ; PRU0
+    LBCO    &RCV_TEMP_REG_2.b3, MII_RT_CFG_CONST, ICSS_MIIRT_RXERR1, 1
+    .endif    ; PRU0
+
+    QBBS    LB_CHECK_RX_ERRORS_2, MII_RCV.rx_flags, host_rcv_flag_shift    
+    QBBC    LB_RESET_RX_FIFO, MII_RCV.rx_flags, fwd_flag_shift    
+
+LB_CHECK_RX_ERRORS_2:
+    ; reset RX fifo, this places the R18 counter back to position 0
+    M_SET_CMD	D_RESET_RXFIFO
     
-;check odd nibble error	
+LB_XIN_STORE_LESS_THAN_32_FROM_LOWER_BANK_OPT:
+
+    AND     R0.b1, R18, R18
+    QBA     CHECK_MISALIGNMENT_ERROR
+    
+LB_CHECK_RX_ERRORS:
+
+    ; Check for CRC Error in the received frame
+    LDI     RCV_TEMP_REG_1.w0, 0x0204
+    LBCO    &RCV_TEMP_REG_2, ICSS_INTC_CONST, RCV_TEMP_REG_1.w0, 4
+    .if $defined(PRU0)
+    LBCO    &RCV_TEMP_REG_2.b3, MII_RT_CFG_CONST, ICSS_MIIRT_RXERR0, 1
+    .else    ; PRU0
+    LBCO    &RCV_TEMP_REG_2.b3, MII_RT_CFG_CONST, ICSS_MIIRT_RXERR1, 1
+    .endif    ; PRU0
+    ; reset RX fifo, this places the R18 counter back to position 0
+    M_SET_CMD	D_RESET_RXFIFO
+    
+    ;check odd nibble error	
 CHECK_MISALIGNMENT_ERROR:
     .if $defined("PRU0")	
     QBBC	CHECK_CRC_ERROR, RCV_TEMP_REG_2, 5      ; if interrupt line is clear check for CRC error else continue
@@ -1622,18 +1673,13 @@ CHECK_CRC_ERROR:
     
     ;Check whether received frame length is less then defined min value
 LB_CHECK_MIN_FRM_ERR:
-    .if $defined("PRU0")	
-    LBCO	&RCV_TEMP_REG_2.b0, MII_RT_CFG_CONST, ICSS_MIIRT_RXERR0, 1	
-    .else
-    LBCO	&RCV_TEMP_REG_2.b0, MII_RT_CFG_CONST, ICSS_MIIRT_RXERR1, 1	
-    .endif
-    QBBC	LB_CHECK_MAX_FRM_ERR, RCV_TEMP_REG_2, 2         ; check if undersize error exist
+    QBBC	LB_CHECK_MAX_FRM_ERR, RCV_TEMP_REG_2.b3, 2         ; check if undersize error exist
     LDI	RCV_TEMP_REG_3 , RX_UNDERSIZED_FRAME_OFFSET
     QBA	LB_CLR_RX_ERROR_REG
     
     ;Check whether received frame length is more then defined max value
 LB_CHECK_MAX_FRM_ERR:
-    QBBC	LB_RESET_RX_FIFO, RCV_TEMP_REG_2, 3         ; check for oversize error
+    QBBC	LB_RESET_RX_FIFO_OPT, RCV_TEMP_REG_2.b3, 3         ; check for oversize error
     LDI	RCV_TEMP_REG_3 , RX_OVERSIZED_FRAME_OFFSET
     
 LB_CLR_RX_ERROR_REG:
@@ -1651,12 +1697,109 @@ LB_CLR_RX_ERROR_REG:
     SBCO	&RCV_TEMP_REG_2.b1, MII_RT_CFG_CONST, ICSS_MIIRT_RXERR1, 1	
     .endif
     SET	MII_RCV.rx_flags , MII_RCV.rx_flags , rx_frame_error_shift 
+
+LB_RESET_RX_FIFO_OPT:
+    ; reset RX fifo, this places the R18 counter back to position 0
+    M_SET_CMD	D_RESET_RXFIFO
+
+    QBBS    RCV_LB_APPEND_TS, R22, 14    ;check PTP flag , if we miss this check then time stamp wont be stored and it will treat that packet as non timestamp packet
+    ; Check if 0 bytes are there to store
+    QBEQ	LB_PROCESS_CHECK_FWD_FLAG, R0.b1, 0	
+    
+    ; Receive for Host Queue
+    QBBC    LB_PROCESS_CHECK_FWD_FLAG, MII_RCV.rx_flags, host_rcv_flag_shift
+    SBCO	&Ethernet, L3_OCMC_RAM_CONST, MII_RCV.buffer_index, b1	
+    
+    ADD	MII_RCV.byte_cntr, MII_RCV.byte_cntr, R0.b1     ; increment the count by R1 bytes	
+    QBGE	LB_PROCESS_CHECK_FWD_FLAG, R0.b1, 4	
+    QBNE	RCV_LB_NO_QUEUE_WRAP_2, MII_RCV.wrkng_wr_ptr, MII_RCV.top_most_buffer_desc_offset
+    AND MII_RCV.wrkng_wr_ptr , MII_RCV.base_buffer_desc_offset , MII_RCV.base_buffer_desc_offset
+    QBA		RCV_LB_QUEUE_WRAPPED_2
+RCV_LB_NO_QUEUE_WRAP_2:
+    ADD		MII_RCV.wrkng_wr_ptr,  MII_RCV.wrkng_wr_ptr,  4
+RCV_LB_QUEUE_WRAPPED_2:
+    QBA     RCV_LB_CHECK_OVERFLOW
+RCV_LB_APPEND_TS:
+    ;--------------Logic to append 10 bytes timestamp to the end of packet----------
+    .if $defined("ICSS_SWITCH_BUILD")
+        QBBC    LB_PROCESS_CHECK_FWD_FLAG, MII_RCV.rx_flags, host_rcv_flag_shift    ;MII_RCV.rx_flags.host_rcv_flag
+    .endif
+
+    ;If there are 0 bytes to store then append timestamp in new block
+    QBEQ    LB_TS_STORE_TS, R0.b1, 0
+    ADD	    MII_RCV.byte_cntr, MII_RCV.byte_cntr, R0.b1     ; increment the count by b1 bytes
+    QBGE	LB_TS_STORE_TS, R0.b1, 4	                    ;If only CRC is left to store then skip and append TS
+
+    SBCO	&Ethernet, L3_OCMC_RAM_CONST, MII_RCV.buffer_index, b1  ;Store the data   
+
+    ;Compare current wrk pointer to top_most queue desc pointer ..check for wrap around
+    QBNE	LB_TS_NO_WRAP_1, MII_RCV.wrkng_wr_ptr, MII_RCV.top_most_buffer_desc_offset
+    AND     MII_RCV.wrkng_wr_ptr , MII_RCV.base_buffer_desc_offset , MII_RCV.base_buffer_desc_offset
+    AND     MII_RCV.buffer_index , MII_RCV.base_buffer_index , MII_RCV.base_buffer_index
+    QBA		LB_TS_STORE_TS
+LB_TS_NO_WRAP_1:
+    ADD		MII_RCV.buffer_index, MII_RCV.buffer_index,  32
+    ADD		MII_RCV.wrkng_wr_ptr,  MII_RCV.wrkng_wr_ptr,  4
+
+LB_TS_STORE_TS:   ;store timestamp in new 32B block
+
+    ;Load offset
+    .if $defined(PTP)
+        M_GPTP_LOAD_TS_OFFSET
+    .endif
+
+    ;Load the TS from Shared RAM
+    LBCO    &R10, ICSS_SHARED_CONST, RCV_TEMP_REG_1.w0, 10
+    ;Store into L3 OCMC
+    SBCO	&R10, L3_OCMC_RAM_CONST, MII_RCV.buffer_index, 10
+    
+    ;check wraparound
+    QBNE	LB_TS_NO_WRAP_2, MII_RCV.wrkng_wr_ptr, MII_RCV.top_most_buffer_desc_offset
+    AND     MII_RCV.wrkng_wr_ptr , MII_RCV.base_buffer_desc_offset , MII_RCV.base_buffer_desc_offset
+    QBA		RCV_LB_CHECK_OVERFLOW
+LB_TS_NO_WRAP_2:
+    ADD		MII_RCV.wrkng_wr_ptr,  MII_RCV.wrkng_wr_ptr,  4
+
+RCV_LB_CHECK_OVERFLOW:
+    .if $defined("ICSS_DUAL_EMAC_BUILD")
+    ; Check if the queue got completely filled with the last few bytes.
+    ;If yes, the wr_ptr and rd_prt might become equal and there could be
+    ;possible data overwrite when the next packet arrives.
+    ;This has been verfied by dry run.
+    QBNE	LB_PROCESS_CHECK_FLAGS_QUEUE_NOT_FULL, MII_RCV.wrkng_wr_ptr, MII_RCV.rd_ptr
+    CLR	MII_RCV.rx_flags , MII_RCV.rx_flags , 0 
+    SET	MII_RCV.rx_flags_extended , MII_RCV.rx_flags_extended , 6 
+    ;For EMAC mode, set rx_frame_error bit
+    SET	MII_RCV.rx_flags , MII_RCV.rx_flags , 4 
+    
+LB_PROCESS_CHECK_FLAGS_QUEUE_NOT_FULL:
+    .endif ;ICSS_DUAL_EMAC_BUILD
+LB_PROCESS_CHECK_FWD_FLAG:
+    .if $defined("ICSS_SWITCH_BUILD")	
+    ; Receive for Port Queue
+    .if    $defined("TWO_PORT_CFG")
+    QBBC    LB_CLEAR_RX_FIFO, MII_RCV.rx_flags, fwd_flag_shift    ;MII_RCV.rx_flags.fwd_flag
+    SBCO    &Ethernet, L3_OCMC_RAM_CONST, MII_RCV_PORT.buffer_index, b1
+    ADD        MII_RCV_PORT.byte_cntr, MII_RCV_PORT.byte_cntr, R0.b1
+    QBGE    LB_CLEAR_RX_FIFO, R0.b1, 4
+    QBNE    RCV_LB_NO_PORT_QUEUE_WRAP_2, MII_RCV_PORT.wrkng_wr_ptr, MII_RCV_PORT.top_most_buffer_desc_offset
+    AND MII_RCV_PORT.wrkng_wr_ptr , MII_RCV_PORT.base_buffer_desc_offset , MII_RCV_PORT.base_buffer_desc_offset	;Warning: converted from MOV
+    QBA        RCV_LB_PORT_QUEUE_WRAPPED_2    
+RCV_LB_NO_PORT_QUEUE_WRAP_2:
+    ADD        MII_RCV_PORT.wrkng_wr_ptr,  MII_RCV_PORT.wrkng_wr_ptr, 4
+RCV_LB_PORT_QUEUE_WRAPPED_2:
+    .endif ;TWO_PORT_CFG
+    
+LB_CLEAR_RX_FIFO:
+    .endif  ;ICSS_SWITCH_BUILD
+    QBA     LB_RESET_RX_FIFO_DONE
     
 LB_RESET_RX_FIFO:
     ; reset RX fifo, this places the R18 counter back to position 0
     M_SET_CMD	D_RESET_RXFIFO
-    
-    
+
+LB_RESET_RX_FIFO_DONE:
+
     QBBC	LB_NO_RX_FRAME_ERROR, MII_RCV.rx_flags, rx_frame_error_shift	 ;replaced: QBBC	LB_NO_RX_FRAME_ERROR, MII_RCV.rx_flags.rx_frame_error 
     ;clear RX_BC_FRAME & RX_MC_FRAME flags
     CLR	R22 , R22 , RX_BC_FRAME 
@@ -1664,15 +1807,13 @@ LB_RESET_RX_FIFO:
     JMP	LB_RELEASE_QUEUE   ; Clear the EOF and other possible error flags.
     
 LB_NO_RX_FRAME_ERROR:
-    
-    .if $defined(PTP)
-    QBBS    LB_RELEASE_HOST_QUEUE, R22, PTP_RELEASE_HOST_QUEUE_BIT
-
-PTP_HOST_QUEUE_RELEASE_DONE:
-    .endif ;PTP
 
     .if $defined("ICSS_SWITCH_BUILD")
-    .if $defined(PTP)	
+    .if $defined(PTP)
+    ;This code is used to control PTP packet forwarding from driver, if mem location
+    ;is set to 1 then FW skips the flow. By default (0) flow is taken
+    LBCO    &RCV_TEMP_REG_2.b0, ICSS_SHARED_CONST, DISABLE_PTP_FRAME_FORWARDING_CTRL_OFFSET, 1
+    QBEQ    PTP_PORT_QUEUE_RELEASE_DONE, RCV_TEMP_REG_2.b0, 1        
     QBBS    LB_RELEASE_PORT_QUEUE, R22, PTP_RELEASE_PORT_QUEUE_BIT
 
 PTP_PORT_QUEUE_RELEASE_DONE:
@@ -1734,10 +1875,8 @@ LB_UPDATE_FOR_HOST_RECEIVE:
     LBCO	&RCV_TEMP_REG_1, ICSS_SHARED_CONST, RCV_CONTEXT.rcv_queue_pointer, 4	
     .endif ;TWO_PORT_CFG
     ; clear length field (18..28) and update length with current received frame
-    LDI	RCV_TEMP_REG_2.w0, 0	
-    
-        SUB	RCV_TEMP_REG_2.w2, RCV_CONTEXT.byte_cntr, 4	;4 byte of FCS
-LB_SKIP_CRC_SUBTRACT:    
+    LDI	RCV_TEMP_REG_2.w0, 0
+    SUB	   RCV_TEMP_REG_2.w2, RCV_CONTEXT.byte_cntr, 4	    ;4 byte of FCS   
     LSL	RCV_TEMP_REG_2.w2, RCV_TEMP_REG_2.w2, 2	
     
         ;Set the Port number on which packet was received
@@ -1746,6 +1885,15 @@ LB_SKIP_CRC_SUBTRACT:
     .else
     SET	RCV_TEMP_REG_2 , RCV_TEMP_REG_2 , 17 ;Port 2	
     .endif
+    
+    CLR     RCV_TEMP_REG_2, RCV_TEMP_REG_2, 15       ;Clear PTP descriptor bit
+
+    .if $defined(PTP)  ;check if bit 15 needs to be set
+        QBBC   LB_SKIP_PTP_DESC_BIT_SET, R22, RX_IS_PTP_BIT
+        CLR    R22, R22, RX_IS_PTP_BIT
+        SET	   RCV_TEMP_REG_2 , RCV_TEMP_REG_2 , 15  ;Indicate to the driver that this is a PTP frame
+LB_SKIP_PTP_DESC_BIT_SET:
+    .endif ;PTP
 
     .if $defined("ICSS_STP_SWITCH")
     ; Set FDB Lookup Success bit if the FDB lookup was successful
@@ -1907,12 +2055,7 @@ LB_NO_HOST_QUEUE_OVERFLOW_OCCURED_SLAVE:
     SBCO	&RCV_TEMP_REG_2, ICSS_SHARED_CONST, RCV_TEMP_REG_1.w0, 4	
     .endif ;TWO_PORT_CFG
     .endif
-    .if $defined(PTP)
-    QBBC    LB_RELEASE_QUEUE_CHECK_FWD_FLAG, R22, PTP_RELEASE_HOST_QUEUE_BIT
-    CLR     R22, R22, PTP_RELEASE_HOST_QUEUE_BIT
-    QBA     PTP_HOST_QUEUE_RELEASE_DONE
-    .endif
-
+    
 LB_RELEASE_QUEUE_CHECK_FWD_FLAG:
     .if $defined("ICSS_SWITCH_BUILD")
     QBBS    LB_RELEASE_PORT_QUEUE, MII_RCV.rx_flags_extended, port_queue_overflow_shift    ;MII_RCV.rx_flags_extended.port_queue_overflow
@@ -1940,6 +2083,7 @@ LB_NO_PORT_QUEUE_OVERFLOW_OCCURED:
     .if $defined(PTP)
     QBBC    LB_RELEASE_QUEUE_CHECK_DONE, R22, PTP_RELEASE_PORT_QUEUE_BIT
     CLR     R22, R22, PTP_RELEASE_PORT_QUEUE_BIT
+    CLR     MII_RCV.rx_flags, MII_RCV.rx_flags, fwd_flag_shift
     QBA     PTP_PORT_QUEUE_RELEASE_DONE
     .endif
 LB_RELEASE_QUEUE_CHECK_DONE: 
@@ -1958,7 +2102,7 @@ LB_MAINTENANCE:
     .endif ;ICSS_SWITCH_BUILD
 
     M_RCV_RX_EOF_INTERRUPT_RAISE_INTC           ; raise RX interrupt on intc controller.
-    
+
     .if $defined("ICSS_SWITCH_BUILD")
 LB_DONE:
     .if    $defined("TWO_PORT_CFG")

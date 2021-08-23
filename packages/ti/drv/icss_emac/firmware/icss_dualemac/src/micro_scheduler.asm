@@ -127,10 +127,13 @@
     .endif
         .sect ".data"
         .retain
-    .word    ICSS_FIRMWARE_RELEASE_1
-    .word    ICSS_FIRMWARE_RELEASE_2
-    .word    ICSS_FIRMWARE_FEATURE_SET
-    .word    ICSS_FIRMWARE_RESERVED_FEATURE_SET
+    .word ICSS_FIRMWARE_RELEASE_1
+    .word ICSS_FIRMWARE_RELEASE_2
+    .word ICSS_FIRMWARE_FEATURE_SET
+    .word ICSS_FIRMWARE_RESERVED_FEATURE_SET
+	    .sect ".version_string"
+	    .retain
+    .include ".version"
         .sect    ".text:micro_scheduler"
         .global  micro_scheduler
     
@@ -138,8 +141,7 @@ micro_scheduler:
     JMP		fw_main
     
 fw_main:
-    ;Firmware Version: To store in shared memory. Can be used by application.
-    
+	
     ZERO	&R0, 124		;Zero all registers
     LDI	R31 , 0
         
@@ -157,7 +159,12 @@ fw_main:
     .endif
     
         ;Configure the Task Table.  (Currently no used as the task table is very small.)
-    LDI32	TASK_TABLE_ROW0, 0x00020100	
+    LDI32	TASK_TABLE_ROW0, 0x00020100
+
+    ;load storm prevention timer interval
+    MOV32   RCV_TEMP_REG_1, SP_COUNTER_UPDATE_INTERVAL_DEFAULT
+    LDI     RCV_TEMP_REG_2, SP_COUNTER_UPDATE_INTERVAL_OFFSET 
+    SBCO    &RCV_TEMP_REG_1, PRU_DMEM_ADDR, RCV_TEMP_REG_2, 4
     
 START_THE_MS:
     
@@ -196,7 +203,7 @@ RET_TTS_IEP_CFG_CLEAR:
 check_sfd:
     XIN	RX_L2_BANK0_ID, &R2, (4 * 17)	; Load Bank 0 values into R2 - R18		
     
-    QBBC	EXECUTE_NEXT_TASK, R10, 5       ; check if SOF is low, then jump to next task else continue
+    ;QBBC	EXECUTE_NEXT_TASK, R10, 5       ; check if SOF is low, then jump to next task else continue
     QBGT	SKIP_RCV_TASK, R18_RCV_BYTECOUNT, 18        ; check if no. of bytes recieved is greater than 18 then 
     JAL	CALL_REG, FN_RCV_FB	                    ; jump to FN_RCV_FB else continue
 SKIP_RCV_TASK:
@@ -299,7 +306,7 @@ MS_SCH_OPPOSITE_PORT_LINK_DOWN:
     QBBC	MS_SCH_OPP_PORT_FULL_DUPLEX, R20, 1	 ;replaced: QBBC    MS_SCH_OPP_PORT_FULL_DUPLEX, R20.PORT_IS_HD 
     SET	R22 , R22 , 23 
 MS_SCH_OPP_PORT_FULL_DUPLEX:
-    .endif	;ICSS_SWITCH_BUILD
+    .endif	;ICSS_SWITCH_BUILD	
 
     ; Check INTR_PAC_STATUS_OFFSET for Interrupt Pacing logic status
     .if $defined(PRU0)
@@ -389,12 +396,73 @@ TS_DIFF_DONE:
 NO_INTR_PENDING:
 TIMER_NOT_ELAPSED:
 INTR_PAC_DIS:
+    ;This is required because there is too much processing in background task
+    ;and it's possible to miss Last Block
+    .if $defined("ICSS_REV1")	
+        .if $defined("PRU0")	
+            QBBC	EARLY_RX_LB_DONE, R31, 30
+        .else
+            QBBC	EARLY_RX_LB_DONE, R31, 31
+        .endif
+    .endif ;ICSS_REV1
+
+    .if $defined("ICSS_REV2")
+        QBBC  EARLY_RX_LB_DONE, R31, 20
+    .endif ;ICSS_REV2
+    
+    JAL	  CALL_REG, FN_RCV_LB
+EARLY_RX_LB_DONE:
 
     .if $defined(PTP)
     .if $defined(PRU0) 
     JAL     CALL_REG, FN_PTP_BACKGROUND_TASK
     .endif ;PRU0
     .endif ;PTP
+    
+STORM_PREVENTION_COUNTER_UPDATE_CHECK:
+    ;current IEP counter value
+    LBCO    &RCV_TEMP_REG_2, IEP_CONST, IEP_COUNTER_OFFSET, 4
+    AND     RCV_TEMP_REG_1, RCV_TEMP_REG_2, RCV_TEMP_REG_2
+    LDI     RCV_TEMP_REG_3, SP_UPDATE_TIMESTAMP_OFFSET
+    LBCO    &RCV_TEMP_REG_4, PRU_DMEM_ADDR, RCV_TEMP_REG_3 , 4
+    QBGE    IEP_WRAPAROUND_HAPPENED, RCV_TEMP_REG_2, RCV_TEMP_REG_4
+    SUB     RCV_TEMP_REG_2, RCV_TEMP_REG_2, RCV_TEMP_REG_4   
+    QBA     CHECK_100_MS_PASSED
+IEP_WRAPAROUND_HAPPENED:
+    ;check compare enable and see if wraparound is enabled
+    LBCO    &RCV_TEMP_REG_3, IEP_CONST, IEP_CMP_CFG_REG, 1
+    QBBC    IEP_CMP0_NOT_ENABLED_HERE, RCV_TEMP_REG_3, 1
+    LBCO    &RCV_TEMP_REG_3, IEP_CONST, IEP_CMP0_REG, 4
+    QBA     CALCULATE_PASSED_TIME_FOR_IEP_WRAPAROUND
+IEP_CMP0_NOT_ENABLED_HERE:
+    FILL    &RCV_TEMP_REG_3, 4
+CALCULATE_PASSED_TIME_FOR_IEP_WRAPAROUND:
+    SUB     RCV_TEMP_REG_4, RCV_TEMP_REG_3, RCV_TEMP_REG_4
+    ADD     RCV_TEMP_REG_2, RCV_TEMP_REG_4, RCV_TEMP_REG_2
+CHECK_100_MS_PASSED:
+    ;check if 100ms has passed
+    LDI     RCV_TEMP_REG_3, SP_COUNTER_UPDATE_INTERVAL_OFFSET
+    LBCO    &RCV_TEMP_REG_3, PRU_DMEM_ADDR, RCV_TEMP_REG_3, 4
+    QBGE    SKIP_STORM_PREVENTION_COUNTER_UPDATE, RCV_TEMP_REG_2, RCV_TEMP_REG_3
+    LDI     RCV_TEMP_REG_3, SP_UPDATE_TIMESTAMP_OFFSET
+    SBCO    &RCV_TEMP_REG_1, PRU_DMEM_ADDR, RCV_TEMP_REG_3, 4
+;for BC    
+    LDI     RCV_TEMP_REG_3, STORM_PREVENTION_OFFSET_BC_DRIVER 
+    LBCO    &RCV_TEMP_REG_4, PRU_DMEM_ADDR, RCV_TEMP_REG_3, 4
+    LDI     RCV_TEMP_REG_3, STORM_PREVENTION_OFFSET_BC 
+    SBCO    &RCV_TEMP_REG_4, PRU_DMEM_ADDR, RCV_TEMP_REG_3, 4
+;for MC    
+    LDI     RCV_TEMP_REG_3, STORM_PREVENTION_OFFSET_MC_DRIVER 
+    LBCO    &RCV_TEMP_REG_4, PRU_DMEM_ADDR, RCV_TEMP_REG_3, 4
+    LDI     RCV_TEMP_REG_3, STORM_PREVENTION_OFFSET_MC 
+    SBCO    &RCV_TEMP_REG_4, PRU_DMEM_ADDR, RCV_TEMP_REG_3, 4
+;for UC    
+    LDI     RCV_TEMP_REG_3, STORM_PREVENTION_OFFSET_UC_DRIVER 
+    LBCO    &RCV_TEMP_REG_4, PRU_DMEM_ADDR, RCV_TEMP_REG_3, 4
+    LDI     RCV_TEMP_REG_3, STORM_PREVENTION_OFFSET_UC 
+    SBCO    &RCV_TEMP_REG_4, PRU_DMEM_ADDR, RCV_TEMP_REG_3, 4
+SKIP_STORM_PREVENTION_COUNTER_UPDATE:
+
     QBBS	stat_task_called, R23, TX_STAT_PEND	 ;check if TX_STAT_PEND is set then jump to stat task 
     QBBC	coll_task_called, R23, RX_STAT_PEND	 ;check if RX_STAT_PEND is clear then jump to next task else jump to stat task
 stat_task_called:

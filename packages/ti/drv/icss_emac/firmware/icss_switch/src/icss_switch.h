@@ -451,24 +451,32 @@ STAT_SIZE    .set  0x98    ;always keep it's value same as the last stat offset
 ;              3. Port Status Offset                                        *
 ;*              These are present on both PRU0 and PRU1                     *
 ;****************************************************************************
-;STATISTICS_OFFSET    .set             0x1f00
-STORM_PREVENTION_OFFSET_BC .set       STATISTICS_OFFSET + STAT_SIZE             ;4 bytes
-PHY_SPEED_OFFSET    .set              STATISTICS_OFFSET + STAT_SIZE + 4     ;4 bytes
-PORT_STATUS_OFFSET    .set            STATISTICS_OFFSET + STAT_SIZE + 8     ;1 byte
-COLLISION_COUNTER    .set             STATISTICS_OFFSET + STAT_SIZE + 9     ;1 byte
-RX_PKT_SIZE_OFFSET    .set            STATISTICS_OFFSET + STAT_SIZE + 10        ;4 bytes
-PORT_CONTROL_ADDR    .set             STATISTICS_OFFSET + STAT_SIZE + 14        ;4 bytes
-PORT_MAC_ADDR    .set                 STATISTICS_OFFSET + STAT_SIZE + 18        ;6 bytes 
-RX_INT_STATUS_OFFSET    .set          STATISTICS_OFFSET + STAT_SIZE + 24        ;1 byte
-STORM_PREVENTION_OFFSET_MC	.set  	  STATISTICS_OFFSET + STAT_SIZE + 25			 ;4 bytes
-STORM_PREVENTION_OFFSET_UC	.set   	  STATISTICS_OFFSET + STAT_SIZE	+ 29			 ;4 bytes
+STORM_PREVENTION_OFFSET_BC_DRIVER   .set    STATISTICS_OFFSET + STAT_SIZE       ;4 bytes
+PHY_SPEED_OFFSET                    .set    STATISTICS_OFFSET + STAT_SIZE + 4   ;4 bytes
+PORT_STATUS_OFFSET                  .set    STATISTICS_OFFSET + STAT_SIZE + 8   ;1 byte
+COLLISION_COUNTER                   .set    STATISTICS_OFFSET + STAT_SIZE + 9   ;1 byte
+RX_PKT_SIZE_OFFSET                  .set    STATISTICS_OFFSET + STAT_SIZE + 10  ;4 bytes
+PORT_CONTROL_ADDR                   .set    STATISTICS_OFFSET + STAT_SIZE + 14  ;4 bytes
+PORT_MAC_ADDR                       .set    STATISTICS_OFFSET + STAT_SIZE + 18  ;6 bytes
+RX_INT_STATUS_OFFSET                .set    STATISTICS_OFFSET + STAT_SIZE + 24  ;1 byte
+STORM_PREVENTION_OFFSET_MC_DRIVER   .set    STATISTICS_OFFSET + STAT_SIZE + 25  ;4 bytes
+STORM_PREVENTION_OFFSET_UC_DRIVER   .set    STATISTICS_OFFSET + STAT_SIZE + 29  ;4 bytes
+STORM_PREVENTION_OFFSET_BC          .set    STATISTICS_OFFSET + STAT_SIZE + 33  ;4 bytes
+STORM_PREVENTION_OFFSET_MC          .set    STATISTICS_OFFSET + STAT_SIZE + 37  ;4 bytes
+STORM_PREVENTION_OFFSET_UC          .set    STATISTICS_OFFSET + STAT_SIZE + 41  ;4 bytes
+SP_UPDATE_TIMESTAMP_OFFSET          .set    STATISTICS_OFFSET + STAT_SIZE + 45  ;4 bytes
+SP_INCREMENT_COUNT_OFFSET           .set    STATISTICS_OFFSET + STAT_SIZE + 49  ;4 bytes
+SP_COUNTER_UPDATE_INTERVAL_OFFSET   .set    STATISTICS_OFFSET + STAT_SIZE + 53  ;4 bytes
+DISABLE_STORM_PREV_FOR_HOST         .set    STATISTICS_OFFSET + STAT_SIZE + 57  ;1 byte
+
+SP_COUNTER_UPDATE_INTERVAL_DEFAULT  .set    100000000
 
     
 ;****************************************************************************
 ;                          Protocol-specific Stats                          *
 ;****************************************************************************
 ; Placing these AFTER cfg offsets so as to not interfere with icss_emac
-STP_INVALID_STATE_OFFSET    .set              STORM_PREVENTION_OFFSET_UC + 4 ; number of invalid STP state errors
+STP_INVALID_STATE_OFFSET    .set           STATISTICS_OFFSET + STAT_SIZE + 58 ; number of invalid STP state errors
 
 ;***********************************************************************************************************
 ;                                                                                                          *

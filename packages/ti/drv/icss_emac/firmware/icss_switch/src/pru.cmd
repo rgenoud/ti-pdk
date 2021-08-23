@@ -41,7 +41,8 @@ SECTIONS
     .cinit         >  PRUDMEM, PAGE 1
     .args          >  PRUDMEM, PAGE 1
 
-    .resource_table > PRUDMEM, PAGE 1
+    .resource_table > PRUDMEM, PAGE 1 palign = 16
+    .version_string > PRUDMEM, PAGE 1 palign = 16
 }
 
 

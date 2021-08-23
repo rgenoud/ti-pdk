@@ -31,6 +31,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/*
+ * NOTE: Resource Table for IRQ mapping is deprecated since v5.10 Linux
+ * kernel. This file is kept for backward compatibilty with older
+ * kernels and will be dropped in future releases.
+ */
+
 #ifndef _RSC_TABLE_PRU_H_
 #define _RSC_TABLE_PRU_H_
 
@@ -48,6 +54,7 @@ struct ch_map pru_intc_map[] = { {42, 0},
 				 {22, 4},
 				 {26, 6},
 				 {41, 7},
+				 {7, 7},
 };
 #endif
 #ifdef PRU1

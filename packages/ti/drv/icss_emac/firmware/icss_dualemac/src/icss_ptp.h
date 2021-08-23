@@ -112,9 +112,9 @@ GPTP_802_3_two_step_bit        .set                        1
         .asg    R7,       two_step_reg
         .asg    R5.b2,    PTP_802_3_msg_id_reg
         .asg    R8,       two_step_reg_vlan
-        .asg    R6,       IF_TWO_STEP_CLK_UDP
+        .asg    R6,       two_step_reg_udp
         .asg    R4.b2,    PTP_MSG_ID_REG_UDP
-        .asg    R7,       IF_TWO_STEP_CLK_UDP_VLAN
+        .asg    R7,       two_step_reg_udp_vlan
         .asg    R5.b2,    PTP_MSG_ID_REG_UDP_VLAN
         .asg    R7.b3,    IP_PROT_REG
         .asg    R8.b3,    IP_PROT_VLAN_REG
@@ -128,32 +128,23 @@ RX_IS_PTP_BIT  .set    14
 TX_IS_PTP_BIT  .set    13    
     ;This is used for internal book-keeping to generate 1PPS sync0 pulse
 CHECK_SYNC0_BIT .set   12
-    ;Set to indicate that DUT is master. Not used currently
-DUT_IS_MASTER_BIT .set   11
     ;Set to indicate that a Tx callback interrupt is pending
     ;On successful completion of transmit the interrupt is set
-TX_CALLBACK_INTERRUPT_BIT .set   9
+TX_CALLBACK_INTERRUPT_BIT .set   11
     ;This is set when host rcv flag is cleared in the middle
     ;Firmware checks this and releases host queue without 
     ;updating the write pointer
     ;Analogous to the one above but for port forwarding queues
-PTP_RELEASE_HOST_QUEUE_BIT .set   8
-PTP_RELEASE_PORT_QUEUE_BIT .set   7
-; Not used for RTOS as it is specific to PRP
-;PTP_FORCED_2_STEP_BIT      .set   6
+PTP_RELEASE_PORT_QUEUE_BIT .set   9
 
     ; Set if RX frame has VLAN tag
-RX_IS_VLAN_BIT .set 6
+RX_IS_VLAN_BIT .set 8
     ; Set if TX frame has VLAN tag
-TX_IS_VLAN_BIT .set 15
+TX_IS_VLAN_BIT .set 7
     ;This flag is used to indicate a UDP PTP frame on Rx 
-RX_IS_UDP_PTP_BIT .set   3
+RX_IS_UDP_PTP_BIT .set   6
     ;This flag is used to indicate a UDP PTP frame on Tx 
-TX_IS_UDP_PTP_BIT  .set   2 
-    ;This is set when delay response is received. Run source port id check when this is set 
-PTP_CHECK_PDELAY_RESP .set   1
-    ;Set if packet is from Master. Rx context
-PTP_PKT_FROM_MASTER_RX  .set   0
+TX_IS_UDP_PTP_BIT  .set   3 
 
 
 GPTP_NUM_DOMAINS                       .set                2
