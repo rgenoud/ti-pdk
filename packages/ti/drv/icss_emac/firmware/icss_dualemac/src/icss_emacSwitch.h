@@ -489,6 +489,9 @@ SP_UPDATE_TIMESTAMP_OFFSET          .set    STATISTICS_OFFSET + STAT_SIZE + 45  
 SP_INCREMENT_COUNT_OFFSET           .set    STATISTICS_OFFSET + STAT_SIZE + 49  ;4 bytes
 SP_COUNTER_UPDATE_INTERVAL_OFFSET   .set    STATISTICS_OFFSET + STAT_SIZE + 53  ;4 bytes
 DISABLE_STORM_PREV_FOR_HOST         .set    STATISTICS_OFFSET + STAT_SIZE + 57  ;1 byte
+
+; Placing these after STP_INVALID_STATE_OFFSET offset so as to not interfere with Switch
+RX_QUEUE_OVERFLOW_FRAMES_OFFSET     .set    STATISTICS_OFFSET + STAT_SIZE + 62	;4 bytes
 	
 ;***********************************************************************************************************
 ;											                   *
