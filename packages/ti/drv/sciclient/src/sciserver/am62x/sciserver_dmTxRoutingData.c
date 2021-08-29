@@ -41,11 +41,39 @@ const struct sproxy_host_tx_thread_data sproxy_route_data[AM62X_CONFIG_MAX] = {
 		.sproxy_ntfy_conf_id	= AM62X_DMASS0_SEC_PROXY_0_TX_DMSC_SEC_A53_0_RESPONSE_TX_THR072_CONF002,
 	},
 	/*
+	 * Non Secure Host A53_1[11]
+	 */
+	[HOST_ID_A53_1] =	{
+		.sproxy_resp_conf_id	= AM62X_DMASS0_SEC_PROXY_0_TX_DM_NONSEC_A53_1_RESPONSE_TX_THR067_CONF006,
+		.sproxy_ntfy_conf_id	= AM62X_DMASS0_SEC_PROXY_0_TX_DM_NONSEC_A53_1_RESPONSE_TX_THR067_CONF006,
+	},
+	/*
+	 * Secure Host A53_2[12]
+	 */
+	[HOST_ID_A53_2] =	{
+		.sproxy_resp_conf_id	= AM62X_DMASS0_SEC_PROXY_0_TX_DM_NONSEC_A53_2_RESPONSE_TX_THR066_CONF007,
+		.sproxy_ntfy_conf_id	= AM62X_DMASS0_SEC_PROXY_0_TX_DM_NONSEC_A53_2_RESPONSE_TX_THR066_CONF007,
+	},
+	/*
+	 * Secure Host A53_3[13]
+	 */
+	[HOST_ID_A53_3] =	{
+		.sproxy_resp_conf_id	= AM62X_DMASS0_SEC_PROXY_0_TX_DM_NONSEC_A53_3_RESPONSE_TX_THR065_CONF008,
+		.sproxy_ntfy_conf_id	= AM62X_DMASS0_SEC_PROXY_0_TX_DM_NONSEC_A53_3_RESPONSE_TX_THR065_CONF008,
+	},
+	/*
 	 * Secure Host DM2DMSC[250]
 	 */
 	[HOST_ID_DM2DMSC] =	{
 		.sproxy_resp_conf_id	= AM62X_DMASS0_SEC_PROXY_0_TX_DMSC_SEC_DM2DMSC_RESPONSE_TX_THR071_CONF003,
 		.sproxy_ntfy_conf_id	= AM62X_DMASS0_SEC_PROXY_0_TX_DMSC_SEC_DM2DMSC_RESPONSE_TX_THR071_CONF003,
+	},
+	/*
+	 * Non Secure Host DMSC2DM[251]
+	 */
+	[HOST_ID_DMSC2DM] =	{
+		.sproxy_resp_conf_id	= AM62X_DMASS0_SEC_PROXY_0_TX_DM_NONSEC_DMSC2DM_RESPONSE_TX_THR061_CONF012,
+		.sproxy_ntfy_conf_id	= AM62X_DMASS0_SEC_PROXY_0_TX_DM_NONSEC_DMSC2DM_RESPONSE_TX_THR061_CONF012,
 	},
 	/*
 	 * Non Secure Host M4_0[30]
