@@ -539,3 +539,9 @@ void _system_post_cinit(void)
     cfg.disableIrqOnInit = true;
     osalArch_Init(&cfg);
 }
+
+/* This function is called when configUSE_IDLE_HOOK is 1 in FreeRTOSConfig.h */
+void vApplicationIdleHook( void )
+{
+    __asm__ volatile ("    wfi");
+}
