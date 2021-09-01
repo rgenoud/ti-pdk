@@ -224,6 +224,14 @@ $(OBJ_PATHS_ASM): $(OBJDIR)/%.$(OBJEXT): %.asm $(GEN_FILE) | $(OBJDIR) $(DEPDIR)
 	$(CC) -ppd=$(DEPFILE).P $(_CFLAGS) $(INCLUDES) $(CFLAGS_DIROPTS) -fa $<
 	$(CC) $(_CFLAGS) $(INCLUDES) $(CFLAGS_DIROPTS) -fa $<
 
+# Object file creation for assembly files with .S extension
+$(OBJ_PATHS_ASM_S): $(OBJDIR)/%.$(OBJEXT): %.S $(GEN_FILE) | $(OBJDIR) $(DEPDIR)
+	$(ECHO) \# Compiling $(GEN_FILE): $<
+	$(CC) -ppd=$(DEPFILE).P $(_CFLAGS) $(INCLUDES) $(CFLAGS_DIROPTS) -fa $<
+	$(CC) $(_CFLAGS) $(INCLUDES) $(CFLAGS_DIROPTS) -fa $<
+  
+
+
 $(PACKAGE_PATHS): $(PACKAGEDIR)/%: %
 	$(ECHO) \# Copying to $(PACKAGE_RELPATH)/$($(APP_NAME)$(MODULE_NAME)_RELPATH)/$<
 	$(MKDIR) -p $(PACKAGE_ROOT)/$($(APP_NAME)$(MODULE_NAME)_RELPATH)
@@ -233,11 +241,11 @@ $(PACKAGE_PATHS): $(PACKAGEDIR)/%: %
 ARFLAGS = rq
 
 # Archive/library file creation
-$(LIBDIR)/$(LIBNAME).$(LIBEXT) : $(OBJ_PATHS_ASM) $(OBJ_PATHS) $(GEN_FILE) | $(LIBDIR)
+$(LIBDIR)/$(LIBNAME).$(LIBEXT) : $(OBJ_PATHS_ASM) $(OBJ_PATHS_ASM_S) $(OBJ_PATHS) $(GEN_FILE) | $(LIBDIR)
 	$(ECHO) \#
 	$(ECHO) \# Archiving $(PRINT_MESSAGE) into $@ ...
 	$(ECHO) \#
-	$(AR) $(ARFLAGS) $@ $(OBJ_PATHS_ASM) $(OBJ_PATHS)
+	$(AR) $(ARFLAGS) $@ $(OBJ_PATHS_ASM) $(OBJ_PATHS_ASM_S) $(OBJ_PATHS)
 
 $(LIBDIR)/$(LIBNAME).$(LIBEXT)_size: $(LIBDIR)/$(LIBNAME).$(LIBEXT)
 	$(ECHO) \#

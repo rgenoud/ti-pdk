@@ -53,6 +53,9 @@ sciclient_LIB_LIST += sciserver_baremetal
 sciclient_LIB_LIST += sciclient_direct
 sciclient_LIB_LIST += sciclient_direct_hs
 endif
+ifeq ($(SOC),$(filter $(SOC), am62x))
+sciclient_LIB_LIST += dm_stub
+endif
 
 drvsciclient_BOARDLIST = am65xx_evm am65xx_idk j721e_sim j721e_evm j7200_evm j721s2_evm am64x_evm am62x_evm
 drvsciclient_SOCLIST = am65xx j721e j7200 j721s2 am64x
@@ -208,6 +211,21 @@ export rm_pm_hal_INCLUDE = $(rm_pm_hal_PATH)
 export rm_pm_hal_SOCLIST = j721e j7200 j721s2 am62x
 export rm_pm_hal_BOARDLIST = j721e_evm j7200_evm j721s2_evm am62x_evm
 export rm_pm_hal_$(SOC)_CORELIST = mcu1_0
+
+export dm_stub_COMP_LIST = dm_stub
+export dm_stub_RELPATH = ti/drv/sciclient/src/rm_pm_hal
+export dm_stub_OBJPATH = ti/drv/sciclient/src/rm_pm_hal
+export dm_stub_PATH = $(PDK_SCICLIENT_COMP_PATH)
+export dm_stub_LIBNAME = dm_stub
+export dm_stub_LIBPATH = $(PDK_SCICLIENT_COMP_PATH)/lib
+export dm_stub_MAKEFILE = -fsrc/dm_stub_makefile BUILD_HS=no
+export dm_stub_BOARD_DEPENDENCY = no
+export dm_stub_CORE_DEPENDENCY = yes
+export dm_stub_PKG_LIST = dm_stub
+export dm_stub_INCLUDE = $(dm_stub_PATH)
+export dm_stub_SOCLIST = am62x
+export dm_stub_BOARDLIST = am62x_evm
+export dm_stub_$(SOC)_CORELIST = mcu1_0
 
 ############################
 # sciclient examples

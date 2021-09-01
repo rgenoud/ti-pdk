@@ -1,0 +1,74 @@
+#
+# This file is the makefile for building sciclient .
+#
+ifeq ($(RULES_MAKE), )
+include $(PDK_INSTALL_PATH)/ti/build/Rules.make
+else
+include $(RULES_MAKE)
+endif
+
+MODULE_NAME = dm_stub
+
+SRCDIR = src/rm_pm_hal src/rm_pm_hal/app/dmstub
+INCDIR = src/rm_pm_hal src/rm_pm_hal/app/dmstub
+
+CFLAGS_LOCAL_COMMON = $(PDK_CFLAGS)
+
+#
+# Low Power Management Feature support in DM stub
+#
+CONFIG_LPM_DM_STUB=y
+CONFIG_LPM_DM_TRACE=y
+
+ifeq ($(CONFIG_LPM_DM_STUB),y)
+  CFLAGS_LOCAL_COMMON += -DCONFIG_LPM_DM_STUB
+endif
+
+# end of Low Power Management Feature support
+
+CONFIG_SOC_FOLDER_STRING="am62x"
+SCICLIENT_SOCVER = V5
+TARGET_SOC = $(shell echo $(CONFIG_SOC_FOLDER_STRING))
+
+include $(PDK_INSTALL_PATH)/ti/drv/sciclient/src/build.inc
+
+objtree := $(PDK_INSTALL_PATH)/ti/drv/sciclient/src/rm_pm_hal
+srctree := $(objtree)
+srcroot := $(srctree)
+
+$(call _recurse_inc,)
+
+CFLAGS_LOCAL_COMMON += $(cppflags-y)
+CFLAGS_LOCAL_COMMON += -I$(srctree)/include
+CFLAGS_LOCAL_COMMON += -I$(PDK_INSTALL_PATH)/ti/drv/sciclient/soc/$(SCICLIENT_SOCVER)
+CFLAGS_LOCAL_COMMON += -I$(PDK_INSTALL_PATH)/ti/drv/sciclient/src/priv
+
+
+# for all obj-y entries .o extensions are changed to .c 
+SRCS_COMMON = $(foreach f, $(obj-y), $(subst .o,.c,$(f)))
+TEM_SRCS_COMMON := $(SRCS_COMMON)
+
+# When obj-y is evaluated entry.o is added to the variable. but entry.o corresponds to entry.S file
+# So removing entry.c from SRCS_COMMON and adding entry.S in SRCS_ASM_S 
+SRCS_COMMON = $(filter-out app/dmstub/entry.c, $(TEM_SRCS_COMMON))
+SRCS_ASM_S += entry.S
+
+
+
+# Core/SoC/platform specific source files and CFLAGS
+# Example:
+#   SRCS_<core/SoC/platform-name> =
+#   CFLAGS_LOCAL_<core/SoC/platform-name> =
+
+# Include common make files
+ifeq ($(MAKERULEDIR), )
+#Makerule path not defined, define this and assume relative path from ROOTDIR
+  MAKERULEDIR := $(ROOTDIR)/ti/build/makerules
+  export MAKERULEDIR
+endif
+include $(MAKERULEDIR)/common.mk
+
+# OBJs and libraries are built by using rule defined in rules_<target>.mk
+#     and need not be explicitly specified here
+
+# Nothing beyond this point
