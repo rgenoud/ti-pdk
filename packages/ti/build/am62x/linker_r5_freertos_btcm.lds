@@ -27,6 +27,7 @@ __FIQ_STACK_SIZE   = 0x0100;
 __ABORT_STACK_SIZE = 0x0100;
 __UND_STACK_SIZE   = 0x0100;
 __SVC_STACK_SIZE   = 0x0100;
+__DM_STUB_STACK_SIZE = 0x0400;
 
 /*--------------------------------------------------------------------------*/
 /*                               Memory Map                                 */
@@ -52,13 +53,45 @@ SECTIONS
     .freertosrstvectors      : {} palign(8)      > MCU0_R5F_TCMB_VEC
     .bootCode        : {} palign(8)      > MCU0_R5F_TCMB
     .startupCode     : {} palign(8)      > MCU0_R5F_TCMB
-    .startupData     : {} palign(8)      > MCU0_R5F_TCMB, type = NOINIT   
+    .startupData     : {} palign(8)      > DDR, type = NOINIT  
     GROUP {
         .text.hwi    : palign(8)
         .text.cache  : palign(8)
         .text.mpu    : palign(8)
         .text.boot   : palign(8)
-    }                                    > MCU0_R5F_TCMB
+    }                                    > DDR
+    GROUP{
+
+        .dm_stub_text : {
+            _privileged_code_begin = .;
+            _text_secure_start = .;
+            dm_stub*(.text)
+        }  palign(8)
+
+        .dm_stub_const : {
+            dm_stub*(.const)
+            _text_secure_end = .;
+            _privileged_code_end = .;
+        }  palign(8)
+
+        .dm_stub_data : {
+            _privileged_data_begin = .;
+            dm_stub*(.data)
+            _privileged_data_end = .;
+        }  palign(8)
+
+        .dm_stub_bss : {
+            _start_bss = .;
+            dm_stub*(.bss)
+            _end_bss = .;
+        }  palign(8)
+
+       .dm_stub_stack : {
+            _start_stack = .;
+            . += __DM_STUB_STACK_SIZE;
+            _end_stack = .;
+        }  palign(8)
+}                                       > MCU0_R5F_TCMB
     .text            : {} palign(8)      > DDR
     .const           : {} palign(8)      > DDR
     .cinit           : {} palign(8)      > DDR

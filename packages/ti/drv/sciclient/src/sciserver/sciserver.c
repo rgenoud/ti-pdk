@@ -577,6 +577,16 @@ static int32_t Sciserver_UserProcessMsg(uint32_t *msg_recv,
             reqMsgSize = sizeof(struct tisci_msg_sys_reset_req);
             respMsgSize = sizeof(struct tisci_msg_sys_reset_resp);
             break;
+#ifdef CONFIG_LPM_DM 
+        case TISCI_MSG_PREPARE_SLEEP:
+            reqMsgSize = sizeof(struct tisci_msg_prepare_sleep_req);
+            respMsgSize = sizeof(struct tisci_msg_prepare_sleep_resp);
+            break;
+        case TISCI_MSG_ENTER_SLEEP:
+            reqMsgSize = sizeof(struct tisci_msg_enter_sleep_req );
+            respMsgSize = sizeof(struct tisci_msg_enter_sleep_resp);
+            break;
+#endif
         default:
             /* Forward the full message size */
             reqMsgSize = SCISERVER_HW_QUEUE_SIZE;

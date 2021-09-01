@@ -82,6 +82,10 @@ ifeq ($(BUILD_HS),yes)
 CFLAGS_LOCAL_COMMON += -DBUILD_HS
 endif
 
+ifeq ($(CONFIG_LPM_DM),y)
+CFLAGS_LOCAL_COMMON += -DCONFIG_LPM_DM
+endif
+
 include $(PDK_INSTALL_PATH)/ti/drv/sciclient/src/rm_pm_hal_build.mk
 
 # Core/SoC/platform specific source files and CFLAGS
