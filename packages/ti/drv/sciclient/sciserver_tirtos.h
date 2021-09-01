@@ -94,6 +94,18 @@ int32_t Sciserver_tirtosInit(Sciserver_TirtosCfgPrms_t *pPrms);
  */
 void Sciserver_tirtosDeinit();
 
+/** \brief Sciserver enable interrupt
+ *  \param None
+ *  \return None
+ */
+void Sciserver_tirtosEnableIntr();
+
+/** \brief Sciserver disable interrupt
+ *  \param None
+ *  \return None
+ */
+void Sciserver_tirtosDisableIntr();
+
 /* ========================================================================== */
 /*                       Static Function Definitions                          */
 /* ========================================================================== */

@@ -491,4 +491,14 @@ static int32_t prvC66xTickInterruptConfig( void )
 
     return xStatus;
 }
+
+
+ void TaskP_SuspendAll(){
+    vTaskSuspendAll();
+ }
+
+ uint32_t TaskP_ResumeAll(){
+    return xTaskResumeAll();
+ }
+
 /* Nothing past this point */
