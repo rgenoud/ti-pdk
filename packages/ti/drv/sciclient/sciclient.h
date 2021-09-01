@@ -329,6 +329,7 @@ typedef uint8_t devgrp_t;
 #include <ti/drv/sciclient/soc/sysfw/include/am62x/tisci_hosts.h>
 #include <ti/drv/sciclient/soc/sysfw/include/am62x/tisci_sec_proxy.h>
 #include <ti/drv/sciclient/soc/sysfw/include/am62x/tisci_boardcfg_constraints.h>
+#include <ti/drv/sciclient/soc/sysfw/include/tisci/lpm/tisci_lpm.h>
 #endif
 
 #include <ti/drv/sciclient/soc/sysfw/include/tisci/security/tisci_sec_macros.h>
