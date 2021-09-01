@@ -199,6 +199,31 @@ void Sciserver_tirtosUserMsgHwiFxn(uintptr_t arg)
     }
 }
 
+void Sciserver_tirtosDisableIntr()
+{
+    uint32_t i = 0U;
+
+    for (i = 0U; i < SCISERVER_ARRAY_SIZE(sciserver_hwi_list); i++) {
+        if (gSciserverHwiHandles[i] != NULL)
+        {
+            Osal_DisableInterrupt(0, sciserver_hwi_list[i].irq_num);
+        }
+    }
+}
+
+void Sciserver_tirtosEnableIntr()
+{
+    uint32_t i = 0U;
+
+    for (i = 0U; i < SCISERVER_ARRAY_SIZE(sciserver_hwi_list); i++) {
+        if (gSciserverHwiHandles[i] != NULL)
+        {
+            Osal_EnableInterrupt(0, sciserver_hwi_list[i].irq_num);
+        }
+    }
+}
+
+
 void Sciserver_tirtosUnRegisterIntr()
 {
     uint32_t i = 0U;

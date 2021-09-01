@@ -177,6 +177,19 @@ extern void TaskP_yield(void);
  */
 extern uint32_t TaskP_isTerminated(TaskP_Handle handle);
 
+/*
+ *  @brief  Suspend the OS
+ *  \param None
+ *  \return None
+ */
+extern void TaskP_SuspendAll();
+
+/*
+ *  @brief  Resume the OS
+ *  \param None
+ *  \return 0: task resuming successfull, 1: t task resuming failed 
+ */
+extern uint32_t TaskP_ResumeAll();
 #ifdef __cplusplus
 }
 #endif

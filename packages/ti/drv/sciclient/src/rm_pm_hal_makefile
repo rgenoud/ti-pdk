@@ -35,6 +35,11 @@ SRCS_COMMON +=  trace.c
 
 endif
 
+ifeq ($(CONFIG_LPM_DM),y)
+SRCDIR += src/priv/osal
+SRCS_COMMON +=  osal_dm.c
+endif
+
 
 # Core/SoC/platform specific source files and CFLAGS
 # Example:

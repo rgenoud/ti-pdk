@@ -378,4 +378,13 @@ void OS_stop(void)
     vTaskEndScheduler();
 }
 
+
+ void TaskP_SuspendAll(){
+    vTaskSuspendAll();
+ }
+
+ uint32_t TaskP_ResumeAll(){
+    return xTaskResumeAll();
+ }
+
 /* Nothing past this point */
