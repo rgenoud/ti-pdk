@@ -91,6 +91,9 @@ ifeq ($(SOC),$(filter $(SOC), j721s2))
     CFLAGS_LOCAL_COMMON += -DCONFIG_MSG_M4_ROM_USE_ALTERNATE_SPROXY
   endif
 endif
+ifeq ($(CONFIG_LPM_DM),y)
+CFLAGS_LOCAL_COMMON += -DCONFIG_LPM_DM
+endif
 
 include $(PDK_INSTALL_PATH)/ti/drv/sciclient/src/rm_pm_hal_build.mk
 

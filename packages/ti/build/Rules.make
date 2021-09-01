@@ -185,6 +185,13 @@ include $(MAKERULEDIR)/env.mk
 
 export PRUCORE_LIST = $(CORE_LIST_PRU)
 
+
+# Low Power Management Feature support
+ifeq ($(SOC),$(filter $(SOC), am62x))
+  CONFIG_LPM_DM=y
+endif
+
+
 ################################################################################
 # Build Tools Configuration
 ################################################################################

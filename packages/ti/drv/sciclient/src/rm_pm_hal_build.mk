@@ -180,6 +180,15 @@ CFLAGS_LOCAL_COMMON += -DCONFIG_RM_PROXY
 endif
 
 #
+# Low Power Management Feature support
+#
+ifeq ($(CONFIG_LPM_DM),y)
+CFLAGS_LOCAL_COMMON += -DCONFIG_LPM_DM
+endif
+
+# end fo lpm features
+
+#
 # Trace configuration for RM/PM
 #
 ifeq ($(CONFIG_TRACE),y)
