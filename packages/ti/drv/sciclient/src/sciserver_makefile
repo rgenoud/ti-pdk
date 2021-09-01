@@ -79,6 +79,10 @@ endif
 
 CFLAGS_LOCAL_COMMON = $(PDK_CFLAGS) $(SCICLIENT_CFLAGS)
 
+ifeq ($(CONFIG_LPM_DM),y)
+CFLAGS_LOCAL_COMMON += -DCONFIG_LPM_DM
+endif
+
 # for am62x same thread will be used for giving respose and notification for sciclient request
 ifeq ($(SOC),am62x)
 CFLAGS_LOCAL_COMMON += -DCONFIG_OSAL_MINIMAL_QUEUES
