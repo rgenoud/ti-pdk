@@ -253,8 +253,8 @@ OBJ_PATHS = $(patsubst %.c, $(OBJDIR)/%.$(OBJEXT), $(SRCS))
 # Change the extension from ASM to $(OBJEXT) and also add path
 OBJ_PATHS_ASM = $(patsubst %.asm, $(OBJDIR)/%.$(OBJEXT), $(SRCS_ASM))
 
-# Change the extension from S to $(OBJEXT) and also add path
-OBJ_PATHS_S = $(patsubst %.S, $(OBJDIR)/%.$(OBJEXT), $(SRCS_S))
+# Change the extension of assembly files from .S to $(OBJEXT) and also add path
+OBJ_PATHS_ASM_S = $(patsubst %.S, $(OBJDIR)/%.$(OBJEXT), $(SRCS_ASM_S))
 
 PACKAGE_PATHS = $(patsubst %, $(PACKAGEDIR)/%, $(PACKAGE_SRCS))
 
