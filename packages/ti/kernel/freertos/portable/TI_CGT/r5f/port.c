@@ -553,5 +553,11 @@ void _system_post_cinit(void)
 /* This function is called when configUSE_IDLE_HOOK is 1 in FreeRTOSConfig.h */
 void vApplicationIdleHook( void )
 {
-    __asm__ volatile ("    wfi");
+#if (configLOAD_UPDATE_IN_IDLE==1)
+    void vApplicationLoadHook();
+
+    vApplicationLoadHook();
+#endif
+
+    asm ( " WFI " );
 }
