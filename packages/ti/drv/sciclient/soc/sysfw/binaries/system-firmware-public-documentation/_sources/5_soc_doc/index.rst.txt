@@ -75,6 +75,27 @@ AM64x
    am64x/soc_devgrps
 
 =====
+AM62x
+=====
+
+.. toctree::
+   :maxdepth: 1
+
+   am62x/hosts
+   am62x/devices
+   am62x/clocks
+   am62x/pll_data
+   am62x/resasg_types
+   am62x/interrupt_cfg
+   am62x/ra_cfg
+   am62x/dma_cfg
+   am62x/psil_cfg
+   am62x/proxy_cfg
+   am62x/sec_proxy
+   am62x/processors
+   am62x/soc_devgrps
+
+=====
 J721E
 =====
 
