@@ -125,6 +125,11 @@ PACKAGE_SRCS_COMMON += src/rm_pm_hal/rm
 PACKAGE_SRCS_COMMON += src/rm_pm_hal/scripts
 PACKAGE_SRCS_COMMON += src/rm_pm_hal/utils
 endif
+ifeq ($(SOC),$(filter $(SOC), am62x))
+PACKAGE_SRCS_COMMON += src/dm_stub_makefile
+PACKAGE_SRCS_COMMON += src/rm_pm_hal/lpm
+PACKAGE_SRCS_COMMON += src/rm_pm_hal/app
+endif
 
 # Core/SoC/platform specific source files and CFLAGS
 # Example:
