@@ -1018,7 +1018,7 @@ Err:
 #if !defined(UART_API2_NOT_SUPPORTED)
 #if !defined(BAREMETAL)
 #if defined (__C7100__)
-#define APP_TSK_STACK_WRITE              (16U * 1024U)
+#define APP_TSK_STACK_WRITE              (32U * 1024U)
 #else
 #define APP_TSK_STACK_WRITE              (8U * 1024U)
 #endif /* #if defined (__C7100__) */
@@ -1157,7 +1157,7 @@ static bool UART_test_simultaneous_rw(bool dmaMode)
     }
     taskSyncFlag = false;
     /* Delete write task */
-    TaskP_delete(writeTask);
+    TaskP_delete(&writeTask);
 
     UART_transactionInit(&transaction);
     transaction.buf = (void *)(uintptr_t)addrEchoPrompt;
@@ -3298,7 +3298,12 @@ int main(void)
 }
 
 #if !defined(BAREMETAL)
+#if defined (__C7100__)
+#define APP_TSK_STACK_MAIN              (32U * 1024U)
+#else
 #define APP_TSK_STACK_MAIN              (16U * 1024U)
+#endif
+
 static uint8_t  gAppTskStackMain[APP_TSK_STACK_MAIN] __attribute__((aligned(32)));
 /*
  *  ======== main ========
