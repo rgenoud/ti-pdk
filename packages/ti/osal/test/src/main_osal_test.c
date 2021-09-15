@@ -43,11 +43,11 @@
 #include <xdc/std.h>
 #if defined (SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2)
 // workaround for A72 does not supported in SYS/BIOS yet
-#if defined (BUILD_C7X_1)
+#if defined (__C7100__)
 #ifndef BARE_METAL
 #include <ti/sysbios/family/c7x/Hwi.h>
 #endif //BARE_METAL
-#endif //BUILD_C7X_1
+#endif //__C7100__
 #else
 #include <xdc/cfg/global.h>
 #endif
@@ -162,7 +162,7 @@ void C66xTimerInterruptInit(void);
 #endif
 #endif
 
-#ifdef BUILD_C7X_1
+#ifdef __C7100__
 void    Osal_appC7xPreInit(void);
 void    C7x_ConfigureTimerOutput(void);
 #endif
@@ -241,7 +241,7 @@ void Board_initOSAL(void)
  */
 volatile   uint64_t gTestlocalTimeout = 0x300000U;
 
-#if (defined (SOC_AM65XX) || defined (SOC_AM64X) || defined(SOC_J721E) || defined(SOC_J7200) || defined (SOC_TPR12) || defined (SOC_AWR294X) || defined (SOC_J721S2)) && (!defined(BUILD_C66X_1))&&(!defined(BUILD_C66X_2))&&(!defined(BUILD_C7X_1))
+#if (defined (SOC_AM65XX) || defined (SOC_AM64X) || defined(SOC_J721E) || defined(SOC_J7200) || defined (SOC_TPR12) || defined (SOC_AWR294X) || defined (SOC_J721S2)) && (!defined(BUILD_C66X_1))&&(!defined(BUILD_C66X_2))&&(!defined(BUILD_C7X_1))&&(!defined(BUILD_C7X_2))
 #define INT_NUM_IRQ 32
 #define LOOP_CNT    100
 volatile uint64_t gFlagIRQ = 0;
@@ -321,7 +321,7 @@ bool  OSAL_core_hwi_test()
 bool OSAL_hwi_test()
 {
   bool pass = true;
-#if (defined (SOC_AM65XX) || defined (SOC_AM64X) || defined(SOC_J721E) || defined(SOC_J7200) || defined (SOC_TPR12) || defined (SOC_AWR294X) || defined (SOC_J721S2)) && (!defined(BUILD_C66X_1))&&(!defined(BUILD_C66X_2))&&(!defined(BUILD_C7X_1))
+#if (defined (SOC_AM65XX) || defined (SOC_AM64X) || defined(SOC_J721E) || defined(SOC_J7200) || defined (SOC_TPR12) || defined (SOC_AWR294X) || defined (SOC_J721S2)) && (!defined(BUILD_C66X_1))&&(!defined(BUILD_C66X_2))&&(!defined(BUILD_C7X_1))&&(!defined(BUILD_C7X_2))
   pass = OSAL_core_hwi_test();
 #endif
   return pass;
@@ -406,7 +406,7 @@ UT_Timer_Type_t  timer_type =             UT_Timer_TIMER64;
     #define OSAL_TEST_TIMER_ID2               (5U)
     #define OSAL_TEST_TIMER_PERIOD            (5000U)
   #endif
-#elif (defined(SOC_J721E) || defined(SOC_J721S2))
+#elif defined(SOC_J721E)
   UT_Timer_Type_t  timer_type    =          UT_Timer_DMTIMER;
   #if defined (BUILD_MCU1_0)
     #define OSAL_TEST_TIMER_ID                (2U)
@@ -425,6 +425,29 @@ UT_Timer_Type_t  timer_type =             UT_Timer_TIMER64;
     #define OSAL_TEST_TIMER_ID2               (3U)
     #define OSAL_TEST_TIMER_PERIOD            (5000U)
   #elif defined (BUILD_C7X_1)
+    #define OSAL_TEST_TIMER_ID                (1U)
+    #define OSAL_TEST_TIMER_ID2               (2U)
+    #define OSAL_TEST_TIMER_PERIOD            (5000U)
+  #else
+    #define OSAL_TEST_TIMER_ID                (2U)
+    #define OSAL_TEST_TIMER_ID2               (5U)
+    #define OSAL_TEST_TIMER_PERIOD            (5000U)
+  #endif
+#elif defined(SOC_J721S2)
+  UT_Timer_Type_t  timer_type    =          UT_Timer_DMTIMER;
+  #if defined (BUILD_MCU1_0)
+    #define OSAL_TEST_TIMER_ID                (2U)
+    #define OSAL_TEST_TIMER_ID2               (3U)
+    #define OSAL_TEST_TIMER_PERIOD            (5000U)
+  #elif defined (__TI_ARM_V7R4__)
+    #define OSAL_TEST_TIMER_ID                (1U)
+    #define OSAL_TEST_TIMER_ID2               (2U)
+    #define OSAL_TEST_TIMER_PERIOD            (5000U)
+  #elif defined (BUILD_C7X_1)
+    #define OSAL_TEST_TIMER_ID                (1U)
+    #define OSAL_TEST_TIMER_ID2               (2U)
+    #define OSAL_TEST_TIMER_PERIOD            (5000U)
+  #elif defined (BUILD_C7X_2)
     #define OSAL_TEST_TIMER_ID                (1U)
     #define OSAL_TEST_TIMER_ID2               (2U)
     #define OSAL_TEST_TIMER_PERIOD            (5000U)
@@ -613,9 +636,9 @@ bool OSAL_timer_test()
     id                  = OSAL_TEST_TIMER_ID;
 #endif
 
-#if defined(SOC_J721E) || defined(SOC_J7200)
+#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2)
 #if !(defined(BARE_METAL) || defined(FREERTOS))
-#if defined(BUILD_C66X_1) || defined(BUILD_C66X_2) || defined(BUILD_C7X_1) || defined(BUILD_MCU1_0)
+#if defined(BUILD_C66X_1) || defined(BUILD_C66X_2) || defined(BUILD_C7X_1) || defined(BUILD_C7X_2) || defined(BUILD_MCU1_0)
     id                  = OSAL_TEST_TIMER_ID;
 #endif
 #endif
@@ -678,14 +701,16 @@ bool OSAL_timer_test()
     timerParams.periodType = TimerP_PeriodType_MICROSECS;
     timerParams.period     = OSAL_TEST_TIMER_PERIOD;
 
-#if defined(SOC_J721E) || defined(SOC_J721S2)
+#if defined(SOC_J721E)
 #if defined(_TMS320C6X)
 	timerParams.eventId    = OSAL_TEST_TIMER_EVENT_NUM;
     timerParams.intNum     = OSAL_TEST_TIMER_INT_NUM;
     OSAL_log("\n set intNum=%d, eventId=%d, id=%d,  \n", timerParams.intNum, timerParams.eventId, id);
 #endif
+#endif
 
-#if defined(BUILD_C7X_1)
+#if defined(SOC_J721E) || defined(SOC_J721S2)
+#if defined(__C7100__)
     timerParams.intNum     = 15;
     OSAL_log("\n set intNum=%d, id=%d,  \n", timerParams.intNum, id);
 #endif
@@ -718,7 +743,7 @@ bool OSAL_timer_test()
 
 #if    TWO_TIMER_INTERRUPT_TEST
 
-#if (defined(_TMS320C6X) && (!defined(SOC_J721E) ))
+#if (defined(_TMS320C6X) && (!defined(SOC_J721E)))
     timerParams.intNum     = 14;
 #endif
 
@@ -1841,7 +1866,7 @@ void osal_test(void *arg0, void *arg1)
 
     Board_initOSAL();
 
-#ifdef BUILD_C7X_1
+#ifdef __C7100__
     Osal_appC7xPreInit();
     C7x_ConfigureTimerOutput();
 #endif
@@ -2093,7 +2118,7 @@ void osal_test(void *arg0, void *arg1)
 
 }
 
-#ifdef BUILD_C7X_1
+#ifdef __C7100__
 void sysIdleLoop(void)
 {
    __asm(" IDLE");
@@ -2104,8 +2129,11 @@ void sysIdleLoop(void)
 void C7x_ConfigureTimerOutput()
 {
     CSL_ClecEventConfig   cfgClec;
+#if defined (SOC_J721E)
     CSL_CLEC_EVTRegs     *clecBaseAddr = (CSL_CLEC_EVTRegs*)CSL_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
-
+#elif defined (SOC_J721S2)
+    CSL_CLEC_EVTRegs     *clecBaseAddr = (CSL_CLEC_EVTRegs*)CSL_COMPUTE_CLUSTER0_CLEC_BASE;
+#endif
     uint32_t input         = CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_TIMER0_INTR_PEND_0 + 992; /* Used for Timer Interrupt */
     uint32_t corepackEvent = 14;
 

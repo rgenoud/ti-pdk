@@ -367,7 +367,7 @@ OSAL_Baremetal_TestApp_PKG_LIST = OSAL_Baremetal_TestApp
 OSAL_Baremetal_TestApp_INCLUDE = $(OSAL_Baremetal_TestApp_PATH)
 OSAL_Baremetal_TestApp_BOARDLIST = $(libosal_BOARDLIST)
 export OSAL_Baremetal_TestApp_BOARDLIST
-ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200 am64x))
+ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200 am64x j721s2))
 OSAL_Baremetal_TestApp_SBL_APPIMAGEGEN = yes
 else
 OSAL_Baremetal_TestApp_SBL_APPIMAGEGEN = no
@@ -394,7 +394,7 @@ ifneq ($(wildcard $(SAFERTOS_KERNEL_INSTALL_PATH)),)
 osal_EXAMPLE_LIST += OSAL_TestApp_$(1)
 endif
 endif
-ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200 am64x tpr12 awr294x))
+ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200 am64x tpr12 awr294x j721s2))
 export OSAL_TestApp_$(1)_SBL_APPIMAGEGEN = yes
 else
 export OSAL_TestApp_$(1)_SBL_APPIMAGEGEN = no
@@ -492,6 +492,12 @@ ifeq ($(SOC),$(filter $(SOC), j7200))
  OSAL_TestApp_tirtos_$(SOC)_CORELIST = mpu1_0 mcu1_0 mcu2_0
  OSAL_Baremetal_TestApp_$(SOC)_CORELIST = mpu1_0 mcu1_0 mcu2_0
  OSAL_TestApp_freertos_$(SOC)_CORELIST = mcu1_0 mcu1_1 mcu2_0 mcu2_1
+endif
+
+ifeq ($(SOC),$(filter $(SOC), j721s2))
+ OSAL_TestApp_tirtos_$(SOC)_CORELIST = mpu1_0 mcu1_0 mcu2_0 mcu3_0 c7x_1 c7x_2
+ OSAL_Baremetal_TestApp_$(SOC)_CORELIST = mpu1_0 mcu1_0 mcu2_0 mcu3_0
+ OSAL_TestApp_freertos_$(SOC)_CORELIST = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1
 endif
 
 ifeq ($(SOC),$(filter $(SOC), tpr12 awr294x))
