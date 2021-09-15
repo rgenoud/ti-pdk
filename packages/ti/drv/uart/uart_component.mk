@@ -68,9 +68,18 @@ ifeq ($(uart_component_make_include), )
 
 # under other list
 drvuart_RTOS_LIST 		= $(DEFAULT_RTOS_LIST)
-drvuart_BOARDLIST       = am65xx_evm am65xx_idk j721e_sim j721e_evm j7200_evm am64x_evm tpr12_evm tpr12_qt awr294x_evm
-drvuart_dma_SOCLIST     = tda2xx tda2px dra72x dra75x tda2ex tda3xx dra78x am574x am572x am571x k2h k2k k2l k2e k2g c6678 c6657 omapl137 omapl138 am437x am65xx j721e j7200
-drvuart_SOCLIST         = tda2xx tda2px dra72x dra75x tda2ex tda3xx dra78x am574x am572x am571x k2h k2k k2l k2e k2g c6678 c6657 am437x am335x omapl137 omapl138 am65xx j721e j7200 am64x tpr12 awr294x
+
+drvuart_BOARDLIST       = am65xx_evm am65xx_idk j721e_sim j721e_evm j7200_evm am64x_evm 
+drvuart_BOARDLIST      += tpr12_evm tpr12_qt awr294x_evm j721s2_evm
+
+drvuart_SOCLIST         = tda2xx tda2px tda2ex tda3xx dra78x am574x am572x am571x dra72x 
+drvuart_SOCLIST        += dra75x k2h k2k k2l k2e k2g c6678 c6657 am437x am335x omapl137 
+drvuart_SOCLIST        += omapl138 am65xx j721e j7200 am64x tpr12 awr294x j721s2
+
+drvuart_dma_SOCLIST     = am574x am572x am571x dra72x dra75x dra78x k2h k2k k2l k2e k2g 
+drvuart_dma_SOCLIST    += c6678 c6657 omapl137 omapl138 am437x am65xx j721e j7200 am335x 
+drvuart_dma_SOCLIST    += am64x tpr12 awr294x
+
 drvuart_tda2xx_CORELIST = ipu1_0
 drvuart_tda2px_CORELIST = ipu1_0
 drvuart_tda2ex_CORELIST = ipu1_0
@@ -92,15 +101,18 @@ drvuart_c6678_CORELIST  = c66x
 drvuart_c6657_CORELIST  = c66x
 drvuart_am437x_CORELIST = a9host
 drvuart_am335x_CORELIST = a8host pru_0 pru_1
+
 drvuart_am65xx_CORELIST = mpu1_0 mcu1_0 mcu1_1
-drvuart_j721e_CORELIST = $(DEFAULT_j721e_CORELIST)
-drvuart_j721e_CORELISTARM = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1
-drvuart_j7200_CORELIST = $(DEFAULT_j7200_CORELIST)
-drvuart_j7200_CORELISTARM = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1
-drvuart_am64x_CORELIST = $(DEFAULT_am64x_CORELIST)
-drvuart_am64x_CORELISTARM = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1
-drvuart_tpr12_CORELIST = mcu1_0 c66xdsp_1
+drvuart_j721e_CORELIST  = $(DEFAULT_j721e_CORELIST)
+drvuart_j7200_CORELIST  = $(DEFAULT_j7200_CORELIST)
+drvuart_am64x_CORELIST  = $(DEFAULT_am64x_CORELIST)
+drvuart_j721s2_CORELIST = $(DEFAULT_j721s2_CORELIST)
+drvuart_tpr12_CORELIST   = mcu1_0 c66xdsp_1
 drvuart_awr294x_CORELIST = mcu1_0 c66xdsp_1
+drvuart_j721e_CORELISTARM  = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1
+drvuart_j7200_CORELISTARM  = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1
+drvuart_am64x_CORELISTARM  = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1
+drvuart_j721s2_CORELISTARM = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1
 
 
 define DRV_UART_RTOS_BOARDLIST_RULE
@@ -165,12 +177,9 @@ export uart_CORE_DEPENDENCY
 export uart_SOC_DEPENDENCY
 uart_PKG_LIST = uart
 uart_INCLUDE = $(uart_PATH)
-uart_SOCLIST = tda2xx tda2px tda2ex tda3xx dra78x am574x am572x am571x dra72x dra75x k2h k2k k2l k2e k2g c6678 c6657 am437x am335x omapl137 omapl138 am65xx j721e j7200 am64x tpr12 awr294x
+uart_SOCLIST = $(drvuart_SOCLIST)
 export uart_SOCLIST
 uart_$(SOC)_CORELIST = $(drvuart_$(SOC)_CORELIST)
-ifeq ($(SOC),$(filter $(SOC), j721e))
-uart_$(SOC)_CORELIST += c7x_1
-endif
 export uart_$(SOC)_CORELIST
 
 # UART LIB DEVICE INDEPENDENT
@@ -220,7 +229,7 @@ export uart_dma_CORE_DEPENDENCY
 export uart_dma_SOC_DEPENDENCY
 uart_dma_PKG_LIST = uart_dma
 uart_dma_INCLUDE = $(uart_dma_PATH)
-uart_dma_SOCLIST = am574x am572x am571x dra72x dra75x dra78x k2h k2k k2l k2e k2g c6678 c6657 omapl137 omapl138 am437x am65xx j721e j7200 am335x am64x tpr12 awr294x
+uart_dma_SOCLIST = $(drvuart_dma_SOCLIST)
 export uart_dma_SOCLIST
 uart_dma_$(SOC)_CORELIST = $(drvuart_$(SOC)_CORELIST)
 export uart_dma_$(SOC)_CORELIST
@@ -324,7 +333,7 @@ export uart_console_CORE_DEPENDENCY
 export uart_console_SOC_DEPENDENCY
 uart_console_PKG_LIST = uart_console
 uart_console_INCLUDE = $(uart_console_PATH)
-uart_console_SOCLIST = tda2xx tda2px tda2ex tda3xx am65xx j721e j7200 tpr12 awr294x
+uart_console_SOCLIST = tda2xx tda2px tda2ex tda3xx am65xx j721e j7200 tpr12 awr294x j721s2
 export uart_console_SOCLIST
 uart_console_$(SOC)_CORELIST = $(drvuart_$(SOC)_CORELIST)
 export uart_console_$(SOC)_CORELIST
@@ -380,14 +389,14 @@ UART_Baremetal_TestApp_PKG_LIST = UART_Baremetal_TestApp
 UART_Baremetal_TestApp_INCLUDE = $(UART_Baremetal_TestApp_PATH)
 UART_Baremetal_TestApp_BOARDLIST = $(drvuart_BOARDLIST)
 export UART_Baremetal_TestApp_BOARDLIST
-ifeq ($(SOC),$(filter $(SOC), j721e j7200 am64x))
+ifeq ($(SOC),$(filter $(SOC), j721e j7200 am64x j721s2))
 UART_Baremetal_TestApp_$(SOC)_CORELIST = $(drvuart_$(SOC)_CORELISTARM)
 else
 UART_Baremetal_TestApp_$(SOC)_CORELIST = $(drvuart_$(SOC)_CORELIST)
 endif
 
 export UART_Baremetal_TestApp_$(SOC)_CORELIST
-ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200 am64x))
+ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200 am64x j721s2))
 UART_Baremetal_TestApp_SBL_APPIMAGEGEN = yes
 else
 UART_Baremetal_TestApp_SBL_APPIMAGEGEN = no
@@ -410,13 +419,13 @@ UART_Baremetal_DMA_TestApp_PKG_LIST = UART_Baremetal_DMA_TestApp
 UART_Baremetal_DMA_TestApp_INCLUDE = $(UART_Baremetal_DMA_TestApp_PATH)
 UART_Baremetal_DMA_TestApp_BOARDLIST = $(drvuart_BOARDLIST)
 export UART_Baremetal_DMA_TestApp_BOARDLIST
-ifeq ($(SOC),$(filter $(SOC), j721e j7200 am64x))
+ifeq ($(SOC),$(filter $(SOC), j721e j7200 am64x j721s2))
 UART_Baremetal_DMA_TestApp_$(SOC)_CORELIST = $(drvuart_$(SOC)_CORELISTARM)
 else
 UART_Baremetal_DMA_TestApp_$(SOC)_CORELIST = $(drvuart_$(SOC)_CORELIST)
 endif
 export UART_Baremetal_DMA_TestApp_$(SOC)_CORELIST
-ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200 am64x))
+ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200 am64x j721s2))
 UART_Baremetal_DMA_TestApp_SBL_APPIMAGEGEN = yes
 export UART_Baremetal_DMA_TestApp_SBL_APPIMAGEGEN
 endif
@@ -440,7 +449,7 @@ export UART_TestApp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(
 else
 export UART_TestApp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), $(drvuart_$(SOC)_CORELIST))
 endif
-ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200 am64x tpr12 awr294x))
+ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200 am64x tpr12 awr294x j721s2))
 export UART_TestApp_$(1)_SBL_APPIMAGEGEN = yes
 endif
 ifneq ($(1),$(filter $(1), safertos))
@@ -471,12 +480,12 @@ export UART_DMA_TestApp_$(1)_MAKEFILE = -f makefile BUILD_OS_TYPE=$(1) DMA=enabl
 UART_DMA_TestApp_$(1)_PKG_LIST = UART_DMA_TestApp_$(1)
 UART_DMA_TestApp_$(1)_INCLUDE = $(UART_DMA_TestApp_$(1)_PATH)
 export UART_DMA_TestApp_$(1)_BOARDLIST = $(drvuart_$(1)_BOARDLIST)
-ifeq ($(SOC),$(filter $(SOC), j721e j7200 am64x))
+ifeq ($(SOC),$(filter $(SOC), j721e j7200 am64x j721s2))
 export UART_DMA_TestApp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), $(drvuart_$(SOC)_CORELISTARM))
 else
 export UART_DMA_TestApp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), $(drvuart_$(SOC)_CORELIST))
 endif
-ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200 am64x tpr12 awr294x))
+ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200 am64x tpr12 awr294x j721s2))
 export UART_DMA_TestApp_$(1)_SBL_APPIMAGEGEN = yes
 endif
 ifneq ($(1),$(filter $(1), safertos))
@@ -511,10 +520,6 @@ UART_BasicExample_Polling_ExampleProject_BOARDLIST = tda2xx-evm tda2px-evm tda2e
 export UART_BasicExample_Polling_ExampleProject_BOARDLIST
 UART_BasicExample_Polling_ExampleProject_$(SOC)_CORELIST = $(drvuart_$(SOC)_CORELIST)
 export UART_BasicExample_Polling_ExampleProject_$(SOC)_CORELIST
-ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200 am64x))
-UART_BasicExample_Polling_ExampleProject_SBL_APPIMAGEGEN = yes
-export UART_BasicExample_Polling_ExampleProject_SBL_APPIMAGEGEN
-endif
 
 # UART Interrupt mode Test app
 UART_BasicExample_Intr_ExampleProject_COMP_LIST = UART_BasicExample_Intr_ExampleProject
@@ -533,10 +538,6 @@ UART_BasicExample_Intr_ExampleProject_BOARDLIST = tda2xx-evm tda2px-evm tda2ex-e
 export UART_BasicExample_Intr_ExampleProject_BOARDLIST
 UART_BasicExample_Intr_ExampleProject_$(SOC)_CORELIST = $(drvuart_$(SOC)_CORELIST)
 export UART_BasicExample_Intr_ExampleProject_$(SOC)_CORELIST
-ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200 am64x))
-UART_BasicExample_Intr_ExampleProject_SBL_APPIMAGEGEN = yes
-export UART_BasicExample_Intr_ExampleProject_SBL_APPIMAGEGEN
-endif
 
 export drvuart_LIB_LIST
 export uart_LIB_LIST
