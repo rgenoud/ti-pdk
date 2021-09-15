@@ -155,13 +155,13 @@ void Osal_initMmuDefault(void)
 /* The C7x CLEC should be programmed to allow config/re config either in secure
  * OR non secure mode. This function configures all inputs to given level
  *
- * Instance is hard-coded for J721e only
+ * Instance is hard-coded for J721S2 only
  *
  */
 void OsalCfgClecAccessCtrl (Bool onlyInSecure)
 {
     CSL_ClecEventConfig cfgClec;
-    CSL_CLEC_EVTRegs   *clecBaseAddr = (CSL_CLEC_EVTRegs*) CSL_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
+    CSL_CLEC_EVTRegs   *clecBaseAddr = (CSL_CLEC_EVTRegs*) CSL_COMPUTE_CLUSTER0_CLEC_BASE;
     uint32_t            i, maxInputs = 2048U;
 
     cfgClec.secureClaimEnable = onlyInSecure;
