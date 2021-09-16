@@ -75,9 +75,9 @@
 /*                            Global Variables                                */
 /* ========================================================================== */
 
-/** \brief This structure contains configuration parameters for
+/** \brief Pointer to structure that contains configuration parameters for
 *       the sec_proxy IP */
-extern CSL_SecProxyCfg gSciclient_secProxyCfg;
+extern CSL_SecProxyCfg *pSciclient_secProxyCfg;
 
 /* ========================================================================== */
 /*                          Function Definitions                              */
@@ -85,14 +85,14 @@ extern CSL_SecProxyCfg gSciclient_secProxyCfg;
 
 uint32_t Sciclient_threadStatusReg(uint32_t thread)
 {
-    return ((uint32_t)(uintptr_t)(gSciclient_secProxyCfg.pSecProxyRtRegs) +
+    return ((uint32_t)(uintptr_t)(pSciclient_secProxyCfg->pSecProxyRtRegs) +
         CSL_SEC_PROXY_RT_THREAD_STATUS(thread));
 }
 
 uint32_t Sciclient_readThread32(uint32_t thread, uint8_t idx)
 {
     uint32_t ret;
-    ret = HW_RD_REG32(CSL_secProxyGetDataAddr(&gSciclient_secProxyCfg,thread,0U) +
+    ret = HW_RD_REG32(CSL_secProxyGetDataAddr(pSciclient_secProxyCfg,thread,0U) +
         ((uintptr_t) (0x4U) * (uintptr_t) idx));
     return ret;
 }
@@ -152,7 +152,7 @@ void Sciclient_sendMessage(uint32_t        thread,
     const uint8_t *msg = pSecHeader;
     uint32_t numWords   = 0U;
     uint32_t test = 0U;
-    uintptr_t threadAddr = CSL_secProxyGetDataAddr(&gSciclient_secProxyCfg, thread, 0U);
+    uintptr_t threadAddr = CSL_secProxyGetDataAddr(pSciclient_secProxyCfg, thread, 0U);
 
     if(pSecHeader != NULL)
     {
@@ -194,7 +194,7 @@ void Sciclient_sendMessage(uint32_t        thread,
     if ((((uint32_t) secHeaderSizeWords*4U)+(SCICLIENT_HEADER_SIZE_IN_WORDS*4U)+payloadSize) <=
         (maxMsgSizeBytes - 4U))
     {
-        threadAddr = CSL_secProxyGetDataAddr(&gSciclient_secProxyCfg, thread, 0U) +
+        threadAddr = CSL_secProxyGetDataAddr(pSciclient_secProxyCfg, thread, 0U) +
         ((uintptr_t) maxMsgSizeBytes  - (uintptr_t) 4U) ;
         CSL_REG32_WR(threadAddr,0U);
     }

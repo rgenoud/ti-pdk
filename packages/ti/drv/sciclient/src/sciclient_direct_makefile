@@ -79,6 +79,13 @@ ifeq ($(BUILD_HS),yes)
 CFLAGS_LOCAL_COMMON += -DBUILD_HS
 endif
 
+#SoCs in which the TIFS ROM uses another sec_proxy instance for TIFS firmware loading
+ifeq ($(SOC),$(filter $(SOC), j721s2))
+  ifeq ($(CORE), mcu1_0)
+    CFLAGS_LOCAL_COMMON += -DCONFIG_MSG_M4_ROM_USE_ALTERNATE_SPROXY
+  endif
+endif
+
 include $(PDK_INSTALL_PATH)/ti/drv/sciclient/src/rm_pm_hal_build.mk
 
 # Core/SoC/platform specific source files and CFLAGS

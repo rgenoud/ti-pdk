@@ -134,9 +134,9 @@ static uint32_t gSciclient_writeInProgress = 0U;
  */
 static struct tisci_sec_header gSciclient_secHeader;
 
-/** \brief This structure contains configuration parameters for
+/** \brief Pointer to structure that contains configuration parameters for
 *       the sec_proxy IP */
-extern CSL_SecProxyCfg gSciclient_secProxyCfg;
+extern CSL_SecProxyCfg *pSciclient_secProxyCfg;
 
 /* ========================================================================== */
 /*                          Function Definitions                              */
@@ -262,10 +262,10 @@ int32_t Sciclient_init(const Sciclient_ConfigPrms_t *pCfgPrms)
             {
                 OsalRegisterIntrParams_t    intrPrms;
                 rxThread = gSciclientMap[contextId].respThreadId;
-                CSL_secProxyGetDataAddr(&gSciclient_secProxyCfg, rxThread, 0U);
+                CSL_secProxyGetDataAddr(pSciclient_secProxyCfg, rxThread, 0U);
                 /* Get the Max Message Size */
                 gSciclient_maxMsgSizeBytes =
-                        CSL_secProxyGetMaxMsgSize(&gSciclient_secProxyCfg) -
+                        CSL_secProxyGetMaxMsgSize(pSciclient_secProxyCfg) -
                         CSL_SEC_PROXY_RSVD_MSG_BYTES;
                 Sciclient_flush(rxThread, gSciclient_maxMsgSizeBytes);
                 Osal_RegisterInterrupt_initParams(&intrPrms);
@@ -323,10 +323,10 @@ int32_t Sciclient_init(const Sciclient_ConfigPrms_t *pCfgPrms)
             {
                 OsalRegisterIntrParams_t    intrPrms;
                 rxThread = gSciclientMap[contextId].respThreadId;
-                CSL_secProxyGetDataAddr(&gSciclient_secProxyCfg, rxThread, 0U);
+                CSL_secProxyGetDataAddr(pSciclient_secProxyCfg, rxThread, 0U);
                 /* Get the Max Message Size */
                 gSciclient_maxMsgSizeBytes =
-                        CSL_secProxyGetMaxMsgSize(&gSciclient_secProxyCfg) -
+                        CSL_secProxyGetMaxMsgSize(pSciclient_secProxyCfg) -
                         CSL_SEC_PROXY_RSVD_MSG_BYTES;
                 Sciclient_flush(rxThread, gSciclient_maxMsgSizeBytes);
                 Osal_RegisterInterrupt_initParams(&intrPrms);
@@ -525,7 +525,7 @@ int32_t Sciclient_serviceGetThreadIds (const Sciclient_ReqPrm_t *pReqPrm,
         gSciclient_secHeader.rsvd = (uint16_t)0;
         /* Get the Max Message Size */
         gSciclient_maxMsgSizeBytes =
-                CSL_secProxyGetMaxMsgSize(&gSciclient_secProxyCfg) -
+                CSL_secProxyGetMaxMsgSize(pSciclient_secProxyCfg) -
                 CSL_SEC_PROXY_RSVD_MSG_BYTES;
     }
     else
@@ -746,7 +746,7 @@ int32_t Sciclient_serviceSecureProxy(const Sciclient_ReqPrm_t *pReqPrm,
 
         timeToWait = pReqPrm->timeout;
         pLocalRespHdr = (struct tisci_header *)(CSL_secProxyGetDataAddr(
-            &gSciclient_secProxyCfg, rxThread, 0U)
+            pSciclient_secProxyCfg, rxThread, 0U)
             + ((uintptr_t) gSecHeaderSizeWords * (uintptr_t) 4U));
         /* Verify thread status before reading/writing */
         status = Sciclient_verifyThread(rxThread);
@@ -1040,7 +1040,7 @@ static void Sciclient_ISR(uintptr_t arg)
         }
         volatile Sciclient_RomFirmwareLoadHdr_t *pLocalRespHdr =
                 (struct tisci_header *)(CSL_secProxyGetDataAddr(
-                                                &gSciclient_secProxyCfg,rxThread,0U)
+                                                pSciclient_secProxyCfg,rxThread,0U)
                                         + ((uintptr_t) gSecHeaderSizeWords * (uintptr_t) 4U));
         uint8_t seqId = pLocalRespHdr->seq;
         if ((gSciclientHandle.semStatus[seqId] == SemaphoreP_OK) && (seqId != 0U))
