@@ -55,7 +55,7 @@ SRCS_COMMON += main_mcspi_slave_mode.c SPI_log.c
 # need to be included for this component
 INCLUDE_EXTERNAL_INTERFACES = pdk $(EXTERNAL_INTERFACES)
 
-ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200))
+ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200 j721s2))
     ifeq ($(CORE), mpu1_0)
         # Slave running on mpu1_0 core
         CFLAGS_SPI_MS     = -DMCSPI_SLAVE_TASK
@@ -68,7 +68,7 @@ ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200))
         # Master running on mcu1_0 core, use the common linker command file in build
         CFLAGS_SPI_MS     = -DMCSPI_MASTER_TASK
         APP_MASTER_SLAVE  = Master
-        ifeq ($(SOC),$(filter $(SOC), j721e j7200))
+        ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2))
             # Slave uses local linker command file to avoid code/data memory conflict with master application
             ifeq ($(BUILD_OS_TYPE), baremetal)
                 EXTERNAL_LNKCMD_FILE_LOCAL =  $(PDK_INSTALL_PATH)/ti/drv/spi/example/mcspi_slavemode/$(SOC)/linker_mcu.lds
@@ -121,12 +121,16 @@ ifeq ($(SOC),$(filter $(SOC), j721e))
 CFLAGS_SPI_MS    += -Dj721e_evm=j721e_evm
 endif
 
+ifeq ($(SOC),$(filter $(SOC), j721s2))
+CFLAGS_SPI_MS    += -Dj721s2_evm=j721s2_evm
+endif
 
-ifeq ($(BOARD),$(filter $(BOARD), am65xx_evm am65xx_idk j721e_sim j721e_evm j7200_evm am64x_evm))
+
+ifeq ($(BOARD),$(filter $(BOARD), am65xx_evm am65xx_idk j721e_sim j721e_evm j7200_evm am64x_evm j721s2_evm))
 CFLAGS_SPI_UT    = -DMCSPI_MULT_CHANNEL
 endif
 
-ifeq ($(SOC),$(filter $(SOC), j721e j7200))
+ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2))
   ifeq ($(CORE),mcu1_0)
     COMP_LIST_COMMON += sciserver_tirtos
   endif

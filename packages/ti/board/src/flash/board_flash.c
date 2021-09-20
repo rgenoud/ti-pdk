@@ -172,13 +172,15 @@ Board_flashHandle Board_flashOpen(uint32_t deviceId, uint32_t portNum, void *par
 
         return (Board_flashHandle)&(Board_flashInfo);
     }
-#elif defined (BOARD_NAND_FLASH_IN)
+#endif
+#if defined (BOARD_NAND_FLASH_IN)
     NAND_HANDLE        flashHandle;
     NAND_Info         *nandInfo;
 
-    if ((deviceId == BOARD_FLASH_ID_MT29F4G08ABAEAWP) || \
-        (deviceId == BOARD_FLASH_ID_MT29F4G16ABAFAH) || \
-        (deviceId == BOARD_FLASH_ID_MT29F8G16ABACAWP))
+    if ((flashInfo->device_id == BOARD_FLASH_ID_MT29F4G08ABAEAWP) || \
+        (flashInfo->device_id == BOARD_FLASH_ID_MT29F4G16ABAFAH)  || \
+        (flashInfo->device_id == BOARD_FLASH_ID_MT29F8G16ABACAWP) || \
+        (flashInfo->device_id == BOARD_FLASH_ID_W35N01JWTBAG))
     {
         /* Open the Nand flash */
         flashHandle = NAND_open(flashIntf, portNum, params);
@@ -252,10 +254,12 @@ Board_flash_STATUS Board_flashClose(Board_flashHandle handle)
     {
         NOR_close(flashInfo->flashHandle);
     }
-#elif defined (BOARD_NAND_FLASH_IN)
+#endif
+#if defined (BOARD_NAND_FLASH_IN)
     if ((flashInfo->device_id == BOARD_FLASH_ID_MT29F4G08ABAEAWP) || \
-        (flashInfo->device_id == BOARD_FLASH_ID_MT29F4G16ABAFAH) || \
-        (flashInfo->device_id == BOARD_FLASH_ID_MT29F8G16ABACAWP))
+        (flashInfo->device_id == BOARD_FLASH_ID_MT29F4G16ABAFAH)  || \
+        (flashInfo->device_id == BOARD_FLASH_ID_MT29F8G16ABACAWP) || \
+        (flashInfo->device_id == BOARD_FLASH_ID_W35N01JWTBAG))
     {
         NAND_close(flashInfo->flashHandle);
     }
@@ -327,10 +331,12 @@ Board_flash_STATUS Board_flashRead(Board_flashHandle  handle,
         }
         return BOARD_FLASH_EOK;
     }
-#elif defined (BOARD_NAND_FLASH_IN)
+#endif
+#if defined (BOARD_NAND_FLASH_IN)
     if ((flashInfo->device_id == BOARD_FLASH_ID_MT29F4G08ABAEAWP) || \
-        (flashInfo->device_id == BOARD_FLASH_ID_MT29F4G16ABAFAH) || \
-        (flashInfo->device_id == BOARD_FLASH_ID_MT29F8G16ABACAWP))
+        (flashInfo->device_id == BOARD_FLASH_ID_MT29F4G16ABAFAH)  || \
+        (flashInfo->device_id == BOARD_FLASH_ID_MT29F8G16ABACAWP) || \
+        (flashInfo->device_id == BOARD_FLASH_ID_W35N01JWTBAG))
     {
         if (NAND_read(flashInfo->flashHandle, offset, len, buf) \
             != NAND_PASS)
@@ -637,10 +643,12 @@ Board_flash_STATUS Board_flashWrite(Board_flashHandle  handle,
         }
         return BOARD_FLASH_EOK;
     }
-#elif defined (BOARD_NAND_FLASH_IN)
+#endif
+#if defined (BOARD_NAND_FLASH_IN)
     if ((flashInfo->device_id == BOARD_FLASH_ID_MT29F4G08ABAEAWP) || \
-        (flashInfo->device_id == BOARD_FLASH_ID_MT29F4G16ABAFAH) || \
-        (flashInfo->device_id == BOARD_FLASH_ID_MT29F8G16ABACAWP))
+        (flashInfo->device_id == BOARD_FLASH_ID_MT29F4G16ABAFAH)  || \
+        (flashInfo->device_id == BOARD_FLASH_ID_MT29F8G16ABACAWP) || \
+        (flashInfo->device_id == BOARD_FLASH_ID_W35N01JWTBAG))
     {
         if (NAND_write(flashInfo->flashHandle, offset, len, buf) != NAND_PASS)
         {
@@ -720,12 +728,14 @@ Board_flash_STATUS Board_flashEraseBlk(Board_flashHandle handle,
         }
         return BOARD_FLASH_EOK;
     }
-#elif defined (BOARD_NAND_FLASH_IN)
+#endif
+#if defined (BOARD_NAND_FLASH_IN)
     NAND_STATUS status;
 
     if ((flashInfo->device_id == BOARD_FLASH_ID_MT29F4G08ABAEAWP) || \
-        (flashInfo->device_id == BOARD_FLASH_ID_MT29F4G16ABAFAH) || \
-        (flashInfo->device_id == BOARD_FLASH_ID_MT29F8G16ABACAWP))
+        (flashInfo->device_id == BOARD_FLASH_ID_MT29F4G16ABAFAH)  || \
+        (flashInfo->device_id == BOARD_FLASH_ID_MT29F8G16ABACAWP) || \
+        (flashInfo->device_id == BOARD_FLASH_ID_W35N01JWTBAG))
     {
         if (flashInfo->bblist[blk_num] == NAND_BAD_BLOCK)
         {

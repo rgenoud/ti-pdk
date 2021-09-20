@@ -309,6 +309,7 @@ extern NAND_STATUS NAND_write(NAND_HANDLE handle, uint32_t addr, uint32_t len, u
 extern NAND_STATUS NAND_erase(NAND_HANDLE handle, int32_t blk);
 
 extern const NAND_FxnTable Nand_gpmcFxnTable;
+extern const NAND_FxnTable Nand_ospiFxnTable;
 
 #ifdef __cplusplus
 }

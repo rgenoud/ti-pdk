@@ -47,7 +47,7 @@
 #if defined(OSPI_TESTAPP_TIRTOS)
 #include <ti/sysbios/utils/Load.h>
 #endif
-#if defined(SOC_AM65XX) || defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_AM64X)
+#if defined(SOC_AM65XX) || defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_AM64X) || defined(SOC_J721S2)
 #if defined (__aarch64__)
 #include <ti/sysbios/family/arm/v8a/Mmu.h>
 #endif
@@ -66,6 +66,9 @@
 #include <ti/board/src/flash/nor/ospi/nor_spi_patterns.h>
 #if defined(SOC_J7200) || defined(SOC_AM64X)
 #include <ti/board/src/flash/nor/ospi/nor_xspi.h>
+#elif defined(SOC_J721S2)
+#include <ti/board/src/flash/nor/ospi/nor_xspi.h>
+#include <ti/board/src/flash/nand/ospi/nand_ospi.h>
 #else
 #include <ti/board/src/flash/nor/ospi/nor_ospi.h>
 #endif
@@ -74,7 +77,7 @@
 #include <ti/osal/CacheP.h>
 #endif
 
-#if defined(SOC_AM65XX) || defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_AM64X)
+#if defined(SOC_AM65XX) || defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_AM64X) || defined(SOC_J721S2)
 #include <ti/csl/cslr_fss.h>
 #include <ti/csl/csl_rat.h>
 #include <ti/csl/arch/csl_arch.h>
@@ -84,6 +87,9 @@
 #endif
 #if defined(SOC_AM64X) || defined(SOC_J7200)
 #include <ti/board/src/flash/nor/device/s28hs512t.h>
+#elif defined(SOC_J721S2)
+#include <ti/board/src/flash/nor/device/s28hs512t.h>
+#include <ti/board/src/flash/nand/device/w35n01jwtbag.h>
 #else
 #include <ti/board/src/flash/nor/device/m35xu512.h>
 #endif
@@ -107,6 +113,13 @@
 #include <ti/csl/soc/j7200/src/cslr_mcu_ctrl_mmr.h>
 #include <ti/csl/soc/j7200/src/cslr_mcu_pll_mmr.h>
 #include <ti/csl/soc/j7200/src/cslr_wkup_ctrl_mmr.h>
+#endif
+
+#if defined(SOC_J721S2)
+#include <ti/csl/soc/j721s2/src/cslr_soc_baseaddress.h>
+#include <ti/csl/soc/j721s2/src/cslr_mcu_ctrl_mmr.h>
+#include <ti/csl/soc/j721s2/src/cslr_mcu_pll_mmr.h>
+#include <ti/csl/soc/j721s2/src/cslr_wkup_ctrl_mmr.h>
 #endif
 
 #endif
@@ -187,7 +200,7 @@ uint8_t txBuf[TEST_BUF_LEN]  __attribute__((aligned(128))) __attribute__((sectio
 #endif
 #endif
 
-#if defined(SOC_J721E) || defined(SOC_J7200)
+#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2)
 #ifdef SPI_DMA_ENABLE
 uint8_t txBuf[TEST_BUF_LEN]  __attribute__((aligned(UDMA_CACHELINE_ALIGNMENT))) __attribute__((section(".benchmark_buffer")));
 #else
@@ -204,7 +217,7 @@ uint8_t rxBuf[TEST_BUF_LEN]  __attribute__((aligned(128))) __attribute__((sectio
 #endif
 #endif
 
-#if defined(SOC_J721E) || defined(SOC_J7200)
+#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2)
 #ifdef SPI_DMA_ENABLE
 uint8_t rxBuf[TEST_BUF_LEN]  __attribute__((aligned(UDMA_CACHELINE_ALIGNMENT))) __attribute__((section(".benchmark_buffer")));
 #else
@@ -212,7 +225,7 @@ uint8_t rxBuf[TEST_BUF_LEN]  __attribute__((aligned(128))) __attribute__((sectio
 #endif
 #endif
 
-#if defined(SOC_AM65XX) || defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_AM64X)
+#if defined(SOC_AM65XX) || defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_AM64X) || defined(SOC_J721S2)
 
 #ifdef SPI_DMA_ENABLE
 /*
@@ -532,7 +545,7 @@ void OSPI_configClk(uint32_t freq, bool usePHY)
 }
 #endif
 
-#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_AM64X)
+#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_AM64X) || defined(SOC_J721S2)
 void OSPI_configClk(uint32_t freq, bool usePHY)
 {
     OSPI_v0_HwAttrs ospi_cfg;
@@ -798,7 +811,7 @@ static bool OSPI_flash_test(void *arg)
     /* Default Device, SoC's specifics overrides shall follow */
     deviceId = BOARD_FLASH_ID_MT35XU512ABA1G12;
 
-#if defined(SOC_J7200) || defined(SOC_AM64X)
+#if defined(SOC_J7200) || defined(SOC_AM64X) || defined(SOC_J721S2)
     deviceId = BOARD_FLASH_ID_S28HS512T;
 #endif
 
@@ -848,7 +861,7 @@ static bool OSPI_flash_test(void *arg)
 #endif
 
 #ifdef OSPI_WRITE
-#if defined(SOC_J7200) || defined(SOC_AM64X)
+#if defined(SOC_J7200) || defined(SOC_AM64X) || defined(SOC_J721S2)
     if (test->dacMode)                          /* DAC writes are not supported on Cypress xSPI Flash - Switch to INDAC mode for write as WA to PDK-7115 */
     {
         SPI_log("\n The Cypress xSPI Flash does not support DAC writes, switching to INDAC mode. \n");
@@ -932,7 +945,7 @@ static bool OSPI_flash_test(void *arg)
 #endif
 #endif /* OSPI_WRITE */
 
-#if defined(SOC_J7200) || defined(SOC_AM64X)
+#if defined(SOC_J7200) || defined(SOC_AM64X) || defined(SOC_J721S2)
     if (test->dacMode)                          /* DAC reads are supported - switching back to DAC mode */
     {
         SPI_log("\n The Cypress xSPI Flash supports DAC reads, switching back to DAC mode. \n");
@@ -1069,7 +1082,7 @@ void OSPI_test_print_test_desc(OSPI_Tests *test)
 OSPI_Tests Ospi_tests[] =
 {
 #ifdef OSPI_WRITE_TUNING
-#if defined(SOC_J7200) || defined(SOC_AM64X)
+#if defined(SOC_J7200) || defined(SOC_AM64X) || defined(SOC_J721S2)
     /* testFunc       testID                     dacMode dmaMode clk                   testDesc */
     {OSPI_flash_test, OSPI_TEST_ID_WR_TUNING,    false,  false,  OSPI_MODULE_CLK_133M, "\r\n OSPI flash test slave to write tuning data to flash"},
 #else

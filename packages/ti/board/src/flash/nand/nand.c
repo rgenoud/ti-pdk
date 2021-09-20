@@ -50,7 +50,7 @@ NAND_Config Nand_config[BOARD_FLASH_NAND_INTF_MAX] =
 NAND_Config Nand_config[BOARD_FLASH_NAND_INTF_MAX] =
 {
     {
-        NULL
+        &Nand_ospiFxnTable
     },
     {
         NULL
