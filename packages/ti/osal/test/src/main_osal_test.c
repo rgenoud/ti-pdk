@@ -1873,7 +1873,7 @@ bool OSAL_mempry_test()
     if (memPtr1 != NULL)
     {
         /* Check if teh allocated mempry is 16 bytes aligned. */
-        if ((uintptr_t)memPtr1 & (align - 1)!= 0)
+        if (((uintptr_t)memPtr1 & (align - 1)) != 0)
         {
             retVal = false;
         }
@@ -1889,7 +1889,7 @@ bool OSAL_mempry_test()
     if (memPtr2 != NULL)
     {
         /* Check if teh allocated mempry is 16 bytes aligned. */
-        if ((uintptr_t)memPtr2 & (align - 1)!= 0)
+        if (((uintptr_t)memPtr2 & (align - 1)) != 0)
         {
             retVal = false;
         }
