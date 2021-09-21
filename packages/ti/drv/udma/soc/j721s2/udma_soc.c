@@ -77,12 +77,20 @@ CSL_udmap_txccfgRegs     gHost_udmap_txccfgRegs;
 CSL_udmap_rxccfgRegs     gHost_udmap_rxccfgRegs;
 CSL_udmap_txcrtRegs      gHost_udmap_txcrtRegs;
 CSL_udmap_rxcrtRegs      gHost_udmap_rxcrtRegs;
+CSL_bcdma_gcfgRegs       gHost_bcdma_gcfgRegs;
+CSL_bcdma_txccfgRegs     gHost_bcdma_txccfgRegs;
+CSL_bcdma_txcrtRegs      gHost_bcdma_txcrtRegs;
+CSL_bcdma_rxccfgRegs     gHost_bcdma_rxccfgRegs;
+CSL_bcdma_rxcrtRegs      gHost_bcdma_rxcrtRegs;
 CSL_ringacc_gcfgRegs     gHost_ringacc_gcfgRegs;
 CSL_ringacc_cfgRegs      gHost_ringacc_cfgRegs;
 CSL_ringacc_rtRegs       gHost_ringacc_rtRegs;
 CSL_ringacc_monitorRegs  gHost_ringacc_monitorRegs;
 CSL_ringacc_fifosRegs    gHost_ringacc_fifosRegs;
 CSL_ringacc_iscRegs      gHost_ringacc_iscRegs;
+CSL_lcdma_ringacc_ring_cfgRegs  gHost_lcdma_ringacc_cfgRegs;
+CSL_lcdma_ringacc_ringrtRegs    gHost_lcdma_ringacc_ringrtRegs;
+CSL_lcdma_ringacc_credRegs      gHost_lcdma_ringacc_credRegs;
 CSL_psilcfgRegs          gHost_psilcfgRegs;
 CSL_intaggr_cfgRegs      gHost_intaggr_cfgRegs;
 CSL_intaggr_imapRegs     gHost_intaggr_imapRegs;
@@ -109,6 +117,12 @@ CSL_DRU_t                gHost_DRU_t;
 #define UDMA_NAVSS0_UDMASS_UDMAP0_CFG_TCHANRT_BASE          (&gHost_udmap_txcrtRegs)
 #define UDMA_NAVSS0_UDMASS_UDMAP0_CFG_RCHANRT_BASE          (&gHost_udmap_rxcrtRegs)
 
+#define UDMA_NAVSS0_BCDMA0_CFG_GCFG_BASE                    (&gHost_bcdma_gcfgRegs)
+#define UDMA_NAVSS0_BCDMA0_CFG_TCHAN_BASE                   (&gHost_bcdma_txccfgRegs)
+#define UDMA_NAVSS0_BCDMA0_CFG_RCHAN_BASE                   (&gHost_bcdma_rxccfgRegs)
+#define UDMA_NAVSS0_BCDMA0_CFG_TCHANRT_BASE                 (&gHost_bcdma_txcrtRegs)
+#define UDMA_NAVSS0_BCDMA0_CFG_RCHANRT_BASE                 (&gHost_bcdma_rxcrtRegs)
+
 #define UDMA_MCU_NAVSS0_UDMASS_RINGACC0_CFG_GCFG_BASE       (&gHost_ringacc_gcfgRegs)
 #define UDMA_MCU_NAVSS0_UDMASS_RINGACC0_CFG_BASE            (&gHost_ringacc_cfgRegs)
 #define UDMA_MCU_NAVSS0_UDMASS_RINGACC0_CFG_RT_BASE         (&gHost_ringacc_rtRegs)
@@ -122,6 +136,10 @@ CSL_DRU_t                gHost_DRU_t;
 #define UDMA_NAVSS0_UDMASS_RINGACC0_CFG_MON_BASE            (&gHost_ringacc_monitorRegs)
 #define UDMA_NAVSS0_UDMASS_RINGACC0_SRC_FIFOS_BASE          (&gHost_ringacc_fifosRegs)
 #define UDMA_NAVSS0_UDMASS_RINGACC0_ISC_ISC_BASE            (&gHost_ringacc_iscRegs)
+
+#define UDMA_NAVSS0_BCDMA0_CFG_RING_BASE                    (&gHost_lcdma_ringacc_cfgRegs)
+#define UDMA_NAVSS0_BCDMA0_CFG_RINGRT_BASE                  (&gHost_lcdma_ringacc_ringrtRegs)
+#define UDMA_NAVSS0_CRED_BASE                               (&gHost_lcdma_ringacc_credRegs)
 
 #define UDMA_MCU_NAVSS0_UDMASS_PSILSS_CFG0_PROXY_BASE       (&gHost_psilcfgRegs)
 #define UDMA_NAVSS0_UDMASS_PSILCFG0_CFG_PROXY_BASE          (&gHost_psilcfgRegs)
@@ -166,6 +184,12 @@ CSL_DRU_t                gHost_DRU_t;
 #define UDMA_NAVSS0_UDMASS_UDMAP0_CFG_TCHANRT_BASE              (CSL_NAVSS0_UDMASS_UDMAP0_CFG_TCHANRT_BASE)
 #define UDMA_NAVSS0_UDMASS_UDMAP0_CFG_RCHANRT_BASE              (CSL_NAVSS0_UDMASS_UDMAP0_CFG_RCHANRT_BASE)
 
+#define UDMA_NAVSS0_BCDMA0_CFG_GCFG_BASE                        (CSL_NAVSS0_BCDMA0_CFG_GCFG_BASE)
+#define UDMA_NAVSS0_BCDMA0_CFG_TCHAN_BASE                       (CSL_NAVSS0_BCDMA0_CFG_TCHAN_BASE)
+#define UDMA_NAVSS0_BCDMA0_CFG_RCHAN_BASE                       (CSL_NAVSS0_BCDMA0_CFG_RCHAN_BASE)
+#define UDMA_NAVSS0_BCDMA0_CFG_TCHANRT_BASE                     (CSL_NAVSS0_BCDMA0_CFG_TCHANRT_BASE)
+#define UDMA_NAVSS0_BCDMA0_CFG_RCHANRT_BASE                     (CSL_NAVSS0_BCDMA0_CFG_RCHANRT_BASE)
+
 #define UDMA_MCU_NAVSS0_UDMASS_RINGACC0_CFG_GCFG_BASE           (CSL_MCU_NAVSS0_UDMASS_RINGACC0_CFG_GCFG_BASE)
 #define UDMA_MCU_NAVSS0_UDMASS_RINGACC0_CFG_BASE                (CSL_MCU_NAVSS0_UDMASS_RINGACC0_CFG_BASE)
 #define UDMA_MCU_NAVSS0_UDMASS_RINGACC0_CFG_RT_BASE             (CSL_MCU_NAVSS0_UDMASS_RINGACC0_CFG_RT_BASE)
@@ -179,6 +203,10 @@ CSL_DRU_t                gHost_DRU_t;
 #define UDMA_NAVSS0_UDMASS_RINGACC0_CFG_MON_BASE                (CSL_NAVSS0_UDMASS_RINGACC0_CFG_MON_BASE)
 #define UDMA_NAVSS0_UDMASS_RINGACC0_SRC_FIFOS_BASE              (CSL_NAVSS0_UDMASS_RINGACC0_SRC_FIFOS_BASE)
 #define UDMA_NAVSS0_UDMASS_RINGACC0_ISC_ISC_BASE                (CSL_NAVSS0_UDMASS_RINGACC0_ISC_BASE)
+
+#define UDMA_NAVSS0_BCDMA0_CFG_RING_BASE                        (CSL_NAVSS0_BCDMA0_CFG_RING_BASE)
+#define UDMA_NAVSS0_BCDMA0_CFG_RINGRT_BASE                      (CSL_NAVSS0_BCDMA0_CFG_RINGRT_BASE)
+#define UDMA_NAVSS0_CRED_BASE                                   (CSL_NAVSS0_CRED_BASE)
 
 #define UDMA_MCU_NAVSS0_UDMASS_PSILSS_CFG0_PROXY_BASE           (CSL_MCU_NAVSS0_UDMASS_PSILSS_CFG0_PROXY_BASE)
 #define UDMA_NAVSS0_UDMASS_PSILCFG0_CFG_PROXY_BASE              (CSL_NAVSS0_UDMASS_PSILCFG0_CFG_PROXY_BASE)
@@ -216,17 +244,18 @@ CSL_DRU_t                gHost_DRU_t;
 
 void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
 {
-    uint32_t            instId;
-    CSL_UdmapCfg       *pUdmapRegs;
-    CSL_RingAccCfg     *pRaRegs;
-    CSL_IntaggrCfg     *pIaRegs;
-    Udma_UtcInstInfo   *utcInfo;
-    CSL_ProxyCfg       *pProxyCfg;
-    CSL_ProxyTargetParams *pProxyTargetRing;
+    uint32_t                instId;
+    CSL_UdmapCfg            *pUdmapRegs;
+    CSL_BcdmaCfg            *pBcdmaRegs;
+    CSL_RingAccCfg          *pRaRegs;
+    CSL_LcdmaRingaccCfg     *pLcdmaRaRegs; 
+    CSL_IntaggrCfg          *pIaRegs;
+    Udma_UtcInstInfo        *utcInfo;
+    CSL_ProxyCfg            *pProxyCfg;
+    CSL_ProxyTargetParams   *pProxyTargetRing;
 
     instId = drvHandle->initPrms.instId;
     
-    drvHandle->instType = UDMA_INST_TYPE_NORMAL;
     
 #if defined (HOST_EMULATION)
     gHost_udmap_gcfgRegs.CAP0 = 0x000B800F;
@@ -242,78 +271,140 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
      * UDMA config init
      */
     /* Init the config structure - one time step */
-    pUdmapRegs = &drvHandle->udmapRegs;
-    if(UDMA_INST_ID_MCU_0 == instId)
+    if(UDMA_INST_ID_BCDMA_0 == instId)
     {
-        pUdmapRegs->pGenCfgRegs     = ((CSL_udmap_gcfgRegs *) UDMA_MCU_NAVSS0_UDMASS_UDMAP0_CFG_GCFG_BASE);
-        pUdmapRegs->pRxFlowCfgRegs  = ((CSL_udmap_rxfcfgRegs *) UDMA_MCU_NAVSS0_UDMASS_UDMAP0_CFG_RFLOW_BASE);
-        pUdmapRegs->pTxChanCfgRegs  = ((CSL_udmap_txccfgRegs *) UDMA_MCU_NAVSS0_UDMASS_UDMAP0_TCHAN_BASE);
-        pUdmapRegs->pRxChanCfgRegs  = ((CSL_udmap_rxccfgRegs *) UDMA_MCU_NAVSS0_UDMASS_UDMAP0_RCHAN_BASE);
-        pUdmapRegs->pTxChanRtRegs   = ((CSL_udmap_txcrtRegs *) UDMA_MCU_NAVSS0_UDMASS_UDMAP_TCHANRT_BASE);
-        pUdmapRegs->pRxChanRtRegs   = ((CSL_udmap_rxcrtRegs *) UDMA_MCU_NAVSS0_UDMASS_UDMAP_RCHANRT_BASE);
-        drvHandle->trigGemOffset    = CSL_NAVSS_GEM_MCU_UDMA_TRIGGER_OFFSET;
+        drvHandle->instType = UDMA_INST_ID_BCDMA_0;
+    	pBcdmaRegs = &drvHandle->bcdmaRegs;
+        pBcdmaRegs->pGenCfgRegs     = ((CSL_bcdma_gcfgRegs *) UDMA_NAVSS0_BCDMA0_CFG_GCFG_BASE);
+        pBcdmaRegs->pTxChanCfgRegs  = ((CSL_bcdma_txccfgRegs *) UDMA_NAVSS0_BCDMA0_CFG_TCHAN_BASE);
+        pBcdmaRegs->pRxChanCfgRegs  = ((CSL_bcdma_rxccfgRegs *) UDMA_NAVSS0_BCDMA0_CFG_RCHAN_BASE);
+        pBcdmaRegs->pTxChanRtRegs   = ((CSL_bcdma_txcrtRegs *) UDMA_NAVSS0_BCDMA0_CFG_TCHANRT_BASE);
+        pBcdmaRegs->pRxChanRtRegs   = ((CSL_bcdma_rxcrtRegs *) UDMA_NAVSS0_BCDMA0_CFG_RCHANRT_BASE);
+        drvHandle->trigGemOffset    = CSL_NAVSS_GEM_MAIN_BCDMA_TRIGGER_OFFSET;
+
+        pUdmapRegs = &drvHandle->udmapRegs;
+        memset(pUdmapRegs, 0, sizeof(*pUdmapRegs));
+
+        /* Fill other SOC specific parameters by reading from UDMA config
+	     * registers */
+	    CSL_bcdmaGetCfg(pBcdmaRegs);
     }
-    else
+    else 
     {
-        pUdmapRegs->pGenCfgRegs     = ((CSL_udmap_gcfgRegs *) UDMA_NAVSS0_UDMASS_UDMAP0_CFG_BASE);
-        pUdmapRegs->pRxFlowCfgRegs  = ((CSL_udmap_rxfcfgRegs *) UDMA_NAVSS0_UDMASS_UDMAP0_CFG_RFLOW_BASE);
-        pUdmapRegs->pTxChanCfgRegs  = ((CSL_udmap_txccfgRegs *) UDMA_NAVSS0_UDMASS_UDMAP0_CFG_TCHAN_BASE);
-        pUdmapRegs->pRxChanCfgRegs  = ((CSL_udmap_rxccfgRegs *) UDMA_NAVSS0_UDMASS_UDMAP0_CFG_RCHAN_BASE);
-        pUdmapRegs->pTxChanRtRegs   = ((CSL_udmap_txcrtRegs *) UDMA_NAVSS0_UDMASS_UDMAP0_CFG_TCHANRT_BASE);
-        pUdmapRegs->pRxChanRtRegs   = ((CSL_udmap_rxcrtRegs *) UDMA_NAVSS0_UDMASS_UDMAP0_CFG_RCHANRT_BASE);
-        drvHandle->trigGemOffset    = CSL_NAVSS_GEM_MAIN_UDMA_TRIGGER_OFFSET;
+        drvHandle->instType = UDMA_INST_TYPE_NORMAL;
+        pUdmapRegs = &drvHandle->udmapRegs;
+        if(UDMA_INST_ID_MCU_0 == instId)
+        {
+            pUdmapRegs->pGenCfgRegs     = ((CSL_udmap_gcfgRegs *) UDMA_MCU_NAVSS0_UDMASS_UDMAP0_CFG_GCFG_BASE);
+            pUdmapRegs->pRxFlowCfgRegs  = ((CSL_udmap_rxfcfgRegs *) UDMA_MCU_NAVSS0_UDMASS_UDMAP0_CFG_RFLOW_BASE);
+            pUdmapRegs->pTxChanCfgRegs  = ((CSL_udmap_txccfgRegs *) UDMA_MCU_NAVSS0_UDMASS_UDMAP0_TCHAN_BASE);
+            pUdmapRegs->pRxChanCfgRegs  = ((CSL_udmap_rxccfgRegs *) UDMA_MCU_NAVSS0_UDMASS_UDMAP0_RCHAN_BASE);
+            pUdmapRegs->pTxChanRtRegs   = ((CSL_udmap_txcrtRegs *) UDMA_MCU_NAVSS0_UDMASS_UDMAP_TCHANRT_BASE);
+            pUdmapRegs->pRxChanRtRegs   = ((CSL_udmap_rxcrtRegs *) UDMA_MCU_NAVSS0_UDMASS_UDMAP_RCHANRT_BASE);
+            drvHandle->trigGemOffset    = CSL_NAVSS_GEM_MCU_UDMA_TRIGGER_OFFSET;
+        }
+        else if(UDMA_INST_ID_MAIN_0 == instId)
+        {
+            pUdmapRegs = &drvHandle->udmapRegs;
+            pUdmapRegs->pGenCfgRegs     = ((CSL_udmap_gcfgRegs *) UDMA_NAVSS0_UDMASS_UDMAP0_CFG_BASE);
+            pUdmapRegs->pRxFlowCfgRegs  = ((CSL_udmap_rxfcfgRegs *) UDMA_NAVSS0_UDMASS_UDMAP0_CFG_RFLOW_BASE);
+            pUdmapRegs->pTxChanCfgRegs  = ((CSL_udmap_txccfgRegs *) UDMA_NAVSS0_UDMASS_UDMAP0_CFG_TCHAN_BASE);
+            pUdmapRegs->pRxChanCfgRegs  = ((CSL_udmap_rxccfgRegs *) UDMA_NAVSS0_UDMASS_UDMAP0_CFG_RCHAN_BASE);
+            pUdmapRegs->pTxChanRtRegs   = ((CSL_udmap_txcrtRegs *) UDMA_NAVSS0_UDMASS_UDMAP0_CFG_TCHANRT_BASE);
+            pUdmapRegs->pRxChanRtRegs   = ((CSL_udmap_rxcrtRegs *) UDMA_NAVSS0_UDMASS_UDMAP0_CFG_RCHANRT_BASE);
+            drvHandle->trigGemOffset    = CSL_NAVSS_GEM_MAIN_UDMA_TRIGGER_OFFSET;
+        }
+        /* UDMA not present in CC QT build. Only DRU is present */
+#ifndef CC_QT_BUILD
+        /* Fill other SOC specific parameters by reading from UDMA config
+        * registers */
+        CSL_udmapGetCfg(pUdmapRegs);
+#endif
+
+        pBcdmaRegs = &drvHandle->bcdmaRegs;
+        memset(pBcdmaRegs, 0, sizeof(*pBcdmaRegs));
     }
     drvHandle->clecRegs = (CSL_CLEC_EVTRegs *) UDMA_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
-/* UDMA not present in CC QT build. Only DRU is present */
-#ifndef CC_QT_BUILD
-    /* Fill other SOC specific parameters by reading from UDMA config
-     * registers */
-    CSL_udmapGetCfg(pUdmapRegs);
-#endif
 
     /*
      * RA config init
      */
-    drvHandle->raType = UDMA_RA_TYPE_NORMAL;
-    pRaRegs = &drvHandle->raRegs;
-    if(UDMA_INST_ID_MCU_0 == instId)
+    if(UDMA_INST_ID_BCDMA_0 == instId)
     {
-        pRaRegs->pGlbRegs   = (CSL_ringacc_gcfgRegs *) UDMA_MCU_NAVSS0_UDMASS_RINGACC0_CFG_GCFG_BASE;
-        pRaRegs->pCfgRegs   = (CSL_ringacc_cfgRegs *) UDMA_MCU_NAVSS0_UDMASS_RINGACC0_CFG_BASE;
-        pRaRegs->pRtRegs    = (CSL_ringacc_rtRegs *) UDMA_MCU_NAVSS0_UDMASS_RINGACC0_CFG_RT_BASE;
-        pRaRegs->pMonRegs   = (CSL_ringacc_monitorRegs *) UDMA_MCU_NAVSS0_UDMASS_RINGACC0_CFG_MON_BASE;
-        pRaRegs->pFifoRegs  = (CSL_ringacc_fifosRegs *) UDMA_MCU_NAVSS0_UDMASS_RINGACC0_FIFOS_BASE;
-        pRaRegs->pIscRegs   = (CSL_ringacc_iscRegs *) UDMA_MCU_NAVSS0_UDMASS_RINGACC0_ISC_ISC_BASE;
-        pRaRegs->maxRings   = CSL_NAVSS_MCU_RINGACC_RING_CNT;
-    }
-    else
-    {
-        pRaRegs->pGlbRegs   = (CSL_ringacc_gcfgRegs *) UDMA_NAVSS0_UDMASS_RINGACC0_GCFG_BASE;
-        pRaRegs->pCfgRegs   = (CSL_ringacc_cfgRegs *) UDMA_NAVSS0_UDMASS_RINGACC0_CFG_BASE;
-        pRaRegs->pRtRegs    = (CSL_ringacc_rtRegs *) UDMA_NAVSS0_UDMASS_RINGACC0_CFG_RT_BASE;
-        pRaRegs->pMonRegs   = (CSL_ringacc_monitorRegs *) UDMA_NAVSS0_UDMASS_RINGACC0_CFG_MON_BASE;
-        pRaRegs->pFifoRegs  = (CSL_ringacc_fifosRegs *) UDMA_NAVSS0_UDMASS_RINGACC0_SRC_FIFOS_BASE;
-        pRaRegs->pIscRegs   = (CSL_ringacc_iscRegs *) UDMA_NAVSS0_UDMASS_RINGACC0_ISC_ISC_BASE;
-        pRaRegs->maxRings   = CSL_NAVSS_MAIN_RINGACC_RING_CNT;
-    }
-    pRaRegs->maxMonitors     = CSL_RINGACC_MAX_MONITORS;
-    pRaRegs->bTraceSupported = (bool)true;
+        drvHandle->raType = UDMA_RA_TYPE_LCDMA;
+        pLcdmaRaRegs = &drvHandle->lcdmaRaRegs;
+	    pLcdmaRaRegs->pRingCfgRegs   = (CSL_lcdma_ringacc_ring_cfgRegs *) UDMA_NAVSS0_BCDMA0_CFG_RING_BASE;
+	    pLcdmaRaRegs->pRingRtRegs    = (CSL_lcdma_ringacc_ringrtRegs *) UDMA_NAVSS0_BCDMA0_CFG_RINGRT_BASE;
+	    pLcdmaRaRegs->pCredRegs      = (CSL_lcdma_ringacc_credRegs *) UDMA_NAVSS0_CRED_BASE;
+	    pLcdmaRaRegs->maxRings       = CSL_NAVSS_BCDMA_NUM_BC_CHANS + CSL_NAVSS_BCDMA_NUM_TX_CHANS + CSL_NAVSS_BCDMA_NUM_RX_CHANS;
 
-    drvHandle->ringDequeueRaw           = &Udma_ringDequeueRawNormal;
-    drvHandle->ringQueueRaw             = &Udma_ringQueueRawNormal;
-    drvHandle->ringFlushRaw             = &Udma_ringFlushRawNormal;
-    drvHandle->ringGetElementCnt        = &Udma_ringGetElementCntNormal;
-    drvHandle->ringGetMemPtr            = &Udma_ringGetMemPtrNormal;
-    drvHandle->ringGetMode              = &Udma_ringGetModeNormal;
-    drvHandle->ringGetForwardRingOcc    = &Udma_ringGetRingOccNormal;
-    drvHandle->ringGetReverseRingOcc    = &Udma_ringGetRingOccNormal;
-    drvHandle->ringGetWrIdx             = &Udma_ringGetWrIdxNormal;
-    drvHandle->ringGetRdIdx             = &Udma_ringGetRdIdxNormal;
-    drvHandle->ringPrime                = &Udma_ringPrimeNormal;
-    drvHandle->ringPrimeRead            = &Udma_ringPrimeReadNormal;
-    drvHandle->ringSetDoorBell          = &Udma_ringSetDoorBellNormal;
-    drvHandle->ringSetCfg               = &Udma_ringSetCfgNormal;
-    drvHandle->ringHandleClearRegs      = &Udma_ringHandleClearRegsNormal;
+        drvHandle->ringDequeueRaw           = &Udma_ringDequeueRawLcdma;
+        drvHandle->ringQueueRaw             = &Udma_ringQueueRawLcdma;
+        drvHandle->ringFlushRaw             = &Udma_ringFlushRawLcdma;
+        drvHandle->ringGetElementCnt        = &Udma_ringGetElementCntLcdma;
+        drvHandle->ringGetMemPtr            = &Udma_ringGetMemPtrLcdma;
+        drvHandle->ringGetMode              = &Udma_ringGetModeLcdma;
+        drvHandle->ringGetForwardRingOcc    = &Udma_ringGetForwardRingOccLcdma;
+        drvHandle->ringGetReverseRingOcc    = &Udma_ringGetReverseRingOccLcdma;
+        drvHandle->ringGetWrIdx             = &Udma_ringGetWrIdxLcdma;
+        drvHandle->ringGetRdIdx             = &Udma_ringGetRdIdxLcdma;
+        drvHandle->ringPrime                = &Udma_ringPrimeLcdma;
+        drvHandle->ringPrimeRead            = &Udma_ringPrimeReadLcdma;
+        drvHandle->ringSetDoorBell          = &Udma_ringSetDoorBellLcdma;
+        drvHandle->ringSetCfg               = &Udma_ringSetCfgLcdma;
+        drvHandle->ringHandleClearRegs      = &Udma_ringHandleClearRegsLcdma;
+
+        pRaRegs = &drvHandle->raRegs;
+        memset(pRaRegs, 0 , sizeof(*pRaRegs));
+    }
+    else 
+    {
+        drvHandle->raType = UDMA_RA_TYPE_NORMAL;
+        pRaRegs = &drvHandle->raRegs;
+        if(UDMA_INST_ID_MCU_0 == instId)
+        {
+            pRaRegs->pGlbRegs   = (CSL_ringacc_gcfgRegs *) UDMA_MCU_NAVSS0_UDMASS_RINGACC0_CFG_GCFG_BASE;
+            pRaRegs->pCfgRegs   = (CSL_ringacc_cfgRegs *) UDMA_MCU_NAVSS0_UDMASS_RINGACC0_CFG_BASE;
+            pRaRegs->pRtRegs    = (CSL_ringacc_rtRegs *) UDMA_MCU_NAVSS0_UDMASS_RINGACC0_CFG_RT_BASE;
+            pRaRegs->pMonRegs   = (CSL_ringacc_monitorRegs *) UDMA_MCU_NAVSS0_UDMASS_RINGACC0_CFG_MON_BASE;
+            pRaRegs->pFifoRegs  = (CSL_ringacc_fifosRegs *) UDMA_MCU_NAVSS0_UDMASS_RINGACC0_FIFOS_BASE;
+            pRaRegs->pIscRegs   = (CSL_ringacc_iscRegs *) UDMA_MCU_NAVSS0_UDMASS_RINGACC0_ISC_ISC_BASE;
+            pRaRegs->maxRings   = CSL_NAVSS_MCU_RINGACC_RING_CNT;
+            pRaRegs->maxMonitors     = CSL_RINGACC_MAX_MONITORS;
+            pRaRegs->bTraceSupported = (bool)true;
+        }
+        else if(UDMA_INST_ID_MAIN_0 == instId)
+        {
+            pRaRegs->pGlbRegs   = (CSL_ringacc_gcfgRegs *) UDMA_NAVSS0_UDMASS_RINGACC0_GCFG_BASE;
+            pRaRegs->pCfgRegs   = (CSL_ringacc_cfgRegs *) UDMA_NAVSS0_UDMASS_RINGACC0_CFG_BASE;
+            pRaRegs->pRtRegs    = (CSL_ringacc_rtRegs *) UDMA_NAVSS0_UDMASS_RINGACC0_CFG_RT_BASE;
+            pRaRegs->pMonRegs   = (CSL_ringacc_monitorRegs *) UDMA_NAVSS0_UDMASS_RINGACC0_CFG_MON_BASE;
+            pRaRegs->pFifoRegs  = (CSL_ringacc_fifosRegs *) UDMA_NAVSS0_UDMASS_RINGACC0_SRC_FIFOS_BASE;
+            pRaRegs->pIscRegs   = (CSL_ringacc_iscRegs *) UDMA_NAVSS0_UDMASS_RINGACC0_ISC_ISC_BASE;
+            pRaRegs->maxRings   = CSL_NAVSS_MAIN_RINGACC_RING_CNT;
+            pRaRegs->maxMonitors     = CSL_RINGACC_MAX_MONITORS;
+            pRaRegs->bTraceSupported = (bool)true;
+        }
+        
+        drvHandle->ringDequeueRaw           = &Udma_ringDequeueRawNormal;
+        drvHandle->ringQueueRaw             = &Udma_ringQueueRawNormal;
+        drvHandle->ringFlushRaw             = &Udma_ringFlushRawNormal;
+        drvHandle->ringGetElementCnt        = &Udma_ringGetElementCntNormal;
+        drvHandle->ringGetMemPtr            = &Udma_ringGetMemPtrNormal;
+        drvHandle->ringGetMode              = &Udma_ringGetModeNormal;
+        drvHandle->ringGetForwardRingOcc    = &Udma_ringGetRingOccNormal;
+        drvHandle->ringGetReverseRingOcc    = &Udma_ringGetRingOccNormal;
+        drvHandle->ringGetWrIdx             = &Udma_ringGetWrIdxNormal;
+        drvHandle->ringGetRdIdx             = &Udma_ringGetRdIdxNormal;
+        drvHandle->ringPrime                = &Udma_ringPrimeNormal;
+        drvHandle->ringPrimeRead            = &Udma_ringPrimeReadNormal;
+        drvHandle->ringSetDoorBell          = &Udma_ringSetDoorBellNormal;
+        drvHandle->ringSetCfg               = &Udma_ringSetCfgNormal;
+        drvHandle->ringHandleClearRegs      = &Udma_ringHandleClearRegsNormal;
+
+        pLcdmaRaRegs = &drvHandle->lcdmaRaRegs;
+        memset(pLcdmaRaRegs, 0 , sizeof(*pLcdmaRaRegs));
+    }
 
     /*
      * All interrupt related config should be based on core and not
@@ -372,16 +463,18 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
 #if defined (BUILD_MCU3_1)
     drvHandle->druCoreId    = UDMA_DRU_CORE_ID_MCU3_1;
 #endif
-#if defined (BUILD_C66X_1)
-    drvHandle->druCoreId    = UDMA_DRU_CORE_ID_C66X_1;
-#endif
-#if defined (BUILD_C66X_2)
-    drvHandle->druCoreId    = UDMA_DRU_CORE_ID_C66X_2;
-#endif
 #if defined (BUILD_C7X_1)
     drvHandle->druCoreId    = UDMA_DRU_CORE_ID_C7X_1;
-    drvHandle->clecRtMap    = CSL_CLEC_RTMAP_CPU_4; /* CPU4 is C7x_1 in J721E */
-    /* CLEC interrupt number 1024 is connected to GIC interrupt number 32 in J721E.
+    drvHandle->clecRtMap    = CSL_CLEC_RTMAP_CPU_4; /* CPU4 is C7x_1 in J721S2 */
+    /* CLEC interrupt number 1024 is connected to GIC interrupt number 32 in J721S2.
+     * Due to this for CLEC programming one needs to add an offset of 992 (1024 - 32)
+     * to the event number which is shared between GIC and CLEC. */
+    drvHandle->clecOffset   = 1024U - 32U;
+#endif
+#if defined (BUILD_C7X_2)
+    drvHandle->druCoreId    = UDMA_DRU_CORE_ID_C7X_2;
+    drvHandle->clecRtMap    = CSL_CLEC_RTMAP_CPU_5; /* CPU4 is C7x_1 in J721S2 */
+    /* CLEC interrupt number 1024 is connected to GIC interrupt number 32 in J721S2.
      * Due to this for CLEC programming one needs to add an offset of 992 (1024 - 32)
      * to the event number which is shared between GIC and CLEC. */
     drvHandle->clecOffset   = 1024U - 32U;
@@ -423,6 +516,25 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
     utcInfo->startThreadId = UDMA_UTC_START_THREAD_ID_VPAC_TC1;
     utcInfo->txCredit      = 3U;
     utcInfo->druRegs       = ((CSL_DRU_t *) CSL_VPAC0_DRU_UTC_VPAC1_DRU_MMR_CFG_DRU_DRU_BASE);
+
+    utcInfo = &drvHandle->utcInfo[UDMA_UTC_ID_VPAC1_TC0];
+    utcInfo->utcId         = UDMA_UTC_ID_VPAC1_TC0;
+    utcInfo->utcType       = UDMA_UTC_TYPE_DRU_VHWA;
+    utcInfo->startCh       = UDMA_UTC_START_CH_VPAC1_TC0;
+    utcInfo->numCh         = UDMA_UTC_NUM_CH_VPAC1_TC0;
+    utcInfo->startThreadId = UDMA_UTC_START_THREAD_ID_VPAC1_TC0;
+    utcInfo->txCredit      = 3U;
+    utcInfo->druRegs       = ((CSL_DRU_t *) CSL_VPAC0_DRU_UTC_VPAC0_DRU_MMR_CFG_DRU_DRU_BASE);
+    utcInfo->numQueue      = CSL_NAVSS_UTC_VPAC_TC0_QUEUE_CNT;
+
+    utcInfo = &drvHandle->utcInfo[UDMA_UTC_ID_VPAC1_TC1];
+    utcInfo->utcId         = UDMA_UTC_ID_VPAC1_TC1;
+    utcInfo->utcType       = UDMA_UTC_TYPE_DRU_VHWA;
+    utcInfo->startCh       = UDMA_UTC_START_CH_VPAC1_TC1;
+    utcInfo->numCh         = UDMA_UTC_NUM_CH_VPAC1_TC1;
+    utcInfo->startThreadId = UDMA_UTC_START_THREAD_ID_VPAC1_TC1;
+    utcInfo->txCredit      = 3U;
+    utcInfo->druRegs       = ((CSL_DRU_t *) CSL_VPAC0_DRU_UTC_VPAC1_DRU_MMR_CFG_DRU_DRU_BASE); // need to cross check these flags
     utcInfo->numQueue      = CSL_NAVSS_UTC_VPAC_TC1_QUEUE_CNT;
 
     utcInfo = &drvHandle->utcInfo[UDMA_UTC_ID_DMPAC_TC0];
@@ -454,7 +566,7 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
 
         drvHandle->proxyTargetNumRing   = CSL_NAVSS_MCU_PROXY_TARGET_NUM_RINGACC0;
     }
-    else
+    else if(UDMA_INST_ID_MAIN_0 == instId)
     {
         pProxyTargetRing->pTargetRegs   = (CSL_proxy_target0Regs *) CSL_NAVSS0_PROXY_TARGET0_DATA_BASE;
         pProxyTargetRing->numChns       = CSL_NAVSS_MAIN_PROXY_TARGET_RINGACC0_NUM_CHANNELS;
@@ -467,6 +579,12 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
         pProxyCfg->pProxyTargetParams   = pProxyTargetRing;
 
         drvHandle->proxyTargetNumRing   = CSL_NAVSS_MAIN_PROXY_TARGET_NUM_RINGACC0;
+    }
+    else
+    {
+        /* Since BCDMA does not use proxy setting proxy paramenters to NULL */
+        memset(pProxyCfg, 0, sizeof(*pProxyCfg));
+        memset(pProxyTargetRing, 0, sizeof(*pProxyTargetRing));
     }
 
     /* Init other variables */
