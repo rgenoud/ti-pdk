@@ -120,7 +120,7 @@ drvuart_j721s2_CORELISTARM = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1
 # List of components included under uart lib
 # The components included here are built and will be part of uart lib
 ############################
-uart_LIB_LIST = uart uart_dma uart_profile uart_dma_profile uart_indp uart_profile_indp uart_console
+uart_LIB_LIST = uart uart_dma uart_indp uart_console
 drvuart_LIB_LIST = $(uart_LIB_LIST)
 
 ############################
