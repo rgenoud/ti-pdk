@@ -85,11 +85,11 @@ const CSL_ArmR5MpuRegionCfg gCslR5MpuCfg[CSL_ARM_R5F_MPU_REGIONS_MAX] =
         .memAttr          = 0U,
     },
     {
-        /* Region 3 configuration: 1 MB MCMS3 RAM */
+        /* Region 3 configuration: 4 MB MCMS3 RAM */
         .regionId         = 3U,
         .enable           = 1U,
         .baseAddr         = 0x70000000,
-        .size             = CSL_ARM_R5_MPU_REGION_SIZE_1MB,
+        .size             = CSL_ARM_R5_MPU_REGION_SIZE_4MB,
         .subRegionEnable  = CSL_ARM_R5_MPU_SUB_REGION_ENABLE_ALL,
         .exeNeverControl  = 0U,
         .accessPermission = CSL_ARM_R5_ACC_PERM_PRIV_USR_RD_WR,

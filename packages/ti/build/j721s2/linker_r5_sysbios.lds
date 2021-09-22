@@ -15,8 +15,8 @@ MEMORY
     OCMC_RAM_BOARD_CFG (RWIX)   : origin=0x41C80000 length=0x2000
     OCMC_RAM_SCISERVER (RWIX)   : origin=0x41C82000 length=0x60000
     RESET_VECTORS (X)           : origin=0x41CE2000 length=0x100
-    OCMC_RAM (RWIX)             : origin=0x41CE2100 length=0x1DA00
-    OCMC_RAM_X509_HEADER (RWIX) : origin=0x41CFFB00 length=0x500
+    OCMC_RAM (RWIX)             : origin=0x41CE2100 length=0x1BA00
+    OCMC_RAM_X509_HEADER (RWIX) : origin=0x41CFDB00 length=0x500
 
     R5F_TCMB0(RWIX)     : ORIGIN = 0x41010000 , LENGTH = 0x00008000
     DDR0 (RWIX)         : ORIGIN = 0x80000000 , LENGTH = 0x80000000

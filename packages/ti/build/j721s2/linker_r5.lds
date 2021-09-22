@@ -42,8 +42,8 @@ MEMORY
     OCMC_RAM_SCISERVER (RWIX)   : origin=0x41C82000 length=0x60000
     VECTORS (X)                 : origin=0x41CE2000 length=0x1000
     RESET_VECTORS (X)           : origin=0x41CE3000 length=0x100
-    OCMC_RAM (RWIX)             : origin=0x41CE3100 length=0x1CA00
-    OCMC_RAM_X509_HEADER (RWIX) : origin=0x41CFFB00 length=0x500
+    OCMC_RAM (RWIX)             : origin=0x41CE3100 length=0x1AA00
+    OCMC_RAM_X509_HEADER (RWIX) : origin=0x41CFDB00 length=0x500
 
     /* j721s2 MCMS3 locations */
     /* j721s2 Reserved Memory for ARM Trusted Firmware */

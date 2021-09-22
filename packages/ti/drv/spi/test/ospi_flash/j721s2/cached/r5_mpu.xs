@@ -48,7 +48,7 @@
  * |----|--------------|------|----|--------------------------------------------------|----|---------------------|------|
  * | 4  | 0x41C00000   | 1MB  | T  | Write-Back, Write-Allocate, Non-Shareable        | F  | RW at PL 1          | 0x0  |
  * |----|--------------|------|----|--------------------------------------------------|----|---------------------|------|
- * | 5  | 0x70000000   | 8MB  | T  | MSMC - Write-Back, Write-Allocate, Non-Shareable | F  | RW at PL 1          | 0x0  |
+ * | 5  | 0x70000000   | 4MB  | T  | MSMC - Write-Back, Write-Allocate, Non-Shareable | F  | RW at PL 1          | 0x0  |
  * |----|--------------|------|----|--------------------------------------------------|----|---------------------|------|
  * | 6  | 0x80000000   | 2GB  | T  | DDR -  Write-Back, Write-Allocate, Non-Shareable | F  | RW at PL 1 & PL 2   | 0x0  |
  * |----|--------------|------|----|--------------------------------------------------|----|---------------------|------|
@@ -138,7 +138,7 @@ attrs.noExecute = false;
 attrs.accPerm = 1;          /* RW at PL1 */
 attrs.tex = 1;
 attrs.subregionDisableMask = 0;
-MPU.setRegionMeta(5, 0x70000000, MPU.RegionSize_1M, attrs);
+MPU.setRegionMeta(5, 0x70000000, MPU.RegionSize_4M, attrs);
 
 /* This entry covers DDR memory */
 attrs.enable = true;

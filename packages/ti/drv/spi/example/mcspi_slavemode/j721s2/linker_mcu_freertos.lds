@@ -46,15 +46,15 @@ MEMORY
     /*- Refer user guide for details on persistence of these sections -*/
     OCMC_RAM_BOARD_CFG   (RWIX) : ORIGIN = 0x41C80000 LENGTH = 0x00002000
     OCMC_RAM_SCISERVER   (RWIX) : ORIGIN = 0x41C82000 LENGTH = 0x00060000
-    OCMC_RAM             (RWIX) : ORIGIN = 0x41CE3100 LENGTH = 0x0001CA00
-    OCMC_RAM_X509_HEADER (RWIX) : ORIGIN = 0x41CFFB00 LENGTH = 0x00000500
+    OCMC_RAM             (RWIX) : ORIGIN = 0x41CE3100 LENGTH = 0x0001AA00
+    OCMC_RAM_X509_HEADER (RWIX) : ORIGIN = 0x41CFDB00 LENGTH = 0x00000500
 
     /*========================J721S2 MCMS3 LOCATIONS ===================*/
     /*---------- J721S2 Reserved Memory for ARM Trusted Firmware -------*/
     MSMC3_ARM_FW  (RWIX)        : ORIGIN = 0x70000000 LENGTH = 0x00040000   /* 256KB       */
-    MSMC3         (RWIX)        : ORIGIN = 0x70040000 LENGTH = 0x000B0000   /* 1MB - 320KB */
-    /*------------- J721S2 Reserved Memory for DMSC Firmware -----------*/
-    MSMC3_DMSC_FW (RWIX)        : ORIGIN = 0x707F0000 LENGTH = 0x00010000   /* 64KB        */
+    MSMC3   (RWIX)              : ORIGIN=0x70040000 LENGTH=0x3B0000        /* 4MB - 320KB */
+    /* j721s2 Reserved Memory for DMSC Firmware */
+    MSMC3_DMSC_FW  (RWIX)       : ORIGIN=0x703F0000 LENGTH=0x10000         /* 64KB */
 
     /*======================= J721S2 DDR LOCATION =======================*/
     DDR0 (RWIX)                 : ORIGIN = 0x88000000 LENGTH = 0x8000000   /* 128 MB */
