@@ -424,7 +424,7 @@ board_diag_emac_BOARDLIST = am65xx_evm am65xx_idk
 board_diag_emac_$(SOC)_CORELIST = $(board_diag_$(SOC)_CORELIST)
 export board_diag_emac_$(SOC)_CORELIST
 export board_diag_emac_SBL_APPIMAGEGEN = $(board_diag_APPIMAGEGEN_CTRL)
-board_diag_EXAMPLE_LIST += board_diag_emac
+#board_diag_EXAMPLE_LIST += board_diag_emac
 
 # EMMC
 board_diag_emmc_COMP_LIST = board_diag_emmc
@@ -599,7 +599,7 @@ board_diag_icssgEmac_INCLUDE = $(board_diag_icssgEmac_PATH)
 board_diag_icssgEmac_BOARDLIST = am65xx_evm am65xx_idk
 export board_diag_icssgEmac_$(SOC)_CORELIST = $(board_diag_$(SOC)_CORELIST)
 export board_diag_icssgEmac_SBL_APPIMAGEGEN = $(board_diag_APPIMAGEGEN_CTRL)
-board_diag_EXAMPLE_LIST += board_diag_icssgEmac
+#board_diag_EXAMPLE_LIST += board_diag_icssgEmac
 
 # icssg_led
 export board_diag_icssgLed_COMP_LIST = board_diag_icssgLed
@@ -614,7 +614,7 @@ board_diag_icssgLed_INCLUDE = $(board_diag_icssgLed_PATH)
 board_diag_icssgLed_BOARDLIST = am65xx_idk
 export board_diag_icssgLed_$(SOC)_CORELIST = $(board_diag_$(SOC)_CORELIST)
 export board_diag_icssgLed_SBL_APPIMAGEGEN = $(board_diag_APPIMAGEGEN_CTRL)
-board_diag_EXAMPLE_LIST += board_diag_icssgLed
+#board_diag_EXAMPLE_LIST += board_diag_icssgLed
 
 # lcd
 export board_diag_lcd_COMP_LIST = board_diag_lcd
