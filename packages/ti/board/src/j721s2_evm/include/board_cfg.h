@@ -244,7 +244,7 @@ extern "C" {
 /* Enable NOR flash driver */
 #define BOARD_NOR_FLASH_IN
 
-/* Enable NOR flash driver */
+/* Enable NAND flash driver */
 #define BOARD_NAND_FLASH_IN
 
 /* Maximum possible buffer length */

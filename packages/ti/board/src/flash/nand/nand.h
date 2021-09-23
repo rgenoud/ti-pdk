@@ -144,7 +144,7 @@ typedef enum NAND_EccAlgo
 typedef struct
 {
     /*! NAND HW interface handle */
-    uint32_t hwHandle;
+    uintptr_t hwHandle;
     /*! manufacturer ID*/
     uint32_t manufacturerId;
     /*! Manufacturers device ID */

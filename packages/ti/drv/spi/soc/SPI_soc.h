@@ -115,6 +115,7 @@ extern int32_t OSPI_configSocIntrPath(void *hwAttrs_ptr, bool setIntrPath);
 
 #define OSPI_DEV_DELAY_CSDA_2  (0x2U)  /* Chip Select De-Assert device delay in # of ref_clk */
 #define OSPI_DEV_DELAY_CSDA_3  (0x3U)
+#define OSPI_DEV_DELAY_CSDA_A  (0xAU)
 #define OSPI_DEV_DELAY_CSDA    OSPI_DEV_DELAY_CSDA_2
 #endif
 

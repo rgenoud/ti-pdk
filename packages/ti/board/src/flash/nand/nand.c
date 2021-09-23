@@ -44,16 +44,22 @@ NAND_Config Nand_config[BOARD_FLASH_NAND_INTF_MAX] =
     },
     {
         NULL
+    },
+    {
+        NULL
     }
 };
 #else
 NAND_Config Nand_config[BOARD_FLASH_NAND_INTF_MAX] =
 {
     {
-        &Nand_ospiFxnTable
+        NULL
     },
     {
         NULL
+    },
+    {
+        &Nand_ospiFxnTable
     }
 };
 #endif

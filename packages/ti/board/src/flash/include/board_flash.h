@@ -173,6 +173,8 @@ typedef enum {
     /**<NAND GPMC peripheral interface */
     BOARD_FLASH_NAND_EMIF16,
     /**<NAND EMIF16 peripheral interface */
+    BOARD_FLASH_NAND_OSPI,
+    /**<NAND OSPI peripheral interface */
     BOARD_FLASH_NAND_INTF_MAX
     /**<End of NAND peripheral interface */
 } Board_flashNandPeriType;

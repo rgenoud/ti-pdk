@@ -85,9 +85,13 @@ static uint32_t Board_getFlashIntf(uint32_t deviceId)
     {
         flashIntf = BOARD_FLASH_NOR_OSPI;
     }
-    else if(BOARD_FLASH_ID_S71KS512S)
+    else if(deviceId == BOARD_FLASH_ID_S71KS512S)
     {
         flashIntf = BOARD_FLASH_NOR_HPF;
+    }
+    else if(deviceId == BOARD_FLASH_ID_W35N01JWTBAG)
+    {
+        flashIntf = BOARD_FLASH_NAND_OSPI;
     }
     else
     {
@@ -177,10 +181,10 @@ Board_flashHandle Board_flashOpen(uint32_t deviceId, uint32_t portNum, void *par
     NAND_HANDLE        nandFlashHandle;
     NAND_Info         *nandInfo;
 
-    if ((flashInfo->device_id == BOARD_FLASH_ID_MT29F4G08ABAEAWP) || \
-        (flashInfo->device_id == BOARD_FLASH_ID_MT29F4G16ABAFAH)  || \
-        (flashInfo->device_id == BOARD_FLASH_ID_MT29F8G16ABACAWP) || \
-        (flashInfo->device_id == BOARD_FLASH_ID_W35N01JWTBAG))
+    if ((deviceId == BOARD_FLASH_ID_MT29F4G08ABAEAWP) || \
+        (deviceId == BOARD_FLASH_ID_MT29F4G16ABAFAH)  || \
+        (deviceId == BOARD_FLASH_ID_MT29F8G16ABACAWP) || \
+        (deviceId == BOARD_FLASH_ID_W35N01JWTBAG))
     {
         /* Open the Nand flash */
         nandFlashHandle = NAND_open(flashIntf, portNum, params);
@@ -486,7 +490,8 @@ Board_flash_STATUS Board_flashOffsetToBlkPage(Board_flashHandle  handle,
         (flashInfo->device_id == BOARD_FLASH_ID_GD25B64CW2G)         || \
         (flashInfo->device_id == BOARD_FLASH_ID_W25Q16FWSF)          || \
         (flashInfo->device_id == BOARD_FLASH_ID_MX25V1635F)			 || \
-        (flashInfo->device_id == BOARD_FLASH_ID_MT28EW256ABA)
+        (flashInfo->device_id == BOARD_FLASH_ID_MT28EW256ABA)        || \
+        (flashInfo->device_id == BOARD_FLASH_ID_W35N01JWTBAG)
        )
     {
         block_count = flashInfo->block_count;
