@@ -87,6 +87,19 @@ static TaskP_freertos gOsalTaskPfreertosPool[OSAL_FREERTOS_CONFIGNUM_TASK];
 
 uint32_t  gOsalTaskAllocCnt = 0U, gOsalTaskPeak = 0U;
 
+/*
+ * Run Time Timer Control Structure.
+ */
+typedef struct xRUN_TIME_TIMER_CONTROL
+{
+    uint64_t        uxTicks;
+    TimerP_Handle   pxTimerHandle;
+    uint32_t        ulUSecPerTick;
+    uint32_t        ulTimerReloadCnt;
+} RunTimeTimerControl_t;
+
+extern RunTimeTimerControl_t gTimerCntrl;
+
 void TaskP_compileTime_SizeChk(void)
 {
 #if defined(__GNUC__) && !defined(__ti__)
@@ -431,6 +444,15 @@ void OS_start(void)
 void OS_stop(void)
 {
     vTaskEndScheduler();
+}
+
+void OS_StopTickTimer(void)
+{
+    TimerP_Status status;
+    status = TimerP_stop(gTimerCntrl.pxTimerHandle);
+
+    /* don't expect the handle to be null */
+    DebugP_assert (status == TimerP_OK);
 }
 
 

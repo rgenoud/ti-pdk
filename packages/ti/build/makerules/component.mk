@@ -95,7 +95,7 @@ DEFAULT_RTOS_LIST = freertos
 # DEFAULT_SOCLIST_tirtos   = $(SOC_LIST_CATALOG) $(SOC_LIST_INFOTAINMENT) $(SOC_LIST_J6_TDA)
 DEFAULT_SOCLIST_tirtos   =
 DEFAULT_SOCLIST_freertos = am65xx j721e j7200 awr294x am62x
-DEFAULT_SOCLIST_safertos = tpr12 awr294x j721e
+DEFAULT_SOCLIST_safertos = tpr12 awr294x
 
 # The below defines the DEFAULT_BOARDLIST_<rtos_type> for various RTOS types(tirtos/freertos/safertos)
 # Disable SYSBIOS(TI-RTOS)
