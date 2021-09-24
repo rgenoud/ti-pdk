@@ -185,6 +185,13 @@ extern uint32_t TaskP_isTerminated(TaskP_Handle handle);
 extern void TaskP_SuspendAll();
 
 /*
+ *  @brief  stop tick timer
+ *  \param None
+ *  \return None
+ */
+extern void OS_StopTickTimer();
+
+/*
  *  @brief  Resume the OS
  *  \param None
  *  \return 0: task resuming successfull, 1: t task resuming failed 
