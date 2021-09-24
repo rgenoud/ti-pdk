@@ -42,6 +42,11 @@
 #include <ti/drv/sciclient/sciserver_tirtos.h>
 #include <ti/osal/TaskP.h>
 #include <osal_dm.h>
+#include <ti/csl/soc.h>
+#include <ti/osal/osal.h>
+
+
+extern void CSL_armR5StartupIntrEnableVic( uint32_t enable );
 
 /**
  * \brief Disable interrupts used by DM firmware
@@ -72,6 +77,9 @@ inline void osal_dm_enable_interrupt(void)
 inline void osal_suspend_dm(void)
 {
         TaskP_SuspendAll();
+        OS_StopTickTimer();
+        CSL_armR5StartupIntrEnableVic(0);  /* Disable VIC */
+        
 }
 
 /**
