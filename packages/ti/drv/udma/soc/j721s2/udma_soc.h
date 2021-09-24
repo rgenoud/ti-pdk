@@ -302,56 +302,51 @@ extern "C" {
  *
  *  @{
  */
-/** \brief Ultra High Capacity TX and Block Copy Channels */
-#define UDMA_RM_RES_ID_TX_UHC                   (0U)
-/** \brief High Capacity TX and Block Copy Channels */
-#define UDMA_RM_RES_ID_TX_HC                    (1U) 
-/** \brief Normal Capacity TX and Block Copy Channels */
-#define UDMA_RM_RES_ID_TX                       (2U) 
-/** \brief Ultra High Capacity RX Channels */
-#define UDMA_RM_RES_ID_RX_UHC                   (3U) 
-/** \brief High Capacity RX Channels */
-#define UDMA_RM_RES_ID_RX_HC                    (4U) 
-/** \brief Normal Capacity RX Channels */
-#define UDMA_RM_RES_ID_RX                       (5U) 
-/** \brief UTC - Extended Channels (MSMC_DRU/VPAC_TC0/VPAC_TC1/DMPAC) */
-#define UDMA_RM_RES_ID_UTC                      (6U) 
-/** \brief Free Flows */
-#define UDMA_RM_RES_ID_RX_FLOW                  (7U) 
-/** \brief Free Rings */
-#define UDMA_RM_RES_ID_RING                     (8U)
+/* List of all Resources Id's shared between all Instances */
 /** \brief Global Event */
-#define UDMA_RM_RES_ID_GLOBAL_EVENT             (9U) 
+#define UDMA_RM_RES_ID_GLOBAL_EVENT             (0U)
 /** \brief Virtual Interrupts */
-#define UDMA_RM_RES_ID_VINTR                    (10U) 
+#define UDMA_RM_RES_ID_VINTR                    (1U)
 /** \brief Interrupt Router Interrupts */
-#define UDMA_RM_RES_ID_IR_INTR                  (11U) 
-/** \brief Proxy */
-#define UDMA_RM_RES_ID_PROXY                    (12U) 
-/** \brief Ring Monitors */
-#define UDMA_RM_RES_ID_RING_MON                 (13U)  
-/** \brief Total number of UDMAP resources */
-#define UDMA_RM_NUM_RES                         (14U) 
-/** \brief Ultra High Capacity Block Copy Channels */
-#define UDMA_RM_RES_ID_BC_UHC                   (0U)
-/** \brief High Capacity Block Copy Channels */
-#define UDMA_RM_RES_ID_BC_HC                    (1U) 
-/** \brief Normal Capacity Block Copy Channels */
-#define UDMA_RM_RES_ID_BC                       (2U)
-/** \brief Ultra High Capacity TX Channels */
-#define UDMA_RM_RES_ID_BC_TX_UHC                (3U)
-/** \brief High Capacity TX Channels */
-#define UDMA_RM_RES_ID_BC_TX_HC                 (4U) 
-/** \brief Normal Capacity TX Channels */
-#define UDMA_RM_RES_ID_BC_TX                    (5U)
+#define UDMA_RM_RES_ID_IR_INTR                  (2U)
+
+/* List of all UDMAP Resource Id's */
+/** \brief Ultra High Capacity TX and Block Copy Channels */
+#define UDMA_RM_RES_ID_TX_UHC                   (3U)
+/** \brief High Capacity TX and Block Copy Channels */
+#define UDMA_RM_RES_ID_TX_HC                    (4U)
+/** \brief Normal Capacity TX and Block Copy Channels */
+#define UDMA_RM_RES_ID_TX                       (5U)
 /** \brief Ultra High Capacity RX Channels */
-#define UDMA_RM_RES_ID_BC_RX_UHC                (6U) 
+#define UDMA_RM_RES_ID_RX_UHC                   (6U)
 /** \brief High Capacity RX Channels */
-#define UDMA_RM_RES_ID_BC_RX_HC                 (7U)       
+#define UDMA_RM_RES_ID_RX_HC                    (7U)
 /** \brief Normal Capacity RX Channels */
-#define UDMA_RM_RES_ID_BC_RX                    (8U)
+#define UDMA_RM_RES_ID_RX                       (8U)
+
+/* List of All Exclusive - UDMA Resource Id's */
+/** \brief UTC - Extended Channels (MSMC_DRU/VPAC_TC0/VPAC_TC1/DMPAC) */
+#define UDMA_RM_RES_ID_UTC                      (9U)
+/** \brief Free Flows */
+#define UDMA_RM_RES_ID_RX_FLOW                  (10U)
+/** \brief Free Rings */
+#define UDMA_RM_RES_ID_RING                     (11U)
+/** \brief Proxy */
+#define UDMA_RM_RES_ID_PROXY                    (12U)
+/** \brief Ring Monitors */
+#define UDMA_RM_RES_ID_RING_MON                 (13U)
 /** \brief Total number of UDMAP resources */
-#define UDMA_RM_NUM_BCDMA_RES                   (11U)   
+#define UDMA_RM_NUM_RES                         (14U)  
+
+/* List of All Exclusive - BCDMA Resource Id's */
+/** \brief Ultra High Capacity Block Copy Channels */
+#define UDMA_RM_RES_ID_BC_UHC                   (9U)
+/** \brief High Capacity Block Copy Channels */
+#define UDMA_RM_RES_ID_BC_HC                    (10U) 
+/** \brief Normal Capacity Block Copy Channels */
+#define UDMA_RM_RES_ID_BC                       (11U)
+/** \brief Total number of BCDMA resources */
+#define UDMA_RM_NUM_BCDMA_RES                   (12U) 
 /* @} */
 
 /** \brief Total number of shared resources - 

@@ -292,7 +292,9 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
     else 
     {
         drvHandle->instType = UDMA_INST_TYPE_NORMAL;
+
         pUdmapRegs = &drvHandle->udmapRegs;
+
         if(UDMA_INST_ID_MCU_0 == instId)
         {
             pUdmapRegs->pGenCfgRegs     = ((CSL_udmap_gcfgRegs *) UDMA_MCU_NAVSS0_UDMASS_UDMAP0_CFG_GCFG_BASE);
@@ -305,7 +307,6 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
         }
         else if(UDMA_INST_ID_MAIN_0 == instId)
         {
-            pUdmapRegs = &drvHandle->udmapRegs;
             pUdmapRegs->pGenCfgRegs     = ((CSL_udmap_gcfgRegs *) UDMA_NAVSS0_UDMASS_UDMAP0_CFG_BASE);
             pUdmapRegs->pRxFlowCfgRegs  = ((CSL_udmap_rxfcfgRegs *) UDMA_NAVSS0_UDMASS_UDMAP0_CFG_RFLOW_BASE);
             pUdmapRegs->pTxChanCfgRegs  = ((CSL_udmap_txccfgRegs *) UDMA_NAVSS0_UDMASS_UDMAP0_CFG_TCHAN_BASE);
@@ -332,7 +333,9 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
     if(UDMA_INST_ID_BCDMA_0 == instId)
     {
         drvHandle->raType = UDMA_RA_TYPE_LCDMA;
+
         pLcdmaRaRegs = &drvHandle->lcdmaRaRegs;
+
 	    pLcdmaRaRegs->pRingCfgRegs   = (CSL_lcdma_ringacc_ring_cfgRegs *) UDMA_NAVSS0_BCDMA0_CFG_RING_BASE;
 	    pLcdmaRaRegs->pRingRtRegs    = (CSL_lcdma_ringacc_ringrtRegs *) UDMA_NAVSS0_BCDMA0_CFG_RINGRT_BASE;
 	    pLcdmaRaRegs->pCredRegs      = (CSL_lcdma_ringacc_credRegs *) UDMA_NAVSS0_CRED_BASE;
@@ -370,8 +373,6 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
             pRaRegs->pFifoRegs  = (CSL_ringacc_fifosRegs *) UDMA_MCU_NAVSS0_UDMASS_RINGACC0_FIFOS_BASE;
             pRaRegs->pIscRegs   = (CSL_ringacc_iscRegs *) UDMA_MCU_NAVSS0_UDMASS_RINGACC0_ISC_ISC_BASE;
             pRaRegs->maxRings   = CSL_NAVSS_MCU_RINGACC_RING_CNT;
-            pRaRegs->maxMonitors     = CSL_RINGACC_MAX_MONITORS;
-            pRaRegs->bTraceSupported = (bool)true;
         }
         else if(UDMA_INST_ID_MAIN_0 == instId)
         {
@@ -382,10 +383,11 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
             pRaRegs->pFifoRegs  = (CSL_ringacc_fifosRegs *) UDMA_NAVSS0_UDMASS_RINGACC0_SRC_FIFOS_BASE;
             pRaRegs->pIscRegs   = (CSL_ringacc_iscRegs *) UDMA_NAVSS0_UDMASS_RINGACC0_ISC_ISC_BASE;
             pRaRegs->maxRings   = CSL_NAVSS_MAIN_RINGACC_RING_CNT;
-            pRaRegs->maxMonitors     = CSL_RINGACC_MAX_MONITORS;
-            pRaRegs->bTraceSupported = (bool)true;
         }
         
+        pRaRegs->maxMonitors     = CSL_RINGACC_MAX_MONITORS;
+        pRaRegs->bTraceSupported = (bool)true;
+
         drvHandle->ringDequeueRaw           = &Udma_ringDequeueRawNormal;
         drvHandle->ringQueueRaw             = &Udma_ringQueueRawNormal;
         drvHandle->ringFlushRaw             = &Udma_ringFlushRawNormal;
@@ -473,7 +475,7 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
 #endif
 #if defined (BUILD_C7X_2)
     drvHandle->druCoreId    = UDMA_DRU_CORE_ID_C7X_2;
-    drvHandle->clecRtMap    = CSL_CLEC_RTMAP_CPU_5; /* CPU4 is C7x_1 in J721S2 */
+    drvHandle->clecRtMap    = CSL_CLEC_RTMAP_CPU_5; /* CPU5 is C7x_2 in J721S2 */
     /* CLEC interrupt number 1024 is connected to GIC interrupt number 32 in J721S2.
      * Due to this for CLEC programming one needs to add an offset of 992 (1024 - 32)
      * to the event number which is shared between GIC and CLEC. */
@@ -516,6 +518,7 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
     utcInfo->startThreadId = UDMA_UTC_START_THREAD_ID_VPAC_TC1;
     utcInfo->txCredit      = 3U;
     utcInfo->druRegs       = ((CSL_DRU_t *) CSL_VPAC0_DRU_UTC_VPAC1_DRU_MMR_CFG_DRU_DRU_BASE);
+    utcInfo->numQueue      = CSL_NAVSS_UTC_VPAC_TC1_QUEUE_CNT;
 
     utcInfo = &drvHandle->utcInfo[UDMA_UTC_ID_VPAC1_TC0];
     utcInfo->utcId         = UDMA_UTC_ID_VPAC1_TC0;
@@ -585,6 +588,7 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
         /* Since BCDMA does not use proxy setting proxy paramenters to NULL */
         memset(pProxyCfg, 0, sizeof(*pProxyCfg));
         memset(pProxyTargetRing, 0, sizeof(*pProxyTargetRing));
+        drvHandle->proxyTargetNumRing = 0U;
     }
 
     /* Init other variables */
