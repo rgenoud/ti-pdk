@@ -85,7 +85,13 @@ extern "C" {
 #define UDMA_SOC_CFG_UDMAP_PRESENT               (1U) 
 
 /** \brief Flag to indicate LCDMA module is present or not in the SOC*/
-#define UDMA_SOC_CFG_LCDMA_PRESENT               (0U) 
+// #define UDMA_SOC_CFG_LCDMA_PRESENT               (0U) 
+
+/** \brief Flag to indicate BCDMA module is present or not in the SOC*/
+#define UDMA_SOC_CFG_BCDMA_PRESENT               (0U) 
+
+/** \brief Flag to indicate PKTDMA module is present or not in the SOC*/
+#define UDMA_SOC_CFG_PKTDMA_PRESENT              (0U) 
 	
 /** \brief Flag to indicate Proxy is present or not in the SOC*/
 #define UDMA_SOC_CFG_PROXY_PRESENT               (1U) 

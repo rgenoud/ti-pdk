@@ -119,7 +119,7 @@ void Udma_ringSetCfgLcdma(Udma_DrvHandle drvHandle,
     lcdmaRingCfg->credVirtId     = CSL_LCDMA_RINGACC_CRED_PASSTHRU;
     CSL_lcdma_ringaccInitRingObj(ringHandle->ringNum, lcdmaRingCfg);
 
-#if (UDMA_SOC_CFG_PROXY_PRESENT == 1)
+#if (UDMA_SOC_CFG_PROXY_PRESENT == 1) // Need to check this
     ringHandle->proxyAddr =
         CSL_proxyGetDataAddr(
             &drvHandle->proxyCfg,

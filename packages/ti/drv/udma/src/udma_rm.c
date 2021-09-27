@@ -2073,12 +2073,14 @@ int32_t UdmaRmInitPrms_init(uint32_t instId, Udma_RmInitPrms *rmInitPrms)
             numExtCh    = CSL_NAVSS_MAIN_UDMAP_NUM_EXT_CHANS;
         }
     #endif
-    #if (UDMA_SOC_CFG_LCDMA_PRESENT == 1)
+    #if (UDMA_SOC_CFG_BCDMA_PRESENT == 1)
         if(UDMA_INST_ID_BCDMA_0 == instId)
         {
             numRes = UDMA_RM_NUM_BCDMA_RES;
         }
-        else if(UDMA_INST_ID_PKTDMA_0 == instId)
+    #endif
+    #if (UDMA_SOC_CFG_PKTDMA_PRESENT == 1)
+        if(UDMA_INST_ID_PKTDMA_0 == instId)
         {
             numRes = UDMA_RM_NUM_PKTDMA_RES;
         }
@@ -2090,8 +2092,48 @@ int32_t UdmaRmInitPrms_init(uint32_t instId, Udma_RmInitPrms *rmInitPrms)
             retVal += Udma_rmGetSciclientDefaultBoardCfgRmRange(&rmDefBoardCfgPrms[resIdx], &rmDefBoardCfgResp[resIdx], &splitResFlag[resIdx]);
         }
 
-    #if (UDMA_SOC_CFG_LCDMA_PRESENT == 1)    
-        if((UDMA_INST_ID_BCDMA_0 == instId) || (UDMA_INST_ID_PKTDMA_0 == instId))
+    #if (UDMA_SOC_CFG_BCDMA_PRESENT == 1)
+        if((UDMA_INST_ID_BCDMA_0 == instId))
+        {   
+            /* Ultra High Capacity Block Copy Channels */
+            rmInitPrms->startBlkCopyUhcCh   = rmDefBoardCfgResp[UDMA_RM_RES_ID_BC_UHC].rangeStart;
+            rmInitPrms->numBlkCopyUhcCh     = rmDefBoardCfgResp[UDMA_RM_RES_ID_BC_UHC].rangeNum;
+
+            /* High Capacity Block Copy Channels */
+            rmInitPrms->startBlkCopyHcCh    = rmDefBoardCfgResp[UDMA_RM_RES_ID_BC_HC].rangeStart;
+            rmInitPrms->numBlkCopyHcCh      = rmDefBoardCfgResp[UDMA_RM_RES_ID_BC_HC].rangeNum;
+
+            /* Normal Capacity Block Copy Channels */
+            rmInitPrms->startBlkCopyCh      = rmDefBoardCfgResp[UDMA_RM_RES_ID_BC].rangeStart;
+            rmInitPrms->numBlkCopyCh        = rmDefBoardCfgResp[UDMA_RM_RES_ID_BC].rangeNum;
+
+            /* Ultra High Capacity TX Channels */
+            rmInitPrms->startTxUhcCh        = rmDefBoardCfgResp[UDMA_RM_RES_ID_TX_UHC].rangeStart;
+            rmInitPrms->numTxUhcCh          = rmDefBoardCfgResp[UDMA_RM_RES_ID_TX_UHC].rangeNum;
+
+            /* High Capacity TX Channels */
+            rmInitPrms->startTxHcCh         = rmDefBoardCfgResp[UDMA_RM_RES_ID_TX_HC].rangeStart;
+            rmInitPrms->numTxHcCh           = rmDefBoardCfgResp[UDMA_RM_RES_ID_TX_HC].rangeNum;
+
+            /* Normal Capacity TX Channels */
+            rmInitPrms->startTxCh           = rmDefBoardCfgResp[UDMA_RM_RES_ID_TX].rangeStart;
+            rmInitPrms->numTxCh             = rmDefBoardCfgResp[UDMA_RM_RES_ID_TX].rangeNum;
+
+            /* Ultra High Capacity RX Channels */
+            rmInitPrms->startRxUhcCh        = rmDefBoardCfgResp[UDMA_RM_RES_ID_RX_UHC].rangeStart;
+            rmInitPrms->numRxUhcCh          = rmDefBoardCfgResp[UDMA_RM_RES_ID_RX_UHC].rangeNum;
+
+             /* High Capacity RX Channels */
+            rmInitPrms->startRxHcCh         = rmDefBoardCfgResp[UDMA_RM_RES_ID_RX_HC].rangeStart;
+            rmInitPrms->numRxHcCh           = rmDefBoardCfgResp[UDMA_RM_RES_ID_RX_HC].rangeNum;
+
+            /* Normal Capacity RX Channels */
+            rmInitPrms->startRxCh           = rmDefBoardCfgResp[UDMA_RM_RES_ID_RX].rangeStart;
+            rmInitPrms->numRxCh             = rmDefBoardCfgResp[UDMA_RM_RES_ID_RX].rangeNum;
+        }
+    #endif
+    #if (UDMA_SOC_CFG_PKTDMA_PRESENT == 1)
+        if((UDMA_INST_ID_PKTDMA_0 == instId))
         {   
             /* Ultra High Capacity Block Copy Channels */
             rmInitPrms->startBlkCopyUhcCh   = rmDefBoardCfgResp[UDMA_RM_RES_ID_BC_UHC].rangeStart;
@@ -2289,13 +2331,30 @@ int32_t UdmaRmInitPrms_init(uint32_t instId, Udma_RmInitPrms *rmInitPrms)
                                                 &rmInitPrms->numIrIntr);
         }
     #endif
-    #if (UDMA_SOC_CFG_LCDMA_PRESENT == 1)   
-        if((UDMA_INST_ID_BCDMA_0 == instId) || (UDMA_INST_ID_PKTDMA_0 == instId))
+    #if (UDMA_SOC_CFG_BCDMA_PRESENT == 1)
+        if((UDMA_INST_ID_BCDMA_0 == instId))
         {  
             /* One to one mapping exists from Virtual Interrupts. 
              * So translate to corresponding range.
              * In case of devices like AM64x, where there are no Interrupt Routers,
-             * this refers to core interrupt itslef. */ 
+             * this refers to core interrupt itslef. */
+            /* Need to review this */ 
+            retVal += Sciclient_rmIrqTranslateIaOutput(rmDefBoardCfgPrms[UDMA_RM_RES_ID_VINTR].sciclientReqType,
+                                                       rmInitPrms->startVintr,
+                                                       Udma_getCoreSciDevId(),
+                                                       (uint16_t *) &rmInitPrms->startIrIntr);
+        
+            rmInitPrms->numIrIntr                          = rmInitPrms->numVintr;             
+        }
+    #endif
+    #if (UDMA_SOC_CFG_PKTDMA_PRESENT == 1)
+        if((UDMA_INST_ID_PKTDMA_0 == instId))
+        {  
+            /* One to one mapping exists from Virtual Interrupts. 
+             * So translate to corresponding range.
+             * In case of devices like AM64x, where there are no Interrupt Routers,
+             * this refers to core interrupt itslef. */
+            /* Need to review this */ 
             retVal += Sciclient_rmIrqTranslateIaOutput(rmDefBoardCfgPrms[UDMA_RM_RES_ID_VINTR].sciclientReqType,
                                                        rmInitPrms->startVintr,
                                                        Udma_getCoreSciDevId(),
@@ -2350,7 +2409,7 @@ int32_t UdmaRmInitPrms_init(uint32_t instId, Udma_RmInitPrms *rmInitPrms)
         rmInitPrms->numRingMon                              = rmDefBoardCfgResp[UDMA_RM_RES_ID_RING_MON].rangeNum;
     #endif
 
-    #if (UDMA_SOC_CFG_LCDMA_PRESENT == 1) 
+    #if (UDMA_SOC_CFG_PKTDMA_PRESENT == 1) 
         if(UDMA_INST_ID_PKTDMA_0 == instId)
         {
         #if (UDMA_NUM_MAPPED_TX_GROUP > 0)

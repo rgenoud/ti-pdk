@@ -53,6 +53,8 @@ extern "C" {
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
+/* Macro to find maximum of given values */
+#define MAX(X,Y)  (X>Y ? X:Y)
 /**
  *  \anchor Udma_InstanceIdSoc
  *  \name UDMA Instance ID specific to SOC
@@ -310,7 +312,7 @@ extern "C" {
 /** \brief Interrupt Router Interrupts */
 #define UDMA_RM_RES_ID_IR_INTR                  (2U)
 
-/* List of all UDMAP Resource Id's */
+/* List of all UDMAP and BCDMA TX/RX Channel Resource Id's */
 /** \brief Ultra High Capacity TX and Block Copy Channels */
 #define UDMA_RM_RES_ID_TX_UHC                   (3U)
 /** \brief High Capacity TX and Block Copy Channels */
@@ -324,7 +326,7 @@ extern "C" {
 /** \brief Normal Capacity RX Channels */
 #define UDMA_RM_RES_ID_RX                       (8U)
 
-/* List of All Exclusive - UDMA Resource Id's */
+/* List of All Exclusive - UDMAP Resource Id's */
 /** \brief UTC - Extended Channels (MSMC_DRU/VPAC_TC0/VPAC_TC1/DMPAC) */
 #define UDMA_RM_RES_ID_UTC                      (9U)
 /** \brief Free Flows */
@@ -336,7 +338,7 @@ extern "C" {
 /** \brief Ring Monitors */
 #define UDMA_RM_RES_ID_RING_MON                 (13U)
 /** \brief Total number of UDMAP resources */
-#define UDMA_RM_NUM_RES                         (14U)  
+#define UDMA_RM_NUM_UDMAP_RES                   (14U)  
 
 /* List of All Exclusive - BCDMA Resource Id's */
 /** \brief Ultra High Capacity Block Copy Channels */
@@ -346,7 +348,10 @@ extern "C" {
 /** \brief Normal Capacity Block Copy Channels */
 #define UDMA_RM_RES_ID_BC                       (11U)
 /** \brief Total number of BCDMA resources */
-#define UDMA_RM_NUM_BCDMA_RES                   (12U) 
+#define UDMA_RM_NUM_BCDMA_RES                   (12U)
+/** \brief Total number of resources */
+#define UDMA_RM_NUM_RES                         MAX(UDMA_RM_NUM_UDMAP_RES, UDMA_RM_NUM_BCDMA_RES)
+
 /* @} */
 
 /** \brief Total number of shared resources - 
