@@ -49,7 +49,7 @@ ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200 j721s2))
 SRCS_COMMON += udma_ring_normal.c
 endif
 #LCDMA RA is not present in all SOC
-ifeq ($(SOC),$(filter $(SOC), am64x))
+ifeq ($(SOC),$(filter $(SOC), am64x j721s2))
 SRCS_COMMON += udma_ring_lcdma.c
 endif
 

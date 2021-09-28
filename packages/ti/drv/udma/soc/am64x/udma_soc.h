@@ -53,6 +53,9 @@ extern "C" {
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
+/* Macro to find maximum of given values */
+#define MAX(X,Y)  (X>Y ? X:Y)
+
 /**
  *  \anchor Udma_InstanceIdSoc
  *  \name UDMA Instance ID specific to SOC
@@ -92,6 +95,9 @@ extern "C" {
     
 /** \brief Flag to indicate Proxy is present or not in the SOC*/
 #define UDMA_SOC_CFG_PROXY_PRESENT               (0U) 
+	
+/** \brief Flag to indicate Interrupt Router is present or not in the SOC*/
+#define UDMA_SOC_CFG_INTR_ROUTER_PRESENT         (0U) 
 
 /** \brief Flag to indicate Clec is present or not in the SOC*/
 #define UDMA_SOC_CFG_CLEC_PRESENT                (0U) 
@@ -296,7 +302,7 @@ extern "C" {
 /** \brief Total number of PKTDMA resources */
 #define UDMA_RM_NUM_PKTDMA_RES                  (35U) 
 /** \brief Total number of resources */
-#define UDMA_RM_NUM_RES                         (35U) 
+#define UDMA_RM_NUM_RES                         MAX(UDMA_RM_NUM_BCDMA_RES, UDMA_RM_NUM_PKTDMA_RES)
 /* @} */
 
 /** \brief Total number of shared resources - 
