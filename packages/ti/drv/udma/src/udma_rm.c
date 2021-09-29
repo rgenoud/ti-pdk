@@ -2028,7 +2028,7 @@ int32_t UdmaRmInitPrms_init(uint32_t instId, Udma_RmInitPrms *rmInitPrms)
     uint32_t                                     splitResFlag[UDMA_RM_NUM_RES] = {0U};
     uint32_t numRes = 0U;
     uint32_t resIdx;
-    bool isBcdmaOrPktdma = false;
+    bool blkCopySubType = false;
 
     /* Error check */
     if(NULL_PTR == rmInitPrms)
@@ -2052,6 +2052,7 @@ int32_t UdmaRmInitPrms_init(uint32_t instId, Udma_RmInitPrms *rmInitPrms)
         if(UDMA_INST_ID_MCU_0 == instId)
         {
             numRes      = UDMA_RM_NUM_RES;
+            blkCopySubType = false;
             /* Assign offset Params */
             numtTxCh    = CSL_NAVSS_MCU_UDMAP_NUM_TX_CHANS;    
             numRxCh     = CSL_NAVSS_MCU_UDMAP_NUM_RX_CHANS;
@@ -2060,6 +2061,7 @@ int32_t UdmaRmInitPrms_init(uint32_t instId, Udma_RmInitPrms *rmInitPrms)
         else if(UDMA_INST_ID_MAIN_0 == instId)
         {
             numRes      = UDMA_RM_NUM_RES;
+            blkCopySubType = false;
             /* Assign offset Params */
             numtTxCh    = CSL_NAVSS_MAIN_UDMAP_NUM_TX_CHANS;    
             numRxCh     = CSL_NAVSS_MAIN_UDMAP_NUM_RX_CHANS;
@@ -2069,14 +2071,14 @@ int32_t UdmaRmInitPrms_init(uint32_t instId, Udma_RmInitPrms *rmInitPrms)
     #if (UDMA_SOC_CFG_BCDMA_PRESENT == 1)
         if(UDMA_INST_ID_BCDMA_0 == instId)
         {
-            isBcdmaOrPktdma = true;
+            blkCopySubType = true;
             numRes = UDMA_RM_NUM_BCDMA_RES;
         }
     #endif
     #if (UDMA_SOC_CFG_PKTDMA_PRESENT == 1)
         if(UDMA_INST_ID_PKTDMA_0 == instId)
         {
-            isBcdmaOrPktdma = true;
+            blkCopySubType = true;
             numRes = UDMA_RM_NUM_PKTDMA_RES;
         }
     #endif
@@ -2087,8 +2089,8 @@ int32_t UdmaRmInitPrms_init(uint32_t instId, Udma_RmInitPrms *rmInitPrms)
             retVal += Udma_rmGetSciclientDefaultBoardCfgRmRange(&rmDefBoardCfgPrms[resIdx], &rmDefBoardCfgResp[resIdx], &splitResFlag[resIdx]);
         }
 
-    #if (UDMA_SOC_CFG_BCDMA_PRESENT == 1)
-        if(isBcdmaOrPktdma)
+    #if (UDMA_SOC_CFG_BCDMA_PRESENT == 1) || (UDMA_SOC_CFG_PKTDMA_PRESENT == 1)
+        if(blkCopySubType)
         {   
             /* Ultra High Capacity Block Copy Channels */
             rmInitPrms->startBlkCopyUhcCh   = rmDefBoardCfgResp[UDMA_RM_RES_ID_BC_UHC].rangeStart;
@@ -2128,7 +2130,7 @@ int32_t UdmaRmInitPrms_init(uint32_t instId, Udma_RmInitPrms *rmInitPrms)
         }
     #endif
     #if (UDMA_SOC_CFG_UDMAP_PRESENT == 1)   
-        if((UDMA_INST_ID_MCU_0 == instId) || (UDMA_INST_ID_MAIN_0 == instId))
+        if(!blkCopySubType)
         {   
             /* Ultra High Capacity Block Copy and TX Channels */
             /* Primary for Block Copy Channel */

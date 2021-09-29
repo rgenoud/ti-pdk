@@ -256,7 +256,7 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
 
     instId = drvHandle->initPrms.instId;
     
-    
+/* Host Emulation not verified for j721s2 */
 #if defined (HOST_EMULATION)
     gHost_udmap_gcfgRegs.CAP0 = 0x000B800F;
     gHost_udmap_gcfgRegs.CAP1 = 0;
@@ -282,12 +282,12 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
         pBcdmaRegs->pRxChanRtRegs   = ((CSL_bcdma_rxcrtRegs *) UDMA_NAVSS0_BCDMA0_CFG_RCHANRT_BASE);
         drvHandle->trigGemOffset    = CSL_NAVSS_GEM_MAIN_BCDMA_TRIGGER_OFFSET;
 
-        pUdmapRegs = &drvHandle->udmapRegs;
-        memset(pUdmapRegs, 0, sizeof(*pUdmapRegs));
-
         /* Fill other SOC specific parameters by reading from UDMA config
 	     * registers */
 	    CSL_bcdmaGetCfg(pBcdmaRegs);
+
+        pUdmapRegs = &drvHandle->udmapRegs;
+        memset(pUdmapRegs, 0, sizeof(*pUdmapRegs));
     }
     else 
     {
@@ -520,26 +520,6 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
     utcInfo->druRegs       = ((CSL_DRU_t *) CSL_VPAC0_DRU_UTC_VPAC1_DRU_MMR_CFG_DRU_DRU_BASE);
     utcInfo->numQueue      = CSL_NAVSS_UTC_VPAC_TC1_QUEUE_CNT;
 
-    utcInfo = &drvHandle->utcInfo[UDMA_UTC_ID_VPAC1_TC0];
-    utcInfo->utcId         = UDMA_UTC_ID_VPAC1_TC0;
-    utcInfo->utcType       = UDMA_UTC_TYPE_DRU_VHWA;
-    utcInfo->startCh       = UDMA_UTC_START_CH_VPAC1_TC0;
-    utcInfo->numCh         = UDMA_UTC_NUM_CH_VPAC1_TC0;
-    utcInfo->startThreadId = UDMA_UTC_START_THREAD_ID_VPAC1_TC0;
-    utcInfo->txCredit      = 3U;
-    utcInfo->druRegs       = ((CSL_DRU_t *) CSL_VPAC0_DRU_UTC_VPAC0_DRU_MMR_CFG_DRU_DRU_BASE);
-    utcInfo->numQueue      = CSL_NAVSS_UTC_VPAC_TC0_QUEUE_CNT;
-
-    utcInfo = &drvHandle->utcInfo[UDMA_UTC_ID_VPAC1_TC1];
-    utcInfo->utcId         = UDMA_UTC_ID_VPAC1_TC1;
-    utcInfo->utcType       = UDMA_UTC_TYPE_DRU_VHWA;
-    utcInfo->startCh       = UDMA_UTC_START_CH_VPAC1_TC1;
-    utcInfo->numCh         = UDMA_UTC_NUM_CH_VPAC1_TC1;
-    utcInfo->startThreadId = UDMA_UTC_START_THREAD_ID_VPAC1_TC1;
-    utcInfo->txCredit      = 3U;
-    utcInfo->druRegs       = ((CSL_DRU_t *) CSL_VPAC0_DRU_UTC_VPAC1_DRU_MMR_CFG_DRU_DRU_BASE); // need to cross check these flags
-    utcInfo->numQueue      = CSL_NAVSS_UTC_VPAC_TC1_QUEUE_CNT;
-
     utcInfo = &drvHandle->utcInfo[UDMA_UTC_ID_DMPAC_TC0];
     utcInfo->utcId         = UDMA_UTC_ID_DMPAC_TC0;
     utcInfo->utcType       = UDMA_UTC_TYPE_DRU_VHWA;
@@ -592,42 +572,73 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
     }
 
     /* Init other variables */
-    if(UDMA_INST_ID_MCU_0 == instId)
+    if(UDMA_INST_ID_BCDMA_0 = instId)
     {
-        drvHandle->udmapSrcThreadOffset = CSL_PSILCFG_NAVSS_MCU_UDMAP0_TSTRM_THREAD_OFFSET;
-        drvHandle->udmapDestThreadOffset= CSL_PSILCFG_NAVSS_MCU_UDMAP0_RSTRM_THREAD_OFFSET;
-        drvHandle->maxRings             = CSL_NAVSS_MCU_RINGACC_RING_CNT;
-        drvHandle->maxProxy             = CSL_NAVSS_MCU_PROXY_NUM_PROXIES;
-        drvHandle->maxRingMon           = CSL_NAVSS_MCU_RINGACC_NUM_MONITORS;
-        drvHandle->devIdRing            = TISCI_DEV_MCU_NAVSS0_RINGACC0;
-        drvHandle->devIdProxy           = TISCI_DEV_MCU_NAVSS0_PROXY0;
-        drvHandle->devIdUdma            = TISCI_DEV_MCU_NAVSS0_UDMAP_0;
-        drvHandle->devIdPsil            = TISCI_DEV_MCU_NAVSS0;
+        drvHandle->txChOffset           = pBcdmaRegs->bcChanCnt;
+	    drvHandle->rxChOffset   		= drvHandle->txChOffset + pBcdmaRegs->splitTxChanCnt;
+       /* The srcIdx passed to Sciclient_rmIrqset API for configuring DMA Completion/Ring events, 
+        * will be ringNum + the corresponding following offset. 
+        * So setting the offset as TISCI Start Idx - corresponding ringNum Offset (if any) */
+        drvHandle->blkCopyRingIrqOffset = TISCI_BCDMA0_BC_RC_OES_IRQ_SRC_IDX_START; // flags not defined in v4
+        drvHandle->txRingIrqOffset      = TISCI_BCDMA0_TX_RC_OES_IRQ_SRC_IDX_START - drvHandle->txChOffset;// flags not defined in v4
+        drvHandle->rxRingIrqOffset      = TISCI_BCDMA0_RX_RC_OES_IRQ_SRC_IDX_START - drvHandle->rxChOffset;// flags not defined in v4
+	    drvHandle->udmapSrcThreadOffset = CSL_PSILCFG_DMSS_BCDMA_STRM_PSILS_THREAD_OFFSET; 
+	    drvHandle->udmapDestThreadOffset= CSL_PSILCFG_DMSS_BCDMA_STRM_PSILD_THREAD_OFFSET;
+	    drvHandle->maxRings             = CSL_DMSS_BCDMA_NUM_BC_CHANS + CSL_DMSS_BCDMA_NUM_TX_CHANS + CSL_DMSS_BCDMA_NUM_RX_CHANS;
+	    drvHandle->devIdRing            = TISCI_DEV_NAVSS0_BCDMA_0;
+	    drvHandle->devIdUdma        	= TISCI_DEV_NAVSS0_BCDMA_0;
+       /* The srcIdx passed to Sciclient_rmIrqset API for configuring TR events, 
+        * will be chNum + the corresponding following offset. 
+        * So setting the offset as TISCI Start Idx - corresponding chNum Offset (if any) */
+        drvHandle->srcIdTrIrq           = drvHandle->devIdIa;
+        drvHandle->blkCopyTrIrqOffset   = TISCI_BCDMA0_BC_DC_OES_IRQ_SRC_IDX_START; // flags not defined in v4
+        drvHandle->txTrIrqOffset        = TISCI_BCDMA0_TX_DC_OES_IRQ_SRC_IDX_START; // flags not defined in v4
+        drvHandle->rxTrIrqOffset        = TISCI_BCDMA0_RX_DC_OES_IRQ_SRC_IDX_START; // flags not defined in v4
+        drvHandle->devIdPsil            = TISCI_DEV_NAVSS0; 
+        drvHandle->maxProxy             = 0U; 
+        drvHandle->maxRingMon           = 0U;
+        drvHandle->extChOffset          = 0U;
+        drvHandle->srcIdRingIrq         = drvHandle->devIdIa;
     }
     else
     {
-        drvHandle->udmapSrcThreadOffset = CSL_PSILCFG_NAVSS_MAIN_UDMAP0_TSTRM_THREAD_OFFSET;
-        drvHandle->udmapDestThreadOffset= CSL_PSILCFG_NAVSS_MAIN_UDMAP0_RSTRM_THREAD_OFFSET;
-        drvHandle->maxRings             = CSL_NAVSS_MAIN_RINGACC_RING_CNT;
-        drvHandle->maxProxy             = CSL_NAVSS_MAIN_PROXY_NUM_PROXIES;
-        drvHandle->maxRingMon           = CSL_NAVSS_MAIN_RINGACC_NUM_MONITORS;
-        drvHandle->devIdRing            = TISCI_DEV_NAVSS0_RINGACC_0;
-        drvHandle->devIdProxy           = TISCI_DEV_NAVSS0_PROXY_0;
-        drvHandle->devIdUdma            = TISCI_DEV_NAVSS0_UDMAP_0;
-        drvHandle->devIdPsil            = TISCI_DEV_NAVSS0;
+        if(UDMA_INST_ID_MCU_0 == instId)
+        {
+            drvHandle->udmapSrcThreadOffset = CSL_PSILCFG_NAVSS_MCU_UDMAP0_TSTRM_THREAD_OFFSET;
+            drvHandle->udmapDestThreadOffset= CSL_PSILCFG_NAVSS_MCU_UDMAP0_RSTRM_THREAD_OFFSET;
+            drvHandle->maxRings             = CSL_NAVSS_MCU_RINGACC_RING_CNT;
+            drvHandle->maxProxy             = CSL_NAVSS_MCU_PROXY_NUM_PROXIES;
+            drvHandle->maxRingMon           = CSL_NAVSS_MCU_RINGACC_NUM_MONITORS;
+            drvHandle->devIdRing            = TISCI_DEV_MCU_NAVSS0_RINGACC0;
+            drvHandle->devIdProxy           = TISCI_DEV_MCU_NAVSS0_PROXY0;
+            drvHandle->devIdUdma            = TISCI_DEV_MCU_NAVSS0_UDMAP_0;
+            drvHandle->devIdPsil            = TISCI_DEV_MCU_NAVSS0;
+        }
+        else
+        {
+            drvHandle->udmapSrcThreadOffset = CSL_PSILCFG_NAVSS_MAIN_UDMAP0_TSTRM_THREAD_OFFSET;
+            drvHandle->udmapDestThreadOffset= CSL_PSILCFG_NAVSS_MAIN_UDMAP0_RSTRM_THREAD_OFFSET;
+            drvHandle->maxRings             = CSL_NAVSS_MAIN_RINGACC_RING_CNT;
+            drvHandle->maxProxy             = CSL_NAVSS_MAIN_PROXY_NUM_PROXIES;
+            drvHandle->maxRingMon           = CSL_NAVSS_MAIN_RINGACC_NUM_MONITORS;
+            drvHandle->devIdRing            = TISCI_DEV_NAVSS0_RINGACC_0;
+            drvHandle->devIdProxy           = TISCI_DEV_NAVSS0_PROXY_0;
+            drvHandle->devIdUdma            = TISCI_DEV_NAVSS0_UDMAP_0;
+            drvHandle->devIdPsil            = TISCI_DEV_NAVSS0;
+        }
+        drvHandle->srcIdRingIrq          = drvHandle->devIdRing;
+        drvHandle->blkCopyRingIrqOffset  = TISCI_RINGACC0_OES_IRQ_SRC_IDX_START; 
+        drvHandle->txRingIrqOffset       = TISCI_RINGACC0_OES_IRQ_SRC_IDX_START;
+        drvHandle->rxRingIrqOffset       = TISCI_RINGACC0_OES_IRQ_SRC_IDX_START;
+        drvHandle->srcIdTrIrq            = drvHandle->devIdUdma;
+        drvHandle->blkCopyTrIrqOffset    = TISCI_UDMAP0_RX_OES_IRQ_SRC_IDX_START; 
+        drvHandle->txTrIrqOffset         = TISCI_UDMAP0_TX_OES_IRQ_SRC_IDX_START;
+        drvHandle->rxTrIrqOffset         = TISCI_UDMAP0_RX_OES_IRQ_SRC_IDX_START;
+        drvHandle->txChOffset            = 0U;
+        drvHandle->extChOffset           = drvHandle->txChOffset + pUdmapRegs->txChanCnt;
+        drvHandle->rxChOffset            =
+            drvHandle->extChOffset + pUdmapRegs->txExtUtcChanCnt;
     }
-    drvHandle->srcIdRingIrq          = drvHandle->devIdRing;
-    drvHandle->blkCopyRingIrqOffset  = TISCI_RINGACC0_OES_IRQ_SRC_IDX_START; 
-    drvHandle->txRingIrqOffset       = TISCI_RINGACC0_OES_IRQ_SRC_IDX_START;
-    drvHandle->rxRingIrqOffset       = TISCI_RINGACC0_OES_IRQ_SRC_IDX_START;
-    drvHandle->srcIdTrIrq            = drvHandle->devIdUdma;
-    drvHandle->blkCopyTrIrqOffset    = TISCI_UDMAP0_RX_OES_IRQ_SRC_IDX_START; 
-    drvHandle->txTrIrqOffset         = TISCI_UDMAP0_TX_OES_IRQ_SRC_IDX_START;
-    drvHandle->rxTrIrqOffset         = TISCI_UDMAP0_RX_OES_IRQ_SRC_IDX_START;
-    drvHandle->txChOffset            = 0U;
-    drvHandle->extChOffset           = drvHandle->txChOffset + pUdmapRegs->txChanCnt;
-    drvHandle->rxChOffset            =
-        drvHandle->extChOffset + pUdmapRegs->txExtUtcChanCnt;
 
     return;
 }
