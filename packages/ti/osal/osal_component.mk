@@ -135,7 +135,7 @@ libosal_safertos_awr294x_CORELIST = c66xdsp_1
 ############################
 osal_LIB_LIST = osal_nonos osal_nonos_indp
 ifeq ($(BUILD_OS_TYPE),tirtos)
-#osal_LIB_LIST += osal_tirtos osal_tirtos_indp
+osal_LIB_LIST += osal_tirtos osal_tirtos_indp
 endif
 osal_LIB_LIST += osal_freertos
 ifeq ($(SOC),$(filter $(SOC), $(libosal_safertos_SOCLIST)))
@@ -274,7 +274,7 @@ export osal_tirtos_PKG_LIST
 osal_tirtos_INCLUDE = $(osal_tirtos_PATH)
 osal_tirtos_SOCLIST = $(libosal_tirtos_SOCLIST)
 export osal_tirtos_SOCLIST
-osal_tirtos_$(SOC)_CORELIST = $(libosal_tirtos_$(SOC)_CORELIST)
+osal_tirtos_$(SOC)_CORELIST = $(filter $(libosal_tirtos_$(SOC)_CORELIST), $(libosal_$(SOC)_CORELIST))
 export osal_tirtos_$(SOC)_CORELIST
 
 # OSAL TIRTOS DEVICE INDEPENDENT
@@ -301,7 +301,7 @@ export osal_tirtos_indp_PKG_LIST
 osal_tirtos_indp_INCLUDE = $(osal_tirtos_indp_PATH)
 osal_tirtos_indp_SOCLIST = 
 export osal_tirtos_indp_SOCLIST
-osal_tirtos_indp_$(SOC)_CORELIST = $(libosal_tirtos_$(SOC)_CORELIST)
+osal_tirtos_indp_$(SOC)_CORELIST = $(filter $(libosal_tirtos_$(SOC)_CORELIST), $(libosal_$(SOC)_CORELIST))
 export osal_tirtos_indp_$(SOC)_CORELIST
 
 # OSAL FREE RTOS LIB

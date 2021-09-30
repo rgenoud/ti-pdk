@@ -50,6 +50,7 @@ ifneq ($(BUILD_OS_TYPE), qnx)
 ifeq ($(SOC),$(filter $(SOC), j721e j7200))
 sciclient_LIB_LIST += rm_pm_hal
 sciclient_LIB_LIST += sciserver_tirtos
+sciclient_LIB_LIST += sciserver_freertos
 sciclient_LIB_LIST += sciserver_baremetal
 sciclient_LIB_LIST += sciclient_direct
 sciclient_LIB_LIST += sciclient_direct_hs
