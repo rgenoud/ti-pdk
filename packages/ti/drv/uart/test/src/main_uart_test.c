@@ -159,14 +159,14 @@ typedef struct UART_Tests_s
 #define UART_TEST_CACHE_LINE_SIZE (128U)
 #endif
 
-char scanPrompt[MAX_TEST_BUFFER_SIZE] __attribute__ ((aligned (UART_TEST_CACHE_LINE_SIZE)));
+volatile char scanPrompt[MAX_TEST_BUFFER_SIZE] __attribute__ ((aligned (UART_TEST_CACHE_LINE_SIZE)));
 char echoPrompt[40] __attribute__ ((aligned (UART_TEST_CACHE_LINE_SIZE))) = "\n\r Data entered is as follows \r\n";
 char dataPrint[40] __attribute__ ((aligned (UART_TEST_CACHE_LINE_SIZE))) = "\r\n enter the data of 16 character \r\n";
 char readTimeoutPrompt[60] __attribute__ ((aligned (UART_TEST_CACHE_LINE_SIZE))) = "\r\n Read timed out \r\n";
 char breakErrPrompt[60] __attribute__ ((aligned (UART_TEST_CACHE_LINE_SIZE))) = "\r\n Received a break condition error \r\n";
 char rdCancelPrompt[60] __attribute__ ((aligned (UART_TEST_CACHE_LINE_SIZE))) = "\r\n Previous read canceled \r\n";
 char wrCancelPrompt[60] __attribute__ ((aligned (UART_TEST_CACHE_LINE_SIZE))) = "\r\n Previous write canceled \r\n";
-char fifoTrgLvlData[MAX_TEST_BUFFER_SIZE] __attribute__ ((aligned (UART_TEST_CACHE_LINE_SIZE))) =
+volatile char fifoTrgLvlData[MAX_TEST_BUFFER_SIZE] __attribute__ ((aligned (UART_TEST_CACHE_LINE_SIZE))) =
                         "0123456789112345678921234567893123456789412345678951234567896123456789712345678981234567899123456789"
                         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789abcedef12345"
                         "6789ABCDEF012345678901234567899876543210deadbeef89512345";
@@ -769,7 +769,7 @@ bool UART_test_trglvl_xfer(UART_Handle uart, uint32_t dmaMode, uint32_t xferSize
     }
 
     /* Read in call back mode */
-    memset(scanPrompt, 0, sizeof(scanPrompt));
+    memset((void *)scanPrompt, 0, sizeof(scanPrompt));
     if (dmaMode)
     {
         CacheP_wbInv((void *)(uintptr_t)addrScanPrompt, (int32_t)sizeof(scanPrompt));
@@ -952,8 +952,8 @@ static bool UART_test_printf_scanf(bool dmaMode)
         UART_printf(stdioPrint);
 
 #ifndef UART_RX_LOOPBACK_ONLY
-        memset(scanPrompt, 0, sizeof(scanPrompt));
-        if (UART_scanFmt(scanPrompt) != S_PASS)
+        memset((void *)scanPrompt, 0, sizeof(scanPrompt));
+        if (UART_scanFmt((const char *)scanPrompt) != S_PASS)
         {
             goto Err;
         }
@@ -999,9 +999,9 @@ static bool UART_test_printf_scanf_stdio_params(bool dmaMode)
 
     UART_printf(stdioPrint);
 
-    memset(scanPrompt, 0, sizeof(scanPrompt));
+    memset((void *)scanPrompt, 0, sizeof(scanPrompt));
 #ifndef UART_RX_LOOPBACK_ONLY
-    if (UART_scanFmt(scanPrompt) != S_PASS)
+    if (UART_scanFmt((const char *)scanPrompt) != S_PASS)
     {
         goto Err;
     }
@@ -1247,7 +1247,7 @@ static bool UART_test_read_write_cancel(bool dmaMode)
     /* Test receive error */
 
     /* Perform the first read, which will be cancelled before completion */
-    memset(scanPrompt, 0, sizeof(scanPrompt));
+    memset((void *)scanPrompt, 0, sizeof(scanPrompt));
     if (dmaMode)
     {
     	CacheP_wbInv((void *)(uintptr_t)addrScanPrompt, (int32_t)sizeof(scanPrompt));
@@ -1303,7 +1303,7 @@ static bool UART_test_read_write_cancel(bool dmaMode)
     }
 
     /* Perform the 2nd read, which will be completed */
-    memset(scanPrompt, 0, sizeof(scanPrompt));
+    memset((void *)scanPrompt, 0, sizeof(scanPrompt));
     if (dmaMode)
     {
     	CacheP_wbInv((void *)(uintptr_t)addrScanPrompt, (int32_t)sizeof(scanPrompt));
@@ -1471,7 +1471,7 @@ static bool UART_test_rx_err(bool dmaMode)
     }
 
     /* Test receive error */
-    memset(scanPrompt, 0, sizeof(scanPrompt));
+    memset((void *)scanPrompt, 0, sizeof(scanPrompt));
     if (dmaMode)
     {
     	CacheP_wbInv((void *)(uintptr_t)addrScanPrompt, (int32_t)sizeof(scanPrompt));
@@ -1549,7 +1549,7 @@ static bool UART_test_timeout(bool dmaMode)
     }
 
     /* Test read timeout */
-    memset(scanPrompt, 0, sizeof(scanPrompt));
+    memset((void *)scanPrompt, 0, sizeof(scanPrompt));
     if (dmaMode)
     {
     	CacheP_wbInv((void *)(uintptr_t)addrScanPrompt, (int32_t)sizeof(scanPrompt));
@@ -1614,7 +1614,7 @@ static bool UART_test_polling_timeout(bool dmaMode)
         goto Err;
     }
 
-    memset(scanPrompt, 0, sizeof(scanPrompt));
+    memset((void *)scanPrompt, 0, sizeof(scanPrompt));
     if (UART_readPolling(uart, (void *)(uintptr_t)scanPrompt, rdSize) != rdSize)
     {
         if (UART_writePolling(uart, (const void *)readTimeoutPrompt, wrSize) != wrSize)
@@ -1639,7 +1639,7 @@ static bool UART_test_polling_timeout(bool dmaMode)
         }
 
         /* Test read timeout */
-        memset(scanPrompt, 0, sizeof(scanPrompt));
+        memset((void *)scanPrompt, 0, sizeof(scanPrompt));
         if (UART_readPolling(uart, (void *)(uintptr_t)scanPrompt, rdSize) != rdSize)
         {
             UART_writePolling(uart, (const void *)readTimeoutPrompt, wrSize);
@@ -1665,7 +1665,7 @@ static bool UART_test_polling_timeout(bool dmaMode)
         wrSize = strlen(dataPrint);
         UART_writePolling(uart, (const void *)dataPrint, wrSize);
 
-        memset(scanPrompt, 0, sizeof(scanPrompt));
+        memset((void *)scanPrompt, 0, sizeof(scanPrompt));
 
 #if !defined(UART_RX_LOOPBACK_ONLY)
         if (UART_readPolling(uart, (void *)(uintptr_t)scanPrompt, rdSize) != rdSize)
@@ -1749,7 +1749,7 @@ static bool UART_test_callback(bool dmaMode)
         goto Err;
     }
 
-    memset(scanPrompt, 0, sizeof(scanPrompt));
+    memset((void *)scanPrompt, 0, sizeof(scanPrompt));
     if (dmaMode)
     {
     	CacheP_wbInv((void *)(uintptr_t)addrScanPrompt, (int32_t)sizeof(scanPrompt));
@@ -1814,7 +1814,7 @@ static bool UART_test_callback(bool dmaMode)
         goto Err;
     }
 
-    memset(scanPrompt, 0, sizeof(scanPrompt));
+    memset((void *)scanPrompt, 0, sizeof(scanPrompt));
     if (dmaMode)
     {
     	CacheP_wbInv((void *)(uintptr_t)addrScanPrompt, (int32_t)sizeof(scanPrompt));
@@ -2181,7 +2181,7 @@ static bool UART_test_read_write(bool dmaMode)
         goto Err;
     }
 
-    memset(scanPrompt, 0, sizeof(scanPrompt));
+    memset((void *)scanPrompt, 0, sizeof(scanPrompt));
     if (dmaMode)
     {
     	CacheP_wbInv((void *)(uintptr_t)addrScanPrompt, (int32_t)sizeof(scanPrompt));
@@ -2215,7 +2215,7 @@ static bool UART_test_read_write(bool dmaMode)
         goto Err;
     }
 
-    memset(scanPrompt, 0, sizeof(scanPrompt));
+    memset((void *)scanPrompt, 0, sizeof(scanPrompt));
     if (dmaMode)
     {
     	CacheP_wbInv((void *)(uintptr_t)addrScanPrompt, (int32_t)sizeof(scanPrompt));
@@ -2320,7 +2320,7 @@ static bool UART_test_read_write_int_disable(bool dmaMode)
         goto Err;
     }
 
-    memset(scanPrompt, 0, sizeof(scanPrompt));
+    memset((void *)scanPrompt, 0, sizeof(scanPrompt));
     if (dmaMode)
     {
         CacheP_wbInv((void *)(uintptr_t)addrScanPrompt, (int32_t)sizeof(scanPrompt));
@@ -2354,7 +2354,7 @@ static bool UART_test_read_write_int_disable(bool dmaMode)
         goto Err;
     }
 
-    memset(scanPrompt, 0, sizeof(scanPrompt));
+    memset((void *)scanPrompt, 0, sizeof(scanPrompt));
     if (dmaMode)
     {
         CacheP_wbInv((void *)(uintptr_t)addrScanPrompt, (int32_t)sizeof(scanPrompt));
@@ -3026,7 +3026,7 @@ bool UART_test_loopback_data(bool dmaMode)
     }
 
     /* Reset the Rx buffer */
-    memset(scanPrompt, 0, MAX_TEST_BUFFER_SIZE);
+    memset((void *)scanPrompt, 0, MAX_TEST_BUFFER_SIZE);
 
     if (dmaMode)
     {
