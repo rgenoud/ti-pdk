@@ -92,10 +92,7 @@ void App_configureLCD(App_utilsLcdCfgParams cfgParams)
     {
         if(PM_SUCCESS == status)
         {
-            status = Sciclient_pmSetModuleClkParent(TISCI_DEV_DSS0,
-                    TISCI_DEV_DSS0_DSS_INST0_DPI_1_IN_2X_CLK,
-                    TISCI_DEV_DSS0_DSS_INST0_DPI_1_IN_2X_CLK_PARENT_DPI0_EXT_CLKSEL_OUT0,
-                    SCICLIENT_SERVICE_WAIT_FOREVER);
+            
         }
 
         if(PM_SUCCESS == status)
@@ -117,11 +114,7 @@ void App_configureLCD(App_utilsLcdCfgParams cfgParams)
 
         if(PM_SUCCESS == status)
         {
-            status = Sciclient_pmSetModuleClkFreq(TISCI_DEV_DSS0,
-                    TISCI_DEV_DSS0_DSS_INST0_DPI_1_IN_2X_CLK,
-                    cfgParams.pixelClk,
-                    0,
-                    SCICLIENT_SERVICE_WAIT_FOREVER);
+            
         }
 
         if(PM_SUCCESS == status)
@@ -169,19 +162,12 @@ void App_configureLCD(App_utilsLcdCfgParams cfgParams)
         }
         if (PM_SUCCESS == status)
         {
-            status = Sciclient_pmSetModuleClkParent(TISCI_DEV_DSS0,
-                TISCI_DEV_DSS0_DSS_INST0_DPI_2_IN_2X_CLK,
-                TISCI_DEV_DSS0_DSS_INST0_DPI_2_IN_2X_CLK_PARENT_HSDIV1_16FFT_MAIN_18_HSDIVOUT0_CLK,
-                SCICLIENT_SERVICE_WAIT_FOREVER);
+            
         }
         if (PM_SUCCESS == status)
         {
             /* Set the clock at the desirable frequency*/
-            status = Sciclient_pmSetModuleClkFreq(TISCI_DEV_DSS0,
-                TISCI_DEV_DSS0_DSS_INST0_DPI_2_IN_2X_CLK,
-                cfgParams.pixelClk,
-                TISCI_MSG_FLAG_CLOCK_ALLOW_FREQ_CHANGE,
-                SCICLIENT_SERVICE_WAIT_FOREVER);
+            
         }
     }
     else
@@ -212,44 +198,27 @@ void App_configureLCD(App_utilsLcdCfgParams cfgParams)
 
         if(PM_SUCCESS == status)
         {
-            status = Sciclient_pmSetModuleClkParent(TISCI_DEV_DSS0,
-                TISCI_DEV_DSS0_DSS_INST0_DPI_2_IN_2X_CLK,
-                TISCI_DEV_DSS0_DSS_INST0_DPI_2_IN_2X_CLK_PARENT_HSDIV1_16FFT_MAIN_18_HSDIVOUT0_CLK,
-                SCICLIENT_SERVICE_WAIT_FOREVER);
+            
         }
 
         if(PM_SUCCESS == status)
         {
-            status = Sciclient_pmSetModuleClkParent(TISCI_DEV_DSS0,
-                TISCI_DEV_DSS0_DSS_INST0_DPI_3_IN_2X_CLK,
-                TISCI_DEV_DSS0_DSS_INST0_DPI_3_IN_2X_CLK_PARENT_DPI1_EXT_CLKSEL_OUT0,
-                SCICLIENT_SERVICE_WAIT_FOREVER);
+           
         }
 
         if(PM_SUCCESS == status)
         {
-            status = Sciclient_pmSetModuleClkParent(TISCI_DEV_DSS0,
-                TISCI_DEV_DSS0_DSS_INST0_DPI_0_IN_2X_CLK,
-                TISCI_DEV_DSS0_DSS_INST0_DPI_0_IN_2X_CLK_PARENT_HSDIV1_16FFT_MAIN_16_HSDIVOUT0_CLK,
-                SCICLIENT_SERVICE_WAIT_FOREVER);
+           
         }
 
         if(PM_SUCCESS == status)
         {
-            status = Sciclient_pmSetModuleClkFreq(TISCI_DEV_DSS0,
-                TISCI_DEV_DSS0_DSS_INST0_DPI_0_IN_2X_CLK,
-                cfgParams.pixelClk,
-                0U,
-                SCICLIENT_SERVICE_WAIT_FOREVER);
+            
         }
 
         if(PM_SUCCESS == status)
         {
-            status = Sciclient_pmModuleClkRequest(TISCI_DEV_DSS0,
-                TISCI_DEV_DSS0_DSS_INST0_DPI_0_IN_2X_CLK,
-                TISCI_MSG_VALUE_CLOCK_SW_STATE_REQ,
-                0U,
-                SCICLIENT_SERVICE_WAIT_FOREVER);
+            
         }
     }
 
