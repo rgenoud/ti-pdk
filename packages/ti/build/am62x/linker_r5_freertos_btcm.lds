@@ -50,7 +50,7 @@ MEMORY
 /*--------------------------------------------------------------*/
 SECTIONS
 {
-    .freertosrstvectors      : {} palign(8)      > MCU0_R5F_TCMB_VEC
+    .freertosrstvectors      : {} palign(8)      > MCU0_R5F_TCMB
     .bootCode        : {} palign(8)      > MCU0_R5F_TCMB
     .startupCode     : {} palign(8)      > MCU0_R5F_TCMB
     .startupData     : {} palign(8)      > DDR, type = NOINIT  
