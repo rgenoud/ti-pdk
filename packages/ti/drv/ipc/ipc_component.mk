@@ -44,7 +44,7 @@ ipc_LIB_LIST = ipc
 drvipc_RTOS_LIST       = $(DEFAULT_RTOS_LIST)
 
 drvipc_SOCLIST         = am65xx j721e j7200 am64x j721s2
-drvipc_BOARDLIST       = am65xx_evm am65xx_idk j721e_sim j721e_qt j721e_evm j7200_evm am64x_evm
+drvipc_BOARDLIST       = am65xx_evm am65xx_idk j721e_sim j721e_qt j721e_evm j7200_evm am64x_evm j721s2_evm
 drvipc_am65xx_CORELIST = mpu1_0 mcu1_0 mcu1_1
 drvipc_am65xx_LASTCORE := $(word $(words $(drvipc_am65xx_CORELIST)), $(drvipc_am65xx_CORELIST))
 drvipc_am65xx_BAREMETAL_CORELIST = mcu1_0 mcu1_1
@@ -446,7 +446,7 @@ export ipc_multicore_perf_test_$(1)_DEPENDS_ON=ipc_perf_test_$(1)
 ipc_multicore_perf_test_$(1)_PKG_LIST = ipc_multicore_perf_test_$(1)
 ipc_multicore_perf_test_$(1)_INCLUDE = $(ipc_multicore_perf_test_$(1)_PATH)
 export ipc_multicore_perf_test_$(1)_BOARDLIST = $(filter $(DEFAULT_BOARDLIST_$(1)), $(drvipc_BOARDLIST))
-export ipc_multicore_perf_test_$(1)_$(SOC)_CORELIST := $(drvipc_$(SOC)_LASTCORE)
+export ipc_multicore_perf_test_$(1)_$(SOC)_CORELIST := $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), $(drvipc_$(SOC)_LASTCORE))
 export ipc_multicore_perf_test_SBL_APPIMAGEGEN = no
 ifneq ($(1),$(filter $(1), safertos))
 ipc_DUP_EXAMPLE_LIST += ipc_multicore_perf_test_$(1)
