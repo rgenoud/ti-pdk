@@ -82,6 +82,11 @@ inline void osal_suspend_dm(void)
         
 }
 
+static void copyDM_ResetVectors(){
+        void _freertosresetvectors (void);  
+        memcpy((void *)0x0, (void *)_freertosresetvectors , 0x40);
+}
+
 /**
  * \brief Resume DM firmware
  *
@@ -89,5 +94,8 @@ inline void osal_suspend_dm(void)
  */
 inline u32 osal_resume_dm(void)
 {
+        copyDM_ResetVectors();
+        CSL_armR5StartupIntrEnableVic(1);      /* Enable VIC mode */
+        OS_StartTickTimer();
         return TaskP_ResumeAll();
 }
