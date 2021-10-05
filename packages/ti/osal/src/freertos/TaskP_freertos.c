@@ -42,6 +42,7 @@
 #include <ti/osal/osal.h>
 #include <ti/osal/DebugP.h>
 #include <ti/osal/soc/osal_soc.h>
+#include <ti/osal/TimerP.h>
 
 #include <FreeRTOS.h>
 #include <task.h>
@@ -455,6 +456,14 @@ void OS_StopTickTimer(void)
     DebugP_assert (status == TimerP_OK);
 }
 
+void OS_StartTickTimer(void)
+{
+    TimerP_Status status;
+    status = TimerP_start(gTimerCntrl.pxTimerHandle);
+
+    /* don't expect the handle to be null */
+    DebugP_assert (status == TimerP_OK);
+}
 
  void TaskP_SuspendAll(){
     vTaskSuspendAll();

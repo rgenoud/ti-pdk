@@ -225,6 +225,13 @@ extern void TaskP_SuspendAll();
 extern void OS_StopTickTimer();
 
 /*
+ *  @brief  start tick timer
+ *  \param None
+ *  \return None
+ */
+extern void OS_StartTickTimer();
+
+/*
  *  @brief  Resume the OS
  *  \param None
  *  \return 0: task resuming successfull, 1: t task resuming failed
