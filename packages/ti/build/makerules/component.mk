@@ -105,7 +105,12 @@ DEFAULT_BOARDLIST_safertos = tpr12_evm awr294x_evm
 # DEFAULT_$(SOC)_CORELIST_<rtos_type> is a subset of all the cores and is used for building components for the particular 'rtos_type'.
 
 
-DEFAULT_$(SOC)_CORELIST_tirtos = $(DEFAULT_$(SOC)_CORELIST)
+ifeq ($(SOC),$(filter $(SOC), j721s2))
+# SysBIOS(TI-RTOS) is not supported on J721S2 C7x cores
+DEFAULT_CORELIST_EXCLUDE_CORES_tirtos = c7x_1 c7x_2 c7x-hostemu
+endif
+
+DEFAULT_$(SOC)_CORELIST_tirtos =  $(filter-out $(DEFAULT_CORELIST_EXCLUDE_CORES_tirtos), $(DEFAULT_$(SOC)_CORELIST))
 
 
 ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 am65xx tpr12 awr294x))
