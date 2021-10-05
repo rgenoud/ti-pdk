@@ -270,18 +270,18 @@ uint32_t Board_getSocDomain(void)
 {
     uint32_t socDomain;
 
-#if defined (BUILD_MPU1_0)
+#if defined (BUILD_MPU1_0) || defined(BUILD_MPU1_1)
     socDomain = BOARD_SOC_DOMAIN_MAIN;
 #elif defined (BUILD_MCU2_0) || defined (BUILD_MCU2_1) || defined (BUILD_MCU3_0) || defined (BUILD_MCU3_1)
     socDomain = BOARD_SOC_DOMAIN_MAIN;
-#elif defined (BUILD_C7X_1)
+#elif defined (BUILD_C7X_1) || defined (BUILD_C7X_2)
     socDomain = BOARD_SOC_DOMAIN_MAIN;
 #elif defined (BUILD_C66X_1) || defined (BUILD_C66X_2)
     socDomain = BOARD_SOC_DOMAIN_MAIN;
 #elif defined (BUILD_MCU1_0) || defined (BUILD_MCU1_1)
     socDomain = BOARD_SOC_DOMAIN_MCU;
 #else
-    #error "Unsupported core id"
+    //#error "Unsupported core id"
 #endif
 
   return socDomain;

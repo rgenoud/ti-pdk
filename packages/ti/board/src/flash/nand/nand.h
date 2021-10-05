@@ -54,7 +54,7 @@ extern "C" {
  *  		The handle must be used in all subsequent operations.
  *
  */
-typedef uint32_t NAND_HANDLE;
+typedef uintptr_t NAND_HANDLE;
 
 /** NAND function return status */
 #define NAND_STATUS                     int32_t

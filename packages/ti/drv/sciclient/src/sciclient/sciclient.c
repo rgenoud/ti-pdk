@@ -289,7 +289,7 @@ int32_t Sciclient_init(const Sciclient_ConfigPrms_t *pCfgPrms)
                 #endif
                 #if defined (__C7100__)
                 {
-                    CSL_CLEC_EVTRegs * regs = (CSL_CLEC_EVTRegs *) CSL_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
+                    CSL_CLEC_EVTRegs * regs = (CSL_CLEC_EVTRegs *) CSL_COMPUTE_CLUSTER0_CLEC_BASE;
                     CSL_ClecEventConfig evtCfg;
                     evtCfg.secureClaimEnable = 0;
                     evtCfg.evtSendEnable = 1;
@@ -300,7 +300,7 @@ int32_t Sciclient_init(const Sciclient_ConfigPrms_t *pCfgPrms)
                      * Due to this for CLEC programming one needs to add an offset of 992 (1024 - 32)
                      * to the event number which is shared between GIC and CLEC.
                      */
-                    CSL_clecConfigEvent(regs, CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_NAVSS0_INTR_ROUTER_0_OUTL_INTR_189 + 992, &evtCfg);
+                    CSL_clecConfigEvent(regs, CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_NAVSS0_INTR_0_OUTL_INTR_189 + 992, &evtCfg);
                     intrPrms.corepacConfig.priority = 1U;
                 }
                 #endif
@@ -350,7 +350,7 @@ int32_t Sciclient_init(const Sciclient_ConfigPrms_t *pCfgPrms)
                 #endif
                 #if defined (__C7100__)
                 {
-                    CSL_CLEC_EVTRegs * regs = (CSL_CLEC_EVTRegs *) CSL_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
+                    CSL_CLEC_EVTRegs * regs = (CSL_CLEC_EVTRegs *) CSL_COMPUTE_CLUSTER0_CLEC_BASE;
                     CSL_ClecEventConfig evtCfg;
                     evtCfg.secureClaimEnable = 0;
                     evtCfg.evtSendEnable = 1;
@@ -361,7 +361,7 @@ int32_t Sciclient_init(const Sciclient_ConfigPrms_t *pCfgPrms)
                      * Due to this for CLEC programming one needs to add an offset of 992 (1024 - 32)
                      * to the event number which is shared between GIC and CLEC.
                      */
-                    CSL_clecConfigEvent(regs, CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_NAVSS0_INTR_ROUTER_0_OUTL_INTR_191 + 992, &evtCfg);
+                    CSL_clecConfigEvent(regs, CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_NAVSS0_INTR_0_OUTL_INTR_191 + 992, &evtCfg);
                     intrPrms.corepacConfig.priority = 1U;
                 }
                 #endif
@@ -871,7 +871,7 @@ int32_t Sciclient_serviceSecureProxy(const Sciclient_ReqPrm_t *pReqPrm,
 
         #if defined (__C7100__)
         {
-            CSL_CLEC_EVTRegs * regs = (CSL_CLEC_EVTRegs *) CSL_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
+            CSL_CLEC_EVTRegs * regs = (CSL_CLEC_EVTRegs *) CSL_COMPUTE_CLUSTER0_CLEC_BASE;
             CSL_ClecEventConfig evtCfg;
             evtCfg.secureClaimEnable = 0;
             evtCfg.evtSendEnable = 1;
@@ -884,11 +884,11 @@ int32_t Sciclient_serviceSecureProxy(const Sciclient_ReqPrm_t *pReqPrm,
              */ 
             if (SCICLIENT_NON_SECURE_CONTEXT == gSciclientMap[contextId].context)
             {
-                CSL_clecConfigEvent(regs, CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_NAVSS0_INTR_ROUTER_0_OUTL_INTR_189 + 992, &evtCfg);
+                CSL_clecConfigEvent(regs, CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_NAVSS0_INTR_0_OUTL_INTR_189 + 992, &evtCfg);
             }
             else
             {
-                CSL_clecConfigEvent(regs, CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_NAVSS0_INTR_ROUTER_0_OUTL_INTR_191 + 992, &evtCfg);
+                CSL_clecConfigEvent(regs, CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_NAVSS0_INTR_0_OUTL_INTR_191 + 992, &evtCfg);
             }
         }
         #endif
@@ -1052,7 +1052,7 @@ static void Sciclient_ISR(uintptr_t arg)
             Osal_DisableInterrupt(0, (int32_t) gSciclientMap[contextId].respIntrNum);
             #if defined (__C7100__)
             {
-                CSL_CLEC_EVTRegs * regs = (CSL_CLEC_EVTRegs *) CSL_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
+                CSL_CLEC_EVTRegs * regs = (CSL_CLEC_EVTRegs *) CSL_COMPUTE_CLUSTER0_CLEC_BASE;
                 CSL_ClecEventConfig evtCfg;
                 evtCfg.secureClaimEnable = 0;
                 evtCfg.evtSendEnable = 0;
@@ -1065,11 +1065,11 @@ static void Sciclient_ISR(uintptr_t arg)
                  */
                 if (SCICLIENT_NON_SECURE_CONTEXT == gSciclientMap[contextId].context)
                 {
-                    CSL_clecConfigEvent(regs, CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_NAVSS0_INTR_ROUTER_0_OUTL_INTR_189 + 992, &evtCfg);
+                    CSL_clecConfigEvent(regs, CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_NAVSS0_INTR_0_OUTL_INTR_189 + 992, &evtCfg);
                 }
                 else
                 {
-                    CSL_clecConfigEvent(regs, CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_NAVSS0_INTR_ROUTER_0_OUTL_INTR_191 + 992, &evtCfg);
+                    CSL_clecConfigEvent(regs, CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_NAVSS0_INTR_0_OUTL_INTR_191 + 992, &evtCfg);
                 }
             }
             Osal_ClearInterrupt(0, (int32_t) gSciclientMap[contextId].respIntrNum);

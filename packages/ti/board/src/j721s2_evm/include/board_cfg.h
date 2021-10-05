@@ -105,6 +105,9 @@ extern "C" {
 /* OSPI instance connected to OSPI NOR flash */
 #define BOARD_OSPI_NOR_INSTANCE                         (0U)
 
+/* OSPI instance connected to OSPI NOR flash */
+#define BOARD_OSPI_NAND_INSTANCE                        (0U)
+
 /* HyperFlash instance number */
 #define BOARD_HPF_INSTANCE                              (0)
 
@@ -231,6 +234,9 @@ extern "C" {
 
 /* Enable NOR flash driver */
 #define BOARD_NOR_FLASH_IN
+
+/* Enable NOR flash driver */
+#define BOARD_NAND_FLASH_IN
 
 /* Maximum possible buffer length */
 #define BOARD_EEPROM_MAX_BUFF_LENGTH                    (197U)

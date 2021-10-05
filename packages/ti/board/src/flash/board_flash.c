@@ -174,7 +174,7 @@ Board_flashHandle Board_flashOpen(uint32_t deviceId, uint32_t portNum, void *par
     }
 #endif
 #if defined (BOARD_NAND_FLASH_IN)
-    NAND_HANDLE        flashHandle;
+    NAND_HANDLE        nandFlashHandle;
     NAND_Info         *nandInfo;
 
     if ((flashInfo->device_id == BOARD_FLASH_ID_MT29F4G08ABAEAWP) || \
@@ -183,20 +183,20 @@ Board_flashHandle Board_flashOpen(uint32_t deviceId, uint32_t portNum, void *par
         (flashInfo->device_id == BOARD_FLASH_ID_W35N01JWTBAG))
     {
         /* Open the Nand flash */
-        flashHandle = NAND_open(flashIntf, portNum, params);
-        if (!flashHandle)
+        nandFlashHandle = NAND_open(flashIntf, portNum, params);
+        if (!nandFlashHandle)
         {
             return 0;
         }
-        nandInfo = (NAND_Info *)flashHandle;
+        nandInfo = (NAND_Info *)nandFlashHandle;
 
         if (deviceId != nandInfo->deviceId)
         {
-            NAND_close(flashHandle);
+            NAND_close(nandFlashHandle);
             return 0;
         }
 
-        flashInfo->flashHandle     = flashHandle;
+        flashInfo->flashHandle     = nandFlashHandle;
         flashInfo->manufacturer_id = nandInfo->manufacturerId;
         flashInfo->device_id       = nandInfo->deviceId;
         flashInfo->type            = BOARD_FLASH_NAND;

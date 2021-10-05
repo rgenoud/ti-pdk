@@ -387,7 +387,11 @@ void Udma_appC7xPreInit(void)
 {
 #if defined (__C7100__)
     CSL_ClecEventConfig cfgClec;
+    #if defined(SOC_J721S2)
+    CSL_CLEC_EVTRegs   *clecBaseAddr = (CSL_CLEC_EVTRegs*) CSL_COMPUTE_CLUSTER0_CLEC_BASE;
+    #else
     CSL_CLEC_EVTRegs   *clecBaseAddr = (CSL_CLEC_EVTRegs*) CSL_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
+    #endif
     uint32_t            i, maxInputs = 2048U;
 
     /* make secure claim bit to FALSE so that after we switch to non-secure mode
