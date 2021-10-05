@@ -1315,7 +1315,7 @@ ifeq ($(SOC),$(filter $(SOC), j7200))
 endif
 
 ifeq ($(SOC),$(filter $(SOC), j721s2))
-  PDK_COMMON_COMP = csl uart board udma
+  PDK_COMMON_COMP = csl uart board udma i2c gpio
   ifeq ($(CORE),mcu1_0)
     PDK_COMMON_COMP += sciclient_direct rm_pm_hal
   else

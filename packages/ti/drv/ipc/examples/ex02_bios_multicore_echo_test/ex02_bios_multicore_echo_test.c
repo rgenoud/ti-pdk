@@ -34,9 +34,9 @@
 /**
  *  \file ex02_bios_multicore_echo_test.c
  *
- *  \brief Multi-core (BIOS-to-BIOS) IPC echo test application performing basic echo 
+ *  \brief Multi-core (BIOS-to-BIOS) IPC echo test application performing basic echo
  *  communication using the IPC driver
- *  
+ *
  */
 
 /* ========================================================================== */
@@ -78,7 +78,7 @@
 #elif defined (SOC_AM64X)
 #define CORE_IN_TEST            5
 #elif defined (SOC_J721S2)
-#define                         8
+#define CORE_IN_TEST            8
 #else
 #error "Invalid SOC"
 #endif

@@ -66,7 +66,7 @@
 #
 ifeq ($(i2c_component_make_include), )
 
-drvi2c_BOARDLIST       = am65xx_evm am65xx_idk j721e_sim j721e_evm j7200_evm am64x_evm j721s2_evm
+drvi2c_BOARDLIST       = am65xx_evm am65xx_idk j721e_sim j721e_evm j7200_evm am64x_evm
 drvi2c_BOARDLISTLIM    = am65xx_evm am65xx_idk am64x_evm
 drvi2c_SOCLIST         = am574x am572x am571x tda2xx tda2px tda2ex tda3xx dra78x dra72x dra75x k2h k2k k2l k2e k2g c6678 c6657 am437x am335x omapl137 omapl138 am65xx j721e j7200 j721s2 am64x tpr12 awr294x
 drvi2c_SOCLISTLIM      = am574x am572x am571x tda2xx tda2px tda2ex tda3xx dra78x dra72x dra75x k2h k2k k2l k2e k2g c6678 c6657 am437x am335x omapl137 omapl138 am65xx am64x
@@ -363,7 +363,7 @@ export I2C_Baremetal_Eeprom_TestApp_CORE_DEPENDENCY
 export I2C_Baremetal_Eeprom_TestApp_MAKEFILE
 I2C_Baremetal_Eeprom_TestApp_PKG_LIST = I2C_Baremetal_Eeprom_TestApp
 I2C_Baremetal_Eeprom_TestApp_INCLUDE = $(I2C_Baremetal_Eeprom_TestApp_PATH)
-I2C_Baremetal_Eeprom_TestApp_BOARDLIST = am65xx_evm am65xx_idk j721e_evm j7200_evm am64x_evm j721s2_evm
+I2C_Baremetal_Eeprom_TestApp_BOARDLIST = am65xx_evm am65xx_idk j721e_evm j7200_evm am64x_evm
 export I2C_Baremetal_Eeprom_TestApp_BOARDLIST
 ifeq ($(SOC),$(filter $(SOC), j721e))
 I2C_Baremetal_Eeprom_TestApp_$(SOC)_CORELIST = $(drvi2c_j721e_CORELISTARM)
@@ -433,7 +433,7 @@ export drv_i2c_utility_XDC_CONFIGURO
 export drv_i2c_utility_MAKEFILE
 drv_i2c_utility_PKG_LIST = drv_i2c_utility
 drv_i2c_utility_INCLUDE = $(drv_i2c_utility_PATH)
-drv_i2c_utility_BOARDLIST = j721e_evm j7200_evm j721s2_evm
+drv_i2c_utility_BOARDLIST = j721e_evm j7200_evm
 export drv_i2c_utility_BOARDLIST
 ifeq ($(SOC),$(filter $(SOC), am65xx))
 drv_i2c_utility_$(SOC)_CORELIST = mcu1_0 mpu1_0

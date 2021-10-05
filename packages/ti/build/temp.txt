@@ -1,0 +1,630 @@
+------------------------------------------------------
+# PDK MM.NN.PP.BB
+------------------------------------------------------
+Nothing to be done for j721s2 c7x_1 csl_intc
+Nothing to be done for j721s2 pm_lib_optimized
+Nothing to be done for j721s2 pm_lib
+Nothing to be done for j721s2 csl_utils_common
+Nothing to be done for j721s2 pm_hal
+Nothing to be done for j721s2 pm_rtos
+Nothing to be done for j721s2 sbl_lib_mmcsd
+Nothing to be done for j721s2 sbl_lib_mmcsd_hlos
+Nothing to be done for j721s2 pmic
+Nothing to be done for j721s2 sbl_lib_hyperflash
+Nothing to be done for j721s2 sbl_lib_ospi
+Nothing to be done for j721s2 sbl_lib_cust
+Nothing to be done for j721s2 pm_hal_optimized
+Nothing to be done for j721s2 sbl_lib_uart
+Nothing to be done for j721s2 sbl_lib_mmcsd_hs
+Nothing to be done for j721s2 sbl_lib_hyperflash_hlos
+Nothing to be done for j721s2 sbl_lib_ospi_nondma
+Nothing to be done for j721s2 sbl_lib_mmcsd_hlos_hs
+Nothing to be done for j721s2 sbl_lib_hyperflash_hlos_hs
+Nothing to be done for j721s2 lwipif_freertos
+Nothing to be done for j721s2 sbl_lib_ospi_nondma_hs
+Nothing to be done for j721s2 enet
+Nothing to be done for j721s2 dmautils
+Nothing to be done for j721s2 sbl_lib_ospi_hlos
+Nothing to be done for j721s2 enet_cfgserver
+Nothing to be done for j721s2 enetphy
+Nothing to be done for j721s2 enet_example_utils_tirtos
+Nothing to be done for j721s2 sbl_lib_uart_hs
+Nothing to be done for j721s2 sbl_lib_ospi_hlos_hs
+Nothing to be done for j721s2 c7x_1 sciclient_direct
+Nothing to be done for j721s2 sbl_lib_cust_hs
+Nothing to be done for j721s2 lwipif_tirtos
+Nothing to be done for j721s2 sbl_lib_ospi_nondma_hlos
+Nothing to be done for j721s2 sdr
+Nothing to be done for j721s2 sbl_lib_hyperflash_hs
+Nothing to be done for j721s2 sbl_lib_ospi_hs
+Nothing to be done for j721s2 sbl_lib_ospi_nondma_hlos_hs
+Nothing to be done for j721s2 enet_example_utils_baremetal
+Nothing to be done for j721s2 c7x_1 rm_pm_hal
+Nothing to be done for j721s2 lwipstack_tirtos
+Nothing to be done for j721s2 lwipcontrib_tirtos
+Nothing to be done for j721s2 c7x_1 vhwa
+Nothing to be done for j721s2 iolink
+Nothing to be done for j721s2 enet_example_utils_freertos
+Nothing to be done for j721s2 enet_example_utils_full_tirtos
+Nothing to be done for j721s2 c7x_1 csitx
+Nothing to be done for j721s2 enet_example_utils_full_freertos
+Nothing to be done for j721s2 cal
+Nothing to be done for j721s2 nimuenet
+Nothing to be done for j721s2 lwipstack_freertos
+Nothing to be done for j721s2 osal_nonos_indp
+Nothing to be done for j721s2 enetsoc
+Nothing to be done for j721s2 lwipcontrib_freertos
+Nothing to be done for j721s2 i2c_profile
+Nothing to be done for j721s2 osal_tirtos_indp
+Nothing to be done for j721s2 iolink_profile_indp
+Nothing to be done for j721s2 c7x_1 sciserver_tirtos
+Nothing to be done for j721s2 c7x_1 sciserver_baremetal
+Nothing to be done for j721s2 c7x_1 dss
+Nothing to be done for j721s2 c7x_1 csirx
+Nothing to be done for j721s2 i2c_profile_indp
+Nothing to be done for j721s2 c7x_1 i2c
+Nothing to be done for j721s2 i2c_indp
+Nothing to be done for j721s2 iolink_profile
+Nothing to be done for j721s2 c7x_1 osal_freertos
+Nothing to be done for j721s2 iolink_indp
+Nothing to be done for j721s2 i2c_icss0
+Nothing to be done for j721s2 uart_dma_profile
+Nothing to be done for j721s2 uart_profile_indp
+Nothing to be done for j721s2 serdes_diag
+Nothing to be done for j721s2 uart_profile
+Nothing to be done for j721s2 uart_indp
+Nothing to be done for j721s2 nimu_icss_indp
+Nothing to be done for j721s2 gpio_profile_indp
+Nothing to be done for j721s2 gpio_indp
+Nothing to be done for j721s2 timeSync
+Nothing to be done for j721s2 fatfs_indp
+Nothing to be done for j721s2 nimu
+Nothing to be done for j721s2 gpio_profile
+Nothing to be done for j721s2 c7x_1 gpio
+Nothing to be done for j721s2 usb
+Nothing to be done for j721s2 pcie_profile
+Nothing to be done for j721s2 fatfs_multi_indp
+Nothing to be done for j721s2 profiling
+Nothing to be done for j721s2 mmcsd_indp
+Nothing to be done for j721s2 mcasp_profile_indp
+Nothing to be done for j721s2 pruss_profile_indp
+Nothing to be done for j721s2 c7x_1 spi
+Nothing to be done for j721s2 mmcsd_dma_profile
+Nothing to be done for j721s2 copyvecs
+Nothing to be done for j721s2 pcie
+Nothing to be done for j721s2 mmcsd
+Nothing to be done for j721s2 pruss
+Nothing to be done for j721s2 emac_indp
+Nothing to be done for j721s2 mcasp
+Nothing to be done for j721s2 mcbsp
+Nothing to be done for j721s2 pcie_indp
+Nothing to be done for j721s2 emac
+Nothing to be done for j721s2 timeSync_ptp
+Nothing to be done for j721s2 nimu_profile
+Nothing to be done for j721s2 icss_emac
+Nothing to be done for j721s2 mcasp_indp
+Nothing to be done for j721s2 fatfs_profile_indp
+Nothing to be done for j721s2 mmcsd_profile_indp
+Nothing to be done for j721s2 icss_emac_profile_indp
+Nothing to be done for j721s2 mmcsd_dma
+Nothing to be done for j721s2 timeSync_hal
+Nothing to be done for j721s2 pcie_profile_indp
+Nothing to be done for j721s2 nimu_icss_profile_indp
+Nothing to be done for j721s2 pruss_indp
+Nothing to be done for j721s2 spi_profile
+Nothing to be done for j721s2 emac_profile
+Nothing to be done for j721s2 icss_emac_indp
+Nothing to be done for j721s2 spi_profile_indp
+Nothing to be done for j721s2 gpmc
+Nothing to be done for j721s2 emac_profile_indp
+Nothing to be done for j721s2 pruss_profile
+Nothing to be done for j721s2 mmcsd_profile
+Nothing to be done for j721s2 icss_emac_profile
+Nothing to be done for j721s2 gpmc_profile_indp
+Nothing to be done for j721s2 spi_dma_profile
+Nothing to be done for j721s2 mcasp_profile
+Nothing to be done for j721s2 c7x_1 spi_dma
+Nothing to be done for j721s2 gpmc_dma_profile
+Nothing to be done for j721s2 gpmc_dma
+Nothing to be done for j721s2 spi_indp
+Nothing to be done for j721s2 gpmc_indp
+Nothing to be done for j721s2 gpmc_profile
+Nothing to be done for j721s2 salite2
+Nothing to be done for j721s2 mibspi
+Nothing to be done for j721s2 edma
+Nothing to be done for j721s2 canfd
+Nothing to be done for j721s2 watchdog
+Nothing to be done for j721s2 mailbox
+Nothing to be done for j721s2 gpadc
+Nothing to be done for j721s2 hwa
+Nothing to be done for j721s2 c7x_1 freertos
+Nothing to be done for j721s2 esm
+Nothing to be done for j721s2 crc
+Nothing to be done for j721s2 mibspi_dma
+Nothing to be done for j721s2 pm_example_utils
+Nothing to be done for j721s2 adcbuf
+Nothing to be done for j721s2 cbuff
+Nothing to be done for j721s2 c7x_1 dss_app_utils
+Nothing to be done for j721s2 c7x_1 dss_app_utils_sysbios
+Nothing to be done for j721s2 cal_app_utils
+Nothing to be done for j721s2 cal_app_utils_baremetal
+Nothing to be done for j721s2 nimu_icssg
+Nothing to be done for j721s2 nimu_icssg_profile
+Nothing to be done for j721s2_evm j721s2 c7x_1 csl_dss_colorbar_app
+Nothing to be done for j721s2_evm j721s2 c7x_1 csl_dss_display_app
+Nothing to be done for j721s2 csl_edma_test_app
+Nothing to be done for j721s2_evm j721s2 c7x_1 csl_i2c_led_blink_app
+Nothing to be done for j721s2 csl_mailbox_sender_receiver_app
+Nothing to be done for j721s2 csl_uart_intr_test_app
+Nothing to be done for j721s2 csl_uart_test_app
+Nothing to be done for j721s2 csl_uart_edma_test_app
+Nothing to be done for j721s2 csl_mailbox_ipc_app
+Nothing to be done for j721s2 csl_xmc_mpu_test_app
+Nothing to be done for j721s2 csl_mmc_raw_access_app
+Nothing to be done for j721s2 csl_spinlock_test_app
+Nothing to be done for j721s2 csl_nor_read_write_app
+Nothing to be done for j721s2 memory_benchmarking_app
+Nothing to be done for j721s2 csl_baremetal_mcspi_masterPerformance_app
+Nothing to be done for j721s2 csl_mmu_a15_data_validation_app
+Nothing to be done for j721s2 csl_wdtimer_reset_app
+Nothing to be done for j721s2 csl_mcasp_transmit_app
+Nothing to be done for j721s2 csl_adc_singleshot_test_app
+Nothing to be done for j721s2 csl_mcspi_masterPerformance_app
+Nothing to be done for j721s2 csl_fsi_test_app
+Nothing to be done for j721s2 csl_dcan_loopback_app
+Nothing to be done for j721s2 csl_gpio_interrupt_app
+Nothing to be done for j721s2 csl_qspi_test_app
+Nothing to be done for j721s2 csl_fpga_read_write_app
+Nothing to be done for j721s2 csl_pcie_ep_write_loopback_app
+Nothing to be done for j721s2 csl_esm_clk_loss_test_app
+Nothing to be done for j721s2 csl_mmu_translation_fault_handle_app
+Nothing to be done for j721s2 csl_hyperbus_app
+Nothing to be done for j721s2 csl_ecap_epwm_loopback_test_app
+Nothing to be done for j721s2 csl_ocmc_basic_test_app
+Nothing to be done for j721s2 csl_mcspi_masterslave_app
+Nothing to be done for j721s2 csl_cbass_baremetal_test_app
+Nothing to be done for j721s2 csl_epwm_duty_cycle_test_app
+Nothing to be done for j721s2 csl_ospi_flash_app
+Nothing to be done for j721s2 csl_rti_unit_testapp
+Nothing to be done for j721s2 csl_pcie_rc_write_loopback_app
+Nothing to be done for j721s2 csl_rti_dwwd_test_app
+Nothing to be done for j721s2 csl_gpio_toggle_app
+Nothing to be done for j721s2 csl_dmTimer_baremetal_test_app
+Nothing to be done for j721s2 csl_timer_app
+Nothing to be done for j721s2 csl_pok_ut_baremetal_app
+Nothing to be done for j721s2 pm_baremetal_clkrate_testapp
+Nothing to be done for j721s2 csl_ecc_test_app
+Nothing to be done for j721s2 csl_ecc_aggr_baremetal_test_app
+Nothing to be done for j721s2 csl_ccmr5_baremetal_test_app
+Nothing to be done for j721s2 csl_eqep_capture_test_app
+Nothing to be done for j721s2 csl_mcan_evm_loopback_app
+Nothing to be done for j721s2 csl_adc_unit_testapp
+Nothing to be done for j721s2 csl_vtm_pvt_sensor_temp_alert
+Nothing to be done for j721s2 csl_ddr_test_app
+Nothing to be done for j721s2 csl_ecap_apwm_test_app
+Nothing to be done for j721s2 csl_vim_baremetal_test_app
+Nothing to be done for j721s2 csl_mmu_tlb_twl_app
+Nothing to be done for j721s2 csl_esm_eve_reset_test_app
+Nothing to be done for j721s2 csl_crc_semicpu_test_app
+Nothing to be done for j721s2 csl_crc_cputest_app
+Nothing to be done for j721s2 board_ddr_thermal_test_app_freertos
+Nothing to be done for j721s2 pm_arp32_cpuidle_testapp
+Nothing to be done for j721s2 csl_pbist_test_app
+Nothing to be done for j721s2 csl_stog_test_app
+Nothing to be done for j721s2 pm_baremetal_voltage_read_testapp
+Nothing to be done for j721s2 csl_lbist_test_app
+Nothing to be done for j721s2 csl_dcc_singleshotmode_app
+Nothing to be done for j721s2 board_baremetal_ddr_thermal_test_app
+Nothing to be done for j721s2 csl_esm_baremetal_test_app
+Nothing to be done for j721s2 csl_rtitmr_unit_testapp
+Nothing to be done for j721s2 csl_mcan_rtos_unit_test_app
+Nothing to be done for j721s2 csl_core_r5_baremetal_test_app
+Nothing to be done for j721s2 csl_mcan_unit_test_app
+Nothing to be done for j721s2 csl_vtm_pvt_sensor_maxt_outrg
+Nothing to be done for j721s2 csl_r5_mpu_tcm_app
+Nothing to be done for j721s2 csl_vtm_ut_baremetal_app
+Nothing to be done for j721s2 csl_dcc_unit_testapp
+Nothing to be done for j721s2 csl_vtm_pvt_sensor_read
+Nothing to be done for j721s2 pm_baremetal_junction_temp_testapp
+Nothing to be done for j721s2 board_ddr_thermal_test_app_tirtos
+Nothing to be done for j721s2 csl_crc_unit_testapp
+Nothing to be done for j721s2 pmic_wdg_testapp
+Nothing to be done for j721s2 pm_cpuidle_testapp
+Nothing to be done for j721s2 pmic_rtc_testapp
+Nothing to be done for j721s2 pmic_gpio_testapp
+Nothing to be done for j721s2 pm_ina226_testapp
+Nothing to be done for j721s2 pm_rtos_testapp
+Nothing to be done for j721s2 pm_baremetal_systemconfig_testapp
+Nothing to be done for j721s2 pm_rtos_thermal_testapp
+Nothing to be done for j721s2 pmic_esm_testapp
+Nothing to be done for j721s2 pmic_fsm_testapp
+Nothing to be done for j721s2 pm_core_loading_testapp
+Nothing to be done for j721s2 pmic_benchmark_testapp
+Nothing to be done for j721s2 pmic_misc_testapp
+Nothing to be done for j721s2 pmic_power_testapp
+Nothing to be done for j721s2 sbl_mmcsd_img
+Nothing to be done for j721s2 pmic_fsm_mcu_testapp
+Nothing to be done for j721s2 sbl_mmcsd_img_hlos
+Nothing to be done for j721s2 sbl_ospi_img_hs
+Nothing to be done for j721s2 pmic_stress_testapp
+Nothing to be done for j721s2 sbl_uart_img
+Nothing to be done for j721s2 sbl_ospi_img_hlos
+Nothing to be done for j721s2 sbl_mmcsd_img_hlos_hs
+Nothing to be done for j721s2 sbl_mmcsd_img_hs
+Nothing to be done for j721s2 sbl_ospi_img
+Nothing to be done for j721s2 sbl_ospi_img_hlos_hs
+Nothing to be done for j721s2 sbl_uart_img_hs
+Nothing to be done for j721s2 sbl_hyperflash_img_hs
+Nothing to be done for j721s2 sbl_hyperflash_img
+Nothing to be done for j721s2 sbl_boot_test
+Nothing to be done for j721s2 sbl_hyperflash_img_hlos
+Nothing to be done for j721s2 sbl_hyperflash_img_hlos_hs
+Nothing to be done for j721s2 sbl_boot_test_short
+Nothing to be done for j721s2 sbl_smp_test
+Nothing to be done for j721s2 sbl_boot_xip_entry
+Nothing to be done for j721s2 udma_crc_testapp_freertos
+Nothing to be done for j721s2 sbl_boot_perf_test
+Nothing to be done for j721s2 udma_user_input_unit_testapp_freertos
+Nothing to be done for j721s2 dmautils_baremetal_autoincrement_testapp
+Nothing to be done for j721s2 udma_memcpy_testapp_tirtos
+Nothing to be done for j721s2 sbl_boot_test_ordered
+Nothing to be done for j721s2 sbl_boot_xip_test
+Nothing to be done for j721s2 dmautils_baremetal_autoinc_circular_testapp
+Nothing to be done for j721s2 udma_dru_testapp_tirtos
+Nothing to be done for j721s2 enet_lwip_example_freertos
+Nothing to be done for j721s2 enet_loopback_test_tirtos
+Nothing to be done for j721s2 udma_user_input_unit_testapp_tirtos
+Nothing to be done for j721s2 udma_sw_trigger_testapp_freertos
+Nothing to be done for j721s2 udma_unit_testapp_tirtos
+Nothing to be done for j721s2 sbl_boot_multicore_xip_entry
+Nothing to be done for j721s2 enet_multiport_test_freertos
+Nothing to be done for j721s2 udma_dru_testapp_freertos
+Nothing to be done for j721s2 sbl_cust_img_hs
+Nothing to be done for j721s2 enet_multiport_test_tirtos
+Nothing to be done for j721s2 keywriter_img
+Nothing to be done for j721s2 sbl_cust_img
+Nothing to be done for j721s2 udma_baremetal_unit_testapp
+Nothing to be done for j721s2 udma_chaining_testapp_tirtos
+Nothing to be done for j721s2 udma_chaining_testapp_freertos
+Nothing to be done for j721s2 udma_dru_direct_tr_testapp_freertos
+Nothing to be done for j721s2 udma_crc_testapp_tirtos
+Nothing to be done for j721s2 udma_adc_testapp_freertos
+Nothing to be done for j721s2 udma_memcpy_testapp_freertos
+Nothing to be done for j721s2 udma_sw_trigger_testapp_tirtos
+Nothing to be done for j721s2 dmautils_baremetal_autoinc_1d2d3d_testapp
+Nothing to be done for j721s2 udma_unit_testapp_freertos
+Nothing to be done for j721s2 udma_baremetal_memcpy_testapp
+Nothing to be done for j721s2 dss_m2m_testapp_freertos
+Nothing to be done for j721s2 enet_lwip_example_tirtos
+Nothing to be done for j721s2 udma_adc_testapp_tirtos
+Nothing to be done for j721s2 udma_dru_direct_tr_testapp_tirtos
+Nothing to be done for j721s2 udma_baremetal_ospi_flash_testapp
+Nothing to be done for j721s2 enet_loopback_test_freertos
+Nothing to be done for j721s2 enet_icssg_unit_testapp_tirtos
+Nothing to be done for j721s2 dss_baremetal_display_testapp
+Nothing to be done for j721s2 enet_unit_testapp_tirtos
+Nothing to be done for j721s2 enet_unit_testapp_freertos
+Nothing to be done for j721s2 dss_display_testapp_freertos
+Nothing to be done for j721s2 cal_loopback_testapp
+Nothing to be done for j721s2 sciclient_rtos_app_safertos
+Nothing to be done for j721s2 enet_icssg_unit_testapp_freertos
+Nothing to be done for j721s2 udma_dynamic_unit_testapp
+Nothing to be done for j721s2 dss_m2m_testapp_tirtos
+Nothing to be done for j721s2 cal_baremetal_loopback_testapp
+Nothing to be done for j721s2 sciserver_testapp_safertos
+Nothing to be done for j721s2 enet_tas_test_tirtos
+Nothing to be done for j721s2 csirx_unit_testapp_tirtos
+Nothing to be done for j721s2_evm j721s2 c7x_1 sciclient_unit_testapp_freertos
+Nothing to be done for j721s2_evm j721s2 c7x_1 vhwa_nf_testapp_tirtos
+Nothing to be done for j721s2_evm j721s2 c7x_1 vhwa_sde_testapp_freertos
+Nothing to be done for j721s2 csirx_capture_testapp_tirtos
+Nothing to be done for j721s2_evm j721s2 c7x_1 sciclient_fw_testapp_freertos
+Nothing to be done for j721s2 enet_nimu_example
+Nothing to be done for j721s2 cal_baremetal_capture_testapp
+Nothing to be done for j721s2 diag_ex_wwdt_perm_example_app
+Nothing to be done for j721s2_evm j721s2 c7x_1 sciserver_testapp_freertos
+Nothing to be done for j721s2 sciclient_unit_testapp_safertos
+Nothing to be done for j721s2_evm j721s2 c7x_1 sciclient_ccs_init
+Nothing to be done for j721s2 cal_capture_testapp
+Nothing to be done for j721s2 dss_display_testapp_tirtos
+Nothing to be done for j721s2 dss_colorbar_testapp_freertos
+Nothing to be done for j721s2 diag_ex_wwdt_early_example_app
+Nothing to be done for j721s2_evm j721s2 c7x_1 vhwa_int_baremetal_testapp
+Nothing to be done for j721s2_evm j721s2 c7x_1 vhwa_msc_testapp_tirtos
+Nothing to be done for j721s2 diag_ex_wwdt_late_example_app
+Nothing to be done for j721s2_evm j721s2 c7x_1 vhwa_dof_baremetal_testapp
+Nothing to be done for j721s2_evm j721s2 c7x_1 sciclient_fw_testapp_tirtos
+Nothing to be done for j721s2 ex04_linux_baremetal_2core_echo_test
+Nothing to be done for j721s2_evm j721s2 c7x_1 vhwa_viss_baremetal_testapp
+Nothing to be done for j721s2 ex03_linux_bios_2core_echo_test_freertos
+Nothing to be done for j721s2 enet_tas_test_freertos
+Nothing to be done for j721s2_evm j721s2 c7x_1 vhwa_viss_testapp_tirtos
+Nothing to be done for j721s2_evm j721s2 c7x_1 vhwa_dof_testapp_tirtos
+Nothing to be done for j721s2 csirx_baremetal_capture_testapp
+Nothing to be done for j721s2 csirx_capture_testapp_freertos
+Nothing to be done for j721s2_evm j721s2 c7x_1 vhwa_dof_testapp_freertos
+Nothing to be done for j721s2 csirx_unit_testapp_freertos
+Nothing to be done for j721s2 csitx_transmit_testapp_freertos
+Nothing to be done for j721s2 csitx_transmit_testapp_tirtos
+Nothing to be done for j721s2_evm j721s2 c7x_1 vhwa_ldc_testapp_freertos
+Nothing to be done for j721s2_evm j721s2 c7x_1 vhwa_ldc_testapp_tirtos
+Nothing to be done for j721s2 sciclient_fw_testapp_safertos
+Nothing to be done for j721s2_evm j721s2 c7x_1 vhwa_ldc_baremetal_testapp
+Nothing to be done for j721s2_evm j721s2 c7x_1 sciclient_rtos_app_freertos
+Nothing to be done for j721s2 dss_colorbar_testapp_tirtos
+Nothing to be done for j721s2_evm j721s2 c7x_1 sciclient_firmware_boot_TestApp
+Nothing to be done for j721s2_evm j721s2 c7x_1 sciserver_testapp_tirtos
+Nothing to be done for j721s2_evm j721s2 c7x_1 vhwa_msc_baremetal_testapp
+Nothing to be done for j721s2_evm j721s2 c7x_1 vhwa_nf_baremetal_testapp
+Nothing to be done for j721s2 ex03_linux_bios_2core_echo_test_tirtos
+Nothing to be done for j721s2 ex02_bios_multicore_echo_testb_tirtos
+Nothing to be done for j721s2_evm j721s2 c7x_1 vhwa_sde_baremetal_testapp
+Nothing to be done for j721s2 ipc_echo_test_freertos
+Nothing to be done for j721s2_evm j721s2 c7x_1 vhwa_msc_testapp_freertos
+Nothing to be done for j721s2_evm j721s2 c7x_1 vhwa_viss_testapp_freertos
+Nothing to be done for j721s2_evm j721s2 c7x_1 vhwa_nf_testapp_freertos
+Nothing to be done for j721s2 diag_ex_wwdt_perm_fifty_example_app
+Nothing to be done for j721s2_evm j721s2 c7x_1 vhwa_sde_testapp_tirtos
+Nothing to be done for j721s2_evm j721s2 c7x_1 OSAL_Baremetal_TestApp
+Nothing to be done for j721s2_evm j721s2 c7x_1 OSAL_TestApp_freertos
+Nothing to be done for j721s2 NIMU_Icssg_ExampleApp
+Nothing to be done for j721s2_evm j721s2 c7x_1 vhwa_flexconnect_baremetal_testapp
+Nothing to be done for j721s2 NIMU_FtpIcssg_ExampleApp
+Nothing to be done for j721s2 sdr_test
+Nothing to be done for j721s2 ipc_echo_test_tirtos
+Nothing to be done for j721s2 diag_ex_esm_example_app
+Nothing to be done for j721s2 GPIO_LedBlink_TestApp_tirtos
+Nothing to be done for j721s2 USB_DevBulk_TestApp_freertos
+Nothing to be done for j721s2 serdes_diag_BER_app
+# Invoking configuro...
+Nothing to be done for j721s2 USB_HostMsc_usb30_TestApp_tirtos
+Nothing to be done for j721s2 NIMU_Cpsw_SMP_ExampleApp
+Nothing to be done for j721s2 GPIO_Baremetal_LedBlink_TestApp
+Nothing to be done for j721s2 GPIO_LedBlink_TestApp_freertos
+Nothing to be done for j721s2 I2C_Master_TestApp
+Nothing to be done for j721s2 NIMU_Cpsw_ExampleApp
+Nothing to be done for j721s2 ex02_baremetal_multicore_echo_test
+Nothing to be done for j721s2 serdes_diag_EYE_app
+Nothing to be done for j721s2 ex02_bios_multicore_echo_test_freertos
+Nothing to be done for j721s2 USB_HostMsc_usb30_TestApp_freertos
+Nothing to be done for j721s2 NIMU_FtpCpsw_ExampleApp
+Nothing to be done for j721s2 diag_ex_ecc_example_app
+Nothing to be done for j721s2 FATFS_Console_TestApp_tirtos
+Nothing to be done for j721s2 USB_HostMsc_TestApp_tirtos
+# Invoking configuro...
+Nothing to be done for j721s2 ipc_echo_testb_tirtos
+Nothing to be done for j721s2 I2C_Eeprom_TestApp_tirtos
+Nothing to be done for j721s2 I2C_Eeprom_TestApp_freertos
+Nothing to be done for j721s2 ipc_echo_baremetal_test
+Nothing to be done for j721s2 ex05_bios_multicore_echo_negative_test_freertos
+Nothing to be done for j721s2 ex01_bios_2core_echo_test_tirtos
+Nothing to be done for j721s2 I2C_Slave_TestApp
+Nothing to be done for j721s2 USB_HostMsc_TestApp_freertos
+Nothing to be done for j721s2 ex05_bios_multicore_echo_negative_test_tirtos
+Nothing to be done for j721s2 ex02_bios_multicore_echo_testb_freertos
+Nothing to be done for j721s2 drv_i2c_utility
+Nothing to be done for j721s2 ex02_bios_multicore_echo_test_tirtos
+Nothing to be done for j721s2 I2C_Baremetal_Eeprom_TestApp
+Nothing to be done for j721s2_evm j721s2 c7x_1 UART_TestApp_freertos
+Nothing to be done for j721s2 drv_i2c_led_blink_test
+Nothing to be done for j721s2 ipc_echo_baremetal_testb
+Nothing to be done for j721s2 ipc_echo_testb_freertos
+Nothing to be done for j721s2 ex01_bios_2core_echo_test_freertos
+Nothing to be done for j721s2_evm j721s2 c7x_1 UART_Baremetal_DMA_TestApp
+Nothing to be done for j721s2_evm j721s2 c7x_1 UART_Baremetal_TestApp
+Nothing to be done for j721s2 ipc_perf_test_freertos
+Nothing to be done for j721s2_evm j721s2 c7x_1 UART_DMA_TestApp_freertos
+Nothing to be done for j721s2 USB_DevBulk_TestApp_tirtos
+Nothing to be done for j721s2_evm j721s2 c7x_1 UART_DMA_TestApp_tirtos
+Nothing to be done for j721s2 ipc_perf_test_tirtos
+Nothing to be done for j721s2 USB_DevMsc_TestApp_freertos
+Nothing to be done for j721s2 USB_DevMsc_TestApp_tirtos
+Nothing to be done for j721s2 USB_HostMsc_usb30_TestApp
+# Invoking configuro...
+Nothing to be done for j721s2 MMCSD_TestApp_freertos
+Nothing to be done for j721s2 MMCSD_TestApp_tirtos
+Nothing to be done for j721s2 FATFS_Console_TestApp_freertos
+# Invoking configuro...
+Nothing to be done for j721s2 MMCSD_EMMC_TestApp_freertos
+Nothing to be done for j721s2 MMCSD_EMMC_DMA_TestApp_tirtos
+Nothing to be done for j721s2 MMCSD_DMA_TestApp_freertos
+Nothing to be done for j721s2 MMCSD_EMMC_TestApp_tirtos
+Nothing to be done for j721s2 MMCSD_Regression_TestApp_tirtos
+Nothing to be done for j721s2 MMCSD_Regression_TestApp_freertos
+Nothing to be done for j721s2 MMCSD_DMA_TestApp_tirtos
+Nothing to be done for j721s2 MMCSD_EMMC_DMA_TestApp_freertos
+Nothing to be done for j721s2 MMCSD_EMMC_Regression_TestApp_tirtos
+Nothing to be done for j721s2 MCASP_DeviceLoopback_TestApp_tirtos
+Nothing to be done for j721s2 MMCSD_Baremetal_EMMC_TestApp
+Nothing to be done for j721s2 MCASP_DeviceLoopback_TestApp_freertos
+Nothing to be done for j721s2 PCIE_sample_ExampleProject_tirtos
+Nothing to be done for j721s2 MMCSD_EMMC_Regression_TestApp_freertos
+Nothing to be done for j721s2 MMCSD_Baremetal_TestApp
+Nothing to be done for j721s2 PCIE_sample_ExampleProject_freertos
+Nothing to be done for j721s2 PCIE_Qos_ExampleProject_tirtos
+Nothing to be done for j721s2 MMCSD_Baremetal_DMA_TestApp
+Nothing to be done for j721s2 MCASP_AudioDCAnalogLoopback_TestApp
+Nothing to be done for j721s2 MMCSD_Baremetal_Regression_TestApp
+Nothing to be done for j721s2 MMCSD_EMMC_Baremetal_Regression_TestApp
+Nothing to be done for j721s2 Emac_Cpsw_Smp_TestApp
+Nothing to be done for j721s2 MMCSD_Baremetal_EMMC_DMA_TestApp
+Nothing to be done for j721s2 Emac_Icssg_TestApp
+Nothing to be done for j721s2 drv_mcspi_loopback_app
+Nothing to be done for j721s2 PCIE_Qos_ExampleProject_freertos
+Nothing to be done for j721s2 MCASP_AudioDCDigitalLoopback_TestApp
+Nothing to be done for j721s2 MCASP_AudioLoopback_TestApp
+Nothing to be done for j721s2 OSPI_Baremetal_Flash_Cache_TestApp
+Nothing to be done for j721s2 QSPI_Baremetal_Flash_Dma_TestApp
+Nothing to be done for j721s2 MCSPI_Baremetal_Master_Dma_TestApp
+Nothing to be done for j721s2_evm j721s2 c7x_1 MCSPI_Baremetal_Slave_Dma_TestApp
+Nothing to be done for j721s2 OSPI_Flash_TestApp
+Nothing to be done for j721s2 pruss_app_sorte_slave
+Nothing to be done for j721s2 pruss_app_sorte_master
+Nothing to be done for j721s2 OSPI_Baremetal_Flash_TestApp
+Nothing to be done for j721s2 OSPI_Flash_Dma_Cache_TestApp
+Nothing to be done for j721s2 OSPI_Flash_Dma_TestApp
+Nothing to be done for j721s2 QSPI_Baremetal_Flash_TestApp
+Nothing to be done for j721s2 Emac_Cpsw_TestApp
+Nothing to be done for j721s2 Emac_Icssg_WithoutDDR_TestApp
+Nothing to be done for j721s2 OSPI_Baremetal_Flash_Dma_Cache_TestApp
+Nothing to be done for j721s2 MCSPI_Slave_Dma_TestApp_tirtos
+Nothing to be done for j721s2 MCSPI_Baremetal_Master_TestApp
+Nothing to be done for j721s2_evm j721s2 c7x_1 MCSPI_Baremetal_Slave_TestApp
+Nothing to be done for j721s2 OSPI_Baremetal_Flash_Dma_TestApp
+Nothing to be done for j721s2 MCSPI_Master_TestApp_tirtos
+Nothing to be done for j721s2 MCSPI_Master_TestApp_freertos
+Nothing to be done for j721s2 MCSPI_Master_Dma_TestApp_freertos
+Nothing to be done for j721s2 MCSPI_Slave_TestApp_tirtos
+Nothing to be done for j721s2 OSPI_Flash_Cache_TestApp
+Nothing to be done for j721s2 MCSPI_Master_Dma_TestApp_tirtos
+Nothing to be done for j721s2 OSPI_Flash_Dma_TestApp_freertos
+Nothing to be done for j721s2 MCSPI_Slave_TestApp_freertos
+Nothing to be done for j721s2 OSPI_Flash_Dma_TestApp_tirtos
+Nothing to be done for j721s2 OSPI_Flash_TestApp_tirtos
+Nothing to be done for j721s2 QSPI_FileFlashWrite_Dma_TestApp
+Nothing to be done for j721s2 OSPI_Flash_Cache_TestApp_tirtos
+Nothing to be done for j721s2 OSPI_Flash_TestApp_freertos
+Nothing to be done for j721s2 OSPI_Flash_Cache_TestApp_freertos
+Nothing to be done for j721s2 MCSPI_Slave_Dma_TestApp_freertos
+Nothing to be done for j721s2 OSPI_Flash_Dma_Cache_TestApp_freertos
+Nothing to be done for j721s2 GPMC_TestApp
+Nothing to be done for j721s2 OSPI_Flash_Dma_Cache_TestApp_tirtos
+Nothing to be done for j721s2 GPMC_Baremetal_Probing_Example
+Nothing to be done for j721s2 QSPI_Flash_TestApp_tirtos
+Nothing to be done for j721s2 SA_TestApp
+Nothing to be done for j721s2 GPMC_Baremetal_TestApp
+Nothing to be done for j721s2 QSPI_Flash_TestApp_freertos
+Nothing to be done for j721s2 gpadc_test_freertos
+Nothing to be done for j721s2 QSPI_Flash_Dma_TestApp_tirtos
+Nothing to be done for j721s2 gpadc_test_tirtos
+Nothing to be done for j721s2 crc_testapp_tirtos
+Nothing to be done for j721s2 QSPI_Flash_Dma_TestApp_freertos
+Nothing to be done for j721s2 edma_unit_testapp_freertos
+Nothing to be done for j721s2 GPMC_Baremetal_Dma_TestApp
+Nothing to be done for j721s2 crc_testapp_freertos
+Nothing to be done for j721s2 GPMC_Dma_TestApp
+Nothing to be done for j721s2 SA_Baremetal_TestApp
+Nothing to be done for j721s2 gpadc_test_safertos
+Nothing to be done for j721s2 edma_unit_testapp_tirtos
+Nothing to be done for j721s2 edma_baremetal_memcpy_testapp
+Nothing to be done for j721s2 MIBSPI_Slavemode_TestApp
+Nothing to be done for j721s2 mailbox_baremetal_perf_testapp
+Nothing to be done for j721s2 mailbox_msg_testapp_freertos
+Nothing to be done for j721s2 edma_memcpy_testapp_freertos
+Nothing to be done for j721s2 mailbox_msg_testapp_tirtos
+Nothing to be done for j721s2 MIBSPI_Loopback_Dma_TestApp_tirtos
+Nothing to be done for j721s2 hwa_testapp_tirtos
+Nothing to be done for j721s2 MIBSPI_Loopback_Dma_TestApp_freertos
+Nothing to be done for j721s2 hwa_testapp_freertos
+Nothing to be done for j721s2 MIBSPI_Loopback_TestApp_tirtos
+Nothing to be done for j721s2_evm j721s2 c7x_1 freertos_test_task_switch
+Nothing to be done for j721s2 mailbox_perf_testapp
+Nothing to be done for j721s2 edma_memcpy_testapp_tirtos
+Nothing to be done for j721s2 MIBSPI_Loopback_TestApp_freertos
+Nothing to be done for j721s2 MIBSPI_Slavemode_Dma_TestApp
+Nothing to be done for j721s2_evm j721s2 c7x_1 freertos_test_ut
+Nothing to be done for j721s2 adcbuf_test_freertos
+Nothing to be done for j721s2 cbuff_manual_test_safertos
+Nothing to be done for j721s2 canfd_test_freertos
+Nothing to be done for j721s2 watchdog_testapp_tirtos
+Nothing to be done for j721s2_evm j721s2 c7x_1 freertos_test_posix
+Nothing to be done for j721s2 adcbuf_test_tirtos
+Nothing to be done for j721s2 canfd_test_tirtos
+Nothing to be done for j721s2 board_diag_bootEeprom
+Nothing to be done for j721s2 board_diag_button
+Nothing to be done for j721s2 board_diag_bootSwitch
+Nothing to be done for j721s2 adcbuf_test_safertos
+Nothing to be done for j721s2 board_utils_uart_flash_programmer
+Nothing to be done for j721s2 watchdog_testapp_freertos
+Nothing to be done for j721s2 cbuff_manual_test_freertos
+Nothing to be done for j721s2 cbuff_manual_test_tirtos
+Nothing to be done for j721s2 board_diag_clockGen
+Nothing to be done for j721s2 board_diag_boostGpio
+Nothing to be done for j721s2 board_utils_uart_flash_programmer_hs
+Nothing to be done for j721s2 board_diag_dsitx
+Nothing to be done for j721s2 board_diag_dsi
+Nothing to be done for j721s2 board_diag_automationHeader
+Nothing to be done for j721s2 board_diag_csirx
+Nothing to be done for j721s2 board_diag_csirx_tirtos
+Nothing to be done for j721s2 board_diag_emmc
+Nothing to be done for j721s2 board_diag_hyperbus
+Nothing to be done for j721s2 board_diag_emac
+Nothing to be done for j721s2 board_diag_adc
+Nothing to be done for j721s2 board_diag_expHeader
+Nothing to be done for j721s2 board_diag_displayPort
+Nothing to be done for j721s2 board_diag_cpsw
+Nothing to be done for j721s2 board_diag_lin
+Nothing to be done for j721s2 board_diag_icssgLed
+Nothing to be done for j721s2 board_diag_currentMonitor
+Nothing to be done for j721s2 board_diag_eeprom
+Nothing to be done for j721s2 board_diag_mcan
+Nothing to be done for j721s2 board_diag_extRtc
+Nothing to be done for j721s2 board_diag_fpdLib
+Nothing to be done for j721s2 board_diag_hdmi
+Nothing to be done for j721s2 board_diag_mmcsd
+Nothing to be done for j721s2 board_diag_framework
+configuring sysbios_c7x.xe71 from package/cfg/sysbios_c7x_pe71.cfg ...
+Nothing to be done for j721s2 board_diag_mem
+Nothing to be done for j721s2 board_diag_led
+Nothing to be done for j721s2 board_diag_icssgEmac
+Nothing to be done for j721s2 board_diag_lcd
+Nothing to be done for j721s2 board_diag_leoPmicLib
+Nothing to be done for j721s2 board_diag_temperature
+Nothing to be done for j721s2 board_diag_gpmc
+Nothing to be done for j721s2 board_diag_ledIndustrial
+Nothing to be done for j721s2 board_diag_rs485Uart
+Nothing to be done for j721s2 board_diag_oledDisplay
+Nothing to be done for j721s2 board_diag_norflash
+Nothing to be done for j721s2 board_diag_pcie
+Nothing to be done for j721s2 board_diag_rotarySwitch
+Nothing to be done for j721s2 board_diag_ospi
+Nothing to be done for j721s2 board_diag_uart
+Nothing to be done for j721s2 sbl_multicore_amp_short
+Nothing to be done for j721s2 board_diag_usbHost
+Nothing to be done for j721s2 board_diag_spiEeprom
+Nothing to be done for j721s2 board_diag_usbDevice
+Nothing to be done for j721s2 sbl_multicore_amp_ordered
+Nothing to be done for j721s2 diag_ex_wwdt_late_example_app_multicore
+Nothing to be done for j721s2 sbl_multicore_amp
+Nothing to be done for j721s2 board_diag_pmic
+Nothing to be done for j721s2 sbl_multicore_smp
+Nothing to be done for j721s2 board_diag_img
+Nothing to be done for j721s2 diag_ex_wwdt_early_example_app_multicore
+Nothing to be done for j721s2 diag_ex_wwdt_perm_example_app_multicore
+Nothing to be done for j721s2 diag_ex_wwdt_perm_fifty_example_app_multicore
+configuring sysbios_c7x.xe71 from package/cfg/sysbios_c7x_pe71.cfg ...
+configuring sysbios_c7x.xe71 from package/cfg/sysbios_c7x_pe71.cfg ...
+configuring sysbios_c7x.xe71 from package/cfg/sysbios_c7x_pe71.cfg ...
+The J721S2 device is not currently supported.
+The following devices are supported for the C71 target:
+	C71
+	J7ES
+	J721E
+/adasuser/ankur/repo_sync/pdk_j721s2/pdk/packages/ti/build/makerules/rules_71.mk:300: recipe for target '/adasuser/ankur/repo_sync/pdk_j721s2/pdk/packages/ti/binary/sciclient_unit_testapp_tirtos/obj/j721s2/c7x_1/release/configuro/package/cfg/sysbios_c7x_pe71.c' failed
+/adasuser/ankur/repo_sync/pdk_j721s2/pdk/packages/ti/build/makefile:366: recipe for target 'sciclient_unit_testapp_tirtos' failed
+/adasuser/ankur/repo_sync/pdk_j721s2/pdk/packages/ti/build/makefile:125: recipe for target 'sciclient_unit_testapp_tirtos_has_dep' failed
+The J721S2 device is not currently supported.
+The following devices are supported for the C71 target:
+	C71
+	J7ES
+	J721E
+The J721S2 device is not currently supported.
+The following devices are supported for the C71 target:
+	C71
+	J7ES
+	J721E
+The J721S2 device is not currently supported.
+The following devices are supported for the C71 target:
+	C71
+	J7ES
+	J721E
+/adasuser/ankur/repo_sync/pdk_j721s2/pdk/packages/ti/build/makerules/rules_71.mk:300: recipe for target '/adasuser/ankur/repo_sync/pdk_j721s2/pdk/packages/ti/binary/sciclient_rtos_app_tirtos/obj/j721s2/c7x_1/release/configuro/package/cfg/sysbios_c7x_pe71.c' failed
+/adasuser/ankur/repo_sync/pdk_j721s2/pdk/packages/ti/build/makefile:366: recipe for target 'sciclient_rtos_app_tirtos' failed
+/adasuser/ankur/repo_sync/pdk_j721s2/pdk/packages/ti/build/makefile:125: recipe for target 'sciclient_rtos_app_tirtos_has_dep' failed
+/adasuser/ankur/repo_sync/pdk_j721s2/pdk/packages/ti/build/makerules/rules_71.mk:300: recipe for target '/adasuser/ankur/repo_sync/pdk_j721s2/pdk/packages/ti/binary/OSAL_TestApp_tirtos/obj/j721s2_evm/c7x_1/release/configuro/package/cfg/sysbios_c7x_pe71.c' failed
+/adasuser/ankur/repo_sync/pdk_j721s2/pdk/packages/ti/build/makefile:366: recipe for target 'OSAL_TestApp_tirtos' failed
+/adasuser/ankur/repo_sync/pdk_j721s2/pdk/packages/ti/build/makefile:125: recipe for target 'OSAL_TestApp_tirtos_has_dep' failed
+/adasuser/ankur/repo_sync/pdk_j721s2/pdk/packages/ti/build/makerules/rules_71.mk:300: recipe for target '/adasuser/ankur/repo_sync/pdk_j721s2/pdk/packages/ti/binary/UART_TestApp_tirtos/obj/j721s2_evm/c7x_1/release/configuro/package/cfg/sysbios_c7x_pe71.c' failed
+/adasuser/ankur/repo_sync/pdk_j721s2/pdk/packages/ti/build/makefile:366: recipe for target 'UART_TestApp_tirtos' failed
+/adasuser/ankur/repo_sync/pdk_j721s2/pdk/packages/ti/build/makefile:125: recipe for target 'UART_TestApp_tirtos_has_dep' failed
+makefile:145: recipe for target 'all_apps' failed

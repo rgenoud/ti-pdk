@@ -46,12 +46,19 @@ ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200))
 sciclient_LIB_LIST += sciclient_hs
 endif
 
-ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2))
+ifeq ($(SOC),$(filter $(SOC), j721e j7200))
 sciclient_LIB_LIST += rm_pm_hal
 sciclient_LIB_LIST += sciserver_tirtos
 sciclient_LIB_LIST += sciserver_baremetal
 sciclient_LIB_LIST += sciclient_direct
 sciclient_LIB_LIST += sciclient_direct_hs
+endif
+
+ifeq ($(SOC),$(filter $(SOC), j721s2))
+sciclient_LIB_LIST += rm_pm_hal
+sciclient_LIB_LIST += sciserver_tirtos
+sciclient_LIB_LIST += sciserver_baremetal
+sciclient_LIB_LIST += sciclient_direct
 endif
 
 drvsciclient_BOARDLIST = am65xx_evm am65xx_idk j721e_sim j721e_evm j7200_evm j721s2_evm am64x_evm
