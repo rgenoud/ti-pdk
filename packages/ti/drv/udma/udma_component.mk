@@ -34,7 +34,7 @@
 #
 ifeq ($(udma_component_make_include), )
 
-# List with various rtos_types(such as tirtos(sysbios),freertos,safertos) to build RTOS apps. 
+# List with various rtos_types(such as tirtos(sysbios),freertos,safertos) to build RTOS apps.
 # Use the Default List defined in 'ti/build/makerules/component.mk'
 # This list will be used to generate RTOS app make rule for each rtos_type.
 drvudma_RTOS_LIST       = $(DEFAULT_RTOS_LIST)
@@ -127,7 +127,7 @@ endif
 export dmautils_CORE_DEPENDENCY = yes
 dmautils_PKG_LIST = dmautils
 dmautils_INCLUDE = $(dmautils_PATH)
-export dmautils_SOCLIST = j721e
+export dmautils_SOCLIST = j721e j721s2
 export dmautils_$(SOC)_CORELIST = c7x_1 c7x-hostemu
 udma_LIB_LIST += dmautils
 
