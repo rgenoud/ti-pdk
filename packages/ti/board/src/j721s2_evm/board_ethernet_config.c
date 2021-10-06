@@ -115,6 +115,22 @@ Board_STATUS Board_cpsw9gEthConfig(uint32_t portNum, uint8_t mode)
 }
 
 /**
+ * \brief  Configures the CPSW2G Subsytem for RGMII mode
+ *
+ * \param  mode    [IN]    Mode selection for the specified port number
+ *                         00 - GMII
+ *                         01 - RMII
+ *                         10 - RGMII
+ *                         11 - SGMII
+ *
+ * \return  BOARD_SOK in case of success or appropriate error code
+ */
+Board_STATUS Board_cpsw2gMacModeConfig(uint8_t mode)
+{
+    return BOARD_SOK;
+}
+
+/**
  * \brief  Board specific configurations for CPSW2G Ethernet ports
  *
  * This function used to configures CPSW2G Ethernet controllers with the respective modes
