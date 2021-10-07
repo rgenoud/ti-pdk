@@ -153,10 +153,6 @@ int main(void)
     /* Initialize SCI Client Server */
     Ipc_setupSciServer();
 
-#if defined (BUILD_C7X) 
-    Ipc_appC7xIntrConfig();
-#endif
-
 #if  defined (_TMS320C6X)
     Ipc_appC66xIntrConfig();
 #endif

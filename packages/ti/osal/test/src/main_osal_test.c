@@ -163,7 +163,6 @@ void C66xTimerInterruptInit(void);
 #endif
 
 #ifdef BUILD_C7X
-void    Osal_appC7xPreInit(void);
 void    C7x_ConfigureTimerOutput(void);
 #endif
 
@@ -425,8 +424,8 @@ UT_Timer_Type_t  timer_type =             UT_Timer_TIMER64;
     #define OSAL_TEST_TIMER_ID2               (3U)
     #define OSAL_TEST_TIMER_PERIOD            (5000U)
   #elif defined (BUILD_C7X_1)
-    #define OSAL_TEST_TIMER_ID                (1U)
-    #define OSAL_TEST_TIMER_ID2               (2U)
+    #define OSAL_TEST_TIMER_ID                (0U)
+    #define OSAL_TEST_TIMER_ID2               (1U)
     #define OSAL_TEST_TIMER_PERIOD            (5000U)
   #else
     #define OSAL_TEST_TIMER_ID                (2U)
@@ -709,9 +708,7 @@ bool OSAL_timer_test()
 #endif
 #endif
 
-#if defined(SOC_J721E) || defined(SOC_J721S2)
-#if defined(BUILD_C7X)
-    timerParams.intNum     = 15;
+
     OSAL_log("\n set intNum=%d, id=%d,  \n", timerParams.intNum, id);
 #endif
 #endif
@@ -1932,8 +1929,7 @@ void osal_test(void *arg0, void *arg1)
 
     Board_initOSAL();
 
-#ifdef BUILD_C7X
-    Osal_appC7xPreInit();
+
     C7x_ConfigureTimerOutput();
 #endif
 
@@ -2208,6 +2204,8 @@ void C7x_ConfigureTimerOutput()
     cfgClec.rtMap             = CSL_CLEC_RTMAP_CPU_ALL;
     cfgClec.extEvtNum         = 0;
     cfgClec.c7xEvtNum         = corepackEvent;
+    CSL_clecClearEvent(clecBaseAddr, input);
+    CSL_clecConfigEventLevel(clecBaseAddr, input, 0); /* configure interrupt as pulse */
     CSL_clecConfigEvent(clecBaseAddr, input, &cfgClec);
 
     input         = CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_TIMER1_INTR_PEND_0 + 992; /* Used for Timer Interrupt */
@@ -2219,7 +2217,10 @@ void C7x_ConfigureTimerOutput()
     cfgClec.rtMap             = CSL_CLEC_RTMAP_CPU_ALL;
     cfgClec.extEvtNum         = 0;
     cfgClec.c7xEvtNum         = corepackEvent;
+    CSL_clecClearEvent(clecBaseAddr, input);
+    CSL_clecConfigEventLevel(clecBaseAddr, input, 0); /* configure interrupt as pulse */
     CSL_clecConfigEvent(clecBaseAddr, input, &cfgClec);
+
 }
 
 #endif
@@ -2318,26 +2319,4 @@ void InitMmu(void)
 }
 #endif
 
-void Osal_appC7xPreInit(void)
-{
-#if defined (BUILD_C7X)
-    CSL_ClecEventConfig cfgClec;
-    CSL_CLEC_EVTRegs   *clecBaseAddr = (CSL_CLEC_EVTRegs*) CSL_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
-    uint32_t            i, maxInputs = 2048U;
 
-    /* make secure claim bit to FALSE so that after we switch to non-secure mode
-     * we can program the CLEC MMRs
-     */
-    cfgClec.secureClaimEnable = FALSE;
-    cfgClec.evtSendEnable     = FALSE;
-    cfgClec.rtMap             = CSL_CLEC_RTMAP_DISABLE;
-    cfgClec.extEvtNum         = 0U;
-    cfgClec.c7xEvtNum         = 0U;
-    for(i = 0U; i < maxInputs; i++)
-    {
-        CSL_clecConfigEvent(clecBaseAddr, i, &cfgClec);
-    }
-#endif
-
-    return;
-}

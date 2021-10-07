@@ -60,7 +60,7 @@
 #if defined (BUILD_C7X)
 /* Temp workaround to avoid assertion failure: A_stackSizeTooSmall : Task stack size must be >= 16KB.
   * until the Bug PDK-7605 is resolved */
-#define APP_TSK_STACK_MAIN              (16U * 1024U)
+#define APP_TSK_STACK_MAIN              (32U * 1024U)
 #else
 #define APP_TSK_STACK_MAIN              (8U * 1024U)
 #endif
@@ -145,8 +145,6 @@ void mainTsk(void* arg0, void* arg1)
     TaskP_Handle task1,task2;
     TaskP_Params taskParams1,taskParams2;
     SemaphoreP_Params       params;
-
-    App_SciclientC7xPreInit();
 
     SemaphoreP_Params_init(&params);
     params.mode = SemaphoreP_Mode_BINARY;
