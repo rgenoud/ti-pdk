@@ -7,3 +7,7 @@ SRCS_COMMON += board_init.c board_lld_init.c board_clock.c board_mmr.c board_pll
 SRCS_COMMON += board_ddr.c board_info.c board_ethernet_config.c board_utils.c board_control.c board_i2c_io_exp.c
 SRCS_COMMON += board_pinmux.c
 PACKAGE_SRCS_COMMON = src/j721s2_evm/src_files_j721s2_evm.mk
+
+# Temp adding the following to package 'ti/boot' directory, until sbl libs are enabled
+# Else there is build error for SBL appimage gen due to missing 'boot' directory
+PACKAGE_SRCS_COMMON = ../boot
