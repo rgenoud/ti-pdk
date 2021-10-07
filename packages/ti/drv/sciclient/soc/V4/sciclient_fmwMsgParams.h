@@ -301,6 +301,23 @@ extern "C" {
 /* @} */
 
 /**
+ *  \anchor Sciclient_IrqSrcIdxStart
+ *  \name IRQ source index start
+ *  @{
+ *  Start offset of IRQ source index.
+ */
+
+#define TISCI_BCDMA0_BC_EOES_IRQ_SRC_IDX_START       (0U)
+#define TISCI_BCDMA0_BC_DC_OES_IRQ_SRC_IDX_START     (512U)
+#define TISCI_BCDMA0_BC_RC_OES_IRQ_SRC_IDX_START     (1024U)
+#define TISCI_BCDMA0_TX_EOES_IRQ_SRC_IDX_START       (1536U)
+#define TISCI_BCDMA0_TX_DC_OES_IRQ_SRC_IDX_START     (2048U)
+#define TISCI_BCDMA0_TX_RC_OES_IRQ_SRC_IDX_START     (2560U)
+#define TISCI_BCDMA0_RX_EOES_IRQ_SRC_IDX_START       (3072U)
+#define TISCI_BCDMA0_RX_DC_OES_IRQ_SRC_IDX_START     (3584U)
+#define TISCI_BCDMA0_RX_RC_OES_IRQ_SRC_IDX_START     (4096U)
+
+/**
  *  \anchor Sciclient_McuR5fProcIds
  *  \name MCU Pulsar Processor IDs
  *  @{

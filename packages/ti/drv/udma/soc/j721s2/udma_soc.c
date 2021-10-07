@@ -579,21 +579,21 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
        /* The srcIdx passed to Sciclient_rmIrqset API for configuring DMA Completion/Ring events, 
         * will be ringNum + the corresponding following offset. 
         * So setting the offset as TISCI Start Idx - corresponding ringNum Offset (if any) */
-        drvHandle->blkCopyRingIrqOffset = TISCI_BCDMA0_BC_RC_OES_IRQ_SRC_IDX_START; // flags not defined in v4
-        drvHandle->txRingIrqOffset      = TISCI_BCDMA0_TX_RC_OES_IRQ_SRC_IDX_START - drvHandle->txChOffset;// flags not defined in v4
-        drvHandle->rxRingIrqOffset      = TISCI_BCDMA0_RX_RC_OES_IRQ_SRC_IDX_START - drvHandle->rxChOffset;// flags not defined in v4
-	    drvHandle->udmapSrcThreadOffset = CSL_PSILCFG_DMSS_BCDMA_STRM_PSILS_THREAD_OFFSET; 
-	    drvHandle->udmapDestThreadOffset= CSL_PSILCFG_DMSS_BCDMA_STRM_PSILD_THREAD_OFFSET;
-	    drvHandle->maxRings             = CSL_DMSS_BCDMA_NUM_BC_CHANS + CSL_DMSS_BCDMA_NUM_TX_CHANS + CSL_DMSS_BCDMA_NUM_RX_CHANS;
+        drvHandle->blkCopyRingIrqOffset = TISCI_BCDMA0_BC_RC_OES_IRQ_SRC_IDX_START;
+        drvHandle->txRingIrqOffset      = TISCI_BCDMA0_TX_RC_OES_IRQ_SRC_IDX_START - drvHandle->txChOffset;
+        drvHandle->rxRingIrqOffset      = TISCI_BCDMA0_RX_RC_OES_IRQ_SRC_IDX_START - drvHandle->rxChOffset;
+	    drvHandle->udmapSrcThreadOffset = CSL_PSILCFG_NAVSS_MAIN_BCDMA0_STRM_PSILS_THREAD_OFFSET; 
+	    drvHandle->udmapDestThreadOffset= CSL_PSILCFG_NAVSS_MAIN_BCDMA0_STRM_PSILD_THREAD_OFFSET;
+	    drvHandle->maxRings             = CSL_NAVSS_BCDMA_NUM_BC_CHANS + CSL_NAVSS_BCDMA_NUM_TX_CHANS + CSL_NAVSS_BCDMA_NUM_RX_CHANS;
 	    drvHandle->devIdRing            = TISCI_DEV_NAVSS0_BCDMA_0;
 	    drvHandle->devIdUdma        	= TISCI_DEV_NAVSS0_BCDMA_0;
        /* The srcIdx passed to Sciclient_rmIrqset API for configuring TR events, 
         * will be chNum + the corresponding following offset. 
         * So setting the offset as TISCI Start Idx - corresponding chNum Offset (if any) */
         drvHandle->srcIdTrIrq           = drvHandle->devIdIa;
-        drvHandle->blkCopyTrIrqOffset   = TISCI_BCDMA0_BC_DC_OES_IRQ_SRC_IDX_START; // flags not defined in v4
-        drvHandle->txTrIrqOffset        = TISCI_BCDMA0_TX_DC_OES_IRQ_SRC_IDX_START; // flags not defined in v4
-        drvHandle->rxTrIrqOffset        = TISCI_BCDMA0_RX_DC_OES_IRQ_SRC_IDX_START; // flags not defined in v4
+        drvHandle->blkCopyTrIrqOffset   = TISCI_BCDMA0_BC_DC_OES_IRQ_SRC_IDX_START;
+        drvHandle->txTrIrqOffset        = TISCI_BCDMA0_TX_DC_OES_IRQ_SRC_IDX_START;
+        drvHandle->rxTrIrqOffset        = TISCI_BCDMA0_RX_DC_OES_IRQ_SRC_IDX_START;
         drvHandle->devIdPsil            = TISCI_DEV_NAVSS0; 
         drvHandle->maxProxy             = 0U; 
         drvHandle->maxRingMon           = 0U;

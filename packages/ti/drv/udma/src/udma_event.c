@@ -927,7 +927,7 @@ static int32_t Udma_eventConfig(Udma_DrvHandle drvHandle,
     Udma_ChHandle       chHandle;
     Udma_RingHandle     ringHandle;
 #if (UDMA_SOC_CFG_RING_MON_PRESENT == 1)
-    Udma_RingMonHandle  monHandle;
+    Udma_RingMonHandle  monHandle = NULL_PTR;
 #endif
     Udma_EventPrms     *eventPrms;
     struct tisci_msg_rm_irq_set_req     rmIrqReq;
@@ -1093,14 +1093,23 @@ static int32_t Udma_eventConfig(Udma_DrvHandle drvHandle,
 
     if(UDMA_EVENT_TYPE_RING_MON == eventPrms->eventType)
     {
+        /* Ring Monitor only available for MAIN and MCU NAVSS instances */
 #if (UDMA_SOC_CFG_RING_MON_PRESENT == 1)
-        Udma_assert(drvHandle, eventPrms->monHandle != NULL_PTR);
-        monHandle = eventPrms->monHandle;
-        Udma_assert(drvHandle, monHandle->ringMonNum != UDMA_RING_MON_INVALID);
+        if((UDMA_INST_ID_MAIN_0 == instId) || (UDMA_INST_ID_MCU_0 == instId))
+        {
+            Udma_assert(drvHandle, eventPrms->monHandle != NULL_PTR);
+            monHandle = eventPrms->monHandle;
+            Udma_assert(drvHandle, monHandle->ringMonNum != UDMA_RING_MON_INVALID);
 
-        rmIrqReq.src_id     = drvHandle->devIdRing;
-        rmIrqReq.src_index  = monHandle->ringMonNum;
-        rmIrqReq.src_index += TISCI_RINGACC0_MON_IRQ_SRC_IDX_START; 
+            rmIrqReq.src_id     = drvHandle->devIdRing;
+            rmIrqReq.src_index  = monHandle->ringMonNum;
+            rmIrqReq.src_index += TISCI_RINGACC0_MON_IRQ_SRC_IDX_START;    
+        }
+        else
+        {
+            retVal = UDMA_EFAIL;
+            Udma_printf(drvHandle, "[Error] Ring Monitor not supported; Event Config failed!!!\n");   
+        }
 #else
         retVal = UDMA_EFAIL;
         Udma_printf(drvHandle, "[Error] Ring Monitor not supported; Event Config failed!!!\n");
@@ -1365,17 +1374,26 @@ static int32_t Udma_eventReset(Udma_DrvHandle drvHandle,
 
     if(UDMA_EVENT_TYPE_RING_MON == eventPrms->eventType)
     {
+        /* Ring Monitor only available for MAIN and MCU NAVSS instances */
 #if (UDMA_SOC_CFG_RING_MON_PRESENT == 1)
-        Udma_assert(drvHandle, eventPrms->monHandle != NULL_PTR);
-        monHandle = eventPrms->monHandle;
-        Udma_assert(drvHandle, monHandle->ringMonNum != UDMA_RING_MON_INVALID);
+        if((UDMA_INST_ID_MAIN_0 == instId) || (UDMA_INST_ID_MCU_0 == instId))
+        {
+            Udma_assert(drvHandle, eventPrms->monHandle != NULL_PTR);
+            monHandle = eventPrms->monHandle;
+            Udma_assert(drvHandle, monHandle->ringMonNum != UDMA_RING_MON_INVALID);
 
-        rmIrqReq.src_id     = drvHandle->devIdRing;
-        rmIrqReq.src_index  = monHandle->ringMonNum;
-        rmIrqReq.src_index += TISCI_RINGACC0_MON_IRQ_SRC_IDX_START;
+            rmIrqReq.src_id     = drvHandle->devIdRing;
+            rmIrqReq.src_index  = monHandle->ringMonNum;
+            rmIrqReq.src_index += TISCI_RINGACC0_MON_IRQ_SRC_IDX_START;    
+        }
+        else
+        {
+            retVal = UDMA_EFAIL;
+            Udma_printf(drvHandle, "[Error] Ring Monitor not supported; Event Config failed!!!\n");   
+        }
 #else
         retVal = UDMA_EFAIL;
-        Udma_printf(drvHandle, "[Error] Ring Monitor not supported; Event reset failed!!!\n");
+        Udma_printf(drvHandle, "[Error] Ring Monitor not supported; Event Config failed!!!\n");
 #endif
     }
 
