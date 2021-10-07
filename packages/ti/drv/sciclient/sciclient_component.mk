@@ -47,7 +47,7 @@ sciclient_LIB_LIST += sciclient_hs
 endif
 
 ifneq ($(BUILD_OS_TYPE), qnx)
-ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2))
+ifeq ($(SOC),$(filter $(SOC), j721e j7200))
 sciclient_LIB_LIST += rm_pm_hal
 sciclient_LIB_LIST += sciserver_tirtos
 sciclient_LIB_LIST += sciserver_baremetal
