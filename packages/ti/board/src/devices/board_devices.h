@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2019-2020 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2019-2021 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -136,6 +136,15 @@
 #include <ti/board/src/devices/fpd/ds90ub925.h>
 #include <ti/board/src/devices/fpd/ds90ub926.h>
 #include <ti/board/src/devices/combos/ds90ub92x_afe8310.h>
+#endif
+
+#if defined(j721s2_evm)
+#include <ti/board/src/devices/common/common.h>
+
+#include <ti/board/src/devices/audio/pcm3168A.h>
+#include <ti/board/src/devices/fpd/ds90ub953.h>
+#include <ti/board/src/devices/fpd/ds90ub960.h>
+#include <ti/board/src/devices/fpd/ds90ub9702.h>
 #endif
 
 #if defined(am65xx_evm) || defined(am65xx_idk)

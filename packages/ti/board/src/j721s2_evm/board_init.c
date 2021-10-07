@@ -56,6 +56,8 @@
 #include "board_internal.h"
 #include "board_ethernet_config.h"
 #include "board_utils.h"
+#include <ti/drv/sciclient/sciclient.h>
+#include <ti/drv/sciclient/sciserver.h>
 
 static bool gBoardSysInitDone = 0;
 
@@ -68,9 +70,19 @@ static bool gBoardSysInitDone = 0;
 static Board_STATUS Board_sysInit(void)
 {
     Board_STATUS status = BOARD_SOK;
+    int32_t ret;
+    Sciclient_ConfigPrms_t config;
 
     if(gBoardSysInitDone == 0)
     {
+        Sciclient_configPrmsInit(&config);
+
+        ret = Sciclient_init(&config);
+        if(ret != 0)
+        {
+            status = BOARD_FAIL;
+        }
+
         if(status == BOARD_SOK)
         {
             gBoardSysInitDone = 1;
@@ -89,9 +101,16 @@ static Board_STATUS Board_sysInit(void)
 static Board_STATUS Board_sysDeinit(void)
 {
     Board_STATUS status = BOARD_SOK;
+    int32_t ret;
 
     if(gBoardSysInitDone == 1)
     {
+        ret = Sciclient_deinit();
+        if(ret != 0)
+        {
+            status = BOARD_FAIL;
+        }
+
         if(status == BOARD_SOK)
         {
             gBoardSysInitDone = 0;
@@ -178,6 +197,86 @@ Board_STATUS Board_init(Board_initCfg cfg)
         Board_sysInit();
     }
 
+    if (cfg & BOARD_INIT_UNLOCK_MMR)
+        ret = Board_unlockMMR();
+    if (ret != BOARD_SOK)
+        return ret;
+
+    if (cfg & BOARD_INIT_MODULE_CLOCK)
+    {
+        ret = Board_moduleClockInitMcu();
+        if (ret != BOARD_SOK)
+            return ret;
+        ret = Board_moduleClockInitMain();
+        if (ret != BOARD_SOK)
+            return ret;
+    }
+
+    if (cfg & BOARD_INIT_MODULE_CLOCK_MCU)
+        ret = Board_moduleClockInitMcu();
+    if (ret != BOARD_SOK)
+        return ret;
+
+    if (cfg & BOARD_INIT_MODULE_CLOCK_MAIN)
+        ret = Board_moduleClockInitMain();
+    if (ret != BOARD_SOK)
+        return ret;
+
+    if (cfg & BOARD_INIT_PINMUX_CONFIG)
+        ret = Board_pinmuxConfig();
+    if (ret != BOARD_SOK)
+        return ret;
+
+    if (cfg & BOARD_INIT_PINMUX_CONFIG_MAIN)
+        ret = Board_pinmuxConfigMain();
+    if (ret != BOARD_SOK)
+        return ret;
+
+    if (cfg & BOARD_INIT_PINMUX_CONFIG_MCU)
+        ret = Board_pinmuxConfigWkup();
+    if (ret != BOARD_SOK)
+        return ret;
+
+    if (cfg & BOARD_INIT_PLL)
+    {
+        ret = Board_PLLInitMcu();
+        if (ret != BOARD_SOK)
+            return ret;
+        ret = Board_PLLInitMain();
+        if (ret != BOARD_SOK)
+            return ret;
+    }
+
+    if (cfg & BOARD_INIT_PLL_MCU)
+        ret = Board_PLLInitMcu();
+    if (ret != BOARD_SOK)
+        return ret;
+
+    if (cfg & BOARD_INIT_PLL_MAIN)
+        ret = Board_PLLInitMain();
+    if (ret != BOARD_SOK)
+        return ret;
+
+    if (cfg & BOARD_INIT_DDR)
+    {
+        if (cfg & BOARD_INIT_DDR_ECC)
+        {
+            ret = Board_DDRInit(true);
+        }
+        else
+        {
+            ret = Board_DDRInit(false);
+        }
+    }
+
+    if (ret != BOARD_SOK)
+        return ret;
+
+    if (cfg & BOARD_INIT_UART_STDIO)
+        ret = Board_uartStdioInit();
+    if (ret != BOARD_SOK)
+        return ret;
+
     return ret;
 }
 
@@ -208,6 +307,26 @@ Board_STATUS Board_deinit(Board_initCfg cfg)
 
     Board_sysDeinit();
 
+    if (cfg & BOARD_DEINIT_UART_STDIO)
+        ret = Board_uartDeInit();
+    if (ret != BOARD_SOK)
+        return ret;
+
+    if (cfg & BOARD_DEINIT_MODULE_CLOCK)
+    {
+     ret = Board_moduleClockDeinitMcu();
+        if (ret != BOARD_SOK)
+            return ret;
+     ret = Board_moduleClockDeinitMain();
+        if (ret != BOARD_SOK)
+            return ret;
+    }
+
+    if (cfg & BOARD_DEINIT_LOCK_MMR)
+        ret = Board_lockMMR();
+    if (ret != BOARD_SOK)
+        return ret;
+
     return ret;
 }
 
@@ -236,6 +355,38 @@ Board_STATUS Board_deinit(Board_initCfg cfg)
 Board_STATUS Board_releaseResource (uint32_t resourceID)
 {
     Board_STATUS ret = BOARD_SOK;
+
+    switch(resourceID)
+    {
+        case BOARD_RESOURCE_UART_STDIO:
+            ret = Board_uartDeInit();
+            break;
+
+        case BOARD_RESOURCE_MODULE_CLOCK:
+            ret = Board_moduleClockDeinitMcu();
+            ret |= Board_moduleClockDeinitMain();
+            break;
+
+        case BOARD_RESOURCE_MMR:
+            ret = Board_lockMMR();
+            break;
+
+        case BOARD_RESOURCE_SCICLIENT:
+            ret = Board_sysDeinit();
+            break;
+
+        case BOARD_RESOURCE_ALL:
+            ret  = Board_uartDeInit();
+            ret |= Board_moduleClockDeinitMcu();
+            ret |= Board_moduleClockDeinitMain();
+            ret |= Board_lockMMR();
+            ret |= Board_sysDeinit();
+            break;
+
+        default:
+            ret = BOARD_INVALID_PARAM;
+            break;
+    }
 
     return ret;
 }
