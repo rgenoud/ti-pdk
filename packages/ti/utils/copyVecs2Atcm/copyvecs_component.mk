@@ -66,7 +66,7 @@
 #
 ifeq ($(copyvecs_component_make_include), )
 
-drvcopyvecs_SOCLIST         = am65xx j721e j7200 am64x
+drvcopyvecs_SOCLIST         = am65xx j721e j7200 am64x j721s2
 
 ############################
 # copyvecs package
