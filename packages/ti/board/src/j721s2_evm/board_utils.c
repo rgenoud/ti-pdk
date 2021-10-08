@@ -44,6 +44,8 @@
 #include "board_utils.h"
 #include "board_cfg.h"
 
+Board_I2cInitCfg_t gBoardI2cInitCfg = {0, BOARD_SOC_DOMAIN_MAIN, 0};
+
 /**
  * \brief Board ID read function
  *
