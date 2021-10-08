@@ -210,7 +210,7 @@ static void TimeSync_getMsgId(uint8_t *msgId,
 static void TimeSync_getSeqId(uint16_t *seqId,
                               uint8_t *frame);
 
-static int32_t TimeSync_configPps(Enet_Type enetType);
+static int32_t TimeSync_configPps(Enet_Type enetType, uint32_t instId);
 
 /* ========================================================================== */
 /*                            Global Variables                                */
@@ -321,9 +321,28 @@ TimeSync_Handle TimeSync_open(TimeSync_Config *timeSyncConfig)
 
         if (timeSyncConfig->socConfig.ipVersion == TIMESYNC_IP_VER_CPSW_2G)
         {
+#if defined(SOC_J721S2)
+            if (timeSyncConfig->socConfig.instId == 0)
+            {
+                gTimeSyncCpswObj.enetType = ENET_CPSW_2G;
+                gTimeSyncCpswObj.instId   = 0U;
+                gTimeSyncCpswObj.hwPush   = CPSW_CPTS_HWPUSH_3;
+            }
+            else if (timeSyncConfig->socConfig.instId == 1)
+            {
+                gTimeSyncCpswObj.enetType = ENET_CPSW_2G;
+                gTimeSyncCpswObj.instId   = 1U;
+                gTimeSyncCpswObj.hwPush   = CPSW_CPTS_HWPUSH_1;
+            }
+            else
+            {
+                status = TIMESYNC_PARAM_INVALID;
+            }
+#else
             gTimeSyncCpswObj.enetType = ENET_CPSW_2G;
             gTimeSyncCpswObj.instId   = 0U;
             gTimeSyncCpswObj.hwPush   = CPSW_CPTS_HWPUSH_3;
+#endif
         }
         else if (timeSyncConfig->socConfig.ipVersion == TIMESYNC_IP_VER_CPSW_9G)
         {
@@ -404,7 +423,7 @@ TimeSync_Handle TimeSync_open(TimeSync_Config *timeSyncConfig)
 
         if (status == TIMESYNC_OK)
         {
-            status = TimeSync_configPps(gTimeSyncCpswObj.enetType);
+            status = TimeSync_configPps(gTimeSyncCpswObj.enetType, gTimeSyncCpswObj.instId);
             if (status != TIMESYNC_OK)
             {
                 EnetAppUtils_print("Failed to configure PPS generation: %d\n", status);
@@ -1499,7 +1518,7 @@ static void TimeSync_getSeqId(uint16_t *seqId,
     *seqId = Enet_ntohs(*seqId);
 }
 
-static int32_t TimeSync_configPps(Enet_Type enetType)
+static int32_t TimeSync_configPps(Enet_Type enetType, , uint32_t instId)
 {
     int32_t status = TIMESYNC_OK;
     Enet_IoctlPrms prms;
@@ -1514,16 +1533,33 @@ static int32_t TimeSync_configPps(Enet_Type enetType)
 
     /* Explicit register call as AM65xx doesn't have TimeSync router inputs/output macros */
     CSL_REG32_WR(CSL_TIMESYNC_INTRTR0_INTR_ROUTER_CFG_BASE + 0x4U + (0x4U * tsrOut), tsrIn);
+#elif defined(SOC_J721S2)
+    if ((enetType == ENET_CPSW_2G) && (instId == 0))
+    {
+        status = EnetAppUtils_setTimeSyncRouter(gTimeSyncCpswObj.enetType,
+                                                0,
+                                                CSLR_TIMESYNC_INTRTR0_IN_MCU_CPSW0_CPTS_GENF0_0,
+                                                CSLR_TIMESYNC_INTRTR0_OUTL_MCU_CPSW0_CPTS_HW3_PUSH_0);
+    }
+    else if ((enetType == ENET_CPSW_2G) && (instId == 1))
+    {
+        status = EnetAppUtils_setTimeSyncRouter(gTimeSyncCpswObj.enetType,
+                                                1,
+                                                CSLR_TIMESYNC_INTRTR0_IN_CPSW1_CPTS_GENF0_0,
+                                                CSLR_TIMESYNC_INTRTR0_OUTL_CPSW1_CPTS_HW1_PUSH_0);
+    }
 #else
     if (enetType == ENET_CPSW_2G)
     {
         status = EnetAppUtils_setTimeSyncRouter(gTimeSyncCpswObj.enetType,
+                                                instId,
                                                 CSLR_TIMESYNC_INTRTR0_IN_MCU_CPSW0_CPTS_GENF0_0,
                                                 CSLR_TIMESYNC_INTRTR0_OUTL_MCU_CPSW0_CPTS_HW3_PUSH_0);
     }
     else
     {
         status = EnetAppUtils_setTimeSyncRouter(gTimeSyncCpswObj.enetType,
+                                                instId,
                                                 CSLR_TIMESYNC_INTRTR0_IN_CPSW0_CPTS_GENF0_0,
                                                 CSLR_TIMESYNC_INTRTR0_OUTL_CPSW0_CPTS_HW1_PUSH_0);
     }
