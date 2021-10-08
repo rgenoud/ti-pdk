@@ -241,6 +241,14 @@ int32_t UdmaInitPrms_init(uint32_t instId, Udma_InitPrms *initPrms)
 
     if(UDMA_SOK == retVal)
     {
+        if(isInstInvalid((int32_t)instId))
+        {
+            retVal = UDMA_EINVALID_PARAMS;
+        }
+    }
+
+    if(UDMA_SOK == retVal)
+    {
         initPrms->instId                = instId;
         retVal = UdmaRmInitPrms_init(instId, &initPrms->rmInitPrms);
         UdmaOsalPrms_init(&initPrms->osalPrms);

@@ -560,26 +560,28 @@ int32_t Udma_ringMonAlloc(Udma_DrvHandle drvHandle,
                           Udma_RingMonHandle monHandle,
                           uint16_t ringMonNum)
 {
+    int32_t     retVal = UDMA_SOK;
 #if (UDMA_SOC_CFG_RING_MON_PRESENT == 1)
-    if((UDMA_INST_ID_MAIN_0 == instId) || (UDMA_INST_ID_MCU_0 == instId))
+    uint32_t    allocDone = (uint32_t) FALSE;
+
+    /* Error check */
+    if((NULL_PTR == monHandle) || (NULL_PTR == drvHandle))
     {
-        int32_t     retVal = UDMA_SOK;
-        uint32_t    allocDone = (uint32_t) FALSE;
-
-        /* Error check */
-        if((NULL_PTR == monHandle) || (NULL_PTR == drvHandle))
+        retVal = UDMA_EBADARGS;
+    }
+    if(UDMA_SOK == retVal)
+    {
+        if((NULL_PTR == drvHandle) || (drvHandle->drvInitDone != UDMA_INIT_DONE))
         {
-            retVal = UDMA_EBADARGS;
+            retVal = UDMA_EFAIL;
         }
-        if(UDMA_SOK == retVal)
-        {
-            if((NULL_PTR == drvHandle) || (drvHandle->drvInitDone != UDMA_INIT_DONE))
-            {
-                retVal = UDMA_EFAIL;
-            }
-        }
+    }
 
-        if(UDMA_SOK == retVal)
+    if(UDMA_SOK == retVal)
+    {
+        uint32_t instType = drvHandle->instType;
+
+        if(UDMA_INST_TYPE_NORMAL == instType)
         {
             if(UDMA_RING_MON_ANY == ringMonNum)
             {
@@ -606,29 +608,29 @@ int32_t Udma_ringMonAlloc(Udma_DrvHandle drvHandle,
                     monHandle->ringMonNum = ringMonNum;
                 }
             }
-        }
 
-        if(UDMA_SOK == retVal)
-        {
-            monHandle->drvHandle = drvHandle;
-            Udma_assert(drvHandle, drvHandle->raRegs.pMonRegs != NULL_PTR);
-            monHandle->pMonRegs =
-                &drvHandle->raRegs.pMonRegs->MON[monHandle->ringMonNum];
-            monHandle->ringMonInitDone = UDMA_INIT_DONE;
+            if(UDMA_SOK == retVal)
+            {
+                monHandle->drvHandle = drvHandle;
+                Udma_assert(drvHandle, drvHandle->raRegs.pMonRegs != NULL_PTR);
+                monHandle->pMonRegs =
+                    &drvHandle->raRegs.pMonRegs->MON[monHandle->ringMonNum];
+                monHandle->ringMonInitDone = UDMA_INIT_DONE;
+            }
+            else
+            {
+                /* Error. Free-up resource if allocated */
+                if(((uint32_t) TRUE) == allocDone)
+                {
+                    Udma_rmFreeRingMon(monHandle->ringMonNum, drvHandle);
+                }
+            }
         }
         else
         {
-            /* Error. Free-up resource if allocated */
-            if(((uint32_t) TRUE) == allocDone)
-            {
-                Udma_rmFreeRingMon(monHandle->ringMonNum, drvHandle);
-            }
+            retVal = UDMA_EFAIL;
+            Udma_printf(drvHandle, "[Error] Ring Monitor only supported for Main/MCU Navss instances; Event Config failed!!!\n");   
         }
-    }
-    else
-    {
-        retVal = UDMA_EFAIL;
-        Udma_printf(drvHandle, "[Error] Ring Monitor only supported for Main/MCU Navss instances; Event Config failed!!!\n");   
     }
 #else
     int32_t         retVal = UDMA_EFAIL;
@@ -641,39 +643,40 @@ int32_t Udma_ringMonAlloc(Udma_DrvHandle drvHandle,
 int32_t Udma_ringMonFree(Udma_RingMonHandle monHandle)
 {
     int32_t         retVal = UDMA_SOK;
+
 #if (UDMA_SOC_CFG_RING_MON_PRESENT == 1)
-    if((UDMA_INST_ID_MAIN_0 == instId) || (UDMA_INST_ID_MCU_0 == instId))
+
+    /* Error check */
+    if((NULL_PTR == monHandle) ||
+    (monHandle->ringMonInitDone != UDMA_INIT_DONE) ||
+    (monHandle->ringMonNum == UDMA_RING_MON_INVALID))
     {
-        if((UDMA_INST_ID_MAIN_0 == instId) || (UDMA_INST_ID_MCU_0 == instId))
+        retVal = UDMA_EBADARGS;
+    }
+
+    Udma_DrvHandle drvHandle = monHandle->drvHandle;
+
+    if(UDMA_SOK == retVal)
+    {
+        if((NULL_PTR == drvHandle) || (drvHandle->drvInitDone != UDMA_INIT_DONE))
         {
-            Udma_DrvHandle  drvHandle;
+            retVal = UDMA_EFAIL;
+        }
+    }
 
-            /* Error check */
-            if((NULL_PTR == monHandle) ||
-            (monHandle->ringMonInitDone != UDMA_INIT_DONE) ||
-            (monHandle->ringMonNum == UDMA_RING_MON_INVALID))
-            {
-                retVal = UDMA_EBADARGS;
-            }
-            if(UDMA_SOK == retVal)
-            {
-                drvHandle = monHandle->drvHandle;
-                if((NULL_PTR == drvHandle) || (drvHandle->drvInitDone != UDMA_INIT_DONE))
-                {
-                    retVal = UDMA_EFAIL;
-                }
-            }
+    if(UDMA_SOK == retVal)
+    {
+        uint32_t instType = drvHandle->instType;
 
-            if(UDMA_SOK == retVal)
-            {
-                /* Free-up event resources */
-                Udma_assert(drvHandle, monHandle->ringMonNum != UDMA_RING_MON_INVALID);
-                Udma_rmFreeRingMon(monHandle->ringMonNum, drvHandle);
-                monHandle->drvHandle        = (Udma_DrvHandle) NULL_PTR;
-                monHandle->ringMonNum       = UDMA_RING_MON_INVALID;
-                monHandle->pMonRegs         = (volatile CSL_ringacc_monitorRegs_mon *) NULL_PTR;
-                monHandle->ringMonInitDone  = UDMA_DEINIT_DONE;
-            }
+        if(UDMA_INST_TYPE_NORMAL == instType)
+        {
+            /* Free-up event resources */
+            Udma_assert(drvHandle, monHandle->ringMonNum != UDMA_RING_MON_INVALID);
+            Udma_rmFreeRingMon(monHandle->ringMonNum, drvHandle);
+            monHandle->drvHandle        = (Udma_DrvHandle) NULL_PTR;
+            monHandle->ringMonNum       = UDMA_RING_MON_INVALID;
+            monHandle->pMonRegs         = (volatile CSL_ringacc_monitorRegs_mon *) NULL_PTR;
+            monHandle->ringMonInitDone  = UDMA_DEINIT_DONE;
         }
         else
         {
@@ -695,32 +698,35 @@ int32_t Udma_ringMonFree(Udma_RingMonHandle monHandle)
 int32_t Udma_ringMonConfig(Udma_RingMonHandle monHandle,
                            const Udma_RingMonPrms *monPrms)
 {
-    int32_t             retVal = UDMA_SOK;
+    int32_t         retVal = UDMA_SOK;
 #if (UDMA_SOC_CFG_RING_MON_PRESENT == 1)
-    if((UDMA_INST_ID_MAIN_0 == instId) || (UDMA_INST_ID_MCU_0 == instId))
+    struct tisci_msg_rm_ring_mon_cfg_req    rmRingMonReq;
+    struct tisci_msg_rm_ring_mon_cfg_resp   rmRingMonResp;
+
+    /* Error check */
+    if((NULL_PTR == monHandle) ||
+    (NULL_PTR == monPrms) ||
+    (monHandle->ringMonInitDone != UDMA_INIT_DONE) ||
+    (monHandle->ringMonNum == UDMA_RING_MON_INVALID))
     {
-        Udma_DrvHandle      drvHandle;
-        struct tisci_msg_rm_ring_mon_cfg_req    rmRingMonReq;
-        struct tisci_msg_rm_ring_mon_cfg_resp   rmRingMonResp;
+        retVal = UDMA_EBADARGS;
+    }
 
-        /* Error check */
-        if((NULL_PTR == monHandle) ||
-        (NULL_PTR == monPrms) ||
-        (monHandle->ringMonInitDone != UDMA_INIT_DONE) ||
-        (monHandle->ringMonNum == UDMA_RING_MON_INVALID))
-        {
-            retVal = UDMA_EBADARGS;
-        }
-        if(UDMA_SOK == retVal)
-        {
-            drvHandle = monHandle->drvHandle;
-            if((NULL_PTR == drvHandle) || (drvHandle->drvInitDone != UDMA_INIT_DONE))
-            {
-                retVal = UDMA_EFAIL;
-            }
-        }
+    Udma_DrvHandle drvHandle = monHandle->drvHandle;
 
-        if(UDMA_SOK == retVal)
+    if(UDMA_SOK == retVal)
+    {
+        if((NULL_PTR == drvHandle) || (drvHandle->drvInitDone != UDMA_INIT_DONE))
+        {
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        uint32_t instType = drvHandle->instType;
+
+        if(UDMA_INST_TYPE_NORMAL == instType)
         {
             rmRingMonReq.valid_params   = TISCI_MSG_VALUE_RM_MON_SOURCE_VALID |
                                         TISCI_MSG_VALUE_RM_MON_MODE_VALID |
@@ -741,11 +747,11 @@ int32_t Udma_ringMonConfig(Udma_RingMonHandle monHandle,
                 Udma_printf(drvHandle, "[Error] Ring monitor config failed!!!\n");
             }
         }
-    }
-    else
-    {
-        retVal = UDMA_EFAIL;
-        Udma_printf(drvHandle, "[Error] Ring Monitor only supported for Main/MCU Navss instances; Event Config failed!!!\n");   
+        else
+        {
+            retVal = UDMA_EFAIL;
+            Udma_printf(drvHandle, "[Error] Ring Monitor only supported for Main/MCU Navss instances; Event Config failed!!!\n");   
+        }
     }
 #else
     retVal = UDMA_EFAIL;
@@ -759,38 +765,40 @@ int32_t Udma_ringMonGetData(Udma_RingMonHandle monHandle,
 {
     int32_t         retVal = UDMA_SOK;
 #if (UDMA_SOC_CFG_RING_MON_PRESENT == 1)
-    if((UDMA_INST_ID_MAIN_0 == instId) || (UDMA_INST_ID_MCU_0 == instId))
+    Udma_DrvHandle  drvHandle;
+
+    /* Error check */
+    if((NULL_PTR == monHandle) ||
+    (NULL_PTR == monData) ||
+    (monHandle->ringMonInitDone != UDMA_INIT_DONE) ||
+    (monHandle->ringMonNum == UDMA_RING_MON_INVALID))
     {
-        Udma_DrvHandle  drvHandle;
-
-        /* Error check */
-        if((NULL_PTR == monHandle) ||
-        (NULL_PTR == monData) ||
-        (monHandle->ringMonInitDone != UDMA_INIT_DONE) ||
-        (monHandle->ringMonNum == UDMA_RING_MON_INVALID))
+        retVal = UDMA_EBADARGS;
+    }
+    if(UDMA_SOK == retVal)
+    {
+        drvHandle = monHandle->drvHandle;
+        if((NULL_PTR == drvHandle) || (drvHandle->drvInitDone != UDMA_INIT_DONE))
         {
-            retVal = UDMA_EBADARGS;
+            retVal = UDMA_EFAIL;
         }
-        if(UDMA_SOK == retVal)
-        {
-            drvHandle = monHandle->drvHandle;
-            if((NULL_PTR == drvHandle) || (drvHandle->drvInitDone != UDMA_INIT_DONE))
-            {
-                retVal = UDMA_EFAIL;
-            }
-        }
+    }
 
-        if(UDMA_SOK == retVal)
+    if(UDMA_SOK == retVal)
+    {
+        uint32_t instType = drvHandle->instType;
+
+        if(UDMA_INST_TYPE_NORMAL == instType)
         {
             Udma_assert(drvHandle, monHandle->pMonRegs != NULL_PTR);
             monData->data0 = CSL_REG32_RD(&monHandle->pMonRegs->DATA0);
             monData->data1 = CSL_REG32_RD(&monHandle->pMonRegs->DATA1);
-        }    
-    }
-    else
-    {
-        retVal = UDMA_EFAIL;
-        Udma_printf(drvHandle, "[Error] Ring Monitor only supported for Main/MCU Navss instances; Event Config failed!!!\n");   
+        }  
+        else
+        {
+            retVal = UDMA_EFAIL;
+            Udma_printf(drvHandle, "[Error] Ring Monitor only supported for Main/MCU Navss instances; Event Config failed!!!\n");   
+        }
     }
 #else
     int32_t         retVal = UDMA_EFAIL;

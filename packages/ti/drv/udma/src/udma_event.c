@@ -1095,7 +1095,10 @@ static int32_t Udma_eventConfig(Udma_DrvHandle drvHandle,
     {
         /* Ring Monitor only available for MAIN and MCU NAVSS instances */
 #if (UDMA_SOC_CFG_RING_MON_PRESENT == 1)
-        if((UDMA_INST_ID_MAIN_0 == instId) || (UDMA_INST_ID_MCU_0 == instId))
+
+        uint32_t instType = drvHandle->instType;
+
+        if(UDMA_INST_TYPE_NORMAL == instType)
         {
             Udma_assert(drvHandle, eventPrms->monHandle != NULL_PTR);
             monHandle = eventPrms->monHandle;
@@ -1376,7 +1379,10 @@ static int32_t Udma_eventReset(Udma_DrvHandle drvHandle,
     {
         /* Ring Monitor only available for MAIN and MCU NAVSS instances */
 #if (UDMA_SOC_CFG_RING_MON_PRESENT == 1)
-        if((UDMA_INST_ID_MAIN_0 == instId) || (UDMA_INST_ID_MCU_0 == instId))
+
+        uint32_t instType = drvHandle->instType;
+        
+        if(UDMA_INST_TYPE_NORMAL == instType)
         {
             Udma_assert(drvHandle, eventPrms->monHandle != NULL_PTR);
             monHandle = eventPrms->monHandle;

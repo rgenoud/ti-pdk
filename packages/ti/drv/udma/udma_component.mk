@@ -241,6 +241,7 @@ ifneq ($(wildcard $(SAFERTOS_KERNEL_INSTALL_PATH)),)
 udma_EXAMPLE_LIST += udma_memcpy_testapp_$(1)
 endif
 endif
+endif
 
 endef
 
@@ -357,6 +358,7 @@ ifneq ($(wildcard $(SAFERTOS_KERNEL_INSTALL_PATH)),)
 udma_EXAMPLE_LIST += udma_dru_testapp_$(1)
 endif
 endif
+endif
 
 endef
 
@@ -392,6 +394,7 @@ udma_EXAMPLE_LIST += udma_dru_direct_tr_testapp_$(1)
 else
 ifneq ($(wildcard $(SAFERTOS_KERNEL_INSTALL_PATH)),)
 udma_EXAMPLE_LIST += udma_dru_direct_tr_testapp_$(1)
+endif
 endif
 endif
 

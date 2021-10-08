@@ -273,7 +273,7 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
     /* Init the config structure - one time step */
     if(UDMA_INST_ID_BCDMA_0 == instId)
     {
-        drvHandle->instType = UDMA_INST_ID_BCDMA_0;
+        drvHandle->instType = UDMA_INST_TYPE_LCDMA_BCDMA;
     	pBcdmaRegs = &drvHandle->bcdmaRegs;
         pBcdmaRegs->pGenCfgRegs     = ((CSL_bcdma_gcfgRegs *) UDMA_NAVSS0_BCDMA0_CFG_GCFG_BASE);
         pBcdmaRegs->pTxChanCfgRegs  = ((CSL_bcdma_txccfgRegs *) UDMA_NAVSS0_BCDMA0_CFG_TCHAN_BASE);
@@ -572,7 +572,7 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
     }
 
     /* Init other variables */
-    if(UDMA_INST_ID_BCDMA_0 = instId)
+    if(UDMA_INST_ID_BCDMA_0 == instId)
     {
         drvHandle->txChOffset           = pBcdmaRegs->bcChanCnt;
 	    drvHandle->rxChOffset   		= drvHandle->txChOffset + pBcdmaRegs->splitTxChanCnt;
@@ -739,4 +739,14 @@ uint32_t Udma_isCacheCoherent(void)
 #endif
 
     return (isCacheCoherent);
+}
+
+uint32_t isInstInvalid(int32_t instId)
+{
+    uint32_t retVal = 0;
+    if((UDMA_INST_ID_START > instId) || (UDMA_INST_ID_MAX < instId))
+    {
+        retVal = 1;
+    }
+    return retVal;
 }

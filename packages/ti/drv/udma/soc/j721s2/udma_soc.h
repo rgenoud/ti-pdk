@@ -797,6 +797,13 @@ uint16_t Udma_getCoreSciDevId(void);
  */
 uint32_t Udma_isCacheCoherent(void);
 
+/**
+ *  \brief Returns True if Udma Init Params are valid
+ * 
+ *  \return TRUE/FALSE
+ */
+uint32_t isInstInvalid(int32_t);
+
 /* ========================================================================== */
 /*                       Static Function Definitions                          */
 /* ========================================================================== */
