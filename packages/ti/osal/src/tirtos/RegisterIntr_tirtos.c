@@ -92,7 +92,7 @@ void Osal_RegisterInterrupt_initParams(OsalRegisterIntrParams_t *interruptRegPar
 #ifdef __TI_ARM_V7R4__
       interruptRegParams->corepacConfig.priority=0x15U; /* Default */
 #else
-#if defined(__C7100__) || defined(BUILD_DSP_1) || defined(BUILD_DSP_2)
+#if defined(BUILD_C7X) || defined(BUILD_C66X)
       interruptRegParams->corepacConfig.priority=0x01U; /* Default */
 #else
       interruptRegParams->corepacConfig.priority=0x20U; /* Default */

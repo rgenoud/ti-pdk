@@ -193,7 +193,7 @@ StaticSemaphore_t gPongSemObj;
 TaskHandle_t gPongTask;
 SemaphoreHandle_t gPongSem;
 
-#ifdef BUILD_C7X_1
+#ifdef BUILD_C7X
 void    Osal_appC7xPreInit(void);
 void    C7x_ConfigureTimerOutput(void);
 uint8_t srcBuf[1024];
@@ -207,7 +207,7 @@ static void ping_isr_1(uintptr_t arg)
 
     ping_isr_1_count++;
     xSemaphoreGiveFromISR(gPingSem, &doTaskSwitch); /* wake up ping task */
-    #ifdef BUILD_C7X_1
+    #ifdef BUILD_C7X
     /* For C7x do memcpy in ISR to confirm Vector registers are restored correctly from ISR */
     memcpy(dstBuf, srcBuf, sizeof(dstBuf));
     #endif
@@ -641,7 +641,7 @@ void test_freertos_main(void *args)
     /* Open drivers to open the UART driver for console */
     //Drivers_open();
 
-#ifdef BUILD_C7X_1
+#ifdef BUILD_C7X
     Osal_appC7xPreInit();
     C7x_ConfigureTimerOutput();
 #endif
@@ -675,7 +675,7 @@ void test_freertos_main(void *args)
     /* Drivers_close(); */
 }
 
-#if defined (__C7100__)
+#if defined (BUILD_C7X)
 extern void Osal_initMmuDefault(void);
 #include <ti/csl/csl_clec.h>
 

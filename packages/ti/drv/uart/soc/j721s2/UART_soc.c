@@ -93,7 +93,7 @@ UART_HwAttrs uartInitCfg[CSL_UART_MAIN_CNT] =
         0,                              /* eventId, used only for C6x */
         UART_INPUT_CLK_96M,             /* frequency */
 #endif
-#if defined (__C7100__)
+#if defined (BUILD_C7X)
         (uint32_t)CSL_UART0_BASE,
         UART_C7X_IRQ0,                  /* intNum */
         CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_UART0_USART_IRQ_0 + UART_CLEC_GIC_SPI_IN_EVT_OFFSET, /* eventId, input event # to CLEC */
@@ -133,7 +133,7 @@ UART_HwAttrs uartInitCfg[CSL_UART_MAIN_CNT] =
         0,
         0,
 #endif
-#if defined (__C7100__)
+#if defined (BUILD_C7X)
         (uint32_t)CSL_UART1_BASE,
         UART_C7X_IRQ0 + 1U,
         CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_UART1_USART_IRQ_0 + UART_CLEC_GIC_SPI_IN_EVT_OFFSET,
@@ -171,7 +171,7 @@ UART_HwAttrs uartInitCfg[CSL_UART_MAIN_CNT] =
         0,
         0,
 #endif
-#if defined (__C7100__)
+#if defined (BUILD_C7X)
         (uint32_t)CSL_UART2_BASE,
         UART_C7X_IRQ0 + 2U,
         CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_UART2_USART_IRQ_0 + UART_CLEC_GIC_SPI_IN_EVT_OFFSET,
@@ -209,7 +209,7 @@ UART_HwAttrs uartInitCfg[CSL_UART_MAIN_CNT] =
         0,
         0,
 #endif
-#if defined (__C7100__)
+#if defined (BUILD_C7X)
         (uint32_t)CSL_UART3_BASE,
         UART_C7X_IRQ0 + 3U,
         CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_UART3_USART_IRQ_0 + UART_CLEC_GIC_SPI_IN_EVT_OFFSET,
@@ -247,7 +247,7 @@ UART_HwAttrs uartInitCfg[CSL_UART_MAIN_CNT] =
         0,
         0,
 #endif
-#if defined (__C7100__)
+#if defined (BUILD_C7X)
         (uint32_t)CSL_UART4_BASE,
         UART_C7X_IRQ0 + 4U,
         CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_UART4_USART_IRQ_0 + UART_CLEC_GIC_SPI_IN_EVT_OFFSET,
@@ -285,7 +285,7 @@ UART_HwAttrs uartInitCfg[CSL_UART_MAIN_CNT] =
         0,
         0,
 #endif
-#if defined (__C7100__)
+#if defined (BUILD_C7X)
         (uint32_t)CSL_UART5_BASE,
         UART_C7X_IRQ0 + 5U,
         CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_UART5_USART_IRQ_0 + UART_CLEC_GIC_SPI_IN_EVT_OFFSET,
@@ -323,7 +323,7 @@ UART_HwAttrs uartInitCfg[CSL_UART_MAIN_CNT] =
         0,
         0,
 #endif
-#if defined (__C7100__)
+#if defined (BUILD_C7X)
         (uint32_t)CSL_UART6_BASE,
         UART_C7X_IRQ0 + 6U,
         CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_UART6_USART_IRQ_0 + UART_CLEC_GIC_SPI_IN_EVT_OFFSET,
@@ -361,7 +361,7 @@ UART_HwAttrs uartInitCfg[CSL_UART_MAIN_CNT] =
         0,
         0,
 #endif
-#if defined (__C7100__)
+#if defined (BUILD_C7X)
         (uint32_t)CSL_UART7_BASE,
         UART_C7X_IRQ0 + 7U,
         CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_UART7_USART_IRQ_0 + UART_CLEC_GIC_SPI_IN_EVT_OFFSET,
@@ -399,7 +399,7 @@ UART_HwAttrs uartInitCfg[CSL_UART_MAIN_CNT] =
         0,
         0,
 #endif
-#if defined (__C7100__)
+#if defined (BUILD_C7X)
         (uint32_t)CSL_UART8_BASE,
         UART_C7X_IRQ0 + 8U,
         CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_UART8_USART_IRQ_0 + UART_CLEC_GIC_SPI_IN_EVT_OFFSET,
@@ -437,7 +437,7 @@ UART_HwAttrs uartInitCfg[CSL_UART_MAIN_CNT] =
         0,
         0,
 #endif
-#if defined (__C7100__)
+#if defined (BUILD_C7X)
         (uint32_t)CSL_UART9_BASE,
         UART_C7X_IRQ0 + 9U,
         CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_UART9_USART_IRQ_0 + UART_CLEC_GIC_SPI_IN_EVT_OFFSET,
@@ -638,7 +638,7 @@ static int32_t UART_socConfigIntrPath(const void *pHwAttrs, bool setIntrPath)
 {
    int32_t ret = UART_SUCCESS;
 
-#if defined (__C7100__)
+#if defined (BUILD_C7X)
     int32_t               retVal;
     UART_HwAttrs         *hwAttrs = (UART_HwAttrs *)(pHwAttrs);
     CSL_ClecEventConfig   cfgClec;

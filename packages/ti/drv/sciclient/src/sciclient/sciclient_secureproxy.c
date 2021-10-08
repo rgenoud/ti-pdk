@@ -141,7 +141,7 @@ int32_t Sciclient_waitThread(uint32_t thread, uint32_t timeout)
     return status;
 }
 
-#if defined (__C7100__)
+#if defined (BUILD_C7X)
 #ifdef __cplusplus
 #pragma FUNCTION_OPTIONS("--opt_level=off")
 #else

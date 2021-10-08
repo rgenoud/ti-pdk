@@ -50,7 +50,7 @@
 /* ========================================================================== */
 
 /* Test application stack size */
-#if defined (__C7100__)
+#if defined (BUILD_C7X)
 /* Temp workaround to avoid assertion failure: A_stackSizeTooSmall : Task stack size must be >= 16KB.
   * until the Bug PDK-7605 is resolved */
 #define APP_TSK_STACK_MAIN              (32U * 1024U)
@@ -107,7 +107,7 @@ int main(void)
     return(0);
 }
 
-#if defined(BUILD_MPU) || defined (__C7100__)
+#if defined(BUILD_MPU) || defined (BUILD_C7X)
 extern void Osal_initMmuDefault(void);
 void InitMmu(void)
 {

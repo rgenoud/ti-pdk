@@ -44,7 +44,7 @@
 #include <ti/drv/udma/udma.h>
 #include <ti/drv/sciclient/sciclient.h>
 #include <ti/drv/udma/examples/udma_apputils/udma_apputils.h>
-#if defined (__C7100__)
+#if defined (BUILD_C7X)
 #include <ti/csl/csl_clec.h>
 #include <ti/csl/arch/csl_arch.h>
 #endif
@@ -120,7 +120,7 @@ uint64_t Udma_appVirtToPhyFxn(const void *virtAddr, uint32_t chNum, void *appDat
     uint64_t    atcmBaseGlobal = 0U;
 
     phyAddr = (uint64_t) virtAddr;
-#if defined (BUILD_C66X_1) || defined (BUILD_C66X_2)
+#if defined (BUILD_C66X)
     /* Convert local L2RAM address to global space */
     if((phyAddr >= CSL_C66_COREPAC_L2_BASE) &&
        (phyAddr < (CSL_C66_COREPAC_L2_BASE + CSL_C66_COREPAC_L2_SIZE)))
@@ -230,7 +230,7 @@ void *Udma_appPhyToVirtFxn(uint64_t phyAddr, uint32_t chNum, void *appData)
 {
     void       *virtAddr;
 
-#if defined (__aarch64__) || defined (__C7100__)
+#if defined (__aarch64__) || defined (BUILD_C7X)
     virtAddr = (void *) phyAddr;
 #else
     uint32_t temp;
@@ -385,7 +385,7 @@ void Udma_appC66xIntrConfig(void)
 
 void Udma_appC7xPreInit(void)
 {
-#if defined (__C7100__)
+#if defined (BUILD_C7X)
     CSL_ClecEventConfig cfgClec;
     #if defined(SOC_J721S2)
     CSL_CLEC_EVTRegs   *clecBaseAddr = (CSL_CLEC_EVTRegs*) CSL_COMPUTE_CLUSTER0_CLEC_BASE;

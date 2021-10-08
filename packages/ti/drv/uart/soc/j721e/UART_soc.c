@@ -45,7 +45,7 @@
 #include <ti/drv/uart/soc/UART_soc.h>
 #include <ti/drv/sciclient/sciclient.h>
 
-#if defined (BUILD_DSP_1) || defined (BUILD_DSP_2)
+#if defined (BUILD_C66X)
 #include  "ti/csl/csl_chipAux.h"
 #endif
 
@@ -72,7 +72,7 @@
 /* C7x INTC int # for UART0 */
 #define UART_C7X_IRQ0                   (20U)
 
-#if defined (BUILD_DSP_1) || defined (BUILD_DSP_2)
+#if defined (BUILD_C66X)
 static uint16_t UART_socGetSciSrcID(uint32_t baseAddr);
 #endif
 static int32_t UART_socConfigIntrPath(const void *pHwAttrs, bool setIntrPath);
@@ -100,14 +100,14 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
         0,                              /* eventId, used only for C6x */
         UART_INPUT_CLK_96M,             /* frequency */
 #endif
-#if defined (BUILD_DSP_1) || defined (BUILD_DSP_2)
+#if defined (BUILD_C66X)
         /* default configuration for UART instance and C66x core on Main domain*/
         (uint32_t)CSL_UART0_BASE,       /* baseAddr */
         OSAL_REGINT_INTVEC_EVENT_COMBINER,  /* intNum, use event combiner for C66x INTC */
         UART_TISCI_C66X_DST_HOST_IRQ0,  /* eventId, DMSC dest event, input to C66x INTC */
         UART_INPUT_CLK_48M,             /* frequency */
 #endif
-#if defined (BUILD_C7X_1)
+#if defined (BUILD_C7X)
         (uint32_t)CSL_UART0_BASE,
         UART_C7X_IRQ0,                  /* intNum */
         CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_UART0_USART_IRQ_0 + UART_CLEC_GIC_SPI_IN_EVT_OFFSET, /* eventId, input event # to CLEC */
@@ -147,13 +147,13 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
         0,
         0,
 #endif
-#if defined (BUILD_DSP_1) || defined (BUILD_DSP_2)
+#if defined (BUILD_C66X)
         (uint32_t)CSL_UART1_BASE,
         OSAL_REGINT_INTVEC_EVENT_COMBINER,
         UART_TISCI_C66X_DST_HOST_IRQ0 + 1U,
         UART_INPUT_CLK_48M,
 #endif
-#if defined (BUILD_C7X_1)
+#if defined (BUILD_C7X)
         (uint32_t)CSL_UART1_BASE,
         UART_C7X_IRQ0 + 1U,
         CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_UART1_USART_IRQ_0 + UART_CLEC_GIC_SPI_IN_EVT_OFFSET,
@@ -191,13 +191,13 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
         0,
         0,
 #endif
-#if defined (BUILD_DSP_1) || defined (BUILD_DSP_2)
+#if defined (BUILD_C66X)
         (uint32_t)CSL_UART2_BASE,
         OSAL_REGINT_INTVEC_EVENT_COMBINER,
         UART_TISCI_C66X_DST_HOST_IRQ0 + 2U,
         UART_INPUT_CLK_48M,
 #endif
-#if defined (BUILD_C7X_1)
+#if defined (BUILD_C7X)
         (uint32_t)CSL_UART2_BASE,
         UART_C7X_IRQ0 + 2U,
         CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_UART2_USART_IRQ_0 + UART_CLEC_GIC_SPI_IN_EVT_OFFSET,
@@ -235,13 +235,13 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
         0,
         0,
 #endif
-#if defined (BUILD_DSP_1) || defined (BUILD_DSP_2)
+#if defined (BUILD_C66X)
         (uint32_t)CSL_UART3_BASE,
         OSAL_REGINT_INTVEC_EVENT_COMBINER,
         UART_TISCI_C66X_DST_HOST_IRQ0 + 3U,
         UART_INPUT_CLK_48M,
 #endif
-#if defined (BUILD_C7X_1)
+#if defined (BUILD_C7X)
         (uint32_t)CSL_UART3_BASE,
         UART_C7X_IRQ0 + 3U,
         CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_UART3_USART_IRQ_0 + UART_CLEC_GIC_SPI_IN_EVT_OFFSET,
@@ -279,13 +279,13 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
         0,
         0,
 #endif
-#if defined (BUILD_DSP_1) || defined (BUILD_DSP_2)
+#if defined (BUILD_C66X)
         (uint32_t)CSL_UART4_BASE,
         OSAL_REGINT_INTVEC_EVENT_COMBINER,
         UART_TISCI_C66X_DST_HOST_IRQ0 + 4U,
         UART_INPUT_CLK_48M,
 #endif
-#if defined (BUILD_C7X_1)
+#if defined (BUILD_C7X)
         (uint32_t)CSL_UART4_BASE,
         UART_C7X_IRQ0 + 4U,
         CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_UART4_USART_IRQ_0 + UART_CLEC_GIC_SPI_IN_EVT_OFFSET,
@@ -323,13 +323,13 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
         0,
         0,
 #endif
-#if defined (BUILD_DSP_1) || defined (BUILD_DSP_2)
+#if defined (BUILD_C66X)
         (uint32_t)CSL_UART5_BASE,
         OSAL_REGINT_INTVEC_EVENT_COMBINER,
         UART_TISCI_C66X_DST_HOST_IRQ0 + 5U,
         UART_INPUT_CLK_48M,
 #endif
-#if defined (BUILD_C7X_1)
+#if defined (BUILD_C7X)
         (uint32_t)CSL_UART5_BASE,
         UART_C7X_IRQ0 + 5U,
         CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_UART5_USART_IRQ_0 + UART_CLEC_GIC_SPI_IN_EVT_OFFSET,
@@ -367,13 +367,13 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
         0,
         0,
 #endif
-#if defined (BUILD_DSP_1) || defined (BUILD_DSP_2)
+#if defined (BUILD_C66X)
         (uint32_t)CSL_UART6_BASE,
         OSAL_REGINT_INTVEC_EVENT_COMBINER,
         UART_TISCI_C66X_DST_HOST_IRQ0 + 6U,
         UART_INPUT_CLK_48M,
 #endif
-#if defined (BUILD_C7X_1)
+#if defined (BUILD_C7X)
         (uint32_t)CSL_UART6_BASE,
         UART_C7X_IRQ0 + 6U,
         CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_UART6_USART_IRQ_0 + UART_CLEC_GIC_SPI_IN_EVT_OFFSET,
@@ -411,13 +411,13 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
         0,
         0,
 #endif
-#if defined (BUILD_DSP_1) || defined (BUILD_DSP_2)
+#if defined (BUILD_C66X)
         (uint32_t)CSL_UART7_BASE,
         OSAL_REGINT_INTVEC_EVENT_COMBINER,
         UART_TISCI_C66X_DST_HOST_IRQ0 + 7U,
         UART_INPUT_CLK_48M,
 #endif
-#if defined (BUILD_C7X_1)
+#if defined (BUILD_C7X)
         (uint32_t)CSL_UART7_BASE,
         UART_C7X_IRQ0 + 7U,
         CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_UART7_USART_IRQ_0 + UART_CLEC_GIC_SPI_IN_EVT_OFFSET,
@@ -455,13 +455,13 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
         0,
         0,
 #endif
-#if defined (BUILD_DSP_1) || defined (BUILD_DSP_2)
+#if defined (BUILD_C66X)
         (uint32_t)CSL_UART8_BASE,
         OSAL_REGINT_INTVEC_EVENT_COMBINER,
         UART_TISCI_C66X_DST_HOST_IRQ0 + 8U,
         UART_INPUT_CLK_48M,
 #endif
-#if defined (BUILD_C7X_1)
+#if defined (BUILD_C7X)
         (uint32_t)CSL_UART8_BASE,
         UART_C7X_IRQ0 + 8U,
         CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_UART8_USART_IRQ_0 + UART_CLEC_GIC_SPI_IN_EVT_OFFSET,
@@ -499,13 +499,13 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
         0,
         0,
 #endif
-#if defined (BUILD_DSP_1) || defined (BUILD_DSP_2)
+#if defined (BUILD_C66X)
         (uint32_t)CSL_UART9_BASE,
         OSAL_REGINT_INTVEC_EVENT_COMBINER,
         UART_TISCI_C66X_DST_HOST_IRQ0 + 9U,
         UART_INPUT_CLK_48M,
 #endif
-#if defined (BUILD_C7X_1)
+#if defined (BUILD_C7X)
         (uint32_t)CSL_UART9_BASE,
         UART_C7X_IRQ0 + 9U,
         CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_UART9_USART_IRQ_0 + UART_CLEC_GIC_SPI_IN_EVT_OFFSET,
@@ -702,7 +702,7 @@ void UART_socInit(void)
 }
 #endif
 
-#if defined (BUILD_DSP_1) || defined (BUILD_DSP_2)
+#if defined (BUILD_C66X)
 static uint16_t UART_socGetSciSrcID(uint32_t baseAddr)
 {
     uint16_t srcID = UART_TISCI_INVALID_DEV_ID;
@@ -758,7 +758,7 @@ static int32_t UART_socConfigIntrPath(const void *pHwAttrs, bool setIntrPath)
 {
    int32_t ret = UART_SUCCESS;
 
-#if defined (BUILD_DSP_1) || defined (BUILD_DSP_2)
+#if defined (BUILD_C66X)
     int32_t                              retVal;
     UART_HwAttrs const                  *hwAttrs = (UART_HwAttrs const *)(pHwAttrs);
     struct tisci_msg_rm_irq_set_req      rmIrqReq;
@@ -825,7 +825,7 @@ static int32_t UART_socConfigIntrPath(const void *pHwAttrs, bool setIntrPath)
     {
        ret = UART_ERROR;
     }
-#elif defined (BUILD_C7X_1)
+#elif defined (BUILD_C7X)
     int32_t               retVal;
     UART_HwAttrs         *hwAttrs = (UART_HwAttrs *)(pHwAttrs);
     CSL_ClecEventConfig   cfgClec;

@@ -1156,7 +1156,7 @@ static int32_t Udma_eventConfig(Udma_DrvHandle drvHandle,
            (FALSE == eventHandle->eventPrms.osalRegisterDisable))
         {
             coreIntrNum = eventHandle->coreIntrNum;
-#if defined (__C7100__)
+#if defined (BUILD_C7X)
             CSL_ClecEventConfig evtCfg;
             uint32_t            clecEvtNum;
             Udma_RmInitPrms    *rmInitPrms = &drvHandle->initPrms.rmInitPrms;

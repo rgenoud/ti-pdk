@@ -52,7 +52,7 @@ typedef struct osalArch_Config_s {
 
 /* Host emulation defines _TMS320C6X which needs to be */
 #if defined (HOST_EMULATION)
-	#if defined (__C7100__)
+	#if defined (BUILD_C7X)
 		#undef _TMS320C6X
 	#endif
 #endif

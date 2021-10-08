@@ -45,7 +45,7 @@
 
 TaskHandle_t TaskP_getFreertosHandle(TaskP_Handle handle);
 
-#ifdef BUILD_C7X_1
+#ifdef BUILD_C7X
 void    Osal_appC7xPreInit(void);
 void    C7x_ConfigureTimerOutput(void);
 #endif
@@ -250,7 +250,7 @@ void ping_main(void *args)
         HwiP_Status hwiStatus;
 
         HwiP_Params_init(&hwiParams);
-#if (defined(_TMS320C6X) || defined (__C7100__))
+#if (defined(_TMS320C6X) || defined (BUILD_C7X))
         hwiParams.evtId = PING_EVT_ID;
 #endif
         hHwi = HwiP_create(PING_INT_NUM, ping_isr, &hwiParams);
@@ -307,7 +307,7 @@ void pong_main(void *args)
         HwiP_Status hwiStatus;
 
         HwiP_Params_init(&hwiParams);
-#if (defined(_TMS320C6X) || defined (__C7100__))
+#if (defined(_TMS320C6X) || defined (BUILD_C7X))
         hwiParams.evtId = PONG_EVT_ID;
 #endif
         hHwi = HwiP_create(PONG_INT_NUM, pong_isr, &hwiParams);
@@ -329,7 +329,7 @@ void task_switch_main(void *args)
     SemaphoreP_Params semParams;
     TaskP_Params      taskParams;
 
-#ifdef BUILD_C7X_1
+#ifdef BUILD_C7X
     Osal_appC7xPreInit();
     C7x_ConfigureTimerOutput();
 #endif
@@ -369,7 +369,7 @@ void task_switch_main(void *args)
     /* Drivers_close(); */
 }
 
-#if defined (__C7100__)
+#if defined (BUILD_C7X)
 extern void Osal_initMmuDefault(void);
 #include <ti/csl/csl_clec.h>
 

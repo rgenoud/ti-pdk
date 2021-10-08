@@ -43,11 +43,11 @@
 #include <xdc/std.h>
 #if defined (SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2)
 // workaround for A72 does not supported in SYS/BIOS yet
-#if defined (__C7100__)
+#if defined (BUILD_C7X)
 #ifndef BARE_METAL
 #include <ti/sysbios/family/c7x/Hwi.h>
 #endif //BARE_METAL
-#endif //__C7100__
+#endif //BUILD_C7X
 #else
 #include <xdc/cfg/global.h>
 #endif
@@ -99,7 +99,7 @@
 
 #include <ti/csl/soc.h>
 
-#if defined (__C7100__)
+#if defined (BUILD_C7X)
 #include <ti/csl/csl_clec.h>
 #include <ti/csl/arch/csl_arch.h>
 #endif
@@ -122,7 +122,7 @@ void ErrorHandler(Error_Block *eb)
 }
 #endif
 
-#if defined(BUILD_C66X_1) || defined(BUILD_C66X_2)
+#if defined(BUILD_C66X)
 /* To set C66 timer interrupts on J7ES */
 void C66xTimerInterruptInit(void);
 #if defined(SOC_J721E)
@@ -162,7 +162,7 @@ void C66xTimerInterruptInit(void);
 #endif
 #endif
 
-#ifdef __C7100__
+#ifdef BUILD_C7X
 void    Osal_appC7xPreInit(void);
 void    C7x_ConfigureTimerOutput(void);
 #endif
@@ -184,7 +184,7 @@ TimerP_Handle handle;
 #endif
 
 /* Test application stack size */
-#if defined (__C7100__)
+#if defined (BUILD_C7X)
 /* Temp workaround to avoid assertion failure: A_stackSizeTooSmall : Task stack size must be >= 16KB.
   * until the Bug PDK-7605 is resolved */
 #define APP_TSK_STACK_MAIN              (64U * 1024U)
@@ -241,7 +241,7 @@ void Board_initOSAL(void)
  */
 volatile   uint64_t gTestlocalTimeout = 0x300000U;
 
-#if (defined (SOC_AM65XX) || defined (SOC_AM64X) || defined(SOC_J721E) || defined(SOC_J7200) || defined (SOC_TPR12) || defined (SOC_AWR294X) || defined (SOC_J721S2)) && (!defined(BUILD_C66X_1))&&(!defined(BUILD_C66X_2))&&(!defined(BUILD_C7X_1))&&(!defined(BUILD_C7X_2))
+#if (defined (SOC_AM65XX) || defined (SOC_AM64X) || defined(SOC_J721E) || defined(SOC_J7200) || defined (SOC_TPR12) || defined (SOC_AWR294X) || defined (SOC_J721S2)) && (!defined(BUILD_C66X))&&(!defined(BUILD_C7X))
 #define INT_NUM_IRQ 32
 #define LOOP_CNT    100
 volatile uint64_t gFlagIRQ = 0;
@@ -321,7 +321,7 @@ bool  OSAL_core_hwi_test()
 bool OSAL_hwi_test()
 {
   bool pass = true;
-#if (defined (SOC_AM65XX) || defined (SOC_AM64X) || defined(SOC_J721E) || defined(SOC_J7200) || defined (SOC_TPR12) || defined (SOC_AWR294X) || defined (SOC_J721S2)) && (!defined(BUILD_C66X_1))&&(!defined(BUILD_C66X_2))&&(!defined(BUILD_C7X_1))&&(!defined(BUILD_C7X_2))
+#if (defined (SOC_AM65XX) || defined (SOC_AM64X) || defined(SOC_J721E) || defined(SOC_J7200) || defined (SOC_TPR12) || defined (SOC_AWR294X) || defined (SOC_J721S2)) && (!defined(BUILD_C66X))&&(!defined(BUILD_C7X))
   pass = OSAL_core_hwi_test();
 #endif
   return pass;
@@ -638,14 +638,14 @@ bool OSAL_timer_test()
 
 #if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2)
 #if !(defined(BARE_METAL) || defined(FREERTOS))
-#if defined(BUILD_C66X_1) || defined(BUILD_C66X_2) || defined(BUILD_C7X_1) || defined(BUILD_C7X_2) || defined(BUILD_MCU1_0)
+#if defined(BUILD_C66X) || defined(BUILD_C7X) || defined(BUILD_MCU1_0)
     id                  = OSAL_TEST_TIMER_ID;
 #endif
 #endif
 #endif
 #if defined(SOC_J721E)
 #if defined(FREERTOS)
-#if defined(BUILD_C66X_1) || defined(BUILD_C66X_2)
+#if defined(BUILD_C66X)
     id                  = OSAL_TEST_TIMER_ID;
 #endif
 #endif
@@ -710,7 +710,7 @@ bool OSAL_timer_test()
 #endif
 
 #if defined(SOC_J721E) || defined(SOC_J721S2)
-#if defined(__C7100__)
+#if defined(BUILD_C7X)
     timerParams.intNum     = 15;
     OSAL_log("\n set intNum=%d, id=%d,  \n", timerParams.intNum, id);
 #endif
@@ -1060,7 +1060,7 @@ uint8_t hwiPMemBlock[HWIP_BLOCK_SIZE];
 #else
 #if defined (FREERTOS)
 #define SEMP_BLOCK_SIZE (OSAL_TEST_NUM_EXT_SEMAPHORES * OSAL_FREERTOS_SEMAPHOREP_SIZE_BYTES)
-#if defined (__C7100__)
+#if defined (BUILD_C7X)
 #define HWIP_BLOCK_SIZE (OSAL_TEST_NUM_EXT_HWIPS * OSAL_FREERTOS_HWIP_C7X_SIZE_BYTES)
 #else
 #define HWIP_BLOCK_SIZE (OSAL_TEST_NUM_EXT_HWIPS * OSAL_NONOS_HWIP_SIZE_BYTES)
@@ -1932,7 +1932,7 @@ void osal_test(void *arg0, void *arg1)
 
     Board_initOSAL();
 
-#ifdef __C7100__
+#ifdef BUILD_C7X
     Osal_appC7xPreInit();
     C7x_ConfigureTimerOutput();
 #endif
@@ -1941,7 +1941,7 @@ void osal_test(void *arg0, void *arg1)
     OSAL_log("\n M4 test \n");
 #endif
 
-#if defined(BUILD_C66X_1) || defined(BUILD_C66X_2)
+#if defined(BUILD_C66X)
 /* To set C66 timer interrupts on J7ES */
     C66xTimerInterruptInit();
 #endif
@@ -2184,7 +2184,7 @@ void osal_test(void *arg0, void *arg1)
 
 }
 
-#ifdef __C7100__
+#ifdef BUILD_C7X
 void sysIdleLoop(void)
 {
    __asm(" IDLE");
@@ -2224,7 +2224,7 @@ void C7x_ConfigureTimerOutput()
 
 #endif
 
-#if defined(BUILD_C66X_1) || defined(BUILD_C66X_2)
+#if defined(BUILD_C66X)
 /* To set C66 timer interrupts on J7ES */
 void C66xTimerInterruptInit(void)
 {
@@ -2310,7 +2310,7 @@ int main(void)
     return (0);
 }
 
-#if defined(BUILD_MPU) || defined (__C7100__)
+#if defined(BUILD_MPU) || defined (BUILD_C7X)
 extern void Osal_initMmuDefault(void);
 void InitMmu(void)
 {
@@ -2320,7 +2320,7 @@ void InitMmu(void)
 
 void Osal_appC7xPreInit(void)
 {
-#if defined (__C7100__)
+#if defined (BUILD_C7X)
     CSL_ClecEventConfig cfgClec;
     CSL_CLEC_EVTRegs   *clecBaseAddr = (CSL_CLEC_EVTRegs*) CSL_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
     uint32_t            i, maxInputs = 2048U;

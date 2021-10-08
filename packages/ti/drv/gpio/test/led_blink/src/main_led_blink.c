@@ -61,7 +61,7 @@
 
 #if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_AM64X)
 #include <ti/csl/soc.h>
-#if defined (BUILD_DSP_1) || defined (BUILD_DSP_2)
+#if defined (BUILD_C66X)
 #include  "ti/csl/csl_chipAux.h"
 #endif
 #endif
@@ -74,7 +74,7 @@
 #include <ti/csl/csl_clec.h>
 #endif
 
-#if defined (__C7100__)
+#if defined (BUILD_C7X)
 #include <ti/csl/arch/csl_arch.h>
 #endif
 
@@ -243,7 +243,7 @@ void GPIO_configIntRouter(uint32_t portNum, uint32_t pinNum, uint32_t gpioIntRtr
     #if defined (BUILD_MPU)
         intCfg[pinNum].intNum = CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_WKUP_GPIOMUX_INTRTR0_OUTP_16 + bankNum;
     #endif
-    #if defined (BUILD_C7X_1)
+    #if defined (BUILD_C7X)
         intCfg[pinNum].eventId = CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_WKUP_GPIOMUX_INTRTR0_OUTP_16 + 992 + bankNum;	/* GPIO_CLEC_GIC_SPI_IN_EVT_OFFSET is 992 */
     #endif
     #if defined (BUILD_MCU)
@@ -335,7 +335,7 @@ static void Board_initGPIO(void)
 #if defined (BUILD_MCU)
 	gpio_cfg.intCfg->intNum = CSLR_MCU_R5FSS0_CORE0_INTR_WKUP_GPIOMUX_INTRTR0_OUTP_0;
 #endif
-#if defined (BUILD_C7X_1)
+#if defined (BUILD_C7X)
 	gpio_cfg.intCfg->eventId = CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_WKUP_GPIOMUX_INTRTR0_OUTP_16 + 992;
 #endif
 
@@ -344,7 +344,7 @@ static void Board_initGPIO(void)
 #ifndef BAREMETAL
 #if defined (SOC_J721E)
 /* set up C7x CLEC for DMTimer0 */
-#if defined (BUILD_C7X_1)
+#if defined (BUILD_C7X)
     CSL_ClecEventConfig   cfgClec;
     CSL_CLEC_EVTRegs     *clecBaseAddr = (CSL_CLEC_EVTRegs *)CSL_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
     uint32_t input         = CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_TIMER0_INTR_PEND_0 + 992; /* Used for Timer Interrupt */
@@ -359,7 +359,7 @@ static void Board_initGPIO(void)
 #endif /* for C7X cores */
 
 /* set up C66x Interrupt Router for DMTimer0 for C66x */
-#if defined (BUILD_DSP_1) || defined (BUILD_DSP_2)
+#if defined (BUILD_C66X)
     int32_t                              retVal;
     struct tisci_msg_rm_irq_set_req      rmIrqReq;
     struct tisci_msg_rm_irq_set_resp     rmIrqResp;
@@ -595,7 +595,7 @@ void AppGpioCallbackFxn(void)
 }
 #endif
 
-#if defined(BUILD_MPU) || defined (__C7100__)
+#if defined(BUILD_MPU) || defined (BUILD_C7X)
 extern void Osal_initMmuDefault(void);
 void InitMmu(void)
 {
@@ -605,7 +605,7 @@ void InitMmu(void)
 
 void Gpio_appC7xPreInit(void)
 {
-#if defined (__C7100__)
+#if defined (BUILD_C7X)
     CSL_ClecEventConfig cfgClec;
 	CSL_CLEC_EVTRegs   *clecBaseAddr = (CSL_CLEC_EVTRegs*) CSL_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
 

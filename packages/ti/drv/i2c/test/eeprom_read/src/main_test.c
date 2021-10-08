@@ -63,19 +63,19 @@
 
 #if defined (SOC_J721E) || defined(SOC_J7200) || defined(SOC_AM65XX) || defined(SOC_AM64X)
 #include <ti/csl/soc.h>
-#if defined (BUILD_DSP_1) || defined (BUILD_DSP_2)
+#if defined (BUILD_C66X)
 #include <ti/csl/csl_chipAux.h>
 #endif
 #include <ti/drv/sciclient/sciclient.h>
 #endif
 
-#if defined (BUILD_C7X_1)
+#if defined (BUILD_C7X)
 #include <ti/csl/csl_clec.h>
 #endif
 
 #include <ti/csl/arch/r5/csl_arm_r5.h>
 
-#if defined (__C7100__)
+#if defined (BUILD_C7X)
 #include <ti/csl/arch/csl_arch.h>
 #endif
 
@@ -251,7 +251,7 @@ bool Board_initI2C(void)
 #ifndef BAREMETAL 
 #if defined (SOC_J721E)
 /* set up C7x CLEC for DMTimer0 */
-#if defined (BUILD_C7X_1)
+#if defined (BUILD_C7X)
     CSL_ClecEventConfig   cfgClec;
     CSL_CLEC_EVTRegs     *clecBaseAddr = (CSL_CLEC_EVTRegs *)CSL_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
     uint32_t input         = CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_TIMER0_INTR_PEND_0 + 992; /* Used for Timer Interrupt */
@@ -266,7 +266,7 @@ bool Board_initI2C(void)
 #endif /* for C7X cores */
 
 /* set up C66x Interrupt Router for DMTimer0 for C66x */
-#if defined (BUILD_DSP_1) || defined (BUILD_DSP_2)
+#if defined (BUILD_C66X)
     int32_t                              retVal;
     struct tisci_msg_rm_irq_set_req      rmIrqReq;
     struct tisci_msg_rm_irq_set_resp     rmIrqResp;
@@ -352,7 +352,7 @@ static void I2C_initConfig(uint32_t instance, I2C_Tests *test)
     I2C_socGetInitCfg(instance, &i2c_cfg);
 
 #if defined (SOC_J721E)
-#if defined (BUILD_DSP_1) || defined (BUILD_DSP_2)
+#if defined (BUILD_C66X)
     /*
      * There is no interrupt routing supported in sciclient to
      * route wakeup domain I2C0 interrupt to C66x cores due to
@@ -969,7 +969,7 @@ int main(void)
 }
 #endif /* #ifdef RTOS_ENV */
 
-#if defined(BUILD_MPU) || defined (__C7100__)
+#if defined(BUILD_MPU) || defined (BUILD_C7X)
 extern void Osal_initMmuDefault(void);
 void InitMmu(void)
 {
@@ -979,7 +979,7 @@ void InitMmu(void)
 
 void I2c_appC7xPreInit(void)
 {
-#if defined (__C7100__)
+#if defined (BUILD_C7X)
     CSL_ClecEventConfig cfgClec;
 	CSL_CLEC_EVTRegs   *clecBaseAddr = (CSL_CLEC_EVTRegs*) CSL_COMPUTE_CLUSTER0_CLEC_REGS_BASE;   
     uint32_t            i, maxInputs = 2048U;

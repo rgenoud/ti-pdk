@@ -1275,23 +1275,23 @@ endif
 
 ifeq ($(CORE),$(filter $(CORE), c66x c66xdsp_1 c66xdsp_2))
   ifeq ($(CORE),$(filter $(CORE), c66xdsp_1))
-    PDK_CFLAGS += -DBUILD_DSP_1 -DBUILD_C66X_1
-    PDK_LNKFLAGS += --define=BUILD_DSP_1 --define=BUILD_C66X_1
+    PDK_CFLAGS += -DBUILD_DSP_1 -DBUILD_C66X_1  -DBUILD_C66X
+    PDK_LNKFLAGS += --define=BUILD_DSP_1 --define=BUILD_C66X_1 --define=BUILD_C66X
   endif
   ifeq ($(CORE),$(filter $(CORE), c66xdsp_2))
-    PDK_CFLAGS += -DBUILD_DSP_2 -DBUILD_C66X_2
-    PDK_LNKFLAGS += --define=BUILD_DSP_2 --define=BUILD_C66X_2
+    PDK_CFLAGS += -DBUILD_DSP_2 -DBUILD_C66X_2 -DBUILD_C66X
+    PDK_LNKFLAGS += --define=BUILD_DSP_2 --define=BUILD_C66X_2 --define=BUILD_C66X
   endif
 endif
 
 ifeq ($(CORE),$(filter $(CORE), c7x_1 c7x-hostemu))
-  PDK_CFLAGS += -DBUILD_C7X_1
-  PDK_LNKFLAGS += --define=BUILD_C7X_1
+  PDK_CFLAGS += -DBUILD_C7X_1 -DBUILD_C7X
+  PDK_LNKFLAGS += --define=BUILD_C7X_1 --define=BUILD_C7X
 endif
 
 ifeq ($(CORE),$(filter $(CORE), c7x_2))
-  PDK_CFLAGS += -DBUILD_C7X_2
-  PDK_LNKFLAGS += --define=BUILD_C7X_2
+  PDK_CFLAGS += -DBUILD_C7X_2 -DBUILD_C7X
+  PDK_LNKFLAGS += --define=BUILD_C7X_2 --define=BUILD_C7X
 endif
 
 ifeq ($(CORE),$(filter $(CORE), qnx_mpu1_0))

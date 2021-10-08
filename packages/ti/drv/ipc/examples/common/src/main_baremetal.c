@@ -86,7 +86,7 @@ void ipc_initSciclient()
     /* Now reinitialize it as default parameter */
     Sciclient_configPrmsInit(&config);
 
-#if defined(BUILD_MPU1_0) || defined(BUILD_C7X_1)
+#if defined(BUILD_MPU1_0) || defined(BUILD_C7X)
     config.opModeFlag  = SCICLIENT_SERVICE_OPERATION_MODE_POLLED;
 #endif
 

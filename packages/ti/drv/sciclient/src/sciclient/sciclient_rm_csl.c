@@ -512,7 +512,7 @@ int32_t Sciclient_rmIrqSet(const struct tisci_msg_rm_irq_set_req *req,
            (TISCI_DEV_C66SS1 == req->dst_id))
         {
             //TODO: Hack till proper core support in TISCI
-#if defined (BUILD_C66X_1) || defined (BUILD_C66X_2)
+#if defined (BUILD_C66X)
             CSL_IntrRouterCfg       c66xIrRegs;
             uint32_t                c66xIrOffset;
 
@@ -766,7 +766,7 @@ int32_t Sciclient_rmIrqRelease(const struct tisci_msg_rm_irq_release_req *req,
         if((TISCI_DEV_C66SS0 == req->dst_id) ||
            (TISCI_DEV_C66SS1 == req->dst_id))
         {
-#if defined (BUILD_C66X_1) || defined (BUILD_C66X_2)
+#if defined (BUILD_C66X)
             CSL_IntrRouterCfg       c66xIrRegs;
             uint32_t                c66xIrOffset;
 

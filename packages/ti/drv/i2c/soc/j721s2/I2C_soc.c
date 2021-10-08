@@ -44,7 +44,7 @@
 #include <ti/csl/arch/r5/csl_arm_r5.h>
 #include <ti/csl/soc.h>
 #include <ti/csl/csl_clec.h>
-#if defined (BUILD_DSP_1) || defined (BUILD_DSP_2)
+#if defined (BUILD_C66X)
 #include <ti/csl/csl_chipAux.h>
 #endif
 #include <ti/drv/i2c/I2C.h>
@@ -65,7 +65,7 @@
 /* C7x INTC int # for I2C0 */
 #define I2C_C7X_IRQ0                   (30U)
 
-#if defined (BUILD_DSP_1) || defined (BUILD_DSP_2)
+#if defined (BUILD_C66X)
 static uint16_t I2C_socGetSciSrcID(uint32_t baseAddr);
 #endif
 
@@ -92,13 +92,13 @@ I2C_HwAttrs i2cInitCfg[I2C_HWIP_MAX_CNT] =
         CSLR_MCU_R5FSS0_CORE0_INTR_MCU_I2C0_POINTRPEND_0,
         0,                                  /* eventId */
 #endif
-#if defined (BUILD_DSP_1) || defined (BUILD_DSP_2)
+#if defined (BUILD_C66X)
         /* default configuration for I2C instance and DSP core on Main domain*/
         (uint32_t)CSL_I2C0_CFG_BASE,        /* baseAddr */
         OSAL_REGINT_INTVEC_EVENT_COMBINER,  /* intNum, use event combiner for C66x INTC */
         I2C_TISCI_C66X_DST_HOST_IRQ0,       /* eventId, DMSC dest event, input to C66x INTC */
 #endif
-#if defined (BUILD_C7X_1)
+#if defined (BUILD_C7X)
         /* default configuration for I2C instance and DSP core on Main domain*/
         (uint32_t)CSL_I2C0_CFG_BASE,       /* baseAddr */
         I2C_C7X_IRQ0,                      /* intNum */
@@ -123,13 +123,13 @@ I2C_HwAttrs i2cInitCfg[I2C_HWIP_MAX_CNT] =
         CSLR_MCU_R5FSS0_CORE0_INTR_MCU_I2C1_POINTRPEND_0,
         0,
 #endif
-#if defined (BUILD_DSP_1) || defined (BUILD_DSP_2)
+#if defined (BUILD_C66X)
         /* default configuration for I2C instance and DSP core on Main domain*/
         (uint32_t)CSL_I2C1_CFG_BASE,        /* baseAddr */
         OSAL_REGINT_INTVEC_EVENT_COMBINER,  /* intNum, use event combiner for C66x INTC */
         I2C_TISCI_C66X_DST_HOST_IRQ0 + 1U,  /* eventId, DMSC dest event, input to C66x INTC */
 #endif
-#if defined (BUILD_C7X_1)
+#if defined (BUILD_C7X)
         /* default configuration for I2C instance and DSP core on Main domain*/
         (uint32_t)CSL_I2C1_CFG_BASE,        /* baseAddr */
         I2C_C7X_IRQ0 + 1,                   /* intNum */
@@ -153,13 +153,13 @@ I2C_HwAttrs i2cInitCfg[I2C_HWIP_MAX_CNT] =
         0,
         0,
 #endif
-#if defined (BUILD_DSP_1) || defined (BUILD_DSP_2)
+#if defined (BUILD_C66X)
         /* default configuration for I2C instance and DSP core on Main domain*/
         (uint32_t)CSL_I2C2_CFG_BASE,        /* baseAddr */
         OSAL_REGINT_INTVEC_EVENT_COMBINER,  /* intNum, use event combiner for C66x INTC */
         I2C_TISCI_C66X_DST_HOST_IRQ0 + 2U,  /* eventId, DMSC dest event, input to C66x INTC */
 #endif
-#if defined (BUILD_C7X_1)
+#if defined (BUILD_C7X)
         /* default configuration for I2C instance and DSP core on Main domain*/
         (uint32_t)CSL_I2C2_CFG_BASE,        /* baseAddr */
         I2C_C7X_IRQ0 + 2,                   /* intNum */
@@ -183,13 +183,13 @@ I2C_HwAttrs i2cInitCfg[I2C_HWIP_MAX_CNT] =
         0,
         0,
 #endif
-#if defined (BUILD_DSP_1) || defined (BUILD_DSP_2)
+#if defined (BUILD_C66X)
         /* default configuration for I2C instance and DSP core on Main domain*/
         (uint32_t)CSL_I2C3_CFG_BASE,        /* baseAddr */
         OSAL_REGINT_INTVEC_EVENT_COMBINER,  /* intNum, use event combiner for C66x INTC */
         I2C_TISCI_C66X_DST_HOST_IRQ0 + 3U,  /* eventId, DMSC dest event, input to C66x INTC */
 #endif
-#if defined (BUILD_C7X_1)
+#if defined (BUILD_C7X)
         /* default configuration for I2C instance and DSP core on Main domain*/
         (uint32_t)CSL_I2C3_CFG_BASE,        /* baseAddr */
         I2C_C7X_IRQ0 + 3,                   /* intNum */
@@ -213,13 +213,13 @@ I2C_HwAttrs i2cInitCfg[I2C_HWIP_MAX_CNT] =
         0,
         0,
 #endif
-#if defined (BUILD_DSP_1) || defined (BUILD_DSP_2)
+#if defined (BUILD_C66X)
         /* default configuration for I2C instance and DSP core on Main domain*/
         (uint32_t)CSL_I2C4_CFG_BASE,        /* baseAddr */
         OSAL_REGINT_INTVEC_EVENT_COMBINER,  /* intNum, use event combiner for C66x INTC */
         I2C_TISCI_C66X_DST_HOST_IRQ0 + 4U,  /* eventId, DMSC dest event, input to C66x INTC */
 #endif
-#if defined (BUILD_C7X_1)
+#if defined (BUILD_C7X)
         /* default configuration for I2C instance and DSP core on Main domain*/
         (uint32_t)CSL_I2C4_CFG_BASE,        /* baseAddr */
         I2C_C7X_IRQ0 + 4,                   /* intNum */
@@ -243,13 +243,13 @@ I2C_HwAttrs i2cInitCfg[I2C_HWIP_MAX_CNT] =
         0,
         0,
 #endif
-#if defined (BUILD_DSP_1) || defined (BUILD_DSP_2)
+#if defined (BUILD_C66X)
         /* default configuration for I2C instance and DSP core on Main domain*/
         (uint32_t)CSL_I2C5_CFG_BASE,        /* baseAddr */
         OSAL_REGINT_INTVEC_EVENT_COMBINER,  /* intNum, use event combiner for C66x INTC */
         I2C_TISCI_C66X_DST_HOST_IRQ0 + 5U,  /* eventId, DMSC dest event, input to C66x INTC */
 #endif
-#if defined (BUILD_C7X_1)
+#if defined (BUILD_C7X)
         /* default configuration for I2C instance and DSP core on Main domain*/
         (uint32_t)CSL_I2C5_CFG_BASE,        /* baseAddr */
         I2C_C7X_IRQ0 + 5,                   /* intNum */
@@ -273,13 +273,13 @@ I2C_HwAttrs i2cInitCfg[I2C_HWIP_MAX_CNT] =
         0,
         0,
 #endif
-#if defined (BUILD_DSP_1) || defined (BUILD_DSP_2)
+#if defined (BUILD_C66X)
         /* default configuration for I2C instance and DSP core on Main domain*/
         (uint32_t)CSL_I2C6_CFG_BASE,        /* baseAddr */
         OSAL_REGINT_INTVEC_EVENT_COMBINER,  /* intNum, use event combiner for C66x INTC */
         I2C_TISCI_C66X_DST_HOST_IRQ0 + 6U,  /* eventId, DMSC dest event, input to C66x INTC */
 #endif
-#if defined (BUILD_C7X_1)
+#if defined (BUILD_C7X)
         /* default configuration for I2C instance and DSP core on Main domain*/
         (uint32_t)CSL_I2C6_CFG_BASE,        /* baseAddr */
         I2C_C7X_IRQ0 + 6,                   /* intNum */
@@ -558,7 +558,7 @@ static int32_t I2C_configSocIntrPath(const void *pHwAttrs, bool setIntrPath)
             }
         }
     }
-#elif defined (BUILD_DSP_1) || defined (BUILD_DSP_2)
+#elif defined (BUILD_C66X)
     int32_t                              retVal;
     I2C_HwAttrs const                   *hwAttrs = (I2C_HwAttrs const *)(pHwAttrs);
     struct tisci_msg_rm_irq_set_req      rmIrqReq;
@@ -626,7 +626,7 @@ static int32_t I2C_configSocIntrPath(const void *pHwAttrs, bool setIntrPath)
     {
        ret = I2C_STATUS_ERROR;
     }
-#elif defined (BUILD_C7X_1)
+#elif defined (BUILD_C7X)
     int32_t               retVal;
     I2C_HwAttrs const    *hwAttrs = (I2C_HwAttrs const *)(pHwAttrs);
     CSL_ClecEventConfig   cfgClec;
@@ -651,7 +651,7 @@ static int32_t I2C_configSocIntrPath(const void *pHwAttrs, bool setIntrPath)
     return(ret);
 }
 
-#if defined (BUILD_DSP_1) || defined (BUILD_DSP_2)
+#if defined (BUILD_C66X)
 static uint16_t I2C_socGetSciSrcID(uint32_t baseAddr)
 {
     uint16_t srcID = I2C_TISCI_INVALID_DEV_ID;

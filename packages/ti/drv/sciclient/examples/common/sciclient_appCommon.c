@@ -52,7 +52,7 @@
 #include <ti/drv/uart/UART.h>
 #include <ti/drv/uart/UART_stdio.h>
 #include <ti/board/board.h>
-#if defined (__C7100__)
+#if defined (BUILD_C7X)
 #include <ti/csl/csl_clec.h>
 #include <ti/csl/arch/csl_arch.h>
 #endif
@@ -580,7 +580,7 @@ uint32_t App_sciclientConsolePuts(char *pTxBuffer,
 
 void App_SciclientC7xPreInit(void)
 {
-#if defined (__C7100__)
+#if defined (BUILD_C7X)
     CSL_ClecEventConfig cfgClec;
     CSL_CLEC_EVTRegs   *clecBaseAddr = (CSL_CLEC_EVTRegs*) CSL_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
     uint32_t            i, maxInputs = 2048U;

@@ -2305,8 +2305,8 @@ int32_t UdmaRmInitPrms_init(uint32_t instId, Udma_RmInitPrms *rmInitPrms)
         }
     #endif
 
-    #if defined (__C7100__) || defined (_TMS320C6X)
-    #if defined (__C7100__)
+    #if defined (BUILD_C7X) || defined (_TMS320C6X)
+    #if defined (BUILD_C7X)
         /* Start C7x Core Interrupt */
         rmInitPrms->startC7xCoreIntr                        = UDMA_C7X_CORE_INTR_OFFSET;
     #endif
@@ -2325,7 +2325,7 @@ int32_t UdmaRmInitPrms_init(uint32_t instId, Udma_RmInitPrms *rmInitPrms)
                                                    rmDefBoardCfgResp[UDMA_RM_RES_ID_IR_INTR].rangeNum,
                                                    &start,
                                                    &offset);
-        #if defined (__C7100__)
+        #if defined (BUILD_C7X)
             rmInitPrms->startC7xCoreIntr                   +=  offset;  
         #endif
         #if defined (_TMS320C6X)

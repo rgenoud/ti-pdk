@@ -339,7 +339,7 @@ int32_t Ospi_udma_deinit(void)
 
 #if defined(OSPI_TESTAPP_RTOS)
 
-#if defined(BUILD_MPU) || defined (__C7100__)
+#if defined(BUILD_MPU) || defined (BUILD_C7X)
 extern void Osal_initMmuDefault(void);
 void InitMmu(void)
 {

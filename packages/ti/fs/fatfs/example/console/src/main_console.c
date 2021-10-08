@@ -344,7 +344,7 @@ void fatfs_console(void* a0, void* a1)
 
 
 #ifndef BARE_METAL
-#if (defined(SOC_AM65XX) || defined(SOC_J721E) || defined (SOC_J7200) || defined (SOC_AM64X)) && (defined(BUILD_MPU) || defined (__C7100__))
+#if (defined(SOC_AM65XX) || defined(SOC_J721E) || defined (SOC_J7200) || defined (SOC_AM64X)) && (defined(BUILD_MPU) || defined (BUILD_C7X))
 extern void Osal_initMmuDefault(void);
 void InitMmu(void)
 {

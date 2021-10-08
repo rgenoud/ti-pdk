@@ -378,7 +378,7 @@ int32_t Sciclient_init(const Sciclient_ConfigPrms_t *pCfgPrms)
                 intrPrms.corepacConfig.corepacEventNum  = 0;
                 intrPrms.corepacConfig.intVecNum        = (int32_t) gSciclientMap[contextId].respIntrNum;
                 #endif
-                #if defined (__C7100__)
+                #if defined (BUILD_C7X)
                 {
                     CSL_CLEC_EVTRegs * regs = (CSL_CLEC_EVTRegs *) CSL_COMPUTE_CLUSTER0_CLEC_BASE;
                     CSL_ClecEventConfig evtCfg;
@@ -442,7 +442,7 @@ int32_t Sciclient_init(const Sciclient_ConfigPrms_t *pCfgPrms)
                 intrPrms.corepacConfig.corepacEventNum  = 0;
                 intrPrms.corepacConfig.intVecNum        = (int32_t) gSciclientMap[contextId].respIntrNum;
                 #endif
-                #if defined (__C7100__)
+                #if defined (BUILD_C7X)
                 {
                     CSL_CLEC_EVTRegs * regs = (CSL_CLEC_EVTRegs *) CSL_COMPUTE_CLUSTER0_CLEC_BASE;
                     CSL_ClecEventConfig evtCfg;
@@ -968,7 +968,7 @@ int32_t Sciclient_serviceSecureProxy(const Sciclient_ReqPrm_t *pReqPrm,
         Osal_EnableInterrupt((int32_t) gSciclientMap[contextId].respIntrNum, OSAL_REGINT_INTVEC_EVENT_COMBINER);
         #else
 
-        #if defined (__C7100__)
+        #if defined (BUILD_C7X)
         {
             CSL_CLEC_EVTRegs * regs = (CSL_CLEC_EVTRegs *) CSL_COMPUTE_CLUSTER0_CLEC_BASE;
             CSL_ClecEventConfig evtCfg;
@@ -1150,7 +1150,7 @@ static void Sciclient_ISR(uintptr_t arg)
             #else
 #ifndef QNX_OS
             Osal_DisableInterrupt(0, (int32_t) gSciclientMap[contextId].respIntrNum);
-            #if defined (__C7100__)
+            #if defined (BUILD_C7X)
             {
                 CSL_CLEC_EVTRegs * regs = (CSL_CLEC_EVTRegs *) CSL_COMPUTE_CLUSTER0_CLEC_BASE;
                 CSL_ClecEventConfig evtCfg;

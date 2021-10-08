@@ -805,7 +805,7 @@ static UART_Handle UART_open_v1(UART_Handle handle, const UART_Params *params)
 #ifdef __TI_ARM_V7R4__
             interruptRegParams.corepacConfig.priority=0x8U;
 #else
-#ifdef __C7100__
+#ifdef BUILD_C7X
             interruptRegParams.corepacConfig.priority=0x01U;
 #else
             interruptRegParams.corepacConfig.priority=0x20U;

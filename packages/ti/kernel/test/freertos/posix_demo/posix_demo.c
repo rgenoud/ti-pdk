@@ -197,7 +197,7 @@ typedef struct DispatcherThreadResources
 /**@} */
 
 /*-----------------------------------------------------------*/
-#ifdef BUILD_C7X_1
+#ifdef BUILD_C7X
 void    Osal_appC7xPreInit(void);
 void    C7x_ConfigureTimerOutput(void);
 #endif
@@ -327,7 +327,7 @@ void posix_demo_main( void *pvParameters )
 
 	/* Remove warnings about unused parameters. */
     ( void ) pvParameters;
-#ifdef BUILD_C7X_1
+#ifdef BUILD_C7X
     Osal_appC7xPreInit();
     C7x_ConfigureTimerOutput();
 #endif
@@ -450,7 +450,7 @@ void posix_demo_main( void *pvParameters )
     /* Drivers_close(); */
 }
 
-#if defined (__C7100__)
+#if defined (BUILD_C7X)
 extern void Osal_initMmuDefault(void);
 #include <ti/csl/csl_clec.h>
 

@@ -464,7 +464,7 @@ const char* Ipc_getCoreName(uint32_t procId)
     return p;
 }
 
-#if defined(BUILD_C7X_1) || defined(BUILD_C7X_2)
+#if defined(BUILD_C7X)
 void Ipc_configClecRouter(uint32_t corePackEvent)
 {
     uint32_t              input;
@@ -702,7 +702,7 @@ uint32_t Ipc_isCacheCoherent(void)
 {
     uint32_t isCacheCoherent;
 
-#if defined (BUILD_MPU1_0) || defined (BUILD_C7X_1) || defined (BUILD_C7X_2)
+#if defined (BUILD_MPU1_0) || defined(BUILD_C7X)
     isCacheCoherent = TRUE;
 #else
     isCacheCoherent = FALSE;

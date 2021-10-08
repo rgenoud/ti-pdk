@@ -70,7 +70,7 @@
 #include <ti/csl/csl_clec.h>
 #endif
 
-#if defined (__C7100__)
+#if defined (BUILD_C7X)
 #include <ti/csl/arch/csl_arch.h>
 #endif
 
@@ -480,7 +480,7 @@ bool Board_initUART(void)
 #ifndef BAREMETAL
 #if defined (SOC_J721E) || defined(SOC_J721S2)
 /* set up C7x CLEC for DMTimer0 */
-#if defined (__C7100__)
+#if defined (BUILD_C7X)
     CSL_ClecEventConfig   cfgClec;
 #if defined (SOC_J721E)
     CSL_CLEC_EVTRegs     *clecBaseAddr = (CSL_CLEC_EVTRegs*)CSL_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
@@ -501,7 +501,7 @@ bool Board_initUART(void)
 
 #if defined (SOC_J721E)
 /* set up C66x Interrupt Router for DMTimer0 for C66x */
-#if defined (BUILD_DSP_1) || defined (BUILD_DSP_2)
+#if defined (BUILD_C66X)
     int32_t                               retVal;
     struct tisci_msg_rm_irq_set_req      rmIrqReq;
     struct tisci_msg_rm_irq_set_resp     rmIrqResp;
@@ -1017,11 +1017,11 @@ Err:
 
 #if !defined(UART_API2_NOT_SUPPORTED)
 #if !defined(BAREMETAL)
-#if defined (__C7100__)
+#if defined (BUILD_C7X)
 #define APP_TSK_STACK_WRITE              (32U * 1024U)
 #else
 #define APP_TSK_STACK_WRITE              (8U * 1024U)
-#endif /* #if defined (__C7100__) */
+#endif /* #if defined (BUILD_C7X) */
 static uint8_t  gAppTskStackWrite[APP_TSK_STACK_WRITE] __attribute__((aligned(32)));
 /* Use a global variable to sync the read task and the write task */
 volatile bool taskSyncFlag;
@@ -3298,7 +3298,7 @@ int main(void)
 }
 
 #if !defined(BAREMETAL)
-#if defined (__C7100__)
+#if defined (BUILD_C7X)
 #define APP_TSK_STACK_MAIN              (32U * 1024U)
 #else
 #define APP_TSK_STACK_MAIN              (16U * 1024U)
@@ -3497,7 +3497,7 @@ static EDMA_Handle UartApp_edmaInit(void)
 #endif /* SOC_TPR12 */
 #endif
 
-#if defined(BUILD_MPU) || defined (__C7100__)
+#if defined(BUILD_MPU) || defined (BUILD_C7X)
 extern void Osal_initMmuDefault(void);
 void InitMmu(void)
 {
@@ -3507,7 +3507,7 @@ void InitMmu(void)
 
 void Uart_appC7xPreInit(void)
 {
-#if defined (__C7100__) && !defined (SOC_J7200)
+#if defined (BUILD_C7X)
     CSL_ClecEventConfig cfgClec;
 	CSL_CLEC_EVTRegs   *clecBaseAddr = (CSL_CLEC_EVTRegs*) CSL_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
 

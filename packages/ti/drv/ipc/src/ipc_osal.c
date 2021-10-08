@@ -174,7 +174,7 @@ void *Mailbox_plugInterrupt(Ipc_MbConfig *cfg, Ipc_OsalIsrFxn func, uintptr_t ar
 
 
     /* Configure C66x Interrupt Router now */
-#if defined(BUILD_C66X_1) || defined(BUILD_C66X_2)
+#if defined(BUILD_C66X)
     Ipc_configC66xIntrRouter(cfg->eventId );
 #endif
 
@@ -196,7 +196,7 @@ void *Mailbox_plugInterrupt(Ipc_MbConfig *cfg, Ipc_OsalIsrFxn func, uintptr_t ar
     intrPrms.corepacConfig.isrRoutine       = func;
     intrPrms.corepacConfig.priority         = cfg->priority;
 
-#if defined(BUILD_C66X_1) || defined(BUILD_C66X_2)
+#if defined(BUILD_C66X)
     intrPrms.corepacConfig.corepacEventNum  = cfg->eventId;
     intrPrms.corepacConfig.intVecNum        = OSAL_REGINT_INTVEC_EVENT_COMBINER;
 #else

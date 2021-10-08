@@ -171,11 +171,11 @@ extern "C" {
 /*                          Function Declarations                             */
 /* ========================================================================== */
 
-#if defined(BUILD_C66X_1) || defined(BUILD_C66X_2)
+#if defined(BUILD_C66X)
 void Ipc_configC66xIntrRouter(uint32_t input);
 #endif
 
-#if defined(BUILD_C7X_1)
+#if defined(BUILD_C7X)
 void Ipc_configClecRouter(uint32_t coreEvent);
 #endif
 

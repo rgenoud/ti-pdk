@@ -51,7 +51,7 @@
 
 #include "ipc_utils.h"
 #include <ti/csl/csl_types.h>
-#if defined (__C7100__)
+#if defined (BUILD_C7X)
 #include <ti/csl/soc.h>
 #include <ti/csl/csl_clec.h>
 #include <ti/csl/arch/csl_arch.h>
@@ -182,7 +182,7 @@ void ipc_boardInit()
 }
 #endif
 
-#if defined (__C7100__)
+#if defined (BUILD_C7X)
 /* To set C71 timer interrupts */
 void ipc_timerInterruptInit(void)
 {
@@ -305,7 +305,7 @@ static void taskFxn(void* a0, void* a1)
     ipc_boardInit();
 #endif
 
-#if defined (__C7100__) ||  defined (_TMS320C6X)
+#if defined (BUILD_C7X) ||  defined (_TMS320C6X)
     ipc_timerInterruptInit();
 #endif
 
@@ -320,7 +320,7 @@ static void taskFxn(void* a0, void* a1)
 #endif
 }
 
-#if defined(__C7100__)
+#if defined(BUILD_C7X)
 /* The C7x CLEC should be programmed to allow config/re config either in secure
  * OR non secure mode. This function configures all inputs to given level
  *

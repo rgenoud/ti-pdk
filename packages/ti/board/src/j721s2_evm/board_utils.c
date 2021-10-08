@@ -278,8 +278,6 @@ uint32_t Board_getSocDomain(void)
     socDomain = BOARD_SOC_DOMAIN_MAIN;
 #elif defined (BUILD_C7X_1) || defined (BUILD_C7X_2)
     socDomain = BOARD_SOC_DOMAIN_MAIN;
-#elif defined (BUILD_C66X_1) || defined (BUILD_C66X_2)
-    socDomain = BOARD_SOC_DOMAIN_MAIN;
 #elif defined (BUILD_MCU1_0) || defined (BUILD_MCU1_1)
     socDomain = BOARD_SOC_DOMAIN_MCU;
 #else

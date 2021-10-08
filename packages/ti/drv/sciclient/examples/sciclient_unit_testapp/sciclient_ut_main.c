@@ -55,7 +55,7 @@
 #include <ti/drv/sciclient/examples/common/sciclient_appCommon.h>
 
 #include <ti/drv/sciclient/examples/sciclient_unit_testapp/sciclient_ut_tests.h>
-#if defined (__C7100__)
+#if defined (BUILD_C7X)
 #include <ti/csl/csl_clec.h>
 #endif
 
@@ -118,7 +118,7 @@ int main(void)
     App_SciclientC7xPreInit();
 
     uint32_t retVal = CSL_PASS;
-    #if defined (__C7100__)
+    #if defined (BUILD_C7X)
     /* 256 CLEC interrupt number mapped to interrupt number 14 from BIOS for
      * timer.
      */
@@ -767,7 +767,7 @@ static int32_t App_tifs2dmMsgForwardingTest(void)
 }
 #endif
 
-#if defined(BUILD_MPU) || defined (__C7100__)
+#if defined(BUILD_MPU) || defined (BUILD_C7X)
 extern void Osal_initMmuDefault(void);
 void InitMmu(void)
 {

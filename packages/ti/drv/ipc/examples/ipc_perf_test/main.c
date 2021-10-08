@@ -65,7 +65,7 @@
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-#ifdef BUILD_C7X_1
+#ifdef BUILD_C7X
 /* Test application stack size */
 #define APP_TSK_STACK_MAIN              (32U * 1024U)
 #else
@@ -153,7 +153,7 @@ int main(void)
     /* Initialize SCI Client Server */
     Ipc_setupSciServer();
 
-#if defined (__C7100__) 
+#if defined (BUILD_C7X) 
     Ipc_appC7xIntrConfig();
 #endif
 
@@ -195,7 +195,7 @@ static void taskFxn(void* a0, void* a1)
     return;
 }
 
-#if defined(BUILD_MPU) || defined (__C7100__)
+#if defined(BUILD_MPU) || defined (BUILD_C7X)
 extern void Osal_initMmuDefault(void);
 void InitMmu(void)
 {
