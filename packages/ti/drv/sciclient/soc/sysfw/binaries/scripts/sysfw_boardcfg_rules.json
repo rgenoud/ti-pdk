@@ -2260,7 +2260,7 @@
                         "name": "RESASG_UTYPE(J721S2_DEV_NAVSS0_INTR_0, RESASG_SUBTYPE_IR_OUTPUT)",
                         "type": 14528,
                         "start_resource": 10,
-                        "num_resource": 178
+                        "num_resource": 174
                     },
                     {
                         "name": "RESASG_UTYPE(J721S2_DEV_NAVSS0_INTR_0, RESASG_SUBTYPE_IR_OUTPUT)",
@@ -2422,7 +2422,7 @@
                         "name": "RESASG_UTYPE(J721S2_DEV_NAVSS0_UDMAP_0, RESASG_SUBTYPE_UDMAP_RX_CHAN)",
                         "type": 16842,
                         "start_resource": 6,
-                        "num_resource": 79
+                        "num_resource": 76
                     },
                     {
                         "name": "RESASG_UTYPE(J721S2_DEV_NAVSS0_UDMAP_0, RESASG_SUBTYPE_UDMAP_RX_HCHAN)",
@@ -2463,14 +2463,14 @@
                     {
                         "name": "RESASG_UTYPE(J721S2_DEV_NAVSS0_UDMASS_INTA_0, RESASG_SUBTYPE_IA_VINT)",
                         "type": 16970,
-                        "start_resource": 38,
-                        "num_resource": 218
+                        "start_resource": 34,
+                        "num_resource": 222
                     },
                     {
                         "name": "RESASG_UTYPE(J721S2_DEV_NAVSS0_UDMASS_INTA_0, RESASG_SUBTYPE_GLOBAL_EVENT_SEVT)",
                         "type": 16973,
-                        "start_resource": 38,
-                        "num_resource": 4570
+                        "start_resource": 34,
+                        "num_resource": 4574
                     },
                     {
                         "name": "RESASG_UTYPE(J721S2_DEV_NAVSS0_UDMASS_INTA_0, RESASG_SUBTYPE_IA_BCDMA_TX_CHAN_ERROR_OES)",
@@ -2512,7 +2512,7 @@
                         "name": "RESASG_UTYPE(J721S2_DEV_MCU_NAVSS0_INTR_ROUTER_0, RESASG_SUBTYPE_IR_OUTPUT)",
                         "type": 17152,
                         "start_resource": 12,
-                        "num_resource": 20
+                        "num_resource": 12
                     },
                     {
                         "name": "RESASG_UTYPE(J721S2_DEV_MCU_NAVSS0_INTR_ROUTER_0, RESASG_SUBTYPE_IR_OUTPUT)",
@@ -2625,14 +2625,14 @@
                     {
                         "name": "RESASG_UTYPE(J721S2_DEV_MCU_NAVSS0_UDMASS_INTA_0, RESASG_SUBTYPE_IA_VINT)",
                         "type": 17610,
-                        "start_resource": 16,
-                        "num_resource": 240
+                        "start_resource": 22,
+                        "num_resource": 234
                     },
                     {
                         "name": "RESASG_UTYPE(J721S2_DEV_MCU_NAVSS0_UDMASS_INTA_0, RESASG_SUBTYPE_GLOBAL_EVENT_SEVT)",
                         "type": 17613,
-                        "start_resource": 16400,
-                        "num_resource": 1520
+                        "start_resource": 16406,
+                        "num_resource": 1514
                     },
                     {
                         "name": "RESASG_UTYPE(J721S2_DEV_MCU_SA3_SS0_INTAGGR_0, RESASG_SUBTYPE_IA_VINT)",

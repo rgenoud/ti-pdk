@@ -158,7 +158,7 @@ __attribute__(( aligned(128), section(".boardcfg_data") )) =
 		{
 			.type = TISCI_RESASG_UTYPE(TISCI_DEV_NAVSS0_INTR_0, TISCI_RESASG_SUBTYPE_IR_OUTPUT),
 			.start_resource = 10U,
-			.num_resource = 178U,
+			.num_resource = 174U,
 			.host_id = TISCI_HOST_ID_MCU_0_R5_0,
 		},
 		{
@@ -290,7 +290,7 @@ __attribute__(( aligned(128), section(".boardcfg_data") )) =
 		{
 			.type = TISCI_RESASG_UTYPE(TISCI_DEV_NAVSS0_UDMAP_0, TISCI_RESASG_SUBTYPE_UDMAP_RX_CHAN),
 			.start_resource = 6U,
-			.num_resource = 79U,
+			.num_resource = 76U,
 			.host_id = TISCI_HOST_ID_MCU_0_R5_0,
 		},
 		{
@@ -331,14 +331,14 @@ __attribute__(( aligned(128), section(".boardcfg_data") )) =
 		},
 		{
 			.type = TISCI_RESASG_UTYPE(TISCI_DEV_NAVSS0_UDMASS_INTA_0, TISCI_RESASG_SUBTYPE_IA_VINT),
-			.start_resource = 38U,
-			.num_resource = 218U,
+			.start_resource = 34U,
+			.num_resource = 222U,
 			.host_id = TISCI_HOST_ID_MCU_0_R5_0,
 		},
 		{
 			.type = TISCI_RESASG_UTYPE(TISCI_DEV_NAVSS0_UDMASS_INTA_0, TISCI_RESASG_SUBTYPE_GLOBAL_EVENT_SEVT),
-			.start_resource = 38U,
-			.num_resource = 4570U,
+			.start_resource = 34U,
+			.num_resource = 4574U,
 			.host_id = TISCI_HOST_ID_MCU_0_R5_0,
 		},
 		{
@@ -380,7 +380,7 @@ __attribute__(( aligned(128), section(".boardcfg_data") )) =
 		{
 			.type = TISCI_RESASG_UTYPE(TISCI_DEV_MCU_NAVSS0_INTR_ROUTER_0, TISCI_RESASG_SUBTYPE_IR_OUTPUT),
 			.start_resource = 12U,
-			.num_resource = 20U,
+			.num_resource = 12U,
 			.host_id = TISCI_HOST_ID_MCU_0_R5_0,
 		},
 		{
@@ -493,14 +493,14 @@ __attribute__(( aligned(128), section(".boardcfg_data") )) =
 		},
 		{
 			.type = TISCI_RESASG_UTYPE(TISCI_DEV_MCU_NAVSS0_UDMASS_INTA_0, TISCI_RESASG_SUBTYPE_IA_VINT),
-			.start_resource = 16U,
-			.num_resource = 240U,
+			.start_resource = 22U,
+			.num_resource = 234U,
 			.host_id = TISCI_HOST_ID_MCU_0_R5_0,
 		},
 		{
 			.type = TISCI_RESASG_UTYPE(TISCI_DEV_MCU_NAVSS0_UDMASS_INTA_0, TISCI_RESASG_SUBTYPE_GLOBAL_EVENT_SEVT),
-			.start_resource = 16400U,
-			.num_resource = 1520U,
+			.start_resource = 16406U,
+			.num_resource = 1514U,
 			.host_id = TISCI_HOST_ID_MCU_0_R5_0,
 		},
 		{
