@@ -740,13 +740,3 @@ uint32_t Udma_isCacheCoherent(void)
 
     return (isCacheCoherent);
 }
-
-uint32_t isInstInvalid(int32_t instId)
-{
-    uint32_t retVal = 0;
-    if((UDMA_INST_ID_START > instId) || (UDMA_INST_ID_MAX < instId))
-    {
-        retVal = 1;
-    }
-    return retVal;
-}

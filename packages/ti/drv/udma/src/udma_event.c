@@ -392,18 +392,17 @@ int32_t Udma_eventGetRxFlowIdFwStatus(Udma_EventHandle eventHandle,
                                       Udma_EventRxFlowIdFwStatus *status)
 {
     int32_t                                 retVal = UDMA_SOK;
-
-#if (UDMA_SOC_CFG_UDMAP_PRESENT == 1)
     uint32_t                                regVal;
     Udma_DrvHandle                          drvHandle;
-    struct tisci_msg_rm_udmap_gcfg_cfg_req  gcfgReq;
-
+    uint32_t                                instType;
+    
     if((NULL_PTR == eventHandle) ||
-       (UDMA_INIT_DONE != eventHandle->eventInitDone) ||
-       (NULL_PTR == status))
+    (UDMA_INIT_DONE != eventHandle->eventInitDone) ||
+    (NULL_PTR == status))
     {
         retVal = UDMA_EFAIL;
     }
+
     if(UDMA_SOK == retVal)
     {
         drvHandle = eventHandle->drvHandle;
@@ -415,43 +414,48 @@ int32_t Udma_eventGetRxFlowIdFwStatus(Udma_EventHandle eventHandle,
 
     if(UDMA_SOK == retVal)
     {
-        regVal = CSL_REG32_RD(&drvHandle->udmapRegs.pGenCfgRegs->RFLOWFWSTAT);
-        if(CSL_FEXT(regVal, UDMAP_GCFG_RFLOWFWSTAT_PEND) != 0U)
+        instType = drvHandle->instType;
+        if(UDMA_INST_TYPE_NORMAL == instType)
         {
-            struct tisci_msg_rm_udmap_gcfg_cfg_resp resp;
-            status->flowId  = CSL_FEXT(regVal, UDMAP_GCFG_RFLOWFWSTAT_FLOWID);
-            status->chNum   = CSL_FEXT(regVal, UDMAP_GCFG_RFLOWFWSTAT_CHANNEL);
-            status->isException = TRUE;
-
-            /* Clear pend bit to allow another exception to be captured */
-            gcfgReq.valid_params = TISCI_MSG_VALUE_RM_UDMAP_GCFG_RFLOWFWSTAT_VALID;
-            gcfgReq.nav_id       = drvHandle->devIdUdma;
-            gcfgReq.perf_ctrl    = 0U;  /* Not set/used */
-            gcfgReq.emu_ctrl     = 0U;  /* Not set/used */
-            gcfgReq.psil_to      = 0U;  /* Not set/used */
-            gcfgReq.rflowfwstat  = 0U;  /* Write 0 to clear */
-            retVal = Sciclient_rmUdmapGcfgCfg(
-                         &gcfgReq, &resp, UDMA_SCICLIENT_TIMEOUT);
-            if(CSL_PASS != retVal)
+#if (UDMA_SOC_CFG_UDMAP_PRESENT == 1)
+            struct tisci_msg_rm_udmap_gcfg_cfg_req  gcfgReq;
+            regVal = CSL_REG32_RD(&drvHandle->udmapRegs.pGenCfgRegs->RFLOWFWSTAT);
+            if(CSL_FEXT(regVal, UDMAP_GCFG_RFLOWFWSTAT_PEND) != 0U)
             {
-                Udma_printf(drvHandle,
-                    "[Error] Sciclient set UDMAP global config failed!!!\n");
+                struct tisci_msg_rm_udmap_gcfg_cfg_resp resp;
+                status->flowId  = CSL_FEXT(regVal, UDMAP_GCFG_RFLOWFWSTAT_FLOWID);
+                status->chNum   = CSL_FEXT(regVal, UDMAP_GCFG_RFLOWFWSTAT_CHANNEL);
+                status->isException = TRUE;
+
+                /* Clear pend bit to allow another exception to be captured */
+                gcfgReq.valid_params = TISCI_MSG_VALUE_RM_UDMAP_GCFG_RFLOWFWSTAT_VALID;
+                gcfgReq.nav_id       = drvHandle->devIdUdma;
+                gcfgReq.perf_ctrl    = 0U;  /* Not set/used */
+                gcfgReq.emu_ctrl     = 0U;  /* Not set/used */
+                gcfgReq.psil_to      = 0U;  /* Not set/used */
+                gcfgReq.rflowfwstat  = 0U;  /* Write 0 to clear */
+                retVal = Sciclient_rmUdmapGcfgCfg(
+                            &gcfgReq, &resp, UDMA_SCICLIENT_TIMEOUT);
+                if(CSL_PASS != retVal)
+                {
+                    Udma_printf(drvHandle,
+                        "[Error] Sciclient set UDMAP global config failed!!!\n");
+                }
             }
+            else
+            {
+                status->flowId  = 0U;
+                status->chNum   = 0U;
+                status->isException = FALSE;
+            }
+#endif
         }
         else
         {
-            status->flowId  = 0U;
-            status->chNum   = 0U;
-            status->isException = FALSE;
+            retVal = UDMA_EFAIL ;
+            Udma_printf(eventHandle->drvHandle, "[Error] RxFlowIdFwStats not suported!!!\n");
         }
     }
-#endif
-#if (UDMA_SOC_CFG_BCDMA_PRESENT == 1) || (UDMA_SOC_CFG_PKTDMA_PRESENT == 1)
-
-    retVal = UDMA_EFAIL ;
-    Udma_printf(eventHandle->drvHandle, "[Error] RxFlowIdFwStats not suported!!!\n");
-#endif
-
     return (retVal);
 }
 
@@ -924,6 +928,7 @@ static int32_t Udma_eventConfig(Udma_DrvHandle drvHandle,
 {
     int32_t             retVal = UDMA_SOK;
     uint32_t            vintrNum, coreIntrNum;
+    uint32_t            instType;
     Udma_ChHandle       chHandle;
     Udma_RingHandle     ringHandle;
 #if (UDMA_SOC_CFG_RING_MON_PRESENT == 1)
@@ -1093,13 +1098,13 @@ static int32_t Udma_eventConfig(Udma_DrvHandle drvHandle,
 
     if(UDMA_EVENT_TYPE_RING_MON == eventPrms->eventType)
     {
-        /* Ring Monitor only available for MAIN and MCU NAVSS instances */
-#if (UDMA_SOC_CFG_RING_MON_PRESENT == 1)
 
         uint32_t instType = drvHandle->instType;
 
         if(UDMA_INST_TYPE_NORMAL == instType)
         {
+        /* Ring Monitor only available for MAIN and MCU NAVSS instances */
+#if (UDMA_SOC_CFG_RING_MON_PRESENT == 1)
             Udma_assert(drvHandle, eventPrms->monHandle != NULL_PTR);
             monHandle = eventPrms->monHandle;
             Udma_assert(drvHandle, monHandle->ringMonNum != UDMA_RING_MON_INVALID);
@@ -1107,26 +1112,31 @@ static int32_t Udma_eventConfig(Udma_DrvHandle drvHandle,
             rmIrqReq.src_id     = drvHandle->devIdRing;
             rmIrqReq.src_index  = monHandle->ringMonNum;
             rmIrqReq.src_index += TISCI_RINGACC0_MON_IRQ_SRC_IDX_START;    
+#endif
         }
         else
         {
             retVal = UDMA_EFAIL;
             Udma_printf(drvHandle, "[Error] Ring Monitor not supported; Event Config failed!!!\n");   
         }
-#else
-        retVal = UDMA_EFAIL;
-        Udma_printf(drvHandle, "[Error] Ring Monitor not supported; Event Config failed!!!\n");
-#endif
     }
 
     if(UDMA_EVENT_TYPE_ERR_OUT_OF_RANGE_FLOW == eventPrms->eventType)
     {
+        instType = drvHandle->instType;
 #if (UDMA_SOC_CFG_UDMAP_PRESENT == 1)
-        rmIrqReq.src_id     = drvHandle->devIdUdma;
-        rmIrqReq.src_index  = TISCI_UDMAP0_RX_FLOW_EOES_IRQ_SRC_IDX_START;  
-#else
-        retVal = UDMA_EFAIL;
-        Udma_printf(drvHandle, "[Error] Event for trapping out of range flow ID received on a packet, not supported!!!\n");
+        if(UDMA_INST_TYPE_NORMAL == instType)
+        {
+            rmIrqReq.src_id     = drvHandle->devIdUdma;
+            rmIrqReq.src_index  = TISCI_UDMAP0_RX_FLOW_EOES_IRQ_SRC_IDX_START;  
+        }
+#endif
+#if (UDMA_SOC_CFG_BCDMA_PRESENT == 1) || (UDMA_SOC_CFG_PKTDMA_PRESENT == 1)
+        if((UDMA_INST_TYPE_LCDMA_BCDMA == instType) || (UDMA_INST_TYPE_LCDMA_PKTDMA == instType))
+        {
+            retVal = UDMA_EFAIL ;
+            Udma_printf(drvHandle, "[Error] Event for trapping out of range flow ID received on a packet, not supported!!!\n");
+        }
 #endif
     }
 
@@ -1210,6 +1220,7 @@ static int32_t Udma_eventReset(Udma_DrvHandle drvHandle,
 {
     int32_t             retVal = UDMA_SOK;
     uint32_t            vintrNum;
+    uint32_t            instType;
     Udma_ChHandle       chHandle;
     Udma_RingHandle     ringHandle;
 #if (UDMA_SOC_CFG_RING_MON_PRESENT == 1)
@@ -1377,13 +1388,13 @@ static int32_t Udma_eventReset(Udma_DrvHandle drvHandle,
 
     if(UDMA_EVENT_TYPE_RING_MON == eventPrms->eventType)
     {
-        /* Ring Monitor only available for MAIN and MCU NAVSS instances */
-#if (UDMA_SOC_CFG_RING_MON_PRESENT == 1)
 
         uint32_t instType = drvHandle->instType;
         
         if(UDMA_INST_TYPE_NORMAL == instType)
         {
+        /* Ring Monitor only available for MAIN and MCU NAVSS instances */
+#if (UDMA_SOC_CFG_RING_MON_PRESENT == 1)
             Udma_assert(drvHandle, eventPrms->monHandle != NULL_PTR);
             monHandle = eventPrms->monHandle;
             Udma_assert(drvHandle, monHandle->ringMonNum != UDMA_RING_MON_INVALID);
@@ -1391,26 +1402,31 @@ static int32_t Udma_eventReset(Udma_DrvHandle drvHandle,
             rmIrqReq.src_id     = drvHandle->devIdRing;
             rmIrqReq.src_index  = monHandle->ringMonNum;
             rmIrqReq.src_index += TISCI_RINGACC0_MON_IRQ_SRC_IDX_START;    
+#endif
         }
         else
         {
             retVal = UDMA_EFAIL;
             Udma_printf(drvHandle, "[Error] Ring Monitor not supported; Event Config failed!!!\n");   
         }
-#else
-        retVal = UDMA_EFAIL;
-        Udma_printf(drvHandle, "[Error] Ring Monitor not supported; Event Config failed!!!\n");
-#endif
     }
 
     if(UDMA_EVENT_TYPE_ERR_OUT_OF_RANGE_FLOW == eventPrms->eventType)
     {
+        instType = drvHandle->instType;
 #if (UDMA_SOC_CFG_UDMAP_PRESENT == 1)
-        rmIrqReq.src_id     = drvHandle->devIdUdma;
-        rmIrqReq.src_index  = TISCI_UDMAP0_RX_FLOW_EOES_IRQ_SRC_IDX_START;
-#else
-        retVal = UDMA_EFAIL;
-        Udma_printf(drvHandle, "[Error] Event for trapping out of range flow ID received on a packet is not supported!!!\n");
+        if(UDMA_INST_TYPE_NORMAL == instType)
+        {
+            rmIrqReq.src_id     = drvHandle->devIdUdma;
+            rmIrqReq.src_index  = TISCI_UDMAP0_RX_FLOW_EOES_IRQ_SRC_IDX_START;
+        }
+#endif
+#if (UDMA_SOC_CFG_BCDMA_PRESENT == 1) || (UDMA_SOC_CFG_PKTDMA_PRESENT == 1)
+        if((UDMA_INST_TYPE_LCDMA_BCDMA == instType) || (UDMA_INST_TYPE_LCDMA_PKTDMA == instType))
+        {
+            retVal = UDMA_EFAIL;
+            Udma_printf(drvHandle, "[Error] Event for trapping out of range flow ID received on a packet is not supported!!!\n");
+        }
 #endif
     }
 

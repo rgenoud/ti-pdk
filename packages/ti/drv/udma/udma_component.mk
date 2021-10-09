@@ -162,7 +162,7 @@ export dmautils_baremetal_autoincrement_testapp_BOARD_DEPENDENCY = yes
 export dmautils_baremetal_autoincrement_testapp_CORE_DEPENDENCY = yes
 dmautils_baremetal_autoincrement_testapp_PKG_LIST = dmautils_baremetal_autoincrement_testapp
 dmautils_baremetal_autoincrement_testapp_INCLUDE = $(dmautils_baremetal_autoincrement_testapp_PATH)
-export dmautils_baremetal_autoincrement_testapp_BOARDLIST = j721e_hostemu j721e_sim j721e_loki j721e_ccqt j721e_evm j721s2_evm
+export dmautils_baremetal_autoincrement_testapp_BOARDLIST = j721e_hostemu j721e_sim j721e_loki j721e_ccqt j721e_evm
 export dmautils_baremetal_autoincrement_testapp_$(SOC)_CORELIST = c7x_1 c7x-hostemu
 udma_EXAMPLE_LIST += dmautils_baremetal_autoincrement_testapp
 
@@ -173,7 +173,7 @@ export dmautils_baremetal_autoinc_1d2d3d_testapp_BOARD_DEPENDENCY = yes
 export dmautils_baremetal_autoinc_1d2d3d_testapp_CORE_DEPENDENCY = yes
 dmautils_baremetal_autoinc_1d2d3d_testapp_PKG_LIST = dmautils_baremetal_autoinc_1d2d3d_testapp
 dmautils_baremetal_autoinc_1d2d3d_testapp_INCLUDE = $(dmautils_baremetal_autoinc_1d2d3d_testapp_PATH)
-export dmautils_baremetal_autoinc_1d2d3d_testapp_BOARDLIST = j721e_hostemu j721e_sim j721e_loki j721e_ccqt j721e_evm j721s2_evm
+export dmautils_baremetal_autoinc_1d2d3d_testapp_BOARDLIST = j721e_hostemu j721e_sim j721e_loki j721e_ccqt j721e_evm
 export dmautils_baremetal_autoinc_1d2d3d_testapp_$(SOC)_CORELIST = c7x_1 c7x-hostemu
 udma_EXAMPLE_LIST += dmautils_baremetal_autoinc_1d2d3d_testapp
 
@@ -184,7 +184,7 @@ export dmautils_baremetal_autoinc_circular_testapp_BOARD_DEPENDENCY = yes
 export dmautils_baremetal_autoinc_circular_testapp_CORE_DEPENDENCY = yes
 dmautils_baremetal_autoinc_circular_testapp_PKG_LIST = dmautils_baremetal_autoinc_circular_testapp
 dmautils_baremetal_autoinc_circular_testapp_INCLUDE = $(dmautils_baremetal_autoinc_circular_testapp_PATH)
-export dmautils_baremetal_autoinc_circular_testapp_BOARDLIST = j721e_hostemu j721e_sim j721e_loki j721e_ccqt j721e_evm j721s2_evm
+export dmautils_baremetal_autoinc_circular_testapp_BOARDLIST = j721e_hostemu j721e_sim j721e_loki j721e_ccqt j721e_evm
 export dmautils_baremetal_autoinc_circular_testapp_$(SOC)_CORELIST = c7x_1 c7x-hostemu
 udma_EXAMPLE_LIST += dmautils_baremetal_autoinc_circular_testapp
 
@@ -228,9 +228,6 @@ export udma_memcpy_testapp_$(1)_BOARDLIST = $(drvudma_$(1)_BOARDLIST)
 ifeq ($(SOC),$(filter $(SOC), j721e))
 export udma_memcpy_testapp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), mpu1_0 mcu1_0 mcu2_0 mcu2_1 mcu3_0 mcu3_1 c66xdsp_1 c66xdsp_2 c7x_1)
 else
-ifeq ($(SOC),$(filter $(SOC), j721s2))
-export udma_memcpy_testapp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), mpu1_0 mcu1_0 mcu2_0 mcu2_1 mcu3_0 mcu3_1 c7x_1 c7x_2)
-else
 export udma_memcpy_testapp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), $(drvudma_$(SOC)_example_CORELIST))
 endif
 export udma_memcpy_testapp_$(1)_SBL_APPIMAGEGEN = yes
@@ -239,7 +236,6 @@ udma_EXAMPLE_LIST += udma_memcpy_testapp_$(1)
 else
 ifneq ($(wildcard $(SAFERTOS_KERNEL_INSTALL_PATH)),)
 udma_EXAMPLE_LIST += udma_memcpy_testapp_$(1)
-endif
 endif
 endif
 
@@ -350,13 +346,13 @@ export udma_dru_testapp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIS
 else
 export udma_dru_testapp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), $(drvudma_$(SOC)_example_CORELIST))
 endif
+endif
 export udma_dru_testapp_$(1)_SBL_APPIMAGEGEN = yes
 ifneq ($(1),$(filter $(1), safertos))
 udma_EXAMPLE_LIST += udma_dru_testapp_$(1)
 else
 ifneq ($(wildcard $(SAFERTOS_KERNEL_INSTALL_PATH)),)
 udma_EXAMPLE_LIST += udma_dru_testapp_$(1)
-endif
 endif
 endif
 
@@ -388,13 +384,13 @@ export udma_dru_direct_tr_testapp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SO
 else
 export udma_dru_direct_tr_testapp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), $(drvudma_$(SOC)_example_CORELIST))
 endif
+endif
 export udma_dru_direct_tr_testapp_$(1)_SBL_APPIMAGEGEN = yes
 ifneq ($(1),$(filter $(1), safertos))
 udma_EXAMPLE_LIST += udma_dru_direct_tr_testapp_$(1)
 else
 ifneq ($(wildcard $(SAFERTOS_KERNEL_INSTALL_PATH)),)
 udma_EXAMPLE_LIST += udma_dru_direct_tr_testapp_$(1)
-endif
 endif
 endif
 
