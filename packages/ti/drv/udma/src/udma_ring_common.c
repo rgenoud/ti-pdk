@@ -561,8 +561,8 @@ int32_t Udma_ringMonAlloc(Udma_DrvHandle drvHandle,
                           uint16_t ringMonNum)
 {
     int32_t     retVal = UDMA_SOK;
-#if (UDMA_SOC_CFG_RING_MON_PRESENT == 1)
     uint32_t    allocDone = (uint32_t) FALSE;
+    uint32_t    instType;
 
     /* Error check */
     if((NULL_PTR == monHandle) || (NULL_PTR == drvHandle))
@@ -579,10 +579,11 @@ int32_t Udma_ringMonAlloc(Udma_DrvHandle drvHandle,
 
     if(UDMA_SOK == retVal)
     {
-        uint32_t instType = drvHandle->instType;
+        instType = drvHandle->instType;
 
         if(UDMA_INST_TYPE_NORMAL == instType)
         {
+#if (UDMA_SOC_CFG_RING_MON_PRESENT == 1)
             if(UDMA_RING_MON_ANY == ringMonNum)
             {
                 /* Alloc free ring MONITOR */
@@ -625,6 +626,7 @@ int32_t Udma_ringMonAlloc(Udma_DrvHandle drvHandle,
                     Udma_rmFreeRingMon(monHandle->ringMonNum, drvHandle);
                 }
             }
+#endif
         }
         else
         {
@@ -632,10 +634,6 @@ int32_t Udma_ringMonAlloc(Udma_DrvHandle drvHandle,
             Udma_printf(drvHandle, "[Error] Ring Monitor only supported for Main/MCU Navss instances; Event Config failed!!!\n");   
         }
     }
-#else
-    int32_t         retVal = UDMA_EFAIL;
-    Udma_printf(drvHandle, "[Error] Ring Monitor not supported!!!\n");
-#endif
 
     return (retVal);
 }

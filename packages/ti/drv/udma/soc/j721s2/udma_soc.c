@@ -590,7 +590,7 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
        /* The srcIdx passed to Sciclient_rmIrqset API for configuring TR events, 
         * will be chNum + the corresponding following offset. 
         * So setting the offset as TISCI Start Idx - corresponding chNum Offset (if any) */
-        drvHandle->srcIdTrIrq           = drvHandle->devIdIa;
+        drvHandle->srcIdTrIrq           = TISCI_DEV_NAVSS0_UDMASS_INTA_0;
         drvHandle->blkCopyTrIrqOffset   = TISCI_BCDMA0_BC_DC_OES_IRQ_SRC_IDX_START;
         drvHandle->txTrIrqOffset        = TISCI_BCDMA0_TX_DC_OES_IRQ_SRC_IDX_START;
         drvHandle->rxTrIrqOffset        = TISCI_BCDMA0_RX_DC_OES_IRQ_SRC_IDX_START;
@@ -598,7 +598,7 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
         drvHandle->maxProxy             = 0U; 
         drvHandle->maxRingMon           = 0U;
         drvHandle->extChOffset          = 0U;
-        drvHandle->srcIdRingIrq         = drvHandle->devIdIa;
+        drvHandle->srcIdRingIrq         = TISCI_DEV_NAVSS0_UDMASS_INTA_0;
     }
     else
     {

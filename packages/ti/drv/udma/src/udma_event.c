@@ -415,9 +415,9 @@ int32_t Udma_eventGetRxFlowIdFwStatus(Udma_EventHandle eventHandle,
     if(UDMA_SOK == retVal)
     {
         instType = drvHandle->instType;
+#if (UDMA_SOC_CFG_UDMAP_PRESENT == 1)
         if(UDMA_INST_TYPE_NORMAL == instType)
         {
-#if (UDMA_SOC_CFG_UDMAP_PRESENT == 1)
             struct tisci_msg_rm_udmap_gcfg_cfg_req  gcfgReq;
             regVal = CSL_REG32_RD(&drvHandle->udmapRegs.pGenCfgRegs->RFLOWFWSTAT);
             if(CSL_FEXT(regVal, UDMAP_GCFG_RFLOWFWSTAT_PEND) != 0U)
@@ -448,14 +448,16 @@ int32_t Udma_eventGetRxFlowIdFwStatus(Udma_EventHandle eventHandle,
                 status->chNum   = 0U;
                 status->isException = FALSE;
             }
-#endif
         }
-        else
+#endif
+#if (UDMA_SOC_CFG_BCDMA_PRESENT == 1) || (UDMA_SOC_CFG_PKTDMA_PRESENT == 1)
+        if((UDMA_INST_TYPE_LCDMA_BCDMA == instType) || (UDMA_INST_TYPE_LCDMA_PKTDMA == instType))
         {
             retVal = UDMA_EFAIL ;
             Udma_printf(eventHandle->drvHandle, "[Error] RxFlowIdFwStats not suported!!!\n");
         }
     }
+#endif
     return (retVal);
 }
 
@@ -939,6 +941,7 @@ static int32_t Udma_eventConfig(Udma_DrvHandle drvHandle,
     struct tisci_msg_rm_irq_set_resp    rmIrqResp;
 
     Udma_assert(drvHandle, eventHandle != NULL_PTR);
+    instType = drvHandle->instType;
     eventPrms = &eventHandle->eventPrms;
 
     rmIrqReq.valid_params           = 0U;
@@ -1098,9 +1101,6 @@ static int32_t Udma_eventConfig(Udma_DrvHandle drvHandle,
 
     if(UDMA_EVENT_TYPE_RING_MON == eventPrms->eventType)
     {
-
-        uint32_t instType = drvHandle->instType;
-
         if(UDMA_INST_TYPE_NORMAL == instType)
         {
         /* Ring Monitor only available for MAIN and MCU NAVSS instances */
@@ -1123,7 +1123,6 @@ static int32_t Udma_eventConfig(Udma_DrvHandle drvHandle,
 
     if(UDMA_EVENT_TYPE_ERR_OUT_OF_RANGE_FLOW == eventPrms->eventType)
     {
-        instType = drvHandle->instType;
 #if (UDMA_SOC_CFG_UDMAP_PRESENT == 1)
         if(UDMA_INST_TYPE_NORMAL == instType)
         {
@@ -1230,6 +1229,7 @@ static int32_t Udma_eventReset(Udma_DrvHandle drvHandle,
     struct tisci_msg_rm_irq_release_req     rmIrqReq;
 
     Udma_assert(drvHandle, eventHandle != NULL_PTR);
+    instType = drvHandle->instType;
     eventPrms = &eventHandle->eventPrms;
 
     rmIrqReq.valid_params           = 0U;
@@ -1388,9 +1388,6 @@ static int32_t Udma_eventReset(Udma_DrvHandle drvHandle,
 
     if(UDMA_EVENT_TYPE_RING_MON == eventPrms->eventType)
     {
-
-        uint32_t instType = drvHandle->instType;
-        
         if(UDMA_INST_TYPE_NORMAL == instType)
         {
         /* Ring Monitor only available for MAIN and MCU NAVSS instances */
@@ -1413,7 +1410,6 @@ static int32_t Udma_eventReset(Udma_DrvHandle drvHandle,
 
     if(UDMA_EVENT_TYPE_ERR_OUT_OF_RANGE_FLOW == eventPrms->eventType)
     {
-        instType = drvHandle->instType;
 #if (UDMA_SOC_CFG_UDMAP_PRESENT == 1)
         if(UDMA_INST_TYPE_NORMAL == instType)
         {
