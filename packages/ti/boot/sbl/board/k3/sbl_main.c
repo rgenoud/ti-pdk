@@ -292,7 +292,7 @@ const CSL_ArmR5MpuRegionCfg gCslR5MpuCfg[CSL_ARM_R5F_MPU_REGIONS_MAX] =
         /* Region 14 configuration (Non-cached for PHY tuning data): Covers last 256KB of EVM Flash (FSS DAT0) */
         .regionId         = 7U,
         .enable           = 1U,
-#if defined(SOC_J7200)
+#if defined(SOC_J7200) || defined(SOC_J721S2)
         .baseAddr         = 0x53FC0000,
         .size             = CSL_ARM_R5_MPU_REGION_SIZE_256KB,
 #else

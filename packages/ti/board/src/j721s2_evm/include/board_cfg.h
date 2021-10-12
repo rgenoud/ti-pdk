@@ -46,6 +46,7 @@ extern "C" {
 #endif
 
 #include <ti/board/board.h>
+#include <ti/board/src/j721s2_evm/include/board_pinmux.h>
 
 /* Board ID information */
 #define BOARD_INFO_CPU_NAME     "j721s2"
