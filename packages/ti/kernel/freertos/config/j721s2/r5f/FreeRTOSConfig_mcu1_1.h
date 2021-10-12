@@ -46,5 +46,16 @@
  * FreeRTOS REFERENCE MANUAL.
  *----------------------------------------------------------*/
 
+/* -- Default DMTimer allocations for various cores in j721s2 ---*/
+/* c7x_1  - DMTimer 0
+ * c7x_2  - DMTimer 1 
+ * mcu2_0 - DMTimer 2
+ * mcu2_1 - DMTimer 3
+ * mcu3_0 - DMTimer 4
+ * mcu3_1 - DMTimer 5
+ * mcu1_0 - MCU DMTimer 1
+ * mcu1_1 - MCU DMTimer 2
+ */  
+
 #define configTIMER_ID                                                    (2)
 #endif /* TI_FREERTOS_MCU1_1_CONFIG_H */

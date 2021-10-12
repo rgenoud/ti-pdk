@@ -300,7 +300,7 @@ static void prvPorttimerTickIsr(uintptr_t args)
 static void prvPortInitTimerCLECCfg(uint32_t timerId, uint32_t timerIntNum)
 {
     CSL_ClecEventConfig   cfgClec;
-    CSL_CLEC_EVTRegs     *clecBaseAddr = (CSL_CLEC_EVTRegs*)CSL_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
+    CSL_CLEC_EVTRegs     *clecBaseAddr = (CSL_CLEC_EVTRegs*)portCOMPUTE_CLUSTER_CLEC_BASE;
     uint32_t input         = gDmTimerPInfoTbl[timerId].eventId;
     uint32_t corepackEvent = timerIntNum;
 

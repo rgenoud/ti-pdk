@@ -73,7 +73,7 @@ freertos_awr294x_CORELIST   = c66xdsp_1 mcu1_0 mcu1_1
 freertos_j721e_CORELIST   = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 c66xdsp_1 c66xdsp_2 c7x_1
 freertos_j7200_CORELIST   = mcu1_0 mcu1_1 mcu2_0 mcu2_1
 freertos_am65xx_CORELIST   = mcu1_0 mcu1_1
-freertos_j721s2_CORELIST   = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1
+freertos_j721s2_CORELIST   = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 c7x_1 c7x_2
 
 ############################
 # freertos package

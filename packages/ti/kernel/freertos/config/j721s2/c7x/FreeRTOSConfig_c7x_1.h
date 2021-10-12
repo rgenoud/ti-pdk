@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2021 Texas Instruments Incorporated
+ *  Copyright (C) 2018-2021 Texas Instruments Incorporated
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -31,8 +31,8 @@
  */
 
 
-#ifndef TI_FREERTOS_MCU3_1_CONFIG_H
-#define TI_FREERTOS_MCU3_1_CONFIG_H
+#ifndef TI_FREERTOS_C7X_1_CONFIG_H
+#define TI_FREERTOS_C7X_1_CONFIG_H
 
 
 /*-----------------------------------------------------------
@@ -57,5 +57,7 @@
  * mcu1_1 - MCU DMTimer 2
  */  
 
-#define configTIMER_ID                                                    (5)
-#endif /* TI_FREERTOS_MCU3_1_CONFIG_H */
+#define configTIMER_ID                                                    (0)
+#define configTIMER_INT_NUM                                               (14)
+
+#endif /* TI_FREERTOS_C7X_1_CONFIG_H */
