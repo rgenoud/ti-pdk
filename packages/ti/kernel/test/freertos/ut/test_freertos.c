@@ -172,6 +172,14 @@
         #define PING_INT_NUM           (CSLR_R5FSS1_CORE1_INTR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_OUT_LEVEL_0)
         #define PONG_INT_NUM           (CSLR_R5FSS1_CORE1_INTR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_OUT_LEVEL_1)
     #endif
+    #ifdef BUILD_C7X_1
+        #define PING_INT_NUM           (15U)
+        #define PONG_INT_NUM           (16U)
+    #endif
+    #ifdef BUILD_C7X_2
+        #define PING_INT_NUM           (16U)
+        #define PONG_INT_NUM           (17U)
+    #endif
 #endif
 
 #define PING_TASK_PRI (2u)
@@ -194,8 +202,6 @@ TaskHandle_t gPongTask;
 SemaphoreHandle_t gPongSem;
 
 #ifdef BUILD_C7X
-void    Osal_appC7xPreInit(void);
-void    C7x_ConfigureTimerOutput(void);
 uint8_t srcBuf[1024];
 uint8_t dstBuf[1024];
 #endif

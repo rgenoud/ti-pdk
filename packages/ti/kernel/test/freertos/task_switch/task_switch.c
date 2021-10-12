@@ -176,6 +176,18 @@ TaskHandle_t TaskP_getFreertosHandle(TaskP_Handle handle);
         #define PING_INT_NUM           (CSLR_R5FSS1_CORE1_INTR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_OUT_LEVEL_0)
         #define PONG_INT_NUM           (CSLR_R5FSS1_CORE1_INTR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_OUT_LEVEL_1)
     #endif
+    #ifdef BUILD_C7X_1
+        #define PING_INT_NUM           (16U)
+        #define PING_EVT_ID            (CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_TIMER2_INTR_PEND_0 + 992)
+        #define PONG_INT_NUM           (17U)
+        #define PONG_EVT_ID            (CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_TIMER3_INTR_PEND_0 + 992)
+    #endif
+    #ifdef BUILD_C7X_2
+        #define PING_INT_NUM           (18U)
+        #define PING_EVT_ID            (CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_TIMER4_INTR_PEND_0 + 992)
+        #define PONG_INT_NUM           (19U)
+        #define PONG_EVT_ID            (CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_TIMER5_INTR_PEND_0 + 992)
+    #endif
 #endif
 
 #define PING_TASK_PRI  (2u)
