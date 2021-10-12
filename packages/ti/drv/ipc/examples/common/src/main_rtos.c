@@ -301,7 +301,7 @@ static void taskFxn(void* a0, void* a1)
 #endif
 }
 
-
+#if defined(BUILD_C7X)
 static void IpcInitMmu(Bool isSecure)
 {
     Mmu_MapAttrs    attrs;
