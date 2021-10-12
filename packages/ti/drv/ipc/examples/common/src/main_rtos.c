@@ -286,7 +286,7 @@ static void taskFxn(void* a0, void* a1)
     ipc_boardInit();
 #endif
 
-
+#if defined (_TMS320C6X)
     ipc_timerInterruptInit();
 #endif
 
