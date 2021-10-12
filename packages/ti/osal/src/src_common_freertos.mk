@@ -4,6 +4,8 @@ INCDIR = . src/freertos src/nonos arch/core
 
 ifeq ($(ISA),$(filter $(ISA), c7x))
 SRCS_COMMON += HwiP_freertos_c7x.c CacheP_freertos_c7x.c
+PACKAGE_SRCS_COMMON += src/freertos/CacheP_freertos_c7x.c
+PACKAGE_SRCS_COMMON += src/freertos/HwiP_freertos_c7x.c
 else
 SRCS_COMMON += HwiP_nonos.c
 endif
@@ -57,10 +59,8 @@ ifeq ($(ISA),$(filter $(ISA),c7x))
   SRCS_COMMON += freertos_mmu.c
 endif
 
-ifeq ($(SOC),$(filter $(SOC), j721e))
+ifeq ($(SOC),$(filter $(SOC), j721e j721s2))
   PACKAGE_SRCS_COMMON += soc/$(SOC)/freertos_mmu.c
-  PACKAGE_SRCS_COMMON += src/freertos/CacheP_freertos_c7x.c
-  PACKAGE_SRCS_COMMON += src/freertos/HwiP_freertos_c7x.c
 endif
 
 

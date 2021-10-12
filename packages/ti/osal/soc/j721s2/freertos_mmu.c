@@ -122,12 +122,12 @@ static void OsalInitMmu(bool isSecure)
     (void)OsalMmuMap(0x41C00000U, 0x41C00000U, 0x00080000U, &attrs, isSecure); /* OCMC - 512KB */
 
     /*
-     * DDR range 0xA0000000 - 0xAA000000 : Used as RAM by multiple
+     * DDR range 0xA0000000 - 0xA8000000 : Used as RAM by multiple
      * remote cores, no need to mmp_map this range.
      * IPC VRing Buffer - uncached
      */
     attrs.attrIndx =  Mmu_AttrIndx_MAIR4;
-    (void)OsalMmuMap(0xAA000000U, 0xAA000000U, 0x02000000U, &attrs, isSecure);
+    (void)OsalMmuMap(0xA8000000U, 0xA8000000U, 0x02000000U, &attrs, isSecure);
 
     return;
 }
@@ -138,13 +138,13 @@ static void OsalInitMmu(bool isSecure)
 /* The C7x CLEC should be programmed to allow config/re config either in secure
  * OR non secure mode. This function configures all inputs to given level
  *
- * Instance is hard-coded for J721e only
+ * Instance is hard-coded for J721S2 only
  *
  */
 void OsalCfgClecAccessCtrl (bool onlyInSecure)
 {
     CSL_ClecEventConfig cfgClec;
-    CSL_CLEC_EVTRegs   *clecBaseAddr = (CSL_CLEC_EVTRegs*) CSL_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
+    CSL_CLEC_EVTRegs   *clecBaseAddr = (CSL_CLEC_EVTRegs*) CSL_COMPUTE_CLUSTER0_CLEC_BASE;
     uint32_t            i, maxInputs = 2048U;
 
     cfgClec.secureClaimEnable = onlyInSecure;

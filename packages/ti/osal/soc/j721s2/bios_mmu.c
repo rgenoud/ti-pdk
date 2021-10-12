@@ -48,12 +48,6 @@
 
 #include <ti/csl/soc.h>
 
-#if defined (__C7100__)
-#include <ti/csl/csl_clec.h>
-#include <ti/csl/arch/csl_arch.h>
-#include <ti/sysbios/family/c7x/Mmu.h>
-#endif
-
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
@@ -88,11 +82,7 @@ static Bool OsalMmuMap(UInt64 vaddr, UInt64 paddr, SizeT size,
 static Bool OsalMmuMap(UInt64 vaddr, UInt64 paddr, SizeT size,
 						Mmu_MapAttrs *attrs, Bool secure)
 {
-#if defined (__C7100__)
-	return (Mmu_map(vaddr, paddr, size, attrs, secure));
-#else
 	return (Mmu_map(vaddr, paddr, size, attrs));
-#endif
 }
 
 static void OsalInitMmu(Bool isSecure)
@@ -101,17 +91,6 @@ static void OsalInitMmu(Bool isSecure)
 
     Mmu_initMapAttrs(&attrs);
     attrs.attrIndx = Mmu_AttrIndx_MAIR0;
-
-#if defined(__C7100__)
-    if(TRUE == isSecure)
-    {
-        attrs.ns = 0;
-    }
-    else
-    {
-        attrs.ns = 1;
-    }
-#endif
 
     /* Register region */
     (void)OsalMmuMap(0x00000000U, 0x00000000U, 0x20000000U, &attrs, isSecure);
@@ -141,51 +120,10 @@ static void OsalInitMmu(Bool isSecure)
     return;
 }
 
-
 #if defined(BUILD_MPU)
 void Osal_initMmuDefault(void)
 {
     OsalInitMmu(FALSE);
-    return;
-}
-#endif
-
-#if defined (__C7100__)
-
-/* The C7x CLEC should be programmed to allow config/re config either in secure
- * OR non secure mode. This function configures all inputs to given level
- *
- * Instance is hard-coded for J721S2 only
- *
- */
-void OsalCfgClecAccessCtrl (Bool onlyInSecure)
-{
-    CSL_ClecEventConfig cfgClec;
-    CSL_CLEC_EVTRegs   *clecBaseAddr = (CSL_CLEC_EVTRegs*) CSL_COMPUTE_CLUSTER0_CLEC_BASE;
-    uint32_t            i, maxInputs = 2048U;
-
-    cfgClec.secureClaimEnable = onlyInSecure;
-    cfgClec.evtSendEnable     = FALSE;
-    cfgClec.rtMap             = CSL_CLEC_RTMAP_DISABLE;
-    cfgClec.extEvtNum         = 0U;
-    cfgClec.c7xEvtNum         = 0U;
-    for(i = 0U; i < maxInputs; i++)
-    {
-        CSL_clecConfigEvent(clecBaseAddr, i, &cfgClec);
-    }
-}
-
-#endif /* */
-
-#if defined (__C7100__)
-void Osal_initMmuDefault(void)
-{
-    OsalInitMmu(FALSE);
-    OsalInitMmu(TRUE);
-
-    /* Setup CLEC access/configure in non-secure mode */
-    OsalCfgClecAccessCtrl(FALSE);
-
     return;
 }
 #endif
