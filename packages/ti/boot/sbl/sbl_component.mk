@@ -1196,7 +1196,7 @@ sbl_smp_test_BOARDLIST = $(sbl_BOARDLIST)
 export sbl_smp_test_BOARDLIST
 sbl_smp_test_$(SOC)_CORELIST = $($(SOC)_smp_CORELIST)
 export sbl_smp_test_$(SOC)_CORELIST
-ifneq ($(SOC),$(filter $(SOC), am64x tpr12 awr294x))
+ifneq ($(SOC),$(filter $(SOC), am64x tpr12 awr294x j721s2))
 sbl_EXAMPLE_LIST += sbl_smp_test
 endif
 sbl_smp_test_SBL_APPIMAGEGEN = yes
@@ -1225,7 +1225,7 @@ sbl_multicore_smp_BOARDLIST = $(sbl_BOARDLIST)
 export sbl_multicore_smp_BOARDLIST
 sbl_multicore_smp_$(SOC)_CORELIST := $($(SOC)_LASTCORE)
 export sbl_multicore_smp_$(SOC)_CORELIST
-ifneq ($(SOC),$(filter $(SOC), am64x tpr12 awr294x))
+ifneq ($(SOC),$(filter $(SOC), am64x tpr12 awr294x j721s2))
 sbl_EXAMPLE_LIST += sbl_multicore_smp
 endif
 sbl_multicore_smp_SBL_APPIMAGEGEN = no
@@ -1556,7 +1556,7 @@ export sbl_cust_img_hs_SOCLIST = $(CUST_SBL_TEST_SOCS)
 export sbl_cust_img_hs_BOARDLIST = $(CUST_SBL_TEST_BOARDS)
 export sbl_cust_img_hs_$(SOC)_CORELIST = mcu1_0
 export sbl_cust_img_hs_SBL_IMAGEGEN = yes
-ifneq ($(SOC),$(filter $(SOC), am64x tpr12 awr294x))
+ifneq ($(SOC),$(filter $(SOC), am64x tpr12 awr294x j721s2))
 sbl_EXAMPLE_LIST += sbl_cust_img_hs
 endif
 
