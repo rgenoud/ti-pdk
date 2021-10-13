@@ -33,19 +33,18 @@
 /**
  *  \file bios_mmu.c
  *
- *  \brief This has the common default MMU setting function for A72 and C7x
+ *  \brief This has the common default MMU setting function for A72
  *
  */
+
+#if defined (BUILD_MPU)
 
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
 
 #include <xdc/std.h>
-#if defined (BUILD_MPU)
 #include <ti/sysbios/family/arm/v8a/Mmu.h>
-#endif
-
 #include <ti/csl/soc.h>
 
 /* ========================================================================== */
@@ -99,9 +98,7 @@ static void OsalInitMmu(Bool isSecure)
     (void)OsalMmuMap(0x60000000U, 0x60000000U, 0x10000000U, &attrs, isSecure);
     (void)OsalMmuMap(0x78000000U, 0x78000000U, 0x08000000U, &attrs, isSecure); /* CLEC */
 
-#if defined(BUILD_MPU)
     (void)OsalMmuMap(0x400000000U, 0x400000000U, 0x400000000U, &attrs, isSecure); /* FSS0 data   */
-#endif
 
     attrs.attrIndx = Mmu_AttrIndx_MAIR7;
     (void)OsalMmuMap(0x80000000U, 0x80000000U, 0x20000000U, &attrs, isSecure); /* DDR */
@@ -115,12 +112,11 @@ static void OsalInitMmu(Bool isSecure)
      * IPC VRing Buffer - uncached
      */
     attrs.attrIndx =  Mmu_AttrIndx_MAIR4;
-    (void)OsalMmuMap(0xAA000000U, 0xAA000000U, 0x02000000U, &attrs, isSecure);
+    (void)OsalMmuMap(0xA8000000U, 0xA8000000U, 0x02000000U, &attrs, isSecure);
 
     return;
 }
 
-#if defined(BUILD_MPU)
 void Osal_initMmuDefault(void)
 {
     OsalInitMmu(FALSE);
