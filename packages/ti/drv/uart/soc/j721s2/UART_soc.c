@@ -56,9 +56,6 @@
 #define UART_INPUT_CLK_48M              (48000000U)
 #define UART_INPUT_CLK_96M              (96000000U)
 
-/* DMSC SYSFW C66x destination host int # for UART0 */
-#define UART_TISCI_C66X_DST_HOST_IRQ0   (50U)
-
 /* DMSC SYSFW invalid UART device ID */
 #define UART_TISCI_INVALID_DEV_ID       (0xFFFFU)
 
@@ -533,7 +530,7 @@ UART_Config UART_config[CSL_UART_MAIN_CNT + 1U] = {
 };
 
 /**
- * \brief  This API gets the SoC level of UART intial configuration
+ * \brief  This API gets the SoC level of UART initial configuration
  *
  * \param  idx       UART instance index.
  * \param  cfg       Pointer to UART SOC initial config.
@@ -558,7 +555,7 @@ int32_t UART_socGetInitCfg(uint32_t idx, UART_HwAttrs *cfg)
 }
 
 /**
- * \brief  This API sets the SoC level of UART intial configuration
+ * \brief  This API sets the SoC level of UART initial configuration
  *
  * \param  idx       UART instance index.
  * \param  cfg       Pointer to UART SOC initial config.
