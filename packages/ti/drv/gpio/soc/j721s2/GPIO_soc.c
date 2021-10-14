@@ -1,14 +1,14 @@
 /**
- *  \file   j721e/GPIO_soc.c
+ *  \file   j721s2/GPIO_soc.c
  *
- *  \brief  J721E SOC specific GPIO hardware attributes.
+ *  \brief  J721S2 SOC specific GPIO hardware attributes.
  *
  *   This file contains the GPIO hardware attributes like base address and
  *   interrupt ids.
  */
 
 /*
- * Copyright (C) 2018 - 2019 Texas Instruments Incorporated - http://www.ti.com/
+ * Copyright (C) 2021 Texas Instruments Incorporated - http://www.ti.com/
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -42,7 +42,7 @@
 
 #include <string.h>
 #include <ti/csl/csl_utils.h>
-#include <ti/csl/soc/j721e/src/cslr_soc.h>
+#include <ti/csl/soc/j721s2/src/cslr_soc.h>
 #include <ti/csl/csl_types.h>
 #include <ti/csl/hw_types.h>
 #include <ti/csl/soc.h>
@@ -50,18 +50,12 @@
 #include <ti/drv/gpio/soc/GPIO_soc.h>
 #include <ti/drv/sciclient/sciclient.h>
 #include <ti/csl/csl_clec.h>
-#if defined (BUILD_C66X)
-#include <ti/csl/csl_chipAux.h>
-#endif
 
 /** \brief Number of gpio pins for each port */
 #define GPIO_NUM_PINS_PER_PORT           (128U)
 
 /** \brief Number of gpio ports present in the soc */
-#define GPIO_NUM_PORTS                   (8U)
-
-/* define the interrupt start number for GPIO on C66x */
-#define GPIO_TISCI_C66X_DST_HOST_IRQ0	 (70U)
+#define GPIO_NUM_PORTS                   (CSL_GPIO_MAIN_CNT)
 
 /* define the interrupt start number for GPIO on C7x */
 #define GPIO_C7X_IRQ0	 				(40U)
@@ -85,11 +79,6 @@ GPIO_IntCfg GPIO_intCfgs[GPIO_NUM_PORTS][GPIO_NUM_PINS_PER_PORT] =
             CSLR_MCU_R5FSS0_CORE0_INTR_MAIN2MCU_LVL_INTRTR0_OUTL_0,  /* main 2 mcu int router output interrupt number */
             0, /* GPIO pin interrupt event */
 #endif
-#if defined (BUILD_C66X)
-            /* main domain */
-            OSAL_REGINT_INTVEC_EVENT_COMBINER,  /* main 2 c66x int router output interrupt number */
-            GPIO_TISCI_C66X_DST_HOST_IRQ0, /* GPIO pin interrupt event */
-#endif
 #if defined (BUILD_C7X)
             /* main domain */
             GPIO_C7X_IRQ0,  				/* main 2 c7x CLEC output interrupt number */
@@ -110,11 +99,6 @@ GPIO_IntCfg GPIO_intCfgs[GPIO_NUM_PORTS][GPIO_NUM_PINS_PER_PORT] =
             /* mcu domain */
             CSLR_MCU_R5FSS0_CORE0_INTR_MAIN2MCU_LVL_INTRTR0_OUTL_0,  /* main 2 mcu int router output interrupt number */
             0, /* GPIO pin interrupt event */
-#endif
-#if defined (BUILD_C66X)
-            /* main domain */
-            OSAL_REGINT_INTVEC_EVENT_COMBINER,  /* main 2 c66x int router output interrupt number */
-            GPIO_TISCI_C66X_DST_HOST_IRQ0, /* GPIO pin interrupt event */
 #endif
 #if defined (BUILD_C7X)
             /* main domain */
@@ -137,11 +121,6 @@ GPIO_IntCfg GPIO_intCfgs[GPIO_NUM_PORTS][GPIO_NUM_PINS_PER_PORT] =
             CSLR_MCU_R5FSS0_CORE0_INTR_MAIN2MCU_LVL_INTRTR0_OUTL_0,  /* main 2 mcu int router output interrupt number */
             0, /* GPIO pin interrupt event */
 #endif
-#if defined (BUILD_C66X)
-            /* main domain */
-            OSAL_REGINT_INTVEC_EVENT_COMBINER,  /* main 2 c66x int router output interrupt number */
-            GPIO_TISCI_C66X_DST_HOST_IRQ0, /* GPIO pin interrupt event */
-#endif
 #if defined (BUILD_C7X)
             /* main domain */
             GPIO_C7X_IRQ0,  				/* main 2 c7x CLEC output interrupt number */
@@ -162,11 +141,6 @@ GPIO_IntCfg GPIO_intCfgs[GPIO_NUM_PORTS][GPIO_NUM_PINS_PER_PORT] =
             /* mcu domain */
             CSLR_MCU_R5FSS0_CORE0_INTR_MAIN2MCU_LVL_INTRTR0_OUTL_0,  /* main 2 mcu int router output interrupt number */
             0, /* GPIO pin interrupt event */
-#endif
-#if defined (BUILD_C66X)
-            /* main domain */
-            OSAL_REGINT_INTVEC_EVENT_COMBINER,  /* main 2 c66x int router output interrupt number */
-            GPIO_TISCI_C66X_DST_HOST_IRQ0, /* GPIO pin interrupt event */
 #endif
 #if defined (BUILD_C7X)
             /* main domain */
@@ -189,11 +163,6 @@ GPIO_IntCfg GPIO_intCfgs[GPIO_NUM_PORTS][GPIO_NUM_PINS_PER_PORT] =
             CSLR_MCU_R5FSS0_CORE0_INTR_MAIN2MCU_LVL_INTRTR0_OUTL_0,  /* main 2 mcu int router output interrupt number */
             0, /* GPIO pin interrupt event */
 #endif
-#if defined (BUILD_C66X)
-            /* main domain */
-            OSAL_REGINT_INTVEC_EVENT_COMBINER,  /* main 2 c66x int router output interrupt number */
-            GPIO_TISCI_C66X_DST_HOST_IRQ0, /* GPIO pin interrupt event */
-#endif
 #if defined (BUILD_C7X)
             /* main domain */
             GPIO_C7X_IRQ0,  				/* main 2 c7x CLEC output interrupt number */
@@ -214,11 +183,6 @@ GPIO_IntCfg GPIO_intCfgs[GPIO_NUM_PORTS][GPIO_NUM_PINS_PER_PORT] =
             /* mcu domain */
             CSLR_MCU_R5FSS0_CORE0_INTR_MAIN2MCU_LVL_INTRTR0_OUTL_0,  /* main 2 mcu int router output interrupt number */
             0, /* GPIO pin interrupt event */
-#endif
-#if defined (BUILD_C66X)
-            /* main domain */
-            OSAL_REGINT_INTVEC_EVENT_COMBINER,  /* main 2 c66x int router output interrupt number */
-            GPIO_TISCI_C66X_DST_HOST_IRQ0, /* GPIO pin interrupt event */
 #endif
 #if defined (BUILD_C7X)
             /* main domain */
@@ -241,11 +205,6 @@ GPIO_IntCfg GPIO_intCfgs[GPIO_NUM_PORTS][GPIO_NUM_PINS_PER_PORT] =
             CSLR_MCU_R5FSS0_CORE0_INTR_MAIN2MCU_LVL_INTRTR0_OUTL_0,  /* main 2 mcu int router output interrupt number */
             0, /* GPIO pin interrupt event */
 #endif
-#if defined (BUILD_C66X)
-            /* main domain */
-            OSAL_REGINT_INTVEC_EVENT_COMBINER,  /* main 2 c66x int router output interrupt number */
-            GPIO_TISCI_C66X_DST_HOST_IRQ0, /* GPIO pin interrupt event */
-#endif
 #if defined (BUILD_C7X)
             /* main domain */
             GPIO_C7X_IRQ0,  				/* main 2 c7x CLEC output interrupt number */
@@ -266,11 +225,6 @@ GPIO_IntCfg GPIO_intCfgs[GPIO_NUM_PORTS][GPIO_NUM_PINS_PER_PORT] =
             /* mcu domain */
             CSLR_MCU_R5FSS0_CORE0_INTR_MAIN2MCU_LVL_INTRTR0_OUTL_0,  /* main 2 mcu int router output interrupt number */
             0, /* GPIO pin interrupt event */
-#endif
-#if defined (BUILD_C66X)
-            /* main domain */
-            OSAL_REGINT_INTVEC_EVENT_COMBINER,  /* main 2 c66x int router output interrupt number */
-            GPIO_TISCI_C66X_DST_HOST_IRQ0, /* GPIO pin interrupt event */
 #endif
 #if defined (BUILD_C7X)
             /* main domain */
@@ -293,11 +247,6 @@ GPIO_IntCfg GPIO_intCfgs[GPIO_NUM_PORTS][GPIO_NUM_PINS_PER_PORT] =
             CSLR_MCU_R5FSS0_CORE0_INTR_MAIN2MCU_LVL_INTRTR0_OUTL_0,  /* main 2 mcu int router output interrupt number */
             0, /* GPIO pin interrupt event */
 #endif
-#if defined (BUILD_C66X)
-            /* main domain */
-            OSAL_REGINT_INTVEC_EVENT_COMBINER,  /* main 2 c66x int router output interrupt number */
-            GPIO_TISCI_C66X_DST_HOST_IRQ0, /* GPIO pin interrupt event */
-#endif
 #if defined (BUILD_C7X)
             /* main domain */
             GPIO_C7X_IRQ0,  				/* main 2 c7x CLEC output interrupt number */
@@ -318,11 +267,6 @@ GPIO_IntCfg GPIO_intCfgs[GPIO_NUM_PORTS][GPIO_NUM_PINS_PER_PORT] =
             /* mcu domain */
             CSLR_MCU_R5FSS0_CORE0_INTR_MAIN2MCU_LVL_INTRTR0_OUTL_0,  /* main 2 mcu int router output interrupt number */
             0, /* GPIO pin interrupt event */
-#endif
-#if defined (BUILD_C66X)
-            /* main domain */
-            OSAL_REGINT_INTVEC_EVENT_COMBINER,  /* main 2 c66x int router output interrupt number */
-            GPIO_TISCI_C66X_DST_HOST_IRQ0, /* GPIO pin interrupt event */
 #endif
 #if defined (BUILD_C7X)
             /* main domain */
@@ -345,11 +289,6 @@ GPIO_IntCfg GPIO_intCfgs[GPIO_NUM_PORTS][GPIO_NUM_PINS_PER_PORT] =
             CSLR_MCU_R5FSS0_CORE0_INTR_MAIN2MCU_LVL_INTRTR0_OUTL_0,  /* main 2 mcu int router output interrupt number */
             0, /* GPIO pin interrupt event */
 #endif
-#if defined (BUILD_C66X)
-            /* main domain */
-            OSAL_REGINT_INTVEC_EVENT_COMBINER,  /* main 2 c66x int router output interrupt number */
-            GPIO_TISCI_C66X_DST_HOST_IRQ0, /* GPIO pin interrupt event */
-#endif
 #if defined (BUILD_C7X)
             /* main domain */
             GPIO_C7X_IRQ0,  				/* main 2 c7x CLEC output interrupt number */
@@ -370,11 +309,6 @@ GPIO_IntCfg GPIO_intCfgs[GPIO_NUM_PORTS][GPIO_NUM_PINS_PER_PORT] =
             /* mcu domain */
             CSLR_MCU_R5FSS0_CORE0_INTR_MAIN2MCU_LVL_INTRTR0_OUTL_0,  /* main 2 mcu int router output interrupt number */
             0, /* GPIO pin interrupt event */
-#endif
-#if defined (BUILD_C66X)
-            /* main domain */
-            OSAL_REGINT_INTVEC_EVENT_COMBINER,  /* main 2 c66x int router output interrupt number */
-            GPIO_TISCI_C66X_DST_HOST_IRQ0, /* GPIO pin interrupt event */
 #endif
 #if defined (BUILD_C7X)
             /* main domain */
@@ -397,11 +331,6 @@ GPIO_IntCfg GPIO_intCfgs[GPIO_NUM_PORTS][GPIO_NUM_PINS_PER_PORT] =
             CSLR_MCU_R5FSS0_CORE0_INTR_MAIN2MCU_LVL_INTRTR0_OUTL_0,  /* main 2 mcu int router output interrupt number */
             0, /* GPIO pin interrupt event */
 #endif
-#if defined (BUILD_C66X)
-            /* main domain */
-            OSAL_REGINT_INTVEC_EVENT_COMBINER,  /* main 2 c66x int router output interrupt number */
-            GPIO_TISCI_C66X_DST_HOST_IRQ0, /* GPIO pin interrupt event */
-#endif
 #if defined (BUILD_C7X)
             /* main domain */
             GPIO_C7X_IRQ0,  				/* main 2 c7x CLEC output interrupt number */
@@ -422,11 +351,6 @@ GPIO_IntCfg GPIO_intCfgs[GPIO_NUM_PORTS][GPIO_NUM_PINS_PER_PORT] =
             /* mcu domain */
             CSLR_MCU_R5FSS0_CORE0_INTR_MAIN2MCU_LVL_INTRTR0_OUTL_0,  /* main 2 mcu int router output interrupt number */
             0, /* GPIO pin interrupt event */
-#endif
-#if defined (BUILD_C66X)
-            /* main domain */
-            OSAL_REGINT_INTVEC_EVENT_COMBINER,  /* main 2 c66x int router output interrupt number */
-            GPIO_TISCI_C66X_DST_HOST_IRQ0, /* GPIO pin interrupt event */
 #endif
 #if defined (BUILD_C7X)
             /* main domain */
@@ -449,11 +373,6 @@ GPIO_IntCfg GPIO_intCfgs[GPIO_NUM_PORTS][GPIO_NUM_PINS_PER_PORT] =
             CSLR_MCU_R5FSS0_CORE0_INTR_MAIN2MCU_LVL_INTRTR0_OUTL_0,  /* main 2 mcu int router output interrupt number */
             0, /* GPIO pin interrupt event */
 #endif
-#if defined (BUILD_C66X)
-            /* main domain */
-            OSAL_REGINT_INTVEC_EVENT_COMBINER,  /* main 2 c66x int router output interrupt number */
-            GPIO_TISCI_C66X_DST_HOST_IRQ0, /* GPIO pin interrupt event */
-#endif
 #if defined (BUILD_C7X)
             /* main domain */
             GPIO_C7X_IRQ0,  				/* main 2 c7x CLEC output interrupt number */
@@ -475,11 +394,6 @@ GPIO_IntCfg GPIO_intCfgs[GPIO_NUM_PORTS][GPIO_NUM_PINS_PER_PORT] =
             CSLR_MCU_R5FSS0_CORE0_INTR_MAIN2MCU_LVL_INTRTR0_OUTL_0,  /* main 2 mcu int router output interrupt number */
             0, /* GPIO pin interrupt event */
 #endif
-#if defined (BUILD_C66X)
-            /* main domain */
-            OSAL_REGINT_INTVEC_EVENT_COMBINER,  /* main 2 c66x int router output interrupt number */
-            GPIO_TISCI_C66X_DST_HOST_IRQ0, /* GPIO pin interrupt event */
-#endif
 #if defined (BUILD_C7X)
             /* main domain */
             GPIO_C7X_IRQ0,  				/* main 2 c7x CLEC output interrupt number */
@@ -498,42 +412,42 @@ GPIO_v0_hwAttrsList GPIO_v0_hwAttrs =
     {
         (uint32_t)CSL_GPIO0_BASE,
         &GPIO_intCfgs[0][0],
-        &GPIO_socConfigIntrPath,
-    },
-    {
-        (uint32_t)CSL_GPIO1_BASE,
-        &GPIO_intCfgs[1][0],
-        &GPIO_socConfigIntrPath,
+        &GPIO_socConfigIntrPath
     },
     {
         (uint32_t)CSL_GPIO2_BASE,
-        &GPIO_intCfgs[2][0],
-        &GPIO_socConfigIntrPath,
-    },
-    {
-        (uint32_t)CSL_GPIO3_BASE,
-        &GPIO_intCfgs[3][0],
-        &GPIO_socConfigIntrPath,
+        &GPIO_intCfgs[1][0],
+        &GPIO_socConfigIntrPath
     },
     {
         (uint32_t)CSL_GPIO4_BASE,
-        &GPIO_intCfgs[4][0],
-        &GPIO_socConfigIntrPath,
-    },
-    {
-        (uint32_t)CSL_GPIO5_BASE,
-        &GPIO_intCfgs[5][0],
-        &GPIO_socConfigIntrPath,
+        &GPIO_intCfgs[2][0],
+        &GPIO_socConfigIntrPath
     },
     {
         (uint32_t)CSL_GPIO6_BASE,
-        &GPIO_intCfgs[6][0],
-        &GPIO_socConfigIntrPath,
+        &GPIO_intCfgs[3][0],
+        &GPIO_socConfigIntrPath
     },
     {
-        (uint32_t)CSL_GPIO7_BASE,
-        &GPIO_intCfgs[7][0],
-        &GPIO_socConfigIntrPath,
+        0U,
+        NULL,
+        NULL
+    },
+    {
+        0U,
+        NULL,
+        NULL
+    },
+    {
+        0U,
+        NULL,
+        NULL
+    },
+    {
+        0U,
+        NULL,
+        NULL
     }
 };
 
@@ -664,7 +578,7 @@ int32_t GPIO_socConfigIntrPath(uint32_t portNum, uint32_t pinNum,void *hwAttrs,b
     GPIO_IntCfg       *intCfg;
     uint32_t           bankNum;
 	int32_t retVal=CSL_PASS;
-#if defined(BUILD_MCU1_0) || defined(BUILD_MCU1_1) || defined(BUILD_MCU2_0) || defined(BUILD_MCU2_1) || defined(BUILD_MCU3_0) || defined(BUILD_MCU3_1)
+#if defined(BUILD_MCU)
     CSL_ArmR5CPUInfo r5CpuInfo;
 #endif
     struct tisci_msg_rm_irq_set_req     rmIrqReq;
@@ -674,7 +588,7 @@ int32_t GPIO_socConfigIntrPath(uint32_t portNum, uint32_t pinNum,void *hwAttrs,b
 
     intCfg = cfg->intCfg;
 
-#if defined(BUILD_MCU1_0) || defined(BUILD_MCU1_1) || defined(BUILD_MCU2_0) || defined(BUILD_MCU2_1) || defined(BUILD_MCU3_0) || defined(BUILD_MCU3_1)
+#if defined(BUILD_MCU)
     CSL_armR5GetCpuID(&r5CpuInfo);
 #endif
     /* Input parameter validation */
@@ -685,43 +599,27 @@ int32_t GPIO_socConfigIntrPath(uint32_t portNum, uint32_t pinNum,void *hwAttrs,b
     {
         case (uint32_t)CSL_WKUP_GPIO0_BASE:
             src_id = TISCI_DEV_WKUP_GPIO0;
-            src_index = (uint16_t)bankNum;  /* This is the bus_gpio_bank (0-5) mentioned in DMSC firmware guide for J721E_DEV_WKUP_GPIO0 */
+            src_index = (uint16_t)bankNum;  /* This is the bus_gpio_bank (0-5) mentioned in DMSC firmware guide for J721S2_DEV_WKUP_GPIO0 */
             break;
         case (uint32_t)CSL_WKUP_GPIO1_BASE:
             src_id = TISCI_DEV_WKUP_GPIO1;
-            src_index = (uint16_t)bankNum;  /* This is the bus_gpio_bank (0-5) mentioned in DMSC firmware guide for J721E_DEV_WKUP_GPIO1 */
+            src_index = (uint16_t)bankNum;  /* This is the bus_gpio_bank (0-5) mentioned in DMSC firmware guide for J721S2_DEV_WKUP_GPIO1 */
             break;
         case (uint32_t)CSL_GPIO0_BASE:
             src_id = TISCI_DEV_GPIO0;
-            src_index = (uint16_t)bankNum;  /* This is the bus_gpio_bank (0-7) mentioned in DMSC firmware guide  for J721E_DEV_GPIO0 */
+            src_index = (uint16_t)bankNum;  /* This is the bus_gpio_bank (0-7) mentioned in DMSC firmware guide  for J721S2_DEV_GPIO0 */
             break;
         case (uint32_t)CSL_GPIO2_BASE:
             src_id = TISCI_DEV_GPIO2;
-            src_index = (uint16_t)bankNum;  /* This is the bus_gpio_bank (0-7) mentioned in DMSC firmware guide  for J721E_DEV_GPIO2 */
+            src_index = (uint16_t)bankNum;  /* This is the bus_gpio_bank (0-7) mentioned in DMSC firmware guide  for J721S2_DEV_GPIO2 */
             break;
         case (uint32_t)CSL_GPIO4_BASE:
             src_id = TISCI_DEV_GPIO4;
-            src_index = (uint16_t)bankNum;  /* This is the bus_gpio_bank (0-7) mentioned in DMSC firmware guide  for J721E_DEV_GPIO4 */
+            src_index = (uint16_t)bankNum;  /* This is the bus_gpio_bank (0-7) mentioned in DMSC firmware guide  for J721S2_DEV_GPIO4 */
             break;
         case (uint32_t)CSL_GPIO6_BASE:
             src_id = TISCI_DEV_GPIO6;
-            src_index = (uint16_t)bankNum;  /* This is the bus_gpio_bank (0-7) mentioned in DMSC firmware guide  for J721E_DEV_GPIO6 */
-            break;
-        case (uint32_t)CSL_GPIO1_BASE:
-            src_id = TISCI_DEV_GPIO1;
-            src_index = (uint16_t)bankNum;  /* This is the bus_gpio_bank (0-2) mentioned in DMSC firmware guide  for J721E_DEV_GPIO1 */
-            break;
-        case (uint32_t)CSL_GPIO3_BASE:
-            src_id = TISCI_DEV_GPIO3;
-            src_index = (uint16_t)bankNum;  /* This is the bus_gpio_bank (0-2) mentioned in DMSC firmware guide  for J721E_DEV_GPIO3 */
-            break;
-        case (uint32_t)CSL_GPIO5_BASE:
-            src_id = TISCI_DEV_GPIO5;
-            src_index = (uint16_t)bankNum;  /* This is the bus_gpio_bank (0-2) mentioned in DMSC firmware guide  for J721E_DEV_GPIO5 */
-            break;
-        case (uint32_t)CSL_GPIO7_BASE:
-            src_id = TISCI_DEV_GPIO7;
-            src_index = (uint16_t)bankNum;  /* This is the bus_gpio_bank (0-2) mentioned in DMSC firmware guide  for J721E_DEV_GPIO7 */
+            src_index = (uint16_t)bankNum;  /* This is the bus_gpio_bank (0-7) mentioned in DMSC firmware guide  for J721S2_DEV_GPIO6 */
             break;
         default:
             break;
@@ -768,9 +666,9 @@ int32_t GPIO_socConfigIntrPath(uint32_t portNum, uint32_t pinNum,void *hwAttrs,b
        dst_id = TISCI_DEV_C66SS1_CORE0;
     }
     dst_host_irq = (uint16_t)intCfg[pinNum].eventId;
-#elif defined(BUILD_C7X_1)
+#elif defined(BUILD_C7X_1) || defined(BUILD_C7X_2)
     dst_id = TISCI_DEV_COMPUTE_CLUSTER0_CLEC;
-    dst_host_irq = (uint16_t)(CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_WKUP_GPIOMUX_INTRTR0_OUTP_16 + bankNum);
+    dst_host_irq = (uint16_t)intCfg[pinNum].eventId;
 #endif
 
     if(setIntrPath) {
@@ -834,7 +732,7 @@ int32_t GPIO_socConfigIntrPath(uint32_t portNum, uint32_t pinNum,void *hwAttrs,b
 #if defined (BUILD_C7X)
     int32_t               ret;
     CSL_ClecEventConfig   cfgClec;
-    CSL_CLEC_EVTRegs     *clecBaseAddr = (CSL_CLEC_EVTRegs *)CSL_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
+    CSL_CLEC_EVTRegs     *clecBaseAddr = (CSL_CLEC_EVTRegs *)CSL_COMPUTE_CLUSTER0_CLEC_BASE;
 
     /* Configure CLEC for GPIO */
     cfgClec.secureClaimEnable = FALSE;
