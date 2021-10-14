@@ -42,6 +42,271 @@
 #include "board_utils.h"
 #include <ti/drv/sciclient/sciclient.h>
 
+extern Board_initParams_t gBoardInitParams;
+
+uint32_t gBoardClkModuleMcuIDInitGroupl[] = {
+    TISCI_DEV_MCU_TIMER0,
+    TISCI_DEV_MCU_FSS0_OSPI_0,
+    TISCI_DEV_MCU_FSS0_OSPI_1,
+    TISCI_DEV_MCU_UART0,
+    TISCI_DEV_WKUP_I2C0,
+    TISCI_DEV_WKUP_UART0,
+};
+
+uint32_t gBoardClkModuleMcuIDInitGroup2[] = {
+    TISCI_DEV_MCU_ADC12FC_16FFC0,
+    TISCI_DEV_MCU_ADC12FC_16FFC1,
+    TISCI_DEV_MCU_CPSW0,
+    TISCI_DEV_WKUP_GPIO0,
+    TISCI_DEV_WKUP_GPIO1,
+    TISCI_DEV_WKUP_GPIOMUX_INTRTR0,
+    TISCI_DEV_MCU_MCAN0,
+    TISCI_DEV_MCU_MCAN1,
+    TISCI_DEV_MCU_I2C0,
+    TISCI_DEV_MCU_I2C1,
+};
+
+uint32_t gBoardClkModuleMcuIDDeinitGroupl[] = {
+    TISCI_DEV_MCU_FSS0_OSPI_0,
+    TISCI_DEV_MCU_FSS0_OSPI_1,
+    TISCI_DEV_WKUP_I2C0,
+};
+
+uint32_t gBoardClkModuleMainIDInitGroup1[] = {
+    TISCI_DEV_DDR0,
+    TISCI_DEV_DDR1,
+    TISCI_DEV_EMIF_DATA_0_VD,
+    TISCI_DEV_EMIF_DATA_1_VD,
+    TISCI_DEV_MMCSD0,
+    TISCI_DEV_MMCSD1,
+    TISCI_DEV_GPIO4,
+    TISCI_DEV_UART0,
+    TISCI_DEV_GTC0,
+};
+
+uint32_t gBoardClkModuleMainIDDeinitGroup1[] = {
+    TISCI_DEV_MMCSD0,
+    TISCI_DEV_MMCSD1,
+    TISCI_DEV_GTC0,
+};
+
+uint32_t gBoardClkModuleMainIDGroup2[] = {
+    TISCI_DEV_TIMER0,
+    TISCI_DEV_TIMER1,
+    TISCI_DEV_TIMER2,
+    TISCI_DEV_TIMER3,
+    TISCI_DEV_GPIO0,
+    TISCI_DEV_GPIO2,
+    TISCI_DEV_GPIO6,
+    TISCI_DEV_MCAN0,
+    TISCI_DEV_MCAN1,
+    TISCI_DEV_MCAN2,
+    TISCI_DEV_MCAN3,
+    TISCI_DEV_MCAN4,
+    TISCI_DEV_MCAN5,
+    TISCI_DEV_MCAN6,
+    TISCI_DEV_MCAN7,
+    TISCI_DEV_MCAN8,
+    TISCI_DEV_MCAN9,
+    TISCI_DEV_MCAN10,
+    TISCI_DEV_MCAN11,
+    TISCI_DEV_MCAN12,
+    TISCI_DEV_MCAN13,
+    TISCI_DEV_MCAN14,
+    TISCI_DEV_MCAN15,
+    TISCI_DEV_MCAN16,
+    TISCI_DEV_MCAN17,
+    TISCI_DEV_MCASP0,
+    TISCI_DEV_MCASP1,
+    TISCI_DEV_MCASP2,
+    TISCI_DEV_MCASP3,
+    TISCI_DEV_MCASP4,
+    TISCI_DEV_I2C0,
+    TISCI_DEV_I2C1,
+    TISCI_DEV_I2C2,
+    TISCI_DEV_I2C3,
+    TISCI_DEV_I2C4,
+    TISCI_DEV_I2C5,
+    TISCI_DEV_I2C6,
+    TISCI_DEV_PCIE1,
+    TISCI_DEV_UART1,
+    TISCI_DEV_UART2,
+    TISCI_DEV_UART3,
+    TISCI_DEV_UART4,
+    TISCI_DEV_UART5,
+    TISCI_DEV_UART6,
+    TISCI_DEV_UART7,
+    TISCI_DEV_UART8,
+    TISCI_DEV_UART9,
+    TISCI_DEV_USB0,
+    TISCI_DEV_SERDES_10G0,
+    TISCI_DEV_MCSPI5,
+    TISCI_DEV_TIMER8
+};
+
+/**
+ * \brief Disables module clock
+ *
+ * \return  BOARD_SOK   - Clock disable successful.
+ *          BOARD_FAIL  - Clock disable failed.
+ *
+ */
+Board_STATUS Board_moduleClockDisable(uint32_t moduleId)
+{
+    Board_STATUS retVal = BOARD_SOK;
+	int32_t      status = CSL_EFAIL;
+    uint32_t     moduleState = 0U;
+    uint32_t     resetState = 0U;
+    uint32_t     contextLossState = 0U;
+
+    /* Get the module state.
+       No need to change the module state if it
+       is already OFF
+     */
+    status = Sciclient_pmGetModuleState(moduleId,
+                                        &moduleState,
+                                        &resetState,
+                                        &contextLossState,
+                                        SCICLIENT_SERVICE_WAIT_FOREVER);
+    if(moduleState != TISCI_MSG_VALUE_DEVICE_HW_STATE_OFF)
+    {
+        status = Sciclient_pmSetModuleState(moduleId,
+                                            TISCI_MSG_VALUE_DEVICE_SW_STATE_AUTO_OFF,
+                                            (TISCI_MSG_FLAG_AOP |
+                                             TISCI_MSG_FLAG_DEVICE_RESET_ISO),
+                                             SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_PASS)
+        {
+            status = Sciclient_pmSetModuleRst (moduleId,
+                                               0x1U,
+                                               SCICLIENT_SERVICE_WAIT_FOREVER);
+            if (status != CSL_PASS)
+            {
+                retVal = BOARD_FAIL;
+            }
+        }
+        else
+        {
+            retVal = BOARD_FAIL;
+        }
+    }
+
+    return retVal;
+}
+
+/**
+ * \brief Enables module clock
+ *
+ * \return  BOARD_SOK   - Clock enable sucessful.
+ *          BOARD_FAIL  - Clock enable failed.
+ *
+ */
+Board_STATUS Board_moduleClockEnable(uint32_t moduleId)
+{
+    Board_STATUS retVal = BOARD_SOK;
+	int32_t      status = CSL_EFAIL;
+    uint32_t     moduleState = 0U;
+    uint32_t     resetState = 0U;
+    uint32_t     contextLossState = 0U;
+
+    /* Get the module state.
+       No need to change the module state if it
+       is already ON
+     */
+    status = Sciclient_pmGetModuleState(moduleId,
+                                        &moduleState,
+                                        &resetState,
+                                        &contextLossState,
+                                        SCICLIENT_SERVICE_WAIT_FOREVER);
+    if(moduleState == TISCI_MSG_VALUE_DEVICE_HW_STATE_OFF)
+    {
+        if(gBoardInitParams.pscMode == BOARD_PSC_DEVICE_MODE_NONEXCLUSIVE)
+        {
+            status = Sciclient_pmSetModuleState(moduleId,
+                                                TISCI_MSG_VALUE_DEVICE_SW_STATE_ON,
+                                                (TISCI_MSG_FLAG_AOP |
+                                                 TISCI_MSG_FLAG_DEVICE_RESET_ISO),
+                                                 SCICLIENT_SERVICE_WAIT_FOREVER);
+        }
+        else
+        {
+            status = Sciclient_pmSetModuleState(moduleId,
+                                                TISCI_MSG_VALUE_DEVICE_SW_STATE_ON,
+                                                (TISCI_MSG_FLAG_AOP |
+                                                 TISCI_MSG_FLAG_DEVICE_EXCLUSIVE |
+                                                 TISCI_MSG_FLAG_DEVICE_RESET_ISO),
+                                                 SCICLIENT_SERVICE_WAIT_FOREVER);
+        }
+        if (status == CSL_PASS)
+        {
+            status = Sciclient_pmSetModuleRst (moduleId,
+                                               0x0U,
+                                               SCICLIENT_SERVICE_WAIT_FOREVER);
+            if (status != CSL_PASS)
+            {
+                retVal = BOARD_FAIL;
+            }
+        }
+        else
+        {
+            retVal = BOARD_FAIL;
+        }
+    }
+
+    return retVal;
+}
+
+/**
+ * \brief clock Initialization function
+ *
+ * \return  BOARD_SOK              - Clock initialization successful.
+ *          BOARD_INIT_CLOCK_FAIL  - Clock initialization failed.
+ *
+ */
+static Board_STATUS Board_moduleClockInit(uint32_t *clkData, uint32_t size)
+{
+	Board_STATUS  status = BOARD_SOK;
+    uint32_t index;
+
+    for(index = 0; index < size; index++)
+    {
+        status = Board_moduleClockEnable(clkData[index]);
+        if(status != BOARD_SOK)
+        {
+            status = BOARD_INIT_CLOCK_FAIL;
+            break;
+        }
+    }
+
+    return status;
+}
+
+/**
+ * \brief Clock de-initialization function
+ *
+ *
+ * \return  BOARD_SOK              - Clock de-initialization successful.
+ *          BOARD_INIT_CLOCK_FAIL  - Clock de-initialization failed.
+ *
+ */
+static Board_STATUS Board_moduleClockDeinit(uint32_t *clkData, uint32_t size)
+{
+    Board_STATUS  status = BOARD_SOK;
+    uint32_t index;
+
+    for(index = 0; index < size; index++)
+    {
+        status = Board_moduleClockDisable(clkData[index]);
+        if(status != BOARD_SOK)
+        {
+            status = BOARD_INIT_CLOCK_FAIL;
+            break;
+        }
+    }
+
+    return status;
+}
+
 /**
  * \brief clock Initialization function for MCU domain
  *
@@ -56,7 +321,35 @@
  */
 Board_STATUS Board_moduleClockInitMcu(void)
 {
-    return BOARD_SOK;
+    Board_STATUS  status = BOARD_SOK;
+    uint32_t size;
+
+    /* Restoring MCU DMtimer0 FCLK to HFOSC0 (changed by ROM) */
+    HW_WR_REG32((CSL_MCU_CTRL_MMR0_CFG0_BASE + CSL_MCU_CTRL_MMR_CFG0_MCU_TIMER0_CLKSEL), 0);
+
+    if((gBoardInitParams.mcuClkGrp == BOARD_MCU_CLOCK_GROUP_ALL) ||
+       (gBoardInitParams.mcuClkGrp == BOARD_MCU_CLOCK_GROUP1))
+    {
+        size = sizeof(gBoardClkModuleMcuIDInitGroupl) / sizeof(uint32_t);
+        status = Board_moduleClockInit(gBoardClkModuleMcuIDInitGroupl, size);
+        if(status != BOARD_SOK)
+        {
+            return status;
+        }
+    }
+
+    if((gBoardInitParams.mcuClkGrp == BOARD_MCU_CLOCK_GROUP_ALL) ||
+       (gBoardInitParams.mcuClkGrp == BOARD_MCU_CLOCK_GROUP2))
+    {
+        size = sizeof(gBoardClkModuleMcuIDInitGroup2) / sizeof(uint32_t);
+        status = Board_moduleClockInit(gBoardClkModuleMcuIDInitGroup2, size);
+        if(status != BOARD_SOK)
+        {
+            return status;
+        }
+    }
+
+    return status;
 }
 
 /**
@@ -73,7 +366,28 @@ Board_STATUS Board_moduleClockInitMcu(void)
  */
 Board_STATUS Board_moduleClockInitMain(void)
 {
-	return BOARD_SOK;
+	Board_STATUS  status = BOARD_SOK;
+    uint32_t size;
+
+    if((gBoardInitParams.mainClkGrp == BOARD_MAIN_CLOCK_GROUP_ALL) ||
+       (gBoardInitParams.mainClkGrp == BOARD_MAIN_CLOCK_GROUP1))
+    {
+        size = sizeof(gBoardClkModuleMainIDInitGroup1) / sizeof(uint32_t);
+        status = Board_moduleClockInit(gBoardClkModuleMainIDInitGroup1, size);
+        if(status != BOARD_SOK)
+        {
+            return status;
+        }
+    }
+
+    if((gBoardInitParams.mainClkGrp == BOARD_MAIN_CLOCK_GROUP_ALL) ||
+       (gBoardInitParams.mainClkGrp == BOARD_MAIN_CLOCK_GROUP2))
+    {
+        size = sizeof(gBoardClkModuleMainIDGroup2) / sizeof(uint32_t);
+        status = Board_moduleClockInit(gBoardClkModuleMainIDGroup2, size);
+    }
+
+    return status;
 }
 
 /**
@@ -87,7 +401,32 @@ Board_STATUS Board_moduleClockInitMain(void)
  */
 Board_STATUS Board_moduleClockDeinitMcu(void)
 {
-	return BOARD_SOK;
+	Board_STATUS  status = BOARD_SOK;
+    uint32_t size;
+
+    if((gBoardInitParams.mcuClkGrp == BOARD_MCU_CLOCK_GROUP_ALL) ||
+       (gBoardInitParams.mcuClkGrp == BOARD_MCU_CLOCK_GROUP1))
+    {
+        size = sizeof(gBoardClkModuleMcuIDDeinitGroupl) / sizeof(uint32_t);
+        status = Board_moduleClockDeinit(gBoardClkModuleMcuIDDeinitGroupl, size);
+        if(status != BOARD_SOK)
+        {
+            return status;
+        }
+    }
+
+    if((gBoardInitParams.mcuClkGrp == BOARD_MCU_CLOCK_GROUP_ALL) ||
+       (gBoardInitParams.mcuClkGrp == BOARD_MCU_CLOCK_GROUP2))
+    {
+        size = sizeof(gBoardClkModuleMcuIDInitGroup2) / sizeof(uint32_t);
+        status = Board_moduleClockDeinit(gBoardClkModuleMcuIDInitGroup2, size);
+        if(status != BOARD_SOK)
+        {
+            return status;
+        }
+    }
+
+    return status;
 }
 
 /**
@@ -101,5 +440,26 @@ Board_STATUS Board_moduleClockDeinitMcu(void)
  */
 Board_STATUS Board_moduleClockDeinitMain(void)
 {
-    return BOARD_SOK;
+    Board_STATUS  status = BOARD_SOK;
+    uint32_t size;
+
+    if((gBoardInitParams.mainClkGrp == BOARD_MAIN_CLOCK_GROUP_ALL) ||
+       (gBoardInitParams.mainClkGrp == BOARD_MAIN_CLOCK_GROUP1))
+    {
+        size = sizeof(gBoardClkModuleMainIDDeinitGroup1) / sizeof(uint32_t);
+        status = Board_moduleClockDeinit(gBoardClkModuleMainIDDeinitGroup1, size);
+        if(status != BOARD_SOK)
+        {
+            return status;
+        }
+    }
+
+    if((gBoardInitParams.mainClkGrp == BOARD_MAIN_CLOCK_GROUP_ALL) ||
+       (gBoardInitParams.mainClkGrp == BOARD_MAIN_CLOCK_GROUP2))
+    {
+        size = sizeof(gBoardClkModuleMainIDGroup2) / sizeof(uint32_t);
+        status = Board_moduleClockDeinit(gBoardClkModuleMainIDGroup2, size);
+    }
+
+    return status;
 }

@@ -44,7 +44,22 @@
 #include "board_utils.h"
 #include "board_cfg.h"
 
+Board_DetectCfg_t  gBoardDetCfg[BOARD_ID_MAX_BOARDS] =
+ {{BOARD_COMMON_EEPROM_I2C_INST, BOARD_GESI_EEPROM_SLAVE_ADDR, BOARD_SOC_DOMAIN_WKUP, "J7X-GESI-EXP"},
+  {BOARD_CSI2_EEPROM_I2C_INST, BOARD_CSI2_EEPROM_SLAVE_ADDR, BOARD_SOC_DOMAIN_MAIN, "J7X-FUSION2-CSI"},
+  {BOARD_COMMON_EEPROM_I2C_INST, BOARD_SOM_EEPROM_SLAVE_ADDR, BOARD_SOC_DOMAIN_WKUP, "J721EX-PM2-SOM"},
+  {BOARD_COMMON_EEPROM_I2C_INST, BOARD_CP_EEPROM_SLAVE_ADDR, BOARD_SOC_DOMAIN_WKUP, "J7X-BASE-CPB"}};
+
 Board_I2cInitCfg_t gBoardI2cInitCfg = {0, BOARD_SOC_DOMAIN_MAIN, 0};
+Board_initParams_t gBoardInitParams = {BOARD_UART_INSTANCE, BOARD_UART_SOC_DOMAIN, BOARD_PSC_DEVICE_MODE_NONEXCLUSIVE,
+                                       BOARD_MAIN_CLOCK_GROUP_ALL, BOARD_MCU_CLOCK_GROUP_ALL};
+
+/* Variables to store and restore the RAT configurations on DSP core */
+#if defined (_TMS320C6X)
+static uint32_t gRatOffsetHi;
+static uint32_t gRatOffsetLo;
+static uint32_t gRatCfg;
+#endif
 
 /**
  * \brief Board ID read function
@@ -66,7 +81,17 @@ Board_I2cInitCfg_t gBoardI2cInitCfg = {0, BOARD_SOC_DOMAIN_MAIN, 0};
  */
 Board_STATUS Board_getBoardData(Board_IDInfo_v2 *info, uint32_t boardID)
 {
-    return BOARD_SOK;
+    Board_I2cInitCfg_t i2cCfg;
+    Board_STATUS status;
+
+    i2cCfg.i2cInst    = gBoardDetCfg[boardID].i2cInst;
+    i2cCfg.socDomain  = gBoardDetCfg[boardID].socDomain;
+    i2cCfg.enableIntr = false;
+    Board_setI2cInitConfig(&i2cCfg);
+
+    status = Board_getIDInfo_v2(info, gBoardDetCfg[boardID].slaveAddr);
+
+    return status;
 }
 
 /**
@@ -96,29 +121,25 @@ Board_STATUS Board_getBoardData(Board_IDInfo_v2 *info, uint32_t boardID)
  */
 bool Board_detectBoard(uint32_t boardID)
 {
+    Board_IDInfo_v2 info;
+    Board_STATUS status;
     bool bDet = FALSE;
 
+    if(boardID <= BOARD_ID_SOM)
+    {
+        status = Board_getBoardData(&info, boardID);
+        if(status == 0)
+        {
+            if(!(strncmp(info.boardInfo.boardName,
+                         gBoardDetCfg[boardID].bName,
+                         BOARD_BOARD_NAME_LEN)))
+            {
+                bDet = TRUE;
+            }
+        }
+    }
+
     return bDet;
-}
-
-/**
- *  \brief    Function to detect ENET expansion application card type
- *
- *  ENET expansion connector supports QSGMII and SGMII application cards.
- *  This function detects type of the application card connected on
- *  ENET expansion connector.
- *
- *  \return
- *            0 (BOARD_ENET_NONE)   - No board connected or invalid board ID data
- *            1 (BOARD_ENET_QSGMII) - QSGMII board connected
- *            2 (BOARD_ENET_SGMII)  - SGMII board connected
- *           -1 (BOARD_ENET_UNKOWN) - Unknown board
-*/
-int32_t Board_detectEnetCard(void)
-{
-    int8_t ret = 0;
-
-    return ret;
 }
 
 /**
@@ -165,7 +186,37 @@ Board_STATUS Board_readMacAddr(uint32_t boardID,
                                uint32_t macBufSize,
                                uint32_t *macAddrCnt)
 {
-    return BOARD_SOK;
+    Board_IDInfo_v2 info;
+    Board_STATUS status;
+    uint8_t macCount = 0;
+
+    if((boardID <= BOARD_ID_SOM) && (macAddrBuf != NULL))
+    {
+        status = Board_getBoardData(&info, boardID);
+        if(status == 0)
+        {
+            macCount = ((info.macInfo.macControl & BOARD_MAC_COUNT_MASK)
+                          >> BOARD_MAC_COUNT_SHIFT) + 1;
+            if(macBufSize < (macCount * BOARD_MAC_ADDR_BYTES))
+            {
+                macCount = (macBufSize / BOARD_MAC_ADDR_BYTES);
+            }
+
+            memcpy(macAddrBuf, &(info.macInfo.macAddress[0]),
+                   (macCount * BOARD_MAC_ADDR_BYTES));
+        }
+    }
+    else
+    {
+        status = BOARD_INVALID_PARAM;
+    }
+
+    if(macAddrCnt != NULL)
+    {
+        *macAddrCnt = macCount;
+    }
+
+    return status;
 }
 
 /**
@@ -196,7 +247,24 @@ Board_STATUS Board_readMacAddr(uint32_t boardID,
 Board_STATUS Board_readMacAddrCount(uint32_t boardID,
                                     uint32_t *macAddrCnt)
 {
-    return BOARD_SOK;
+    Board_IDInfo_v2 info;
+    Board_STATUS status;
+
+    if((boardID <= BOARD_ID_SOM) && (macAddrCnt != NULL))
+    {
+        status = Board_getBoardData(&info, boardID);
+        if(status == 0)
+        {
+            *macAddrCnt = ((info.macInfo.macControl & BOARD_MAC_COUNT_MASK)
+                           >> BOARD_MAC_COUNT_SHIFT) + 1;
+        }
+    }
+    else
+    {
+        status = BOARD_INVALID_PARAM;
+    }
+
+    return status;
 }
 
 /**
@@ -215,6 +283,13 @@ Board_STATUS Board_readMacAddrCount(uint32_t boardID,
  */
 Board_STATUS Board_setI2cInitConfig(Board_I2cInitCfg_t *i2cCfg)
 {
+    if(i2cCfg == NULL)
+    {
+        return BOARD_INVALID_PARAM;
+    }
+
+    gBoardI2cInitCfg = *i2cCfg;
+
     return BOARD_SOK;
 }
 
@@ -231,6 +306,13 @@ Board_STATUS Board_setI2cInitConfig(Board_I2cInitCfg_t *i2cCfg)
  */
 Board_STATUS Board_getInitParams(Board_initParams_t *initParams)
 {
+    if(initParams == NULL)
+    {
+        return BOARD_INVALID_PARAM;
+    }
+
+    *initParams = gBoardInitParams;
+
     return BOARD_SOK;
 }
 
@@ -256,6 +338,13 @@ Board_STATUS Board_getInitParams(Board_initParams_t *initParams)
  */
 Board_STATUS Board_setInitParams(Board_initParams_t *initParams)
 {
+    if(initParams == NULL)
+    {
+        return BOARD_INVALID_PARAM;
+    }
+
+    gBoardInitParams = *initParams;
+
     return BOARD_SOK;
 }
 
@@ -272,16 +361,16 @@ uint32_t Board_getSocDomain(void)
 {
     uint32_t socDomain;
 
-#if defined (BUILD_MPU1_0) || defined(BUILD_MPU1_1)
+#if defined (BUILD_MPU1_0)
     socDomain = BOARD_SOC_DOMAIN_MAIN;
 #elif defined (BUILD_MCU2_0) || defined (BUILD_MCU2_1) || defined (BUILD_MCU3_0) || defined (BUILD_MCU3_1)
     socDomain = BOARD_SOC_DOMAIN_MAIN;
-#elif defined (BUILD_C7X_1) || defined (BUILD_C7X_2)
+#elif defined (BUILD_C7X_1)
     socDomain = BOARD_SOC_DOMAIN_MAIN;
 #elif defined (BUILD_MCU1_0) || defined (BUILD_MCU1_1)
     socDomain = BOARD_SOC_DOMAIN_MCU;
 #else
-    //#error "Unsupported core id"
+    #error "Unsupported core id"
 #endif
 
   return socDomain;
@@ -297,7 +386,16 @@ uint32_t Board_getSocDomain(void)
  */
 void Board_setRATCfg(void)
 {
-
+#if defined (_TMS320C6X)
+    gRatOffsetLo = HW_RD_REG32(CSL_C66_COREPAC_C66_RATCFG_BASE + 0x24);
+    gRatOffsetHi = HW_RD_REG32(CSL_C66_COREPAC_C66_RATCFG_BASE + 0x28);
+    gRatCfg      = HW_RD_REG32(CSL_C66_COREPAC_C66_RATCFG_BASE + 0x20);
+    HW_WR_REG32((CSL_C66_COREPAC_C66_RATCFG_BASE + 0x24),
+                BOARD_C66X_RAT_OFFSET);
+    HW_WR_REG32((CSL_C66_COREPAC_C66_RATCFG_BASE + 0x28), 0);
+    HW_WR_REG32((CSL_C66_COREPAC_C66_RATCFG_BASE + 0x20),
+                BOARD_C66X_RAT_CONFIG);
+#endif
 }
 
 /**
@@ -307,7 +405,11 @@ void Board_setRATCfg(void)
  */
 void Board_restoreRATCfg(void)
 {
-
+#if defined (_TMS320C6X)
+    HW_WR_REG32((CSL_C66_COREPAC_C66_RATCFG_BASE + 0x20), gRatCfg);
+    HW_WR_REG32((CSL_C66_COREPAC_C66_RATCFG_BASE + 0x24), gRatOffsetLo);
+    HW_WR_REG32((CSL_C66_COREPAC_C66_RATCFG_BASE + 0x28), gRatOffsetHi);
+#endif
 }
 
 /**
@@ -326,5 +428,13 @@ void Board_restoreRATCfg(void)
  */
 void BOARD_delay(uint32_t usecs)
 {
+    uint32_t msecs;
 
+    msecs = usecs/1000;
+    if(usecs%1000)
+    {
+        msecs += 1;
+    }
+
+    Osal_delay(msecs);
 }

@@ -148,6 +148,7 @@ typedef int32_t Board_STATUS;
 
 #elif defined (j721s2_evm)
 #include <ti/board/src/j721s2_evm/include/board_cfg.h>
+#include <ti/board/src/j721s2_evm/include/board_pinmux.h>
 
 #elif defined (am64x_evm)
 #include <ti/board/src/am64x_evm/include/board_cfg.h>

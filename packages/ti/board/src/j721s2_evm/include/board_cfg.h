@@ -46,7 +46,6 @@ extern "C" {
 #endif
 
 #include <ti/board/board.h>
-#include <ti/board/src/j721s2_evm/include/board_pinmux.h>
 
 /* Board ID information */
 #define BOARD_INFO_CPU_NAME     "j721s2"
@@ -62,13 +61,17 @@ extern "C" {
 #undef BOARD_DDR_ENABLE_DDR_MEM_PRIME
 
 /* UART LLD instance number for primary UART port */
-#define BOARD_UART_INSTANCE                             (0U)
+#define BOARD_UART_INSTANCE                             (8U)
 /* UART LLD instance number for MAIN UART1 port */
 #define BOARD_UART1_INSTANCE                            (1U)
 /* UART LLD instance number for MAIN UART2 port */
 #define BOARD_UART2_INSTANCE                            (2U)
 /* UART LLD instance number for MAIN UART4 port */
 #define BOARD_UART4_INSTANCE                            (4U)
+/* UART LLD instance number for MAIN UART5 port */
+#define BOARD_UART5_INSTANCE                            (5U)
+/* MCU UART LLD instance number */
+#define BOARD_MCU_UART_INSTANCE                         (0U)
 /* WKUP UART LLD instance number */
 #define BOARD_WKUP_UART_INSTANCE                        (0U)
 /* ICSSG UART instance number */
@@ -113,13 +116,15 @@ extern "C" {
 #define BOARD_HPF_INSTANCE                              (0)
 
 /* I2C instance connected to IO Expander */
+#define BOARD_I2C_IOEXP_SOM_DEVICE1_INSTANCE            (0U)
 #define BOARD_I2C_IOEXP_DEVICE1_INSTANCE                (0U)
 #define BOARD_I2C_IOEXP_DEVICE2_INSTANCE                (0U)
 #define BOARD_I2C_IOEXP_DEVICE3_INSTANCE                (3U)
-#define BOARD_I2C_IOEXP_DEVICE4_INSTANCE                (1U)
+#define BOARD_I2C_IOEXP_DEVICE4_INSTANCE                (4U)
 #define BOARD_I2C_IOEXP_DEVICE5_INSTANCE                (6U)
 #define BOARD_I2C_AUDIO_IOEXP_DEVICE_INSTANCE           (3U)
 #define BOARD_I2C_VIDEO_IOEXP_DEVICE_INSTANCE           (1U)
+#define BOARD_I2C_DSI2DP_DEVICE_INSTANCE                (4U)
 
 /* I2C IO Expander Slave devices */
 #define BOARD_I2C_IOEXP_DEVICE1_ADDR                    (0x20U)
@@ -158,9 +163,9 @@ extern "C" {
 #define BOARD_USER_LED2                                 (7U)
 #define BOARD_USER_LED_IOEXP_PORT                       (2U)
 
-#define BOARD_ICSS_EMAC_PORT_MAX                        (4)
-#define BOARD_CPSW9G_EMAC_PORT_MAX                      (4)
-#define BOARD_CPSW9G_PORT_MAX                           (8)
+#define BOARD_ICSS_EMAC_PORT_MAX                        (1)
+#define BOARD_CPSW9G_EMAC_PORT_MAX                      (0)
+#define BOARD_CPSW9G_PORT_MAX                           (0)
 
 
 /* ICSS0 EMAC PHY register address */
@@ -206,8 +211,6 @@ extern "C" {
 #define BOARD_ICSS_EMAC_STRAP_STS1_ADDR                (0x6EU)
 #define BOARD_ICSS_EMAC_STRAP_STS2_ADDR                (0x6FU)
 
-#define BOARD_SGMII_PORT_MAX                            (4U)
-
 /* MCU_ETH1_RESETn */
 #define BOARD_GPIO_IOEXP_MCU_EMAC_RST_PORT_NUM          (0U) /* WKUP_GPIO0_3 */
 #define BOARD_GPIO_IOEXP_MCU_EMAC_RST_PIN_NUM           (0x03U)
@@ -217,7 +220,7 @@ extern "C" {
 #define BOARD_GPIO_MCU_EMAC_INT_PIN_NUM                 (0X37U)
 
 /* AUTOMATION HEADER */
-#define BOARD_TEST_HEADER_I2C_INSTANCE                  (2U)
+#define BOARD_TEST_HEADER_I2C_INSTANCE                  (1U)
 #define BOARD_I2C_BOOT_MODE_SW_ADDR                     (0x22U)
 
 /* Temperature sensor i2c instance */
@@ -227,7 +230,7 @@ extern "C" {
 #define BOARD_TEMP_SENSOR_I2C_SLAVE_DEVICE1_ADDR        (0x48U)
 #define BOARD_TEMP_SENSOR_I2C_SLAVE_DEVICE2_ADDR        (0x49U)
 
-#define BOARD_I2C_CURRENT_MONITOR_INSTANCE              (2U)
+#define BOARD_I2C_CURRENT_MONITOR_INSTANCE              (1U)
 
 /* Instance for interfaces connected to MMCSD */
 #define BOARD_MMCSD_SD_INSTANCE                         (1U)
@@ -406,6 +409,14 @@ extern "C" {
 /* McSPI instance for master and slave test */
 #define BOARD_MCSPI_MASTER_INSTANCE                     (1)
 #define BOARD_MCSPI_SLAVE_INSTANCE                      (1)
+
+/* Default pinmux configuration of UART Tx pin used by ROM/SBL */
+#define BOARD_MCU_UART_TX_PINMUX_VAL                    (PIN_MODE(0U) | ((PIN_PULL_DISABLE) & \
+                                                         (~PIN_PULL_DIRECTION & ~PIN_INPUT_ENABLE)))
+#define BOARD_MCU_UART_TX_PINMUX_ADDR                   (BOARD_WKUP_PMUX_CTRL_ADDR + PIN_WKUP_GPIO0_12)
+#define BOARD_MCU_UART_TX_LOCK_KICK_ADDR                (CSL_WKUP_CTRL_MMR0_CFG0_BASE + \
+                                                         CSL_WKUP_CTRL_MMR_CFG0_LOCK7_KICK0)
+
 
 #ifdef __cplusplus
 }
