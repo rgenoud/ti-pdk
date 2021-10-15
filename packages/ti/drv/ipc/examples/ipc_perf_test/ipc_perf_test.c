@@ -139,7 +139,7 @@ static uint32_t remoteProc[] = {
     IPC_MCU2_1, IPC_MCU3_0, IPC_MCU3_1, IPC_C66X_1,
     IPC_C66X_2
 #endif
-#elif defined(SOC_J721E)
+#elif defined(SOC_J721S2)
 #if defined(BUILD_MPU1_0)
     IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1,
     IPC_MCU3_0, IPC_MCU3_1, IPC_C7X_1, IPC_C7X_2
