@@ -149,6 +149,7 @@ void *Mailbox_plugInterrupt(Ipc_MbConfig *cfg, Ipc_OsalIsrFxn func, uintptr_t ar
     OsalRegisterIntrParams_t    intrPrms;
     OsalInterruptRetCode_e      osalRetVal;
     HwiP_Handle                 hwiHandle = NULL;
+    uint32_t                    coreIntrNum = 0U;
 #ifndef IPC_SUPPORT_SCICLIENT
     CSL_IntrRouterCfg           irRegs;
 #endif
@@ -180,14 +181,16 @@ void *Mailbox_plugInterrupt(Ipc_MbConfig *cfg, Ipc_OsalIsrFxn func, uintptr_t ar
 
 #endif  /* IPC_SUPPORT_SCICLIENT */
 
+    coreIntrNum = cfg->eventId;
+
     /*
      * CLEC needs to be configured for all modes - CSL and Sciclient
      **/
-#if defined(BUILD_C7X_1)
-    Ipc_configClecRouter(cfg->eventId );
-
-    cfg->eventId = (cfg->eventId - IPC_C7X_COMPUTE_CLUSTER_OFFSET) + C7X1_MBINTR_OFFSET;
-
+#if defined(BUILD_C7X)
+    /* Pass the corePackEvent and the base (which was derived from the NAVSS IR o/p 
+     * range returned from BoardCfg) to route the corressponding CLEC i/p Event to 
+     * a C7x IRQ. The returned IRQ num is used to register Interrupt with OSAL. */
+    coreIntrNum = Ipc_configClecRouter(cfg->eventId, cfg->eventIdBase);
 #endif
 
     /* Register interrupts */
@@ -197,10 +200,10 @@ void *Mailbox_plugInterrupt(Ipc_MbConfig *cfg, Ipc_OsalIsrFxn func, uintptr_t ar
     intrPrms.corepacConfig.priority         = cfg->priority;
 
 #if defined(BUILD_C66X)
-    intrPrms.corepacConfig.corepacEventNum  = cfg->eventId;
+    intrPrms.corepacConfig.corepacEventNum  = coreIntrNum;
     intrPrms.corepacConfig.intVecNum        = OSAL_REGINT_INTVEC_EVENT_COMBINER;
 #else
-    intrPrms.corepacConfig.intVecNum        = cfg->eventId;
+    intrPrms.corepacConfig.intVecNum        = coreIntrNum;
     intrPrms.corepacConfig.corepacEventNum  = 0;
 #endif
 
