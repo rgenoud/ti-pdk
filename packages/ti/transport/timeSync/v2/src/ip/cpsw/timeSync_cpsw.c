@@ -1518,7 +1518,7 @@ static void TimeSync_getSeqId(uint16_t *seqId,
     *seqId = Enet_ntohs(*seqId);
 }
 
-static int32_t TimeSync_configPps(Enet_Type enetType, , uint32_t instId)
+static int32_t TimeSync_configPps(Enet_Type enetType, uint32_t instId)
 {
     int32_t status = TIMESYNC_OK;
     Enet_IoctlPrms prms;
