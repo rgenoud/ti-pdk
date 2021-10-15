@@ -69,11 +69,7 @@
 /*                            Global Variables                                */
 /* ========================================================================== */
 
-#if defined (SOC_AM65XX)
 #define CORE_IN_TEST            2
-#else
-#define CORE_IN_TEST            2
-#endif
 
 #define NUM_RESPONDER_TASKS     2
 

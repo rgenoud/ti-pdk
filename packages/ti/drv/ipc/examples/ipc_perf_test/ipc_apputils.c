@@ -44,10 +44,6 @@
 #include <ti/drv/ipc/ipc.h>
 #include <ti/drv/sciclient/sciclient.h>
 #include "ipc_apputils.h"
-#if defined (BUILD_C7X)
-#include <ti/csl/csl_clec.h>
-#include <ti/csl/arch/csl_arch.h>
-#endif
 #include <ti/osal/osal.h>
 #include <ti/drv/ipc/include/ipc_config.h>
 /* ========================================================================== */

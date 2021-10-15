@@ -79,6 +79,8 @@
 #define CORE_IN_TEST            5
 #elif defined (SOC_J721S2)
 #define CORE_IN_TEST            8
+#else
+#error "Invalid SOC"
 #endif
 
 /*
@@ -249,7 +251,9 @@ uint32_t remoteProc[] =
 uint32_t selfProcId = IPC_C7X_2;
 uint32_t remoteProc[] =
 {
+#if defined (SOC_J721S2)
     IPC_MPU1_0, IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1, IPC_MCU3_0, IPC_MCU3_1, IPC_C7X_1
+#endif
 };
 #endif
 

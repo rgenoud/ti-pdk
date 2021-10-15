@@ -73,18 +73,18 @@ MEMORY
 
     /*===================== MCU MSRAM Locations =======================*/
     OCMC_RAM_BOARD_CFG   (RWIX) : ORIGIN = 0x41C80000 LENGTH = 0x00002000
-    OCMC_RAM             (RWIX) : ORIGIN = 0x41C82000 LENGTH = 0x0007DB00
-    OCMC_RAM_X509_HEADER (RWIX) : ORIGIN = 0x41CFFB00 LENGTH = 0x00000500
+    OCMC_RAM             (RWIX) : ORIGIN = 0x41C82000 LENGTH = 0x0007BB00
+    OCMC_RAM_X509_HEADER (RWIX) : ORIGIN = 0x41CFDB00 LENGTH = 0x00000500
 
     /*=================== COMPUTE_CLUSTER0_MSMC_SRAM ==================*/
-    /*---------- J721E Reserved Memory for ARM Trusted Firmware -------*/
+    /*---------- J721S2 Reserved Memory for ARM Trusted Firmware -------*/
     MSMC3_ARM_FW         (RWIX) : ORIGIN = 0x70000000 LENGTH = 0x00040000   /* 256KB       */
     /*-----------------------------------------------------------------*/
-    MSMC3                (RWIX) : ORIGIN = 0x70040000 LENGTH = 0x007B0000   /* 8MB - 320KB */
-    /*------------- J721E Reserved Memory for DMSC Firmware -----------*/
-    MSMC3_DMSC_FW        (RWIX) : ORIGIN = 0x707F0000 LENGTH = 0x00010000   /* 64KB        */
+    MSMC3                (RWIX) : ORIGIN = 0x70040000 LENGTH = 0x003B0000   /* 4MB - 320KB */
+    /*------------- J721S2 Reserved Memory for DMSC Firmware -----------*/
+    MSMC3_DMSC_FW        (RWIX) : ORIGIN = 0x703F0000 LENGTH = 0x00010000   /* 64KB        */
 
-    /*===================== J721E DDR Locations =======================*/
+    /*===================== J721S2 DDR Locations =======================*/
     /* DDR Memory Map is included from memory_map_ddr.cmd -------------*/
 }
 

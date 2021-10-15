@@ -69,11 +69,7 @@
 /*                            Global Variables                                */
 /* ========================================================================== */
 
-#if defined (SOC_AM65XX)
 #define CORE_IN_TEST            2
-#else
-#define CORE_IN_TEST            2
-#endif
 
 /*
  * In the cfg file of R5F, C66x, default heap is 48K which is not
