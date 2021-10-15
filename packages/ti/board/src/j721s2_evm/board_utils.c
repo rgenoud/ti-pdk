@@ -143,6 +143,24 @@ bool Board_detectBoard(uint32_t boardID)
 }
 
 /**
+ *  \brief    Function to detect ENET expansion application card type
+ *
+ *  ENET expansion connector supports QSGMII and SGMII application cards.
+ *  This function detects type of the application card connected on
+ *  ENET expansion connector.
+ *
+ *  \return
+ *            0 (BOARD_ENET_NONE)   - No board connected or invalid board ID data
+ *            1 (BOARD_ENET_QSGMII) - QSGMII board connected
+ *            2 (BOARD_ENET_SGMII)  - SGMII board connected
+ *           -1 (BOARD_ENET_UNKOWN) - Unknown board
+*/
+int32_t Board_detectEnetCard(void)
+{
+    return 0;
+}
+
+/**
  * \brief Read MAC ID function
  *
  *  This function reads the MAC addresses programmed to the board ID EEPROM
