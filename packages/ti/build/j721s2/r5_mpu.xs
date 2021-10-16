@@ -52,7 +52,7 @@
  * |----|--------------|------|----|----------------------------------------------------|----|---------------------|------|
  * | 6  | 0x80000000   | 2GB  | T  | DDR - Write-Back, Write-Allocate, Non-Shareable    | F  | RW at PL 1 & PL 2   | 0x0  |
  * |----|--------------|------|----|----------------------------------------------------|----|---------------------|------|
- * | 7  | 0xAA000000   | 32MB | T  | DDR (VRing Buffer) - Uncacheable, Shareable        | F  | RW at PL 1 & PL 2   | 0x0  |
+ * | 7  | 0xA8000000   | 32MB | T  | DDR (VRing Buffer) - Uncacheable, Shareable        | F  | RW at PL 1 & PL 2   | 0x0  |
  * |----|---------------------|----|----------------------------------------------------|----|---------------------|------|
  * | 8  | 0x50000000   | 64MB | T  | OSPI flash memory - Cacheable                      | F  | RW at PL 1          | 0x0  |
  *  ----------------------------------------------------------------------------------------------------------------------
@@ -158,7 +158,7 @@ attrs.noExecute = true;
 attrs.accPerm = 3;          /* RW at PL1 & PL2 */
 attrs.tex = 0;
 attrs.subregionDisableMask = 0;
-MPU.setRegionMeta(7, 0xAA000000, MPU.RegionSize_32M, attrs);
+MPU.setRegionMeta(7, 0xA8000000, MPU.RegionSize_32M, attrs);
 
 attrs.enable = true;
 attrs.bufferable = true;
