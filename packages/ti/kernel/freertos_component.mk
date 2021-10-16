@@ -207,7 +207,13 @@ export freertos_test_posix_PKG_LIST
 freertos_test_posix_INCLUDE = $(freertos_test_posix_PATH)
 freertos_test_posix_BOARDLIST = $(freertos_BOARDLIST)
 export freertos_test_posix_BOARDLIST
+ifneq ($(SOC),$(filter $(SOC), j721s2))
 freertos_test_posix_$(SOC)_CORELIST = $(freertos_$(SOC)_CORELIST)
+else
+# Temp disable FreeRTOS POSIX Demo for J721S2 C7x cores, 
+# Since build failures are seen with silicon_version 7120 on C7x CGT 2.0.0A21260 
+freertos_test_posix_$(SOC)_CORELIST = $(filter-out c7x_1 c7x_2, $(freertos_$(SOC)_CORELIST)) 
+endif
 export freertos_test_posix_$(SOC)_CORELIST
 
 
