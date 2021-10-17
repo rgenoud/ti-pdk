@@ -2284,19 +2284,7 @@
                         "name": "RESASG_UTYPE(J721S2_DEV_NAVSS0_INTR_0, RESASG_SUBTYPE_IR_OUTPUT)",
                         "type": 14528,
                         "start_resource": 292,
-                        "num_resource": 52
-                    },
-                    {
-                        "name": "RESASG_UTYPE(J721S2_DEV_NAVSS0_INTR_0, RESASG_SUBTYPE_IR_OUTPUT)",
-                        "type": 14528,
-                        "start_resource": 348,
-                        "num_resource": 28
-                    },
-                    {
-                        "name": "RESASG_UTYPE(J721S2_DEV_NAVSS0_INTR_0, RESASG_SUBTYPE_IR_OUTPUT)",
-                        "type": 14528,
-                        "start_resource": 380,
-                        "num_resource": 132
+                        "num_resource": 220
                     },
                     {
                         "name": "RESASG_UTYPE(J721S2_DEV_NAVSS0_MODSS_INTA_0, RESASG_SUBTYPE_IA_VINT)",
