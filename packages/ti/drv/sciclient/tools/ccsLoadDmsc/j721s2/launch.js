@@ -62,7 +62,7 @@ pdkPath = "/ti/j7presi/workarea/pdk";
 pathSciclient = pdkPath+"/packages/ti/drv/sciclient/tools/ccsLoadDmsc/j721s2/"
 ccs_init_elf_file = pathSciclient+"sciclient_ccs_init_mcu1_0_release.xer5f";
 loadSciserverFlag = 1;
-sciserver_elf_file = pathSciclient+"sciserver_testapp_tirtos_mcu1_0_release.xer5f";
+sciserver_elf_file = pathSciclient+"sciserver_testapp_freertos_mcu1_0_release.xer5f";
 
 //path to tifs bin
 tifs_bin = pdkPath+"/packages/ti/drv/sciclient/soc/sysfw/binaries/ti-fs-firmware-j721s2-gp.bin"
