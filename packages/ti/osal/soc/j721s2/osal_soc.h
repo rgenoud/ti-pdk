@@ -70,11 +70,16 @@ extern "C" {
 
 #define TimerP_numTimerDevices          ((uint32_t) 20U )
 #if defined (BUILD_MCU)
-  #define TIMERP_ANY_MASK               ((uint32_t) 0x000F)
-  #define TIMERP_AVAILABLE_MASK       ((uint32_t)(0x000F))
-#else
+  #define TIMERP_ANY_MASK               ((uint32_t) 0x03FF)
+  #define TIMERP_AVAILABLE_MASK       ((uint32_t)(0x03FF))
+#endif
+#if defined (BUILD_MPU)
   #define TIMERP_ANY_MASK               ((uint32_t) 0x0FFF)
   #define TIMERP_AVAILABLE_MASK       ((uint32_t)(0x0FFF))
+#endif
+#if defined (BUILD_C7X)
+  #define TIMERP_ANY_MASK               ((uint32_t) 0x00FF)
+  #define TIMERP_AVAILABLE_MASK       ((uint32_t)(0x00FF))
 #endif
 
 /* using the default timer base addresses */
