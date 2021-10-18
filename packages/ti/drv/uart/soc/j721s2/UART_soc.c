@@ -391,10 +391,10 @@ UART_HwAttrs uartInitCfg[CSL_UART_MAIN_CNT] =
         UART_INPUT_CLK_48M,
 #endif
 #if defined (BUILD_MCU)
-        0,
-        0,
-        0,
-        0,
+        (uint32_t)CSL_MCU_UART0_BASE,   /* baseAddr */
+        CSLR_MCU_R5FSS0_CORE0_INTR_MCU_UART0_USART_IRQ_0,   /* intNum */
+        0,                              /* eventId, used only for C6x */
+        UART_INPUT_CLK_96M,             /* frequency */
 #endif
 #if defined (BUILD_C7X)
         (uint32_t)CSL_UART8_BASE,
