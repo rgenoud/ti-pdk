@@ -424,7 +424,7 @@ void TimerP_updateDefaultInfoTbl(void)
     CSL_armR5GetCpuID(&info);
 
     /* Main domain R5F only */
-    if ((uint32_t)CSL_ARM_R5_CLUSTER_GROUP_ID_1 == info.grpId)
+    if ((uint32_t)CSL_ARM_R5_CLUSTER_GROUP_ID_0 != info.grpId)
     {
         intIdx = CSLR_R5FSS0_CORE0_INTR_TIMER0_INTR_PEND_0;
         for (i = 0U; i < TimerP_numTimerDevices; i++)
