@@ -176,7 +176,7 @@ void C7x_ConfigureTimerOutput(void);
         /* DMTimer 2 and Interrupt num 16 is used by SysBIOS/FreeRTOS by default, 
         * so we need to use a different one here */
         #define OSAL_TEST_TIMER_INT_NUM                 (14U)
-        #define OSAL_TEST_TIMER_EVENT_NUM               (CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_TIMER0_INTR_PEND_0 + 992)
+        #define OSAL_TEST_TIMER_EVENT_NUM               (CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_TIMER0_INTR_PEND_0 + 992)
     #endif
     #if defined(SOC_J721S2)
         #if defined(FREERTOS)
@@ -186,7 +186,7 @@ void C7x_ConfigureTimerOutput(void);
             * so we need to use a different one here */
             /* 15 for C7x_1 - DMTimer 1; 16 for C7x_2 - DMTimer 2 */
             #define OSAL_TEST_TIMER_INT_NUM                 (configTIMER_INT_NUM + 1U) 
-            #define OSAL_TEST_TIMER_EVENT_NUM               (CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_TIMER0_INTR_PEND_0 + 992 + configTIMER_ID + 1)
+            #define OSAL_TEST_TIMER_EVENT_NUM               (CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_TIMER0_INTR_PEND_0 + 992 + configTIMER_ID + 1)
         #endif
     #endif
 

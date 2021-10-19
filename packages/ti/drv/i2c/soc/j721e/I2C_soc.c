@@ -57,7 +57,7 @@
 #define I2C_TISCI_INVALID_DEV_ID       ((uint16_t)0xFFFFU)
 
 /* CLEC input event # offset for GIC SPI */
-#define I2C_CLEC_GIC_SPI_IN_EVT_OFFSET (1024U - 32U)
+#define I2C_CLEC_SOC_EVENTS_IN_EVT_OFFSET (1024U - 32U)
 
 /* DMSC SYSFW C66x destination host int # for I2C0 */
 #define I2C_TISCI_C66X_DST_HOST_IRQ0   (60U)
@@ -102,7 +102,7 @@ I2C_HwAttrs i2cInitCfg[I2C_HWIP_MAX_CNT] =
         /* default configuration for I2C instance and DSP core on Main domain*/
         (uint32_t)CSL_I2C0_CFG_BASE,       /* baseAddr */
         I2C_C7X_IRQ0,                      /* intNum */
-        CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_I2C0_POINTRPEND_0 + I2C_CLEC_GIC_SPI_IN_EVT_OFFSET, /* eventId, input event # to CLEC */
+        CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_I2C0_POINTRPEND_0 + I2C_CLEC_SOC_EVENTS_IN_EVT_OFFSET, /* eventId, input event # to CLEC */
 #endif
         I2C_INPUT_CLK,
         (bool)true,
@@ -133,7 +133,7 @@ I2C_HwAttrs i2cInitCfg[I2C_HWIP_MAX_CNT] =
         /* default configuration for I2C instance and DSP core on Main domain*/
         (uint32_t)CSL_I2C1_CFG_BASE,        /* baseAddr */
         I2C_C7X_IRQ0 + 1,                   /* intNum */
-        CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_I2C1_POINTRPEND_0 + I2C_CLEC_GIC_SPI_IN_EVT_OFFSET, /* eventId, input event # to CLEC */
+        CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_I2C1_POINTRPEND_0 + I2C_CLEC_SOC_EVENTS_IN_EVT_OFFSET, /* eventId, input event # to CLEC */
 #endif
         I2C_INPUT_CLK,
         (bool)true,
@@ -163,7 +163,7 @@ I2C_HwAttrs i2cInitCfg[I2C_HWIP_MAX_CNT] =
         /* default configuration for I2C instance and DSP core on Main domain*/
         (uint32_t)CSL_I2C2_CFG_BASE,        /* baseAddr */
         I2C_C7X_IRQ0 + 2,                   /* intNum */
-        CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_I2C2_POINTRPEND_0 + I2C_CLEC_GIC_SPI_IN_EVT_OFFSET, /* eventId, input event # to CLEC */
+        CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_I2C2_POINTRPEND_0 + I2C_CLEC_SOC_EVENTS_IN_EVT_OFFSET, /* eventId, input event # to CLEC */
 #endif
         I2C_INPUT_CLK,
         (bool)true,
@@ -193,7 +193,7 @@ I2C_HwAttrs i2cInitCfg[I2C_HWIP_MAX_CNT] =
         /* default configuration for I2C instance and DSP core on Main domain*/
         (uint32_t)CSL_I2C3_CFG_BASE,        /* baseAddr */
         I2C_C7X_IRQ0 + 3,                   /* intNum */
-        CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_I2C3_POINTRPEND_0 + I2C_CLEC_GIC_SPI_IN_EVT_OFFSET, /* eventId, input event # to CLEC */
+        CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_I2C3_POINTRPEND_0 + I2C_CLEC_SOC_EVENTS_IN_EVT_OFFSET, /* eventId, input event # to CLEC */
 #endif
         I2C_INPUT_CLK,
         (bool)true,
@@ -223,7 +223,7 @@ I2C_HwAttrs i2cInitCfg[I2C_HWIP_MAX_CNT] =
         /* default configuration for I2C instance and DSP core on Main domain*/
         (uint32_t)CSL_I2C4_CFG_BASE,        /* baseAddr */
         I2C_C7X_IRQ0 + 4,                   /* intNum */
-        CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_I2C4_POINTRPEND_0 + I2C_CLEC_GIC_SPI_IN_EVT_OFFSET, /* eventId, input event # to CLEC */
+        CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_I2C4_POINTRPEND_0 + I2C_CLEC_SOC_EVENTS_IN_EVT_OFFSET, /* eventId, input event # to CLEC */
 #endif
         I2C_INPUT_CLK,
         (bool)true,
@@ -253,7 +253,7 @@ I2C_HwAttrs i2cInitCfg[I2C_HWIP_MAX_CNT] =
         /* default configuration for I2C instance and DSP core on Main domain*/
         (uint32_t)CSL_I2C5_CFG_BASE,        /* baseAddr */
         I2C_C7X_IRQ0 + 5,                   /* intNum */
-        CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_I2C5_POINTRPEND_0 + I2C_CLEC_GIC_SPI_IN_EVT_OFFSET, /* eventId, input event # to CLEC */
+        CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_I2C5_POINTRPEND_0 + I2C_CLEC_SOC_EVENTS_IN_EVT_OFFSET, /* eventId, input event # to CLEC */
 #endif
         I2C_INPUT_CLK,
         (bool)true,
@@ -283,7 +283,7 @@ I2C_HwAttrs i2cInitCfg[I2C_HWIP_MAX_CNT] =
         /* default configuration for I2C instance and DSP core on Main domain*/
         (uint32_t)CSL_I2C6_CFG_BASE,        /* baseAddr */
         I2C_C7X_IRQ0 + 6,                   /* intNum */
-        CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_I2C6_POINTRPEND_0 + I2C_CLEC_GIC_SPI_IN_EVT_OFFSET, /* eventId, input event # to CLEC */
+        CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_I2C6_POINTRPEND_0 + I2C_CLEC_SOC_EVENTS_IN_EVT_OFFSET, /* eventId, input event # to CLEC */
 #endif
         I2C_INPUT_CLK,
         (bool)true,

@@ -238,7 +238,7 @@ bool Board_initI2C(void)
 #endif /* for mcu builds only */
 
 #if defined (BUILD_C7X_1)
-    i2c_cfg.eventId = CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_WKUP_I2C0_POINTRPEND_0 + 992U, /* eventId, input event # to CLEC */
+    i2c_cfg.eventId = CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_WKUP_I2C0_POINTRPEND_0 + 992U, /* eventId, input event # to CLEC */
 #endif
 #endif
 

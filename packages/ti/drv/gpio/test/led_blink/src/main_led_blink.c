@@ -243,7 +243,7 @@ void GPIO_configIntRouter(uint32_t portNum, uint32_t pinNum, uint32_t gpioIntRtr
         intCfg[pinNum].intNum = CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_WKUP_GPIOMUX_INTRTR0_OUTP_16 + bankNum;
     #endif
     #if defined (BUILD_C7X)
-        intCfg[pinNum].eventId = CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_WKUP_GPIOMUX_INTRTR0_OUTP_16 + 992 + bankNum;	/* GPIO_CLEC_GIC_SPI_IN_EVT_OFFSET is 992 */
+        intCfg[pinNum].eventId = CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_WKUP_GPIOMUX_INTRTR0_OUTP_16 + 992 + bankNum;	/* GPIO_CLEC_SOC_EVENTS_IN_EVT_OFFSET is 992 */
     #endif
     #if defined (BUILD_MCU)
         intCfg[pinNum].intNum = CSLR_MCU_R5FSS0_CORE0_INTR_WKUP_GPIOMUX_INTRTR0_OUTP_0 + bankNum;
@@ -335,7 +335,7 @@ static void Board_initGPIO(void)
 	gpio_cfg.intCfg->intNum = CSLR_MCU_R5FSS0_CORE0_INTR_WKUP_GPIOMUX_INTRTR0_OUTP_0;
 #endif
 #if defined (BUILD_C7X)
-	gpio_cfg.intCfg->eventId = CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_WKUP_GPIOMUX_INTRTR0_OUTP_16 + 992;
+	gpio_cfg.intCfg->eventId = CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_WKUP_GPIOMUX_INTRTR0_OUTP_16 + 992;
 #endif
 
 /* --- TODO: move this into the board library --- */

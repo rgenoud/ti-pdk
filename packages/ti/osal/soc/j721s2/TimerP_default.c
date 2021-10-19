@@ -69,7 +69,7 @@ TimerP_dmTimerDefault gDmTimerPInfoTbl[TimerP_numTimerDevices] = {
 #if defined (BUILD_C7X)
      (uint32_t)CSL_TIMER0_CFG_BASE,                                /* Main domain's DM Timer base address */
      (int32_t)0xE,                                                 /* intNum */
-     992U + CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_TIMER0_INTR_PEND_0, /* eventId 0x4e0 */
+     992U + CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_TIMER0_INTR_PEND_0, /* eventId 0x4e0 */
 #endif
 
   },
@@ -89,7 +89,7 @@ TimerP_dmTimerDefault gDmTimerPInfoTbl[TimerP_numTimerDevices] = {
 #if defined (BUILD_C7X)
      (uint32_t)CSL_TIMER1_CFG_BASE,                                /* Main domain's DM Timer base address */
      (int32_t)0xF,                                                 /* intNum */
-     992U + CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_TIMER1_INTR_PEND_0, /* eventId 0x4e1 */
+     992U + CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_TIMER1_INTR_PEND_0, /* eventId 0x4e1 */
 #endif
   },
   /* Timer ID 2 */
@@ -108,7 +108,7 @@ TimerP_dmTimerDefault gDmTimerPInfoTbl[TimerP_numTimerDevices] = {
 #if defined (BUILD_C7X)
      (uint32_t)CSL_TIMER2_CFG_BASE,                                /* Main domain's DM Timer base address */
      (int32_t)0x10,                                                 /* intNum */
-     992U + CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_TIMER2_INTR_PEND_0, /* eventId 0x4e2 */
+     992U + CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_TIMER2_INTR_PEND_0, /* eventId 0x4e2 */
 #endif
   },
   /* Timer ID 3 */
@@ -127,7 +127,7 @@ TimerP_dmTimerDefault gDmTimerPInfoTbl[TimerP_numTimerDevices] = {
 #if defined (BUILD_C7X)
      (uint32_t)CSL_TIMER3_CFG_BASE,                                /* Main domain's DM Timer base address */
      (int32_t)0x11,                                                 /* intNum */
-     992U + CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_TIMER3_INTR_PEND_0, /* eventId 0x4e3 */
+     992U + CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_TIMER3_INTR_PEND_0, /* eventId 0x4e3 */
 #endif
   },
   /* Timer ID 4 */
@@ -146,7 +146,7 @@ TimerP_dmTimerDefault gDmTimerPInfoTbl[TimerP_numTimerDevices] = {
 #if defined (BUILD_C7X)
      (uint32_t)CSL_TIMER4_CFG_BASE,                                /* Main domain's DM Timer base address */
      (int32_t)0x12,                                                 /* intNum */
-     992U + CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_TIMER4_INTR_PEND_0, /* eventId 0x4e4 */
+     992U + CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_TIMER4_INTR_PEND_0, /* eventId 0x4e4 */
 #endif
   },
   /* Timer ID 5 */
@@ -165,7 +165,7 @@ TimerP_dmTimerDefault gDmTimerPInfoTbl[TimerP_numTimerDevices] = {
 #if defined (BUILD_C7X)
      (uint32_t)CSL_TIMER5_CFG_BASE,                                /* Main domain's DM Timer base address */
      (int32_t)0x13,                                                 /* intNum */
-     992U + CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_TIMER5_INTR_PEND_0, /* eventId 0x4e5 */
+     992U + CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_TIMER5_INTR_PEND_0, /* eventId 0x4e5 */
 #endif
   },
   /* Timer ID 6 */
@@ -184,7 +184,7 @@ TimerP_dmTimerDefault gDmTimerPInfoTbl[TimerP_numTimerDevices] = {
 #if defined (BUILD_C7X)
      (uint32_t)CSL_TIMER6_CFG_BASE,                                /* Main domain's DM Timer base address */
      (int32_t)0x14,                                                 /* intNum */
-     992U + CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_TIMER6_INTR_PEND_0, /* eventId 0x4e6 */
+     992U + CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_TIMER6_INTR_PEND_0, /* eventId 0x4e6 */
 #endif
   },
    /* Timer ID 7 */
@@ -203,7 +203,7 @@ TimerP_dmTimerDefault gDmTimerPInfoTbl[TimerP_numTimerDevices] = {
 #if defined (BUILD_C7X)
      (uint32_t)CSL_TIMER7_CFG_BASE,                                /* Main domain's DM Timer base address */
      (int32_t)0x15,                                                 /* intNum */
-     992U + CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_TIMER7_INTR_PEND_0, /* eventId 0x4e7 */
+     992U + CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_TIMER7_INTR_PEND_0, /* eventId 0x4e7 */
 #endif
   },
   /* Timer ID 8 */

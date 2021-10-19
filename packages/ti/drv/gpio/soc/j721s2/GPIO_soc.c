@@ -61,7 +61,7 @@
 #define GPIO_C7X_IRQ0	 				(40U)
 
 /* CLEC input event # offset for GIC SPI */
-#define GPIO_CLEC_GIC_SPI_IN_EVT_OFFSET (1024U - 32U)
+#define GPIO_CLEC_SOC_EVENTS_IN_EVT_OFFSET (1024U - 32U)
 
 /* GPIO Pin interrupt configurations */
 GPIO_IntCfg GPIO_intCfgs[GPIO_NUM_PORTS][GPIO_NUM_PINS_PER_PORT] =
@@ -82,7 +82,7 @@ GPIO_IntCfg GPIO_intCfgs[GPIO_NUM_PORTS][GPIO_NUM_PINS_PER_PORT] =
 #if defined (BUILD_C7X)
             /* main domain */
             GPIO_C7X_IRQ0,  				/* main 2 c7x CLEC output interrupt number */
-            CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_GPIOMUX_INTRTR0_OUTP_8 + GPIO_CLEC_GIC_SPI_IN_EVT_OFFSET, /* GPIO pin interrupt event */
+            CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_GPIOMUX_INTRTR0_OUTP_8 + GPIO_CLEC_SOC_EVENTS_IN_EVT_OFFSET, /* GPIO pin interrupt event */
 #endif
             INVALID_INTC_MUX_NUM,        /* CIC not used for GPIO pin 0 */
             0,
@@ -103,7 +103,7 @@ GPIO_IntCfg GPIO_intCfgs[GPIO_NUM_PORTS][GPIO_NUM_PINS_PER_PORT] =
 #if defined (BUILD_C7X)
             /* main domain */
             GPIO_C7X_IRQ0,  				/* main 2 c7x CLEC output interrupt number */
-            CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_GPIOMUX_INTRTR0_OUTP_8 + GPIO_CLEC_GIC_SPI_IN_EVT_OFFSET, /* GPIO pin interrupt event */
+            CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_GPIOMUX_INTRTR0_OUTP_8 + GPIO_CLEC_SOC_EVENTS_IN_EVT_OFFSET, /* GPIO pin interrupt event */
 #endif
             INVALID_INTC_MUX_NUM,
             0,
@@ -124,7 +124,7 @@ GPIO_IntCfg GPIO_intCfgs[GPIO_NUM_PORTS][GPIO_NUM_PINS_PER_PORT] =
 #if defined (BUILD_C7X)
             /* main domain */
             GPIO_C7X_IRQ0,  				/* main 2 c7x CLEC output interrupt number */
-            CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_GPIOMUX_INTRTR0_OUTP_8 + GPIO_CLEC_GIC_SPI_IN_EVT_OFFSET, /* GPIO pin interrupt event */
+            CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_GPIOMUX_INTRTR0_OUTP_8 + GPIO_CLEC_SOC_EVENTS_IN_EVT_OFFSET, /* GPIO pin interrupt event */
 #endif
             INVALID_INTC_MUX_NUM,
             0,
@@ -145,7 +145,7 @@ GPIO_IntCfg GPIO_intCfgs[GPIO_NUM_PORTS][GPIO_NUM_PINS_PER_PORT] =
 #if defined (BUILD_C7X)
             /* main domain */
             GPIO_C7X_IRQ0,  				/* main 2 c7x CLEC output interrupt number */
-            CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_GPIOMUX_INTRTR0_OUTP_8 + GPIO_CLEC_GIC_SPI_IN_EVT_OFFSET, /* GPIO pin interrupt event */
+            CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_GPIOMUX_INTRTR0_OUTP_8 + GPIO_CLEC_SOC_EVENTS_IN_EVT_OFFSET, /* GPIO pin interrupt event */
 #endif
             INVALID_INTC_MUX_NUM,
             0,
@@ -166,7 +166,7 @@ GPIO_IntCfg GPIO_intCfgs[GPIO_NUM_PORTS][GPIO_NUM_PINS_PER_PORT] =
 #if defined (BUILD_C7X)
             /* main domain */
             GPIO_C7X_IRQ0,  				/* main 2 c7x CLEC output interrupt number */
-            CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_GPIOMUX_INTRTR0_OUTP_8 + GPIO_CLEC_GIC_SPI_IN_EVT_OFFSET, /* GPIO pin interrupt event */
+            CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_GPIOMUX_INTRTR0_OUTP_8 + GPIO_CLEC_SOC_EVENTS_IN_EVT_OFFSET, /* GPIO pin interrupt event */
 #endif
             INVALID_INTC_MUX_NUM,
             0,
@@ -187,7 +187,7 @@ GPIO_IntCfg GPIO_intCfgs[GPIO_NUM_PORTS][GPIO_NUM_PINS_PER_PORT] =
 #if defined (BUILD_C7X)
             /* main domain */
             GPIO_C7X_IRQ0,  				/* main 2 c7x CLEC output interrupt number */
-            CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_GPIOMUX_INTRTR0_OUTP_8 + GPIO_CLEC_GIC_SPI_IN_EVT_OFFSET, /* GPIO pin interrupt event */
+            CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_GPIOMUX_INTRTR0_OUTP_8 + GPIO_CLEC_SOC_EVENTS_IN_EVT_OFFSET, /* GPIO pin interrupt event */
 #endif
             INVALID_INTC_MUX_NUM,
             0,
@@ -208,7 +208,7 @@ GPIO_IntCfg GPIO_intCfgs[GPIO_NUM_PORTS][GPIO_NUM_PINS_PER_PORT] =
 #if defined (BUILD_C7X)
             /* main domain */
             GPIO_C7X_IRQ0,  				/* main 2 c7x CLEC output interrupt number */
-            CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_GPIOMUX_INTRTR0_OUTP_8 + GPIO_CLEC_GIC_SPI_IN_EVT_OFFSET, /* GPIO pin interrupt event */
+            CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_GPIOMUX_INTRTR0_OUTP_8 + GPIO_CLEC_SOC_EVENTS_IN_EVT_OFFSET, /* GPIO pin interrupt event */
 #endif
             INVALID_INTC_MUX_NUM,
             0,
@@ -229,7 +229,7 @@ GPIO_IntCfg GPIO_intCfgs[GPIO_NUM_PORTS][GPIO_NUM_PINS_PER_PORT] =
 #if defined (BUILD_C7X)
             /* main domain */
             GPIO_C7X_IRQ0,  				/* main 2 c7x CLEC output interrupt number */
-            CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_GPIOMUX_INTRTR0_OUTP_8 + GPIO_CLEC_GIC_SPI_IN_EVT_OFFSET, /* GPIO pin interrupt event */
+            CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_GPIOMUX_INTRTR0_OUTP_8 + GPIO_CLEC_SOC_EVENTS_IN_EVT_OFFSET, /* GPIO pin interrupt event */
 #endif
             INVALID_INTC_MUX_NUM,
             0,
@@ -250,7 +250,7 @@ GPIO_IntCfg GPIO_intCfgs[GPIO_NUM_PORTS][GPIO_NUM_PINS_PER_PORT] =
 #if defined (BUILD_C7X)
             /* main domain */
             GPIO_C7X_IRQ0,  				/* main 2 c7x CLEC output interrupt number */
-            CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_GPIOMUX_INTRTR0_OUTP_8 + GPIO_CLEC_GIC_SPI_IN_EVT_OFFSET, /* GPIO pin interrupt event */
+            CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_GPIOMUX_INTRTR0_OUTP_8 + GPIO_CLEC_SOC_EVENTS_IN_EVT_OFFSET, /* GPIO pin interrupt event */
 #endif
             INVALID_INTC_MUX_NUM,
             0,
@@ -271,7 +271,7 @@ GPIO_IntCfg GPIO_intCfgs[GPIO_NUM_PORTS][GPIO_NUM_PINS_PER_PORT] =
 #if defined (BUILD_C7X)
             /* main domain */
             GPIO_C7X_IRQ0,  				/* main 2 c7x CLEC output interrupt number */
-            CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_GPIOMUX_INTRTR0_OUTP_8 + GPIO_CLEC_GIC_SPI_IN_EVT_OFFSET, /* GPIO pin interrupt event */
+            CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_GPIOMUX_INTRTR0_OUTP_8 + GPIO_CLEC_SOC_EVENTS_IN_EVT_OFFSET, /* GPIO pin interrupt event */
 #endif
             INVALID_INTC_MUX_NUM,
             0,
@@ -292,7 +292,7 @@ GPIO_IntCfg GPIO_intCfgs[GPIO_NUM_PORTS][GPIO_NUM_PINS_PER_PORT] =
 #if defined (BUILD_C7X)
             /* main domain */
             GPIO_C7X_IRQ0,  				/* main 2 c7x CLEC output interrupt number */
-            CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_GPIOMUX_INTRTR0_OUTP_8 + GPIO_CLEC_GIC_SPI_IN_EVT_OFFSET, /* GPIO pin interrupt event */
+            CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_GPIOMUX_INTRTR0_OUTP_8 + GPIO_CLEC_SOC_EVENTS_IN_EVT_OFFSET, /* GPIO pin interrupt event */
 #endif
             INVALID_INTC_MUX_NUM,
             0,
@@ -313,7 +313,7 @@ GPIO_IntCfg GPIO_intCfgs[GPIO_NUM_PORTS][GPIO_NUM_PINS_PER_PORT] =
 #if defined (BUILD_C7X)
             /* main domain */
             GPIO_C7X_IRQ0,  				/* main 2 c7x CLEC output interrupt number */
-            CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_GPIOMUX_INTRTR0_OUTP_8 + GPIO_CLEC_GIC_SPI_IN_EVT_OFFSET, /* GPIO pin interrupt event */
+            CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_GPIOMUX_INTRTR0_OUTP_8 + GPIO_CLEC_SOC_EVENTS_IN_EVT_OFFSET, /* GPIO pin interrupt event */
 #endif
             INVALID_INTC_MUX_NUM,
             0,
@@ -334,7 +334,7 @@ GPIO_IntCfg GPIO_intCfgs[GPIO_NUM_PORTS][GPIO_NUM_PINS_PER_PORT] =
 #if defined (BUILD_C7X)
             /* main domain */
             GPIO_C7X_IRQ0,  				/* main 2 c7x CLEC output interrupt number */
-            CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_GPIOMUX_INTRTR0_OUTP_8 + GPIO_CLEC_GIC_SPI_IN_EVT_OFFSET, /* GPIO pin interrupt event */
+            CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_GPIOMUX_INTRTR0_OUTP_8 + GPIO_CLEC_SOC_EVENTS_IN_EVT_OFFSET, /* GPIO pin interrupt event */
 #endif
             INVALID_INTC_MUX_NUM,
             0,
@@ -355,7 +355,7 @@ GPIO_IntCfg GPIO_intCfgs[GPIO_NUM_PORTS][GPIO_NUM_PINS_PER_PORT] =
 #if defined (BUILD_C7X)
             /* main domain */
             GPIO_C7X_IRQ0,  				/* main 2 c7x CLEC output interrupt number */
-            CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_GPIOMUX_INTRTR0_OUTP_8 + GPIO_CLEC_GIC_SPI_IN_EVT_OFFSET, /* GPIO pin interrupt event */
+            CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_GPIOMUX_INTRTR0_OUTP_8 + GPIO_CLEC_SOC_EVENTS_IN_EVT_OFFSET, /* GPIO pin interrupt event */
 #endif
             INVALID_INTC_MUX_NUM,
             0,
@@ -376,7 +376,7 @@ GPIO_IntCfg GPIO_intCfgs[GPIO_NUM_PORTS][GPIO_NUM_PINS_PER_PORT] =
 #if defined (BUILD_C7X)
             /* main domain */
             GPIO_C7X_IRQ0,  				/* main 2 c7x CLEC output interrupt number */
-            CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_GPIOMUX_INTRTR0_OUTP_8 + GPIO_CLEC_GIC_SPI_IN_EVT_OFFSET, /* GPIO pin interrupt event */
+            CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_GPIOMUX_INTRTR0_OUTP_8 + GPIO_CLEC_SOC_EVENTS_IN_EVT_OFFSET, /* GPIO pin interrupt event */
 #endif
             INVALID_INTC_MUX_NUM,
             0,
@@ -397,7 +397,7 @@ GPIO_IntCfg GPIO_intCfgs[GPIO_NUM_PORTS][GPIO_NUM_PINS_PER_PORT] =
 #if defined (BUILD_C7X)
             /* main domain */
             GPIO_C7X_IRQ0,  				/* main 2 c7x CLEC output interrupt number */
-            CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_GPIOMUX_INTRTR0_OUTP_8 + GPIO_CLEC_GIC_SPI_IN_EVT_OFFSET, /* GPIO pin interrupt event */
+            CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_GPIOMUX_INTRTR0_OUTP_8 + GPIO_CLEC_SOC_EVENTS_IN_EVT_OFFSET, /* GPIO pin interrupt event */
 #endif
             INVALID_INTC_MUX_NUM,
             0,
