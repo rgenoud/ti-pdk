@@ -76,7 +76,7 @@ drvlwip_BOARDLIST       = am65xx_evm am65xx_idk j721e_evm j7200_evm j721s2_evm t
 drvlwip_am65xx_CORELIST = mcu1_0
 drvlwip_j721e_CORELIST  = mcu1_0 mcu2_0 mcu2_1
 drvlwip_j7200_CORELIST  = mcu1_0 mcu2_0 mcu2_1
-drvenet_j721s2_CORELIST = mcu1_0 mcu2_0 mcu2_1
+drvlwip_j721s2_CORELIST = mcu1_0 mcu2_0 mcu2_1
 drvlwip_tpr12_CORELIST  = mcu1_0 mcu1_1
 drvlwip_awr294x_CORELIST  = mcu1_0 mcu1_1
 
