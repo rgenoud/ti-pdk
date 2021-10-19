@@ -307,7 +307,7 @@ static void prvPortInitTimerCLECCfg(uint32_t timerId, uint32_t timerIntNum)
     /* Configure CLEC */
     cfgClec.secureClaimEnable = FALSE;
     cfgClec.evtSendEnable     = TRUE;
-    cfgClec.rtMap             = CSL_CLEC_RTMAP_CPU_ALL;
+    cfgClec.rtMap             = portCOMPUTE_CLUSTER_CLEC_RTMAP;
     cfgClec.extEvtNum         = 0;
     cfgClec.c7xEvtNum         = corepackEvent;
     CSL_clecClearEvent(clecBaseAddr, input);

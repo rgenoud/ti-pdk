@@ -60,4 +60,7 @@
 #define configTIMER_ID                                                    (0)
 #define configTIMER_INT_NUM                                               (14)
 
+/* Compute Cluster CLEC route map */
+#define portCOMPUTE_CLUSTER_CLEC_RTMAP                                    (CSL_CLEC_RTMAP_CPU_4)
+
 #endif /* TI_FREERTOS_C7X_1_CONFIG_H */
