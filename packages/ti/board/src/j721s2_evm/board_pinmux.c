@@ -356,9 +356,9 @@ Board_STATUS Board_pinmuxConfig (void)
     Board_STATUS status = BOARD_SOK;
 
     /* Pinmux for baseboard */
-    Board_pinmuxUpdate(gJ7AEP_MainPinmuxData,
+    Board_pinmuxUpdate(gJ721S2_MainPinmuxData,
                        BOARD_SOC_DOMAIN_MAIN);
-    Board_pinmuxUpdate(gJ7AEP_WkupPinmuxData,
+    Board_pinmuxUpdate(gJ721S2_WkupPinmuxData,
                        BOARD_SOC_DOMAIN_WKUP);
 
     return status;
@@ -382,7 +382,7 @@ Board_STATUS Board_pinmuxConfigMain (void)
     Board_STATUS status = BOARD_SOK;
 
     /* Pinmux for baseboard */
-    status = Board_pinmuxUpdate(gJ7AEP_MainPinmuxData,
+    status = Board_pinmuxUpdate(gJ721S2_MainPinmuxData,
                                 BOARD_SOC_DOMAIN_MAIN);
 
     return status;
@@ -406,7 +406,7 @@ Board_STATUS Board_pinmuxConfigWkup (void)
     Board_STATUS status = BOARD_SOK;
 
     /* Pinmux for baseboard */
-    status = Board_pinmuxUpdate(gJ7AEP_WkupPinmuxData,
+    status = Board_pinmuxUpdate(gJ721S2_WkupPinmuxData,
                        BOARD_SOC_DOMAIN_WKUP);
 
     return status;
