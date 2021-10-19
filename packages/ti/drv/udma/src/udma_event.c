@@ -456,8 +456,8 @@ int32_t Udma_eventGetRxFlowIdFwStatus(Udma_EventHandle eventHandle,
             retVal = UDMA_EFAIL ;
             Udma_printf(eventHandle->drvHandle, "[Error] RxFlowIdFwStats not suported!!!\n");
         }
-    }
 #endif
+    }
     return (retVal);
 }
 
