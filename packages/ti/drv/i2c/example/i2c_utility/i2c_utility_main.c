@@ -254,9 +254,11 @@ int32_t main(void)
     int32_t retVal = CSL_SOK;
 
     boardCfg = BOARD_INIT_MODULE_CLOCK |
-               BOARD_INIT_PINMUX_CONFIG |
-               BOARD_INIT_UART_STDIO;
+               BOARD_INIT_PINMUX_CONFIG;
 
+#if (APP_USE_UART_CONSOLE == 1U)
+    boardCfg |= BOARD_INIT_UART_STDIO;
+#endif
     status = Board_init(boardCfg);
     if(status != BOARD_SOK)
     {
@@ -1150,7 +1152,7 @@ static int32_t App_gets(char *str)
 }
 
 /* If there are any steps required before the initialization of I2C is done */
-#if defined (SOC_J721E)
+#if defined (SOC_J721E) || defined (SOC_J721S2)
 
 static int32_t App_i2cPreInt(void)
 {
