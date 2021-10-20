@@ -87,14 +87,14 @@ typedef enum
 Board_STATUS Board_sgmiiEthPhyConfig(void);
 
 /**
- * \brief  Board specific configurations for CPSW9G Ethernet PHYs
+ * \brief  Board specific configurations for CPSW2G Main Domain Ethernet PHYs
  *
- * This function takes care of configuring the internal delays for CPSW9G
+ * This function takes care of configuring the internal delays for CPSW2G Main Domain
  * Ethernet PHYs
  *
  * \return  BOARD_SOK in case of success or appropriate error code
  */
-Board_STATUS Board_cpsw9gEthPhyConfig(void);
+Board_STATUS Board_cpsw2gMainEthPhyConfig(void);
 
 /**
  * \brief  Board specific configurations for CPSW2G Ethernet PHY
@@ -105,16 +105,6 @@ Board_STATUS Board_cpsw9gEthPhyConfig(void);
  * \return  BOARD_SOK in case of success or appropriate error code
  */
 Board_STATUS Board_cpsw2gEthPhyConfig(void);
-
-/**
- * \brief  Board specific configurations for ICSS EMAC Ethernet PHYs
- *
- * This function takes care of configuring the internal delays for ICSS
- * Ethernet PHY
- *
- * \return  BOARD_SOK in case of success or appropriate error code
- */
-Board_STATUS Board_icssEthPhyConfig(void);
 
 #if BOARD_INCLUDE
 /* TBD: Need to enable once Board_ethConfig called from the board init  */
@@ -148,15 +138,6 @@ static Board_STATUS Board_cpsw9gEthConfig(uint32_t portNum, uint8_t mode);
  */
 static Board_STATUS Board_cpsw2gEthConfig(uint32_t portNum, uint8_t mode);
 
-/**
- * \brief  Board specific configurations for ICSSG RGMII Ethernet
- *
- * This function takes care of configuring the internal delays for
- * ICSSG RGMII Ethernet PHY
- *
- * \return  BOARD_SOK in case of success or appropriate error code
- */
-static Board_STATUS Board_icssgEthConfig(uint32_t portNum, uint8_t mode);
 
 /**
  * \brief  Board specific configurations for SGMII Ethernet
@@ -179,22 +160,14 @@ static Board_STATUS Board_sgmiiEthConfig(uint32_t portNum, uint8_t mode);
 Board_STATUS Board_ethConfigCpsw2g(void);
 
 /**
- * \brief  Board specific configurations for CPSW9G Ethernet ports
+ * \brief  Board specific configurations for CPSW2G MAIN Domain Ethernet ports
  *
- * This function used to configures CPSW9G Ethernet controllers with the respective modes
+ * This function used to configures CPSW2G MAIN Domain Ethernet controllers with the respective modes
  *
  * \return  BOARD_SOK in case of success or appropriate error code
  */
-Board_STATUS Board_ethConfigCpsw9g(void);
+Board_STATUS Board_ethConfigCpsw2gMain(void);
 
-/**
- * \brief  Board specific configurations for ICSS Ethernet ports
- *
- * This function used to configures ICSS Ethernet controllers with the respective modes
- *
- * \return  BOARD_SOK in case of success or appropriate error code
- */
-Board_STATUS Board_ethConfigIcss(void);
 
 /**
  * \brief  Configures the CPSW2G Subsytem for RGMII mode
@@ -210,12 +183,6 @@ Board_STATUS Board_ethConfigIcss(void);
  */
 Board_STATUS Board_cpsw2gMacModeConfig(uint8_t mode);
 
-/**
- * \brief  Enable/Disable COMA_MODE for ENET EXP boards PHY
- *
- * \return  BOARD_SOK in case of success or appropriate error code
- */
-Board_STATUS Board_cpswEnetExpComaModeCfg(bool enable);
 
 /**
  * \brief  Enable/Disable PHY reset for ENET EXP boards PHY
@@ -225,9 +192,8 @@ Board_STATUS Board_cpswEnetExpComaModeCfg(bool enable);
 Board_STATUS Board_cpswEnetExpPhyReset(bool enableFlag);
 
 /**
- * \brief  Configures the CPSW9G Subsytem for RGMII and RMII mode
+ * \brief  Configures the CPSW2G Main Subsytem for RGMII and RMII mode
  *
- * \param  portNum [IN]    EMAC port number
  * \param  mode    [IN]    Mode selection for the specified port number
  *                         000 - GMII
  *                         001 - RMII
@@ -237,7 +203,7 @@ Board_STATUS Board_cpswEnetExpPhyReset(bool enableFlag);
  *
  * \return  BOARD_SOK in case of success or appropriate error code
  */
-Board_STATUS Board_cpsw9gEthConfig(uint32_t portNum, uint8_t mode);
+Board_STATUS Board_cpsw2gMainEthConfig(uint8_t mode);
 
 #ifdef __cplusplus
 }

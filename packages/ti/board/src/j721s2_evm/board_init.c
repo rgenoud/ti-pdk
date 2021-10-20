@@ -176,10 +176,10 @@ static Board_STATUS Board_sysDeinit(void)
  *      board interfaces connected to those peripherals.
  *
  *  BOARD_INIT_ENETCTRL_CPSW2G -
- *      Enabled configurations for CPSW2G Ethernet ports with the respective modes
+ *      Enabled configurations for CPSW2G MCU Domain Ethernet ports with the respective modes
  *
- *  BOARD_INIT_ENETCTRL_CPSW9G -
- *      Enabled configurations for CPSW9G Ethernet ports with the respective modes
+ *  BOARD_INIT_ENETCTRL_CPSW2G_MAIN -
+ *      Enabled configurations for CPSW2G MAIN Domain Ethernet ports with the respective modes
  *
  *  BOARD_INIT_ENETCTRL_ICSS -
  *      Enabled configurations for ICSS Ethernet ports with the respective modes
@@ -199,6 +199,16 @@ Board_STATUS Board_init(Board_initCfg cfg)
 
     if (cfg & BOARD_INIT_UNLOCK_MMR)
         ret = Board_unlockMMR();
+    if (ret != BOARD_SOK)
+        return ret;
+
+    if (cfg & BOARD_INIT_ENETCTRL_CPSW2G)
+        ret = Board_ethConfigCpsw2g();
+    if (ret != BOARD_SOK)
+        return ret;
+
+    if (cfg & BOARD_INIT_ENETCTRL_CPSW2G_MAIN)
+        ret = Board_ethConfigCpsw2gMain();
     if (ret != BOARD_SOK)
         return ret;
 
@@ -269,6 +279,16 @@ Board_STATUS Board_init(Board_initCfg cfg)
         }
     }
 
+    if (ret != BOARD_SOK)
+        return ret;
+
+    if (cfg & BOARD_INIT_ETH_PHY)
+        ret = Board_cpsw2gEthPhyConfig();
+    if (ret != BOARD_SOK)
+        return ret;
+
+    if (cfg & BOARD_INIT_CPSW2G_MAIN_ETH_PHY)
+        ret = Board_cpsw2gMainEthPhyConfig();
     if (ret != BOARD_SOK)
         return ret;
 
