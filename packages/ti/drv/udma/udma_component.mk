@@ -225,10 +225,14 @@ export udma_memcpy_testapp_$(1)_MAKEFILE = -f makefile BUILD_OS_TYPE=$(1)
 udma_memcpy_testapp_$(1)_PKG_LIST = udma_memcpy_testapp_$(1)
 udma_memcpy_testapp_$(1)_INCLUDE = $(udma_memcpy_testapp_$(1)_PATH)
 export udma_memcpy_testapp_$(1)_BOARDLIST = $(drvudma_$(1)_BOARDLIST)
+ifeq ($(SOC),$(filter $(SOC), j721s2))
+export udma_memcpy_testapp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), mpu1_0 mcu1_0 mcu2_0 mcu2_1 mcu3_0 mcu3_1 c7x_1 c7x_2)
+else
 ifeq ($(SOC),$(filter $(SOC), j721e))
 export udma_memcpy_testapp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), mpu1_0 mcu1_0 mcu2_0 mcu2_1 mcu3_0 mcu3_1 c66xdsp_1 c66xdsp_2 c7x_1)
 else
 export udma_memcpy_testapp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), $(drvudma_$(SOC)_example_CORELIST))
+endif
 endif
 export udma_memcpy_testapp_$(1)_SBL_APPIMAGEGEN = yes
 ifneq ($(1),$(filter $(1), safertos))
