@@ -71,6 +71,7 @@
 #include <ti/board/board.h>
 
 #if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2)))
+#include <ti/drv/sciclient/src/sciclient/sciclient_priv.h>
 #include <ti/drv/sciclient/sciserver_tirtos.h>
 #endif
 
@@ -130,6 +131,8 @@ __attribute__ ((aligned(8192)));
 /* Sciserver Init TAsk stack */
 static uint8_t  gSciserverInitTskStack[APP_SCISERVER_INIT_TSK_STACK]
 __attribute__ ((aligned(8192)));
+
+extern Sciclient_ServiceHandle_t gSciclientHandle;
 #endif
 
 /* ========================================================================== */
@@ -169,6 +172,16 @@ void ipc_initSciclient()
         {
             App_printf("Sciclient_init Failed\n");
         }
+#if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2)))
+        if (gSciclientHandle.rmBoardConfigComplete == SCICLIENT_FT_PASS)
+        {
+            App_printf("Sciclient_boardCfgRm init Passed\n");
+        }
+        else
+        {
+            App_printf("Sciclient_boardCfgRm init FAILED!\n");
+        }
+#endif
     }
 }
 
