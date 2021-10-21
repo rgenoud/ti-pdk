@@ -2187,9 +2187,9 @@ int32_t UdmaRmInitPrms_init(uint32_t instId, Udma_RmInitPrms *rmInitPrms)
         /* Secondary for VPAC_TC0+VPAC_TC1+DMPAC Channels */
         /* Here the assumption taken to split the external channels for HWA is that,
          * all similar type of channels (VPAC_TC0/VPAC_TC1/DMPAC) will be reserved to same core */
-        uint32_t vpac0Start = CSL_NAVSS_MAIN_UDMAP_NUM_TX_CHANS + UDMA_UTC_NUM_CH_DRU0;
-        uint32_t vpac1Start = vpac0Start + UDMA_UTC_NUM_CH_VPAC_TC0;
-        uint32_t dmpacStart = vpac1Start + UDMA_UTC_NUM_CH_VPAC_TC1;
+        uint32_t vpac0Start = CSL_NAVSS_MAIN_UDMAP_NUM_TX_CHANS + UDMA_UTC_START_CH_VPAC_TC0;
+        uint32_t vpac1Start = CSL_NAVSS_MAIN_UDMAP_NUM_TX_CHANS + UDMA_UTC_START_CH_VPAC_TC1;
+        uint32_t dmpacStart = CSL_NAVSS_MAIN_UDMAP_NUM_TX_CHANS + UDMA_UTC_START_CH_DMPAC_TC0;
 
         if((rmDefBoardCfgResp[UDMA_RM_RES_ID_UTC].rangeStartSec == vpac0Start) &&
            (rmDefBoardCfgResp[UDMA_RM_RES_ID_UTC].rangeStartSec + rmDefBoardCfgResp[UDMA_RM_RES_ID_UTC].rangeNumSec >= vpac0Start + UDMA_UTC_NUM_CH_VPAC_TC0))
