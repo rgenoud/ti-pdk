@@ -69,7 +69,7 @@ ifeq ($(spi_component_make_include), )
 drvqspi_RTOS_LIST      = tirtos freertos
 drvqspi_BOARDLIST      = tpr12_evm awr294x_evm
 drvspi_RTOS_LIST       = $(DEFAULT_RTOS_LIST)
-drvspi_BOARDLIST       = am65xx_evm am65xx_idk j721e_sim j721e_evm j7200_evm am64x_evm
+drvspi_BOARDLIST       = am65xx_evm am65xx_idk j721e_sim j721e_evm j7200_evm am64x_evm j721s2_evm
 drvspi_SOCLIST         = tda2xx tda2px tda2ex tda3xx dra72x dra75x dra78x am574x am572x am571x k2h k2k k2l k2e k2g c6678 c6657 am437x am335x omapl137 omapl138 am65xx j721e j7200 am64x tpr12 awr294x j721s2
 drvspi_SOCLISTLIM      = tda2xx tda2px tda2ex tda3xx dra72x dra75x dra78x am574x am572x am571x k2h k2k k2l k2e k2g c6678 c6657 am437x am335x omapl137 omapl138
 drvspi_dma_SOCLIST     = tda2xx tda2px tda2ex tda3xx dra72x dra75x dra78x am574x am572x am571x k2h k2k k2l k2e k2g c6678 c6657 am437x am335x omapl137 omapl138 am65xx j721e j7200 am64x	tpr12 awr294x j721s2
@@ -106,8 +106,8 @@ drvspi_am64x_CORELISTARM  = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1
 drvspi_am64x_CORELISTARM_CACHE  = mcu1_0 mcu1_1 mcu2_0 mcu2_1
 drvspi_tpr12_CORELIST  = mcu1_0
 drvspi_awr294x_CORELIST  = mcu1_0
-drvspi_j721s2_CORELIST     = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1
-drvspi_j721s2_CORELIST_CACHE     = mcu1_0 mcu1_1 mcu2_0 mcu2_1
+drvspi_j721s2_CORELIST     = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1
+drvspi_j721s2_CORELIST_CACHE     = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1
 
 ospi_RTOS_LIST       = $(DEFAULT_RTOS_LIST)
 define DRV_OSPI_RTOS_BOARDLIST_RULE
