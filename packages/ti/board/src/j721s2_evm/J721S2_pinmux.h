@@ -90,6 +90,7 @@ enum pinMainOffsets
 	PIN_MCAN16_TX		 = 0x024,
 	PIN_MMC1_CLK		 = 0x104,
 	PIN_MMC1_CMD		 = 0x108,
+    PIN_MMC1_CLKLB       = 0x100,
 	PIN_MMC1_DAT0		 = 0x0FC,
 	PIN_MMC1_DAT1		 = 0x0F8,
 	PIN_MMC1_DAT2		 = 0x0F4,
