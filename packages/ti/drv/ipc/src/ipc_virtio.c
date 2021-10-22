@@ -188,7 +188,7 @@ static void*    vqBaseAddr = NULL;
 static uint32_t vqSizeLeft = 0U;
 static void*    rscTable   = NULL;
 
-static Ipc_TranslationTable  vrTranslationTable;
+static Ipc_TranslationTable  vrTranslationTable = {0};
 
 void* Ipc_allocVirtio()
 {
