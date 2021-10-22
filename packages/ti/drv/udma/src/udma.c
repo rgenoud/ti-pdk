@@ -119,16 +119,19 @@ int32_t Udma_init(Udma_DrvHandle drvHandle, const Udma_InitPrms *initPrms)
         }
 
 #if (UDMA_SOC_CFG_PROXY_PRESENT == 1)
-        if(UDMA_SOK == retVal)
+        if(UDMA_INST_TYPE_NORMAL == drvHandle->instType)
         {
-            /* Setup channelized firewall for default core proxy */
-            req.valid_params = 0U;
-            req.nav_id       = drvHandle->devIdProxy;
-            req.index        = drvHandle->initPrms.rmInitPrms.proxyThreadNum;
-            retVal = Sciclient_rmSetProxyCfg(&req, UDMA_SCICLIENT_TIMEOUT);
-            if(UDMA_SOK != retVal)
+            if(UDMA_SOK == retVal)
             {
-                Udma_printf(drvHandle, "[Error] SciClient Set proxy config failed!!!\n");
+                /* Setup channelized firewall for default core proxy */
+                req.valid_params = 0U;
+                req.nav_id       = drvHandle->devIdProxy;
+                req.index        = drvHandle->initPrms.rmInitPrms.proxyThreadNum;
+                retVal = Sciclient_rmSetProxyCfg(&req, UDMA_SCICLIENT_TIMEOUT);
+                if(UDMA_SOK != retVal)
+                {
+                    Udma_printf(drvHandle, "[Error] SciClient Set proxy config failed!!!\n");
+                }
             }
         }
 #endif
