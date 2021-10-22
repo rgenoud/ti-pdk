@@ -146,6 +146,7 @@ void OsalCfgClecAccessCtrl (bool onlyInSecure)
     CSL_ClecEventConfig cfgClec;
     CSL_CLEC_EVTRegs   *clecBaseAddr = (CSL_CLEC_EVTRegs*) CSL_COMPUTE_CLUSTER0_CLEC_BASE;
     uint32_t            i, maxInputs = 2048U;
+    uint32_t            secureClaim = 0U;
 
     cfgClec.secureClaimEnable = onlyInSecure;
     cfgClec.evtSendEnable     = false;
@@ -154,7 +155,14 @@ void OsalCfgClecAccessCtrl (bool onlyInSecure)
     cfgClec.c7xEvtNum         = 0U;
     for(i = 0U; i < maxInputs; i++)
     {
-        CSL_clecConfigEvent(clecBaseAddr, i, &cfgClec);
+        /* Since the CLEC module is shared b/w c7x_1 and c7x_2, 
+         * Before reseting the events and disabling secure claim,
+         * check if its already done by other C7x. */
+        CSL_clecGetSecureClaimStatus(clecBaseAddr, i, &secureClaim);
+        if(secureClaim)
+        {
+            CSL_clecConfigEvent(clecBaseAddr, i, &cfgClec);
+        }
     }
 }
 
