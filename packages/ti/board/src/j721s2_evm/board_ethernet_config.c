@@ -223,7 +223,75 @@ Board_STATUS Board_sgmiiEthPhyConfig(void)
  */
 Board_STATUS Board_cpsw2gMainEthPhyConfig(void)
 {
-    return BOARD_SOK;
+    uint32_t baseAddr;
+    uint8_t  phyAddr;
+    uint16_t regData = 0;
+    Board_STATUS status = BOARD_SOK;
+
+    baseAddr = (CSL_CPSW1_NUSS_BASE + 0x0F00);
+    phyAddr  = BOARD_MAIN_EMAC_PHY_ADDR;
+
+    Board_mdioInit(baseAddr);
+
+    /* Enable the PHY delay configurations */
+    Board_ethPhyExtendedRegWrite(baseAddr, phyAddr,
+                                 BOARD_ETHPHY_RGMIICTL_REG_ADDR,
+                                 BOARD_ETHPHY_DELAY_CTRL);
+
+    /* Setting delay */
+    Board_ethPhyExtendedRegWrite(baseAddr, phyAddr,
+                                 BOARD_ETHPHY_RGMIIDCTL_REG_ADDR,
+                                 BOARD_ETHPHY_CPSW2G_MAIN_DELAY);
+
+    /*Setting IO impedance to 35ohms  */
+    Board_ethPhyExtendedRegWrite(baseAddr, phyAddr,
+                                 BOARD_ETHPHY_GPIO_MUX_CFG_REG_ADDR,
+                                 BOARD_ETHPHY_IO_IMPEDANCE);
+
+    /* Enable PHY speed LED functionality */
+    Board_ethPhyExtendedRegRead(baseAddr, phyAddr,
+                                BOARD_ETHPHY_GPIO_MUX_CTRL2_REG_ADDR,
+                                &regData);
+    regData  = (regData & ~(BOARD_ETHPHY_GPIO_MUX_CTRL2_REG_MASK)) | 0x6;
+    Board_ethPhyExtendedRegWrite(baseAddr, phyAddr,
+                                 BOARD_ETHPHY_GPIO_MUX_CTRL2_REG_ADDR,
+                                 regData);
+
+    regData = 0;
+    BoardDiag_ethPhyRegRead(baseAddr, phyAddr,
+                            BOARD_ETHPHY_LEDCR1_REG_ADDR, &regData);
+    regData  = (regData & ~(BOARD_ETHPHY_LEDCR1_REG_MASK)) |
+                BOARD_ETHPHY_LEDCR1_REG_CFG;
+    Board_ethPhyRegWrite(baseAddr, phyAddr,
+                         BOARD_ETHPHY_LEDCR1_REG_ADDR, regData);
+
+   /* When the Phy is strapped to enable Fast Link Drop (FLD) feature,
+    * the detect threshold value becomes 0x2 in bit 2:0 instead of 0x1
+    * in the  FLD_THRESH (0x2e) register  as in non strapped case.
+    * This causes the phy link to be unstable.
+    * As a workaround, write a value of 0x1 in this bit field if
+    * bit 10 of STRAP_STS2 (0x6f) register is set (enable FLD).
+    */
+    regData = 0;
+    Board_ethPhyExtendedRegRead(baseAddr, phyAddr,
+                                BOARD_ETHPHY_STRAP_STS2_REG_ADDR,
+                                &regData);
+    if (regData & BOARD_ETHPHY_STRAP_FLD_MASK)
+    {
+        regData = 0;
+        Board_ethPhyExtendedRegRead(baseAddr, phyAddr,
+                                    BOARD_ETHPHY_FLD_THRESH_REG_ADDR,
+                                    &regData);
+        if (regData == BOARD_ETHPHY_STRAP_FLD_THS_CHECK_FLAG)
+        {
+            regData &= ~0x7;
+            Board_ethPhyExtendedRegWrite(baseAddr, phyAddr,
+                                         BOARD_ETHPHY_FLD_THRESH_REG_ADDR,
+                                         (regData | 0x1));
+        }
+    }
+
+    return status;
 }
 
 /**

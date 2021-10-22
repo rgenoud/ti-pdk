@@ -196,6 +196,9 @@ extern "C" {
 /* MCU EMAC PHY MDIO address */
 #define BOARD_MCU_EMAC_PHY_ADDR                         (0U)
 
+/* MAIN EMAC PHY MDIO address */
+#define BOARD_MAIN_EMAC_PHY_ADDR                        (0U)
+
 /* HDMI IO Exp instances */
 #define BOARD_HDMI_IO_EXP_INSTANCE                      (1U)
 #define BOARD_HDMI_IO_SLAVE_ADDR                        (0x21U)
