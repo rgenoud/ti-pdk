@@ -293,25 +293,25 @@ __attribute__(( aligned(128), section(".boardcfg_data") )) =
         {
             .num_resource = 16,
             .type = TISCI_RESASG_UTYPE (TISCI_DEV_NAVSS0_BCDMA_0, TISCI_RESASG_SUBTYPE_BCDMA_RING_SPLIT_TR_RX_CHAN),
-            .start_resource = 48,
+            .start_resource = 16,
             .host_id = TISCI_HOST_ID_A72_2,
         },
         {
             .num_resource = 16,
             .type = TISCI_RESASG_UTYPE (TISCI_DEV_NAVSS0_BCDMA_0, TISCI_RESASG_SUBTYPE_BCDMA_RING_SPLIT_TR_RX_CHAN),
-            .start_resource = 64,
+            .start_resource = 32,
             .host_id = TISCI_HOST_ID_MAIN_0_R5_0,
         },
         {
             .num_resource = 8,
             .type = TISCI_RESASG_UTYPE (TISCI_DEV_NAVSS0_BCDMA_0, TISCI_RESASG_SUBTYPE_BCDMA_RING_SPLIT_TR_TX_CHAN),
-            .start_resource = 28,
+            .start_resource = 0,
             .host_id = TISCI_HOST_ID_A72_2,
         },
         {
             .num_resource = 8,
             .type = TISCI_RESASG_UTYPE (TISCI_DEV_NAVSS0_BCDMA_0, TISCI_RESASG_SUBTYPE_BCDMA_RING_SPLIT_TR_TX_CHAN),
-            .start_resource = 36,
+            .start_resource = 8,
             .host_id = TISCI_HOST_ID_MAIN_0_R5_0,
         },
         {

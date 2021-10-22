@@ -2235,13 +2235,13 @@
                     {
                         "name": "RESASG_UTYPE(J721S2_DEV_NAVSS0_BCDMA_0, RESASG_SUBTYPE_BCDMA_RING_SPLIT_TR_RX_CHAN)",
                         "type": 14414,
-                        "start_resource": 48,
+                        "start_resource": 16,
                         "num_resource": 32
                     },
                     {
                         "name": "RESASG_UTYPE(J721S2_DEV_NAVSS0_BCDMA_0, RESASG_SUBTYPE_BCDMA_RING_SPLIT_TR_TX_CHAN)",
                         "type": 14415,
-                        "start_resource": 28,
+                        "start_resource": 0,
                         "num_resource": 16
                     },
                     {

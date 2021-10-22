@@ -129,235 +129,235 @@ Following is a mapping of Clocks IDs to function:
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
 |   Clock ID | Name                                                                | Function                                                |
 +============+=====================================================================+=========================================================+
-|          1 | DEV_ATL0_ATL_IO_PORT_ATCLK_OUT_2                                    | Output clock                                            |
+|          0 | DEV_ATL0_ATL_IO_PORT_ATCLK_OUT                                      | Output clock                                            |
++------------+---------------------------------------------------------------------+---------------------------------------------------------+
+|          1 | DEV_ATL0_ATL_IO_PORT_ATCLK_OUT_1                                    | Output clock                                            |
++------------+---------------------------------------------------------------------+---------------------------------------------------------+
+|          2 | DEV_ATL0_ATL_IO_PORT_ATCLK_OUT_2                                    | Output clock                                            |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
 |          3 | DEV_ATL0_ATL_IO_PORT_ATCLK_OUT_3                                    | Output clock                                            |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|          4 | DEV_ATL0_ATL_IO_PORT_ATCLK_OUT                                      | Output clock                                            |
+|          4 | DEV_ATL0_ATL_CLK                                                    | Input muxed clock                                       |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|          8 | DEV_ATL0_ATL_IO_PORT_ATCLK_OUT_1                                    | Output clock                                            |
+|          5 | DEV_ATL0_ATL_CLK_PARENT_HSDIV2_16FFT_MAIN_4_HSDIVOUT1_CLK           | Parent input clock option to DEV_ATL0_ATL_CLK           |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|         10 | DEV_ATL0_ATL_CLK                                                    | Input muxed clock                                       |
+|          6 | DEV_ATL0_ATL_CLK_PARENT_HSDIV4_16FFT_MAIN_2_HSDIVOUT2_CLK           | Parent input clock option to DEV_ATL0_ATL_CLK           |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|         11 | DEV_ATL0_ATL_CLK_PARENT_HSDIV2_16FFT_MAIN_4_HSDIVOUT1_CLK           | Parent input clock option to DEV_ATL0_ATL_CLK           |
+|          9 | DEV_ATL0_ATL_CLK_PARENT_POSTDIV3_16FFT_MAIN_0_HSDIVOUT7_CLK         | Parent input clock option to DEV_ATL0_ATL_CLK           |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|         12 | DEV_ATL0_ATL_CLK_PARENT_HSDIV4_16FFT_MAIN_2_HSDIVOUT2_CLK           | Parent input clock option to DEV_ATL0_ATL_CLK           |
+|         10 | DEV_ATL0_ATL_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT                 | Parent input clock option to DEV_ATL0_ATL_CLK           |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|         15 | DEV_ATL0_ATL_CLK_PARENT_POSTDIV3_16FFT_MAIN_0_HSDIVOUT7_CLK         | Parent input clock option to DEV_ATL0_ATL_CLK           |
+|         11 | DEV_ATL0_ATL_CLK_PARENT_BOARD_0_EXT_REFCLK1_OUT                     | Parent input clock option to DEV_ATL0_ATL_CLK           |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|         16 | DEV_ATL0_ATL_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT                 | Parent input clock option to DEV_ATL0_ATL_CLK           |
+|         13 | DEV_ATL0_VBUS_CLK                                                   | Input clock                                             |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|         17 | DEV_ATL0_ATL_CLK_PARENT_BOARD_0_EXT_REFCLK1_OUT                     | Parent input clock option to DEV_ATL0_ATL_CLK           |
+|         14 | DEV_ATL0_ATL_IO_PORT_AWS                                            | Input muxed clock                                       |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|         24 | DEV_ATL0_ATL_IO_PORT_AWS_3                                          | Input muxed clock                                       |
+|         15 | DEV_ATL0_ATL_IO_PORT_AWS_PARENT_MCASP_MAIN_0_MCASP_AFSX_POUT        | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS   |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|         25 | DEV_ATL0_ATL_IO_PORT_AWS_3_PARENT_MCASP_MAIN_0_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_3 |
+|         16 | DEV_ATL0_ATL_IO_PORT_AWS_PARENT_MCASP_MAIN_1_MCASP_AFSX_POUT        | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS   |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|         26 | DEV_ATL0_ATL_IO_PORT_AWS_3_PARENT_MCASP_MAIN_1_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_3 |
+|         17 | DEV_ATL0_ATL_IO_PORT_AWS_PARENT_MCASP_MAIN_2_MCASP_AFSX_POUT_DUP0   | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS   |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|         27 | DEV_ATL0_ATL_IO_PORT_AWS_3_PARENT_MCASP_MAIN_2_MCASP_AFSX_POUT_DUP0 | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_3 |
+|         18 | DEV_ATL0_ATL_IO_PORT_AWS_PARENT_MCASP_MAIN_3_MCASP_AFSX_POUT_DUP0   | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS   |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|         28 | DEV_ATL0_ATL_IO_PORT_AWS_3_PARENT_MCASP_MAIN_3_MCASP_AFSX_POUT_DUP0 | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_3 |
+|         19 | DEV_ATL0_ATL_IO_PORT_AWS_PARENT_MCASP_MAIN_4_MCASP_AFSX_POUT_DUP0   | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS   |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|         29 | DEV_ATL0_ATL_IO_PORT_AWS_3_PARENT_MCASP_MAIN_4_MCASP_AFSX_POUT_DUP0 | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_3 |
+|         27 | DEV_ATL0_ATL_IO_PORT_AWS_PARENT_MCASP_MAIN_0_MCASP_AFSX_POUT_DUP0   | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS   |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|         37 | DEV_ATL0_ATL_IO_PORT_AWS_3_PARENT_MCASP_MAIN_0_MCASP_AFSX_POUT_DUP0 | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_3 |
+|         28 | DEV_ATL0_ATL_IO_PORT_AWS_PARENT_MCASP_MAIN_1_MCASP_AFSX_POUT_DUP0   | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS   |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|         38 | DEV_ATL0_ATL_IO_PORT_AWS_3_PARENT_MCASP_MAIN_1_MCASP_AFSX_POUT_DUP0 | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_3 |
+|         29 | DEV_ATL0_ATL_IO_PORT_AWS_PARENT_MCASP_MAIN_2_MCASP_AFSX_POUT        | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS   |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|         39 | DEV_ATL0_ATL_IO_PORT_AWS_3_PARENT_MCASP_MAIN_2_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_3 |
+|         30 | DEV_ATL0_ATL_IO_PORT_AWS_PARENT_MCASP_MAIN_3_MCASP_AFSX_POUT        | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS   |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|         40 | DEV_ATL0_ATL_IO_PORT_AWS_3_PARENT_MCASP_MAIN_3_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_3 |
+|         31 | DEV_ATL0_ATL_IO_PORT_AWS_PARENT_MCASP_MAIN_4_MCASP_AFSX_POUT        | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS   |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|         41 | DEV_ATL0_ATL_IO_PORT_AWS_3_PARENT_MCASP_MAIN_4_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_3 |
+|         39 | DEV_ATL0_ATL_IO_PORT_AWS_PARENT_BOARD_0_AUDIO_EXT_REFCLK0_OUT       | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS   |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|         49 | DEV_ATL0_ATL_IO_PORT_AWS_3_PARENT_BOARD_0_AUDIO_EXT_REFCLK0_OUT     | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_3 |
+|         40 | DEV_ATL0_ATL_IO_PORT_AWS_PARENT_BOARD_0_AUDIO_EXT_REFCLK1_OUT       | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS   |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|         50 | DEV_ATL0_ATL_IO_PORT_AWS_3_PARENT_BOARD_0_AUDIO_EXT_REFCLK1_OUT     | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_3 |
+|         47 | DEV_ATL0_ATL_IO_PORT_AWS_1                                          | Input muxed clock                                       |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|         57 | DEV_ATL0_ATL_IO_PORT_AWS_2                                          | Input muxed clock                                       |
+|         48 | DEV_ATL0_ATL_IO_PORT_AWS_1_PARENT_MCASP_MAIN_0_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_1 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|         58 | DEV_ATL0_ATL_IO_PORT_AWS_2_PARENT_MCASP_MAIN_0_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_2 |
+|         49 | DEV_ATL0_ATL_IO_PORT_AWS_1_PARENT_MCASP_MAIN_1_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_1 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|         59 | DEV_ATL0_ATL_IO_PORT_AWS_2_PARENT_MCASP_MAIN_1_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_2 |
+|         50 | DEV_ATL0_ATL_IO_PORT_AWS_1_PARENT_MCASP_MAIN_2_MCASP_AFSX_POUT_DUP0 | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_1 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|         60 | DEV_ATL0_ATL_IO_PORT_AWS_2_PARENT_MCASP_MAIN_2_MCASP_AFSX_POUT_DUP0 | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_2 |
+|         51 | DEV_ATL0_ATL_IO_PORT_AWS_1_PARENT_MCASP_MAIN_3_MCASP_AFSX_POUT_DUP0 | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_1 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|         61 | DEV_ATL0_ATL_IO_PORT_AWS_2_PARENT_MCASP_MAIN_3_MCASP_AFSX_POUT_DUP0 | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_2 |
+|         52 | DEV_ATL0_ATL_IO_PORT_AWS_1_PARENT_MCASP_MAIN_4_MCASP_AFSX_POUT_DUP0 | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_1 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|         62 | DEV_ATL0_ATL_IO_PORT_AWS_2_PARENT_MCASP_MAIN_4_MCASP_AFSX_POUT_DUP0 | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_2 |
+|         60 | DEV_ATL0_ATL_IO_PORT_AWS_1_PARENT_MCASP_MAIN_0_MCASP_AFSX_POUT_DUP0 | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_1 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|         70 | DEV_ATL0_ATL_IO_PORT_AWS_2_PARENT_MCASP_MAIN_0_MCASP_AFSX_POUT_DUP0 | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_2 |
+|         61 | DEV_ATL0_ATL_IO_PORT_AWS_1_PARENT_MCASP_MAIN_1_MCASP_AFSX_POUT_DUP0 | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_1 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|         71 | DEV_ATL0_ATL_IO_PORT_AWS_2_PARENT_MCASP_MAIN_1_MCASP_AFSX_POUT_DUP0 | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_2 |
+|         62 | DEV_ATL0_ATL_IO_PORT_AWS_1_PARENT_MCASP_MAIN_2_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_1 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|         72 | DEV_ATL0_ATL_IO_PORT_AWS_2_PARENT_MCASP_MAIN_2_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_2 |
+|         63 | DEV_ATL0_ATL_IO_PORT_AWS_1_PARENT_MCASP_MAIN_3_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_1 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|         73 | DEV_ATL0_ATL_IO_PORT_AWS_2_PARENT_MCASP_MAIN_3_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_2 |
+|         64 | DEV_ATL0_ATL_IO_PORT_AWS_1_PARENT_MCASP_MAIN_4_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_1 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|         74 | DEV_ATL0_ATL_IO_PORT_AWS_2_PARENT_MCASP_MAIN_4_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_2 |
+|         72 | DEV_ATL0_ATL_IO_PORT_AWS_1_PARENT_BOARD_0_AUDIO_EXT_REFCLK0_OUT     | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_1 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|         82 | DEV_ATL0_ATL_IO_PORT_AWS_2_PARENT_BOARD_0_AUDIO_EXT_REFCLK0_OUT     | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_2 |
+|         73 | DEV_ATL0_ATL_IO_PORT_AWS_1_PARENT_BOARD_0_AUDIO_EXT_REFCLK1_OUT     | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_1 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|         83 | DEV_ATL0_ATL_IO_PORT_AWS_2_PARENT_BOARD_0_AUDIO_EXT_REFCLK1_OUT     | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_2 |
+|         80 | DEV_ATL0_ATL_IO_PORT_AWS_2                                          | Input muxed clock                                       |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|         91 | DEV_ATL0_ATL_IO_PORT_BWS_1                                          | Input muxed clock                                       |
+|         81 | DEV_ATL0_ATL_IO_PORT_AWS_2_PARENT_MCASP_MAIN_0_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_2 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|         92 | DEV_ATL0_ATL_IO_PORT_BWS_1_PARENT_MCASP_MAIN_0_MCASP_AFSR_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_1 |
+|         82 | DEV_ATL0_ATL_IO_PORT_AWS_2_PARENT_MCASP_MAIN_1_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_2 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|         93 | DEV_ATL0_ATL_IO_PORT_BWS_1_PARENT_MCASP_MAIN_1_MCASP_AFSR_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_1 |
+|         83 | DEV_ATL0_ATL_IO_PORT_AWS_2_PARENT_MCASP_MAIN_2_MCASP_AFSX_POUT_DUP0 | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_2 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|         94 | DEV_ATL0_ATL_IO_PORT_BWS_1_PARENT_MCASP_MAIN_2_MCASP_AFSR_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_1 |
+|         84 | DEV_ATL0_ATL_IO_PORT_AWS_2_PARENT_MCASP_MAIN_3_MCASP_AFSX_POUT_DUP0 | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_2 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|         95 | DEV_ATL0_ATL_IO_PORT_BWS_1_PARENT_MCASP_MAIN_3_MCASP_AFSR_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_1 |
+|         85 | DEV_ATL0_ATL_IO_PORT_AWS_2_PARENT_MCASP_MAIN_4_MCASP_AFSX_POUT_DUP0 | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_2 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|         96 | DEV_ATL0_ATL_IO_PORT_BWS_1_PARENT_MCASP_MAIN_4_MCASP_AFSR_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_1 |
+|         93 | DEV_ATL0_ATL_IO_PORT_AWS_2_PARENT_MCASP_MAIN_0_MCASP_AFSX_POUT_DUP0 | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_2 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        104 | DEV_ATL0_ATL_IO_PORT_BWS_1_PARENT_MCASP_MAIN_0_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_1 |
+|         94 | DEV_ATL0_ATL_IO_PORT_AWS_2_PARENT_MCASP_MAIN_1_MCASP_AFSX_POUT_DUP0 | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_2 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        105 | DEV_ATL0_ATL_IO_PORT_BWS_1_PARENT_MCASP_MAIN_1_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_1 |
+|         95 | DEV_ATL0_ATL_IO_PORT_AWS_2_PARENT_MCASP_MAIN_2_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_2 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        106 | DEV_ATL0_ATL_IO_PORT_BWS_1_PARENT_MCASP_MAIN_2_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_1 |
+|         96 | DEV_ATL0_ATL_IO_PORT_AWS_2_PARENT_MCASP_MAIN_3_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_2 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        107 | DEV_ATL0_ATL_IO_PORT_BWS_1_PARENT_MCASP_MAIN_3_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_1 |
+|         97 | DEV_ATL0_ATL_IO_PORT_AWS_2_PARENT_MCASP_MAIN_4_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_2 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        108 | DEV_ATL0_ATL_IO_PORT_BWS_1_PARENT_MCASP_MAIN_4_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_1 |
+|        105 | DEV_ATL0_ATL_IO_PORT_AWS_2_PARENT_BOARD_0_AUDIO_EXT_REFCLK0_OUT     | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_2 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        116 | DEV_ATL0_ATL_IO_PORT_BWS_1_PARENT_BOARD_0_AUDIO_EXT_REFCLK0_OUT     | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_1 |
+|        106 | DEV_ATL0_ATL_IO_PORT_AWS_2_PARENT_BOARD_0_AUDIO_EXT_REFCLK1_OUT     | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_2 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        117 | DEV_ATL0_ATL_IO_PORT_BWS_1_PARENT_BOARD_0_AUDIO_EXT_REFCLK1_OUT     | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_1 |
+|        113 | DEV_ATL0_ATL_IO_PORT_AWS_3                                          | Input muxed clock                                       |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        124 | DEV_ATL0_ATL_IO_PORT_BWS_3                                          | Input muxed clock                                       |
+|        114 | DEV_ATL0_ATL_IO_PORT_AWS_3_PARENT_MCASP_MAIN_0_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_3 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        125 | DEV_ATL0_ATL_IO_PORT_BWS_3_PARENT_MCASP_MAIN_0_MCASP_AFSR_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_3 |
+|        115 | DEV_ATL0_ATL_IO_PORT_AWS_3_PARENT_MCASP_MAIN_1_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_3 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        126 | DEV_ATL0_ATL_IO_PORT_BWS_3_PARENT_MCASP_MAIN_1_MCASP_AFSR_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_3 |
+|        116 | DEV_ATL0_ATL_IO_PORT_AWS_3_PARENT_MCASP_MAIN_2_MCASP_AFSX_POUT_DUP0 | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_3 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        127 | DEV_ATL0_ATL_IO_PORT_BWS_3_PARENT_MCASP_MAIN_2_MCASP_AFSR_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_3 |
+|        117 | DEV_ATL0_ATL_IO_PORT_AWS_3_PARENT_MCASP_MAIN_3_MCASP_AFSX_POUT_DUP0 | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_3 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        128 | DEV_ATL0_ATL_IO_PORT_BWS_3_PARENT_MCASP_MAIN_3_MCASP_AFSR_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_3 |
+|        118 | DEV_ATL0_ATL_IO_PORT_AWS_3_PARENT_MCASP_MAIN_4_MCASP_AFSX_POUT_DUP0 | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_3 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        129 | DEV_ATL0_ATL_IO_PORT_BWS_3_PARENT_MCASP_MAIN_4_MCASP_AFSR_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_3 |
+|        126 | DEV_ATL0_ATL_IO_PORT_AWS_3_PARENT_MCASP_MAIN_0_MCASP_AFSX_POUT_DUP0 | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_3 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        137 | DEV_ATL0_ATL_IO_PORT_BWS_3_PARENT_MCASP_MAIN_0_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_3 |
+|        127 | DEV_ATL0_ATL_IO_PORT_AWS_3_PARENT_MCASP_MAIN_1_MCASP_AFSX_POUT_DUP0 | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_3 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        138 | DEV_ATL0_ATL_IO_PORT_BWS_3_PARENT_MCASP_MAIN_1_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_3 |
+|        128 | DEV_ATL0_ATL_IO_PORT_AWS_3_PARENT_MCASP_MAIN_2_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_3 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        139 | DEV_ATL0_ATL_IO_PORT_BWS_3_PARENT_MCASP_MAIN_2_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_3 |
+|        129 | DEV_ATL0_ATL_IO_PORT_AWS_3_PARENT_MCASP_MAIN_3_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_3 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        140 | DEV_ATL0_ATL_IO_PORT_BWS_3_PARENT_MCASP_MAIN_3_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_3 |
+|        130 | DEV_ATL0_ATL_IO_PORT_AWS_3_PARENT_MCASP_MAIN_4_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_3 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        141 | DEV_ATL0_ATL_IO_PORT_BWS_3_PARENT_MCASP_MAIN_4_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_3 |
+|        138 | DEV_ATL0_ATL_IO_PORT_AWS_3_PARENT_BOARD_0_AUDIO_EXT_REFCLK0_OUT     | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_3 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        149 | DEV_ATL0_ATL_IO_PORT_BWS_3_PARENT_BOARD_0_AUDIO_EXT_REFCLK0_OUT     | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_3 |
+|        139 | DEV_ATL0_ATL_IO_PORT_AWS_3_PARENT_BOARD_0_AUDIO_EXT_REFCLK1_OUT     | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_3 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        150 | DEV_ATL0_ATL_IO_PORT_BWS_3_PARENT_BOARD_0_AUDIO_EXT_REFCLK1_OUT     | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_3 |
+|        146 | DEV_ATL0_ATL_IO_PORT_BWS                                            | Input muxed clock                                       |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        157 | DEV_ATL0_VBUS_CLK                                                   | Input clock                                             |
+|        147 | DEV_ATL0_ATL_IO_PORT_BWS_PARENT_MCASP_MAIN_0_MCASP_AFSR_POUT        | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS   |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        159 | DEV_ATL0_ATL_IO_PORT_AWS                                            | Input muxed clock                                       |
+|        148 | DEV_ATL0_ATL_IO_PORT_BWS_PARENT_MCASP_MAIN_1_MCASP_AFSR_POUT        | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS   |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        160 | DEV_ATL0_ATL_IO_PORT_AWS_PARENT_MCASP_MAIN_0_MCASP_AFSX_POUT        | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS   |
+|        149 | DEV_ATL0_ATL_IO_PORT_BWS_PARENT_MCASP_MAIN_2_MCASP_AFSR_POUT        | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS   |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        161 | DEV_ATL0_ATL_IO_PORT_AWS_PARENT_MCASP_MAIN_1_MCASP_AFSX_POUT        | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS   |
+|        150 | DEV_ATL0_ATL_IO_PORT_BWS_PARENT_MCASP_MAIN_3_MCASP_AFSR_POUT        | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS   |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        162 | DEV_ATL0_ATL_IO_PORT_AWS_PARENT_MCASP_MAIN_2_MCASP_AFSX_POUT_DUP0   | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS   |
+|        151 | DEV_ATL0_ATL_IO_PORT_BWS_PARENT_MCASP_MAIN_4_MCASP_AFSR_POUT        | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS   |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        163 | DEV_ATL0_ATL_IO_PORT_AWS_PARENT_MCASP_MAIN_3_MCASP_AFSX_POUT_DUP0   | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS   |
+|        159 | DEV_ATL0_ATL_IO_PORT_BWS_PARENT_MCASP_MAIN_0_MCASP_AFSX_POUT        | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS   |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        164 | DEV_ATL0_ATL_IO_PORT_AWS_PARENT_MCASP_MAIN_4_MCASP_AFSX_POUT_DUP0   | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS   |
+|        160 | DEV_ATL0_ATL_IO_PORT_BWS_PARENT_MCASP_MAIN_1_MCASP_AFSX_POUT        | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS   |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        172 | DEV_ATL0_ATL_IO_PORT_AWS_PARENT_MCASP_MAIN_0_MCASP_AFSX_POUT_DUP0   | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS   |
+|        161 | DEV_ATL0_ATL_IO_PORT_BWS_PARENT_MCASP_MAIN_2_MCASP_AFSX_POUT        | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS   |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        173 | DEV_ATL0_ATL_IO_PORT_AWS_PARENT_MCASP_MAIN_1_MCASP_AFSX_POUT_DUP0   | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS   |
+|        162 | DEV_ATL0_ATL_IO_PORT_BWS_PARENT_MCASP_MAIN_3_MCASP_AFSX_POUT        | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS   |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        174 | DEV_ATL0_ATL_IO_PORT_AWS_PARENT_MCASP_MAIN_2_MCASP_AFSX_POUT        | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS   |
+|        163 | DEV_ATL0_ATL_IO_PORT_BWS_PARENT_MCASP_MAIN_4_MCASP_AFSX_POUT        | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS   |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        175 | DEV_ATL0_ATL_IO_PORT_AWS_PARENT_MCASP_MAIN_3_MCASP_AFSX_POUT        | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS   |
+|        171 | DEV_ATL0_ATL_IO_PORT_BWS_PARENT_BOARD_0_AUDIO_EXT_REFCLK0_OUT       | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS   |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        176 | DEV_ATL0_ATL_IO_PORT_AWS_PARENT_MCASP_MAIN_4_MCASP_AFSX_POUT        | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS   |
+|        172 | DEV_ATL0_ATL_IO_PORT_BWS_PARENT_BOARD_0_AUDIO_EXT_REFCLK1_OUT       | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS   |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        184 | DEV_ATL0_ATL_IO_PORT_AWS_PARENT_BOARD_0_AUDIO_EXT_REFCLK0_OUT       | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS   |
+|        179 | DEV_ATL0_ATL_IO_PORT_BWS_1                                          | Input muxed clock                                       |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        185 | DEV_ATL0_ATL_IO_PORT_AWS_PARENT_BOARD_0_AUDIO_EXT_REFCLK1_OUT       | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS   |
+|        180 | DEV_ATL0_ATL_IO_PORT_BWS_1_PARENT_MCASP_MAIN_0_MCASP_AFSR_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_1 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        198 | DEV_ATL0_ATL_IO_PORT_AWS_1                                          | Input muxed clock                                       |
+|        181 | DEV_ATL0_ATL_IO_PORT_BWS_1_PARENT_MCASP_MAIN_1_MCASP_AFSR_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_1 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        199 | DEV_ATL0_ATL_IO_PORT_AWS_1_PARENT_MCASP_MAIN_0_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_1 |
+|        182 | DEV_ATL0_ATL_IO_PORT_BWS_1_PARENT_MCASP_MAIN_2_MCASP_AFSR_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_1 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        200 | DEV_ATL0_ATL_IO_PORT_AWS_1_PARENT_MCASP_MAIN_1_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_1 |
+|        183 | DEV_ATL0_ATL_IO_PORT_BWS_1_PARENT_MCASP_MAIN_3_MCASP_AFSR_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_1 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        201 | DEV_ATL0_ATL_IO_PORT_AWS_1_PARENT_MCASP_MAIN_2_MCASP_AFSX_POUT_DUP0 | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_1 |
+|        184 | DEV_ATL0_ATL_IO_PORT_BWS_1_PARENT_MCASP_MAIN_4_MCASP_AFSR_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_1 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        202 | DEV_ATL0_ATL_IO_PORT_AWS_1_PARENT_MCASP_MAIN_3_MCASP_AFSX_POUT_DUP0 | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_1 |
+|        192 | DEV_ATL0_ATL_IO_PORT_BWS_1_PARENT_MCASP_MAIN_0_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_1 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        203 | DEV_ATL0_ATL_IO_PORT_AWS_1_PARENT_MCASP_MAIN_4_MCASP_AFSX_POUT_DUP0 | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_1 |
+|        193 | DEV_ATL0_ATL_IO_PORT_BWS_1_PARENT_MCASP_MAIN_1_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_1 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        211 | DEV_ATL0_ATL_IO_PORT_AWS_1_PARENT_MCASP_MAIN_0_MCASP_AFSX_POUT_DUP0 | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_1 |
+|        194 | DEV_ATL0_ATL_IO_PORT_BWS_1_PARENT_MCASP_MAIN_2_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_1 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        212 | DEV_ATL0_ATL_IO_PORT_AWS_1_PARENT_MCASP_MAIN_1_MCASP_AFSX_POUT_DUP0 | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_1 |
+|        195 | DEV_ATL0_ATL_IO_PORT_BWS_1_PARENT_MCASP_MAIN_3_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_1 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        213 | DEV_ATL0_ATL_IO_PORT_AWS_1_PARENT_MCASP_MAIN_2_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_1 |
+|        196 | DEV_ATL0_ATL_IO_PORT_BWS_1_PARENT_MCASP_MAIN_4_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_1 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        214 | DEV_ATL0_ATL_IO_PORT_AWS_1_PARENT_MCASP_MAIN_3_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_1 |
+|        204 | DEV_ATL0_ATL_IO_PORT_BWS_1_PARENT_BOARD_0_AUDIO_EXT_REFCLK0_OUT     | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_1 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        215 | DEV_ATL0_ATL_IO_PORT_AWS_1_PARENT_MCASP_MAIN_4_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_1 |
+|        205 | DEV_ATL0_ATL_IO_PORT_BWS_1_PARENT_BOARD_0_AUDIO_EXT_REFCLK1_OUT     | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_1 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        223 | DEV_ATL0_ATL_IO_PORT_AWS_1_PARENT_BOARD_0_AUDIO_EXT_REFCLK0_OUT     | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_1 |
+|        212 | DEV_ATL0_ATL_IO_PORT_BWS_2                                          | Input muxed clock                                       |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        224 | DEV_ATL0_ATL_IO_PORT_AWS_1_PARENT_BOARD_0_AUDIO_EXT_REFCLK1_OUT     | Parent input clock option to DEV_ATL0_ATL_IO_PORT_AWS_1 |
+|        213 | DEV_ATL0_ATL_IO_PORT_BWS_2_PARENT_MCASP_MAIN_0_MCASP_AFSR_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_2 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        234 | DEV_ATL0_ATL_IO_PORT_BWS                                            | Input muxed clock                                       |
+|        214 | DEV_ATL0_ATL_IO_PORT_BWS_2_PARENT_MCASP_MAIN_1_MCASP_AFSR_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_2 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        235 | DEV_ATL0_ATL_IO_PORT_BWS_PARENT_MCASP_MAIN_0_MCASP_AFSR_POUT        | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS   |
+|        215 | DEV_ATL0_ATL_IO_PORT_BWS_2_PARENT_MCASP_MAIN_2_MCASP_AFSR_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_2 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        236 | DEV_ATL0_ATL_IO_PORT_BWS_PARENT_MCASP_MAIN_1_MCASP_AFSR_POUT        | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS   |
+|        216 | DEV_ATL0_ATL_IO_PORT_BWS_2_PARENT_MCASP_MAIN_3_MCASP_AFSR_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_2 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        237 | DEV_ATL0_ATL_IO_PORT_BWS_PARENT_MCASP_MAIN_2_MCASP_AFSR_POUT        | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS   |
+|        217 | DEV_ATL0_ATL_IO_PORT_BWS_2_PARENT_MCASP_MAIN_4_MCASP_AFSR_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_2 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        238 | DEV_ATL0_ATL_IO_PORT_BWS_PARENT_MCASP_MAIN_3_MCASP_AFSR_POUT        | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS   |
+|        225 | DEV_ATL0_ATL_IO_PORT_BWS_2_PARENT_MCASP_MAIN_0_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_2 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        239 | DEV_ATL0_ATL_IO_PORT_BWS_PARENT_MCASP_MAIN_4_MCASP_AFSR_POUT        | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS   |
+|        226 | DEV_ATL0_ATL_IO_PORT_BWS_2_PARENT_MCASP_MAIN_1_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_2 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        247 | DEV_ATL0_ATL_IO_PORT_BWS_PARENT_MCASP_MAIN_0_MCASP_AFSX_POUT        | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS   |
+|        227 | DEV_ATL0_ATL_IO_PORT_BWS_2_PARENT_MCASP_MAIN_2_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_2 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        248 | DEV_ATL0_ATL_IO_PORT_BWS_PARENT_MCASP_MAIN_1_MCASP_AFSX_POUT        | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS   |
+|        228 | DEV_ATL0_ATL_IO_PORT_BWS_2_PARENT_MCASP_MAIN_3_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_2 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        249 | DEV_ATL0_ATL_IO_PORT_BWS_PARENT_MCASP_MAIN_2_MCASP_AFSX_POUT        | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS   |
+|        229 | DEV_ATL0_ATL_IO_PORT_BWS_2_PARENT_MCASP_MAIN_4_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_2 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        250 | DEV_ATL0_ATL_IO_PORT_BWS_PARENT_MCASP_MAIN_3_MCASP_AFSX_POUT        | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS   |
+|        237 | DEV_ATL0_ATL_IO_PORT_BWS_2_PARENT_BOARD_0_AUDIO_EXT_REFCLK0_OUT     | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_2 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        251 | DEV_ATL0_ATL_IO_PORT_BWS_PARENT_MCASP_MAIN_4_MCASP_AFSX_POUT        | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS   |
+|        238 | DEV_ATL0_ATL_IO_PORT_BWS_2_PARENT_BOARD_0_AUDIO_EXT_REFCLK1_OUT     | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_2 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        259 | DEV_ATL0_ATL_IO_PORT_BWS_PARENT_BOARD_0_AUDIO_EXT_REFCLK0_OUT       | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS   |
+|        245 | DEV_ATL0_ATL_IO_PORT_BWS_3                                          | Input muxed clock                                       |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        260 | DEV_ATL0_ATL_IO_PORT_BWS_PARENT_BOARD_0_AUDIO_EXT_REFCLK1_OUT       | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS   |
+|        246 | DEV_ATL0_ATL_IO_PORT_BWS_3_PARENT_MCASP_MAIN_0_MCASP_AFSR_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_3 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        269 | DEV_ATL0_ATL_IO_PORT_BWS_2                                          | Input muxed clock                                       |
+|        247 | DEV_ATL0_ATL_IO_PORT_BWS_3_PARENT_MCASP_MAIN_1_MCASP_AFSR_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_3 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        270 | DEV_ATL0_ATL_IO_PORT_BWS_2_PARENT_MCASP_MAIN_0_MCASP_AFSR_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_2 |
+|        248 | DEV_ATL0_ATL_IO_PORT_BWS_3_PARENT_MCASP_MAIN_2_MCASP_AFSR_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_3 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        271 | DEV_ATL0_ATL_IO_PORT_BWS_2_PARENT_MCASP_MAIN_1_MCASP_AFSR_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_2 |
+|        249 | DEV_ATL0_ATL_IO_PORT_BWS_3_PARENT_MCASP_MAIN_3_MCASP_AFSR_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_3 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        272 | DEV_ATL0_ATL_IO_PORT_BWS_2_PARENT_MCASP_MAIN_2_MCASP_AFSR_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_2 |
+|        250 | DEV_ATL0_ATL_IO_PORT_BWS_3_PARENT_MCASP_MAIN_4_MCASP_AFSR_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_3 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        273 | DEV_ATL0_ATL_IO_PORT_BWS_2_PARENT_MCASP_MAIN_3_MCASP_AFSR_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_2 |
+|        258 | DEV_ATL0_ATL_IO_PORT_BWS_3_PARENT_MCASP_MAIN_0_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_3 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        274 | DEV_ATL0_ATL_IO_PORT_BWS_2_PARENT_MCASP_MAIN_4_MCASP_AFSR_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_2 |
+|        259 | DEV_ATL0_ATL_IO_PORT_BWS_3_PARENT_MCASP_MAIN_1_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_3 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        282 | DEV_ATL0_ATL_IO_PORT_BWS_2_PARENT_MCASP_MAIN_0_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_2 |
+|        260 | DEV_ATL0_ATL_IO_PORT_BWS_3_PARENT_MCASP_MAIN_2_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_3 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        283 | DEV_ATL0_ATL_IO_PORT_BWS_2_PARENT_MCASP_MAIN_1_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_2 |
+|        261 | DEV_ATL0_ATL_IO_PORT_BWS_3_PARENT_MCASP_MAIN_3_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_3 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        284 | DEV_ATL0_ATL_IO_PORT_BWS_2_PARENT_MCASP_MAIN_2_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_2 |
+|        262 | DEV_ATL0_ATL_IO_PORT_BWS_3_PARENT_MCASP_MAIN_4_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_3 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        285 | DEV_ATL0_ATL_IO_PORT_BWS_2_PARENT_MCASP_MAIN_3_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_2 |
+|        270 | DEV_ATL0_ATL_IO_PORT_BWS_3_PARENT_BOARD_0_AUDIO_EXT_REFCLK0_OUT     | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_3 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        286 | DEV_ATL0_ATL_IO_PORT_BWS_2_PARENT_MCASP_MAIN_4_MCASP_AFSX_POUT      | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_2 |
-+------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        294 | DEV_ATL0_ATL_IO_PORT_BWS_2_PARENT_BOARD_0_AUDIO_EXT_REFCLK0_OUT     | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_2 |
-+------------+---------------------------------------------------------------------+---------------------------------------------------------+
-|        295 | DEV_ATL0_ATL_IO_PORT_BWS_2_PARENT_BOARD_0_AUDIO_EXT_REFCLK1_OUT     | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_2 |
+|        271 | DEV_ATL0_ATL_IO_PORT_BWS_3_PARENT_BOARD_0_AUDIO_EXT_REFCLK1_OUT     | Parent input clock option to DEV_ATL0_ATL_IO_PORT_BWS_3 |
 +------------+---------------------------------------------------------------------+---------------------------------------------------------+
 
 .. _soc_doc_j721s2_public_clks_board0:
@@ -1918,29 +1918,37 @@ Device: :ref:`J721S2_DEV_DPHY_TX0 <soc_doc_j721s2_public_devices_desc_device_lis
 
 Following is a mapping of Clocks IDs to function:
 
-+------------+-----------------------------------------+--------------+
-|   Clock ID | Name                                    | Function     |
-+============+=========================================+==============+
-|          1 | DEV_DPHY_TX0_IP2_PPI_TXBYTECLKHS_CL_CLK | Output clock |
-+------------+-----------------------------------------+--------------+
-|          2 | DEV_DPHY_TX0_IP1_PPI_TXBYTECLKHS_CL_CLK | Output clock |
-+------------+-----------------------------------------+--------------+
-|          5 | DEV_DPHY_TX0_CLK                        | Input clock  |
-+------------+-----------------------------------------+--------------+
-|          8 | DEV_DPHY_TX0_PSM_CLK                    | Input clock  |
-+------------+-----------------------------------------+--------------+
-|         12 | DEV_DPHY_TX0_CK_M                       | Output clock |
-+------------+-----------------------------------------+--------------+
-|         14 | DEV_DPHY_TX0_DPHY_REF_CLK               | Input clock  |
-+------------+-----------------------------------------+--------------+
-|         16 | DEV_DPHY_TX0_CK_P                       | Output clock |
-+------------+-----------------------------------------+--------------+
-|         18 | DEV_DPHY_TX0_IP1_PPI_M_TXCLKESC_CLK     | Input clock  |
-+------------+-----------------------------------------+--------------+
-|         19 | DEV_DPHY_TX0_IP1_PPI_M_RXCLKESC_CLK     | Output clock |
-+------------+-----------------------------------------+--------------+
-|         20 | DEV_DPHY_TX0_IP2_PPI_M_TXCLKESC_CLK     | Input clock  |
-+------------+-----------------------------------------+--------------+
++------------+--------------------------------------------------------------------+--------------------------------------------------------+
+|   Clock ID | Name                                                               | Function                                               |
++============+====================================================================+========================================================+
+|          1 | DEV_DPHY_TX0_IP2_PPI_TXBYTECLKHS_CL_CLK                            | Output clock                                           |
++------------+--------------------------------------------------------------------+--------------------------------------------------------+
+|          2 | DEV_DPHY_TX0_IP1_PPI_TXBYTECLKHS_CL_CLK                            | Output clock                                           |
++------------+--------------------------------------------------------------------+--------------------------------------------------------+
+|          5 | DEV_DPHY_TX0_CLK                                                   | Input clock                                            |
++------------+--------------------------------------------------------------------+--------------------------------------------------------+
+|          8 | DEV_DPHY_TX0_PSM_CLK                                               | Input clock                                            |
++------------+--------------------------------------------------------------------+--------------------------------------------------------+
+|         12 | DEV_DPHY_TX0_CK_M                                                  | Output clock                                           |
++------------+--------------------------------------------------------------------+--------------------------------------------------------+
+|         14 | DEV_DPHY_TX0_DPHY_REF_CLK                                          | Input muxed clock                                      |
++------------+--------------------------------------------------------------------+--------------------------------------------------------+
+|         15 | DEV_DPHY_TX0_DPHY_REF_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT           | Parent input clock option to DEV_DPHY_TX0_DPHY_REF_CLK |
++------------+--------------------------------------------------------------------+--------------------------------------------------------+
+|         16 | DEV_DPHY_TX0_DPHY_REF_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT            | Parent input clock option to DEV_DPHY_TX0_DPHY_REF_CLK |
++------------+--------------------------------------------------------------------+--------------------------------------------------------+
+|         17 | DEV_DPHY_TX0_DPHY_REF_CLK_PARENT_HSDIV4_16FFT_MAIN_3_HSDIVOUT4_CLK | Parent input clock option to DEV_DPHY_TX0_DPHY_REF_CLK |
++------------+--------------------------------------------------------------------+--------------------------------------------------------+
+|         18 | DEV_DPHY_TX0_DPHY_REF_CLK_PARENT_HSDIV4_16FFT_MAIN_2_HSDIVOUT4_CLK | Parent input clock option to DEV_DPHY_TX0_DPHY_REF_CLK |
++------------+--------------------------------------------------------------------+--------------------------------------------------------+
+|         20 | DEV_DPHY_TX0_CK_P                                                  | Output clock                                           |
++------------+--------------------------------------------------------------------+--------------------------------------------------------+
+|         22 | DEV_DPHY_TX0_IP1_PPI_M_TXCLKESC_CLK                                | Input clock                                            |
++------------+--------------------------------------------------------------------+--------------------------------------------------------+
+|         23 | DEV_DPHY_TX0_IP1_PPI_M_RXCLKESC_CLK                                | Output clock                                           |
++------------+--------------------------------------------------------------------+--------------------------------------------------------+
+|         24 | DEV_DPHY_TX0_IP2_PPI_M_TXCLKESC_CLK                                | Input clock                                            |
++------------+--------------------------------------------------------------------+--------------------------------------------------------+
 
 .. _soc_doc_j721s2_public_clks_dphy_tx1:
 
@@ -1952,27 +1960,35 @@ Device: :ref:`J721S2_DEV_DPHY_TX1 <soc_doc_j721s2_public_devices_desc_device_lis
 
 Following is a mapping of Clocks IDs to function:
 
-+------------+-----------------------------------------+--------------+
-|   Clock ID | Name                                    | Function     |
-+============+=========================================+==============+
-|          1 | DEV_DPHY_TX1_IP2_PPI_TXBYTECLKHS_CL_CLK | Output clock |
-+------------+-----------------------------------------+--------------+
-|          2 | DEV_DPHY_TX1_IP1_PPI_TXBYTECLKHS_CL_CLK | Output clock |
-+------------+-----------------------------------------+--------------+
-|          5 | DEV_DPHY_TX1_CLK                        | Input clock  |
-+------------+-----------------------------------------+--------------+
-|          8 | DEV_DPHY_TX1_PSM_CLK                    | Input clock  |
-+------------+-----------------------------------------+--------------+
-|         12 | DEV_DPHY_TX1_CK_M                       | Output clock |
-+------------+-----------------------------------------+--------------+
-|         14 | DEV_DPHY_TX1_DPHY_REF_CLK               | Input clock  |
-+------------+-----------------------------------------+--------------+
-|         16 | DEV_DPHY_TX1_CK_P                       | Output clock |
-+------------+-----------------------------------------+--------------+
-|         18 | DEV_DPHY_TX1_IP1_PPI_M_TXCLKESC_CLK     | Input clock  |
-+------------+-----------------------------------------+--------------+
-|         19 | DEV_DPHY_TX1_IP1_PPI_M_RXCLKESC_CLK     | Output clock |
-+------------+-----------------------------------------+--------------+
++------------+--------------------------------------------------------------------+--------------------------------------------------------+
+|   Clock ID | Name                                                               | Function                                               |
++============+====================================================================+========================================================+
+|          1 | DEV_DPHY_TX1_IP2_PPI_TXBYTECLKHS_CL_CLK                            | Output clock                                           |
++------------+--------------------------------------------------------------------+--------------------------------------------------------+
+|          2 | DEV_DPHY_TX1_IP1_PPI_TXBYTECLKHS_CL_CLK                            | Output clock                                           |
++------------+--------------------------------------------------------------------+--------------------------------------------------------+
+|          5 | DEV_DPHY_TX1_CLK                                                   | Input clock                                            |
++------------+--------------------------------------------------------------------+--------------------------------------------------------+
+|          8 | DEV_DPHY_TX1_PSM_CLK                                               | Input clock                                            |
++------------+--------------------------------------------------------------------+--------------------------------------------------------+
+|         12 | DEV_DPHY_TX1_CK_M                                                  | Output clock                                           |
++------------+--------------------------------------------------------------------+--------------------------------------------------------+
+|         14 | DEV_DPHY_TX1_DPHY_REF_CLK                                          | Input muxed clock                                      |
++------------+--------------------------------------------------------------------+--------------------------------------------------------+
+|         15 | DEV_DPHY_TX1_DPHY_REF_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT           | Parent input clock option to DEV_DPHY_TX1_DPHY_REF_CLK |
++------------+--------------------------------------------------------------------+--------------------------------------------------------+
+|         16 | DEV_DPHY_TX1_DPHY_REF_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT            | Parent input clock option to DEV_DPHY_TX1_DPHY_REF_CLK |
++------------+--------------------------------------------------------------------+--------------------------------------------------------+
+|         17 | DEV_DPHY_TX1_DPHY_REF_CLK_PARENT_HSDIV4_16FFT_MAIN_3_HSDIVOUT4_CLK | Parent input clock option to DEV_DPHY_TX1_DPHY_REF_CLK |
++------------+--------------------------------------------------------------------+--------------------------------------------------------+
+|         18 | DEV_DPHY_TX1_DPHY_REF_CLK_PARENT_HSDIV4_16FFT_MAIN_2_HSDIVOUT4_CLK | Parent input clock option to DEV_DPHY_TX1_DPHY_REF_CLK |
++------------+--------------------------------------------------------------------+--------------------------------------------------------+
+|         20 | DEV_DPHY_TX1_CK_P                                                  | Output clock                                           |
++------------+--------------------------------------------------------------------+--------------------------------------------------------+
+|         22 | DEV_DPHY_TX1_IP1_PPI_M_TXCLKESC_CLK                                | Input clock                                            |
++------------+--------------------------------------------------------------------+--------------------------------------------------------+
+|         23 | DEV_DPHY_TX1_IP1_PPI_M_RXCLKESC_CLK                                | Output clock                                           |
++------------+--------------------------------------------------------------------+--------------------------------------------------------+
 
 .. _soc_doc_j721s2_public_clks_dss0:
 
@@ -6768,197 +6784,205 @@ Device: :ref:`J721S2_DEV_SERDES_10G0 <soc_doc_j721s2_public_devices_desc_device_
 
 Following is a mapping of Clocks IDs to function:
 
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|   Clock ID | Name                                                                  | Function                                                  |
-+============+=======================================================================+===========================================================+
-|          1 | DEV_SERDES_10G0_IP3_LN3_REFCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|          2 | DEV_SERDES_10G0_IP3_LN3_TXCLK                                         | Input clock                                               |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|          3 | DEV_SERDES_10G0_IP4_LN1_TXCLK                                         | Input clock                                               |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|          5 | DEV_SERDES_10G0_IP2_LN2_RXFCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|          6 | DEV_SERDES_10G0_IP2_LN0_TXFCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|          7 | DEV_SERDES_10G0_IP2_LN3_RXFCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|          8 | DEV_SERDES_10G0_IP2_LN1_REFCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|          9 | DEV_SERDES_10G0_IP4_LN1_TXFCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         10 | DEV_SERDES_10G0_CMN_REFCLK_P                                          | Input clock                                               |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         10 | DEV_SERDES_10G0_CMN_REFCLK_P                                          | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         11 | DEV_SERDES_10G0_IP4_LN2_RXFCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         12 | DEV_SERDES_10G0_IP3_LN3_RXFCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         13 | DEV_SERDES_10G0_IP2_LN0_RXFCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         15 | DEV_SERDES_10G0_IP3_LN1_TXMCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         16 | DEV_SERDES_10G0_IP3_LN3_RXCLK                                         | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         18 | DEV_SERDES_10G0_IP1_LN0_REFCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         20 | DEV_SERDES_10G0_IP1_LN0_TXMCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         21 | DEV_SERDES_10G0_IP1_LN2_TXFCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         22 | DEV_SERDES_10G0_IP1_LN0_RXFCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         23 | DEV_SERDES_10G0_IP2_LN1_TXMCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         24 | DEV_SERDES_10G0_IP3_LN1_REFCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         25 | DEV_SERDES_10G0_IP3_LN1_TXCLK                                         | Input clock                                               |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         26 | DEV_SERDES_10G0_IP2_LN2_REFCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         27 | DEV_SERDES_10G0_IP1_LN2_TXMCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         28 | DEV_SERDES_10G0_IP1_LN1_RXFCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         29 | DEV_SERDES_10G0_IP4_LN0_TXCLK                                         | Input clock                                               |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         30 | DEV_SERDES_10G0_IP2_LN0_TXCLK                                         | Input clock                                               |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         31 | DEV_SERDES_10G0_IP4_LN2_RXCLK                                         | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         32 | DEV_SERDES_10G0_IP1_LN3_RXFCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         34 | DEV_SERDES_10G0_IP4_LN2_TXFCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         35 | DEV_SERDES_10G0_IP4_LN3_RXFCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         36 | DEV_SERDES_10G0_IP3_LN3_TXMCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         39 | DEV_SERDES_10G0_IP1_LN2_RXFCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         40 | DEV_SERDES_10G0_CORE_REF_CLK                                          | Input muxed clock                                         |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         41 | DEV_SERDES_10G0_CORE_REF_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT           | Parent input clock option to DEV_SERDES_10G0_CORE_REF_CLK |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         42 | DEV_SERDES_10G0_CORE_REF_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT            | Parent input clock option to DEV_SERDES_10G0_CORE_REF_CLK |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         43 | DEV_SERDES_10G0_CORE_REF_CLK_PARENT_HSDIV4_16FFT_MAIN_3_HSDIVOUT4_CLK | Parent input clock option to DEV_SERDES_10G0_CORE_REF_CLK |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         44 | DEV_SERDES_10G0_CORE_REF_CLK_PARENT_HSDIV4_16FFT_MAIN_2_HSDIVOUT4_CLK | Parent input clock option to DEV_SERDES_10G0_CORE_REF_CLK |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         47 | DEV_SERDES_10G0_IP4_LN0_RXFCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         48 | DEV_SERDES_10G0_IP4_LN2_REFCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         49 | DEV_SERDES_10G0_IP4_LN3_TXFCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         51 | DEV_SERDES_10G0_IP2_LN1_RXFCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         52 | DEV_SERDES_10G0_IP4_LN3_RXCLK                                         | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         55 | DEV_SERDES_10G0_IP1_LN1_TXFCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         56 | DEV_SERDES_10G0_IP4_LN1_RXCLK                                         | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         57 | DEV_SERDES_10G0_IP1_LN3_TXMCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         58 | DEV_SERDES_10G0_IP3_LN1_RXCLK                                         | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         60 | DEV_SERDES_10G0_IP2_LN0_REFCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         61 | DEV_SERDES_10G0_IP1_LN1_TXCLK                                         | Input clock                                               |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         63 | DEV_SERDES_10G0_IP4_LN0_REFCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         64 | DEV_SERDES_10G0_IP1_LN3_TXFCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         65 | DEV_SERDES_10G0_IP3_LN1_TXFCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         66 | DEV_SERDES_10G0_IP2_LN2_RXCLK                                         | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         69 | DEV_SERDES_10G0_IP4_LN1_RXFCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         70 | DEV_SERDES_10G0_IP2_LN1_RXCLK                                         | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         71 | DEV_SERDES_10G0_IP2_LN2_TXCLK                                         | Input clock                                               |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         75 | DEV_SERDES_10G0_CLK                                                   | Input clock                                               |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         76 | DEV_SERDES_10G0_IP4_LN3_REFCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         77 | DEV_SERDES_10G0_IP2_LN3_REFCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         78 | DEV_SERDES_10G0_IP1_LN3_RXCLK                                         | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         80 | DEV_SERDES_10G0_IP1_LN1_REFCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         81 | DEV_SERDES_10G0_IP2_LN2_TXMCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         84 | DEV_SERDES_10G0_IP1_LN3_REFCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         85 | DEV_SERDES_10G0_IP2_LN0_RXCLK                                         | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         88 | DEV_SERDES_10G0_IP3_LN3_TXFCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         89 | DEV_SERDES_10G0_IP1_LN0_RXCLK                                         | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         90 | DEV_SERDES_10G0_IP1_LN1_TXMCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         91 | DEV_SERDES_10G0_IP4_LN0_RXCLK                                         | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         92 | DEV_SERDES_10G0_IP4_LN2_TXMCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         95 | DEV_SERDES_10G0_IP2_LN3_TXCLK                                         | Input clock                                               |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         96 | DEV_SERDES_10G0_IP4_LN3_TXMCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         97 | DEV_SERDES_10G0_IP1_LN0_TXCLK                                         | Input clock                                               |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         98 | DEV_SERDES_10G0_IP2_LN3_RXCLK                                         | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|         99 | DEV_SERDES_10G0_IP2_LN3_TXMCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|        101 | DEV_SERDES_10G0_IP4_LN1_TXMCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|        102 | DEV_SERDES_10G0_IP1_LN2_RXCLK                                         | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|        103 | DEV_SERDES_10G0_IP4_LN0_TXFCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|        104 | DEV_SERDES_10G0_IP1_LN1_RXCLK                                         | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|        105 | DEV_SERDES_10G0_IP4_LN3_TXCLK                                         | Input clock                                               |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|        106 | DEV_SERDES_10G0_IP2_LN0_TXMCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|        107 | DEV_SERDES_10G0_IP1_LN2_TXCLK                                         | Input clock                                               |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|        112 | DEV_SERDES_10G0_CMN_REFCLK_M                                          | Input clock                                               |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|        112 | DEV_SERDES_10G0_CMN_REFCLK_M                                          | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|        114 | DEV_SERDES_10G0_IP4_LN2_TXCLK                                         | Input clock                                               |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|        115 | DEV_SERDES_10G0_IP1_LN3_TXCLK                                         | Input clock                                               |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|        116 | DEV_SERDES_10G0_IP2_LN1_TXFCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|        118 | DEV_SERDES_10G0_IP2_LN3_TXFCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|        119 | DEV_SERDES_10G0_IP1_LN2_REFCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|        120 | DEV_SERDES_10G0_IP4_LN1_REFCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|        121 | DEV_SERDES_10G0_IP3_LN1_RXFCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|        124 | DEV_SERDES_10G0_IP2_LN2_TXFCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|        125 | DEV_SERDES_10G0_IP4_LN0_TXMCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|        126 | DEV_SERDES_10G0_IP2_LN1_TXCLK                                         | Input clock                                               |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
-|        127 | DEV_SERDES_10G0_IP1_LN0_TXFCLK                                        | Output clock                                              |
-+------------+-----------------------------------------------------------------------+-----------------------------------------------------------+
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|   Clock ID | Name                                                                  | Function                                                   |
++============+=======================================================================+============================================================+
+|          0 | DEV_SERDES_10G0_CLK                                                   | Input clock                                                |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|          1 | DEV_SERDES_10G0_CMN_REFCLK_M                                          | Input clock                                                |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|          1 | DEV_SERDES_10G0_CMN_REFCLK_M                                          | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|          2 | DEV_SERDES_10G0_CMN_REFCLK_P                                          | Input clock                                                |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|          2 | DEV_SERDES_10G0_CMN_REFCLK_P                                          | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|          3 | DEV_SERDES_10G0_CORE_REF_CLK                                          | Input muxed clock                                          |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|          4 | DEV_SERDES_10G0_CORE_REF_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT           | Parent input clock option to DEV_SERDES_10G0_CORE_REF_CLK  |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|          5 | DEV_SERDES_10G0_CORE_REF_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT            | Parent input clock option to DEV_SERDES_10G0_CORE_REF_CLK  |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|          6 | DEV_SERDES_10G0_CORE_REF_CLK_PARENT_HSDIV4_16FFT_MAIN_3_HSDIVOUT4_CLK | Parent input clock option to DEV_SERDES_10G0_CORE_REF_CLK  |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|          7 | DEV_SERDES_10G0_CORE_REF_CLK_PARENT_HSDIV4_16FFT_MAIN_2_HSDIVOUT4_CLK | Parent input clock option to DEV_SERDES_10G0_CORE_REF_CLK  |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|          9 | DEV_SERDES_10G0_IP1_LN0_REFCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         10 | DEV_SERDES_10G0_IP1_LN0_RXCLK                                         | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         11 | DEV_SERDES_10G0_IP1_LN0_RXFCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         12 | DEV_SERDES_10G0_IP1_LN0_TXCLK                                         | Input clock                                                |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         13 | DEV_SERDES_10G0_IP1_LN0_TXFCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         14 | DEV_SERDES_10G0_IP1_LN0_TXMCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         15 | DEV_SERDES_10G0_IP1_LN1_REFCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         16 | DEV_SERDES_10G0_IP1_LN1_RXCLK                                         | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         17 | DEV_SERDES_10G0_IP1_LN1_RXFCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         18 | DEV_SERDES_10G0_IP1_LN1_TXCLK                                         | Input clock                                                |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         19 | DEV_SERDES_10G0_IP1_LN1_TXFCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         20 | DEV_SERDES_10G0_IP1_LN1_TXMCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         21 | DEV_SERDES_10G0_IP1_LN2_REFCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         22 | DEV_SERDES_10G0_IP1_LN2_RXCLK                                         | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         23 | DEV_SERDES_10G0_IP1_LN2_RXFCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         24 | DEV_SERDES_10G0_IP1_LN2_TXCLK                                         | Input muxed clock                                          |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         25 | DEV_SERDES_10G0_IP1_LN2_TXCLK_PARENT_K3_DSS_EDP_MAIN_0_PHY_LN2_TXCLK  | Parent input clock option to DEV_SERDES_10G0_IP1_LN2_TXCLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         26 | DEV_SERDES_10G0_IP1_LN2_TXCLK_PARENT_K3_DSS_EDP_MAIN_0_PHY_LN0_TXCLK  | Parent input clock option to DEV_SERDES_10G0_IP1_LN2_TXCLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         27 | DEV_SERDES_10G0_IP1_LN2_TXFCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         28 | DEV_SERDES_10G0_IP1_LN2_TXMCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         29 | DEV_SERDES_10G0_IP1_LN3_REFCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         30 | DEV_SERDES_10G0_IP1_LN3_RXCLK                                         | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         31 | DEV_SERDES_10G0_IP1_LN3_RXFCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         32 | DEV_SERDES_10G0_IP1_LN3_TXCLK                                         | Input muxed clock                                          |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         33 | DEV_SERDES_10G0_IP1_LN3_TXCLK_PARENT_K3_DSS_EDP_MAIN_0_PHY_LN3_TXCLK  | Parent input clock option to DEV_SERDES_10G0_IP1_LN3_TXCLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         34 | DEV_SERDES_10G0_IP1_LN3_TXCLK_PARENT_K3_DSS_EDP_MAIN_0_PHY_LN1_TXCLK  | Parent input clock option to DEV_SERDES_10G0_IP1_LN3_TXCLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         35 | DEV_SERDES_10G0_IP1_LN3_TXFCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         36 | DEV_SERDES_10G0_IP1_LN3_TXMCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         37 | DEV_SERDES_10G0_IP2_LN0_REFCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         38 | DEV_SERDES_10G0_IP2_LN0_RXCLK                                         | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         39 | DEV_SERDES_10G0_IP2_LN0_RXFCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         40 | DEV_SERDES_10G0_IP2_LN0_TXCLK                                         | Input clock                                                |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         41 | DEV_SERDES_10G0_IP2_LN0_TXFCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         42 | DEV_SERDES_10G0_IP2_LN0_TXMCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         43 | DEV_SERDES_10G0_IP2_LN1_REFCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         44 | DEV_SERDES_10G0_IP2_LN1_RXCLK                                         | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         45 | DEV_SERDES_10G0_IP2_LN1_RXFCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         46 | DEV_SERDES_10G0_IP2_LN1_TXCLK                                         | Input clock                                                |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         47 | DEV_SERDES_10G0_IP2_LN1_TXFCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         48 | DEV_SERDES_10G0_IP2_LN1_TXMCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         49 | DEV_SERDES_10G0_IP2_LN2_REFCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         50 | DEV_SERDES_10G0_IP2_LN2_RXCLK                                         | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         51 | DEV_SERDES_10G0_IP2_LN2_RXFCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         52 | DEV_SERDES_10G0_IP2_LN2_TXCLK                                         | Input clock                                                |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         53 | DEV_SERDES_10G0_IP2_LN2_TXFCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         54 | DEV_SERDES_10G0_IP2_LN2_TXMCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         55 | DEV_SERDES_10G0_IP2_LN3_REFCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         56 | DEV_SERDES_10G0_IP2_LN3_RXCLK                                         | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         57 | DEV_SERDES_10G0_IP2_LN3_RXFCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         58 | DEV_SERDES_10G0_IP2_LN3_TXCLK                                         | Input clock                                                |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         59 | DEV_SERDES_10G0_IP2_LN3_TXFCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         60 | DEV_SERDES_10G0_IP2_LN3_TXMCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         67 | DEV_SERDES_10G0_IP3_LN1_REFCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         68 | DEV_SERDES_10G0_IP3_LN1_RXCLK                                         | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         69 | DEV_SERDES_10G0_IP3_LN1_RXFCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         70 | DEV_SERDES_10G0_IP3_LN1_TXCLK                                         | Input clock                                                |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         71 | DEV_SERDES_10G0_IP3_LN1_TXFCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         72 | DEV_SERDES_10G0_IP3_LN1_TXMCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         79 | DEV_SERDES_10G0_IP3_LN3_REFCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         80 | DEV_SERDES_10G0_IP3_LN3_RXCLK                                         | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         81 | DEV_SERDES_10G0_IP3_LN3_RXFCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         82 | DEV_SERDES_10G0_IP3_LN3_TXCLK                                         | Input clock                                                |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         83 | DEV_SERDES_10G0_IP3_LN3_TXFCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         84 | DEV_SERDES_10G0_IP3_LN3_TXMCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         85 | DEV_SERDES_10G0_IP4_LN0_REFCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         86 | DEV_SERDES_10G0_IP4_LN0_RXCLK                                         | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         87 | DEV_SERDES_10G0_IP4_LN0_RXFCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         88 | DEV_SERDES_10G0_IP4_LN0_TXCLK                                         | Input clock                                                |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         89 | DEV_SERDES_10G0_IP4_LN0_TXFCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         90 | DEV_SERDES_10G0_IP4_LN0_TXMCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         91 | DEV_SERDES_10G0_IP4_LN1_REFCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         92 | DEV_SERDES_10G0_IP4_LN1_RXCLK                                         | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         93 | DEV_SERDES_10G0_IP4_LN1_RXFCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         94 | DEV_SERDES_10G0_IP4_LN1_TXCLK                                         | Input clock                                                |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         95 | DEV_SERDES_10G0_IP4_LN1_TXFCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         96 | DEV_SERDES_10G0_IP4_LN1_TXMCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         97 | DEV_SERDES_10G0_IP4_LN2_REFCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         98 | DEV_SERDES_10G0_IP4_LN2_RXCLK                                         | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|         99 | DEV_SERDES_10G0_IP4_LN2_RXFCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|        100 | DEV_SERDES_10G0_IP4_LN2_TXCLK                                         | Input clock                                                |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|        101 | DEV_SERDES_10G0_IP4_LN2_TXFCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|        102 | DEV_SERDES_10G0_IP4_LN2_TXMCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|        103 | DEV_SERDES_10G0_IP4_LN3_REFCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|        104 | DEV_SERDES_10G0_IP4_LN3_RXCLK                                         | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|        105 | DEV_SERDES_10G0_IP4_LN3_RXFCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|        106 | DEV_SERDES_10G0_IP4_LN3_TXCLK                                         | Input clock                                                |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|        107 | DEV_SERDES_10G0_IP4_LN3_TXFCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|        108 | DEV_SERDES_10G0_IP4_LN3_TXMCLK                                        | Output clock                                               |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
 
 .. _soc_doc_j721s2_public_clks_stm0:
 
