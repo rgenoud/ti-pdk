@@ -154,7 +154,7 @@ __attribute__(( aligned(128), section(".boardcfg_data") )) =
                 .magic = TISCI_BOARDCFG_RM_RESASG_MAGIC_NUM,
                 .size = (uint16_t) sizeof(struct tisci_boardcfg_rm_resasg),
             },
-            .resasg_entries_size = 413 * sizeof(struct tisci_boardcfg_rm_resasg_entry),
+            .resasg_entries_size = 411 * sizeof(struct tisci_boardcfg_rm_resasg_entry),
         },
     },
     .resasg_entries = {
@@ -801,7 +801,7 @@ __attribute__(( aligned(128), section(".boardcfg_data") )) =
             .host_id = TISCI_HOST_ID_MAIN_0_R5_2,
         },
         {
-            .num_resource = 96,
+            .num_resource = 192,
             .type = TISCI_RESASG_UTYPE (TISCI_DEV_NAVSS0_RINGACC_0, TISCI_RESASG_SUBTYPE_RA_UDMAP_TX_EXT),
             .start_resource = 117,
             .host_id = TISCI_HOST_ID_MAIN_0_R5_0,
@@ -809,14 +809,8 @@ __attribute__(( aligned(128), section(".boardcfg_data") )) =
         {
             .num_resource = 32,
             .type = TISCI_RESASG_UTYPE (TISCI_DEV_NAVSS0_RINGACC_0, TISCI_RESASG_SUBTYPE_RA_UDMAP_TX_EXT),
-            .start_resource = 213,
+            .start_resource = 309,
             .host_id = TISCI_HOST_ID_MAIN_0_R5_2,
-        },
-        {
-            .num_resource = 96,
-            .type = TISCI_RESASG_UTYPE (TISCI_DEV_NAVSS0_RINGACC_0, TISCI_RESASG_SUBTYPE_RA_UDMAP_TX_EXT),
-            .start_resource = 245,
-            .host_id = TISCI_HOST_ID_ALL,
         },
         {
             .num_resource = 0,
@@ -1317,7 +1311,7 @@ __attribute__(( aligned(128), section(".boardcfg_data") )) =
             .host_id = TISCI_HOST_ID_MAIN_0_R5_2,
         },
         {
-            .num_resource = 96,
+            .num_resource = 192,
             .type = TISCI_RESASG_UTYPE (TISCI_DEV_NAVSS0_UDMAP_0, TISCI_RESASG_SUBTYPE_UDMAP_TX_ECHAN),
             .start_resource = 117,
             .host_id = TISCI_HOST_ID_MAIN_0_R5_0,
@@ -1325,14 +1319,8 @@ __attribute__(( aligned(128), section(".boardcfg_data") )) =
         {
             .num_resource = 32,
             .type = TISCI_RESASG_UTYPE (TISCI_DEV_NAVSS0_UDMAP_0, TISCI_RESASG_SUBTYPE_UDMAP_TX_ECHAN),
-            .start_resource = 213,
+            .start_resource = 309,
             .host_id = TISCI_HOST_ID_MAIN_0_R5_2,
-        },
-        {
-            .num_resource = 96,
-            .type = TISCI_RESASG_UTYPE (TISCI_DEV_NAVSS0_UDMAP_0, TISCI_RESASG_SUBTYPE_UDMAP_TX_ECHAN),
-            .start_resource = 245,
-            .host_id = TISCI_HOST_ID_ALL,
         },
         {
             .num_resource = 0,
