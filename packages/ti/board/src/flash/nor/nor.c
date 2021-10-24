@@ -157,7 +157,7 @@ NOR_Config Nor_config[BOARD_FLASH_NOR_INTF_MAX] =
         NULL
     },
     {
-        NULL
+        &Nor_qspiFxnTable
     },
     {
         NULL
