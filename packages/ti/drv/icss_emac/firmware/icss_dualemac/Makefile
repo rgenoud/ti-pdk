@@ -14,7 +14,7 @@ HEX_LNKCMD_DIR = ../cmd
 SRCDIR += ./src
 INCDIR += ./src ./
 # Common source files across all platforms and cores
-SRCS += resource_table.c
+SRCS += resource_table.c pru_intc_map.c
 SRCS_ASM += micro_scheduler.asm emac_MII_Rcv.asm emac_MII_Xmt.asm emac_statistics.asm emac_tts.asm emac_ptp.asm
 
 LNKFLAGS_LOCAL_COMMON = --entry_point=micro_scheduler
