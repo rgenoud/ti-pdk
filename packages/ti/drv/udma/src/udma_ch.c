@@ -471,7 +471,8 @@ int32_t Udma_chConfigRx(Udma_ChHandle chHandle, const Udma_ChRxPrms *rxPrms)
             /* Configure default flow for PDMA and other PSIL channels */
             if((((chHandle->chType & UDMA_CH_FLAG_PDMA) == UDMA_CH_FLAG_PDMA) ||
                     ((chHandle->chType & UDMA_CH_FLAG_PSIL) == UDMA_CH_FLAG_PSIL)) &&
-               (TRUE == rxPrms->configDefaultFlow))
+               (TRUE == rxPrms->configDefaultFlow) && 
+               (UDMA_INST_TYPE_LCDMA_BCDMA != drvHandle->instType))
             {
                 UdmaFlowPrms_init(&flowPrms, chHandle->chType);
                 flowPrms.psInfoPresent = rxPrms->flowPsInfoPresent;
@@ -2329,50 +2330,60 @@ static int32_t Udma_chAllocResource(Udma_ChHandle chHandle)
 
     if(UDMA_SOK == retVal)
     {
-#if (UDMA_SOC_CFG_RA_NORMAL_PRESENT == 1)
-        /* Allocate completion ring only when memory is provided */
-        if(NULL_PTR != chHandle->chPrms.cqRingPrms.ringMem)
+        if(UDMA_INST_TYPE_NORMAL == drvHandle->instType)
         {
-            chHandle->cqRing = &chHandle->cqRingObj;
-            retVal = Udma_ringAlloc(
-                         drvHandle,
-                         chHandle->cqRing,
-                         UDMA_RING_ANY,
-                         &chHandle->chPrms.cqRingPrms);
-            if(UDMA_SOK != retVal)
+#if (UDMA_SOC_CFG_RA_NORMAL_PRESENT == 1)
+            /* Allocate completion ring only when memory is provided */
+            if(NULL_PTR != chHandle->chPrms.cqRingPrms.ringMem)
             {
-                chHandle->cqRing = (Udma_RingHandle) NULL_PTR;
-                Udma_printf(drvHandle, "[Error] CQ ring alloc failed!!!\n");
+                chHandle->cqRing = &chHandle->cqRingObj;
+                retVal = Udma_ringAlloc(
+                            drvHandle,
+                            chHandle->cqRing,
+                            UDMA_RING_ANY,
+                            &chHandle->chPrms.cqRingPrms);
+                if(UDMA_SOK != retVal)
+                {
+                    chHandle->cqRing = (Udma_RingHandle) NULL_PTR;
+                    Udma_printf(drvHandle, "[Error] CQ ring alloc failed!!!\n");
+                }
             }
-        }
-#else
-        /* In devices like AM64x, there is no seperate completion queue. */
-        chHandle->cqRing = &chHandle->fqRingObj;
 #endif
+        }
+        else
+        {
+            /* In devices like AM64x, there is no seperate completion queue. */
+            chHandle->cqRing = &chHandle->fqRingObj;
+        }
     }
 
     if(UDMA_SOK == retVal)
     {
-#if (UDMA_SOC_CFG_RA_NORMAL_PRESENT == 1)
-        /* Allocate teardown completion ring only when memory is provided */
-        if(NULL_PTR != chHandle->chPrms.tdCqRingPrms.ringMem)
+        if(UDMA_INST_TYPE_NORMAL == drvHandle->instType)
         {
-            chHandle->tdCqRing = &chHandle->tdCqRingObj;
-            retVal = Udma_ringAlloc(
-                         drvHandle,
-                         chHandle->tdCqRing,
-                         UDMA_RING_ANY,
-                         &chHandle->chPrms.tdCqRingPrms);
-            if(UDMA_SOK != retVal)
+#if (UDMA_SOC_CFG_RA_NORMAL_PRESENT == 1)
+            /* Allocate teardown completion ring only when memory is provided */
+            if(NULL_PTR != chHandle->chPrms.tdCqRingPrms.ringMem)
             {
-                chHandle->tdCqRing = (Udma_RingHandle) NULL_PTR;
-                Udma_printf(drvHandle, "[Error] TD CQ ring alloc failed!!!\n");
+                chHandle->tdCqRing = &chHandle->tdCqRingObj;
+                retVal = Udma_ringAlloc(
+                            drvHandle,
+                            chHandle->tdCqRing,
+                            UDMA_RING_ANY,
+                            &chHandle->chPrms.tdCqRingPrms);
+                if(UDMA_SOK != retVal)
+                {
+                    chHandle->tdCqRing = (Udma_RingHandle) NULL_PTR;
+                    Udma_printf(drvHandle, "[Error] TD CQ ring alloc failed!!!\n");
+                }
             }
-        }
-#else
-        /* In devices like AM64x, teardown is not supported.*/
-        chHandle->tdCqRing = (Udma_RingHandle) NULL_PTR;
 #endif
+        }
+        else
+        {
+            /* In devices like AM64x, teardown is not supported.*/
+            chHandle->tdCqRing = (Udma_RingHandle) NULL_PTR;
+        }
     }
 
     if(UDMA_SOK != retVal)
