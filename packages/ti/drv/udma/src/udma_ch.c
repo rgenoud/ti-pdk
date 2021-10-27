@@ -2506,27 +2506,34 @@ static int32_t Udma_chFreeResource(Udma_ChHandle chHandle)
         }
         chHandle->fqRing = (Udma_RingHandle) NULL_PTR;
     }
-    if(NULL_PTR != chHandle->cqRing)
+    
+    if(UDMA_INST_TYPE_NORMAL == drvHandle->instType)
     {
-
+        if(NULL_PTR != chHandle->cqRing)
+        {
 #if (UDMA_SOC_CFG_RA_NORMAL_PRESENT == 1)
-        retVal += Udma_ringFree(chHandle->cqRing);
-        if(UDMA_SOK != retVal)
-        {
-            Udma_printf(drvHandle, "[Error] RM Free CQ ring failed!!!\n");
-        }
+            retVal += Udma_ringFree(chHandle->cqRing);
+            if(UDMA_SOK != retVal)
+            {
+                Udma_printf(drvHandle, "[Error] RM Free CQ ring failed!!!\n");
+            }
 #endif
-        chHandle->cqRing = (Udma_RingHandle) NULL_PTR;
-    }
-    if(NULL_PTR != chHandle->tdCqRing)
-    {
-        retVal += Udma_ringFree(chHandle->tdCqRing);
-        if(UDMA_SOK != retVal)
-        {
-            Udma_printf(drvHandle, "[Error] RM Free TDCQ ring failed!!!\n");
+            chHandle->cqRing = (Udma_RingHandle) NULL_PTR;
         }
-        chHandle->tdCqRing = (Udma_RingHandle) NULL_PTR;
+
+        if(NULL_PTR != chHandle->tdCqRing)
+        {
+#if (UDMA_SOC_CFG_RA_NORMAL_PRESENT == 1)
+            retVal += Udma_ringFree(chHandle->tdCqRing);
+            if(UDMA_SOK != retVal)
+            {
+                Udma_printf(drvHandle, "[Error] RM Free TDCQ ring failed!!!\n");
+            }
+#endif
+            chHandle->tdCqRing = (Udma_RingHandle) NULL_PTR;
+        }
     }
+
 
     return (retVal);
 }

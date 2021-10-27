@@ -848,41 +848,45 @@ int32_t Udma_ringProxyQueueRaw(Udma_RingHandle ringHandle,
                                Udma_DrvHandle drvHandle,
                                uint64_t phyDescMem)
 {
-#if (UDMA_SOC_CFG_PROXY_PRESENT == 1)
     int32_t             retVal = UDMA_SOK;
-    uint32_t            ringHwOcc;
-    CSL_ProxyThreadCfg  threadCfg;
-
-    /* Get ring occupancy. We should write to FIFO (through proxy) only
-     * when there is room available. Otherwise ring will overflow */
-    ringHwOcc = CSL_ringaccGetRingHwOcc(
-                    &ringHandle->drvHandle->raRegs, ringHandle->ringNum);
-    if(ringHwOcc >= ringHandle->cfg.elCnt)
+    if(UDMA_INST_TYPE_NORMAL == drvHandle->instType)
     {
-        /* Ring full */
-        retVal = UDMA_EFAIL;
+#if (UDMA_SOC_CFG_PROXY_PRESENT == 1)
+        uint32_t            ringHwOcc;
+        CSL_ProxyThreadCfg  threadCfg;
+
+        /* Get ring occupancy. We should write to FIFO (through proxy) only
+        * when there is room available. Otherwise ring will overflow */
+        ringHwOcc = CSL_ringaccGetRingHwOcc(
+                        &ringHandle->drvHandle->raRegs, ringHandle->ringNum);
+        if(ringHwOcc >= ringHandle->cfg.elCnt)
+        {
+            /* Ring full */
+            retVal = UDMA_EFAIL;
+        }
+        else
+        {
+            threadCfg.mode      = CSL_PROXY_QUEUE_ACCESS_MODE_TAIL;
+            threadCfg.elSz      = (uint32_t)sizeof(uint64_t);
+            threadCfg.queueNum  = ringHandle->ringNum;
+            threadCfg.errEvtNum = UDMA_EVENT_INVALID;
+            retVal = CSL_proxyCfgThread(
+                        &drvHandle->proxyCfg,
+                        drvHandle->proxyTargetNumRing,
+                        drvHandle->initPrms.rmInitPrms.proxyThreadNum,
+                        &threadCfg);
+            if(UDMA_SOK == retVal)
+            {
+                Udma_proxyWrite64(ringHandle->proxyAddr, phyDescMem);
+            }
+        }
+#endif
     }
     else
     {
-        threadCfg.mode      = CSL_PROXY_QUEUE_ACCESS_MODE_TAIL;
-        threadCfg.elSz      = (uint32_t)sizeof(uint64_t);
-        threadCfg.queueNum  = ringHandle->ringNum;
-        threadCfg.errEvtNum = UDMA_EVENT_INVALID;
-        retVal = CSL_proxyCfgThread(
-                     &drvHandle->proxyCfg,
-                     drvHandle->proxyTargetNumRing,
-                     drvHandle->initPrms.rmInitPrms.proxyThreadNum,
-                     &threadCfg);
-        if(UDMA_SOK == retVal)
-        {
-            Udma_proxyWrite64(ringHandle->proxyAddr, phyDescMem);
-        }
+        retVal = UDMA_EFAIL;
+        Udma_printf(drvHandle, "[Error] Proxy not present!!!\n");
     }
-
-#else
-    int32_t             retVal = UDMA_EFAIL;
-    Udma_printf(drvHandle, "[Error] Proxy not present!!!\n");
-#endif
 
     return (retVal);
 }
@@ -891,41 +895,45 @@ int32_t Udma_ringProxyDequeueRaw(Udma_RingHandle ringHandle,
                                         Udma_DrvHandle drvHandle,
                                         uint64_t *phyDescMem)
 {
-#if (UDMA_SOC_CFG_PROXY_PRESENT == 1)
     int32_t             retVal = UDMA_SOK;
-    uint32_t            ringHwOcc;
-    CSL_ProxyThreadCfg  threadCfg;
-
-    /* Get ring occupancy. We should read from FIFO (through proxy) only
-     * when something is available. Otherwise ring will underflow */
-    ringHwOcc = CSL_ringaccGetRingHwOcc(
-                    &ringHandle->drvHandle->raRegs, ringHandle->ringNum);
-    if(0U == ringHwOcc)
+    if(UDMA_INST_TYPE_NORMAL == drvHandle->instType)
     {
-        /* Nothing to flush */
-        retVal = UDMA_ETIMEOUT;
+#if (UDMA_SOC_CFG_PROXY_PRESENT == 1)
+        uint32_t            ringHwOcc;
+        CSL_ProxyThreadCfg  threadCfg;
+
+        /* Get ring occupancy. We should read from FIFO (through proxy) only
+        * when something is available. Otherwise ring will underflow */
+        ringHwOcc = CSL_ringaccGetRingHwOcc(
+                        &ringHandle->drvHandle->raRegs, ringHandle->ringNum);
+        if(0U == ringHwOcc)
+        {
+            /* Nothing to flush */
+            retVal = UDMA_ETIMEOUT;
+        }
+        else
+        {
+            threadCfg.mode      = CSL_PROXY_QUEUE_ACCESS_MODE_HEAD;
+            threadCfg.elSz      = (uint32_t)sizeof(uint64_t);
+            threadCfg.queueNum  = ringHandle->ringNum;
+            threadCfg.errEvtNum = UDMA_EVENT_INVALID;
+            retVal = CSL_proxyCfgThread(
+                        &drvHandle->proxyCfg,
+                        drvHandle->proxyTargetNumRing,
+                        drvHandle->initPrms.rmInitPrms.proxyThreadNum,
+                        &threadCfg);
+            if(UDMA_SOK == retVal)
+            {
+                Udma_proxyRead64(ringHandle->proxyAddr, phyDescMem);
+            }
+        }
+#endif
     }
     else
     {
-        threadCfg.mode      = CSL_PROXY_QUEUE_ACCESS_MODE_HEAD;
-        threadCfg.elSz      = (uint32_t)sizeof(uint64_t);
-        threadCfg.queueNum  = ringHandle->ringNum;
-        threadCfg.errEvtNum = UDMA_EVENT_INVALID;
-        retVal = CSL_proxyCfgThread(
-                     &drvHandle->proxyCfg,
-                     drvHandle->proxyTargetNumRing,
-                     drvHandle->initPrms.rmInitPrms.proxyThreadNum,
-                     &threadCfg);
-        if(UDMA_SOK == retVal)
-        {
-            Udma_proxyRead64(ringHandle->proxyAddr, phyDescMem);
-        }
+        retVal = UDMA_EFAIL;
+        Udma_printf(drvHandle, "[Error] Proxy not present!!!\n");
     }
-
-#else
-    int32_t             retVal = UDMA_EFAIL;
-    Udma_printf(drvHandle, "[Error] Proxy not present!!!\n");
-#endif
 
     return (retVal);
 }
