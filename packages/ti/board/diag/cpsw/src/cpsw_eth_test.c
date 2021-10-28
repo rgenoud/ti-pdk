@@ -1090,8 +1090,8 @@ static void BoardDiag_enetLpbkInitCpswCfg(Cpsw_Cfg *cpswCfg)
      * of IP limitation, so disabling timestamping for this application */
     cptsCfg->hostRxTsEn = false;
 
-    EnetAppUtils_initResourceConfig(gEnetLpbk.enetType, gEnetLpbk.coreId,
-                                    &cpswCfg->resCfg);
+    EnetAppUtils_initResourceConfig(gEnetLpbk.enetType, gEnetLpbk.instId,
+                                    gEnetLpbk.coreId, &cpswCfg->resCfg);
 }
 
 /**
