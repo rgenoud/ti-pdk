@@ -456,7 +456,7 @@ UT_Timer_Type_t  timer_type =             UT_Timer_TIMER64;
     #define OSAL_TEST_TIMER_ID                (2U)
     #define OSAL_TEST_TIMER_PERIOD            (5000U)
   #elif defined (__TI_ARM_V7R4__)
-    #define OSAL_TEST_TIMER_ID                (0U)
+    #define OSAL_TEST_TIMER_ID                (1U)
     #define OSAL_TEST_TIMER_PERIOD            (5000U)
   #elif defined (BUILD_C7X_1)
     #define OSAL_TEST_TIMER_ID                (1U)
