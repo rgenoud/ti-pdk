@@ -85,7 +85,7 @@ drvmmcsd_omapl138_CORELIST = arm9_0 c674x
 drvmmcsd_am65xx_CORELIST     = mpu1_0 mcu1_0
 drvmmcsd_j721e_CORELIST     = mpu1_0 mcu1_0 mcu2_0 mcu2_1 mcu3_0 mcu3_1
 drvmmcsd_j7200_CORELIST     = mpu1_0 mcu1_0 mcu2_0 mcu2_1
-drvmmcsd_j721s2_CORELIST    = $(DEFAULT_j721s2_CORELIST)
+drvmmcsd_j721s2_CORELIST    = mpu1_0 mcu1_0 mcu2_0 mcu2_1 mcu3_0 mcu3_1
 drvmmcsd_am64x_CORELIST     = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1
 drvmmcsd_RTOS_LIST          = $(DEFAULT_RTOS_LIST)
 
@@ -128,6 +128,9 @@ export mmcsd_SOCLIST
 mmcsd_$(SOC)_CORELIST = $(drvmmcsd_$(SOC)_CORELIST)
 ifeq ($(SOC),$(filter $(SOC), j721e))
 mmcsd_$(SOC)_CORELIST += c66xdsp_1 c66xdsp_2 c7x_1
+endif
+ifeq ($(SOC),$(filter $(SOC), j721s2))
+mmcsd_$(SOC)_CORELIST += c7x_1 c7x_2
 endif
 export mmcsd_$(SOC)_CORELIST
 
@@ -183,6 +186,9 @@ export mmcsd_dma_SOCLIST
 mmcsd_dma_$(SOC)_CORELIST = $(drvmmcsd_$(SOC)_CORELIST)
 ifeq ($(SOC),$(filter $(SOC), j721e))
 mmcsd_dma_$(SOC)_CORELIST += c66xdsp_1 c66xdsp_2 c7x_1
+endif
+ifeq ($(SOC),$(filter $(SOC), j721s2))
+mmcsd_dma_$(SOC)_CORELIST += c7x_1 c7x_2
 endif
 export mmcsd_dma_$(SOC)_CORELIST
 
