@@ -75,6 +75,10 @@ extern "C" {
 #define BOARD_ENET_SGMII                      (2U)
 #define BOARD_ENET_UNKOWN                     (-1)
 
+/* GPIO port and pin numbers for SDIO 1V8 enable */
+#define BOARD_SDIO_1V8_EN_PIN_NUM             (8U) //GPIO0_8 - SEL_SDIO_3V3_1V8n
+
+
 /**
  * \brief Structure to configure the board I2C parameters
  */
