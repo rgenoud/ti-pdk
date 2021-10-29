@@ -116,17 +116,17 @@ extern "C" {
  */
 
 /** AM62_MAIN_SEC_MMR_MAIN_0: (Cluster 9 Processor 0) */
-#define SCICLIENT_PROCID_A53_CL0_C0 (0x04U)
+#define SCICLIENT_PROC_ID_A53SS0_CORE_0 (0x20U)
 /** AM62_MAIN_SEC_MMR_MAIN_0: (Cluster 9 Processor 1) */
-#define SCICLIENT_PROCID_A53_CL0_C1 (0x05U)
+#define SCICLIENT_PROC_ID_A53SS0_CORE_1 (0x21U)
 /** AM62_MAIN_SEC_MMR_MAIN_0: (Cluster 9 Processor 2) */
-#define SCICLIENT_PROCID_A53_CL0_C2 (0x0AU)
+#define SCICLIENT_PROC_ID_A53SS0_CORE_2 (0x22U)
 /** AM62_MAIN_SEC_MMR_MAIN_0: (Cluster 9 Processor 3) */
-#define SCICLIENT_PROCID_A53_CL0_C4 (0x0BU)
-/** AM62_MAIN_SEC_MMR_MAIN_0: (Cluster 0 Processor 0) */
-#define SCICLIENT_PROCID_R5_CL0_C0 (0x03U)
+#define SCICLIENT_PROC_ID_A53SS0_CORE_3 (0x23U)
+/** AM62_WKUP_SEC_MMR_WKUP_0: (Cluster 28 Processor 0) */
+#define SCICLIENT_PROC_ID_R5FSS0_CORE0 (0x01U)
 /*** AM62_MAIN_SEC_MMR_MAIN_0: (Cluster 16 Processor 0) */
-#define SCICLIENT_PROCID_MCU_M4FSS0_C0 (0x18U)
+#define SCICLIENT_PROC_ID_MCU_M4FSS0_CORE0 (0x18U)
 
 
 /* @} */
@@ -211,9 +211,9 @@ extern "C" {
  *  MCU Device Processor IDs.
  */
 #define SCICLIENT_DEV_MCU_R5FSS0_CORE0_PROCID  \
-    (SCICLIENT_PROCID_R5_CL0_C0)
+    (SCICLIENT_PROC_ID_R5FSS0_CORE0)
 #define SCICLIENT_DEV_MCU_R5FSS0_CORE1_PROCID  \
-    (SCICLIENT_PROCID_R5_CL0_C0)
+    (SCICLIENT_PROC_ID_R5FSS0_CORE0)
 /* @} */
 
 /** Board config Base start address */
