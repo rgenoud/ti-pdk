@@ -2325,14 +2325,14 @@
                     {
                         "name": "RESASG_UTYPE(J721S2_DEV_NAVSS0_RINGACC_0, RESASG_SUBTYPE_RA_GP)",
                         "type": 16577,
-                        "start_resource": 426,
-                        "num_resource": 548
+                        "start_resource": 423,
+                        "num_resource": 551
                     },
                     {
                         "name": "RESASG_UTYPE(J721S2_DEV_NAVSS0_RINGACC_0, RESASG_SUBTYPE_RA_UDMAP_RX)",
                         "type": 16578,
                         "start_resource": 347,
-                        "num_resource": 79
+                        "num_resource": 76
                     },
                     {
                         "name": "RESASG_UTYPE(J721S2_DEV_NAVSS0_RINGACC_0, RESASG_SUBTYPE_RA_UDMAP_TX)",
@@ -2385,8 +2385,8 @@
                     {
                         "name": "RESASG_UTYPE(J721S2_DEV_NAVSS0_UDMAP_0, RESASG_SUBTYPE_UDMAP_RX_FLOW_COMMON)",
                         "type": 16832,
-                        "start_resource": 85,
-                        "num_resource": 139
+                        "start_resource": 82,
+                        "num_resource": 142
                     },
                     {
                         "name": "RESASG_UTYPE(J721S2_DEV_NAVSS0_UDMAP_0, RESASG_SUBTYPE_UDMAP_INVALID_FLOW_OES)",
