@@ -111,7 +111,7 @@ else
     sbl_LIB_LIST = sbl_lib_uart
     sbl_LIB_LIST += sbl_lib_qspi sbl_lib_qspi_nondma
   else ifeq ($(SOC),$(filter $(SOC), j721s2))
-    sbl_LIB_LIST = sbl_lib_ospi sbl_lib_uart sbl_lib_cust
+    sbl_LIB_LIST = sbl_lib_mmcsd sbl_lib_ospi sbl_lib_uart sbl_lib_cust
     sbl_LIB_LIST += sbl_lib_ospi_nondma
   else
     sbl_LIB_LIST = sbl_lib_mmcsd sbl_lib_ospi sbl_lib_uart sbl_lib_hyperflash sbl_lib_cust
@@ -135,7 +135,7 @@ else
   ifeq ($(SOC), $(filter $(SOC), tpr12 awr294x))
     sbl_EXAMPLE_LIST = sbl_uart_img sbl_qspi_img
   else ifeq ($(SOC),$(filter $(SOC), j721s2))
-    sbl_EXAMPLE_LIST = sbl_uart_img sbl_ospi_img
+    sbl_EXAMPLE_LIST = sbl_uart_img sbl_ospi_img sbl_mmcsd_img
   else
     sbl_EXAMPLE_LIST = sbl_uart_img
     sbl_EXAMPLE_LIST += sbl_mmcsd_img sbl_mmcsd_img_hlos sbl_ospi_img sbl_ospi_img_hlos sbl_hyperflash_img sbl_hyperflash_img_hlos
