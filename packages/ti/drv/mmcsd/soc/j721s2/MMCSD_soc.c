@@ -243,7 +243,29 @@ MMCSD_Error MMCSD_socInit(void)
        {
           MMCSDInitCfg[1].intNum = CSLR_R5FSS0_CORE1_INTR_MMCSD1_EMMCSDSS_INTR_0;
        }
-    } 
+    } else if (r5CpuInfo.grpId == (uint32_t)CSL_ARM_R5_CLUSTER_GROUP_ID_2) /* Main R5 SS1*/
+    {
+        /* Configure the Main SS MMCSD instances for Main SS Pulsar R5 . R5FSS'n'_CORE'n' */
+        /********** MMCSD-0 . intNum = R5FSS'n'_CORE'n' *****************/
+        if(r5CpuInfo.cpuID == 0U) 
+        {
+           MMCSDInitCfg[0].intNum = CSLR_R5FSS1_CORE0_INTR_MMCSD0_EMMCSS_INTR_0 ;
+        } 
+        else
+        {
+          MMCSDInitCfg[0].intNum = CSLR_R5FSS1_CORE1_INTR_MMCSD0_EMMCSS_INTR_0;
+        }
+       /* ********* MMCSD-1&2 . intNum = R5FSS'n'_INTRTR0 **************** */
+          
+        if(r5CpuInfo.cpuID == 0U) 
+        {
+          MMCSDInitCfg[1].intNum = CSLR_R5FSS1_CORE0_INTR_MMCSD1_EMMCSDSS_INTR_0;
+        }
+        else
+        {
+          MMCSDInitCfg[1].intNum = CSLR_R5FSS1_CORE1_INTR_MMCSD1_EMMCSDSS_INTR_0;
+        }   
+     } 
      else 
      {
          ret=MMCSD_ERR;
