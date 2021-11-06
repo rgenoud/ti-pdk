@@ -111,7 +111,7 @@ else
     sbl_LIB_LIST = sbl_lib_uart
     sbl_LIB_LIST += sbl_lib_qspi sbl_lib_qspi_nondma
   else ifeq ($(SOC),$(filter $(SOC), j721s2))
-    sbl_LIB_LIST = sbl_lib_mmcsd sbl_lib_ospi sbl_lib_uart sbl_lib_cust
+    sbl_LIB_LIST = sbl_lib_mmcsd sbl_lib_uart sbl_lib_cust
     sbl_LIB_LIST += sbl_lib_ospi_nondma
   else
     sbl_LIB_LIST = sbl_lib_mmcsd sbl_lib_ospi sbl_lib_uart sbl_lib_hyperflash sbl_lib_cust
@@ -727,7 +727,11 @@ sbl_ospi_img_COMP_LIST = sbl_ospi_img
 sbl_ospi_img_RELPATH = ti/boot/sbl/board/k3
 sbl_ospi_img_CUSTOM_BINPATH = $(PDK_SBL_COMP_PATH)/binary/$(BOARD)/ospi/bin
 sbl_ospi_img_PATH = $(PDK_SBL_COMP_PATH)/board/k3
-sbl_ospi_img_MAKEFILE = -f$(PDK_SBL_COMP_PATH)/build/sbl_img.mk BOOTMODE=ospi SBL_USE_DMA=yes BUILD_HS=no
+ifeq ($(SOC),$(filter $(SOC), j721s2))
+  sbl_ospi_img_MAKEFILE = -f$(PDK_SBL_COMP_PATH)/build/sbl_img.mk BOOTMODE=ospi SBL_USE_DMA=no BUILD_HS=no
+else
+  sbl_ospi_img_MAKEFILE = -f$(PDK_SBL_COMP_PATH)/build/sbl_img.mk BOOTMODE=ospi SBL_USE_DMA=yes BUILD_HS=no
+endif
 export sbl_ospi_img_MAKEFILE
 export sbl_ospi_img_SBL_CERT_KEY=$(SBL_CERT_KEY)
 sbl_ospi_img_BOARD_DEPENDENCY = yes
