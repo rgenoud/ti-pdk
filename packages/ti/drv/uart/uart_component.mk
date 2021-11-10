@@ -372,7 +372,7 @@ export UART_DMA_TestApp_$(1)_XDC_CONFIGURO =  $(if $(findstring tirtos,$(1)),yes
 export UART_DMA_TestApp_$(1)_MAKEFILE = -f makefile BUILD_OS_TYPE=$(1) DMA=enable
 UART_DMA_TestApp_$(1)_PKG_LIST = UART_DMA_TestApp_$(1)
 UART_DMA_TestApp_$(1)_INCLUDE = $(UART_DMA_TestApp_$(1)_PATH)
-export UART_DMA_TestApp_$(1)_BOARDLIST = $(drvuart_$(1)_BOARDLIST)
+export UART_DMA_TestApp_$(1)_BOARDLIST = $(filter $(DEFAULT_BOARDLIST_$(1)), $(drvuart_BOARDLIST))
 ifeq ($(SOC),$(filter $(SOC), j721e j7200 am64x j721s2))
 export UART_DMA_TestApp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), $(drvuart_$(SOC)_CORELISTARM))
 else
