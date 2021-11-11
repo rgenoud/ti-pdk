@@ -116,13 +116,13 @@ libosal_j721s2_CORELIST  = $(DEFAULT_j721s2_CORELIST)
 ifneq ($(SOC),$(filter $(SOC), j721s2))
 libosal_tirtos_$(SOC)_CORELIST = $(libosal_$(SOC)_CORELIST)
 else
-libosal_tirtos_$(SOC)_CORELIST = $(filter-out c7x_1 c7x_2, $(libosal_$(SOC)_CORELIST)) 
+libosal_tirtos_$(SOC)_CORELIST = $(filter-out c7x_1 c7x_2, $(libosal_$(SOC)_CORELIST))
 endif
 
 ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200 tpr12 awr294x j721s2))
-libosal_freertos_$(SOC)_CORELIST = $(filter-out mpu1_0, $(libosal_$(SOC)_CORELIST)) 
+libosal_freertos_$(SOC)_CORELIST = $(filter-out mpu1_0, $(libosal_$(SOC)_CORELIST))
 else
-libosal_freertos_$(SOC)_CORELIST = 
+libosal_freertos_$(SOC)_CORELIST =
 endif
 
 libosal_safertos_tpr12_CORELIST   = c66xdsp_1
@@ -245,7 +245,7 @@ export osal_nonos_indp_SOC_DEPENDENCY
 osal_nonos_indp_PKG_LIST = osal_nonos_indp
 export osal_nonos_indp_PKG_LIST
 osal_nonos_indp_INCLUDE = $(osal_nonos_indp_PATH)
-osal_nonos_indp_SOCLIST = 
+osal_nonos_indp_SOCLIST =
 export osal_nonos_indp_SOCLIST
 osal_nonos_indp_$(SOC)_CORELIST = $(libosal_$(SOC)_CORELIST)
 export osal_nonos_indp_$(SOC)_CORELIST
@@ -299,7 +299,7 @@ export osal_tirtos_indp_SOC_DEPENDENCY
 osal_tirtos_indp_PKG_LIST = osal_tirtos_indp
 export osal_tirtos_indp_PKG_LIST
 osal_tirtos_indp_INCLUDE = $(osal_tirtos_indp_PATH)
-osal_tirtos_indp_SOCLIST = 
+osal_tirtos_indp_SOCLIST =
 export osal_tirtos_indp_SOCLIST
 osal_tirtos_indp_$(SOC)_CORELIST = $(filter $(libosal_tirtos_$(SOC)_CORELIST), $(libosal_$(SOC)_CORELIST))
 export osal_tirtos_indp_$(SOC)_CORELIST
@@ -501,7 +501,7 @@ ifeq ($(SOC),$(filter $(SOC), j7200))
 endif
 
 ifeq ($(SOC),$(filter $(SOC), j721s2))
- OSAL_TestApp_tirtos_$(SOC)_CORELIST = mpu1_0 mcu1_0 mcu2_0 mcu3_0
+ OSAL_TestApp_tirtos_$(SOC)_CORELIST = mpu1_0
  OSAL_Baremetal_TestApp_$(SOC)_CORELIST = mpu1_0 mcu1_0 mcu2_0 mcu3_0
  OSAL_TestApp_freertos_$(SOC)_CORELIST = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 c7x_1 c7x_2
 endif

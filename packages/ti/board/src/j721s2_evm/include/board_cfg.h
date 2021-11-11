@@ -57,7 +57,7 @@ extern "C" {
 #define BOARD_DDR_END_ADDR                              (0xFFFFFFFFU)
 /* Note with ECC enabled, all memory is not usable: 1/8 memory used for inline ECC */
 #define BOARD_DDR_ECC_END_ADDR                          (0xF1FFFFFFU)
-/* Enable/Disable DDR Memory Prime for ECC. Define the following macro to enable. */ 
+/* Enable/Disable DDR Memory Prime for ECC. Define the following macro to enable. */
 #undef BOARD_DDR_ENABLE_DDR_MEM_PRIME
 
 /* UART LLD instance number for primary UART port */
@@ -278,7 +278,7 @@ extern "C" {
 #define BOARD_I2C_DOMAIN_INSTANCE_MAX     (2U)
 
 /* SoC domain used by UART module */
-#if defined (__TI_ARM_V7R5__)
+#if (__ARM_ARCH == 7) && (__ARM_ARCH_PROFILE == 'R') && defined(__ARM_FEATURE_IDIV)
 #define BOARD_UART_SOC_DOMAIN    (BOARD_SOC_DOMAIN_MCU)
 #else
 #define BOARD_UART_SOC_DOMAIN    (BOARD_SOC_DOMAIN_MAIN)
