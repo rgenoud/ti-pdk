@@ -54,7 +54,7 @@ extern "C" {
 /* ========================================================================== */
 
 /* Macro to find maximum of given values */
-#define MAX(X,Y)  (X>Y ? X:Y)
+#define UDMA_MAX(X,Y)  (X>Y ? X:Y)
 /**
  *  \anchor Udma_InstanceIdSoc
  *  \name UDMA Instance ID specific to SOC
@@ -332,7 +332,7 @@ extern "C" {
 #define UDMA_RM_NUM_UDMAP_RES                   (17U)  
 
 /** \brief Total number of resources */
-#define UDMA_RM_NUM_RES                         MAX(UDMA_RM_NUM_UDMAP_RES, UDMA_RM_NUM_BCDMA_RES)
+#define UDMA_RM_NUM_RES                         UDMA_MAX(UDMA_RM_NUM_UDMAP_RES, UDMA_RM_NUM_BCDMA_RES)
 
 /* @} */
 

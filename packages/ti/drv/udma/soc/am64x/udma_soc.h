@@ -54,7 +54,7 @@ extern "C" {
 /* ========================================================================== */
 
 /* Macro to find maximum of given values */
-#define MAX(X,Y)  (X>Y ? X:Y)
+#define UDMA_MAX(X,Y)  (X>Y ? X:Y)
 
 /**
  *  \anchor Udma_InstanceIdSoc
@@ -302,7 +302,7 @@ extern "C" {
 /** \brief Total number of PKTDMA resources */
 #define UDMA_RM_NUM_PKTDMA_RES                  (35U) 
 /** \brief Total number of resources */
-#define UDMA_RM_NUM_RES                         MAX(UDMA_RM_NUM_BCDMA_RES, UDMA_RM_NUM_PKTDMA_RES)
+#define UDMA_RM_NUM_RES                         UDMA_MAX(UDMA_RM_NUM_BCDMA_RES, UDMA_RM_NUM_PKTDMA_RES)
 /* @} */
 
 /** \brief Total number of shared resources - 
