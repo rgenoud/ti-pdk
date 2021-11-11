@@ -43,7 +43,7 @@ MEMORY
     /*---------------------- MCU R5FSS0 CORE0 -------------------------*/
     MCU1_R5F0_ATCM_RSVD  (RWIX) : ORIGIN = 0x41000000 LENGTH = 0x00000040
     MCU1_R5F0_ATCM       (RWIX) : ORIGIN = 0x41000040 LENGTH = 0x00007FC0
- // MCU1_R5F0_BTCM_RSVD  (RWIX) : ORIGIN = 0x41010000 LENGTH = 0x00000040 (Documented only, to avoid conflict above with MCU_R5F_TCMB_VECS) 
+ // MCU1_R5F0_BTCM_RSVD  (RWIX) : ORIGIN = 0x41010000 LENGTH = 0x00000040 (Documented only, to avoid conflict above with MCU_R5F_TCMB_VECS)
  // MCU1_R5F0_BTCM       (RWIX) : ORIGIN = 0x41010040 LENGTH = 0x00007FC0 (Documented only, to avoid conflict above with MCU_R5F_TCMB)
     /*---------------------- MCU R5FSS0 CORE1 -------------------------*/
     MCU1_R5F1_ATCM_RSVD  (RWIX) : ORIGIN = 0x41400000 LENGTH = 0x00000040
@@ -94,11 +94,11 @@ MEMORY
 SECTIONS
 {
     .freertosrstvectors : {} palign(8)      > __VECS
-    
+
     .bootCode           : {} palign(8)      > __BOOT
     .startupCode        : {} palign(8)      > __BOOT
     .startupData        : {} palign(8)      > __BOOT, type = NOINIT
-    GROUP 
+    GROUP
     {
         .text.hwi       : palign(8)
         .text.cache     : palign(8)
@@ -108,6 +108,7 @@ SECTIONS
 
     .text               : {} palign(8)      > __CORE_DDR_SPACE
     .const              : {} palign(8)      > __CORE_DDR_SPACE
+    .rodata             : {} palign(8)      > __CORE_DDR_SPACE
     .cinit              : {} palign(8)      > __CORE_DDR_SPACE
     .bss                : {} align(4)       > __CORE_DDR_SPACE
     .far                : {} align(4)       > __CORE_DDR_SPACE
@@ -121,7 +122,7 @@ SECTIONS
     /* USB or any other LLD buffer for benchmarking */
     .benchmark_buffer (NOLOAD) {} align (8)     > __CORE_DDR_SPACE
     ipc_data_buffer (NOINIT) : {} palign(128)	> __CORE_DDR_SPACE
-    .resource_table          : 
+    .resource_table          :
     {
         __RESOURCE_TABLE = .;
     }                                           > __CORE_EXT_DATA_BASE

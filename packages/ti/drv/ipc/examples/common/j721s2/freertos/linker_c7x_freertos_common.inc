@@ -59,8 +59,8 @@ SECTIONS
     }
 
     ipc_data_buffer:        > __CORE_DDR_SPACE
-    .resource_table: 
-    { 
+    .resource_table:
+    {
         __RESOURCE_TABLE = .;
     }                       > __CORE_EXT_D
 }

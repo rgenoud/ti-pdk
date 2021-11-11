@@ -117,13 +117,14 @@ SECTIONS
                      *(.text:ti_sysbios_family_arm_MPU_*)
                      *(.text:ti_sysbios_family_arm_v7r_Cache_*)
                   }  palign(8) > MCU2_R5F1_TCMB1
-    .text:xdc_runtime_Startup_reset__I : {} palign(8) > MCU2_R5F1_TCMB1  
+    .text:xdc_runtime_Startup_reset__I : {} palign(8) > MCU2_R5F1_TCMB1
     .bootCode    	: {} palign(8) 		> MCU2_R5F1_TCMB1
     .utilsCopyVecsToAtcm               : {} palign(8) > MCU2_R5F1_TCMB1
     .startupCode 	: {} palign(8) 		> MCU2_R5F1_TCMB1
     .startupData 	: {} palign(8) 		> MCU2_R5F1_TCMB1, type = NOINIT
     .text	: {} palign(8)		> MCU2_1_DDR_SPACE
     .const   	: {} palign(8) 		> MCU2_1_DDR_SPACE
+    .rodata   	: {} palign(8) 		> MCU2_1_DDR_SPACE
     .cinit   	: {} palign(8) 		> MCU2_1_DDR_SPACE
     .pinit   	: {} palign(8) 		> MCU2_1_DDR_SPACE
     .bss     	: {} align(4)  		> MCU2_1_DDR_SPACE

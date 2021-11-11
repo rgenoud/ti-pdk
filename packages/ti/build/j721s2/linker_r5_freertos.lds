@@ -68,7 +68,7 @@ SECTIONS
     .freertosrstvectors      : {} palign(8)      > VECTORS
     .bootCode        : {} palign(8)      > OCMC_RAM
     .startupCode     : {} palign(8)      > OCMC_RAM
-    .text.hwi        : {} palign(8)      > OCMC_RAM	
+    .text.hwi        : {} palign(8)      > OCMC_RAM
     .startupData     : {} palign(8)      > OCMC_RAM, type = NOINIT
     .text            : {} palign(8)      > DDR0
     GROUP {
@@ -78,6 +78,7 @@ SECTIONS
         .text.boot   : palign(8)
     }                                    > DDR0
     .const           : {} palign(8)      > DDR0
+    .rodata          : {} palign(8)      > DDR0
     .cinit           : {} palign(8)      > DDR0
     .bss             : {} align(4)       > DDR0
     .far             : {} align(4)       > DDR0
