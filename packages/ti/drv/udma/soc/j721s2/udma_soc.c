@@ -71,36 +71,37 @@
 #if defined (HOST_EMULATION)
 /* These variables are defined for supporting host emulation ( PC emulation ) and
 will not be used for target*/
-CSL_udmap_gcfgRegs       gHost_udmap_gcfgRegs;
-CSL_udmap_rxfcfgRegs     gHost_udmap_rxfcfgRegs;
-CSL_udmap_txccfgRegs     gHost_udmap_txccfgRegs;
-CSL_udmap_rxccfgRegs     gHost_udmap_rxccfgRegs;
-CSL_udmap_txcrtRegs      gHost_udmap_txcrtRegs;
-CSL_udmap_rxcrtRegs      gHost_udmap_rxcrtRegs;
-CSL_bcdma_gcfgRegs       gHost_bcdma_gcfgRegs;
-CSL_bcdma_txccfgRegs     gHost_bcdma_txccfgRegs;
-CSL_bcdma_txcrtRegs      gHost_bcdma_txcrtRegs;
-CSL_bcdma_rxccfgRegs     gHost_bcdma_rxccfgRegs;
-CSL_bcdma_rxcrtRegs      gHost_bcdma_rxcrtRegs;
-CSL_ringacc_gcfgRegs     gHost_ringacc_gcfgRegs;
-CSL_ringacc_cfgRegs      gHost_ringacc_cfgRegs;
-CSL_ringacc_rtRegs       gHost_ringacc_rtRegs;
-CSL_ringacc_monitorRegs  gHost_ringacc_monitorRegs;
-CSL_ringacc_fifosRegs    gHost_ringacc_fifosRegs;
-CSL_ringacc_iscRegs      gHost_ringacc_iscRegs;
+CSL_udmap_gcfgRegs              gHost_udmap_gcfgRegs;
+CSL_udmap_rxfcfgRegs            gHost_udmap_rxfcfgRegs;
+CSL_udmap_txccfgRegs            gHost_udmap_txccfgRegs;
+CSL_udmap_rxccfgRegs            gHost_udmap_rxccfgRegs;
+CSL_udmap_txcrtRegs             gHost_udmap_txcrtRegs;
+CSL_udmap_rxcrtRegs             gHost_udmap_rxcrtRegs;
+CSL_bcdma_gcfgRegs              gHost_bcdma_gcfgRegs;
+CSL_bcdma_txccfgRegs            gHost_bcdma_txccfgRegs;
+CSL_bcdma_txcrtRegs             gHost_bcdma_txcrtRegs;
+CSL_bcdma_rxccfgRegs            gHost_bcdma_rxccfgRegs;
+CSL_bcdma_rxcrtRegs             gHost_bcdma_rxcrtRegs;
+CSL_ringacc_gcfgRegs            gHost_ringacc_gcfgRegs;
+CSL_ringacc_cfgRegs             gHost_ringacc_cfgRegs;
+CSL_ringacc_rtRegs              gHost_ringacc_rtRegs;
+CSL_ringacc_monitorRegs         gHost_ringacc_monitorRegs;
+CSL_ringacc_fifosRegs           gHost_ringacc_fifosRegs;
+CSL_ringacc_iscRegs             gHost_ringacc_iscRegs;
 CSL_lcdma_ringacc_ring_cfgRegs  gHost_lcdma_ringacc_cfgRegs;
 CSL_lcdma_ringacc_ringrtRegs    gHost_lcdma_ringacc_ringrtRegs;
 CSL_lcdma_ringacc_credRegs      gHost_lcdma_ringacc_credRegs;
-CSL_psilcfgRegs          gHost_psilcfgRegs;
-CSL_intaggr_cfgRegs      gHost_intaggr_cfgRegs;
-CSL_intaggr_imapRegs     gHost_intaggr_imapRegs;
-CSL_intaggr_intrRegs     gHost_intaggr_intrRegs;
-CSL_intaggr_l2gRegs      gHost_intaggr_l2gRegs;
-CSL_intaggr_mcastRegs    gHost_intaggr_mcastRegs;
-CSL_intaggr_gcntcfgRegs  gHost_intaggr_gcntcfgRegs;
-CSL_intaggr_gcntrtiRegs  gHost_intaggr_gcntrtiRegs;
-CSL_intr_router_cfgRegs  gHost_intr_router_cfgRegs;
-CSL_CLEC_EVTRegs  gHost_clec_evtRegs;
+CSL_psilcfgRegs                 gHost_psilcfgRegs;
+CSL_intaggr_cfgRegs             gHost_intaggr_cfgRegs;
+CSL_intaggr_imapRegs            gHost_intaggr_imapRegs;
+CSL_intaggr_intrRegs            gHost_intaggr_intrRegs;
+CSL_intaggr_l2gRegs             gHost_intaggr_l2gRegs;
+CSL_intaggr_mcastRegs           gHost_intaggr_mcastRegs;
+CSL_intaggr_gcntcfgRegs         gHost_intaggr_gcntcfgRegs;
+CSL_intaggr_gcntrtiRegs         gHost_intaggr_gcntrtiRegs;
+CSL_intaggr_unmapRegs           gHost_intaggr_unmapRegs;
+CSL_intr_router_cfgRegs         gHost_intr_router_cfgRegs;
+CSL_CLEC_EVTRegs                gHost_clec_evtRegs;
 
 CSL_DRU_t                gHost_DRU_t;
 #define UDMA_MCU_NAVSS0_UDMASS_UDMAP0_CFG_GCFG_BASE         (&gHost_udmap_gcfgRegs)
@@ -151,6 +152,7 @@ CSL_DRU_t                gHost_DRU_t;
 #define UDMA_MCU_NAVSS0_UDMASS_INTA0_MCAST_BASE             (&gHost_intaggr_mcastRegs)
 #define UDMA_MCU_NAVSS0_UDMASS_INTA0_GCNT_BASE              (&gHost_intaggr_gcntcfgRegs)
 #define UDMA_MCU_NAVSS0_UDMASS_INTA0_GCNTRTI_BASE           (&gHost_intaggr_gcntrtiRegs)
+#define UDMA_MCU_NAVSS0_UDMASS_INTA0_UNMAP_BASE             (&gHost_intaggr_unmapRegs)
 
 #define UDMA_MCU_NAVSS0_INTR0_CFG_BASE                      (&gHost_intr_router_cfgRegs)
 
@@ -161,6 +163,7 @@ CSL_DRU_t                gHost_DRU_t;
 #define UDMA_NAVSS0_UDMASS_INTA0_CFG_MCAST_BASE             (&gHost_intaggr_mcastRegs)
 #define UDMA_NAVSS0_UDMASS_INTA0_CFG_GCNTCFG_BASE           (&gHost_intaggr_gcntcfgRegs)
 #define UDMA_NAVSS0_UDMASS_INTA0_CFG_GCNTRTI_BASE           (&gHost_intaggr_gcntrtiRegs)
+#define UDMA_NAVSS0_UDMASS_INTA0_CFG_UNMAP_BASE             (&gHost_intaggr_unmapRegs)
 
 #define UDMA_NAVSS0_INTR0_INTR_ROUTER_CFG_BASE              (&gHost_intr_router_cfgRegs)
 
