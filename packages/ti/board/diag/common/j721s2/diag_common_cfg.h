@@ -40,7 +40,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <ti/drv/uart/soc/UART_soc.h>
-#include <ti/board/src/j721e_evm/include/board_utils.h>
+#include <ti/board/src/j721s2_evm/include/board_utils.h>
 
 #include "board.h"
 #include "board_cfg.h"
