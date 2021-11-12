@@ -179,6 +179,52 @@ bool Board_detectBoard(uint32_t boardID)
 }
 
 /**
+ * \brief  Checks for Alpha board revision
+ *
+ * \param   boardID  [IN]  ID of the board to be detected
+ * \n                      BOARD_ID_GESI(0x0) - GESI Board
+ * \n                      BOARD_ID_INFOTAINMENT(0x1) - Infotainment board
+ * \n                      BOARD_ID_FUSION2(0x2) - Fusion 2 Board
+ * \n                      BOARD_ID_MV(0x3) - MV expansion
+ * \n                      BOARD_ID_LI(0x4) - LI expansion
+ * \n                      BOARD_ID_ENET(0x5) - Quad ENET expansion
+ * \n                      BOARD_ID_DISPLAY(0x6) - Display adapter board
+ * \n                      BOARD_ID_SOM(0x7) - Dual PMIC SoM Board
+ * \n                      BOARD_ID_CP(0x8) - CP Board
+ *
+ * \return TRUE if board revision is E2, FALSE for all other cases
+ */
+bool Board_isAlpha(uint32_t boardID)
+{
+    Board_IDInfo_v2 info;
+    Board_STATUS status;
+    bool alphaBoard = FALSE;
+
+    status = Board_getBoardData(&info, boardID);
+    if(status == 0)
+    {
+        if(boardID == BOARD_ID_SOM)
+        {
+            if(!(strncmp(info.boardInfo.designRev, "E1", BOARD_DESIGN_REV_LEN)))
+            {
+                alphaBoard = TRUE;
+            }
+        }
+        else
+        {
+            if(!(strncmp(info.boardInfo.designRev,
+                         "E2",
+                         BOARD_DESIGN_REV_LEN)))
+            {
+                alphaBoard = TRUE;
+            }
+        }
+    }
+
+    return alphaBoard;
+}
+
+/**
  *  \brief    Function to detect ENET expansion application card type
  *
  *  ENET expansion connector supports QSGMII and SGMII application cards.
