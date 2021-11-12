@@ -1,4 +1,4 @@
-# Copyright (C) 2019-2020 Texas Instruments Incorporated - http://www.ti.com/
+# Copyright (C) 2019-2021 Texas Instruments Incorporated - http://www.ti.com/
 #
 #
 #  Redistribution and use in source and binary forms, with or without
@@ -68,7 +68,7 @@ LOCAL_APP_NAME = $(UNIFLASH)_$(BOARD)_flash_programmer
 SRCDIR = $(UNIFLASH_BASE_DIR)/src
 INCDIR = $(PDK_BOARD_COMP_PATH) $(UNIFLASH_BASE_DIR)/src $(UNIFLASH_BASE_DIR)/include $(PDK_BOARD_COMP_PATH)/src/$(BOARD)/include $(PDK_BOARD_COMP_PATH)/src/$(BOARD) $(PDK_BOARD_COMP_PATH)/src/flash $(PDK_CSL_COMP_PATH)
 
-ifeq ($(BOARD), $(filter $(BOARD), j721e_evm am65xx_evm am65xx_idk j7200_evm am64x_evm))
+ifeq ($(BOARD), $(filter $(BOARD), j721e_evm am65xx_evm am65xx_idk j7200_evm am64x_evm j721s2_evm))
   SRCDIR += $(UNIFLASH_BASE_DIR)/soc/k3 $(UNIFLASH_BASE_DIR)/src/ospi $(UNIFLASH_BASE_DIR)/src/qspi $(UNIFLASH_BASE_DIR)/src/hyperflash $(UNIFLASH_BASE_DIR)/src/emmc $(PDK_BOARD_COMP_PATH)/diag/common/$(SOC)
   INCDIR += $(UNIFLASH_BASE_DIR)/soc/k3 $(UNIFLASH_BASE_DIR)/src/ospi $(UNIFLASH_BASE_DIR)/src/qspi $(UNIFLASH_BASE_DIR)/src/hyperflash $(UNIFLASH_BASE_DIR)/src/emmc $(PDK_BOARD_COMP_PATH)/diag/common/$(SOC)
   ifeq ($(BOARD), $(filter $(BOARD), am65xx_evm am65xx_idk))
@@ -88,7 +88,7 @@ INCLUDE_EXTERNAL_INTERFACES = pdk
 
 # List all the components required by the application
 COMP_LIST_COMMON = $(PDK_COMMON_BAREMETAL_COMP)
-ifeq ($(BOARD), $(filter $(BOARD), j721e_evm am65xx_evm am65xx_idk j7200_evm am64x_evm))
+ifeq ($(BOARD), $(filter $(BOARD), j721e_evm am65xx_evm am65xx_idk j7200_evm am64x_evm j721s2_evm))
 COMP_LIST_COMMON += spi_dma mmcsd
 endif
 
@@ -109,7 +109,7 @@ else
   PACKAGE_SRCS_COMMON = ../../board ../../build ../../include ../../src ../../soc/soc.h
   PACKAGE_SRCS_COMMON += ../../../host
   PACKAGE_SRCS_COMMON += ../../../../board_utils_component.mk
-  ifeq ($(BOARD), $(filter $(BOARD), j721e_evm am65xx_evm am65xx_idk j7200_evm am64x_evm))
+  ifeq ($(BOARD), $(filter $(BOARD), j721e_evm am65xx_evm am65xx_idk j7200_evm am64x_evm j721s2_evm))
   PACKAGE_SRCS_COMMON += ../../soc/k3
   endif
   ifeq ($(BOARD), $(filter $(BOARD), tpr12_evm awr294x_evm))
@@ -122,6 +122,11 @@ SRCS_COMMON = uart_main.c xmodem.c soc.c
 
 ifeq ($(BOARD), $(filter $(BOARD), j721e_evm j7200_evm))
 SRCS_COMMON += ospi.c emmc.c hyperflash.c
+EXTERNAL_LNKCMD_FILE_LOCAL = $(UNIFLASH_BASE_DIR)/soc/k3/linker_j7.cmd
+endif
+
+ifeq ($(BOARD), $(filter $(BOARD), j721s2_evm))
+SRCS_COMMON += ospi.c
 EXTERNAL_LNKCMD_FILE_LOCAL = $(UNIFLASH_BASE_DIR)/soc/k3/linker_j7.cmd
 endif
 
@@ -152,7 +157,7 @@ ifeq ($(BOARD), $(filter $(BOARD), am65xx_evm am65xx_idk))
 CFLAGS_LOCAL_COMMON += -DSOC_AM65XX
 endif
 
-ifeq ($(BOARD), $(filter $(BOARD), j721e_evm am65xx_evm am65xx_idk am64x_evm))
+ifeq ($(BOARD), $(filter $(BOARD), j721e_evm am65xx_evm am65xx_idk am64x_evm j721s2_evm))
 ifeq ($(BUILD_HS),no)
 #CFLAGS_LOCAL_COMMON += -DSPI_DMA_ENABLE
 endif

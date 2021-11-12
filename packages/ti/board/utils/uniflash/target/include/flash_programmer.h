@@ -85,6 +85,13 @@ extern "C" {
 #define EMMC_FLASH
 #endif
 
+#if defined(j721s2_evm)
+#define MAX_BAUDRATE_SUPPORTED          (0xEU)
+#define MAX_BAUDRATE_SUPPORTED_LINUX    (0xBU)
+
+#define OSPI_FLASH
+#endif
+
 #if defined(am65xx_evm) || defined(am65xx_idk)
 #define MAX_BAUDRATE_SUPPORTED			(0xEU)
 #define MAX_BAUDRATE_SUPPORTED_LINUX	(0xBU)
@@ -116,7 +123,7 @@ extern "C" {
 #else
 #define UFP_FLOW_CTRL_STS               (0x0U)
 
-#if (defined(j7200_evm) || defined(j721e_evm) || defined(am65xx_evm) || defined(am65xx_idk))
+#if (defined(j7200_evm) || defined(j721e_evm) || defined(am65xx_evm) || defined(am65xx_idk) || defined(j721s2_evm))
 #define MAX_BAUDRATE_SUPPORTED_FC       (MAX_BAUDRATE_SUPPORTED)
 #define MAX_BAUDRATE_SUPPORTED_LINUX_FC (MAX_BAUDRATE_SUPPORTED_LINUX)
 #else

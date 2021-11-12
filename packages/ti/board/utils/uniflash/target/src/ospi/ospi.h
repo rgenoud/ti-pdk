@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2020 Texas Instruments Incorporated - http://www.ti.com/
+ * Copyright (C) 2018-2021 Texas Instruments Incorporated - http://www.ti.com/
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -47,7 +47,7 @@ extern "C" {
 #include <ti/drv/spi/soc/SPI_soc.h>
 #include <ti/board/src/flash/include/board_flash.h>
 
-#if defined(j7200_evm) || defined(am64x_evm)
+#if defined(j7200_evm) || defined(am64x_evm) || defined(j721s2_evm)
 #include <ti/board/src/flash/nor/ospi/nor_xspi.h>
 #else
 #include <ti/board/src/flash/nor/ospi/nor_ospi.h>
@@ -79,7 +79,7 @@ extern "C" {
 
 #if defined(SOC_AM65XX) || defined(j721e_evm)
 #define OSPI_FLASH_ID   BOARD_FLASH_ID_MT35XU512ABA1G12
-#elif defined(j7200_evm) || defined (am64x_evm)
+#elif defined(j7200_evm) || defined (am64x_evm) || defined(j721s2_evm)
 #define OSPI_FLASH_ID   BOARD_FLASH_ID_S28HS512T
 #else
 #define OSPI_FLASH_ID   BOARD_FLASH_ID_MT35XU256ABA1G12

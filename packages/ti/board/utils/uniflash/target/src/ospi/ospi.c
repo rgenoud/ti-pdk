@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2019 Texas Instruments Incorporated - http://www.ti.com/
+ * Copyright (C) 2018-2021 Texas Instruments Incorporated - http://www.ti.com/
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -389,7 +389,7 @@ static int8_t UFP_ospiInit(void)
     ospiUdmaInit(&ospi_cfg);
 #endif
 
-#if defined(SOC_J7200) || defined(SOC_AM64X)
+#if defined(SOC_J7200) || defined(SOC_AM64X) || defined(SOC_J721S2)
     ospi_cfg.dacEnable  = false;
 #endif
     ospi_cfg.phyEnable  = false;
