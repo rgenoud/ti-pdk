@@ -416,6 +416,11 @@ void Mmu_setMAIR(uint8_t idx, uint8_t attr)
     Hwi_restore(key);
 }
 
+void c7x_startup_delay_wa()
+{
+    uint64_t startTime = __TSC;
+    while(__TSC < (10ULL * 1000ULL * 1000ULL * 1000ULL + startTime));
+}
 /*
  *  ======== Mmu_startup ========
  */

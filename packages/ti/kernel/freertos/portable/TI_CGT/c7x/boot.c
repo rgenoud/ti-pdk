@@ -33,7 +33,7 @@
 /*                                                                           */
 /*****************************************************************************/
 #include <stdint.h>
-
+#include <c7x.h>
 #include "Mmu.h"
 
 extern char __TI_STACK_END[];
@@ -49,6 +49,13 @@ void _c_int00_secure()
    /* SETUP __SP IN A POSITION-INDEPENDENT MANNER (I.E. NO _symval())        */
    /*------------------------------------------------------------------------*/
     __SP = (((uint64_t)&__TI_STACK_END) - 16) & ~0b111;
+
+#ifdef BUILD_C7X_2
+    {
+        extern void c7x_startup_delay_wa();
+        c7x_startup_delay_wa();
+    }
+#endif
 
    Mmu_startup();
 }
