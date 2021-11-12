@@ -116,7 +116,8 @@ extern "C" {
 #define BOARD_HPF_INSTANCE                              (0)
 
 /* I2C instance connected to IO Expander */
-#define BOARD_I2C_IOEXP_SOM_DEVICE1_INSTANCE            (0U)
+#define BOARD_I2C_IOEXP_SOM_INSTANCE                    (0U)
+#define BOARD_I2C_IOEXP_SOM_DEVICE1_INSTANCE            (BOARD_I2C_IOEXP_SOM_INSTANCE)
 #define BOARD_I2C_IOEXP_DEVICE1_INSTANCE                (0U)
 #define BOARD_I2C_IOEXP_DEVICE2_INSTANCE                (0U)
 #define BOARD_I2C_IOEXP_DEVICE3_INSTANCE                (3U)
@@ -127,6 +128,7 @@ extern "C" {
 #define BOARD_I2C_DSI2DP_DEVICE_INSTANCE                (4U)
 
 /* I2C IO Expander Slave devices */
+#define BOARD_I2C_IOEXP_SOM_ADDR                        (0x21U)
 #define BOARD_I2C_IOEXP_DEVICE1_ADDR                    (0x20U)
 #define BOARD_I2C_IOEXP_DEVICE2_ADDR                    (0x22U)
 #define BOARD_I2C_IOEXP_DEVICE3_ADDR                    (0x20U)
