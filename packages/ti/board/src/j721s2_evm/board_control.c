@@ -41,6 +41,46 @@
 #include "board_control.h"
 
 /**
+ * \brief Configures IO expander pins
+ *
+ *  \return   Board_SOK in case of success or appropriate error code.
+ *
+ */
+static Board_STATUS Board_setIoExpPinOutput(Board_IoExpCfg_t *cfg)
+{
+    Board_I2cInitCfg_t i2cCfg;
+    Board_STATUS status;
+
+    i2cCfg.i2cInst    = cfg->i2cInst;
+    i2cCfg.socDomain  = cfg->socDomain;
+    i2cCfg.enableIntr = cfg->enableIntr;
+    Board_setI2cInitConfig(&i2cCfg);
+
+    status = Board_i2cIoExpInit();
+    if(status == BOARD_SOK)
+    {
+        /* Setting the pin direction as output */
+        status = Board_i2cIoExpSetPinDirection(cfg->slaveAddr,
+                                               cfg->ioExpType,
+                                               cfg->portNum,
+                                               cfg->pinNum,
+                                               PIN_DIRECTION_OUTPUT);
+        BOARD_delay(1000);
+        /* Pulling the hdmi power pin to low */
+        status |= Board_i2cIoExpPinLevelSet(cfg->slaveAddr,
+                                            cfg->ioExpType,
+                                            cfg->portNum,
+                                            cfg->pinNum,
+                                            cfg->signalLevel);
+        BOARD_delay(1000);
+
+        Board_i2cIoExpDeInit();
+    }
+
+    return status;
+}
+
+/**
  * \brief Board control function
  *
  * \param   cmd  [IN]  Board control command
@@ -55,6 +95,20 @@
  */
 Board_STATUS Board_control(uint32_t cmd, void *arg)
 {
-    return BOARD_SOK;
+    Board_STATUS status;
+
+    switch (cmd)
+    {
+        case BOARD_CTRL_CMD_SET_IO_EXP_PIN_OUT:
+            status = Board_setIoExpPinOutput((Board_IoExpCfg_t *)arg);
+            break;
+
+        default:
+            status = BOARD_INVALID_PARAM;
+            break;
+    }
+
+    return status;
 }
+
 
