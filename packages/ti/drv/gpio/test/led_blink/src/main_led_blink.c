@@ -236,6 +236,9 @@ void GPIO_configIntRouter(uint32_t portNum, uint32_t pinNum, uint32_t gpioIntRtr
        use WKUP domain GPIO pins which connected to LEDs on base board */
     cfg->baseAddr = CSL_WKUP_GPIO0_BASE;
 
+#if !defined(j721s2_evm) 
+    /* J721S2 Sets the following by querying from BoardCfg.
+     * Ideally other SOC's as well should do the same. And the following code can be cleanup up. */
     bankNum = pinNum/16; /* Each GPIO bank has 16 pins */
 
     /* WKUP GPIO int router input interrupt is the GPIO bank interrupt */
@@ -251,6 +254,7 @@ void GPIO_configIntRouter(uint32_t portNum, uint32_t pinNum, uint32_t gpioIntRtr
     intCfg[pinNum].intcMuxNum = INVALID_INTC_MUX_NUM;
     intCfg[pinNum].intcMuxInEvent = 0;
     intCfg[pinNum].intcMuxOutEvent = 0;
+#endif
 #endif
 
 #if defined(am64x_evm)
@@ -328,6 +332,10 @@ static void Board_initGPIO(void)
 
 	/* change default GPIO port from MAIN GPIO0 to WAKEUP GPIO0 to access TP45 */
     gpio_cfg.baseAddr = CSL_WKUP_GPIO0_BASE;
+
+#if !defined(j721s2_evm) 
+    /* J721S2 Sets the following by querying from BoardCfg.
+     * Ideally other SOC's as well should do the same. And the following code can be cleanup up. */
 #if defined (BUILD_MPU)
 	gpio_cfg.intCfg->intNum = CSLR_COMPUTE_CLUSTER0_GIC500SS_SPI_WKUP_GPIOMUX_INTRTR0_OUTP_16;
 #endif
@@ -336,6 +344,7 @@ static void Board_initGPIO(void)
 #endif
 #if defined (BUILD_C7X)
 	gpio_cfg.intCfg->eventId = CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_WKUP_GPIOMUX_INTRTR0_OUTP_16 + 992;
+#endif
 #endif
 
 /* --- TODO: move this into the board library --- */
