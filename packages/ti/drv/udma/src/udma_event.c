@@ -1168,6 +1168,57 @@ static int32_t Udma_eventConfig(Udma_DrvHandle drvHandle,
             {
                 Udma_printf(drvHandle, "[Error] Sciclient event config failed!!!\n");
             }
+#ifdef PDK_10849_WA
+        if(UDMA_INST_TYPE_LCDMA_BCDMA == drvHandle->instType)
+        {   
+            CSL_intaggr_unmapRegs   *pUnmapRegs = NULL_PTR;
+            uint32_t unmappedEventIdx;
+            uint64_t regVal;
+
+            if((rmIrqReq.src_index >= TISCI_BCDMA0_TX_EOES_IRQ_SRC_IDX_START) &&
+                (rmIrqReq.src_index < TISCI_BCDMA0_TX_EOES_IRQ_SRC_IDX_START + CSL_NAVSS_BCDMA_NUM_TX_CHANS))
+
+            {
+                pUnmapRegs = (CSL_intaggr_unmapRegs *)0x30883000;
+                unmappedEventIdx = rmIrqReq.src_index - TISCI_BCDMA0_TX_EOES_IRQ_SRC_IDX_START;
+            }
+            else if((rmIrqReq.src_index >= TISCI_BCDMA0_TX_DC_OES_IRQ_SRC_IDX_START) &&
+                    (rmIrqReq.src_index < TISCI_BCDMA0_TX_DC_OES_IRQ_SRC_IDX_START + CSL_NAVSS_BCDMA_NUM_TX_CHANS))
+            {
+                pUnmapRegs = (CSL_intaggr_unmapRegs *)0x30884000;
+                unmappedEventIdx = rmIrqReq.src_index - TISCI_BCDMA0_TX_DC_OES_IRQ_SRC_IDX_START;
+            }
+            else if((rmIrqReq.src_index >= TISCI_BCDMA0_TX_RC_OES_IRQ_SRC_IDX_START) &&
+                    (rmIrqReq.src_index < TISCI_BCDMA0_TX_RC_OES_IRQ_SRC_IDX_START + CSL_NAVSS_BCDMA_NUM_TX_CHANS))
+            {
+                pUnmapRegs = (CSL_intaggr_unmapRegs *)0x30885000;
+                unmappedEventIdx = rmIrqReq.src_index - TISCI_BCDMA0_TX_RC_OES_IRQ_SRC_IDX_START;
+            }
+            else if((rmIrqReq.src_index >= TISCI_BCDMA0_RX_EOES_IRQ_SRC_IDX_START) &&
+                    (rmIrqReq.src_index < TISCI_BCDMA0_RX_EOES_IRQ_SRC_IDX_START + CSL_NAVSS_BCDMA_NUM_RX_CHANS))
+            {
+                pUnmapRegs = (CSL_intaggr_unmapRegs *)0x30886000;
+                unmappedEventIdx = rmIrqReq.src_index - TISCI_BCDMA0_RX_EOES_IRQ_SRC_IDX_START;
+            }
+            else if((rmIrqReq.src_index >= TISCI_BCDMA0_RX_DC_OES_IRQ_SRC_IDX_START) &&
+                    (rmIrqReq.src_index < TISCI_BCDMA0_RX_DC_OES_IRQ_SRC_IDX_START + CSL_NAVSS_BCDMA_NUM_RX_CHANS))
+            {
+                pUnmapRegs = (CSL_intaggr_unmapRegs *)0x30887000;
+                unmappedEventIdx = rmIrqReq.src_index - TISCI_BCDMA0_RX_DC_OES_IRQ_SRC_IDX_START;
+            }
+            else if((rmIrqReq.src_index >= TISCI_BCDMA0_RX_RC_OES_IRQ_SRC_IDX_START) &&
+                    (rmIrqReq.src_index < TISCI_BCDMA0_RX_RC_OES_IRQ_SRC_IDX_START + CSL_NAVSS_BCDMA_NUM_RX_CHANS))
+            {
+                pUnmapRegs = (CSL_intaggr_unmapRegs *)0x30888000;
+                unmappedEventIdx = rmIrqReq.src_index - TISCI_BCDMA0_RX_RC_OES_IRQ_SRC_IDX_START;
+            }
+            if(NULL_PTR != pUnmapRegs)
+            {
+                regVal = CSL_FMK( INTAGGR_UNMAP_UNMAP_MAP_MAPIDX, (uint64_t)rmIrqReq.global_event );
+                CSL_REG64_WR( &pUnmapRegs->UNMAP[unmappedEventIdx].MAP, regVal );
+            }
+        }
+#endif
         }
     }
 

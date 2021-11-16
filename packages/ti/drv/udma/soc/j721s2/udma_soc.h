@@ -53,6 +53,7 @@ extern "C" {
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
+#define PDK_10849_WA
 /* Macro to find maximum of given values */
 #define UDMA_MAX(X,Y)  (X>Y ? X:Y)
 /**
