@@ -152,7 +152,6 @@ CSL_DRU_t                gHost_DRU_t;
 #define UDMA_MCU_NAVSS0_UDMASS_INTA0_MCAST_BASE             (&gHost_intaggr_mcastRegs)
 #define UDMA_MCU_NAVSS0_UDMASS_INTA0_GCNT_BASE              (&gHost_intaggr_gcntcfgRegs)
 #define UDMA_MCU_NAVSS0_UDMASS_INTA0_GCNTRTI_BASE           (&gHost_intaggr_gcntrtiRegs)
-#define UDMA_MCU_NAVSS0_UDMASS_INTA0_UNMAP_BASE             (&gHost_intaggr_unmapRegs)
 
 #define UDMA_MCU_NAVSS0_INTR0_CFG_BASE                      (&gHost_intr_router_cfgRegs)
 
@@ -231,6 +230,7 @@ CSL_DRU_t                gHost_DRU_t;
 #define UDMA_NAVSS0_UDMASS_INTA0_CFG_MCAST_BASE                 (CSL_NAVSS0_UDMASS_INTA0_CFG_MCAST_BASE)
 #define UDMA_NAVSS0_UDMASS_INTA0_CFG_GCNTCFG_BASE               (CSL_NAVSS0_UDMASS_INTA0_CFG_GCNTCFG_BASE)
 #define UDMA_NAVSS0_UDMASS_INTA0_CFG_GCNTRTI_BASE               (CSL_NAVSS0_UDMASS_INTA0_CFG_GCNTRTI_BASE)
+#define UDMA_NAVSS0_UDMASS_INTA0_CFG_UNMAP_BASE                 (CSL_NAVSS0_UDMASS_INTA0_CFG_UNMAP_BASE)
 
 #define UDMA_NAVSS0_INTR0_INTR_ROUTER_CFG_BASE                  (CSL_NAVSS0_INTR0_INTR_ROUTER_CFG_BASE)
 /** \brief DRU0 UTC baseaddress */
@@ -485,6 +485,12 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
     drvHandle->clecOffset   = 1024U - 32U;
 #endif
 #endif
+    if(UDMA_INST_ID_BCDMA_0 == instId)
+    {
+        /* Set NAVSS Interrupt Aggregator Unmapped Event Register base address (used for BCDMA events) */
+        pIaRegs->pUnmapRegs   = (CSL_intaggr_unmapRegs *) UDMA_NAVSS0_UDMASS_INTA0_CFG_UNMAP_BASE;
+    }
+
 
     drvHandle->devIdCore    = Udma_getCoreSciDevId();
     drvHandle->iaGemOffset  = Udma_getGlobalEventOffset();
