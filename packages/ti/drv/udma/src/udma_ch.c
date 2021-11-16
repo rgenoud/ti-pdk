@@ -644,6 +644,9 @@ int32_t Udma_chConfigUtc(Udma_ChHandle chHandle, const Udma_ChUtcPrms *utcPrms)
                 druChCfg.type       = 0U;   /* Not used */
                 druChCfg.owner      = utcPrms->druOwner;
                 druChCfg.pauseOnErr = utcPrms->pauseOnError;
+#if defined (CSL_DRU_CHNRT_CFG_ATYPE_MASK)
+                druChCfg.atype      = utcPrms->addrType;
+#endif
                 druChCfg.evtNum     = UDMA_EVENT_INVALID;
                 druChCfg.queueId    = (uint64_t)utcPrms->druQueueId;
                 retVal = CSL_druChConfig(utcInfo->druRegs, utcChNum, &druChCfg);
