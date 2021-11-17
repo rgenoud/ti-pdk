@@ -913,6 +913,7 @@ static bool OSPI_flash_test(void *arg)
     deviceId = BOARD_FLASH_ID_MT35XU512ABA1G12;
 #endif
 
+#if defined(SOC_J721S2)
     if(test->norFlash)
     {
         blockSize = NOR_BLOCK_SIZE;
@@ -921,6 +922,9 @@ static bool OSPI_flash_test(void *arg)
     {
         blockSize = NAND_BLOCK_SIZE;
     }
+#else
+    blockSize = NOR_BLOCK_SIZE;
+#endif
 
 #ifdef OSPI_PROFILE
     /* Get start time stamp for the Board_flashOpen measurement */
