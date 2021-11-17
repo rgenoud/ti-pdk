@@ -22,6 +22,7 @@ CONFIG_LPM_DM_TRACE=y
 
 ifeq ($(CONFIG_LPM_DM_STUB),y)
   CFLAGS_LOCAL_COMMON += -DCONFIG_LPM_DM_STUB
+  CFLAGS_LOCAL_COMMON += -DCONFIG_LPM_DM_TRACE
 endif
 
 # end of Low Power Management Feature support
