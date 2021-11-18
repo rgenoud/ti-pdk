@@ -42,6 +42,9 @@
 /* ========================================================================== */
 
 #include <ti/drv/udma/src/udma_priv.h>
+#ifdef QNX_OS
+#include <udma_resmgr.h>
+#endif
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
@@ -108,7 +111,11 @@ int32_t Udma_ringAlloc(Udma_DrvHandle drvHandle,
             /* Alloc free ring */
             if(UDMA_MAPPED_GROUP_INVALID == ringPrms->mappedRingGrp)
             {
+#ifdef QNX_OS
+                ringHandle->ringNum = Udma_resmgr_rmAllocFreeRing(drvHandle);
+#else
                 ringHandle->ringNum = Udma_rmAllocFreeRing(drvHandle);
+#endif
             }
 #if((UDMA_NUM_MAPPED_TX_GROUP + UDMA_NUM_MAPPED_RX_GROUP) > 0)
             else
@@ -171,7 +178,11 @@ int32_t Udma_ringAlloc(Udma_DrvHandle drvHandle,
                                   TISCI_MSG_VALUE_RM_RING_ASEL_VALID;
         rmRingReq.nav_id        = drvHandle->devIdRing;
         rmRingReq.index         = ringHandle->ringNum;
+#ifdef QNX_OS
+        physBase = Udma_virtToPhyFxn(ringPrms->ringMem, ringPrms->ringMemSize, drvHandle, (Udma_ChHandle) NULL_PTR);
+#else
         physBase = Udma_virtToPhyFxn(ringPrms->ringMem, drvHandle, (Udma_ChHandle) NULL_PTR);
+#endif
         rmRingReq.addr_lo       = (uint32_t)physBase;
         rmRingReq.addr_hi       = (uint32_t)(physBase >> 32UL);
         rmRingReq.count         = ringPrms->elemCnt;
@@ -184,6 +195,9 @@ int32_t Udma_ringAlloc(Udma_DrvHandle drvHandle,
         {
             rmRingReq.valid_params |= TISCI_MSG_VALUE_RM_RING_VIRTID_VALID;
             rmRingReq.virtid        = ringPrms->virtId;
+#ifdef QNX_OS
+            Udma_printf(drvHandle, "%s: rmRingReq.virtid=ringPrms->virtId;=0x%x\n",__FUNCTION__, rmRingReq.virtid);
+#endif
         }
 
         retVal = Sciclient_rmRingCfg(
@@ -219,7 +233,11 @@ int32_t Udma_ringAlloc(Udma_DrvHandle drvHandle,
         {
             if(UDMA_MAPPED_GROUP_INVALID == ringPrms->mappedRingGrp)
             {
+#ifdef QNX_OS
+                Udma_resmgr_rmFreeFreeRing(ringHandle->ringNum, drvHandle);
+#else
                 Udma_rmFreeFreeRing(ringHandle->ringNum, drvHandle);
+#endif
             }
 #if((UDMA_NUM_MAPPED_TX_GROUP + UDMA_NUM_MAPPED_RX_GROUP) > 0)
             else
@@ -265,7 +283,11 @@ int32_t Udma_ringFree(Udma_RingHandle ringHandle)
         Udma_assert(drvHandle, ringHandle->ringNum != UDMA_RING_INVALID);
         if(UDMA_MAPPED_GROUP_INVALID == ringHandle->mappedRingGrp)
         {
+#ifdef QNX_OS
+            Udma_resmgr_rmFreeFreeRing(ringHandle->ringNum, drvHandle);
+#else
             Udma_rmFreeFreeRing(ringHandle->ringNum, drvHandle);
+#endif
         }
 #if((UDMA_NUM_MAPPED_TX_GROUP + UDMA_NUM_MAPPED_RX_GROUP) > 0)
         else
@@ -601,7 +623,11 @@ int32_t Udma_ringMonAlloc(Udma_DrvHandle drvHandle,
             if(UDMA_RING_MON_ANY == ringMonNum)
             {
                 /* Alloc free ring MONITOR */
+#ifdef QNX_OS
+                monHandle->ringMonNum = Udma_resmgr_rmAllocRingMon(drvHandle);
+#else
                 monHandle->ringMonNum = Udma_rmAllocRingMon(drvHandle);
+#endif
                 if(UDMA_RING_MON_INVALID == monHandle->ringMonNum)
                 {
                     retVal = UDMA_EALLOC;
@@ -637,7 +663,11 @@ int32_t Udma_ringMonAlloc(Udma_DrvHandle drvHandle,
                 /* Error. Free-up resource if allocated */
                 if(((uint32_t) TRUE) == allocDone)
                 {
+#ifdef QNX_OS
+                    Udma_resmgr_rmFreeRingMon(monHandle->ringMonNum, drvHandle);
+#else
                     Udma_rmFreeRingMon(monHandle->ringMonNum, drvHandle);
+#endif
                 }
             }
 #endif
@@ -685,7 +715,11 @@ int32_t Udma_ringMonFree(Udma_RingMonHandle monHandle)
 #if (UDMA_SOC_CFG_RING_MON_PRESENT == 1)
             /* Free-up event resources */
             Udma_assert(drvHandle, monHandle->ringMonNum != UDMA_RING_MON_INVALID);
+#ifdef QNX_OS
+            Udma_resmgr_rmFreeRingMon(monHandle->ringMonNum, drvHandle);
+#else
             Udma_rmFreeRingMon(monHandle->ringMonNum, drvHandle);
+#endif
             monHandle->drvHandle        = (Udma_DrvHandle) NULL_PTR;
             monHandle->ringMonNum       = UDMA_RING_MON_INVALID;
             monHandle->pMonRegs         = (volatile CSL_ringacc_monitorRegs_mon *) NULL_PTR;
