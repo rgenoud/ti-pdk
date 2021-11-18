@@ -42,6 +42,9 @@
 /* ========================================================================== */
 
 #include <ti/drv/udma/src/udma_priv.h>
+#ifdef QNX_OS
+#include <udma_resmgr.h>
+#endif
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
@@ -94,6 +97,21 @@ int32_t Udma_proxyAlloc(Udma_DrvHandle drvHandle,
 
     if(UDMA_SOK == retVal)
     {
+#ifdef QNX_OS
+        if(proxyNum >= drvHandle->maxProxy)
+        {
+            Udma_printf(drvHandle, "[Error] Out of range proxy index!!!\n");
+            retVal = UDMA_EINVALID_PARAMS;
+        }
+        else
+        {
+            proxyHandle->proxyNum = Udma_resmgr_rmAllocProxy(proxyNum, drvHandle);
+            if(UDMA_PROXY_INVALID == proxyHandle->proxyNum)
+            {
+                retVal = UDMA_EALLOC;
+            }
+        }
+#else
         if(UDMA_PROXY_ANY == proxyNum)
         {
             /* Alloc free proxy */
@@ -115,6 +133,7 @@ int32_t Udma_proxyAlloc(Udma_DrvHandle drvHandle,
                 proxyHandle->proxyNum = proxyNum;
             }
         }
+#endif
     }
 
     if(UDMA_SOK == retVal)
@@ -126,11 +145,15 @@ int32_t Udma_proxyAlloc(Udma_DrvHandle drvHandle,
         if(UDMA_SOK != retVal)
         {
             Udma_printf(drvHandle, "[Error] SciClient Set proxy config failed!!!\n");
+#ifdef QNX_OS
+            Udma_resmgr_rmFreeProxy(proxyHandle->proxyNum, drvHandle);
+#else
             if (UDMA_PROXY_ANY == proxyNum)
             {
                 /* Free-up resources */
                 Udma_rmFreeProxy(proxyHandle->proxyNum, drvHandle);
             }
+#endif
         }
     }
 
@@ -181,7 +204,11 @@ int32_t Udma_proxyFree(Udma_ProxyHandle proxyHandle)
 #if (UDMA_SOC_CFG_PROXY_PRESENT == 1)
             /* Free-up resources */
             Udma_assert(drvHandle, proxyHandle->proxyNum != UDMA_PROXY_INVALID);
+#ifdef QNX_OS
+            Udma_resmgr_rmFreeProxy(proxyHandle->proxyNum, drvHandle);
+#else
             Udma_rmFreeProxy(proxyHandle->proxyNum, drvHandle);
+#endif
             proxyHandle->drvHandle       = (Udma_DrvHandle) NULL_PTR;
             proxyHandle->proxyNum        = UDMA_PROXY_INVALID;
             proxyHandle->proxyAddr       = 0U;
