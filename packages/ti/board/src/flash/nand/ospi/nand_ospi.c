@@ -316,7 +316,7 @@ static NAND_STATUS Nand_ospiDisableWriteProtection(SPI_Handle handle)
     NAND_STATUS     retVal = NAND_PASS;
     uint32_t        data[3];
     uint32_t        retry = 10;
-    uint32_t        delay = 1000;
+    volatile uint32_t delay = 1000;
     uint32_t        idleFlag = FALSE;
     OSPI_v0_HwAttrs const *hwAttrs = (OSPI_v0_HwAttrs const *)handle->hwAttrs;
     const CSL_ospi_flash_cfgRegs *pRegs = (const CSL_ospi_flash_cfgRegs *)hwAttrs->baseAddr;
@@ -675,7 +675,7 @@ NAND_STATUS Nand_ospiRead(NAND_HANDLE handle, uint32_t addr, uint32_t len, uint8
     OSPI_v0_HwAttrs *hwAttrs;
     uint8_t          pageReadCmd[4];
     uint32_t         pageReadCmdLen = 4;
-    uint32_t         delay = 1000;
+    volatile uint32_t delay = 1000;
 
     if (!handle)
     {
@@ -767,7 +767,7 @@ NAND_STATUS Nand_ospiWrite(NAND_HANDLE handle, uint32_t addr, uint32_t len, uint
     uint8_t          progExecuteCmd[4];
     uint32_t         progExecuteCmdLen = 4;
     uint8_t          cmdWren = NAND_CMD_WREN;
-    uint32_t         delay;
+    volatile uint32_t delay;
 
     if (!handle)
     {
