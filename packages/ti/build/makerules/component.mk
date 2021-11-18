@@ -1379,7 +1379,7 @@ endif
 ifeq ($(SOC),$(filter $(SOC), am62x))
   PDK_COMMON_COMP = csl board uart
   ifeq ($(CORE),mcu1_0)
-    PDK_COMMON_COMP +=  sciclient_direct rm_pm_hal dm_stub
+    PDK_COMMON_COMP +=  sciclient_direct rm_pm_hal dm_stub self_reset
   else
     PDK_COMMON_COMP += sciclient
   endif
