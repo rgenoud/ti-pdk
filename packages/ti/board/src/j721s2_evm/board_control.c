@@ -81,6 +81,137 @@ static Board_STATUS Board_setIoExpPinOutput(Board_IoExpCfg_t *cfg)
 }
 
 /**
+ * \brief   Configures IO mux on SoM board
+ *
+ * \param   mask  [IN] Mask value for the IO expander pins to be configured
+ * \param   value [IN] Value to be written to IO expander pins
+ *
+ * \return  Board_SOK in case of success or appropriate error code.
+ *
+ */
+static Board_STATUS Board_setSomMux(uint8_t mask,
+                                    uint8_t value)
+{
+    Board_I2cInitCfg_t i2cCfg;
+    Board_STATUS status;
+    uint8_t ioExpData;
+
+    i2cCfg.i2cInst    = BOARD_I2C_IOEXP_SOM_INSTANCE;
+    i2cCfg.socDomain  = BOARD_SOC_DOMAIN_MAIN;
+    i2cCfg.enableIntr = false;
+    Board_setI2cInitConfig(&i2cCfg);
+
+    status = Board_i2cIoExpInit();
+    if(status == BOARD_SOK)
+    {
+        /* Setting the port direction as output */
+        status = Board_i2cIoExpSetPortDirection(BOARD_I2C_IOEXP_SOM_ADDR,
+                                                ONE_PORT_IOEXP,
+                                                PORTNUM_0,
+                                                0);
+        BOARD_delay(1000);
+
+        /* Reading the IO expander current port settings */
+        status |= Board_i2cIoExpReadOutputPort(BOARD_I2C_IOEXP_SOM_ADDR,
+                                               ONE_PORT_IOEXP,
+                                               PORTNUM_0,
+                                               &ioExpData);
+        BOARD_delay(1000);
+
+        ioExpData = (ioExpData & ~(mask)) | value;
+
+        /* Modify the IO expander port settings to enable audio Mux */
+        status |= Board_i2cIoExpWritePort(BOARD_I2C_IOEXP_SOM_ADDR,
+                                          ONE_PORT_IOEXP,
+                                          PORTNUM_0,
+                                          ioExpData);
+
+        BOARD_delay(1000);
+
+        Board_i2cIoExpDeInit();
+    }
+
+    return status;
+}
+
+/**
+ * \brief   Configures the mux on SoM board to route port A to Port B1
+ *
+ * \return  Board_SOK in case of success or appropriate error code.
+ *
+ */
+static Board_STATUS Board_setSoMMUXPortB1(void)
+{
+    Board_STATUS status;
+
+    status = Board_setSomMux(BOARD_CTRL_CMD_SOM_MUX_PORTB_MASK,
+                             BOARD_CTRL_CMD_SOM_MUX_PORTB1_ENABLE);
+
+    return status;
+}
+
+/**
+ * \brief   Configures the mux on SoM board to route port A to Port B2
+ *
+ * \return  Board_SOK in case of success or appropriate error code.
+ *
+ */
+static Board_STATUS Board_setSoMMUXPortB2(void)
+{
+    Board_STATUS status;
+
+    status = Board_setSomMux(BOARD_CTRL_CMD_SOM_MUX_PORTB_MASK,
+                             BOARD_CTRL_CMD_SOM_MUX_PORTB2_ENABLE);
+
+    return status;
+}
+
+/**
+ * \brief   Configures the mux on SoM board to route port A to Port B3
+ *
+ * \return  Board_SOK in case of success or appropriate error code.
+ *
+ */
+static Board_STATUS Board_setSoMMUXPortB3(void)
+{
+    Board_STATUS status;
+
+    status = Board_setSomMux(BOARD_CTRL_CMD_SOM_MUX_PORTB_MASK,
+                             BOARD_CTRL_CMD_SOM_MUX_PORTB3_ENABLE);
+
+    return status;
+}
+
+/**
+ * \brief   Configures EDP enable pin to high
+ *
+ * \return  Board_SOK in case of success or appropriate error code.
+ *
+ */
+static Board_STATUS Board_enableEDP(void)
+{
+    Board_IoExpCfg_t ioExpCfg;
+    Board_STATUS status;
+
+    ioExpCfg.i2cInst     = BOARD_I2C_IOEXP_SOM_INSTANCE;
+    ioExpCfg.socDomain   = BOARD_SOC_DOMAIN_MAIN;
+    ioExpCfg.slaveAddr   = BOARD_I2C_IOEXP_SOM_ADDR;
+    ioExpCfg.enableIntr  = false;
+    ioExpCfg.ioExpType   = ONE_PORT_IOEXP;
+    ioExpCfg.portNum     = PORTNUM_0;
+    ioExpCfg.pinNum      = PIN_NUM_5;
+    ioExpCfg.signalLevel = GPIO_SIGNAL_LEVEL_HIGH;
+
+    status = Board_setIoExpPinOutput(&ioExpCfg);
+    if(status != BOARD_SOK)
+    {
+        return status;
+    }
+
+    return status;
+}
+
+/**
  * \brief Board control function
  *
  * \param   cmd  [IN]  Board control command
@@ -103,6 +234,22 @@ Board_STATUS Board_control(uint32_t cmd, void *arg)
             status = Board_setIoExpPinOutput((Board_IoExpCfg_t *)arg);
             break;
 
+        case BOARD_CTRL_CMD_SET_SOM_MUX_PORTB1:
+            status = Board_setSoMMUXPortB1();
+            break;
+
+        case BOARD_CTRL_CMD_SET_SOM_MUX_PORTB2:
+            status = Board_setSoMMUXPortB2();
+            break;
+
+        case BOARD_CTRL_CMD_SET_SOM_MUX_PORTB3:
+            status = Board_setSoMMUXPortB3();
+            break;
+
+        case BOARD_CTRL_CMD_ENABLE_EDP:
+            status = Board_enableEDP();
+            break;
+
         default:
             status = BOARD_INVALID_PARAM;
             break;
@@ -110,5 +257,3 @@ Board_STATUS Board_control(uint32_t cmd, void *arg)
 
     return status;
 }
-
-

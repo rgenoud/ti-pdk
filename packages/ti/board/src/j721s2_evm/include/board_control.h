@@ -60,7 +60,44 @@ extern "C" {
 #include "board_utils.h"
 #include "board_i2c_io_exp.h"
 
-#define BOARD_CTRL_CMD_SET_IO_EXP_PIN_OUT       (0)
+#define BOARD_CTRL_CMD_SET_IO_EXP_PIN_OUT       (0U)
+
+/*
+ * Enables Port A to Port B1 routing on SoM Mux which enables below IOs
+ *  - Debug Trace Data
+ *  - McASP
+ */
+#define BOARD_CTRL_CMD_SET_SOM_MUX_PORTB1       (1U)
+
+/*
+ * Enables Port A to Port B1 routing on SoM Mux which enables below IOs
+ *  - UARTs for LIN
+ *  - MCAN3, MCAN4, MCAN5
+ *  - I2C1, I2C3
+ *  - UART8 CTS & RTS
+ *  - GPIO0_23 (GPIO_RGMII1_INT#)
+ *  - GPIO0_26 (CSI2_EXP_A_GPIO2)
+ *  - GPIO0_28 (CSI2_EXP_A_GPIO4)
+ */
+#define BOARD_CTRL_CMD_SET_SOM_MUX_PORTB2       (2U)
+
+/*
+ * Enables Port A to Port B1 routing on SoM Mux which enables below IOs
+ *  - Hyperlink0, Hyperlink1
+ *  - MCAN3, MCAN4, MCAN5
+ *  - SPI5
+ */
+#define BOARD_CTRL_CMD_SET_SOM_MUX_PORTB3       (3U)
+
+/* Enables the DSI to eDP bridge */
+#define BOARD_CTRL_CMD_ENABLE_EDP               (4U)
+
+#define BOARD_CTRL_CMD_SOM_MUX_PORTB_MASK       (0x7U)
+#define BOARD_CTRL_CMD_SOM_MUX_PORTB1_ENABLE    (0x4U)
+#define BOARD_CTRL_CMD_SOM_MUX_PORTB2_ENABLE    (0x7U)
+#define BOARD_CTRL_CMD_SOM_MUX_PORTB3_ENABLE    (0x3U)
+
+/* Below macros are not supprted on J721S2 but kept for the build compatibility */
 #define BOARD_CTRL_CMD_SET_HDMI_MUX             (1)
 #define BOARD_CTRL_CMD_SET_HDMI_PD_HIGH         (2U)
 #define BOARD_CTRL_CMD_SET_ICSSG_MDIO_MUX       (3U)
