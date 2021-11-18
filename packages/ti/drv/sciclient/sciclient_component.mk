@@ -238,6 +238,22 @@ export dm_stub_SOCLIST = am62x
 export dm_stub_BOARDLIST = am62x_evm
 export dm_stub_$(SOC)_CORELIST = mcu1_0
 
+
+export self_reset_COMP_LIST = self_reset
+export self_reset_RELPATH = ti/drv/sciclient/src/self_reset
+export self_reset_OBJPATH = ti/drv/sciclient/src/self_reset
+export self_reset_PATH = $(PDK_SCICLIENT_COMP_PATH)
+export self_reset_LIBNAME = self_reset
+export self_reset_LIBPATH = $(PDK_SCICLIENT_COMP_PATH)/lib
+export self_reset_MAKEFILE = -fsrc/self_reset_makefile BUILD_HS=no
+export self_reset_BOARD_DEPENDENCY = no
+export self_reset_CORE_DEPENDENCY = yes
+export self_reset_PKG_LIST = self_reset
+export self_reset_INCLUDE = $(self_reset_PATH)
+export self_reset_SOCLIST = am62x
+export self_reset_BOARDLIST = am62x_evm
+export self_reset_$(SOC)_CORELIST = mcu1_0
+
 ############################
 # sciclient examples
 # List of examples under sciclient (+= is used at each example definition)
