@@ -14,7 +14,7 @@
 --fill_value=0
 --stack_size=0x4000
 --heap_size=0x8000
---entry_point=_freertosresetvectors
+--entry_point=_self_reset_start
 
 -stack  0x4000  /* SOFTWARE STACK SIZE */
 -heap   0x8000  /* HEAP AREA SIZE      */
@@ -50,9 +50,9 @@ MEMORY
 /*--------------------------------------------------------------*/
 SECTIONS
 {
-    .freertosrstvectors      : {} palign(8)      > MCU0_R5F_TCMB
-    .bootCode        : {} palign(8)      > MCU0_R5F_TCMB
-    .startupCode     : {} palign(8)      > MCU0_R5F_TCMB
+    .freertosrstvectors      : align = 8 ,load = MCU0_R5F_TCMB, run = MCU0_R5F_TCMA
+    .bootCode        : align = 8 ,load = MCU0_R5F_TCMB, run = MCU0_R5F_TCMA
+    .startupCode     : align = 8 ,load = MCU0_R5F_TCMB, run = MCU0_R5F_TCMA
     .startupData     : {} palign(8)      > DDR, type = NOINIT  
     GROUP {
         .text.hwi    : palign(8)
@@ -91,7 +91,7 @@ SECTIONS
             . += __DM_STUB_STACK_SIZE;
             _end_stack = .;
         }  palign(8)
-}                                       > MCU0_R5F_TCMB
+}  load = MCU0_R5F_TCMB, run = MCU0_R5F_TCMA
     .text            : {} palign(8)      > DDR
     .const           : {} palign(8)      > DDR
     .cinit           : {} palign(8)      > DDR
