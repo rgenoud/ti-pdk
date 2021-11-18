@@ -6,6 +6,7 @@
 # RM & PM HAL Configuration
 #
 CONFIG_ADDR_REMAP_OFFSET=0x00000000
+CONFIG_DM_BUILD=y
 # end of RM & PM HAL Configuration
 
 #
@@ -33,7 +34,6 @@ CONFIG_RM_UDMAP=y
 CONFIG_UDMAP_CHANNEL_BURST_SIZE=y
 CONFIG_UDMAP_TX_CHANNEL_TEARDOWN_TYPE=y
 CONFIG_UDMAP_UDMA=y
-# CONFIG_UDMAP_BCDMA is not set
 # CONFIG_UDMAP_PKTDMA is not set
 CONFIG_RM_PROXY=y
 # end of Resource Manager Feature Support
@@ -60,6 +60,7 @@ ifeq ($(SOC),$(filter $(SOC), j721s2))
 CONFIG_SOC_FOLDER_STRING="j721s2"
 CONFIG_CLK_PLL_16FFT_FRACF_CALIBRATION=y
 CONFIG_PSC_PD_MAX_COUNT_64=y
+CONFIG_UDMAP_BCDMA=y
 endif
 
 # SoC Specific source files
@@ -78,7 +79,6 @@ TARGET_SOC = $(shell echo $(CONFIG_SOC_FOLDER_STRING))
 #
 # Power Management Feature support
 #
-
 ifeq ($(CONFIG_PM),y)
 CFLAGS_LOCAL_COMMON += -DCONFIG_PM
 endif
@@ -110,6 +110,9 @@ endif
 #
 # Resource Manager Feature Support
 #
+ifeq ($(CONFIG_DM_BUILD),y)
+CFLAGS_LOCAL_COMMON += -DCONFIG_DM_BUILD
+endif
 ifeq ($(CONFIG_RM),y)
 CFLAGS_LOCAL_COMMON += -DCONFIG_RM
 endif
