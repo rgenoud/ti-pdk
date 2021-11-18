@@ -445,7 +445,7 @@ ifeq ($(SOC),$(filter $(SOC), j7200))
 drv_i2c_utility_$(SOC)_CORELIST = $(drvi2c_j7200_CORELIST)
 endif
 ifeq ($(SOC),$(filter $(SOC), j721s2))
-drv_i2c_utility_$(SOC)_CORELIST = $(drvi2c_j721s2_CORELIST)
+drv_i2c_utility_$(SOC)_CORELIST = $(drvi2c_j721s2_CORELISTARM)
 endif
 export drv_i2c_utility_$(SOC)_CORELIST
 
