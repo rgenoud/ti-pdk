@@ -44,9 +44,9 @@ endif
 # This should be enabled only when debugging.
 # If you enable this there is an additional size and boot time increase
 #
-# CONFIG_TRACE=y
-# CONFIG_TRACE_BUFFER=y
-# CONFIG_TRACE_UART=y
+CONFIG_TRACE=y
+CONFIG_TRACE_BUFFER=y
+CONFIG_TRACE_UART=y
 
 ifeq ($(SOC),$(filter $(SOC), j721e))
 CONFIG_SOC_FOLDER_STRING="j721e"
