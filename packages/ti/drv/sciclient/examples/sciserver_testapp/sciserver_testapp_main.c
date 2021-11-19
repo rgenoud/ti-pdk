@@ -135,6 +135,12 @@ static void taskFxn(void* a0, void* a1)
             &clientPrms.inPmPrms, &clientPrms.inRmPrms);
     }
     
+    /* Enable UART console print*/
+    if (ret == CSL_PASS)
+    {
+        App_sciclientConsoleInit();
+    }
+
     if (ret == CSL_PASS)
     {
         ret = Sciclient_init(&clientPrms);
@@ -150,11 +156,6 @@ static void taskFxn(void* a0, void* a1)
         ret = Sciserver_tirtosInit(&appPrms);
     }
 
-    /* Enable UART console print*/
-    if (ret == CSL_PASS)
-    {
-        App_sciclientConsoleInit();
-    }
 
    App_sciclientPrintf("Sciserver Built On: %s %s\n", __DATE__, __TIME__);
     if (ret == CSL_PASS)
