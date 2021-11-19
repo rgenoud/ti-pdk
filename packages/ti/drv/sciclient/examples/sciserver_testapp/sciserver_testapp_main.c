@@ -132,6 +132,12 @@ static void taskFxn(void* a0, void* a1)
             &clientPrms.inPmPrms, &clientPrms.inRmPrms);
     }
     
+    /* Enable UART console print*/
+    if (ret == CSL_PASS)
+    {
+        App_sciclientConsoleInit();
+    }
+
     if (ret == CSL_PASS)
     {
         ret = Sciclient_init(&clientPrms);
@@ -145,12 +151,6 @@ static void taskFxn(void* a0, void* a1)
     if (ret == CSL_PASS)
     {
         ret = Sciserver_tirtosInit(&appPrms);
-    }
-
-    /* Enable UART console print*/
-    if (ret == CSL_PASS)
-    {
-        App_sciclientConsoleInit();
     }
 
     version_str = Sciserver_getVersionStr();
