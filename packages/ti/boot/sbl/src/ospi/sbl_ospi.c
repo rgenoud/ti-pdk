@@ -443,7 +443,7 @@ int32_t SBL_ospiInit(void *handle)
          * that issue is fixed
          */
         uint64_t ospiFunClk;
-#if defined(SOC_AM64X) || defined(SOC_J721E) || defined(BUILD_XIP)
+#if defined(SOC_AM64X) || defined(SOC_J721E) || defined(SOC_J721S2) || defined(BUILD_XIP)
         ospiFunClk = (uint64_t)(OSPI_MODULE_CLK_166M);
         ospi_cfg.devDelays[3] = OSPI_DEV_DELAY_CSDA_3;
 #else
