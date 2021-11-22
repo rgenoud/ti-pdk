@@ -112,6 +112,10 @@ Following fields are supported by the Key writer.
 MPK/MEK Options
 ^^^^^^^^^^^^^^^
 
+.. note::
+
+    These are currently not supported, and reserved for future use.
+
 MPK (SMPKH/BMPKH) options is a 10 bit value, split into two 5 bit values, to be programmed
 contiguous to MPK part 1 and part 2. MEK options is a 5 bit value, programmed
 contiguous to MEK.

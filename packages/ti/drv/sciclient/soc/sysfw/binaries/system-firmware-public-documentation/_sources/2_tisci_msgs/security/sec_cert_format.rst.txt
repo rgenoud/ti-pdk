@@ -700,6 +700,10 @@ The structure of the fields is shown below in ASN.1 notation.
 Keywriter: MPK Options            
 -----------------------------
 
+.. note::
+
+    This extension is currently not supported, and reserved for future.
+
 This extension contains information about the MPK Options
 It is identified by the OID **1.3.6.1.4.1.294.1.69**
 The structure of the fields is shown below in ASN.1 notation.
@@ -785,6 +789,10 @@ The structure of the fields is shown below in ASN.1 notation.
 
 Keywriter: MEK Options            
 ------------------------------------------------------
+
+.. note::
+
+    This extension is currently not supported, and reserved for future.
 
 This extension contains information about the MEK Options,
 it is identified by the OID **1.3.6.1.4.1.294.1.72**

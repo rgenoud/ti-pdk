@@ -302,11 +302,11 @@ needs to be signed using BMPK (private).</li>
 </tr>
 <tr class="row-odd"><td>MEK Options</td>
 <td>SMEK/BMEK options</td>
-<td>5 bit value</td>
+<td>(Reserved for future use) 5 bit value</td>
 </tr>
 <tr class="row-even"><td>MPK Options</td>
 <td>SMPK/BMPK options</td>
-<td>10 bit value (split into 2 parts)</td>
+<td>(Reserved for future use) 10 bit value (split into 2 parts)</td>
 </tr>
 <tr class="row-odd"><td>MSV</td>
 <td>Model specific value</td>
@@ -341,6 +341,10 @@ Support for ECDSA and different key lengths will be available in subsequent vers
 </div>
 <div class="section" id="mpk-mek-options">
 <h3>MPK/MEK Options<a class="headerlink" href="#mpk-mek-options" title="Permalink to this headline">¶</a></h3>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">These are currently not supported, and reserved for future use.</p>
+</div>
 <p>MPK (SMPKH/BMPKH) options is a 10 bit value, split into two 5 bit values, to be programmed
 contiguous to MPK part 1 and part 2. MEK options is a 5 bit value, programmed
 contiguous to MEK.</p>
