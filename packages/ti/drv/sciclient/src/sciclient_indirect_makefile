@@ -130,6 +130,8 @@ ifeq ($(SOC),$(filter $(SOC), am62x))
 PACKAGE_SRCS_COMMON += src/dm_stub_makefile
 PACKAGE_SRCS_COMMON += src/rm_pm_hal/lpm
 PACKAGE_SRCS_COMMON += src/rm_pm_hal/app
+PACKAGE_SRCS_COMMON += src/self_reset_makefile
+PACKAGE_SRCS_COMMON += src/self_reset
 endif
 
 # Core/SoC/platform specific source files and CFLAGS
