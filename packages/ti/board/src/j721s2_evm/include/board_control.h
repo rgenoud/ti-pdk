@@ -70,11 +70,12 @@ extern "C" {
 #define BOARD_CTRL_CMD_SET_SOM_MUX_PORTB1       (1U)
 
 /*
- * Enables Port A to Port B1 routing on SoM Mux which enables below IOs
+ * Enables Port A to Port B2 routing on SoM Mux which enables below IOs
  *  - UARTs for LIN
  *  - MCAN3, MCAN4, MCAN5
  *  - I2C1, I2C3
  *  - UART8 CTS & RTS
+ *  - GPIO0_18 (DP0_HPD)
  *  - GPIO0_23 (GPIO_RGMII1_INT#)
  *  - GPIO0_26 (CSI2_EXP_A_GPIO2)
  *  - GPIO0_28 (CSI2_EXP_A_GPIO4)
@@ -82,15 +83,14 @@ extern "C" {
 #define BOARD_CTRL_CMD_SET_SOM_MUX_PORTB2       (2U)
 
 /*
- * Enables Port A to Port B1 routing on SoM Mux which enables below IOs
+ * Enables Port A to Port B3 routing on SoM Mux which enables below IOs
  *  - Hyperlink0, Hyperlink1
- *  - MCAN3, MCAN4, MCAN5
  *  - SPI5
  */
 #define BOARD_CTRL_CMD_SET_SOM_MUX_PORTB3       (3U)
 
 /* Enables the DSI to eDP bridge */
-#define BOARD_CTRL_CMD_ENABLE_EDP               (4U)
+#define BOARD_CTRL_CMD_ENABLE_DSI2DP_BRIDGE     (4U)
 
 #define BOARD_CTRL_CMD_SOM_MUX_PORTB_MASK       (0x7U)
 #define BOARD_CTRL_CMD_SOM_MUX_PORTB1_ENABLE    (0x4U)

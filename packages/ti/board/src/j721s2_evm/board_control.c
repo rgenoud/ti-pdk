@@ -183,12 +183,12 @@ static Board_STATUS Board_setSoMMUXPortB3(void)
 }
 
 /**
- * \brief   Configures EDP enable pin to high
+ * \brief   Configures DSI to EDP bridge enable pin to high
  *
  * \return  Board_SOK in case of success or appropriate error code.
  *
  */
-static Board_STATUS Board_enableEDP(void)
+static Board_STATUS Board_enableDSI2EDPBridge(void)
 {
     Board_IoExpCfg_t ioExpCfg;
     Board_STATUS status;
@@ -246,8 +246,8 @@ Board_STATUS Board_control(uint32_t cmd, void *arg)
             status = Board_setSoMMUXPortB3();
             break;
 
-        case BOARD_CTRL_CMD_ENABLE_EDP:
-            status = Board_enableEDP();
+        case BOARD_CTRL_CMD_ENABLE_DSI2DP_BRIDGE:
+            status = Board_enableDSI2EDPBridge();
             break;
 
         default:
