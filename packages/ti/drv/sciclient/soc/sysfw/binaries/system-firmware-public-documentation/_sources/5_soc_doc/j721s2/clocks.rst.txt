@@ -1365,27 +1365,29 @@ Following is a mapping of Clocks IDs to function:
 +============+==========================+=============+
 |          0 | DEV_DCC0_DCC_CLKSRC0_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          1 | DEV_DCC0_DCC_CLKSRC2_CLK | Input clock |
+|          1 | DEV_DCC0_DCC_CLKSRC1_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          2 | DEV_DCC0_DCC_INPUT00_CLK | Input clock |
+|          2 | DEV_DCC0_DCC_CLKSRC2_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          3 | DEV_DCC0_DCC_INPUT01_CLK | Input clock |
+|          3 | DEV_DCC0_DCC_CLKSRC3_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          5 | DEV_DCC0_DCC_CLKSRC1_CLK | Input clock |
+|          4 | DEV_DCC0_DCC_CLKSRC4_CLK | Input clock |
++------------+--------------------------+-------------+
+|          5 | DEV_DCC0_DCC_CLKSRC5_CLK | Input clock |
 +------------+--------------------------+-------------+
 |          6 | DEV_DCC0_DCC_CLKSRC6_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          7 | DEV_DCC0_DCC_CLKSRC5_CLK | Input clock |
+|          7 | DEV_DCC0_DCC_CLKSRC7_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          8 | DEV_DCC0_DCC_CLKSRC7_CLK | Input clock |
+|          8 | DEV_DCC0_DCC_INPUT00_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          9 | DEV_DCC0_VBUS_CLK        | Input clock |
+|          9 | DEV_DCC0_DCC_INPUT01_CLK | Input clock |
 +------------+--------------------------+-------------+
-|         10 | DEV_DCC0_DCC_CLKSRC3_CLK | Input clock |
+|         10 | DEV_DCC0_DCC_INPUT02_CLK | Input clock |
 +------------+--------------------------+-------------+
 |         11 | DEV_DCC0_DCC_INPUT10_CLK | Input clock |
 +------------+--------------------------+-------------+
-|         12 | DEV_DCC0_DCC_CLKSRC4_CLK | Input clock |
+|         12 | DEV_DCC0_VBUS_CLK        | Input clock |
 +------------+--------------------------+-------------+
 
 .. _soc_doc_j721s2_public_clks_dcc1:
@@ -1403,27 +1405,29 @@ Following is a mapping of Clocks IDs to function:
 +============+==========================+=============+
 |          0 | DEV_DCC1_DCC_CLKSRC0_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          1 | DEV_DCC1_DCC_CLKSRC2_CLK | Input clock |
+|          1 | DEV_DCC1_DCC_CLKSRC1_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          2 | DEV_DCC1_DCC_INPUT00_CLK | Input clock |
+|          2 | DEV_DCC1_DCC_CLKSRC2_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          3 | DEV_DCC1_DCC_INPUT01_CLK | Input clock |
+|          3 | DEV_DCC1_DCC_CLKSRC3_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          5 | DEV_DCC1_DCC_CLKSRC1_CLK | Input clock |
+|          4 | DEV_DCC1_DCC_CLKSRC4_CLK | Input clock |
++------------+--------------------------+-------------+
+|          5 | DEV_DCC1_DCC_CLKSRC5_CLK | Input clock |
 +------------+--------------------------+-------------+
 |          6 | DEV_DCC1_DCC_CLKSRC6_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          7 | DEV_DCC1_DCC_CLKSRC5_CLK | Input clock |
+|          7 | DEV_DCC1_DCC_CLKSRC7_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          8 | DEV_DCC1_DCC_CLKSRC7_CLK | Input clock |
+|          8 | DEV_DCC1_DCC_INPUT00_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          9 | DEV_DCC1_VBUS_CLK        | Input clock |
+|          9 | DEV_DCC1_DCC_INPUT01_CLK | Input clock |
 +------------+--------------------------+-------------+
-|         10 | DEV_DCC1_DCC_CLKSRC3_CLK | Input clock |
+|         10 | DEV_DCC1_DCC_INPUT02_CLK | Input clock |
 +------------+--------------------------+-------------+
 |         11 | DEV_DCC1_DCC_INPUT10_CLK | Input clock |
 +------------+--------------------------+-------------+
-|         12 | DEV_DCC1_DCC_CLKSRC4_CLK | Input clock |
+|         12 | DEV_DCC1_VBUS_CLK        | Input clock |
 +------------+--------------------------+-------------+
 
 .. _soc_doc_j721s2_public_clks_dcc2:
@@ -1441,25 +1445,27 @@ Following is a mapping of Clocks IDs to function:
 +============+==========================+=============+
 |          0 | DEV_DCC2_DCC_CLKSRC0_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          2 | DEV_DCC2_DCC_INPUT00_CLK | Input clock |
+|          1 | DEV_DCC2_DCC_CLKSRC1_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          3 | DEV_DCC2_DCC_INPUT01_CLK | Input clock |
+|          3 | DEV_DCC2_DCC_CLKSRC3_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          5 | DEV_DCC2_DCC_CLKSRC1_CLK | Input clock |
+|          4 | DEV_DCC2_DCC_CLKSRC4_CLK | Input clock |
++------------+--------------------------+-------------+
+|          5 | DEV_DCC2_DCC_CLKSRC5_CLK | Input clock |
 +------------+--------------------------+-------------+
 |          6 | DEV_DCC2_DCC_CLKSRC6_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          7 | DEV_DCC2_DCC_CLKSRC5_CLK | Input clock |
+|          7 | DEV_DCC2_DCC_CLKSRC7_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          8 | DEV_DCC2_DCC_CLKSRC7_CLK | Input clock |
+|          8 | DEV_DCC2_DCC_INPUT00_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          9 | DEV_DCC2_VBUS_CLK        | Input clock |
+|          9 | DEV_DCC2_DCC_INPUT01_CLK | Input clock |
 +------------+--------------------------+-------------+
-|         10 | DEV_DCC2_DCC_CLKSRC3_CLK | Input clock |
+|         10 | DEV_DCC2_DCC_INPUT02_CLK | Input clock |
 +------------+--------------------------+-------------+
 |         11 | DEV_DCC2_DCC_INPUT10_CLK | Input clock |
 +------------+--------------------------+-------------+
-|         12 | DEV_DCC2_DCC_CLKSRC4_CLK | Input clock |
+|         12 | DEV_DCC2_VBUS_CLK        | Input clock |
 +------------+--------------------------+-------------+
 
 .. _soc_doc_j721s2_public_clks_dcc3:
@@ -1477,21 +1483,25 @@ Following is a mapping of Clocks IDs to function:
 +============+==========================+=============+
 |          0 | DEV_DCC3_DCC_CLKSRC0_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          2 | DEV_DCC3_DCC_INPUT00_CLK | Input clock |
+|          1 | DEV_DCC3_DCC_CLKSRC1_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          3 | DEV_DCC3_DCC_INPUT01_CLK | Input clock |
+|          2 | DEV_DCC3_DCC_CLKSRC2_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          5 | DEV_DCC3_DCC_CLKSRC1_CLK | Input clock |
+|          5 | DEV_DCC3_DCC_CLKSRC5_CLK | Input clock |
 +------------+--------------------------+-------------+
 |          6 | DEV_DCC3_DCC_CLKSRC6_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          7 | DEV_DCC3_DCC_CLKSRC5_CLK | Input clock |
+|          7 | DEV_DCC3_DCC_CLKSRC7_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          8 | DEV_DCC3_DCC_CLKSRC7_CLK | Input clock |
+|          8 | DEV_DCC3_DCC_INPUT00_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          9 | DEV_DCC3_VBUS_CLK        | Input clock |
+|          9 | DEV_DCC3_DCC_INPUT01_CLK | Input clock |
++------------+--------------------------+-------------+
+|         10 | DEV_DCC3_DCC_INPUT02_CLK | Input clock |
 +------------+--------------------------+-------------+
 |         11 | DEV_DCC3_DCC_INPUT10_CLK | Input clock |
++------------+--------------------------+-------------+
+|         12 | DEV_DCC3_VBUS_CLK        | Input clock |
 +------------+--------------------------+-------------+
 
 .. _soc_doc_j721s2_public_clks_dcc4:
@@ -1509,23 +1519,25 @@ Following is a mapping of Clocks IDs to function:
 +============+==========================+=============+
 |          0 | DEV_DCC4_DCC_CLKSRC0_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          1 | DEV_DCC4_DCC_CLKSRC2_CLK | Input clock |
+|          2 | DEV_DCC4_DCC_CLKSRC2_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          2 | DEV_DCC4_DCC_INPUT00_CLK | Input clock |
+|          3 | DEV_DCC4_DCC_CLKSRC3_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          3 | DEV_DCC4_DCC_INPUT01_CLK | Input clock |
+|          4 | DEV_DCC4_DCC_CLKSRC4_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          7 | DEV_DCC4_DCC_CLKSRC5_CLK | Input clock |
+|          5 | DEV_DCC4_DCC_CLKSRC5_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          8 | DEV_DCC4_DCC_CLKSRC7_CLK | Input clock |
+|          7 | DEV_DCC4_DCC_CLKSRC7_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          9 | DEV_DCC4_VBUS_CLK        | Input clock |
+|          8 | DEV_DCC4_DCC_INPUT00_CLK | Input clock |
 +------------+--------------------------+-------------+
-|         10 | DEV_DCC4_DCC_CLKSRC3_CLK | Input clock |
+|          9 | DEV_DCC4_DCC_INPUT01_CLK | Input clock |
++------------+--------------------------+-------------+
+|         10 | DEV_DCC4_DCC_INPUT02_CLK | Input clock |
 +------------+--------------------------+-------------+
 |         11 | DEV_DCC4_DCC_INPUT10_CLK | Input clock |
 +------------+--------------------------+-------------+
-|         12 | DEV_DCC4_DCC_CLKSRC4_CLK | Input clock |
+|         12 | DEV_DCC4_VBUS_CLK        | Input clock |
 +------------+--------------------------+-------------+
 
 .. _soc_doc_j721s2_public_clks_dcc5:
@@ -1541,29 +1553,27 @@ Following is a mapping of Clocks IDs to function:
 +------------+--------------------------+-------------+
 |   Clock ID | Name                     | Function    |
 +============+==========================+=============+
-|          0 | DEV_DCC5_DCC_CLKSRC0_CLK | Input clock |
+|          1 | DEV_DCC5_DCC_CLKSRC1_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          1 | DEV_DCC5_DCC_CLKSRC2_CLK | Input clock |
+|          2 | DEV_DCC5_DCC_CLKSRC2_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          2 | DEV_DCC5_DCC_INPUT00_CLK | Input clock |
+|          3 | DEV_DCC5_DCC_CLKSRC3_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          3 | DEV_DCC5_DCC_INPUT01_CLK | Input clock |
-+------------+--------------------------+-------------+
-|          5 | DEV_DCC5_DCC_CLKSRC1_CLK | Input clock |
+|          4 | DEV_DCC5_DCC_CLKSRC4_CLK | Input clock |
 +------------+--------------------------+-------------+
 |          6 | DEV_DCC5_DCC_CLKSRC6_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          7 | DEV_DCC5_DCC_CLKSRC5_CLK | Input clock |
+|          7 | DEV_DCC5_DCC_CLKSRC7_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          8 | DEV_DCC5_DCC_CLKSRC7_CLK | Input clock |
+|          8 | DEV_DCC5_DCC_INPUT00_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          9 | DEV_DCC5_VBUS_CLK        | Input clock |
+|          9 | DEV_DCC5_DCC_INPUT01_CLK | Input clock |
 +------------+--------------------------+-------------+
-|         10 | DEV_DCC5_DCC_CLKSRC3_CLK | Input clock |
+|         10 | DEV_DCC5_DCC_INPUT02_CLK | Input clock |
 +------------+--------------------------+-------------+
 |         11 | DEV_DCC5_DCC_INPUT10_CLK | Input clock |
 +------------+--------------------------+-------------+
-|         12 | DEV_DCC5_DCC_CLKSRC4_CLK | Input clock |
+|         12 | DEV_DCC5_VBUS_CLK        | Input clock |
 +------------+--------------------------+-------------+
 
 .. _soc_doc_j721s2_public_clks_dcc6:
@@ -1581,27 +1591,29 @@ Following is a mapping of Clocks IDs to function:
 +============+==========================+=============+
 |          0 | DEV_DCC6_DCC_CLKSRC0_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          1 | DEV_DCC6_DCC_CLKSRC2_CLK | Input clock |
+|          1 | DEV_DCC6_DCC_CLKSRC1_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          2 | DEV_DCC6_DCC_INPUT00_CLK | Input clock |
+|          2 | DEV_DCC6_DCC_CLKSRC2_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          3 | DEV_DCC6_DCC_INPUT01_CLK | Input clock |
+|          3 | DEV_DCC6_DCC_CLKSRC3_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          5 | DEV_DCC6_DCC_CLKSRC1_CLK | Input clock |
+|          4 | DEV_DCC6_DCC_CLKSRC4_CLK | Input clock |
++------------+--------------------------+-------------+
+|          5 | DEV_DCC6_DCC_CLKSRC5_CLK | Input clock |
 +------------+--------------------------+-------------+
 |          6 | DEV_DCC6_DCC_CLKSRC6_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          7 | DEV_DCC6_DCC_CLKSRC5_CLK | Input clock |
+|          7 | DEV_DCC6_DCC_CLKSRC7_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          8 | DEV_DCC6_DCC_CLKSRC7_CLK | Input clock |
+|          8 | DEV_DCC6_DCC_INPUT00_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          9 | DEV_DCC6_VBUS_CLK        | Input clock |
+|          9 | DEV_DCC6_DCC_INPUT01_CLK | Input clock |
 +------------+--------------------------+-------------+
-|         10 | DEV_DCC6_DCC_CLKSRC3_CLK | Input clock |
+|         10 | DEV_DCC6_DCC_INPUT02_CLK | Input clock |
 +------------+--------------------------+-------------+
 |         11 | DEV_DCC6_DCC_INPUT10_CLK | Input clock |
 +------------+--------------------------+-------------+
-|         12 | DEV_DCC6_DCC_CLKSRC4_CLK | Input clock |
+|         12 | DEV_DCC6_VBUS_CLK        | Input clock |
 +------------+--------------------------+-------------+
 
 .. _soc_doc_j721s2_public_clks_dcc7:
@@ -1619,23 +1631,25 @@ Following is a mapping of Clocks IDs to function:
 +============+==========================+=============+
 |          0 | DEV_DCC7_DCC_CLKSRC0_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          1 | DEV_DCC7_DCC_CLKSRC2_CLK | Input clock |
+|          1 | DEV_DCC7_DCC_CLKSRC1_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          2 | DEV_DCC7_DCC_INPUT00_CLK | Input clock |
+|          2 | DEV_DCC7_DCC_CLKSRC2_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          3 | DEV_DCC7_DCC_INPUT01_CLK | Input clock |
-+------------+--------------------------+-------------+
-|          5 | DEV_DCC7_DCC_CLKSRC1_CLK | Input clock |
+|          5 | DEV_DCC7_DCC_CLKSRC5_CLK | Input clock |
 +------------+--------------------------+-------------+
 |          6 | DEV_DCC7_DCC_CLKSRC6_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          7 | DEV_DCC7_DCC_CLKSRC5_CLK | Input clock |
+|          7 | DEV_DCC7_DCC_CLKSRC7_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          8 | DEV_DCC7_DCC_CLKSRC7_CLK | Input clock |
+|          8 | DEV_DCC7_DCC_INPUT00_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          9 | DEV_DCC7_VBUS_CLK        | Input clock |
+|          9 | DEV_DCC7_DCC_INPUT01_CLK | Input clock |
++------------+--------------------------+-------------+
+|         10 | DEV_DCC7_DCC_INPUT02_CLK | Input clock |
 +------------+--------------------------+-------------+
 |         11 | DEV_DCC7_DCC_INPUT10_CLK | Input clock |
++------------+--------------------------+-------------+
+|         12 | DEV_DCC7_VBUS_CLK        | Input clock |
 +------------+--------------------------+-------------+
 
 .. _soc_doc_j721s2_public_clks_dcc8:
@@ -1653,25 +1667,27 @@ Following is a mapping of Clocks IDs to function:
 +============+==========================+=============+
 |          0 | DEV_DCC8_DCC_CLKSRC0_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          1 | DEV_DCC8_DCC_CLKSRC2_CLK | Input clock |
+|          1 | DEV_DCC8_DCC_CLKSRC1_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          2 | DEV_DCC8_DCC_INPUT00_CLK | Input clock |
+|          2 | DEV_DCC8_DCC_CLKSRC2_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          3 | DEV_DCC8_DCC_INPUT01_CLK | Input clock |
+|          3 | DEV_DCC8_DCC_CLKSRC3_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          5 | DEV_DCC8_DCC_CLKSRC1_CLK | Input clock |
+|          4 | DEV_DCC8_DCC_CLKSRC4_CLK | Input clock |
 +------------+--------------------------+-------------+
 |          6 | DEV_DCC8_DCC_CLKSRC6_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          8 | DEV_DCC8_DCC_CLKSRC7_CLK | Input clock |
+|          7 | DEV_DCC8_DCC_CLKSRC7_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          9 | DEV_DCC8_VBUS_CLK        | Input clock |
+|          8 | DEV_DCC8_DCC_INPUT00_CLK | Input clock |
 +------------+--------------------------+-------------+
-|         10 | DEV_DCC8_DCC_CLKSRC3_CLK | Input clock |
+|          9 | DEV_DCC8_DCC_INPUT01_CLK | Input clock |
++------------+--------------------------+-------------+
+|         10 | DEV_DCC8_DCC_INPUT02_CLK | Input clock |
 +------------+--------------------------+-------------+
 |         11 | DEV_DCC8_DCC_INPUT10_CLK | Input clock |
 +------------+--------------------------+-------------+
-|         12 | DEV_DCC8_DCC_CLKSRC4_CLK | Input clock |
+|         12 | DEV_DCC8_VBUS_CLK        | Input clock |
 +------------+--------------------------+-------------+
 
 .. _soc_doc_j721s2_public_clks_dcc9:
@@ -1689,25 +1705,27 @@ Following is a mapping of Clocks IDs to function:
 +============+==========================+=============+
 |          0 | DEV_DCC9_DCC_CLKSRC0_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          1 | DEV_DCC9_DCC_CLKSRC2_CLK | Input clock |
+|          1 | DEV_DCC9_DCC_CLKSRC1_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          2 | DEV_DCC9_DCC_INPUT00_CLK | Input clock |
+|          2 | DEV_DCC9_DCC_CLKSRC2_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          3 | DEV_DCC9_DCC_INPUT01_CLK | Input clock |
+|          3 | DEV_DCC9_DCC_CLKSRC3_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          5 | DEV_DCC9_DCC_CLKSRC1_CLK | Input clock |
+|          4 | DEV_DCC9_DCC_CLKSRC4_CLK | Input clock |
++------------+--------------------------+-------------+
+|          5 | DEV_DCC9_DCC_CLKSRC5_CLK | Input clock |
 +------------+--------------------------+-------------+
 |          6 | DEV_DCC9_DCC_CLKSRC6_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          7 | DEV_DCC9_DCC_CLKSRC5_CLK | Input clock |
+|          8 | DEV_DCC9_DCC_INPUT00_CLK | Input clock |
 +------------+--------------------------+-------------+
-|          9 | DEV_DCC9_VBUS_CLK        | Input clock |
+|          9 | DEV_DCC9_DCC_INPUT01_CLK | Input clock |
 +------------+--------------------------+-------------+
-|         10 | DEV_DCC9_DCC_CLKSRC3_CLK | Input clock |
+|         10 | DEV_DCC9_DCC_INPUT02_CLK | Input clock |
 +------------+--------------------------+-------------+
 |         11 | DEV_DCC9_DCC_INPUT10_CLK | Input clock |
 +------------+--------------------------+-------------+
-|         12 | DEV_DCC9_DCC_CLKSRC4_CLK | Input clock |
+|         12 | DEV_DCC9_VBUS_CLK        | Input clock |
 +------------+--------------------------+-------------+
 
 .. _soc_doc_j721s2_public_clks_ddr0:
@@ -4229,27 +4247,29 @@ Following is a mapping of Clocks IDs to function:
 +============+==============================+=============+
 |          0 | DEV_MCU_DCC0_DCC_CLKSRC0_CLK | Input clock |
 +------------+------------------------------+-------------+
-|          1 | DEV_MCU_DCC0_DCC_CLKSRC2_CLK | Input clock |
+|          1 | DEV_MCU_DCC0_DCC_CLKSRC1_CLK | Input clock |
 +------------+------------------------------+-------------+
-|          2 | DEV_MCU_DCC0_DCC_INPUT00_CLK | Input clock |
+|          2 | DEV_MCU_DCC0_DCC_CLKSRC2_CLK | Input clock |
 +------------+------------------------------+-------------+
-|          3 | DEV_MCU_DCC0_DCC_INPUT01_CLK | Input clock |
+|          3 | DEV_MCU_DCC0_DCC_CLKSRC3_CLK | Input clock |
 +------------+------------------------------+-------------+
-|          5 | DEV_MCU_DCC0_DCC_CLKSRC1_CLK | Input clock |
+|          4 | DEV_MCU_DCC0_DCC_CLKSRC4_CLK | Input clock |
++------------+------------------------------+-------------+
+|          5 | DEV_MCU_DCC0_DCC_CLKSRC5_CLK | Input clock |
 +------------+------------------------------+-------------+
 |          6 | DEV_MCU_DCC0_DCC_CLKSRC6_CLK | Input clock |
 +------------+------------------------------+-------------+
-|          7 | DEV_MCU_DCC0_DCC_CLKSRC5_CLK | Input clock |
+|          7 | DEV_MCU_DCC0_DCC_CLKSRC7_CLK | Input clock |
 +------------+------------------------------+-------------+
-|          8 | DEV_MCU_DCC0_DCC_CLKSRC7_CLK | Input clock |
+|          8 | DEV_MCU_DCC0_DCC_INPUT00_CLK | Input clock |
 +------------+------------------------------+-------------+
-|          9 | DEV_MCU_DCC0_VBUS_CLK        | Input clock |
+|          9 | DEV_MCU_DCC0_DCC_INPUT01_CLK | Input clock |
 +------------+------------------------------+-------------+
-|         10 | DEV_MCU_DCC0_DCC_CLKSRC3_CLK | Input clock |
+|         10 | DEV_MCU_DCC0_DCC_INPUT02_CLK | Input clock |
 +------------+------------------------------+-------------+
 |         11 | DEV_MCU_DCC0_DCC_INPUT10_CLK | Input clock |
 +------------+------------------------------+-------------+
-|         12 | DEV_MCU_DCC0_DCC_CLKSRC4_CLK | Input clock |
+|         12 | DEV_MCU_DCC0_VBUS_CLK        | Input clock |
 +------------+------------------------------+-------------+
 
 .. _soc_doc_j721s2_public_clks_mcu_dcc1:
@@ -4267,27 +4287,29 @@ Following is a mapping of Clocks IDs to function:
 +============+==============================+=============+
 |          0 | DEV_MCU_DCC1_DCC_CLKSRC0_CLK | Input clock |
 +------------+------------------------------+-------------+
-|          1 | DEV_MCU_DCC1_DCC_CLKSRC2_CLK | Input clock |
+|          1 | DEV_MCU_DCC1_DCC_CLKSRC1_CLK | Input clock |
 +------------+------------------------------+-------------+
-|          2 | DEV_MCU_DCC1_DCC_INPUT00_CLK | Input clock |
+|          2 | DEV_MCU_DCC1_DCC_CLKSRC2_CLK | Input clock |
 +------------+------------------------------+-------------+
-|          3 | DEV_MCU_DCC1_DCC_INPUT01_CLK | Input clock |
+|          3 | DEV_MCU_DCC1_DCC_CLKSRC3_CLK | Input clock |
 +------------+------------------------------+-------------+
-|          5 | DEV_MCU_DCC1_DCC_CLKSRC1_CLK | Input clock |
+|          4 | DEV_MCU_DCC1_DCC_CLKSRC4_CLK | Input clock |
++------------+------------------------------+-------------+
+|          5 | DEV_MCU_DCC1_DCC_CLKSRC5_CLK | Input clock |
 +------------+------------------------------+-------------+
 |          6 | DEV_MCU_DCC1_DCC_CLKSRC6_CLK | Input clock |
 +------------+------------------------------+-------------+
-|          7 | DEV_MCU_DCC1_DCC_CLKSRC5_CLK | Input clock |
+|          7 | DEV_MCU_DCC1_DCC_CLKSRC7_CLK | Input clock |
 +------------+------------------------------+-------------+
-|          8 | DEV_MCU_DCC1_DCC_CLKSRC7_CLK | Input clock |
+|          8 | DEV_MCU_DCC1_DCC_INPUT00_CLK | Input clock |
 +------------+------------------------------+-------------+
-|          9 | DEV_MCU_DCC1_VBUS_CLK        | Input clock |
+|          9 | DEV_MCU_DCC1_DCC_INPUT01_CLK | Input clock |
 +------------+------------------------------+-------------+
-|         10 | DEV_MCU_DCC1_DCC_CLKSRC3_CLK | Input clock |
+|         10 | DEV_MCU_DCC1_DCC_INPUT02_CLK | Input clock |
 +------------+------------------------------+-------------+
 |         11 | DEV_MCU_DCC1_DCC_INPUT10_CLK | Input clock |
 +------------+------------------------------+-------------+
-|         12 | DEV_MCU_DCC1_DCC_CLKSRC4_CLK | Input clock |
+|         12 | DEV_MCU_DCC1_VBUS_CLK        | Input clock |
 +------------+------------------------------+-------------+
 
 .. _soc_doc_j721s2_public_clks_mcu_dcc2:
@@ -4305,23 +4327,27 @@ Following is a mapping of Clocks IDs to function:
 +============+==============================+=============+
 |          0 | DEV_MCU_DCC2_DCC_CLKSRC0_CLK | Input clock |
 +------------+------------------------------+-------------+
-|          1 | DEV_MCU_DCC2_DCC_CLKSRC2_CLK | Input clock |
+|          1 | DEV_MCU_DCC2_DCC_CLKSRC1_CLK | Input clock |
 +------------+------------------------------+-------------+
-|          2 | DEV_MCU_DCC2_DCC_INPUT00_CLK | Input clock |
+|          2 | DEV_MCU_DCC2_DCC_CLKSRC2_CLK | Input clock |
 +------------+------------------------------+-------------+
-|          3 | DEV_MCU_DCC2_DCC_INPUT01_CLK | Input clock |
+|          3 | DEV_MCU_DCC2_DCC_CLKSRC3_CLK | Input clock |
 +------------+------------------------------+-------------+
-|          5 | DEV_MCU_DCC2_DCC_CLKSRC1_CLK | Input clock |
+|          4 | DEV_MCU_DCC2_DCC_CLKSRC4_CLK | Input clock |
 +------------+------------------------------+-------------+
-|          8 | DEV_MCU_DCC2_DCC_CLKSRC7_CLK | Input clock |
+|          6 | DEV_MCU_DCC2_DCC_CLKSRC6_CLK | Input clock |
 +------------+------------------------------+-------------+
-|          9 | DEV_MCU_DCC2_VBUS_CLK        | Input clock |
+|          7 | DEV_MCU_DCC2_DCC_CLKSRC7_CLK | Input clock |
 +------------+------------------------------+-------------+
-|         10 | DEV_MCU_DCC2_DCC_CLKSRC3_CLK | Input clock |
+|          8 | DEV_MCU_DCC2_DCC_INPUT00_CLK | Input clock |
++------------+------------------------------+-------------+
+|          9 | DEV_MCU_DCC2_DCC_INPUT01_CLK | Input clock |
++------------+------------------------------+-------------+
+|         10 | DEV_MCU_DCC2_DCC_INPUT02_CLK | Input clock |
 +------------+------------------------------+-------------+
 |         11 | DEV_MCU_DCC2_DCC_INPUT10_CLK | Input clock |
 +------------+------------------------------+-------------+
-|         12 | DEV_MCU_DCC2_DCC_CLKSRC4_CLK | Input clock |
+|         12 | DEV_MCU_DCC2_VBUS_CLK        | Input clock |
 +------------+------------------------------+-------------+
 
 .. _soc_doc_j721s2_public_clks_mcu_esm0:
@@ -6395,6 +6421,8 @@ Following is a mapping of Clocks IDs to function:
 +------------+-------------------------------------------------------------------------------+-----------------------------------------------------------+
 |         34 | DEV_PCIE1_PCIE_LANE2_TXFCLK                                                   | Input clock                                               |
 +------------+-------------------------------------------------------------------------------+-----------------------------------------------------------+
+|         35 | DEV_PCIE1_PCIE_PM_CLK                                                         | Input clock                                               |
++------------+-------------------------------------------------------------------------------+-----------------------------------------------------------+
 |         36 | DEV_PCIE1_PCIE_LANE1_TXFCLK                                                   | Input clock                                               |
 +------------+-------------------------------------------------------------------------------+-----------------------------------------------------------+
 |         37 | DEV_PCIE1_PCIE_LANE1_TXMCLK                                                   | Input clock                                               |
@@ -6548,27 +6576,29 @@ Device: :ref:`J721S2_DEV_RTI0 <soc_doc_j721s2_public_devices_desc_device_list>` 
 
 Following is a mapping of Clocks IDs to function:
 
-+------------+--------------------------------------------------------------------+-----------------------------------------------+
-|   Clock ID | Name                                                               | Function                                      |
-+============+====================================================================+===============================================+
-|          0 | DEV_RTI0_VBUSP_CLK                                                 | Input clock                                   |
-+------------+--------------------------------------------------------------------+-----------------------------------------------+
-|          1 | DEV_RTI0_RTI_CLK                                                   | Input muxed clock                             |
-+------------+--------------------------------------------------------------------+-----------------------------------------------+
-|          2 | DEV_RTI0_RTI_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT                    | Parent input clock option to DEV_RTI0_RTI_CLK |
-+------------+--------------------------------------------------------------------+-----------------------------------------------+
-|          3 | DEV_RTI0_RTI_CLK_PARENT_GLUELOGIC_LPXOSC_CLKOUT                    | Parent input clock option to DEV_RTI0_RTI_CLK |
-+------------+--------------------------------------------------------------------+-----------------------------------------------+
-|          5 | DEV_RTI0_RTI_CLK_PARENT_J7AM_WAKEUP_16FF_WKUP_0_WKUP_RCOSC_32K_CLK | Parent input clock option to DEV_RTI0_RTI_CLK |
-+------------+--------------------------------------------------------------------+-----------------------------------------------+
-|          6 | DEV_RTI0_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT                     | Parent input clock option to DEV_RTI0_RTI_CLK |
-+------------+--------------------------------------------------------------------+-----------------------------------------------+
-|          7 | DEV_RTI0_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP0                | Parent input clock option to DEV_RTI0_RTI_CLK |
-+------------+--------------------------------------------------------------------+-----------------------------------------------+
-|          8 | DEV_RTI0_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP1                | Parent input clock option to DEV_RTI0_RTI_CLK |
-+------------+--------------------------------------------------------------------+-----------------------------------------------+
-|          9 | DEV_RTI0_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP2                | Parent input clock option to DEV_RTI0_RTI_CLK |
-+------------+--------------------------------------------------------------------+-----------------------------------------------+
++------------+----------------------------------------------------------------------+-----------------------------------------------+
+|   Clock ID | Name                                                                 | Function                                      |
++============+======================================================================+===============================================+
+|          0 | DEV_RTI0_VBUSP_CLK                                                   | Input clock                                   |
++------------+----------------------------------------------------------------------+-----------------------------------------------+
+|          1 | DEV_RTI0_RTI_CLK                                                     | Input muxed clock                             |
++------------+----------------------------------------------------------------------+-----------------------------------------------+
+|          2 | DEV_RTI0_RTI_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT                      | Parent input clock option to DEV_RTI0_RTI_CLK |
++------------+----------------------------------------------------------------------+-----------------------------------------------+
+|          3 | DEV_RTI0_RTI_CLK_PARENT_GLUELOGIC_LPXOSC_CLKOUT                      | Parent input clock option to DEV_RTI0_RTI_CLK |
++------------+----------------------------------------------------------------------+-----------------------------------------------+
+|          4 | DEV_RTI0_RTI_CLK_PARENT_J7AM_WAKEUP_16FF_WKUP_0_WKUP_RCOSC_12P5M_CLK | Parent input clock option to DEV_RTI0_RTI_CLK |
++------------+----------------------------------------------------------------------+-----------------------------------------------+
+|          5 | DEV_RTI0_RTI_CLK_PARENT_J7AM_WAKEUP_16FF_WKUP_0_WKUP_RCOSC_32K_CLK   | Parent input clock option to DEV_RTI0_RTI_CLK |
++------------+----------------------------------------------------------------------+-----------------------------------------------+
+|          6 | DEV_RTI0_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT                       | Parent input clock option to DEV_RTI0_RTI_CLK |
++------------+----------------------------------------------------------------------+-----------------------------------------------+
+|          7 | DEV_RTI0_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP0                  | Parent input clock option to DEV_RTI0_RTI_CLK |
++------------+----------------------------------------------------------------------+-----------------------------------------------+
+|          8 | DEV_RTI0_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP1                  | Parent input clock option to DEV_RTI0_RTI_CLK |
++------------+----------------------------------------------------------------------+-----------------------------------------------+
+|          9 | DEV_RTI0_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP2                  | Parent input clock option to DEV_RTI0_RTI_CLK |
++------------+----------------------------------------------------------------------+-----------------------------------------------+
 
 .. _soc_doc_j721s2_public_clks_rti1:
 
@@ -6580,27 +6610,29 @@ Device: :ref:`J721S2_DEV_RTI1 <soc_doc_j721s2_public_devices_desc_device_list>` 
 
 Following is a mapping of Clocks IDs to function:
 
-+------------+--------------------------------------------------------------------+-----------------------------------------------+
-|   Clock ID | Name                                                               | Function                                      |
-+============+====================================================================+===============================================+
-|          0 | DEV_RTI1_VBUSP_CLK                                                 | Input clock                                   |
-+------------+--------------------------------------------------------------------+-----------------------------------------------+
-|          1 | DEV_RTI1_RTI_CLK                                                   | Input muxed clock                             |
-+------------+--------------------------------------------------------------------+-----------------------------------------------+
-|          2 | DEV_RTI1_RTI_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT                    | Parent input clock option to DEV_RTI1_RTI_CLK |
-+------------+--------------------------------------------------------------------+-----------------------------------------------+
-|          3 | DEV_RTI1_RTI_CLK_PARENT_GLUELOGIC_LPXOSC_CLKOUT                    | Parent input clock option to DEV_RTI1_RTI_CLK |
-+------------+--------------------------------------------------------------------+-----------------------------------------------+
-|          5 | DEV_RTI1_RTI_CLK_PARENT_J7AM_WAKEUP_16FF_WKUP_0_WKUP_RCOSC_32K_CLK | Parent input clock option to DEV_RTI1_RTI_CLK |
-+------------+--------------------------------------------------------------------+-----------------------------------------------+
-|          6 | DEV_RTI1_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT                     | Parent input clock option to DEV_RTI1_RTI_CLK |
-+------------+--------------------------------------------------------------------+-----------------------------------------------+
-|          7 | DEV_RTI1_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP0                | Parent input clock option to DEV_RTI1_RTI_CLK |
-+------------+--------------------------------------------------------------------+-----------------------------------------------+
-|          8 | DEV_RTI1_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP1                | Parent input clock option to DEV_RTI1_RTI_CLK |
-+------------+--------------------------------------------------------------------+-----------------------------------------------+
-|          9 | DEV_RTI1_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP2                | Parent input clock option to DEV_RTI1_RTI_CLK |
-+------------+--------------------------------------------------------------------+-----------------------------------------------+
++------------+----------------------------------------------------------------------+-----------------------------------------------+
+|   Clock ID | Name                                                                 | Function                                      |
++============+======================================================================+===============================================+
+|          0 | DEV_RTI1_VBUSP_CLK                                                   | Input clock                                   |
++------------+----------------------------------------------------------------------+-----------------------------------------------+
+|          1 | DEV_RTI1_RTI_CLK                                                     | Input muxed clock                             |
++------------+----------------------------------------------------------------------+-----------------------------------------------+
+|          2 | DEV_RTI1_RTI_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT                      | Parent input clock option to DEV_RTI1_RTI_CLK |
++------------+----------------------------------------------------------------------+-----------------------------------------------+
+|          3 | DEV_RTI1_RTI_CLK_PARENT_GLUELOGIC_LPXOSC_CLKOUT                      | Parent input clock option to DEV_RTI1_RTI_CLK |
++------------+----------------------------------------------------------------------+-----------------------------------------------+
+|          4 | DEV_RTI1_RTI_CLK_PARENT_J7AM_WAKEUP_16FF_WKUP_0_WKUP_RCOSC_12P5M_CLK | Parent input clock option to DEV_RTI1_RTI_CLK |
++------------+----------------------------------------------------------------------+-----------------------------------------------+
+|          5 | DEV_RTI1_RTI_CLK_PARENT_J7AM_WAKEUP_16FF_WKUP_0_WKUP_RCOSC_32K_CLK   | Parent input clock option to DEV_RTI1_RTI_CLK |
++------------+----------------------------------------------------------------------+-----------------------------------------------+
+|          6 | DEV_RTI1_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT                       | Parent input clock option to DEV_RTI1_RTI_CLK |
++------------+----------------------------------------------------------------------+-----------------------------------------------+
+|          7 | DEV_RTI1_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP0                  | Parent input clock option to DEV_RTI1_RTI_CLK |
++------------+----------------------------------------------------------------------+-----------------------------------------------+
+|          8 | DEV_RTI1_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP1                  | Parent input clock option to DEV_RTI1_RTI_CLK |
++------------+----------------------------------------------------------------------+-----------------------------------------------+
+|          9 | DEV_RTI1_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP2                  | Parent input clock option to DEV_RTI1_RTI_CLK |
++------------+----------------------------------------------------------------------+-----------------------------------------------+
 
 .. _soc_doc_j721s2_public_clks_rti15:
 
@@ -6612,27 +6644,29 @@ Device: :ref:`J721S2_DEV_RTI15 <soc_doc_j721s2_public_devices_desc_device_list>`
 
 Following is a mapping of Clocks IDs to function:
 
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|   Clock ID | Name                                                                | Function                                       |
-+============+=====================================================================+================================================+
-|          0 | DEV_RTI15_VBUSP_CLK                                                 | Input clock                                    |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          1 | DEV_RTI15_RTI_CLK                                                   | Input muxed clock                              |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          2 | DEV_RTI15_RTI_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT                    | Parent input clock option to DEV_RTI15_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          3 | DEV_RTI15_RTI_CLK_PARENT_GLUELOGIC_LPXOSC_CLKOUT                    | Parent input clock option to DEV_RTI15_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          5 | DEV_RTI15_RTI_CLK_PARENT_J7AM_WAKEUP_16FF_WKUP_0_WKUP_RCOSC_32K_CLK | Parent input clock option to DEV_RTI15_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          6 | DEV_RTI15_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT                     | Parent input clock option to DEV_RTI15_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          7 | DEV_RTI15_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP0                | Parent input clock option to DEV_RTI15_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          8 | DEV_RTI15_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP1                | Parent input clock option to DEV_RTI15_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          9 | DEV_RTI15_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP2                | Parent input clock option to DEV_RTI15_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|   Clock ID | Name                                                                  | Function                                       |
++============+=======================================================================+================================================+
+|          0 | DEV_RTI15_VBUSP_CLK                                                   | Input clock                                    |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          1 | DEV_RTI15_RTI_CLK                                                     | Input muxed clock                              |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          2 | DEV_RTI15_RTI_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT                      | Parent input clock option to DEV_RTI15_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          3 | DEV_RTI15_RTI_CLK_PARENT_GLUELOGIC_LPXOSC_CLKOUT                      | Parent input clock option to DEV_RTI15_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          4 | DEV_RTI15_RTI_CLK_PARENT_J7AM_WAKEUP_16FF_WKUP_0_WKUP_RCOSC_12P5M_CLK | Parent input clock option to DEV_RTI15_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          5 | DEV_RTI15_RTI_CLK_PARENT_J7AM_WAKEUP_16FF_WKUP_0_WKUP_RCOSC_32K_CLK   | Parent input clock option to DEV_RTI15_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          6 | DEV_RTI15_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT                       | Parent input clock option to DEV_RTI15_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          7 | DEV_RTI15_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP0                  | Parent input clock option to DEV_RTI15_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          8 | DEV_RTI15_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP1                  | Parent input clock option to DEV_RTI15_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          9 | DEV_RTI15_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP2                  | Parent input clock option to DEV_RTI15_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
 
 .. _soc_doc_j721s2_public_clks_rti16:
 
@@ -6644,27 +6678,29 @@ Device: :ref:`J721S2_DEV_RTI16 <soc_doc_j721s2_public_devices_desc_device_list>`
 
 Following is a mapping of Clocks IDs to function:
 
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|   Clock ID | Name                                                                | Function                                       |
-+============+=====================================================================+================================================+
-|          0 | DEV_RTI16_VBUSP_CLK                                                 | Input clock                                    |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          1 | DEV_RTI16_RTI_CLK                                                   | Input muxed clock                              |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          2 | DEV_RTI16_RTI_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT                    | Parent input clock option to DEV_RTI16_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          3 | DEV_RTI16_RTI_CLK_PARENT_GLUELOGIC_LPXOSC_CLKOUT                    | Parent input clock option to DEV_RTI16_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          5 | DEV_RTI16_RTI_CLK_PARENT_J7AM_WAKEUP_16FF_WKUP_0_WKUP_RCOSC_32K_CLK | Parent input clock option to DEV_RTI16_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          6 | DEV_RTI16_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT                     | Parent input clock option to DEV_RTI16_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          7 | DEV_RTI16_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP0                | Parent input clock option to DEV_RTI16_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          8 | DEV_RTI16_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP1                | Parent input clock option to DEV_RTI16_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          9 | DEV_RTI16_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP2                | Parent input clock option to DEV_RTI16_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|   Clock ID | Name                                                                  | Function                                       |
++============+=======================================================================+================================================+
+|          0 | DEV_RTI16_VBUSP_CLK                                                   | Input clock                                    |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          1 | DEV_RTI16_RTI_CLK                                                     | Input muxed clock                              |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          2 | DEV_RTI16_RTI_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT                      | Parent input clock option to DEV_RTI16_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          3 | DEV_RTI16_RTI_CLK_PARENT_GLUELOGIC_LPXOSC_CLKOUT                      | Parent input clock option to DEV_RTI16_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          4 | DEV_RTI16_RTI_CLK_PARENT_J7AM_WAKEUP_16FF_WKUP_0_WKUP_RCOSC_12P5M_CLK | Parent input clock option to DEV_RTI16_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          5 | DEV_RTI16_RTI_CLK_PARENT_J7AM_WAKEUP_16FF_WKUP_0_WKUP_RCOSC_32K_CLK   | Parent input clock option to DEV_RTI16_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          6 | DEV_RTI16_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT                       | Parent input clock option to DEV_RTI16_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          7 | DEV_RTI16_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP0                  | Parent input clock option to DEV_RTI16_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          8 | DEV_RTI16_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP1                  | Parent input clock option to DEV_RTI16_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          9 | DEV_RTI16_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP2                  | Parent input clock option to DEV_RTI16_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
 
 .. _soc_doc_j721s2_public_clks_rti17:
 
@@ -6676,27 +6712,29 @@ Device: :ref:`J721S2_DEV_RTI17 <soc_doc_j721s2_public_devices_desc_device_list>`
 
 Following is a mapping of Clocks IDs to function:
 
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|   Clock ID | Name                                                                | Function                                       |
-+============+=====================================================================+================================================+
-|          0 | DEV_RTI17_VBUSP_CLK                                                 | Input clock                                    |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          1 | DEV_RTI17_RTI_CLK                                                   | Input muxed clock                              |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          2 | DEV_RTI17_RTI_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT                    | Parent input clock option to DEV_RTI17_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          3 | DEV_RTI17_RTI_CLK_PARENT_GLUELOGIC_LPXOSC_CLKOUT                    | Parent input clock option to DEV_RTI17_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          5 | DEV_RTI17_RTI_CLK_PARENT_J7AM_WAKEUP_16FF_WKUP_0_WKUP_RCOSC_32K_CLK | Parent input clock option to DEV_RTI17_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          6 | DEV_RTI17_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT                     | Parent input clock option to DEV_RTI17_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          7 | DEV_RTI17_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP0                | Parent input clock option to DEV_RTI17_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          8 | DEV_RTI17_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP1                | Parent input clock option to DEV_RTI17_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          9 | DEV_RTI17_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP2                | Parent input clock option to DEV_RTI17_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|   Clock ID | Name                                                                  | Function                                       |
++============+=======================================================================+================================================+
+|          0 | DEV_RTI17_VBUSP_CLK                                                   | Input clock                                    |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          1 | DEV_RTI17_RTI_CLK                                                     | Input muxed clock                              |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          2 | DEV_RTI17_RTI_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT                      | Parent input clock option to DEV_RTI17_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          3 | DEV_RTI17_RTI_CLK_PARENT_GLUELOGIC_LPXOSC_CLKOUT                      | Parent input clock option to DEV_RTI17_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          4 | DEV_RTI17_RTI_CLK_PARENT_J7AM_WAKEUP_16FF_WKUP_0_WKUP_RCOSC_12P5M_CLK | Parent input clock option to DEV_RTI17_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          5 | DEV_RTI17_RTI_CLK_PARENT_J7AM_WAKEUP_16FF_WKUP_0_WKUP_RCOSC_32K_CLK   | Parent input clock option to DEV_RTI17_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          6 | DEV_RTI17_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT                       | Parent input clock option to DEV_RTI17_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          7 | DEV_RTI17_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP0                  | Parent input clock option to DEV_RTI17_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          8 | DEV_RTI17_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP1                  | Parent input clock option to DEV_RTI17_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          9 | DEV_RTI17_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP2                  | Parent input clock option to DEV_RTI17_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
 
 .. _soc_doc_j721s2_public_clks_rti28:
 
@@ -6708,27 +6746,29 @@ Device: :ref:`J721S2_DEV_RTI28 <soc_doc_j721s2_public_devices_desc_device_list>`
 
 Following is a mapping of Clocks IDs to function:
 
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|   Clock ID | Name                                                                | Function                                       |
-+============+=====================================================================+================================================+
-|          0 | DEV_RTI28_VBUSP_CLK                                                 | Input clock                                    |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          1 | DEV_RTI28_RTI_CLK                                                   | Input muxed clock                              |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          2 | DEV_RTI28_RTI_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT                    | Parent input clock option to DEV_RTI28_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          3 | DEV_RTI28_RTI_CLK_PARENT_GLUELOGIC_LPXOSC_CLKOUT                    | Parent input clock option to DEV_RTI28_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          5 | DEV_RTI28_RTI_CLK_PARENT_J7AM_WAKEUP_16FF_WKUP_0_WKUP_RCOSC_32K_CLK | Parent input clock option to DEV_RTI28_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          6 | DEV_RTI28_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT                     | Parent input clock option to DEV_RTI28_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          7 | DEV_RTI28_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP0                | Parent input clock option to DEV_RTI28_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          8 | DEV_RTI28_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP1                | Parent input clock option to DEV_RTI28_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          9 | DEV_RTI28_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP2                | Parent input clock option to DEV_RTI28_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|   Clock ID | Name                                                                  | Function                                       |
++============+=======================================================================+================================================+
+|          0 | DEV_RTI28_VBUSP_CLK                                                   | Input clock                                    |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          1 | DEV_RTI28_RTI_CLK                                                     | Input muxed clock                              |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          2 | DEV_RTI28_RTI_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT                      | Parent input clock option to DEV_RTI28_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          3 | DEV_RTI28_RTI_CLK_PARENT_GLUELOGIC_LPXOSC_CLKOUT                      | Parent input clock option to DEV_RTI28_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          4 | DEV_RTI28_RTI_CLK_PARENT_J7AM_WAKEUP_16FF_WKUP_0_WKUP_RCOSC_12P5M_CLK | Parent input clock option to DEV_RTI28_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          5 | DEV_RTI28_RTI_CLK_PARENT_J7AM_WAKEUP_16FF_WKUP_0_WKUP_RCOSC_32K_CLK   | Parent input clock option to DEV_RTI28_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          6 | DEV_RTI28_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT                       | Parent input clock option to DEV_RTI28_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          7 | DEV_RTI28_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP0                  | Parent input clock option to DEV_RTI28_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          8 | DEV_RTI28_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP1                  | Parent input clock option to DEV_RTI28_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          9 | DEV_RTI28_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP2                  | Parent input clock option to DEV_RTI28_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
 
 .. _soc_doc_j721s2_public_clks_rti29:
 
@@ -6740,27 +6780,29 @@ Device: :ref:`J721S2_DEV_RTI29 <soc_doc_j721s2_public_devices_desc_device_list>`
 
 Following is a mapping of Clocks IDs to function:
 
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|   Clock ID | Name                                                                | Function                                       |
-+============+=====================================================================+================================================+
-|          0 | DEV_RTI29_VBUSP_CLK                                                 | Input clock                                    |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          1 | DEV_RTI29_RTI_CLK                                                   | Input muxed clock                              |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          2 | DEV_RTI29_RTI_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT                    | Parent input clock option to DEV_RTI29_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          3 | DEV_RTI29_RTI_CLK_PARENT_GLUELOGIC_LPXOSC_CLKOUT                    | Parent input clock option to DEV_RTI29_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          5 | DEV_RTI29_RTI_CLK_PARENT_J7AM_WAKEUP_16FF_WKUP_0_WKUP_RCOSC_32K_CLK | Parent input clock option to DEV_RTI29_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          6 | DEV_RTI29_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT                     | Parent input clock option to DEV_RTI29_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          7 | DEV_RTI29_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP0                | Parent input clock option to DEV_RTI29_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          8 | DEV_RTI29_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP1                | Parent input clock option to DEV_RTI29_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          9 | DEV_RTI29_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP2                | Parent input clock option to DEV_RTI29_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|   Clock ID | Name                                                                  | Function                                       |
++============+=======================================================================+================================================+
+|          0 | DEV_RTI29_VBUSP_CLK                                                   | Input clock                                    |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          1 | DEV_RTI29_RTI_CLK                                                     | Input muxed clock                              |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          2 | DEV_RTI29_RTI_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT                      | Parent input clock option to DEV_RTI29_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          3 | DEV_RTI29_RTI_CLK_PARENT_GLUELOGIC_LPXOSC_CLKOUT                      | Parent input clock option to DEV_RTI29_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          4 | DEV_RTI29_RTI_CLK_PARENT_J7AM_WAKEUP_16FF_WKUP_0_WKUP_RCOSC_12P5M_CLK | Parent input clock option to DEV_RTI29_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          5 | DEV_RTI29_RTI_CLK_PARENT_J7AM_WAKEUP_16FF_WKUP_0_WKUP_RCOSC_32K_CLK   | Parent input clock option to DEV_RTI29_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          6 | DEV_RTI29_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT                       | Parent input clock option to DEV_RTI29_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          7 | DEV_RTI29_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP0                  | Parent input clock option to DEV_RTI29_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          8 | DEV_RTI29_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP1                  | Parent input clock option to DEV_RTI29_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          9 | DEV_RTI29_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP2                  | Parent input clock option to DEV_RTI29_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
 
 .. _soc_doc_j721s2_public_clks_rti30:
 
@@ -6772,27 +6814,29 @@ Device: :ref:`J721S2_DEV_RTI30 <soc_doc_j721s2_public_devices_desc_device_list>`
 
 Following is a mapping of Clocks IDs to function:
 
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|   Clock ID | Name                                                                | Function                                       |
-+============+=====================================================================+================================================+
-|          0 | DEV_RTI30_VBUSP_CLK                                                 | Input clock                                    |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          1 | DEV_RTI30_RTI_CLK                                                   | Input muxed clock                              |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          2 | DEV_RTI30_RTI_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT                    | Parent input clock option to DEV_RTI30_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          3 | DEV_RTI30_RTI_CLK_PARENT_GLUELOGIC_LPXOSC_CLKOUT                    | Parent input clock option to DEV_RTI30_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          5 | DEV_RTI30_RTI_CLK_PARENT_J7AM_WAKEUP_16FF_WKUP_0_WKUP_RCOSC_32K_CLK | Parent input clock option to DEV_RTI30_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          6 | DEV_RTI30_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT                     | Parent input clock option to DEV_RTI30_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          7 | DEV_RTI30_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP0                | Parent input clock option to DEV_RTI30_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          8 | DEV_RTI30_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP1                | Parent input clock option to DEV_RTI30_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          9 | DEV_RTI30_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP2                | Parent input clock option to DEV_RTI30_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|   Clock ID | Name                                                                  | Function                                       |
++============+=======================================================================+================================================+
+|          0 | DEV_RTI30_VBUSP_CLK                                                   | Input clock                                    |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          1 | DEV_RTI30_RTI_CLK                                                     | Input muxed clock                              |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          2 | DEV_RTI30_RTI_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT                      | Parent input clock option to DEV_RTI30_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          3 | DEV_RTI30_RTI_CLK_PARENT_GLUELOGIC_LPXOSC_CLKOUT                      | Parent input clock option to DEV_RTI30_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          4 | DEV_RTI30_RTI_CLK_PARENT_J7AM_WAKEUP_16FF_WKUP_0_WKUP_RCOSC_12P5M_CLK | Parent input clock option to DEV_RTI30_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          5 | DEV_RTI30_RTI_CLK_PARENT_J7AM_WAKEUP_16FF_WKUP_0_WKUP_RCOSC_32K_CLK   | Parent input clock option to DEV_RTI30_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          6 | DEV_RTI30_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT                       | Parent input clock option to DEV_RTI30_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          7 | DEV_RTI30_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP0                  | Parent input clock option to DEV_RTI30_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          8 | DEV_RTI30_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP1                  | Parent input clock option to DEV_RTI30_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          9 | DEV_RTI30_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP2                  | Parent input clock option to DEV_RTI30_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
 
 .. _soc_doc_j721s2_public_clks_rti31:
 
@@ -6804,27 +6848,29 @@ Device: :ref:`J721S2_DEV_RTI31 <soc_doc_j721s2_public_devices_desc_device_list>`
 
 Following is a mapping of Clocks IDs to function:
 
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|   Clock ID | Name                                                                | Function                                       |
-+============+=====================================================================+================================================+
-|          0 | DEV_RTI31_VBUSP_CLK                                                 | Input clock                                    |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          1 | DEV_RTI31_RTI_CLK                                                   | Input muxed clock                              |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          2 | DEV_RTI31_RTI_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT                    | Parent input clock option to DEV_RTI31_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          3 | DEV_RTI31_RTI_CLK_PARENT_GLUELOGIC_LPXOSC_CLKOUT                    | Parent input clock option to DEV_RTI31_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          5 | DEV_RTI31_RTI_CLK_PARENT_J7AM_WAKEUP_16FF_WKUP_0_WKUP_RCOSC_32K_CLK | Parent input clock option to DEV_RTI31_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          6 | DEV_RTI31_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT                     | Parent input clock option to DEV_RTI31_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          7 | DEV_RTI31_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP0                | Parent input clock option to DEV_RTI31_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          8 | DEV_RTI31_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP1                | Parent input clock option to DEV_RTI31_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
-|          9 | DEV_RTI31_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP2                | Parent input clock option to DEV_RTI31_RTI_CLK |
-+------------+---------------------------------------------------------------------+------------------------------------------------+
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|   Clock ID | Name                                                                  | Function                                       |
++============+=======================================================================+================================================+
+|          0 | DEV_RTI31_VBUSP_CLK                                                   | Input clock                                    |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          1 | DEV_RTI31_RTI_CLK                                                     | Input muxed clock                              |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          2 | DEV_RTI31_RTI_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT                      | Parent input clock option to DEV_RTI31_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          3 | DEV_RTI31_RTI_CLK_PARENT_GLUELOGIC_LPXOSC_CLKOUT                      | Parent input clock option to DEV_RTI31_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          4 | DEV_RTI31_RTI_CLK_PARENT_J7AM_WAKEUP_16FF_WKUP_0_WKUP_RCOSC_12P5M_CLK | Parent input clock option to DEV_RTI31_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          5 | DEV_RTI31_RTI_CLK_PARENT_J7AM_WAKEUP_16FF_WKUP_0_WKUP_RCOSC_32K_CLK   | Parent input clock option to DEV_RTI31_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          6 | DEV_RTI31_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT                       | Parent input clock option to DEV_RTI31_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          7 | DEV_RTI31_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP0                  | Parent input clock option to DEV_RTI31_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          8 | DEV_RTI31_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP1                  | Parent input clock option to DEV_RTI31_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
+|          9 | DEV_RTI31_RTI_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT_DUP2                  | Parent input clock option to DEV_RTI31_RTI_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------+
 
 .. _soc_doc_j721s2_public_clks_sa2_ul0:
 
@@ -7086,43 +7132,45 @@ Device: :ref:`J721S2_DEV_TIMER0 <soc_doc_j721s2_public_devices_desc_device_list>
 
 Following is a mapping of Clocks IDs to function:
 
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|   Clock ID | Name                                                                 | Function                                               |
-+============+======================================================================+========================================================+
-|          0 | DEV_TIMER0_TIMER_PWM                                                 | Output clock                                           |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|          1 | DEV_TIMER0_TIMER_TCLK_CLK                                            | Input muxed clock                                      |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|          2 | DEV_TIMER0_TIMER_TCLK_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT             | Parent input clock option to DEV_TIMER0_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|          3 | DEV_TIMER0_TIMER_TCLK_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT              | Parent input clock option to DEV_TIMER0_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|          4 | DEV_TIMER0_TIMER_TCLK_CLK_PARENT_POSTDIV3_16FFT_MAIN_0_HSDIVOUT8_CLK | Parent input clock option to DEV_TIMER0_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|          6 | DEV_TIMER0_TIMER_TCLK_CLK_PARENT_HSDIV4_16FFT_MAIN_3_HSDIVOUT3_CLK   | Parent input clock option to DEV_TIMER0_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|          7 | DEV_TIMER0_TIMER_TCLK_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT         | Parent input clock option to DEV_TIMER0_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|          8 | DEV_TIMER0_TIMER_TCLK_CLK_PARENT_BOARD_0_EXT_REFCLK1_OUT             | Parent input clock option to DEV_TIMER0_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|          9 | DEV_TIMER0_TIMER_TCLK_CLK_PARENT_GLUELOGIC_LPXOSC_CLKOUT             | Parent input clock option to DEV_TIMER0_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|         10 | DEV_TIMER0_TIMER_TCLK_CLK_PARENT_BOARD_0_CPTS0_RFT_CLK_OUT           | Parent input clock option to DEV_TIMER0_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|         11 | DEV_TIMER0_TIMER_TCLK_CLK_PARENT_HSDIV4_16FFT_MAIN_1_HSDIVOUT3_CLK   | Parent input clock option to DEV_TIMER0_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|         12 | DEV_TIMER0_TIMER_TCLK_CLK_PARENT_POSTDIV2_16FFT_MAIN_2_HSDIVOUT6_CLK | Parent input clock option to DEV_TIMER0_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|         13 | DEV_TIMER0_TIMER_TCLK_CLK_PARENT_HSDIV2_16FFT_MAIN_4_HSDIVOUT2_CLK   | Parent input clock option to DEV_TIMER0_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|         14 | DEV_TIMER0_TIMER_TCLK_CLK_PARENT_NAVSS512J7AM_MAIN_0_CPTS0_GENF2     | Parent input clock option to DEV_TIMER0_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|         15 | DEV_TIMER0_TIMER_TCLK_CLK_PARENT_NAVSS512J7AM_MAIN_0_CPTS0_GENF3     | Parent input clock option to DEV_TIMER0_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|         16 | DEV_TIMER0_TIMER_TCLK_CLK_PARENT_CPSW_2GUSS_MAIN_0_CPTS_GENF0        | Parent input clock option to DEV_TIMER0_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|         18 | DEV_TIMER0_TIMER_HCLK_CLK                                            | Input clock                                            |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|   Clock ID | Name                                                                          | Function                                               |
++============+===============================================================================+========================================================+
+|          0 | DEV_TIMER0_TIMER_PWM                                                          | Output clock                                           |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          1 | DEV_TIMER0_TIMER_TCLK_CLK                                                     | Input muxed clock                                      |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          2 | DEV_TIMER0_TIMER_TCLK_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT                      | Parent input clock option to DEV_TIMER0_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          3 | DEV_TIMER0_TIMER_TCLK_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT                       | Parent input clock option to DEV_TIMER0_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          4 | DEV_TIMER0_TIMER_TCLK_CLK_PARENT_POSTDIV3_16FFT_MAIN_0_HSDIVOUT8_CLK          | Parent input clock option to DEV_TIMER0_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          5 | DEV_TIMER0_TIMER_TCLK_CLK_PARENT_J7AM_WAKEUP_16FF_WKUP_0_WKUP_RCOSC_12P5M_CLK | Parent input clock option to DEV_TIMER0_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          6 | DEV_TIMER0_TIMER_TCLK_CLK_PARENT_HSDIV4_16FFT_MAIN_3_HSDIVOUT3_CLK            | Parent input clock option to DEV_TIMER0_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          7 | DEV_TIMER0_TIMER_TCLK_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT                  | Parent input clock option to DEV_TIMER0_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          8 | DEV_TIMER0_TIMER_TCLK_CLK_PARENT_BOARD_0_EXT_REFCLK1_OUT                      | Parent input clock option to DEV_TIMER0_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          9 | DEV_TIMER0_TIMER_TCLK_CLK_PARENT_GLUELOGIC_LPXOSC_CLKOUT                      | Parent input clock option to DEV_TIMER0_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|         10 | DEV_TIMER0_TIMER_TCLK_CLK_PARENT_BOARD_0_CPTS0_RFT_CLK_OUT                    | Parent input clock option to DEV_TIMER0_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|         11 | DEV_TIMER0_TIMER_TCLK_CLK_PARENT_HSDIV4_16FFT_MAIN_1_HSDIVOUT3_CLK            | Parent input clock option to DEV_TIMER0_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|         12 | DEV_TIMER0_TIMER_TCLK_CLK_PARENT_POSTDIV2_16FFT_MAIN_2_HSDIVOUT6_CLK          | Parent input clock option to DEV_TIMER0_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|         13 | DEV_TIMER0_TIMER_TCLK_CLK_PARENT_HSDIV2_16FFT_MAIN_4_HSDIVOUT2_CLK            | Parent input clock option to DEV_TIMER0_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|         14 | DEV_TIMER0_TIMER_TCLK_CLK_PARENT_NAVSS512J7AM_MAIN_0_CPTS0_GENF2              | Parent input clock option to DEV_TIMER0_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|         15 | DEV_TIMER0_TIMER_TCLK_CLK_PARENT_NAVSS512J7AM_MAIN_0_CPTS0_GENF3              | Parent input clock option to DEV_TIMER0_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|         16 | DEV_TIMER0_TIMER_TCLK_CLK_PARENT_CPSW_2GUSS_MAIN_0_CPTS_GENF0                 | Parent input clock option to DEV_TIMER0_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|         18 | DEV_TIMER0_TIMER_HCLK_CLK                                                     | Input clock                                            |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
 
 .. _soc_doc_j721s2_public_clks_timer1:
 
@@ -7156,43 +7204,45 @@ Device: :ref:`J721S2_DEV_TIMER10 <soc_doc_j721s2_public_devices_desc_device_list
 
 Following is a mapping of Clocks IDs to function:
 
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|   Clock ID | Name                                                                  | Function                                                |
-+============+=======================================================================+=========================================================+
-|          0 | DEV_TIMER10_TIMER_PWM                                                 | Output clock                                            |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|          1 | DEV_TIMER10_TIMER_TCLK_CLK                                            | Input muxed clock                                       |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|          2 | DEV_TIMER10_TIMER_TCLK_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT             | Parent input clock option to DEV_TIMER10_TIMER_TCLK_CLK |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|          3 | DEV_TIMER10_TIMER_TCLK_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT              | Parent input clock option to DEV_TIMER10_TIMER_TCLK_CLK |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|          4 | DEV_TIMER10_TIMER_TCLK_CLK_PARENT_POSTDIV3_16FFT_MAIN_0_HSDIVOUT8_CLK | Parent input clock option to DEV_TIMER10_TIMER_TCLK_CLK |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|          6 | DEV_TIMER10_TIMER_TCLK_CLK_PARENT_HSDIV4_16FFT_MAIN_3_HSDIVOUT3_CLK   | Parent input clock option to DEV_TIMER10_TIMER_TCLK_CLK |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|          7 | DEV_TIMER10_TIMER_TCLK_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT         | Parent input clock option to DEV_TIMER10_TIMER_TCLK_CLK |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|          8 | DEV_TIMER10_TIMER_TCLK_CLK_PARENT_BOARD_0_EXT_REFCLK1_OUT             | Parent input clock option to DEV_TIMER10_TIMER_TCLK_CLK |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|          9 | DEV_TIMER10_TIMER_TCLK_CLK_PARENT_GLUELOGIC_LPXOSC_CLKOUT             | Parent input clock option to DEV_TIMER10_TIMER_TCLK_CLK |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|         10 | DEV_TIMER10_TIMER_TCLK_CLK_PARENT_BOARD_0_CPTS0_RFT_CLK_OUT           | Parent input clock option to DEV_TIMER10_TIMER_TCLK_CLK |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|         11 | DEV_TIMER10_TIMER_TCLK_CLK_PARENT_HSDIV4_16FFT_MAIN_1_HSDIVOUT3_CLK   | Parent input clock option to DEV_TIMER10_TIMER_TCLK_CLK |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|         12 | DEV_TIMER10_TIMER_TCLK_CLK_PARENT_POSTDIV2_16FFT_MAIN_2_HSDIVOUT6_CLK | Parent input clock option to DEV_TIMER10_TIMER_TCLK_CLK |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|         13 | DEV_TIMER10_TIMER_TCLK_CLK_PARENT_HSDIV2_16FFT_MAIN_4_HSDIVOUT2_CLK   | Parent input clock option to DEV_TIMER10_TIMER_TCLK_CLK |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|         14 | DEV_TIMER10_TIMER_TCLK_CLK_PARENT_NAVSS512J7AM_MAIN_0_CPTS0_GENF2     | Parent input clock option to DEV_TIMER10_TIMER_TCLK_CLK |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|         15 | DEV_TIMER10_TIMER_TCLK_CLK_PARENT_NAVSS512J7AM_MAIN_0_CPTS0_GENF3     | Parent input clock option to DEV_TIMER10_TIMER_TCLK_CLK |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|         16 | DEV_TIMER10_TIMER_TCLK_CLK_PARENT_CPSW_2GUSS_MAIN_0_CPTS_GENF0        | Parent input clock option to DEV_TIMER10_TIMER_TCLK_CLK |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|         18 | DEV_TIMER10_TIMER_HCLK_CLK                                            | Input clock                                             |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|   Clock ID | Name                                                                           | Function                                                |
++============+================================================================================+=========================================================+
+|          0 | DEV_TIMER10_TIMER_PWM                                                          | Output clock                                            |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|          1 | DEV_TIMER10_TIMER_TCLK_CLK                                                     | Input muxed clock                                       |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|          2 | DEV_TIMER10_TIMER_TCLK_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT                      | Parent input clock option to DEV_TIMER10_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|          3 | DEV_TIMER10_TIMER_TCLK_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT                       | Parent input clock option to DEV_TIMER10_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|          4 | DEV_TIMER10_TIMER_TCLK_CLK_PARENT_POSTDIV3_16FFT_MAIN_0_HSDIVOUT8_CLK          | Parent input clock option to DEV_TIMER10_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|          5 | DEV_TIMER10_TIMER_TCLK_CLK_PARENT_J7AM_WAKEUP_16FF_WKUP_0_WKUP_RCOSC_12P5M_CLK | Parent input clock option to DEV_TIMER10_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|          6 | DEV_TIMER10_TIMER_TCLK_CLK_PARENT_HSDIV4_16FFT_MAIN_3_HSDIVOUT3_CLK            | Parent input clock option to DEV_TIMER10_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|          7 | DEV_TIMER10_TIMER_TCLK_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT                  | Parent input clock option to DEV_TIMER10_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|          8 | DEV_TIMER10_TIMER_TCLK_CLK_PARENT_BOARD_0_EXT_REFCLK1_OUT                      | Parent input clock option to DEV_TIMER10_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|          9 | DEV_TIMER10_TIMER_TCLK_CLK_PARENT_GLUELOGIC_LPXOSC_CLKOUT                      | Parent input clock option to DEV_TIMER10_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|         10 | DEV_TIMER10_TIMER_TCLK_CLK_PARENT_BOARD_0_CPTS0_RFT_CLK_OUT                    | Parent input clock option to DEV_TIMER10_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|         11 | DEV_TIMER10_TIMER_TCLK_CLK_PARENT_HSDIV4_16FFT_MAIN_1_HSDIVOUT3_CLK            | Parent input clock option to DEV_TIMER10_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|         12 | DEV_TIMER10_TIMER_TCLK_CLK_PARENT_POSTDIV2_16FFT_MAIN_2_HSDIVOUT6_CLK          | Parent input clock option to DEV_TIMER10_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|         13 | DEV_TIMER10_TIMER_TCLK_CLK_PARENT_HSDIV2_16FFT_MAIN_4_HSDIVOUT2_CLK            | Parent input clock option to DEV_TIMER10_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|         14 | DEV_TIMER10_TIMER_TCLK_CLK_PARENT_NAVSS512J7AM_MAIN_0_CPTS0_GENF2              | Parent input clock option to DEV_TIMER10_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|         15 | DEV_TIMER10_TIMER_TCLK_CLK_PARENT_NAVSS512J7AM_MAIN_0_CPTS0_GENF3              | Parent input clock option to DEV_TIMER10_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|         16 | DEV_TIMER10_TIMER_TCLK_CLK_PARENT_CPSW_2GUSS_MAIN_0_CPTS_GENF0                 | Parent input clock option to DEV_TIMER10_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|         18 | DEV_TIMER10_TIMER_HCLK_CLK                                                     | Input clock                                             |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
 
 .. _soc_doc_j721s2_public_clks_timer11:
 
@@ -7226,43 +7276,45 @@ Device: :ref:`J721S2_DEV_TIMER12 <soc_doc_j721s2_public_devices_desc_device_list
 
 Following is a mapping of Clocks IDs to function:
 
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|   Clock ID | Name                                                                  | Function                                                |
-+============+=======================================================================+=========================================================+
-|          0 | DEV_TIMER12_TIMER_PWM                                                 | Output clock                                            |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|          1 | DEV_TIMER12_TIMER_TCLK_CLK                                            | Input muxed clock                                       |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|          2 | DEV_TIMER12_TIMER_TCLK_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT             | Parent input clock option to DEV_TIMER12_TIMER_TCLK_CLK |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|          3 | DEV_TIMER12_TIMER_TCLK_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT              | Parent input clock option to DEV_TIMER12_TIMER_TCLK_CLK |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|          4 | DEV_TIMER12_TIMER_TCLK_CLK_PARENT_POSTDIV3_16FFT_MAIN_0_HSDIVOUT8_CLK | Parent input clock option to DEV_TIMER12_TIMER_TCLK_CLK |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|          6 | DEV_TIMER12_TIMER_TCLK_CLK_PARENT_HSDIV4_16FFT_MAIN_3_HSDIVOUT3_CLK   | Parent input clock option to DEV_TIMER12_TIMER_TCLK_CLK |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|          7 | DEV_TIMER12_TIMER_TCLK_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT         | Parent input clock option to DEV_TIMER12_TIMER_TCLK_CLK |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|          8 | DEV_TIMER12_TIMER_TCLK_CLK_PARENT_BOARD_0_EXT_REFCLK1_OUT             | Parent input clock option to DEV_TIMER12_TIMER_TCLK_CLK |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|          9 | DEV_TIMER12_TIMER_TCLK_CLK_PARENT_GLUELOGIC_LPXOSC_CLKOUT             | Parent input clock option to DEV_TIMER12_TIMER_TCLK_CLK |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|         10 | DEV_TIMER12_TIMER_TCLK_CLK_PARENT_BOARD_0_CPTS0_RFT_CLK_OUT           | Parent input clock option to DEV_TIMER12_TIMER_TCLK_CLK |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|         11 | DEV_TIMER12_TIMER_TCLK_CLK_PARENT_HSDIV4_16FFT_MAIN_1_HSDIVOUT3_CLK   | Parent input clock option to DEV_TIMER12_TIMER_TCLK_CLK |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|         12 | DEV_TIMER12_TIMER_TCLK_CLK_PARENT_POSTDIV2_16FFT_MAIN_2_HSDIVOUT6_CLK | Parent input clock option to DEV_TIMER12_TIMER_TCLK_CLK |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|         13 | DEV_TIMER12_TIMER_TCLK_CLK_PARENT_HSDIV2_16FFT_MAIN_4_HSDIVOUT2_CLK   | Parent input clock option to DEV_TIMER12_TIMER_TCLK_CLK |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|         14 | DEV_TIMER12_TIMER_TCLK_CLK_PARENT_NAVSS512J7AM_MAIN_0_CPTS0_GENF2     | Parent input clock option to DEV_TIMER12_TIMER_TCLK_CLK |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|         15 | DEV_TIMER12_TIMER_TCLK_CLK_PARENT_NAVSS512J7AM_MAIN_0_CPTS0_GENF3     | Parent input clock option to DEV_TIMER12_TIMER_TCLK_CLK |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|         16 | DEV_TIMER12_TIMER_TCLK_CLK_PARENT_CPSW_2GUSS_MAIN_0_CPTS_GENF0        | Parent input clock option to DEV_TIMER12_TIMER_TCLK_CLK |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|         18 | DEV_TIMER12_TIMER_HCLK_CLK                                            | Input clock                                             |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|   Clock ID | Name                                                                           | Function                                                |
++============+================================================================================+=========================================================+
+|          0 | DEV_TIMER12_TIMER_PWM                                                          | Output clock                                            |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|          1 | DEV_TIMER12_TIMER_TCLK_CLK                                                     | Input muxed clock                                       |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|          2 | DEV_TIMER12_TIMER_TCLK_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT                      | Parent input clock option to DEV_TIMER12_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|          3 | DEV_TIMER12_TIMER_TCLK_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT                       | Parent input clock option to DEV_TIMER12_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|          4 | DEV_TIMER12_TIMER_TCLK_CLK_PARENT_POSTDIV3_16FFT_MAIN_0_HSDIVOUT8_CLK          | Parent input clock option to DEV_TIMER12_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|          5 | DEV_TIMER12_TIMER_TCLK_CLK_PARENT_J7AM_WAKEUP_16FF_WKUP_0_WKUP_RCOSC_12P5M_CLK | Parent input clock option to DEV_TIMER12_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|          6 | DEV_TIMER12_TIMER_TCLK_CLK_PARENT_HSDIV4_16FFT_MAIN_3_HSDIVOUT3_CLK            | Parent input clock option to DEV_TIMER12_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|          7 | DEV_TIMER12_TIMER_TCLK_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT                  | Parent input clock option to DEV_TIMER12_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|          8 | DEV_TIMER12_TIMER_TCLK_CLK_PARENT_BOARD_0_EXT_REFCLK1_OUT                      | Parent input clock option to DEV_TIMER12_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|          9 | DEV_TIMER12_TIMER_TCLK_CLK_PARENT_GLUELOGIC_LPXOSC_CLKOUT                      | Parent input clock option to DEV_TIMER12_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|         10 | DEV_TIMER12_TIMER_TCLK_CLK_PARENT_BOARD_0_CPTS0_RFT_CLK_OUT                    | Parent input clock option to DEV_TIMER12_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|         11 | DEV_TIMER12_TIMER_TCLK_CLK_PARENT_HSDIV4_16FFT_MAIN_1_HSDIVOUT3_CLK            | Parent input clock option to DEV_TIMER12_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|         12 | DEV_TIMER12_TIMER_TCLK_CLK_PARENT_POSTDIV2_16FFT_MAIN_2_HSDIVOUT6_CLK          | Parent input clock option to DEV_TIMER12_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|         13 | DEV_TIMER12_TIMER_TCLK_CLK_PARENT_HSDIV2_16FFT_MAIN_4_HSDIVOUT2_CLK            | Parent input clock option to DEV_TIMER12_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|         14 | DEV_TIMER12_TIMER_TCLK_CLK_PARENT_NAVSS512J7AM_MAIN_0_CPTS0_GENF2              | Parent input clock option to DEV_TIMER12_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|         15 | DEV_TIMER12_TIMER_TCLK_CLK_PARENT_NAVSS512J7AM_MAIN_0_CPTS0_GENF3              | Parent input clock option to DEV_TIMER12_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|         16 | DEV_TIMER12_TIMER_TCLK_CLK_PARENT_CPSW_2GUSS_MAIN_0_CPTS_GENF0                 | Parent input clock option to DEV_TIMER12_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|         18 | DEV_TIMER12_TIMER_HCLK_CLK                                                     | Input clock                                             |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
 
 .. _soc_doc_j721s2_public_clks_timer13:
 
@@ -7296,43 +7348,45 @@ Device: :ref:`J721S2_DEV_TIMER14 <soc_doc_j721s2_public_devices_desc_device_list
 
 Following is a mapping of Clocks IDs to function:
 
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|   Clock ID | Name                                                                  | Function                                                |
-+============+=======================================================================+=========================================================+
-|          0 | DEV_TIMER14_TIMER_PWM                                                 | Output clock                                            |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|          1 | DEV_TIMER14_TIMER_TCLK_CLK                                            | Input muxed clock                                       |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|          2 | DEV_TIMER14_TIMER_TCLK_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT             | Parent input clock option to DEV_TIMER14_TIMER_TCLK_CLK |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|          3 | DEV_TIMER14_TIMER_TCLK_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT              | Parent input clock option to DEV_TIMER14_TIMER_TCLK_CLK |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|          4 | DEV_TIMER14_TIMER_TCLK_CLK_PARENT_POSTDIV3_16FFT_MAIN_0_HSDIVOUT8_CLK | Parent input clock option to DEV_TIMER14_TIMER_TCLK_CLK |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|          6 | DEV_TIMER14_TIMER_TCLK_CLK_PARENT_HSDIV4_16FFT_MAIN_3_HSDIVOUT3_CLK   | Parent input clock option to DEV_TIMER14_TIMER_TCLK_CLK |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|          7 | DEV_TIMER14_TIMER_TCLK_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT         | Parent input clock option to DEV_TIMER14_TIMER_TCLK_CLK |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|          8 | DEV_TIMER14_TIMER_TCLK_CLK_PARENT_BOARD_0_EXT_REFCLK1_OUT             | Parent input clock option to DEV_TIMER14_TIMER_TCLK_CLK |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|          9 | DEV_TIMER14_TIMER_TCLK_CLK_PARENT_GLUELOGIC_LPXOSC_CLKOUT             | Parent input clock option to DEV_TIMER14_TIMER_TCLK_CLK |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|         10 | DEV_TIMER14_TIMER_TCLK_CLK_PARENT_BOARD_0_CPTS0_RFT_CLK_OUT           | Parent input clock option to DEV_TIMER14_TIMER_TCLK_CLK |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|         11 | DEV_TIMER14_TIMER_TCLK_CLK_PARENT_HSDIV4_16FFT_MAIN_1_HSDIVOUT3_CLK   | Parent input clock option to DEV_TIMER14_TIMER_TCLK_CLK |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|         12 | DEV_TIMER14_TIMER_TCLK_CLK_PARENT_POSTDIV2_16FFT_MAIN_2_HSDIVOUT6_CLK | Parent input clock option to DEV_TIMER14_TIMER_TCLK_CLK |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|         13 | DEV_TIMER14_TIMER_TCLK_CLK_PARENT_HSDIV2_16FFT_MAIN_4_HSDIVOUT2_CLK   | Parent input clock option to DEV_TIMER14_TIMER_TCLK_CLK |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|         14 | DEV_TIMER14_TIMER_TCLK_CLK_PARENT_NAVSS512J7AM_MAIN_0_CPTS0_GENF2     | Parent input clock option to DEV_TIMER14_TIMER_TCLK_CLK |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|         15 | DEV_TIMER14_TIMER_TCLK_CLK_PARENT_NAVSS512J7AM_MAIN_0_CPTS0_GENF3     | Parent input clock option to DEV_TIMER14_TIMER_TCLK_CLK |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|         16 | DEV_TIMER14_TIMER_TCLK_CLK_PARENT_CPSW_2GUSS_MAIN_0_CPTS_GENF0        | Parent input clock option to DEV_TIMER14_TIMER_TCLK_CLK |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|         18 | DEV_TIMER14_TIMER_HCLK_CLK                                            | Input clock                                             |
-+------------+-----------------------------------------------------------------------+---------------------------------------------------------+
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|   Clock ID | Name                                                                           | Function                                                |
++============+================================================================================+=========================================================+
+|          0 | DEV_TIMER14_TIMER_PWM                                                          | Output clock                                            |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|          1 | DEV_TIMER14_TIMER_TCLK_CLK                                                     | Input muxed clock                                       |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|          2 | DEV_TIMER14_TIMER_TCLK_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT                      | Parent input clock option to DEV_TIMER14_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|          3 | DEV_TIMER14_TIMER_TCLK_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT                       | Parent input clock option to DEV_TIMER14_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|          4 | DEV_TIMER14_TIMER_TCLK_CLK_PARENT_POSTDIV3_16FFT_MAIN_0_HSDIVOUT8_CLK          | Parent input clock option to DEV_TIMER14_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|          5 | DEV_TIMER14_TIMER_TCLK_CLK_PARENT_J7AM_WAKEUP_16FF_WKUP_0_WKUP_RCOSC_12P5M_CLK | Parent input clock option to DEV_TIMER14_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|          6 | DEV_TIMER14_TIMER_TCLK_CLK_PARENT_HSDIV4_16FFT_MAIN_3_HSDIVOUT3_CLK            | Parent input clock option to DEV_TIMER14_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|          7 | DEV_TIMER14_TIMER_TCLK_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT                  | Parent input clock option to DEV_TIMER14_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|          8 | DEV_TIMER14_TIMER_TCLK_CLK_PARENT_BOARD_0_EXT_REFCLK1_OUT                      | Parent input clock option to DEV_TIMER14_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|          9 | DEV_TIMER14_TIMER_TCLK_CLK_PARENT_GLUELOGIC_LPXOSC_CLKOUT                      | Parent input clock option to DEV_TIMER14_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|         10 | DEV_TIMER14_TIMER_TCLK_CLK_PARENT_BOARD_0_CPTS0_RFT_CLK_OUT                    | Parent input clock option to DEV_TIMER14_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|         11 | DEV_TIMER14_TIMER_TCLK_CLK_PARENT_HSDIV4_16FFT_MAIN_1_HSDIVOUT3_CLK            | Parent input clock option to DEV_TIMER14_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|         12 | DEV_TIMER14_TIMER_TCLK_CLK_PARENT_POSTDIV2_16FFT_MAIN_2_HSDIVOUT6_CLK          | Parent input clock option to DEV_TIMER14_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|         13 | DEV_TIMER14_TIMER_TCLK_CLK_PARENT_HSDIV2_16FFT_MAIN_4_HSDIVOUT2_CLK            | Parent input clock option to DEV_TIMER14_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|         14 | DEV_TIMER14_TIMER_TCLK_CLK_PARENT_NAVSS512J7AM_MAIN_0_CPTS0_GENF2              | Parent input clock option to DEV_TIMER14_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|         15 | DEV_TIMER14_TIMER_TCLK_CLK_PARENT_NAVSS512J7AM_MAIN_0_CPTS0_GENF3              | Parent input clock option to DEV_TIMER14_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|         16 | DEV_TIMER14_TIMER_TCLK_CLK_PARENT_CPSW_2GUSS_MAIN_0_CPTS_GENF0                 | Parent input clock option to DEV_TIMER14_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
+|         18 | DEV_TIMER14_TIMER_HCLK_CLK                                                     | Input clock                                             |
++------------+--------------------------------------------------------------------------------+---------------------------------------------------------+
 
 .. _soc_doc_j721s2_public_clks_timer15:
 
@@ -7458,43 +7512,45 @@ Device: :ref:`J721S2_DEV_TIMER2 <soc_doc_j721s2_public_devices_desc_device_list>
 
 Following is a mapping of Clocks IDs to function:
 
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|   Clock ID | Name                                                                 | Function                                               |
-+============+======================================================================+========================================================+
-|          0 | DEV_TIMER2_TIMER_PWM                                                 | Output clock                                           |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|          1 | DEV_TIMER2_TIMER_TCLK_CLK                                            | Input muxed clock                                      |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|          2 | DEV_TIMER2_TIMER_TCLK_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT             | Parent input clock option to DEV_TIMER2_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|          3 | DEV_TIMER2_TIMER_TCLK_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT              | Parent input clock option to DEV_TIMER2_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|          4 | DEV_TIMER2_TIMER_TCLK_CLK_PARENT_POSTDIV3_16FFT_MAIN_0_HSDIVOUT8_CLK | Parent input clock option to DEV_TIMER2_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|          6 | DEV_TIMER2_TIMER_TCLK_CLK_PARENT_HSDIV4_16FFT_MAIN_3_HSDIVOUT3_CLK   | Parent input clock option to DEV_TIMER2_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|          7 | DEV_TIMER2_TIMER_TCLK_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT         | Parent input clock option to DEV_TIMER2_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|          8 | DEV_TIMER2_TIMER_TCLK_CLK_PARENT_BOARD_0_EXT_REFCLK1_OUT             | Parent input clock option to DEV_TIMER2_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|          9 | DEV_TIMER2_TIMER_TCLK_CLK_PARENT_GLUELOGIC_LPXOSC_CLKOUT             | Parent input clock option to DEV_TIMER2_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|         10 | DEV_TIMER2_TIMER_TCLK_CLK_PARENT_BOARD_0_CPTS0_RFT_CLK_OUT           | Parent input clock option to DEV_TIMER2_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|         11 | DEV_TIMER2_TIMER_TCLK_CLK_PARENT_HSDIV4_16FFT_MAIN_1_HSDIVOUT3_CLK   | Parent input clock option to DEV_TIMER2_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|         12 | DEV_TIMER2_TIMER_TCLK_CLK_PARENT_POSTDIV2_16FFT_MAIN_2_HSDIVOUT6_CLK | Parent input clock option to DEV_TIMER2_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|         13 | DEV_TIMER2_TIMER_TCLK_CLK_PARENT_HSDIV2_16FFT_MAIN_4_HSDIVOUT2_CLK   | Parent input clock option to DEV_TIMER2_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|         14 | DEV_TIMER2_TIMER_TCLK_CLK_PARENT_NAVSS512J7AM_MAIN_0_CPTS0_GENF2     | Parent input clock option to DEV_TIMER2_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|         15 | DEV_TIMER2_TIMER_TCLK_CLK_PARENT_NAVSS512J7AM_MAIN_0_CPTS0_GENF3     | Parent input clock option to DEV_TIMER2_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|         16 | DEV_TIMER2_TIMER_TCLK_CLK_PARENT_CPSW_2GUSS_MAIN_0_CPTS_GENF0        | Parent input clock option to DEV_TIMER2_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|         18 | DEV_TIMER2_TIMER_HCLK_CLK                                            | Input clock                                            |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|   Clock ID | Name                                                                          | Function                                               |
++============+===============================================================================+========================================================+
+|          0 | DEV_TIMER2_TIMER_PWM                                                          | Output clock                                           |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          1 | DEV_TIMER2_TIMER_TCLK_CLK                                                     | Input muxed clock                                      |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          2 | DEV_TIMER2_TIMER_TCLK_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT                      | Parent input clock option to DEV_TIMER2_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          3 | DEV_TIMER2_TIMER_TCLK_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT                       | Parent input clock option to DEV_TIMER2_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          4 | DEV_TIMER2_TIMER_TCLK_CLK_PARENT_POSTDIV3_16FFT_MAIN_0_HSDIVOUT8_CLK          | Parent input clock option to DEV_TIMER2_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          5 | DEV_TIMER2_TIMER_TCLK_CLK_PARENT_J7AM_WAKEUP_16FF_WKUP_0_WKUP_RCOSC_12P5M_CLK | Parent input clock option to DEV_TIMER2_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          6 | DEV_TIMER2_TIMER_TCLK_CLK_PARENT_HSDIV4_16FFT_MAIN_3_HSDIVOUT3_CLK            | Parent input clock option to DEV_TIMER2_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          7 | DEV_TIMER2_TIMER_TCLK_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT                  | Parent input clock option to DEV_TIMER2_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          8 | DEV_TIMER2_TIMER_TCLK_CLK_PARENT_BOARD_0_EXT_REFCLK1_OUT                      | Parent input clock option to DEV_TIMER2_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          9 | DEV_TIMER2_TIMER_TCLK_CLK_PARENT_GLUELOGIC_LPXOSC_CLKOUT                      | Parent input clock option to DEV_TIMER2_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|         10 | DEV_TIMER2_TIMER_TCLK_CLK_PARENT_BOARD_0_CPTS0_RFT_CLK_OUT                    | Parent input clock option to DEV_TIMER2_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|         11 | DEV_TIMER2_TIMER_TCLK_CLK_PARENT_HSDIV4_16FFT_MAIN_1_HSDIVOUT3_CLK            | Parent input clock option to DEV_TIMER2_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|         12 | DEV_TIMER2_TIMER_TCLK_CLK_PARENT_POSTDIV2_16FFT_MAIN_2_HSDIVOUT6_CLK          | Parent input clock option to DEV_TIMER2_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|         13 | DEV_TIMER2_TIMER_TCLK_CLK_PARENT_HSDIV2_16FFT_MAIN_4_HSDIVOUT2_CLK            | Parent input clock option to DEV_TIMER2_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|         14 | DEV_TIMER2_TIMER_TCLK_CLK_PARENT_NAVSS512J7AM_MAIN_0_CPTS0_GENF2              | Parent input clock option to DEV_TIMER2_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|         15 | DEV_TIMER2_TIMER_TCLK_CLK_PARENT_NAVSS512J7AM_MAIN_0_CPTS0_GENF3              | Parent input clock option to DEV_TIMER2_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|         16 | DEV_TIMER2_TIMER_TCLK_CLK_PARENT_CPSW_2GUSS_MAIN_0_CPTS_GENF0                 | Parent input clock option to DEV_TIMER2_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|         18 | DEV_TIMER2_TIMER_HCLK_CLK                                                     | Input clock                                            |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
 
 .. _soc_doc_j721s2_public_clks_timer3:
 
@@ -7528,43 +7584,45 @@ Device: :ref:`J721S2_DEV_TIMER4 <soc_doc_j721s2_public_devices_desc_device_list>
 
 Following is a mapping of Clocks IDs to function:
 
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|   Clock ID | Name                                                                 | Function                                               |
-+============+======================================================================+========================================================+
-|          0 | DEV_TIMER4_TIMER_PWM                                                 | Output clock                                           |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|          1 | DEV_TIMER4_TIMER_TCLK_CLK                                            | Input muxed clock                                      |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|          2 | DEV_TIMER4_TIMER_TCLK_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT             | Parent input clock option to DEV_TIMER4_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|          3 | DEV_TIMER4_TIMER_TCLK_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT              | Parent input clock option to DEV_TIMER4_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|          4 | DEV_TIMER4_TIMER_TCLK_CLK_PARENT_POSTDIV3_16FFT_MAIN_0_HSDIVOUT8_CLK | Parent input clock option to DEV_TIMER4_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|          6 | DEV_TIMER4_TIMER_TCLK_CLK_PARENT_HSDIV4_16FFT_MAIN_3_HSDIVOUT3_CLK   | Parent input clock option to DEV_TIMER4_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|          7 | DEV_TIMER4_TIMER_TCLK_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT         | Parent input clock option to DEV_TIMER4_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|          8 | DEV_TIMER4_TIMER_TCLK_CLK_PARENT_BOARD_0_EXT_REFCLK1_OUT             | Parent input clock option to DEV_TIMER4_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|          9 | DEV_TIMER4_TIMER_TCLK_CLK_PARENT_GLUELOGIC_LPXOSC_CLKOUT             | Parent input clock option to DEV_TIMER4_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|         10 | DEV_TIMER4_TIMER_TCLK_CLK_PARENT_BOARD_0_CPTS0_RFT_CLK_OUT           | Parent input clock option to DEV_TIMER4_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|         11 | DEV_TIMER4_TIMER_TCLK_CLK_PARENT_HSDIV4_16FFT_MAIN_1_HSDIVOUT3_CLK   | Parent input clock option to DEV_TIMER4_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|         12 | DEV_TIMER4_TIMER_TCLK_CLK_PARENT_POSTDIV2_16FFT_MAIN_2_HSDIVOUT6_CLK | Parent input clock option to DEV_TIMER4_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|         13 | DEV_TIMER4_TIMER_TCLK_CLK_PARENT_HSDIV2_16FFT_MAIN_4_HSDIVOUT2_CLK   | Parent input clock option to DEV_TIMER4_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|         14 | DEV_TIMER4_TIMER_TCLK_CLK_PARENT_NAVSS512J7AM_MAIN_0_CPTS0_GENF2     | Parent input clock option to DEV_TIMER4_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|         15 | DEV_TIMER4_TIMER_TCLK_CLK_PARENT_NAVSS512J7AM_MAIN_0_CPTS0_GENF3     | Parent input clock option to DEV_TIMER4_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|         16 | DEV_TIMER4_TIMER_TCLK_CLK_PARENT_CPSW_2GUSS_MAIN_0_CPTS_GENF0        | Parent input clock option to DEV_TIMER4_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|         18 | DEV_TIMER4_TIMER_HCLK_CLK                                            | Input clock                                            |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|   Clock ID | Name                                                                          | Function                                               |
++============+===============================================================================+========================================================+
+|          0 | DEV_TIMER4_TIMER_PWM                                                          | Output clock                                           |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          1 | DEV_TIMER4_TIMER_TCLK_CLK                                                     | Input muxed clock                                      |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          2 | DEV_TIMER4_TIMER_TCLK_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT                      | Parent input clock option to DEV_TIMER4_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          3 | DEV_TIMER4_TIMER_TCLK_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT                       | Parent input clock option to DEV_TIMER4_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          4 | DEV_TIMER4_TIMER_TCLK_CLK_PARENT_POSTDIV3_16FFT_MAIN_0_HSDIVOUT8_CLK          | Parent input clock option to DEV_TIMER4_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          5 | DEV_TIMER4_TIMER_TCLK_CLK_PARENT_J7AM_WAKEUP_16FF_WKUP_0_WKUP_RCOSC_12P5M_CLK | Parent input clock option to DEV_TIMER4_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          6 | DEV_TIMER4_TIMER_TCLK_CLK_PARENT_HSDIV4_16FFT_MAIN_3_HSDIVOUT3_CLK            | Parent input clock option to DEV_TIMER4_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          7 | DEV_TIMER4_TIMER_TCLK_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT                  | Parent input clock option to DEV_TIMER4_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          8 | DEV_TIMER4_TIMER_TCLK_CLK_PARENT_BOARD_0_EXT_REFCLK1_OUT                      | Parent input clock option to DEV_TIMER4_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          9 | DEV_TIMER4_TIMER_TCLK_CLK_PARENT_GLUELOGIC_LPXOSC_CLKOUT                      | Parent input clock option to DEV_TIMER4_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|         10 | DEV_TIMER4_TIMER_TCLK_CLK_PARENT_BOARD_0_CPTS0_RFT_CLK_OUT                    | Parent input clock option to DEV_TIMER4_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|         11 | DEV_TIMER4_TIMER_TCLK_CLK_PARENT_HSDIV4_16FFT_MAIN_1_HSDIVOUT3_CLK            | Parent input clock option to DEV_TIMER4_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|         12 | DEV_TIMER4_TIMER_TCLK_CLK_PARENT_POSTDIV2_16FFT_MAIN_2_HSDIVOUT6_CLK          | Parent input clock option to DEV_TIMER4_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|         13 | DEV_TIMER4_TIMER_TCLK_CLK_PARENT_HSDIV2_16FFT_MAIN_4_HSDIVOUT2_CLK            | Parent input clock option to DEV_TIMER4_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|         14 | DEV_TIMER4_TIMER_TCLK_CLK_PARENT_NAVSS512J7AM_MAIN_0_CPTS0_GENF2              | Parent input clock option to DEV_TIMER4_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|         15 | DEV_TIMER4_TIMER_TCLK_CLK_PARENT_NAVSS512J7AM_MAIN_0_CPTS0_GENF3              | Parent input clock option to DEV_TIMER4_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|         16 | DEV_TIMER4_TIMER_TCLK_CLK_PARENT_CPSW_2GUSS_MAIN_0_CPTS_GENF0                 | Parent input clock option to DEV_TIMER4_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|         18 | DEV_TIMER4_TIMER_HCLK_CLK                                                     | Input clock                                            |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
 
 .. _soc_doc_j721s2_public_clks_timer5:
 
@@ -7598,43 +7656,45 @@ Device: :ref:`J721S2_DEV_TIMER6 <soc_doc_j721s2_public_devices_desc_device_list>
 
 Following is a mapping of Clocks IDs to function:
 
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|   Clock ID | Name                                                                 | Function                                               |
-+============+======================================================================+========================================================+
-|          0 | DEV_TIMER6_TIMER_PWM                                                 | Output clock                                           |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|          1 | DEV_TIMER6_TIMER_TCLK_CLK                                            | Input muxed clock                                      |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|          2 | DEV_TIMER6_TIMER_TCLK_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT             | Parent input clock option to DEV_TIMER6_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|          3 | DEV_TIMER6_TIMER_TCLK_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT              | Parent input clock option to DEV_TIMER6_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|          4 | DEV_TIMER6_TIMER_TCLK_CLK_PARENT_POSTDIV3_16FFT_MAIN_0_HSDIVOUT8_CLK | Parent input clock option to DEV_TIMER6_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|          6 | DEV_TIMER6_TIMER_TCLK_CLK_PARENT_HSDIV4_16FFT_MAIN_3_HSDIVOUT3_CLK   | Parent input clock option to DEV_TIMER6_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|          7 | DEV_TIMER6_TIMER_TCLK_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT         | Parent input clock option to DEV_TIMER6_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|          8 | DEV_TIMER6_TIMER_TCLK_CLK_PARENT_BOARD_0_EXT_REFCLK1_OUT             | Parent input clock option to DEV_TIMER6_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|          9 | DEV_TIMER6_TIMER_TCLK_CLK_PARENT_GLUELOGIC_LPXOSC_CLKOUT             | Parent input clock option to DEV_TIMER6_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|         10 | DEV_TIMER6_TIMER_TCLK_CLK_PARENT_BOARD_0_CPTS0_RFT_CLK_OUT           | Parent input clock option to DEV_TIMER6_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|         11 | DEV_TIMER6_TIMER_TCLK_CLK_PARENT_HSDIV4_16FFT_MAIN_1_HSDIVOUT3_CLK   | Parent input clock option to DEV_TIMER6_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|         12 | DEV_TIMER6_TIMER_TCLK_CLK_PARENT_POSTDIV2_16FFT_MAIN_2_HSDIVOUT6_CLK | Parent input clock option to DEV_TIMER6_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|         13 | DEV_TIMER6_TIMER_TCLK_CLK_PARENT_HSDIV2_16FFT_MAIN_4_HSDIVOUT2_CLK   | Parent input clock option to DEV_TIMER6_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|         14 | DEV_TIMER6_TIMER_TCLK_CLK_PARENT_NAVSS512J7AM_MAIN_0_CPTS0_GENF2     | Parent input clock option to DEV_TIMER6_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|         15 | DEV_TIMER6_TIMER_TCLK_CLK_PARENT_NAVSS512J7AM_MAIN_0_CPTS0_GENF3     | Parent input clock option to DEV_TIMER6_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|         16 | DEV_TIMER6_TIMER_TCLK_CLK_PARENT_CPSW_2GUSS_MAIN_0_CPTS_GENF0        | Parent input clock option to DEV_TIMER6_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|         18 | DEV_TIMER6_TIMER_HCLK_CLK                                            | Input clock                                            |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|   Clock ID | Name                                                                          | Function                                               |
++============+===============================================================================+========================================================+
+|          0 | DEV_TIMER6_TIMER_PWM                                                          | Output clock                                           |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          1 | DEV_TIMER6_TIMER_TCLK_CLK                                                     | Input muxed clock                                      |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          2 | DEV_TIMER6_TIMER_TCLK_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT                      | Parent input clock option to DEV_TIMER6_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          3 | DEV_TIMER6_TIMER_TCLK_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT                       | Parent input clock option to DEV_TIMER6_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          4 | DEV_TIMER6_TIMER_TCLK_CLK_PARENT_POSTDIV3_16FFT_MAIN_0_HSDIVOUT8_CLK          | Parent input clock option to DEV_TIMER6_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          5 | DEV_TIMER6_TIMER_TCLK_CLK_PARENT_J7AM_WAKEUP_16FF_WKUP_0_WKUP_RCOSC_12P5M_CLK | Parent input clock option to DEV_TIMER6_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          6 | DEV_TIMER6_TIMER_TCLK_CLK_PARENT_HSDIV4_16FFT_MAIN_3_HSDIVOUT3_CLK            | Parent input clock option to DEV_TIMER6_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          7 | DEV_TIMER6_TIMER_TCLK_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT                  | Parent input clock option to DEV_TIMER6_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          8 | DEV_TIMER6_TIMER_TCLK_CLK_PARENT_BOARD_0_EXT_REFCLK1_OUT                      | Parent input clock option to DEV_TIMER6_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          9 | DEV_TIMER6_TIMER_TCLK_CLK_PARENT_GLUELOGIC_LPXOSC_CLKOUT                      | Parent input clock option to DEV_TIMER6_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|         10 | DEV_TIMER6_TIMER_TCLK_CLK_PARENT_BOARD_0_CPTS0_RFT_CLK_OUT                    | Parent input clock option to DEV_TIMER6_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|         11 | DEV_TIMER6_TIMER_TCLK_CLK_PARENT_HSDIV4_16FFT_MAIN_1_HSDIVOUT3_CLK            | Parent input clock option to DEV_TIMER6_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|         12 | DEV_TIMER6_TIMER_TCLK_CLK_PARENT_POSTDIV2_16FFT_MAIN_2_HSDIVOUT6_CLK          | Parent input clock option to DEV_TIMER6_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|         13 | DEV_TIMER6_TIMER_TCLK_CLK_PARENT_HSDIV2_16FFT_MAIN_4_HSDIVOUT2_CLK            | Parent input clock option to DEV_TIMER6_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|         14 | DEV_TIMER6_TIMER_TCLK_CLK_PARENT_NAVSS512J7AM_MAIN_0_CPTS0_GENF2              | Parent input clock option to DEV_TIMER6_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|         15 | DEV_TIMER6_TIMER_TCLK_CLK_PARENT_NAVSS512J7AM_MAIN_0_CPTS0_GENF3              | Parent input clock option to DEV_TIMER6_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|         16 | DEV_TIMER6_TIMER_TCLK_CLK_PARENT_CPSW_2GUSS_MAIN_0_CPTS_GENF0                 | Parent input clock option to DEV_TIMER6_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|         18 | DEV_TIMER6_TIMER_HCLK_CLK                                                     | Input clock                                            |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
 
 .. _soc_doc_j721s2_public_clks_timer7:
 
@@ -7668,43 +7728,45 @@ Device: :ref:`J721S2_DEV_TIMER8 <soc_doc_j721s2_public_devices_desc_device_list>
 
 Following is a mapping of Clocks IDs to function:
 
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|   Clock ID | Name                                                                 | Function                                               |
-+============+======================================================================+========================================================+
-|          0 | DEV_TIMER8_TIMER_PWM                                                 | Output clock                                           |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|          1 | DEV_TIMER8_TIMER_TCLK_CLK                                            | Input muxed clock                                      |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|          2 | DEV_TIMER8_TIMER_TCLK_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT             | Parent input clock option to DEV_TIMER8_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|          3 | DEV_TIMER8_TIMER_TCLK_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT              | Parent input clock option to DEV_TIMER8_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|          4 | DEV_TIMER8_TIMER_TCLK_CLK_PARENT_POSTDIV3_16FFT_MAIN_0_HSDIVOUT8_CLK | Parent input clock option to DEV_TIMER8_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|          6 | DEV_TIMER8_TIMER_TCLK_CLK_PARENT_HSDIV4_16FFT_MAIN_3_HSDIVOUT3_CLK   | Parent input clock option to DEV_TIMER8_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|          7 | DEV_TIMER8_TIMER_TCLK_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT         | Parent input clock option to DEV_TIMER8_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|          8 | DEV_TIMER8_TIMER_TCLK_CLK_PARENT_BOARD_0_EXT_REFCLK1_OUT             | Parent input clock option to DEV_TIMER8_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|          9 | DEV_TIMER8_TIMER_TCLK_CLK_PARENT_GLUELOGIC_LPXOSC_CLKOUT             | Parent input clock option to DEV_TIMER8_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|         10 | DEV_TIMER8_TIMER_TCLK_CLK_PARENT_BOARD_0_CPTS0_RFT_CLK_OUT           | Parent input clock option to DEV_TIMER8_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|         11 | DEV_TIMER8_TIMER_TCLK_CLK_PARENT_HSDIV4_16FFT_MAIN_1_HSDIVOUT3_CLK   | Parent input clock option to DEV_TIMER8_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|         12 | DEV_TIMER8_TIMER_TCLK_CLK_PARENT_POSTDIV2_16FFT_MAIN_2_HSDIVOUT6_CLK | Parent input clock option to DEV_TIMER8_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|         13 | DEV_TIMER8_TIMER_TCLK_CLK_PARENT_HSDIV2_16FFT_MAIN_4_HSDIVOUT2_CLK   | Parent input clock option to DEV_TIMER8_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|         14 | DEV_TIMER8_TIMER_TCLK_CLK_PARENT_NAVSS512J7AM_MAIN_0_CPTS0_GENF2     | Parent input clock option to DEV_TIMER8_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|         15 | DEV_TIMER8_TIMER_TCLK_CLK_PARENT_NAVSS512J7AM_MAIN_0_CPTS0_GENF3     | Parent input clock option to DEV_TIMER8_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|         16 | DEV_TIMER8_TIMER_TCLK_CLK_PARENT_CPSW_2GUSS_MAIN_0_CPTS_GENF0        | Parent input clock option to DEV_TIMER8_TIMER_TCLK_CLK |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
-|         18 | DEV_TIMER8_TIMER_HCLK_CLK                                            | Input clock                                            |
-+------------+----------------------------------------------------------------------+--------------------------------------------------------+
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|   Clock ID | Name                                                                          | Function                                               |
++============+===============================================================================+========================================================+
+|          0 | DEV_TIMER8_TIMER_PWM                                                          | Output clock                                           |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          1 | DEV_TIMER8_TIMER_TCLK_CLK                                                     | Input muxed clock                                      |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          2 | DEV_TIMER8_TIMER_TCLK_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT                      | Parent input clock option to DEV_TIMER8_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          3 | DEV_TIMER8_TIMER_TCLK_CLK_PARENT_BOARD_0_HFOSC1_CLK_OUT                       | Parent input clock option to DEV_TIMER8_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          4 | DEV_TIMER8_TIMER_TCLK_CLK_PARENT_POSTDIV3_16FFT_MAIN_0_HSDIVOUT8_CLK          | Parent input clock option to DEV_TIMER8_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          5 | DEV_TIMER8_TIMER_TCLK_CLK_PARENT_J7AM_WAKEUP_16FF_WKUP_0_WKUP_RCOSC_12P5M_CLK | Parent input clock option to DEV_TIMER8_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          6 | DEV_TIMER8_TIMER_TCLK_CLK_PARENT_HSDIV4_16FFT_MAIN_3_HSDIVOUT3_CLK            | Parent input clock option to DEV_TIMER8_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          7 | DEV_TIMER8_TIMER_TCLK_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT                  | Parent input clock option to DEV_TIMER8_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          8 | DEV_TIMER8_TIMER_TCLK_CLK_PARENT_BOARD_0_EXT_REFCLK1_OUT                      | Parent input clock option to DEV_TIMER8_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|          9 | DEV_TIMER8_TIMER_TCLK_CLK_PARENT_GLUELOGIC_LPXOSC_CLKOUT                      | Parent input clock option to DEV_TIMER8_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|         10 | DEV_TIMER8_TIMER_TCLK_CLK_PARENT_BOARD_0_CPTS0_RFT_CLK_OUT                    | Parent input clock option to DEV_TIMER8_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|         11 | DEV_TIMER8_TIMER_TCLK_CLK_PARENT_HSDIV4_16FFT_MAIN_1_HSDIVOUT3_CLK            | Parent input clock option to DEV_TIMER8_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|         12 | DEV_TIMER8_TIMER_TCLK_CLK_PARENT_POSTDIV2_16FFT_MAIN_2_HSDIVOUT6_CLK          | Parent input clock option to DEV_TIMER8_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|         13 | DEV_TIMER8_TIMER_TCLK_CLK_PARENT_HSDIV2_16FFT_MAIN_4_HSDIVOUT2_CLK            | Parent input clock option to DEV_TIMER8_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|         14 | DEV_TIMER8_TIMER_TCLK_CLK_PARENT_NAVSS512J7AM_MAIN_0_CPTS0_GENF2              | Parent input clock option to DEV_TIMER8_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|         15 | DEV_TIMER8_TIMER_TCLK_CLK_PARENT_NAVSS512J7AM_MAIN_0_CPTS0_GENF3              | Parent input clock option to DEV_TIMER8_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|         16 | DEV_TIMER8_TIMER_TCLK_CLK_PARENT_CPSW_2GUSS_MAIN_0_CPTS_GENF0                 | Parent input clock option to DEV_TIMER8_TIMER_TCLK_CLK |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
+|         18 | DEV_TIMER8_TIMER_HCLK_CLK                                                     | Input clock                                            |
++------------+-------------------------------------------------------------------------------+--------------------------------------------------------+
 
 .. _soc_doc_j721s2_public_clks_timer9:
 
@@ -8232,7 +8294,15 @@ Following is a mapping of Clocks IDs to function:
 Clocks for WKUP_PORZ_SYNC0 Device
 ---------------------------------
 
-**This device has no defined clocks.**
+Device: :ref:`J721S2_DEV_WKUP_PORZ_SYNC0 <soc_doc_j721s2_public_devices_desc_device_list>` (ID = 123)
+
+Following is a mapping of Clocks IDs to function:
+
++------------+------------------------------------+-------------+
+|   Clock ID | Name                               | Function    |
++============+====================================+=============+
+|          0 | DEV_WKUP_PORZ_SYNC0_CLK_12M_RC_CLK | Input clock |
++------------+------------------------------------+-------------+
 
 .. _soc_doc_j721s2_public_clks_wkup_psc0:
 
