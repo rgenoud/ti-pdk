@@ -56,7 +56,7 @@
 
 /** \brief Aligned address at which the X509 header is placed. */
 #if defined SOC_AM62X
-#define SCISERVER_COMMON_X509_HEADER_ADDR (0x43c3f9e0)
+#define SCISERVER_COMMON_X509_HEADER_ADDR (0x43c3f1e0)
 #else
 #define SCISERVER_COMMON_X509_HEADER_ADDR (0x41cffb00)
 #endif
