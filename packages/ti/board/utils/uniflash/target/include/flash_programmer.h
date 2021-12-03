@@ -90,6 +90,7 @@ extern "C" {
 #define MAX_BAUDRATE_SUPPORTED_LINUX    (0xBU)
 
 #define OSPI_FLASH
+#define OSPI_NAND_FLASH
 #endif
 
 #if defined(am65xx_evm) || defined(am65xx_idk)
