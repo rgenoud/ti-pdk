@@ -70,9 +70,11 @@ SECTIONS
     .const         : {} palign(8)      > MSMC3
     .cinit         : {} palign(8)      > MSMC3
     .pinit         : {} palign(8)      > MSMC3
+    .rodata  	   : {} palign(8)      > MSMC3
     .bss           : {} align(4)       > MSMC3
     .far           : {} align(4)       > MSMC3
     .data          : {} palign(128)    > MSMC3
+    
     .sysmem        : {}                > MSMC3
     .data_buffer   : {} palign(128)    > MSMC3
     .bss.devgroup* : {} align(4)       > MSMC3
@@ -82,7 +84,7 @@ SECTIONS
     /* USB or any other LLD buffer for benchmarking */
     .benchmark_buffer (NOLOAD) {} ALIGN (8) > DDR0
 
-    .stack      : {} align(4)       > DDR0  (HIGH)
+    .stack      : {} align(4)       > MSMC3  (HIGH)
     .irqStack   : {. = . + __IRQ_STACK_SIZE;} align(4)      > MSMC3
     RUN_START(__IRQ_STACK_START)
     RUN_END(__IRQ_STACK_END)
