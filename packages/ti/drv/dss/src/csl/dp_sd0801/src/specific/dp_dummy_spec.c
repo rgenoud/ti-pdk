@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * Copyright (C) 2012-2019 Cadence Design Systems, Inc.
+ * Copyright (C) 2012-2021 Cadence Design Systems, Inc.
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -54,7 +54,7 @@ uint32_t DP_SD0801_PhyInit(DP_SD0801_PrivateData* pD, uint8_t laneCount, DP_SD08
     /* controlled by state on the lines. */
     uint32_t retVal;
 
-    retVal = DP_SD0801_PhyInitSF(pD);
+    retVal = DP_SD0801_PhyInitSF(pD, laneCount, linkRate);
 
     if (CDN_EOK == retVal)
     {
