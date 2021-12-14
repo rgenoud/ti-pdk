@@ -49,6 +49,7 @@ SECTIONS
     .startupData   : {} palign(8)      > HSM_RAM, type = NOINIT
     .text          : {} palign(8)      > HSM_RAM
     .const         : {} palign(8)      > HSM_RAM
+    .rodata          : {} palign(8)    > HSM_RAM
     .const.devgroup.MCU_WAKEUP    : {} align(8)      > HSM_RAM
     .const.devgroup.MAIN          : {} align(8)      > HSM_RAM
     .const.devgroup.DMSC_INTERNAL : {} align(8)      > HSM_RAM

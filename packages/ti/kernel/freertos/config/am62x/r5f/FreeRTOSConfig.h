@@ -164,6 +164,8 @@ uint32_t uiPortGetRunTimeCounterValue();
 #define INCLUDE_vSemaphoreDelete    (1)
 #define INCLUDE_xEventGroupSetBitFromISR (1)
 #define INCLUDE_xTimerPendFunctionCall   (1)
+#define INCLUDE_xTaskGetIdleTaskHandle   (1)
+#define INCLUDE_vTaskPrioritySet         (1)
 
 /* 
  * This is not a FreeRTOS defined config and is defined by TI to enable
@@ -171,5 +173,16 @@ uint32_t uiPortGetRunTimeCounterValue();
  */
 #define configCOPY_RESET_VECTORS    (0)
 #define configMCU_ATCM_BASE         (0x0U)
+/* 
+ * This is not a FreeRTOS defined config and is defined by TI to enable
+ * load update in idle task 
+ */
+#define configLOAD_UPDATE_IN_IDLE   (1)
+#define configLOAD_WINDOW_IN_MS     (500)
+
+#if (configLOAD_UPDATE_IN_IDLE==1)
+#undef  configUSE_IDLE_HOOK
+#define configUSE_IDLE_HOOK         (1)
+#endif
 
 #endif /* TI_FREERTOS_CONFIG_H */
