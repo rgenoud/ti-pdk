@@ -38,6 +38,7 @@
  *
  */
 
+#include <string.h>
 #include <types/short_types.h>
 #include <ti/drv/sciclient/sciserver_tirtos.h>
 #include <ti/osal/TaskP.h>
@@ -53,7 +54,7 @@ extern void CSL_armR5StartupIntrEnableVic( uint32_t enable );
  *
  * \return None
  */
-inline void osal_dm_disable_interrupt(void)
+void osal_dm_disable_interrupt(void)
 {
         Sciserver_tirtosDisableIntr();
 }
@@ -64,7 +65,7 @@ inline void osal_dm_disable_interrupt(void)
  *
  * \return None
  */
-inline void osal_dm_enable_interrupt(void)
+void osal_dm_enable_interrupt(void)
 {
         Sciserver_tirtosEnableIntr();
 }
@@ -74,7 +75,7 @@ inline void osal_dm_enable_interrupt(void)
  *
  * \return None
  */
-inline void osal_suspend_dm(void)
+void osal_suspend_dm(void)
 {
         TaskP_SuspendAll();
         OS_StopTickTimer();
@@ -92,7 +93,7 @@ static void copyDM_ResetVectors(){
  *
  * \return CSL_PASS if it is a success, else error
  */
-inline u32 osal_resume_dm(void)
+u32 osal_resume_dm(void)
 {
         copyDM_ResetVectors();
         CSL_armR5StartupIntrEnableVic(1);      /* Enable VIC mode */
