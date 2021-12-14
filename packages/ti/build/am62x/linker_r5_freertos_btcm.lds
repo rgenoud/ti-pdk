@@ -86,6 +86,12 @@ SECTIONS
             _end_bss = .;
         }  palign(8)
 
+         .dm_stub_rodata : {
+            _start_rodata = .;
+            dm_stub*(.rodata)
+            _end_rodata = .;
+        }  palign(8)
+
        .dm_stub_stack : {
             _start_stack = .;
             . += __DM_STUB_STACK_SIZE;
@@ -94,6 +100,7 @@ SECTIONS
 }  load = MCU0_R5F_TCMB, run = MCU0_R5F_TCMA
     .text            : {} palign(8)      > DDR
     .const           : {} palign(8)      > DDR
+    .rodata          : {} palign(8)      > DDR
     .cinit           : {} palign(8)      > DDR
     .bss             : {} align(4)       > DDR
     .far             : {} align(4)       > DDR

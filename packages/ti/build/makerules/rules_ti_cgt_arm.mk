@@ -242,9 +242,9 @@ $(OBJ_PATHS_ASM): $(OBJDIR)/%.$(OBJEXT): %.asm $(GEN_FILE) | $(OBJDIR) $(DEPDIR)
 
 # Object file creation for assembly files with .S extension
 $(OBJ_PATHS_ASM_S): $(OBJDIR)/%.$(OBJEXT): %.S $(GEN_FILE) | $(OBJDIR) $(DEPDIR)
-	$(ECHO) \# Compiling $(GEN_FILE): $<
-	$(CC) -ppd=$(DEPFILE).P $(_CFLAGS) $(INCLUDES) $(CFLAGS_DIROPTS) -fa $<
-	$(CC) $(_CFLAGS) $(INCLUDES) $(CFLAGS_DIROPTS) -fa $<
+	$(ECHO) \# Compiling $(PRINT_MESSAGE): $<
+	$(CC) -MMD $(_CFLAGS) $(INCLUDES) $(CFLAGS_DIROPTS) -x ti-asm $< -o $@
+	$(CC) $(_CFLAGS) $(INCLUDES) $(CFLAGS_DIROPTS) -x ti-asm $< -o $@
   
 
 

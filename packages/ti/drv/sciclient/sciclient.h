@@ -278,6 +278,8 @@ typedef uint8_t devgrp_t;
 #define SCICLIENT_COMMON_X509_HEADER_ADDR (0x41cffb00)
 #elif defined(SOC_J721S2)
 #define SCICLIENT_COMMON_X509_HEADER_ADDR (0x41cfdb00)
+#elif defined(SOC_AM62X)
+#define SCICLIENT_COMMON_X509_HEADER_ADDR (0x43c3f1e0)
 #else
 #define SCICLIENT_COMMON_X509_HEADER_ADDR (0x41cffb00)
 #endif
