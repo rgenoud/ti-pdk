@@ -2,7 +2,7 @@
 #include <ti/drv/dss/src/csl/dp_sd0801/csl_dp_sd0801.h>
 #include <ti/drv/dss/dss.h>
 
-#define ADDR_AFE                   (0x05050000)
+#define ADDR_AFE                   (0x05060000)
 #define DSSEDP0_CFGR1_BASE         (0x0A000000)
 #define DSSEDP0_CFGR2_BASE         (0x04F48000)
 #define APB_BASE                   DSSEDP0_CFGR1_BASE

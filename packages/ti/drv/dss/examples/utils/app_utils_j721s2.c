@@ -188,38 +188,119 @@ void App_configureLCD(App_utilsLcdCfgParams cfgParams)
                 SCICLIENT_SERVICE_WAIT_FOREVER);
         }
 
+        status = Sciclient_pmSetModuleState(TISCI_DEV_DSS0,
+                TISCI_MSG_VALUE_DEVICE_SW_STATE_AUTO_OFF,
+                TISCI_MSG_FLAG_AOP,
+                SCICLIENT_SERVICE_WAIT_FOREVER);
+        if(status == PM_SUCCESS)
+        {
+            printf("\n TISCI_DEV_DSS0 device shutdown successful !\r\n");
+        } else {
+            printf("\n TISCI_DEV_DSS0 device shutdown NOT successful !!!\r\n");
+        }
+
+        minRate = 148450000;
+        //maxRate = 148550000;
+        status = Sciclient_pmQueryModuleClkFreq(TISCI_DEV_DSS0,
+                                            TISCI_DEV_DSS0_DSS_INST0_DPI_0_IN_2X_CLK_PARENT_HSDIV1_16FFT_MAIN_16_HSDIVOUT0_CLK,
+                                            cfgParams.pixelClk,
+                                            &respClkRate,
+                                            SCICLIENT_SERVICE_WAIT_FOREVER);
+        if(status == PM_SUCCESS)
+        {
+            printf("\n TISCI_DEV_DSS0_DSS_INST0_DPI_1_IN_2X_CLK possible rate = %lld Hz\r\n", respClkRate);
+        } else {
+            printf("\n TISCI_DEV_DSS0_DSS_INST0_DPI_1_IN_2X_CLK requested rate range NOT possible !!\r\n");
+        }
+        if(status == PM_SUCCESS)
+        {
+            /* Check if the clock is enabled or not */
+            status = Sciclient_pmModuleGetClkStatus(TISCI_DEV_DSS0,
+                                                    TISCI_DEV_DSS0_DSS_INST0_DPI_0_IN_2X_CLK_PARENT_HSDIV1_16FFT_MAIN_16_HSDIVOUT0_CLK,
+                                                    &clockStatus,
+                                                    SCICLIENT_SERVICE_WAIT_FOREVER);
+        }
+
+        if ((status == PM_SUCCESS) && (respClkRate >= minRate))
+        {
+             status = Sciclient_pmSetModuleClkFreq(
+                                      TISCI_DEV_DSS0,
+                                      TISCI_DEV_DSS0_DSS_INST0_DPI_0_IN_2X_CLK_PARENT_HSDIV1_16FFT_MAIN_16_HSDIVOUT0_CLK,
+                                      respClkRate,
+                                      TISCI_MSG_FLAG_CLOCK_ALLOW_FREQ_CHANGE,
+                                      SCICLIENT_SERVICE_WAIT_FOREVER);
+            if (status == PM_SUCCESS)
+            {
+                if (clockStatus == TISCI_MSG_VALUE_CLOCK_SW_STATE_UNREQ)
+                {
+                    /* Enable the clock */
+                    status = Sciclient_pmModuleClkRequest(
+                                                        TISCI_DEV_DSS0,
+                                                        TISCI_DEV_DSS0_DSS_INST0_DPI_0_IN_2X_CLK_PARENT_HSDIV1_16FFT_MAIN_16_HSDIVOUT0_CLK,
+                                                        TISCI_MSG_VALUE_CLOCK_SW_STATE_REQ,
+                                                        0U,
+                                                        SCICLIENT_SERVICE_WAIT_FOREVER);
+                }
+            }
+        }
+
+
+        uint64_t clkFreq = 0U;
+        PMLIBClkRateGet(TISCI_DEV_DSS0,
+            TISCI_DEV_DSS0_DSS_INST0_DPI_0_IN_2X_CLK_PARENT_HSDIV1_16FFT_MAIN_16_HSDIVOUT0_CLK,
+            &clkFreq);
+        printf("\n TISCI_DEV_DSS0_DSS_INST0_DPI_1_IN_2X_CLK = %lld Hz\r\n", clkFreq);
+
+        status = Sciclient_pmModuleClkRequest(TISCI_DEV_DSS0,
+                                              TISCI_DEV_DSS0_DSS_INST0_DPI_0_IN_2X_CLK_PARENT_HSDIV1_16FFT_MAIN_16_HSDIVOUT0_CLK,
+                                              TISCI_MSG_VALUE_CLOCK_SW_STATE_UNREQ,
+                                              0U,
+                                              SCICLIENT_SERVICE_WAIT_FOREVER);
+
         if(PM_SUCCESS == status)
         {
+            
+            status = Sciclient_pmSetModuleClkFreq(TISCI_DEV_DSS0,
+                TISCI_DEV_DSS0_DSS_INST0_DPI_0_IN_2X_CLK_PARENT_HSDIV1_16FFT_MAIN_16_HSDIVOUT0_CLK,
+                minRate,
+                0U,
+                SCICLIENT_SERVICE_WAIT_FOREVER);
+
+            PMLIBClkRateGet(TISCI_DEV_DSS0,
+                TISCI_DEV_DSS0_DSS_INST0_DPI_0_IN_2X_CLK_PARENT_HSDIV1_16FFT_MAIN_16_HSDIVOUT0_CLK,
+                &clkFreq);
+            printf("\n TISCI_DEV_DSS0_DSS_INST0_DPI_0_IN_2X_CLK_PARENT_HSDIV1_16FFT_MAIN_16_HSDIVOUT0_CLK Expected %lld but getting %lld Hz\r\n", cfgParams.pixelClk, respClkRate);
+        }
+
+        if(PM_SUCCESS == status)
+        {
+            printf("\n TISCI_DEV_DSS0_DSS_INST0_DPI_0_IN_CLK is now ENABLED !\r\n");
             status = Sciclient_pmSetModuleState(TISCI_DEV_DSS0,
                 TISCI_MSG_VALUE_DEVICE_SW_STATE_ON,
                 TISCI_MSG_FLAG_AOP,
                 SCICLIENT_SERVICE_WAIT_FOREVER);
+        } else {
+            printf("\n TISCI_DEV_DSS0_DSS_INST0_DPI_0_IN_CLK is STILL DISABLED !!!\r\n");
         }
 
-        if(PM_SUCCESS == status)
-        {
-            
-        }
+        Board_init(BOARD_INIT_UNLOCK_MMR);
+        volatile uint32_t regVal;
 
-        if(PM_SUCCESS == status)
-        {
-           
-        }
+        CSL_main_ctrl_mmr_cfg0Regs *overlayReg = (CSL_main_ctrl_mmr_cfg0Regs *)CSL_CTRL_MMR0_CFG0_BASE;
+        
+        regVal = CSL_REG32_RD(&(overlayReg->EDP0_CTRL));
+        CSL_REG32_WR(&(overlayReg->EDP0_CTRL), regVal | 0x10000000);
+        regVal = CSL_REG32_RD(&(overlayReg->EDP0_CTRL));
+        printf("edp0 ctrl is %x...\n", regVal);
 
-        if(PM_SUCCESS == status)
-        {
-           
-        }
-
-        if(PM_SUCCESS == status)
-        {
-            
-        }
-
-        if(PM_SUCCESS == status)
-        {
-            
-        }
+        regVal = CSL_REG32_RD(&(overlayReg->DSS_DISPC0_CLKSEL0));
+        printf("clksel0 %x...\n", regVal);        
+        regVal = CSL_REG32_RD(&(overlayReg->DSS_DISPC0_CLKSEL1));
+        printf("clksel1 %x...\n", regVal);
+        regVal = CSL_REG32_RD(&(overlayReg->DSS_DISPC0_CLKSEL2));
+        printf("clksel2 %x...\n", regVal);
+        regVal = CSL_REG32_RD(&(overlayReg->DSS_DISPC0_CLKSEL3));
+        printf("clksel3 %x...\n", regVal);
     }
 
 }

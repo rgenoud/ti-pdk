@@ -66,7 +66,7 @@ typedef enum
 #define DP_PRIVATE_DATA_SIZE          (131072U)
 #define DP_PHY_PRIVATE_DATA_SIZE      (1024U)
 #define DP_INTR                       (64U)
-#define ADDR_AFE                      (0x05050000)
+#define ADDR_AFE                      (0x05060000)
 
 /* ========================================================================== */
 /*                         Structure Declarations                             */
@@ -305,20 +305,42 @@ int32_t Dss_dctrlDrvInitDp(uint32_t isHpdSupported)
     /* Select EDP PHY CLK source */
     CSL_REG32_WR(CSL_CTRL_MMR0_CFG0_BASE + CSL_MAIN_CTRL_MMR_CFG0_EDP_PHY0_CLKSEL, 0x0);
 
+
+    CSL_REG32_WR(CSL_CTRL_MMR0_CFG0_BASE + CSL_MAIN_CTRL_MMR_CFG0_EDP0_CTRL, 0x10000000);
+    CSL_REG32_WR(CSL_CTRL_MMR0_CFG0_BASE + CSL_MAIN_CTRL_MMR_CFG0_SERDES0_LN0_CTRL, 0x2);
+    CSL_REG32_WR(CSL_CTRL_MMR0_CFG0_BASE + CSL_MAIN_CTRL_MMR_CFG0_SERDES0_LN1_CTRL, 0x1);
+    CSL_REG32_WR(CSL_CTRL_MMR0_CFG0_BASE + CSL_MAIN_CTRL_MMR_CFG0_SERDES0_LN2_CTRL, 0x0);
+    CSL_REG32_WR(CSL_CTRL_MMR0_CFG0_BASE + CSL_MAIN_CTRL_MMR_CFG0_SERDES0_LN3_CTRL, 0x0);
+
     /* Set DPTX_SRC_CFG, 0:vif0_en, 1:vif_1_en, 2:vif_2_en, 3: vif_3_en, 4: vif_0_sel, TBD */
     CSL_REG32_WR(CSL_DSS_EDP0_INTG_CFG_VP_BASE + CSL_DPTX_DPTX_SRC_CFG, 0x1F);
 
     /* WIZ PHY */
+
     CSL_REG32_WR(ADDR_AFE + 0x408, 0x30000000);
     CSL_REG32_WR(ADDR_AFE + 0x40c, 0x39000000);
     CSL_REG32_WR(ADDR_AFE + 0x480, 0x70000000);
-    CSL_REG32_WR(ADDR_AFE + 0x4c0, 0x80000000);
-    CSL_REG32_WR(ADDR_AFE + 0x500, 0x80000000);
-    CSL_REG32_WR(ADDR_AFE + 0x540, 0x80000000);
+    CSL_REG32_WR(ADDR_AFE + 0x4c0, 0x70000000 );
+    CSL_REG32_WR(ADDR_AFE + 0x500, 0x70000000 );
+    CSL_REG32_WR(ADDR_AFE + 0x540, 0x70000000 );
     CSL_REG32_WR(ADDR_AFE + 0x484, 0x10001   );
     CSL_REG32_WR(ADDR_AFE + 0x4c4, 0x10001   );
     CSL_REG32_WR(ADDR_AFE + 0x504, 0x10001   );
     CSL_REG32_WR(ADDR_AFE + 0x544, 0x10001   );
+    CSL_REG32_WR(ADDR_AFE + 0x5FC, 0x00000   );
+
+
+
+    // CSL_REG32_WR(ADDR_AFE + 0x408, 0x30000000);
+    // CSL_REG32_WR(ADDR_AFE + 0x40c, 0x39000000);
+    // CSL_REG32_WR(ADDR_AFE + 0x480, 0x70000000);
+    // CSL_REG32_WR(ADDR_AFE + 0x4c0, 0x80000000);
+    // CSL_REG32_WR(ADDR_AFE + 0x500, 0x80000000);
+    // CSL_REG32_WR(ADDR_AFE + 0x540, 0x80000000);
+    // CSL_REG32_WR(ADDR_AFE + 0x484, 0x10001   );
+    // CSL_REG32_WR(ADDR_AFE + 0x4c4, 0x10001   );
+    // CSL_REG32_WR(ADDR_AFE + 0x504, 0x10001   );
+    // CSL_REG32_WR(ADDR_AFE + 0x544, 0x10001   );
 
     retVal = Dss_dctrlDrvInitDPTX(isHpdSupported);
 
