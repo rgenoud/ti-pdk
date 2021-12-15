@@ -523,13 +523,4 @@ void OS_StartTickTimer(void)
     /* don't expect the handle to be null */
     DebugP_assert (status == TimerP_OK);
 }
-
- void TaskP_SuspendAll(){
-    vTaskSuspendAll();
- }
-
- uint32_t TaskP_ResumeAll(){
-    return xTaskResumeAll();
- }
-
 /* Nothing past this point */
