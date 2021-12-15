@@ -43,6 +43,14 @@
 #include "dp_sd0801_internal.h"
 #include "dp_sd0801_spec.h"
 
+
+// TI change - 5/2/2019 chae
+// #define added by TI to select a different refclk freq (19.2MHz)
+// The REF_CLK selection changes how configurePhyPmaCmnCfg routine configures the PHY PLL
+// and also how VCO is configured with SSC option
+#define REF_CLK_19_2MHz 
+
+
 typedef struct phyRegValue_t
 {
     uint32_t addr;
@@ -78,6 +86,21 @@ bool isPhySupported(const DP_SD0801_PrivateData* pD)
 
     return retVal;
 }
+
+/**
+ * Used to convert number of lanes to bit-field indicator
+ */
+static uint8_t getLaneCfg(uint8_t mLane, uint8_t laneCount) {
+
+    uint8_t laneCfg = 0U;
+
+    if ((laneCount <= DP_SD0801_MAX_LANE_COUNT) && (laneCount > 0U)) {
+        laneCfg = (uint8_t)((1U << (laneCount)) - 1U);
+    }
+
+    return (laneCfg << mLane);
+}
+
 
 #ifdef REF_CLK_19_2MHz
 
@@ -1260,9 +1283,10 @@ static void configurePhyPmaCmnDpRate(const DP_SD0801_PrivateData* pD, uint8_t li
     }
 }
 
-static void setA0PowerRegPwrState(uint32_t* pwrState, uint8_t laneCount)
+static void setA0PowerRegPwrState(uint32_t* pwrState, uint8_t mLane, uint8_t laneCount)
 {
-    /* lane 0 */
+#if 0
+     // lane 0
     *pwrState = CPS_FLD_WRITE(DP__DP_REGS__PMA_POWER_STATE_REQ_P, PMA_XCVR_POWER_STATE_REQ_LN_0, *pwrState, 0x00);
 
     if (laneCount > 1U)
@@ -1277,11 +1301,20 @@ static void setA0PowerRegPwrState(uint32_t* pwrState, uint8_t laneCount)
         *pwrState = CPS_FLD_WRITE(DP__DP_REGS__PMA_POWER_STATE_REQ_P, PMA_XCVR_POWER_STATE_REQ_LN_2, *pwrState, 0x00);
         *pwrState = CPS_FLD_WRITE(DP__DP_REGS__PMA_POWER_STATE_REQ_P, PMA_XCVR_POWER_STATE_REQ_LN_3, *pwrState, 0x00);
     }
+#else
+    uint8_t i;
+
+    for (i = 0; i < laneCount; i++)
+    {
+        *pwrState &= ~(0x3FU << ((mLane + i) * 8U));
+    }
+#endif
 }
 
-static void setA0PowerRegPllclkEn(uint32_t* pllclkEn, uint8_t laneCount)
+static void setA0PowerRegPllclkEn(uint32_t* pllclkEn, uint8_t mLane, uint8_t laneCount)
 {
-    /* lane 0 */
+#if 0
+    // lane 0
     *pllclkEn = CPS_FLD_WRITE(DP__DP_REGS__PMA_PLLCLK_EN_P, PMA_XCVR_PLLCLK_EN_LN_0, *pllclkEn, 0x00);
 
     if (laneCount > 1U)
@@ -1296,55 +1329,72 @@ static void setA0PowerRegPllclkEn(uint32_t* pllclkEn, uint8_t laneCount)
         *pllclkEn = CPS_FLD_WRITE(DP__DP_REGS__PMA_PLLCLK_EN_P, PMA_XCVR_PLLCLK_EN_LN_2, *pllclkEn, 0x00);
         *pllclkEn = CPS_FLD_WRITE(DP__DP_REGS__PMA_PLLCLK_EN_P, PMA_XCVR_PLLCLK_EN_LN_3, *pllclkEn, 0x00);
     }
+#else
+    uint8_t i;
+
+    for (i = 0; i < laneCount; i++)
+    {
+        *pllclkEn &= ~(1U << (mLane + i));
+    }
+#endif
 }
 
 /**
  * Set lines power state to A0
  * Set lines pll clk enable to 0
  */
-static void setPowerA0(const DP_SD0801_PrivateData* pD, uint8_t laneCount)
+static void setPowerA0(const DP_SD0801_PrivateData* pD, uint8_t mLane, uint8_t laneCount)
 {
     uint32_t pwrState = CPS_REG_READ(&pD->regBaseDp->dp_regs.PMA_POWER_STATE_REQ_p);
     uint32_t pllclkEn = CPS_REG_READ(&pD->regBaseDp->dp_regs.PMA_PLLCLK_EN_p);
 
-    setA0PowerRegPwrState(&pwrState, laneCount);
-    setA0PowerRegPllclkEn(&pllclkEn, laneCount);
+    setA0PowerRegPwrState(&pwrState, mLane, laneCount);
+    setA0PowerRegPllclkEn(&pllclkEn, mLane, laneCount);
 
     CPS_REG_WRITE(&pD->regBaseDp->dp_regs.PMA_POWER_STATE_REQ_p, pwrState);
     CPS_REG_WRITE(&pD->regBaseDp->dp_regs.PMA_PLLCLK_EN_p, pllclkEn);
 }
 
-uint32_t DP_SD0801_PhyInit(DP_SD0801_PrivateData* pD, uint8_t laneCount, DP_SD0801_LinkRate linkRate)
+uint32_t DP_SD0801_PhyInit(DP_SD0801_PrivateData* pD, uint8_t mLane, uint8_t laneCount, DP_SD0801_LinkRate linkRate)
 {
     uint32_t regTmp;
     uint8_t lane_cfg = 0U;
-#ifdef HAVE_CMN_PLL1
-    uint8_t dp_pll = 3;
-#else
-    uint8_t dp_pll = 1;
-#endif
+    uint8_t dp_pll = 3 /*1*/; /* Changed by TI 5/15 */
     uint32_t retVal = CDN_EOK;
+    uint8_t cLane = 0;
+    uint8_t cLane_cfg = 0;
 
     retVal = DP_SD0801_PhyInitSF(pD);
 
     if (CDN_EOK == retVal)
     {
+#if 0
         if ((laneCount <= 4U) && (laneCount >  0U))
         {
             lane_cfg = (uint8_t)((1U << (laneCount)) - 1U);
         }
+#else
+        lane_cfg = getLaneCfg(mLane, laneCount);
+        cLane_cfg = getLaneCfg(cLane, laneCount);
+#endif
 
         /* PHY PMA registers configuration function */
         configurePhyPmaDpCfg(pD, lane_cfg);
 
-        setPowerA0(pD, laneCount);
+        setPowerA0(pD, cLane, laneCount);
 
-        /* release phy_l0*_reset_n and pma_tx_elec_idle_ln_* based on used laneCount */
-        regTmp = ((0x000FU & ~(uint32_t)lane_cfg) << 4U) | (0x000FU & (uint32_t)lane_cfg);
+        // release phy_l0*_reset_n and pma_tx_elec_idle_ln_* based on used laneCount
+        regTmp = ((0x000FU & ~(uint32_t)cLane_cfg) << 4U) | (0x000FU & (uint32_t)cLane_cfg);
         CPS_REG_WRITE(&pD->regBaseDp->dp_regs.PHY_RESET_p, regTmp);
 
-        /* release pma_xcvr_pllclk_en_ln_*, only for the master lane */
+#if 0
+        // release pma_xcvr_pllclk_en_ln_*, only for the master lane
         CPS_REG_WRITE(&pD->regBaseDp->dp_regs.PMA_PLLCLK_EN_p, 0x0001);
+#else
+        regTmp = CPS_REG_READ(&pD->regBaseDp->dp_regs.PMA_PLLCLK_EN_p);
+        regTmp |= (1U << cLane);
+        CPS_REG_WRITE(&pD->regBaseDp->dp_regs.PMA_PLLCLK_EN_p, regTmp);
+#endif
 
         /* PHY PMA registers configuration functions */
         /* Set SSC disabled on init, can be enabled on link rate change. */
@@ -1352,14 +1402,16 @@ uint32_t DP_SD0801_PhyInit(DP_SD0801_PrivateData* pD, uint8_t laneCount, DP_SD08
         configurePhyPmaCmnDpRate(pD, lane_cfg,linkRate, dp_pll);
 
         pD->linkState.linkRate  = linkRate;
+        pD->linkState.mLane = mLane;
         pD->linkState.laneCount = laneCount;
     }
 
     return retVal;
 }
 
-static void setPowerState(const DP_SD0801_PrivateData* pD, phyPowerstate pwrState, uint8_t laneCount)
+static void setPowerState(const DP_SD0801_PrivateData* pD, phyPowerstate pwrState, uint8_t mLane, uint8_t laneCount)
 {
+    uint8_t i;
     uint32_t regTmp;
 
     /* Register value for power state for a single byte. */
@@ -1381,8 +1433,9 @@ static void setPowerState(const DP_SD0801_PrivateData* pD, phyPowerstate pwrStat
         break;
     }
 
-    /* Select values of registers and mask, depending on enabled lane count. */
-    switch (laneCount)
+    // Select values of registers and mask, depending on enabled lane count.
+#if 0
+    switch(laneCount)
     {
     /* lane 0 */
     case (0x0001):
@@ -1404,8 +1457,19 @@ static void setPowerState(const DP_SD0801_PrivateData* pD, phyPowerstate pwrStat
         pmaPowerStateMask = 0x3F3F3F3FU;
         break;
     }
+#else
 
-    /* Set power state A<n> */
+    pmaPowerStateVal = CPS_REG_READ(&pD->regBaseDp->dp_regs.PMA_POWER_STATE_REQ_p);
+    pmaPowerStateMask = 0; // TBD
+
+    for (i = 0; i < laneCount; i++)
+    {
+        pmaPowerStateVal |= (pmaPowerStateValPart << ((mLane + i) * 8U));
+        pmaPowerStateMask |= (0x3FU << ((mLane + i) * 8U));
+    }
+#endif
+
+    // Set power state A<n>
     CPS_REG_WRITE(&pD->regBaseDp->dp_regs.PMA_POWER_STATE_REQ_p, pmaPowerStateVal);
     /* Wait, until PHY acknowledges power state completion */
     do {
@@ -1419,26 +1483,30 @@ static void setPowerState(const DP_SD0801_PrivateData* pD, phyPowerstate pwrStat
  * Version of function DP_SD0801_PhyRun internal to driver.
  * To be used, if parameters (sanity) are ensured to be correct by caller.
  */
-static void phyRun(const DP_SD0801_PrivateData* pD, uint8_t laneCount)
+static void phyRun(const DP_SD0801_PrivateData* pD, uint8_t mLane, uint8_t laneCount)
 {
     uint32_t regTmp;
 
-    /* waiting for ACK of pma_xcvr_pllclk_en_ln_*, only for the master lane */
+    // waiting for ACK of pma_xcvr_pllclk_en_ln_*, only for the master lane
     do {
         regTmp = CPS_REG_READ(&pD->regBaseDp->dp_regs.PMA_PLLCLK_EN_ACK_p);
+#if 0
     } while (((regTmp) & 0x0001U) == 0x0000U);
+#else
+    } while (((regTmp) & (0x0001U << mLane)) == 0x0000U);
+#endif
 
     CPS_DelayNs(100);
 
-    setPowerState(pD, POWERSTATE_A2, laneCount);
-    setPowerState(pD, POWERSTATE_A0, laneCount);
+    setPowerState(pD, POWERSTATE_A2, mLane, laneCount);
+    setPowerState(pD, POWERSTATE_A0, mLane, laneCount);
 }
 
 /**
  * Enable DP Main Link lanes, after releasing PHY reset and waiting for PHY to
  * get ready.
  */
-uint32_t DP_SD0801_PhyRun(const DP_SD0801_PrivateData* pD, uint8_t laneCount)
+uint32_t DP_SD0801_PhyRun(const DP_SD0801_PrivateData* pD, uint8_t mLane, uint8_t laneCount)
 {
     uint32_t retVal = CDN_EOK;
 
@@ -1446,7 +1514,7 @@ uint32_t DP_SD0801_PhyRun(const DP_SD0801_PrivateData* pD, uint8_t laneCount)
 
     if (CDN_EOK == retVal)
     {
-        phyRun(pD, laneCount);
+        phyRun(pD, mLane, laneCount);
     }
     return retVal;
 }
@@ -1514,21 +1582,26 @@ uint32_t DP_SD0801_ConfigLane(DP_SD0801_PrivateData* pD, uint8_t lane, const DP_
     uint8_t preEmphasis;
     uint16_t regTmp;
     DP_SD0801_VoltageCoefficients* coeffs;
-    /* Bits 9 and 10 of address indicate lane number. */
+    uint8_t mLane = pD->linkState.mLane;
+    // Bits 9 and 10 of address indicate lane number.
+#if 0
     const uint32_t laneOffset = ((uint32_t)lane << 9);
+#else
+    const uint32_t laneOffset = ((uint32_t)(lane + mLane) << 9);
+#endif
     uint32_t DiagAcyaAddr = (TX_DIAG_ACYA | laneOffset);
 
     retVal = DP_SD0801_ConfigLaneSF(pD, linkState);
     if (CDN_EOK == retVal) {
 
-        voltageSwing = linkState->voltageSwing[lane];
-        preEmphasis = linkState->preEmphasis[lane];
+        voltageSwing = linkState->voltageSwing[mLane + lane]; // TBD
+        preEmphasis = linkState->preEmphasis[mLane + lane]; // TBD
 
-        /* Store new settings in pD. */
-        pD->linkState.voltageSwing[lane] = voltageSwing;
-        pD->linkState.preEmphasis[lane] = preEmphasis;
+        // Store new settings in pD.
+        pD->linkState.voltageSwing[mLane + lane] = voltageSwing;
+        pD->linkState.preEmphasis[mLane + lane] = preEmphasis;
 
-        /* Write register bit TX_DIAG_ACYA[0] to 1'b1 to freeze the current state of the analog TX driver. */
+        // Write register bit TX_DIAG_ACYA[0] to 1'b1 to freeze the current state of the analog TX driver.
         regTmp = afeRead(pD, DiagAcyaAddr);
         regTmp |= TX_DIAG_ACYA_HBDC_MASK;
         afeWrite(pD, DiagAcyaAddr, regTmp);
@@ -1555,41 +1628,66 @@ uint32_t DP_SD0801_ConfigLane(DP_SD0801_PrivateData* pD, uint8_t lane, const DP_
 /**
  * Enable or disable PLL for selected lanes)
  */
-static void setPllEnable(const DP_SD0801_PrivateData* pD, uint8_t laneCount, bool enable)
+static void setPllEnable(const DP_SD0801_PrivateData* pD, uint8_t mLane, uint8_t laneCount, bool enable)
 {
+    uint8_t i;
     uint32_t regTmp;
-    /* used to determine, which bits to check for or enable in PMA_PLLCLK_EN register */
-    uint32_t pllRegBits;
-    /* used to enable or disable lanes */
+    // used to determine, which bits to check for or enable in PMA_PLLCLK_EN register
+    uint32_t pllRegBits=0;
+    // used to enable or disable lanes
     uint32_t pllRegWriteVal;
+    uint32_t pllRegAckVal;
 
-    /* Select values of registers and mask, depending on enabled lane count. */
-    switch (laneCount)
+    // Select values of registers and mask, depending on enabled lane count.
+#if 0
+    switch(laneCount)
     {
-    /* lane 0 */
+    // lane 0
     case (0x0001):
         pllRegBits = 0x00000001U;
         break;
-    /* lanes 0-1 */
+    // lanes 0-1
     case (0x0002):
         pllRegBits = 0x00000003U;
         break;
-    /* lanes 0-3, all */
+    // lanes 0-3, all
     default:
         pllRegBits = 0x0000000FU;
         break;
     }
+#else
+    pllRegWriteVal = CPS_REG_READ(&pD->regBaseDp->dp_regs.PMA_PLLCLK_EN_p);
+
+    for (i = 0; i < laneCount; i++)
+    {
+        pllRegBits |= (1U << (mLane + i));
+    }
+#endif
 
     if (enable) {
+#if 0
         pllRegWriteVal = pllRegBits;
+#else
+        pllRegWriteVal |= pllRegBits;
+        pllRegAckVal = pllRegBits;
+#endif
     } else {
+#if 0
         pllRegWriteVal = 0x00000000U;
+#else
+        pllRegWriteVal &= (~pllRegBits);
+        pllRegAckVal = 0U;
+#endif
     }
 
-    CPS_REG_WRITE(&pD->regBaseDp->dp_regs.PMA_PLLCLK_EN_p, pllRegWriteVal); /* Enable / disable PLL */
+    CPS_REG_WRITE(&pD->regBaseDp->dp_regs.PMA_PLLCLK_EN_p, pllRegWriteVal); // Enable / disable PLL
     do {
         regTmp = CPS_REG_READ(&pD->regBaseDp->dp_regs.PMA_PLLCLK_EN_ACK_p);
+#if 0
     } while (((regTmp) & pllRegBits) != pllRegWriteVal);
+#else
+    } while (((regTmp) & pllRegBits) != pllRegAckVal);
+#endif
     CPS_DelayNs(100);
 }
 
@@ -1648,7 +1746,9 @@ uint32_t DP_SD0801_SetLinkRate(DP_SD0801_PrivateData* pD, const DP_SD0801_LinkSt
 
     uint32_t retVal;
     uint8_t linkCfg = 0U;
-    uint8_t dpPll = 1; /* TBD how to set */
+    uint8_t dpPll = 1;
+    uint8_t mLane = pD->linkState.mLane;
+    uint8_t cLane = 0;
 
     retVal = DP_SD0801_SetLinkRateSF(pD, linkState);
     if (CDN_EOK == retVal) {
@@ -1662,86 +1762,117 @@ uint32_t DP_SD0801_SetLinkRate(DP_SD0801_PrivateData* pD, const DP_SD0801_LinkSt
         pD->linkState.laneCount = laneCount;
         pD->linkState.ssc = ssc;
 
+#if 0
         if ((laneCount <= 4U) && (laneCount >  0U))
         {
-            linkCfg = (uint8_t)((1U << (laneCount)) - 1U);
+            linkCfg = (uint8_t)((1U<<(laneCount)) - 1U);
         }
+#else
+        linkCfg = getLaneCfg(mLane, laneCount);
+#endif
 
-        setPowerState(pD, POWERSTATE_A3, laneCount);
+        setPowerState(pD, POWERSTATE_A3, cLane, laneCount);
 
-        /* Disable PLLs */
-        setPllEnable(pD, laneCount, false);
+        // Disable PLLs
+        setPllEnable(pD, cLane, laneCount, false);
         CPS_DelayNs(100);
 
         reconfigureLinkRate(pD, linkRate, dpPll, linkCfg, ssc);
         /* No need as far as pma_xcvr_standard_mode_ln_* and pma_xcvr_data_width_ln_* are IPS fixed */
         CPS_DelayNs(200);
 
-        /* Enable PLLs */
-        setPllEnable(pD, laneCount, true);
+        // Enable PLLs
+        setPllEnable(pD, cLane, laneCount, true);
 
-        setPowerState(pD, POWERSTATE_A2, laneCount);
-        setPowerState(pD, POWERSTATE_A0, laneCount);
-        CPS_DelayNs(900); /* 100ns in total with delay in setPowerState */
+        setPowerState(pD, POWERSTATE_A2, cLane, laneCount);
+        setPowerState(pD, POWERSTATE_A0, cLane, laneCount);
+        CPS_DelayNs(900); // 100ns in total with delay in setPowerState
     }
 
     return retVal;
 }
 
-static void setPhyIdleBits(uint32_t *regTmp, uint8_t laneCount)
+static void setPhyIdleBits(uint32_t *regTmp, uint8_t mLane, uint8_t laneCount)
 {
-    /* always enable lane 0 */
+#if 0
+    // always enable lane 0
     *regTmp = CPS_FLD_WRITE(DP__DP_REGS__PHY_RESET_P, PMA_TX_ELEC_IDLE_LN_0, *regTmp, 0);
 
-    /* Enable lane 1 for > 1 lanes */
+    // Enable lane 1 for > 1 lanes
     *regTmp = CPS_FLD_WRITE(DP__DP_REGS__PHY_RESET_P, PMA_TX_ELEC_IDLE_LN_1, *regTmp, ((laneCount > 1U) ? 0U : 1U));
 
-    /* Enable lanes 2 and 3 for > 2 lanes */
+    // Enable lanes 2 and 3 for > 2 lanes
     *regTmp = CPS_FLD_WRITE(DP__DP_REGS__PHY_RESET_P, PMA_TX_ELEC_IDLE_LN_2, *regTmp, ((laneCount > 2U) ? 0U : 1U));
     *regTmp = CPS_FLD_WRITE(DP__DP_REGS__PHY_RESET_P, PMA_TX_ELEC_IDLE_LN_3, *regTmp, ((laneCount > 2U) ? 0U : 1U));
+#else
+    uint8_t linkCfg = 0U;
+    uint32_t pmaTxElecIdle;
+    linkCfg = getLaneCfg(mLane, laneCount);
+    pmaTxElecIdle = linkCfg << DP__DP_REGS__PHY_RESET_P__PMA_TX_ELEC_IDLE_LN_0_SHIFT;
+    *regTmp &= (~pmaTxElecIdle);
+#endif
 }
 
 /**
  * Assert lane reset (Active low) on lane 0, among disabled lanes.
  */
-static void resetLane0(const DP_SD0801_PrivateData* pD, uint8_t linkCfg)
+static void resetLane0(const DP_SD0801_PrivateData* pD, uint8_t mLane, uint8_t linkCfg)
 {
     uint32_t regTmp;
 
-    /* Assert lane reset low so that unused lanes remain in reset and powered down when re-enable the link */
+    // Assert lane reset low so that unused lanes remain in reset and powered down when re-enable the link
     regTmp = CPS_REG_READ(&pD->regBaseDp->dp_regs.PHY_RESET_p);
+#if 0
     CPS_REG_WRITE(&pD->regBaseDp->dp_regs.PHY_RESET_p, ((regTmp & 0x0000FFF0U) | (0x0000000EU & (uint32_t)linkCfg)));
+#else
+    regTmp |= (uint32_t)linkCfg & (~(1U << mLane));
+
+    //CPS_REG_WRITE(&pD->regBaseDp->dp_regs.PHY_RESET_p, ((regTmp & 0x0000FFF0U) | (0x0000000EU & (uint32_t)linkCfg)));
+    CPS_REG_WRITE(&pD->regBaseDp->dp_regs.PHY_RESET_p, regTmp);
+#endif
 }
 
-static void startupLanes(const DP_SD0801_PrivateData* pD, uint8_t laneCount)
+static void startupLanes(const DP_SD0801_PrivateData* pD, uint8_t mLane, uint8_t laneCount)
 {
     uint32_t regTmp;
     uint8_t linkCfg = 0U;
+    uint8_t cLane = 0;
+    uint8_t cLinkCfg = 0;
 
+#if 0
     if ((laneCount <= 4U) && (laneCount >  0U))
     {
-        linkCfg = (uint8_t)((1U << (laneCount)) - 1U);
+        linkCfg = (uint8_t)((1U<<(laneCount)) - 1U);
     }
+#else
+    linkCfg = getLaneCfg(mLane, laneCount);
+    cLinkCfg = getLaneCfg(cLane, laneCount);
+#endif
 
     /* Assert lane reset (Active low) on lane 0, among disabled lanes. */
-    resetLane0(pD, linkCfg);
+    resetLane0(pD, cLane, cLinkCfg);
 
-    /* Set lanes into power state A0 */
-    setPowerA0(pD, laneCount);
+    // Set lanes into power state A0
+    setPowerA0(pD, cLane, laneCount);
 
-    /* release phy_l0*_reset_n based on used laneCount */
+    // release phy_l0*_reset_n based on used laneCount
     regTmp = CPS_REG_READ(&pD->regBaseDp->dp_regs.PHY_RESET_p);
+#if 0
     CPS_REG_WRITE(&pD->regBaseDp->dp_regs.PHY_RESET_p, ((regTmp & 0x0000FFF0U) | (0x0000000FU & (uint32_t)linkCfg)));
+#else
+    regTmp |= cLinkCfg;
+    CPS_REG_WRITE(&pD->regBaseDp->dp_regs.PHY_RESET_p, regTmp);
+#endif
 }
 
 /**
  * Start-up PHY lanes and wait for pma_cmn_ready, then delay for 100 ns
  */
-static void startupLanesAndWait(const DP_SD0801_PrivateData* pD, uint8_t laneCount)
+static void startupLanesAndWait(const DP_SD0801_PrivateData* pD, uint8_t mLane, uint8_t laneCount)
 {
-    startupLanes(pD, laneCount);
+        startupLanes(pD, mLane, laneCount);
 
-    /* Checking pma_cmn_ready */
+        // Checking pma_cmn_ready
     waitPmaCmnReady(pD);
 
     CPS_DelayNs(100);
@@ -1753,30 +1884,42 @@ uint32_t DP_SD0801_EnableLanes(DP_SD0801_PrivateData* pD, const DP_SD0801_LinkSt
 
     uint32_t retVal;
     uint32_t regTmp;
+    uint32_t pllclkEn;
+//    uint8_t mLane = pD->linkState.mLane;
+    uint8_t cLane = 0;
 
     retVal = DP_SD0801_EnableLanesSF(pD, linkState);
     if (CDN_EOK == retVal) {
 
         const uint8_t laneCount = linkState->laneCount;
 
-        /* Store new setting in pD. */
+        // Store new setting in pD.
         pD->linkState.laneCount = laneCount;
 
         /* Assert pma_tx_elec_idle_ln_* for disabled lanes */
         regTmp = CPS_REG_READ(&pD->regBaseDp->dp_regs.PHY_RESET_p);
-        setPhyIdleBits(&regTmp, laneCount);
+        setPhyIdleBits(&regTmp, cLane, laneCount);
         CPS_REG_WRITE(&pD->regBaseDp->dp_regs.PHY_RESET_p, regTmp);
 
-        /* reset the link by asserting phy_l00_reset_n low */
+        // reset the link by asserting phy_l00_reset_n low
         regTmp = CPS_REG_READ(&pD->regBaseDp->dp_regs.PHY_RESET_p);
+#if 0
         CPS_REG_WRITE(&pD->regBaseDp->dp_regs.PHY_RESET_p, (regTmp & 0x0000FFFEU));
+#else
+        CPS_REG_WRITE(&pD->regBaseDp->dp_regs.PHY_RESET_p, (regTmp & (~(1 << cLane))));
+#endif
 
-        startupLanesAndWait(pD, laneCount);
+        startupLanesAndWait(pD, cLane, laneCount);
 
-        /* release pma_xcvr_pllclk_en_ln_*, only for the master lane */
+#if 0
+        // release pma_xcvr_pllclk_en_ln_*, only for the master lane
         CPS_REG_WRITE(&pD->regBaseDp->dp_regs.PMA_PLLCLK_EN_p, 0x0001);
+#else
+        pllclkEn = CPS_REG_READ(&pD->regBaseDp->dp_regs.PMA_PLLCLK_EN_p);
+        CPS_REG_WRITE(&pD->regBaseDp->dp_regs.PMA_PLLCLK_EN_p, (pllclkEn | (1 << cLane)));
+#endif
 
-        phyRun(pD, laneCount);
+        phyRun(pD, cLane, laneCount);
     }
 
     return retVal;

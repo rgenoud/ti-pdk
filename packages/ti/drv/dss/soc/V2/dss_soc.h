@@ -498,7 +498,7 @@ static inline void Dss_dpInitParamsInit(Dss_DpInitParams *dpInitParams)
     if(NULL != dpInitParams)
     {
         dpInitParams->isAvailable = TRUE;
-        dpInitParams->isHpdSupported = TRUE;
+        dpInitParams->isHpdSupported = FALSE;
     }
 }
 

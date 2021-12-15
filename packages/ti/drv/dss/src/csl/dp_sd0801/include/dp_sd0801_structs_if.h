@@ -73,6 +73,8 @@ struct DP_SD0801_LinkState_s
     DP_SD0801_LinkRate linkRate;
     /** Lane count */
     uint8_t laneCount;
+    /** Mster Lane */
+    uint8_t mLane;
     /** Voltage swing level, one per lane. */
     uint8_t voltageSwing[DP_SD0801_MAX_LANE_COUNT];
     /** Pre-emphasis level, one per lane. */

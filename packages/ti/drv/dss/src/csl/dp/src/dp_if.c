@@ -2639,14 +2639,14 @@ uint32_t DP_ConfigurePhyAuxCtrl(const DP_PrivateData* pD)
     return retVal;
 }
 
-uint32_t DP_ConfigurePhyStartUp(DP_PrivateData* pD, uint8_t laneCount, DP_LinkRate linkRate)
+uint32_t DP_ConfigurePhyStartUp(DP_PrivateData* pD, uint8_t mlane, uint8_t laneCount, DP_LinkRate linkRate)
 {
     uint32_t retVal;
 
     retVal = DP_ConfigurePhyStartUpSF(pD, linkRate);
 
     if (CDN_EOK == retVal) {
-        retVal = DP_SD0801_PhyStartUp(pD->phyPd, laneCount, toLinkRateSd(linkRate));
+        retVal = DP_SD0801_PhyStartUp(pD->phyPd, mlane, laneCount, toLinkRateSd(linkRate));
     }
 
     return retVal;

@@ -1017,7 +1017,7 @@ uint32_t DP_ConfigurePhyAuxCtrl(const DP_PrivateData* pD);
  * @return CDN_EOK success
  * @return CDN_EINVAL If pD is NULL or parameters are invalid.
  */
-uint32_t DP_ConfigurePhyStartUp(DP_PrivateData* pD, uint8_t laneCount, DP_LinkRate linkRate);
+uint32_t DP_ConfigurePhyStartUp(DP_PrivateData* pD, uint8_t mlane, uint8_t laneCount, DP_LinkRate linkRate);
 
 /**
  * Sends request for reading EDID from sink device. DP_checkResponse

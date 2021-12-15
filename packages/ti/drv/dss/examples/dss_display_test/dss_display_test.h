@@ -112,7 +112,7 @@ extern "C" {
 
 #define DISP_APP_RAW_DATA_INPUT           (0U)
 
-#define DISP_APP_TEST_EDP                 (0U)
+#define DISP_APP_TEST_EDP                 (1U)
 
 #define DISP_APP_TEST_MULTISYNC           (0U)
 
@@ -136,7 +136,7 @@ extern "C" {
 #undef CIO_CONSOLE
 
 #ifndef CIO_CONSOLE
-#define DSS_log                UART_printf
+#define DSS_log                printf
 #else
 #define DSS_log                printf
 #endif

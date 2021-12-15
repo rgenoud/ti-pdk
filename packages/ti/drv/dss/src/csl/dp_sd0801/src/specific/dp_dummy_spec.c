@@ -47,7 +47,7 @@ bool isPhySupported(const DP_SD0801_PrivateData* pD)
     return true;
 }
 
-uint32_t DP_SD0801_PhyInit(DP_SD0801_PrivateData* pD, uint8_t laneCount, DP_SD0801_LinkRate linkRate)
+uint32_t DP_SD0801_PhyInit(DP_SD0801_PrivateData* pD, uint8_t mlane, uint8_t laneCount, DP_SD0801_LinkRate linkRate)
 {
     /* Internal reg Addr 2 controls line for link rate. */
     /* B16 (0x8----) enables control from regs - otherwise dummy phy is */
@@ -119,7 +119,7 @@ uint32_t DP_SD0801_PhyInit(DP_SD0801_PrivateData* pD, uint8_t laneCount, DP_SD08
  * Enable DP Main Link lanes, after releasing PHY reset and waiting for PHY to
  * get ready.
  */
-uint32_t DP_SD0801_PhyRun(const DP_SD0801_PrivateData* pD, uint8_t laneCount)
+uint32_t DP_SD0801_PhyRun(const DP_SD0801_PrivateData* pD, uint8_t clane, uint8_t laneCount)
 {
     return DP_SD0801_PhyRunSF(pD);
 }

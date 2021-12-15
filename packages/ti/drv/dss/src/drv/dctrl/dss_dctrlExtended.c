@@ -659,7 +659,7 @@ static int32_t Dss_dctrlDrvInitDPTX(uint32_t isHpdSupported)
     pObj->dpClkInfo.mhz = 125;
 
     pObj->srcCaps.maxLinkRate = DP_LINK_RATE_8_10;
-    pObj->srcCaps.laneCount = 4;
+    pObj->srcCaps.laneCount = 2;
     pObj->srcCaps.ssc = false;
     pObj->srcCaps.scramblerDisable = false;
     pObj->srcCaps.tps3 = true;
@@ -669,7 +669,7 @@ static int32_t Dss_dctrlDrvInitDPTX(uint32_t isHpdSupported)
     pObj->srcCaps.maxPreemphasis = 3;
     pObj->srcCaps.forceVoltageSwing = false;
     pObj->srcCaps.forcePreemphasis = false;
-    pObj->srcCaps.laneMapping = DP_LANE_MAPPING_SINGLE_REGULAR;
+    pObj->srcCaps.laneMapping = DP_LANE_MAPPING_DUAL_LANES_23;
     pObj->srcCaps.controllersPerPhy = DP_SINGLE_CONTROLLER;
 
     pObj->isConnected = FALSE;
@@ -800,6 +800,7 @@ static int32_t Dss_dctrlDrvInitDPTX(uint32_t isHpdSupported)
     if(FVID2_SOK == retVal)
     {
         dpApiRet = DP_ConfigurePhyStartUp(pObj->dpPrivData,
+                0x2,
                 pObj->srcCaps.laneCount,
                 pObj->srcCaps.maxLinkRate);
         if(CDN_EOK != dpApiRet)

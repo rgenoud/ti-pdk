@@ -120,6 +120,7 @@ uint32_t DP_SD0801_Init(DP_SD0801_PrivateData* pD, const DP_SD0801_Config* confi
         /* Assign addresses of register bases from configuration. */
         pD->regBase = config->regBase;
         pD->regBaseDp = config->regBaseDp;
+        pD->linkState.mLane = 0; // Default master lane
         pD->linkState.laneCount = 0; /* Indicates uninitialized PHY driver. */
         pD->linkState.linkRate = DP_SD0801_LINK_RATE_1_62;
         for (i = 0; i < 4U; i++)
@@ -158,7 +159,6 @@ uint32_t DP_SD0801_PhySetReset(const DP_SD0801_PrivateData* pD, bool reset)
         regTmp = CPS_FLD_WRITE(DP__DP_REGS__PHY_RESET_P, PHY_RESET, regTmp, (reset ? 0 : 1));
         CPS_REG_WRITE(&pD->regBaseDp->dp_regs.PHY_RESET_p, regTmp);
 
-        CPS_ExtPhyReset(reset);
     }
     return retVal;
 }
@@ -229,15 +229,16 @@ uint32_t DP_SD0801_ReadLinkStat(const DP_SD0801_PrivateData* pD, DP_SD0801_LinkS
 /**
  * Automatically initialize and configure DP Main Link on PHY.
  */
-uint32_t DP_SD0801_PhyStartUp(DP_SD0801_PrivateData* pD, uint8_t laneCount, DP_SD0801_LinkRate linkRate)
+uint32_t DP_SD0801_PhyStartUp(DP_SD0801_PrivateData* pD, uint8_t mLane, uint8_t laneCount, DP_SD0801_LinkRate linkRate)
 {
     uint32_t retVal;
+    uint8_t cLane = 0;
 
     retVal = DP_SD0801_PhyStartUpSF(pD, linkRate);
 
     if (CDN_EOK == retVal) {
         /* Perform operations to be done before releasing reset. */
-        retVal = DP_SD0801_PhyInit(pD, laneCount, linkRate);
+        retVal = DP_SD0801_PhyInit(pD, mLane, laneCount, linkRate);
     }
 
     if (CDN_EOK == retVal) {
@@ -251,7 +252,7 @@ uint32_t DP_SD0801_PhyStartUp(DP_SD0801_PrivateData* pD, uint8_t laneCount, DP_S
 
     if (CDN_EOK == retVal) {
         /* Perform operations to be done after releasing reset. */
-        retVal = DP_SD0801_PhyRun(pD, laneCount);
+        retVal = DP_SD0801_PhyRun(pD, cLane, laneCount);
     }
 
     return retVal;

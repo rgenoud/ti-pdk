@@ -175,18 +175,18 @@ uint32_t DP_SD0801_ConfigurePhyAuxCtrl(const DP_SD0801_PrivateData* pD);
  * @return CDN_EOK success
  * @return CDN_EINVAL If pD is NULL or parameters are invalid.
  */
-uint32_t DP_SD0801_PhyStartUp(DP_SD0801_PrivateData* pD, uint8_t laneCount, DP_SD0801_LinkRate linkRate);
+uint32_t DP_SD0801_PhyStartUp(DP_SD0801_PrivateData* pD, uint8_t mlane, uint8_t laneCount, DP_SD0801_LinkRate linkRate);
 
 /**
  * Part of manual DP PHY Main Link initialization. Performs operations
  * to be done before releasing PHY reset.
  * @param[in] pD Driver state info specific to this instance.
  * @param[in] laneCount Number of lanes to initialize PHY with.
- * @param[in] linkRate Link rate to initialize PHY with.
+ * @param[in] linkRate Link rate to initialit8_t laneCouze PHY with.
  * @return CDN_EOK success
  * @return CDN_EINVAL If pD is NULL or parameters are invalid.
  */
-uint32_t DP_SD0801_PhyInit(DP_SD0801_PrivateData* pD, uint8_t laneCount, DP_SD0801_LinkRate linkRate);
+uint32_t DP_SD0801_PhyInit(DP_SD0801_PrivateData* pD, uint8_t mlane, uint8_t laneCount, DP_SD0801_LinkRate linkRate);
 
 /**
  * Part of manual DP PHY Main Link initialization. Assert or release
@@ -215,7 +215,7 @@ uint32_t DP_SD0801_WaitPmaCmnReady(const DP_SD0801_PrivateData* pD);
  * @return CDN_EOK success
  * @return CDN_EINVAL If pD is NULL.
  */
-uint32_t DP_SD0801_PhyRun(const DP_SD0801_PrivateData* pD, uint8_t laneCount);
+uint32_t DP_SD0801_PhyRun(const DP_SD0801_PrivateData* pD, uint8_t clane, uint8_t laneCount);
 
 /**
  * Configure voltage swing and pre-emphasis values for a specified

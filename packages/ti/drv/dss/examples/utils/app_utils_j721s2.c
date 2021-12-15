@@ -86,8 +86,8 @@ void App_configureSoC(void)
 
 void App_configureLCD(App_utilsLcdCfgParams cfgParams)
 {
-    int32_t status = PM_SUCCESS;
-
+    int32_t status = PM_SUCCESS, clockStatus;
+    uint64_t minRate, respClkRate;
     if(APP_OUTPUT_HDMI == cfgParams.outType)
     {
         if(PM_SUCCESS == status)
