@@ -40,6 +40,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <ti/csl/arch/csl_arch.h>
 #include "board_internal.h"
 #include "board_utils.h"
 #include "board_cfg.h"
@@ -496,18 +497,16 @@ MMCSD_Error Board_mmc_voltageSwitchFxn(uint32_t instance,
  */
 uint32_t Board_getSocDomain(void)
 {
-    uint32_t socDomain;
+    uint32_t socDomain = BOARD_SOC_DOMAIN_MAIN;
 
-#if defined (BUILD_MPU1_0)
-    socDomain = BOARD_SOC_DOMAIN_MAIN;
-#elif defined (BUILD_MCU2_0) || defined (BUILD_MCU2_1) || defined (BUILD_MCU3_0) || defined (BUILD_MCU3_1)
-    socDomain = BOARD_SOC_DOMAIN_MAIN;
-#elif defined (BUILD_C7X_1) || defined (BUILD_C7X_2)
-    socDomain = BOARD_SOC_DOMAIN_MAIN;
-#elif defined (BUILD_MCU1_0) || defined (BUILD_MCU1_1)
-    socDomain = BOARD_SOC_DOMAIN_MCU;
-#else
-    #error "Unsupported core id"
+#ifdef BUILD_MCU
+    CSL_ArmR5CPUInfo info;
+
+    CSL_armR5GetCpuID(&info);
+    if (info.grpId == (uint32_t)CSL_ARM_R5_CLUSTER_GROUP_ID_0)
+    {
+        socDomain = BOARD_SOC_DOMAIN_MCU;
+    }
 #endif
 
   return socDomain;
