@@ -77,7 +77,7 @@ void osal_dm_enable_interrupt(void)
  */
 void osal_suspend_dm(void)
 {
-        TaskP_SuspendAll();
+        TaskP_disable();
         OS_StopTickTimer();
         CSL_armR5StartupIntrEnableVic(0);  /* Disable VIC */
         
@@ -98,5 +98,6 @@ u32 osal_resume_dm(void)
         copyDM_ResetVectors();
         CSL_armR5StartupIntrEnableVic(1);      /* Enable VIC mode */
         OS_StartTickTimer();
-        return TaskP_ResumeAll();
+        TaskP_restore(0);
+        return 0;
 }
