@@ -118,7 +118,7 @@ export board_diag_adc_CORE_DEPENDENCY
 export board_diag_adc_MAKEFILE
 board_diag_adc_PKG_LIST = board_diag_adc
 board_diag_adc_INCLUDE = $(board_diag_adc_PATH)
-board_diag_adc_BOARDLIST = j721e_evm j7200_evm am64x_evm
+board_diag_adc_BOARDLIST = j721e_evm j7200_evm am64x_evm j721s2_evm
 board_diag_adc_$(SOC)_CORELIST = $(board_diag_$(SOC)_CORELIST)
 export board_diag_adc_$(SOC)_CORELIST
 export board_diag_adc_SBL_APPIMAGEGEN = $(board_diag_APPIMAGEGEN_CTRL)
@@ -700,7 +700,7 @@ export board_diag_lin_CORE_DEPENDENCY
 export board_diag_lin_MAKEFILE
 board_diag_lin_PKG_LIST = board_diag_lin
 board_diag_lin_INCLUDE = $(board_diag_lin_PATH)
-board_diag_lin_BOARDLIST = j721e_evm j7200_evm
+board_diag_lin_BOARDLIST = j721e_evm j7200_evm j721s2_evm
 board_diag_lin_$(SOC)_CORELIST = $(board_diag_$(SOC)_CORELIST)
 export board_diag_lin_$(SOC)_CORELIST
 export board_diag_lin_SBL_APPIMAGEGEN = $(board_diag_APPIMAGEGEN_CTRL)
@@ -720,7 +720,7 @@ export board_diag_mcan_CORE_DEPENDENCY
 export board_diag_mcan_MAKEFILE
 board_diag_mcan_PKG_LIST = board_diag_mcan
 board_diag_mcan_INCLUDE = $(board_diag_mcan_PATH)
-board_diag_mcan_BOARDLIST = j721e_evm am65xx_idk j7200_evm am64x_evm tpr12_evm am64x_svb awr294x_evm
+board_diag_mcan_BOARDLIST = j721e_evm am65xx_idk j7200_evm am64x_evm tpr12_evm am64x_svb awr294x_evm j721s2_evm
 board_diag_mcan_$(SOC)_CORELIST = $(board_diag_$(SOC)_CORELIST)
 export board_diag_mcan_$(SOC)_CORELIST
 export board_diag_mcan_SBL_APPIMAGEGEN = $(board_diag_APPIMAGEGEN_CTRL)
@@ -800,6 +800,26 @@ board_diag_norflash_$(SOC)_CORELIST = $(board_diag_$(SOC)_CORELIST)
 export board_diag_norflash_$(SOC)_CORELIST
 export board_diag_norflash_SBL_APPIMAGEGEN = $(board_diag_APPIMAGEGEN_CTRL)
 board_diag_EXAMPLE_LIST += board_diag_norflash
+
+# OCTAL NAND
+board_diag_octalNand_COMP_LIST = board_diag_octalNand
+board_diag_octalNand_RELPATH = ti/board/diag/octal_nand/build
+board_diag_octalNand_PATH = $(PDK_BOARD_DIAG_COMP_PATH)/octal_nand/build
+board_diag_octalNand_CUSTOM_BINPATH = $(board_diag_LOCAL_BINPATH)
+board_diag_octalNand_MAKEFILE = -f makefile
+board_diag_octalNand_BOARD_DEPENDENCY = yes
+board_diag_octalNand_CORE_DEPENDENCY = yes
+export board_diag_octalNand_COMP_LIST
+export board_diag_octalNand_BOARD_DEPENDENCY
+export board_diag_octalNand_CORE_DEPENDENCY
+export board_diag_octalNand_MAKEFILE
+board_diag_octalNand_PKG_LIST = board_diag_octalNand
+board_diag_octalNand_INCLUDE = $(board_diag_octalNand_PATH)
+board_diag_octalNand_BOARDLIST = j721s2_evm
+board_diag_octalNand_$(SOC)_CORELIST = $(board_diag_$(SOC)_CORELIST)
+export board_diag_octalNand_$(SOC)_CORELIST
+export board_diag_octalNand_SBL_APPIMAGEGEN = $(board_diag_APPIMAGEGEN_CTRL)
+board_diag_EXAMPLE_LIST += board_diag_octalNand
 
 # OLED DISPLAY
 board_diag_oledDisplay_COMP_LIST = board_diag_oledDisplay
