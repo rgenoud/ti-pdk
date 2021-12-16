@@ -51,8 +51,9 @@
 #include <ti/board/src/devices/board_devices.h>
 #include <ti/board/board.h>
 #include <ti/board/board_cfg.h>
+#if defined (SOC_J721E)
 #include <ti/board/src/j721e_evm/include/board_i2c_io_exp.h>
-
+#endif
 #include <dss_display_test.h>
 
 /* ========================================================================== */
