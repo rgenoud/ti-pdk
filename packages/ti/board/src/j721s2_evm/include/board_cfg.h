@@ -415,6 +415,16 @@ extern "C" {
 #define BOARD_MCSPI_MASTER_INSTANCE                     (1)
 #define BOARD_MCSPI_SLAVE_INSTANCE                      (1)
 
+/* LIN uart instance */
+#define BOARD_LIN1_UART_INSTANCE                         (6U)
+#define BOARD_LIN1_UART_BASE                             (CSL_UART6_BASE)
+
+#define BOARD_LIN2_UART_INSTANCE                         (3U)
+#define BOARD_LIN2_UART_BASE                             (CSL_UART3_BASE)
+
+#define BOARD_LIN3_UART_INSTANCE                         (9U)
+#define BOARD_LIN3_UART_BASE                             (CSL_UART9_BASE)
+
 /* Default pinmux configuration of UART Tx pin used by ROM/SBL */
 #define BOARD_MCU_UART_TX_PINMUX_VAL                    (PIN_MODE(0U) | ((PIN_PULL_DISABLE) & \
                                                          (~PIN_PULL_DIRECTION & ~PIN_INPUT_ENABLE)))
