@@ -304,6 +304,8 @@ int32_t Dss_dctrlDrvInitDp(uint32_t isHpdSupported)
      */
 
 #if defined(SOC_J721S2)
+/* Need to account the change in hpd in j7aep */
+/*  CSL_REG32_WR(CSL_CTRL_MMR0_CFG0_BASE + CSL_MAIN_CTRL_MMR_CFG0_PADCONFIG0 + 0x1c4, 0x00040005); */
 #else
     /* HPD Pin Mux */
     CSL_REG32_WR(CSL_CTRL_MMR0_CFG0_BASE + CSL_MAIN_CTRL_MMR_CFG0_PADCONFIG0 + 0x1c4, 0x00040005);
@@ -329,7 +331,7 @@ int32_t Dss_dctrlDrvInitDp(uint32_t isHpdSupported)
     CSL_REG32_WR(ADDR_AFE + 0x504, 0x10001   );
     CSL_REG32_WR(ADDR_AFE + 0x544, 0x10001   );
     CSL_REG32_WR(ADDR_AFE + 0x5FC, 0x00000   );
-#elif
+#else
     CSL_REG32_WR(ADDR_AFE + 0x408, 0x30000000);
     CSL_REG32_WR(ADDR_AFE + 0x40c, 0x39000000);
     CSL_REG32_WR(ADDR_AFE + 0x480, 0x70000000);
@@ -821,7 +823,7 @@ static int32_t Dss_dctrlDrvInitDPTX(uint32_t isHpdSupported)
                 pObj->srcCaps.maxLinkRate);
 #else          
         dpApiRet = DP_ConfigurePhyStartUp(pObj->dpPrivData,
-                0x2,
+                0x0,
                 pObj->srcCaps.laneCount,
                 pObj->srcCaps.maxLinkRate);
 #endif                      
@@ -832,8 +834,6 @@ static int32_t Dss_dctrlDrvInitDPTX(uint32_t isHpdSupported)
         }
     }
 
-
-
     if(FVID2_SOK == retVal)
     {
         dpApiRet = DP_SetSourceCapabilities(pObj->dpPrivData, &pObj->srcCaps);
@@ -843,15 +843,6 @@ static int32_t Dss_dctrlDrvInitDPTX(uint32_t isHpdSupported)
             retVal = FVID2_EFAIL;
         }
     }
-
-    
-
-    
-
-    
-
-
-    
 
     if((FVID2_SOK == retVal) &&
     (TRUE == pObj->isHpdSupported))

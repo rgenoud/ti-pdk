@@ -89,8 +89,7 @@ void App_configureLCD(App_utilsLcdCfgParams cfgParams)
     int32_t status = PM_SUCCESS, clockStatus;
     uint64_t minRate, respClkRate;
     if(APP_OUTPUT_HDMI == cfgParams.outType)
-    {
-#if defined (SOC_J721E)        
+    {       
         if(PM_SUCCESS == status)
         {
             status = Sciclient_pmSetModuleClkParent(TISCI_DEV_DSS0,
@@ -98,7 +97,6 @@ void App_configureLCD(App_utilsLcdCfgParams cfgParams)
                     TISCI_DEV_DSS0_DSS_INST0_DPI_1_IN_2X_CLK_PARENT_DPI0_EXT_CLKSEL_OUT0,
                     SCICLIENT_SERVICE_WAIT_FOREVER);
         }
-#endif
         if(PM_SUCCESS == status)
         {
             status = Sciclient_pmSetModuleState(TISCI_DEV_DSS0,
@@ -115,7 +113,6 @@ void App_configureLCD(App_utilsLcdCfgParams cfgParams)
                     0,
                     SCICLIENT_SERVICE_WAIT_FOREVER);
         }
-#if defined (SOC_J721E) 
         if(PM_SUCCESS == status)
         {
             status = Sciclient_pmSetModuleClkFreq(TISCI_DEV_DSS0,
@@ -124,7 +121,6 @@ void App_configureLCD(App_utilsLcdCfgParams cfgParams)
                     0,
                     SCICLIENT_SERVICE_WAIT_FOREVER);
         }
-#endif
         if(PM_SUCCESS == status)
         {
             status = Sciclient_pmModuleClkRequest(TISCI_DEV_DSS0,
@@ -168,12 +164,11 @@ void App_configureLCD(App_utilsLcdCfgParams cfgParams)
                     0,
                     SCICLIENT_SERVICE_WAIT_FOREVER);
         }
-#if defined (SOC_J721E)         
         if (PM_SUCCESS == status)
         {
             status = Sciclient_pmSetModuleClkParent(TISCI_DEV_DSS0,
                 TISCI_DEV_DSS0_DSS_INST0_DPI_2_IN_2X_CLK,
-                TISCI_DEV_DSS0_DSS_INST0_DPI_2_IN_2X_CLK_PARENT_HSDIV1_16FFT_MAIN_18_HSDIVOUT0_CLK,
+                TISCI_DEV_DSS0_DSS_INST0_DPI_2_IN_2X_CLK_PARENT_HSDIV1_16FFT_MAIN_17_HSDIVOUT0_CLK,
                 SCICLIENT_SERVICE_WAIT_FOREVER);
         }
         if (PM_SUCCESS == status)
@@ -185,7 +180,7 @@ void App_configureLCD(App_utilsLcdCfgParams cfgParams)
                 TISCI_MSG_FLAG_CLOCK_ALLOW_FREQ_CHANGE,
                 SCICLIENT_SERVICE_WAIT_FOREVER);
         }
-#endif        
+    
     }
     else
     {
