@@ -1,32 +1,30 @@
 /**********************************************************************
- *
- * Copyright (C) 2012-2021 Cadence Design Systems, Inc.
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- * notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- * notice, this list of conditions and the following disclaimer in the
- * documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the copyright holder nor the names of its
- * contributors may be used to endorse or promote products derived from
- * this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- ******************************************************************************
+* Copyright (C) 2012-2019 Cadence Design Systems, Inc.
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions
+* are met:
+*
+* 1. Redistributions of source code must retain the above copyright
+* notice, this list of conditions and the following disclaimer.
+* 2. Redistributions in binary form must reproduce the above copyright
+* notice, this list of conditions and the following disclaimer in the
+* documentation and/or other materials provided with the distribution.
+* 3. Neither the name of the copyright holder nor the names of its
+* contributors may be used to endorse or promote products derived from
+* this software without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+* ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+* LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+* CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+* SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+* INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+* CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+* ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+* POSSIBILITY OF SUCH DAMAGE.
+**********************************************************************
 * WARNING: This file is auto-generated using api-generator utility.
 *          api-generator: 12.03.9e11b77(origin/DRV-3827_extract_sanity_to_c_file)
 *          Do not edit it manually.
@@ -116,25 +114,6 @@ uint32_t DP_SD0801_LinkStateSF(const DP_SD0801_LinkState *obj)
  * @returns CDN_EINVAL for invalid
  */
 uint32_t DP_SD0801_ConfigSF(const DP_SD0801_Config *obj)
-{
-    uint32_t ret = 0;
-
-    if (obj == NULL)
-    {
-        ret = CDN_EINVAL;
-    }
-
-    return ret;
-}
-
-/**
- * Function to validate struct Callbacks
- *
- * @param[in] obj pointer to struct to be verified
- * @returns 0 for valid
- * @returns CDN_EINVAL for invalid
- */
-uint32_t DP_SD0801_CallbacksSF(const DP_SD0801_Callbacks *obj)
 {
     uint32_t ret = 0;
 
@@ -260,21 +239,16 @@ uint32_t DP_SD0801_SanityFunction3(const DP_SD0801_PrivateData* pD)
  * A common function to check the validity of API functions with
  * following parameter types
  * @param[in] pD Driver state info specific to this instance.
- * @param[in] laneCount Number of lanes to initialize PHY with.
  * @param[in] linkRate Link rate to initialize PHY with.
  * @return 0 success
  * @return CDN_EINVAL invalid parameters
  */
-uint32_t DP_SD0801_SanityFunction4(const DP_SD0801_PrivateData* pD, const uint8_t laneCount, const DP_SD0801_LinkRate linkRate)
+uint32_t DP_SD0801_SanityFunction4(const DP_SD0801_PrivateData* pD, const DP_SD0801_LinkRate linkRate)
 {
     /* Declaring return variable */
     uint32_t ret = 0;
 
     if (DP_SD0801_PrivateDataSF(pD) == CDN_EINVAL)
-    {
-        ret = CDN_EINVAL;
-    }
-    else if ((laneCount < (1U)) || (laneCount > (DP_SD0801_MAX_LANE_COUNT)))
     {
         ret = CDN_EINVAL;
     }
@@ -437,38 +411,6 @@ uint32_t DP_SD0801_SanityFunction15(const DP_SD0801_PrivateData* pD, const DP_SD
         ret = CDN_EINVAL;
     }
     else if (DP_SD0801_PrivateDataSF(pD) == CDN_EINVAL)
-    {
-        ret = CDN_EINVAL;
-    }
-    else
-    {
-        /*
-         * All 'if ... else if' constructs shall be terminated with an 'else' statement
-         * (MISRA2012-RULE-15_7-3)
-         */
-    }
-
-    return ret;
-}
-
-/**
- * A common function to check the validity of API functions with
- * following parameter types
- * @param[in] pD Driver state info specific to this instance.
- * @param[in] callbacks Structure with defined callbacks
- * @return 0 success
- * @return CDN_EINVAL invalid parameters
- */
-uint32_t DP_SD0801_SanityFunction16(const DP_SD0801_PrivateData* pD, const DP_SD0801_Callbacks* callbacks)
-{
-    /* Declaring return variable */
-    uint32_t ret = 0;
-
-    if (DP_SD0801_PrivateDataSF(pD) == CDN_EINVAL)
-    {
-        ret = CDN_EINVAL;
-    }
-    else if (DP_SD0801_CallbacksSF(callbacks) == CDN_EINVAL)
     {
         ret = CDN_EINVAL;
     }
