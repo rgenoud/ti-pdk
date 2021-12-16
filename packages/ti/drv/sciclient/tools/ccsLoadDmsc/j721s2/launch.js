@@ -48,7 +48,7 @@
 
 //<!!!!!! EDIT THIS !!!!!>
 // Set this to 1 to allow loading the GEL files directly from the ccxml file.
-disableGelLoad = 1;
+disableGelLoad = 0;
 // Set to 1 to use the firmware with Firewalls.
 if (disableGelLoad == 0)
 {
@@ -56,7 +56,7 @@ if (disableGelLoad == 0)
     gelFilePath = "k3-avv-repo/framework/gels/K3J7AEP";
 }
 //PDK path. Edit this
-pdkPath = "/home/a0492778/dss_bringup/pdk";
+pdkPath = "/ti/j7presi/workarea/pdk";
 
 //path to board config elf
 pathSciclient = pdkPath+"/packages/ti/drv/sciclient/tools/ccsLoadDmsc/j721s2/"

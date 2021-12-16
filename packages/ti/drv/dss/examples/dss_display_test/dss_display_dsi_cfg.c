@@ -193,39 +193,40 @@ static int32_t DispApp_SetBoardMux()
 
 static int32_t DispApp_InitI2c(DispApp_Obj *appObj)
 {
-    // int32_t status = FVID2_SOK;
-    // uint32_t loopCnt;
-    // uint8_t domain, i2cInst, slaveAddr;
-    // I2C_Params i2cParams;
-    // I2C_HwAttrs i2cConfig;
+    int32_t status = FVID2_SOK;
 
-    // /* Initialize I2C Driver */
-    // for(loopCnt = 0; loopCnt < I2C_HWIP_MAX_CNT; loopCnt++)
-    // {
-    //     I2C_socGetInitCfg(loopCnt, &i2cConfig);
-    //     i2cConfig.enableIntr = false;
-    //     I2C_socSetInitCfg(loopCnt, &i2cConfig);
-    // }
+#if defined (SOC_J721E)
+    uint32_t loopCnt;
+    uint8_t domain, i2cInst, slaveAddr;
+    I2C_Params i2cParams;
+    I2C_HwAttrs i2cConfig;
 
-    // /* Initializes the I2C */
-    // I2C_init();
+    /* Initialize I2C Driver */
+    for(loopCnt = 0; loopCnt < I2C_HWIP_MAX_CNT; loopCnt++)
+    {
+        I2C_socGetInitCfg(loopCnt, &i2cConfig);
+        i2cConfig.enableIntr = false;
+        I2C_socSetInitCfg(loopCnt, &i2cConfig);
+    }
 
-    // /* Initializes the I2C Parameters */
-    // I2C_Params_init(&i2cParams);
-    // i2cParams.bitRate = I2C_400kHz; /* 400KHz */
+    /* Initializes the I2C */
+    I2C_init();
 
-    // Board_fpdUb941GetI2CAddr(&domain, &i2cInst, &slaveAddr);
+    /* Initializes the I2C Parameters */
+    I2C_Params_init(&i2cParams);
+    i2cParams.bitRate = I2C_400kHz; /* 400KHz */
 
-    // /* Configures the I2C instance with the passed parameters*/
-    // gI2cHandle = I2C_open(i2cInst, &i2cParams);
-    // if(gI2cHandle == NULL)
-    // {
-    //     App_print("\nI2C Open failed!\n");
-    //     status = FVID2_EFAIL;
-    // }
+    Board_fpdUb941GetI2CAddr(&domain, &i2cInst, &slaveAddr);
 
-    // return (status);
-    return FVID2_SOK;
+    /* Configures the I2C instance with the passed parameters*/
+    gI2cHandle = I2C_open(i2cInst, &i2cParams);
+    if(gI2cHandle == NULL)
+    {
+        App_print("\nI2C Open failed!\n");
+        status = FVID2_EFAIL;
+    }
+#endif
+    return (status);
 }
 
 int32_t DispApp_SetDsiSerdesCfg(DispApp_Obj *appObj)

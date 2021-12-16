@@ -1,5 +1,5 @@
 /**********************************************************************
-* Copyright (C) 2012-2019 Cadence Design Systems, Inc.
+* Copyright (C) 2012-2021 Cadence Design Systems, Inc.
 * Redistribution and use in source and binary forms, with or without
 * modification, are permitted provided that the following conditions
 * are met:
@@ -24,7 +24,7 @@
 * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 * POSSIBILITY OF SUCH DAMAGE.
-**********************************************************************
+*******************************************************************************
 * WARNING: This file is auto-generated using api-generator utility.
 *          api-generator: 12.03.9e11b77(origin/DRV-3827_extract_sanity_to_c_file)
 *          Do not edit it manually.
