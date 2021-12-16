@@ -51,6 +51,7 @@
 #include <ti/drv/dss/src/drv/dctrl/dss_dctrlIntr.h>
 #include <ti/drv/dss/src/drv/dctrl/dss_dctrlPriv.h>
 #include <dss_soc_priv.h>
+#include <ti/board/src/j721s2_evm/include/board_control.h>
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
@@ -300,6 +301,12 @@ int32_t Dss_dctrlDrvInitDp(uint32_t isHpdSupported)
      */
 
     /* HPD Pin Mux */
+    // Board_initCfg boardCfg;
+
+    // boardCfg = BOARD_INIT_UNLOCK_MMR;
+    // Board_init(boardCfg);
+    Board_unlockMMR();
+
     CSL_REG32_WR(CSL_CTRL_MMR0_CFG0_BASE + CSL_MAIN_CTRL_MMR_CFG0_PADCONFIG0 + 0x1c4, 0x00040005);
 
     /* Select EDP PHY CLK source */
@@ -473,6 +480,7 @@ static int32_t Dss_dctrlDrvDetectDp()
     if(FVID2_SOK == retVal)
     {
         dpApiRet = DP_GetHpdStatus(pObj->dpPrivData, &hpdState);
+        hpdState = true;
         if((CDN_EOK != dpApiRet) ||
         (true != hpdState))
         {
@@ -658,7 +666,7 @@ static int32_t Dss_dctrlDrvInitDPTX(uint32_t isHpdSupported)
     pObj->dpCbInfo.event = NULL;
     pObj->dpClkInfo.mhz = 125;
 
-    pObj->srcCaps.maxLinkRate = DP_LINK_RATE_8_10;
+    pObj->srcCaps.maxLinkRate = DP_LINK_RATE_2_70;
     pObj->srcCaps.laneCount = 2;
     pObj->srcCaps.ssc = false;
     pObj->srcCaps.scramblerDisable = false;
@@ -666,10 +674,10 @@ static int32_t Dss_dctrlDrvInitDPTX(uint32_t isHpdSupported)
     pObj->srcCaps.tps4 = true;
     pObj->srcCaps.fastLinkTraining = false;
     pObj->srcCaps.maxVoltageSwing = 3;
-    pObj->srcCaps.maxPreemphasis = 3;
+    pObj->srcCaps.maxPreemphasis = 2;
     pObj->srcCaps.forceVoltageSwing = false;
     pObj->srcCaps.forcePreemphasis = false;
-    pObj->srcCaps.laneMapping = DP_LANE_MAPPING_DUAL_LANES_23;
+    pObj->srcCaps.laneMapping = DP_LANE_MAPPING_SINGLE_REGULAR;
     pObj->srcCaps.controllersPerPhy = DP_SINGLE_CONTROLLER;
 
     pObj->isConnected = FALSE;
@@ -737,20 +745,20 @@ static int32_t Dss_dctrlDrvInitDPTX(uint32_t isHpdSupported)
 
     if(FVID2_SOK == retVal)
     {
-        dpApiRet = DP_LoadFirmware(pObj->dpPrivData, &pObj->dpFWImage);
+        dpApiRet = DP_SetClock(pObj->dpPrivData, &pObj->dpClkInfo);
         if (CDN_EOK != dpApiRet)
         {
-            GT_0trace(DssTrace, GT_ERR, "error : DP_LoadFirmware\r\n");
+            GT_0trace(DssTrace, GT_ERR, "error : DP_SetClock\r\n");
             retVal = FVID2_EFAIL;
         }
     }
 
     if(FVID2_SOK == retVal)
     {
-        dpApiRet = DP_SetClock(pObj->dpPrivData, &pObj->dpClkInfo);
+        dpApiRet = DP_LoadFirmware(pObj->dpPrivData, &pObj->dpFWImage);
         if (CDN_EOK != dpApiRet)
         {
-            GT_0trace(DssTrace, GT_ERR, "error : DP_SetClock\r\n");
+            GT_0trace(DssTrace, GT_ERR, "error : DP_LoadFirmware\r\n");
             retVal = FVID2_EFAIL;
         }
     }
@@ -775,6 +783,7 @@ static int32_t Dss_dctrlDrvInitDPTX(uint32_t isHpdSupported)
         }
     }
 
+
     if(FVID2_SOK == retVal)
     {
         uint8_t mainCtrlResp;
@@ -786,6 +795,8 @@ static int32_t Dss_dctrlDrvInitDPTX(uint32_t isHpdSupported)
             retVal = FVID2_EFAIL;
         }
     }
+
+    // test echo missing here
 
     if(FVID2_SOK == retVal)
     {
@@ -801,7 +812,7 @@ static int32_t Dss_dctrlDrvInitDPTX(uint32_t isHpdSupported)
     {
         dpApiRet = DP_ConfigurePhyStartUp(pObj->dpPrivData,
                 0x2,
-                pObj->srcCaps.laneCount,
+                0x2,
                 pObj->srcCaps.maxLinkRate);
         if(CDN_EOK != dpApiRet)
         {
@@ -809,6 +820,8 @@ static int32_t Dss_dctrlDrvInitDPTX(uint32_t isHpdSupported)
             retVal = FVID2_EFAIL;
         }
     }
+
+
 
     if(FVID2_SOK == retVal)
     {
@@ -819,6 +832,15 @@ static int32_t Dss_dctrlDrvInitDPTX(uint32_t isHpdSupported)
             retVal = FVID2_EFAIL;
         }
     }
+
+    
+
+    
+
+    
+
+
+    
 
     if((FVID2_SOK == retVal) &&
     (TRUE == pObj->isHpdSupported))

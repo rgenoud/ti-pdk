@@ -140,7 +140,7 @@ static void configurePhyPmaCmnCfg(const DP_SD0801_PrivateData* pD)
         {.addr = CMN_PLL0_VCOCAL_ITER_TMR, .val = 0x0004},
         {.addr = CMN_PLL0_VCOCAL_REFTIM_START, .val = 0x0260},
         {.addr = CMN_PLL0_VCOCAL_TCTRL, .val = 0x0003},
-#ifdef HAVE_CMN_PLL1
+#if 1
         {.addr = CMN_PDIAG_PLL1_CP_PADJ_M0, .val = 0x0509},
         {.addr = CMN_PDIAG_PLL1_CP_IADJ_M0, .val = 0x0F00},
         {.addr = CMN_PDIAG_PLL1_FILT_PADJ_M0, .val = 0x0F08},
@@ -530,7 +530,7 @@ static void enableSsc(const DP_SD0801_PrivateData* pD, uint16_t ctrl2Val, uint16
     afeWrite(pD, CMN_PLL0_SS_CTRL3_M0, ctrl3Val);
     afeWrite(pD, CMN_PLL0_SS_CTRL4_M0, 0x0003);
 
-#ifdef HAVE_CMN_PLL1
+#if 1
     afeWrite(pD, CMN_PLL1_SS_CTRL1_M0, 0x0001); /*  Enable SSC */
     afeWrite(pD, CMN_PLL1_SS_CTRL2_M0, ctrl2Val);
     afeWrite(pD, CMN_PLL1_SS_CTRL3_M0, ctrl3Val);
@@ -547,7 +547,7 @@ static void configurePhyPmaCmnVcoCfg10_8(const DP_SD0801_PrivateData* pD, bool s
     afeWrite(pD, CMN_PLL0_HIGH_THR_M0, 0x00BC);
     afeWrite(pD, CMN_PDIAG_PLL0_CTRL_M0, 0x0012);
 
-#ifdef HAVE_CMN_PLL1
+#if 1
     afeWrite(pD, CMN_PLL1_INTDIV_M0, 0x0119);
     afeWrite(pD, CMN_PLL1_FRACDIVL_M0, 0x4000);
     afeWrite(pD, CMN_PLL1_FRACDIVH_M0, 0x0002);
@@ -570,7 +570,7 @@ static void configurePhyPmaCmnVcoCfg9_72(const DP_SD0801_PrivateData* pD, bool s
     afeWrite(pD, CMN_PLL0_HIGH_THR_M0, 0x0152);
     afeWrite(pD, CMN_PDIAG_PLL0_CTRL_M0, 0x0002);
 
-#ifdef HAVE_CMN_PLL1
+#if 1
     afeWrite(pD, CMN_PLL1_INTDIV_M0, 0x01FA);
     afeWrite(pD, CMN_PLL1_FRACDIVL_M0, 0x4000);
     afeWrite(pD, CMN_PLL1_FRACDIVH_M0, 0x0002);
@@ -593,7 +593,7 @@ static void configurePhyPmaCmnVcoCfg8_64(const DP_SD0801_PrivateData* pD, bool s
     afeWrite(pD, CMN_PLL0_HIGH_THR_M0, 0x012C);
     afeWrite(pD, CMN_PDIAG_PLL0_CTRL_M0, 0x0002);
 
-#ifdef HAVE_CMN_PLL1
+#if 1
     afeWrite(pD, CMN_PLL1_INTDIV_M0, 0x01C2);
     afeWrite(pD, CMN_PLL1_FRACDIVL_M0, 0x0000);
     afeWrite(pD, CMN_PLL1_FRACDIVH_M0, 0x0002);
@@ -616,7 +616,7 @@ static void configurePhyPmaCmnVcoCfg8_1(const DP_SD0801_PrivateData* pD, bool ss
     afeWrite(pD, CMN_PLL0_HIGH_THR_M0, 0x011A);
     afeWrite(pD, CMN_PDIAG_PLL0_CTRL_M0, 0x0002);
 
-#ifdef HAVE_CMN_PLL1
+#if 1
     /*  Setting VCO for 8.1GHz -- 19.2MHz */
     afeWrite(pD, CMN_PLL1_INTDIV_M0, 0x01A5);
     afeWrite(pD, CMN_PLL1_FRACDIVL_M0, 0xE000);
@@ -652,7 +652,7 @@ static void configurePhyPmaCmnVcoCommon(const DP_SD0801_PrivateData* pD, bool ss
     afeWrite(pD, CMN_PLL0_LOCK_REFCNT_START, 0x0099);
     afeWrite(pD, CMN_PLL0_LOCK_PLLCNT_START, 0x0099);
 
-#ifdef HAVE_CMN_PLL1
+#if 1
     /*  Settings common for all VCOs - 19.2 MHz */
     if (ssc)
     {
