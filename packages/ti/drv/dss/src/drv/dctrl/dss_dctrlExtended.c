@@ -480,7 +480,9 @@ static int32_t Dss_dctrlDrvDetectDp()
     if(FVID2_SOK == retVal)
     {
         dpApiRet = DP_GetHpdStatus(pObj->dpPrivData, &hpdState);
-        hpdState = true;
+
+        /* HPD pin is not connected on j721s2_evm, so setting hpdDtate as true to avoid error. */
+        hpdState = true;    
         if((CDN_EOK != dpApiRet) ||
         (true != hpdState))
         {
