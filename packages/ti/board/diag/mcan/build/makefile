@@ -85,7 +85,7 @@ endif
 
 SRCS_COMMON += mcan_test.c diag_common_cfg.c
 
-ifeq ($(BOARD), $(filter $(BOARD), j721e_evm am65xx_idk j7200_evm awr294x_evm))
+ifeq ($(BOARD), $(filter $(BOARD), j721e_evm am65xx_idk j7200_evm awr294x_evm j721s2_evm))
 SRCS_COMMON += GPIO_MCAN_config.c
 endif
 

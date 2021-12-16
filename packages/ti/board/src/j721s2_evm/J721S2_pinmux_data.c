@@ -260,9 +260,57 @@ static pinmuxPerCfg_t gMcan6PinCfg[] =
     {PINMUX_END}
 };
 
+static pinmuxPerCfg_t gMcan3PinCfg[] =
+{
+    /* MyMCAN3 -> MCAN3_RX -> U26 */
+    {
+        PIN_MCASP0_AXR4, PIN_MODE(0) | \
+        ((PIN_PULL_DISABLE | PIN_INPUT_ENABLE) & (~PIN_PULL_DIRECTION))
+    },
+    /* MyMCAN3 -> MCAN3_TX -> T27 */
+    {
+        PIN_MCASP0_AXR3, PIN_MODE(0) | \
+        ((PIN_PULL_DISABLE | PIN_INPUT_ENABLE) & (~PIN_PULL_DIRECTION))
+    },
+    {PINMUX_END}
+};
+
+static pinmuxPerCfg_t gMcan5PinCfg[] =
+{
+    /* MyMCAN5 -> MCAN5_RX -> U27 */
+    {
+        PIN_MCASP0_AFSX, PIN_MODE(0) | \
+        ((PIN_PULL_DISABLE | PIN_INPUT_ENABLE) & (~PIN_PULL_DIRECTION))
+    },
+    /* MyMCAN5 -> MCAN5_TX -> AB28 */
+    {
+        PIN_MCASP0_ACLKX, PIN_MODE(0) | \
+        ((PIN_PULL_DISABLE | PIN_INPUT_ENABLE) & (~PIN_PULL_DIRECTION))
+    },
+    {PINMUX_END}
+};
+
+static pinmuxPerCfg_t gMcan4PinCfg[] =
+{
+    /* MyMCAN4 -> MCAN4_RX -> AD27 */
+    {
+        PIN_MCASP0_AXR6, PIN_MODE(0) | \
+        ((PIN_PULL_DISABLE | PIN_INPUT_ENABLE) & (~PIN_PULL_DIRECTION))
+    },
+    /* MyMCAN4 -> MCAN4_TX -> AA28 */
+    {
+        PIN_MCASP0_AXR5, PIN_MODE(0) | \
+        ((PIN_PULL_DISABLE | PIN_INPUT_ENABLE) & (~PIN_PULL_DIRECTION))
+    },
+    {PINMUX_END}
+};
+
 static pinmuxModuleCfg_t gMcanPinCfg[] =
 {
     {6, TRUE, gMcan6PinCfg},
+    {3, TRUE, gMcan3PinCfg},
+    {5, TRUE, gMcan5PinCfg},
+    {4, TRUE, gMcan4PinCfg},
     {PINMUX_END}
 };
 
@@ -835,11 +883,59 @@ static pinmuxPerCfg_t gUart5PinCfg[] =
     {PINMUX_END}
 };
 
+static pinmuxPerCfg_t gUart3PinCfg[] =
+{
+    /* MyUART3 -> UART3_RXD -> R28 */
+    {
+        PIN_MCAN2_TX, PIN_MODE(11) | \
+        ((PIN_PULL_DISABLE | PIN_INPUT_ENABLE) & (~PIN_PULL_DIRECTION))
+    },
+    /* MyUART3 -> UART3_TXD -> Y25 */
+    {
+        PIN_MCAN2_RX, PIN_MODE(11) | \
+        ((PIN_PULL_DISABLE | PIN_INPUT_ENABLE) & (~PIN_PULL_DIRECTION))
+    },
+    {PINMUX_END}
+};
+
+static pinmuxPerCfg_t gUart6PinCfg[] =
+{
+    /* MyUART6 -> UART6_RXD -> T26 */
+    {
+        PIN_GPIO0_12, PIN_MODE(12) | \
+        ((PIN_PULL_DISABLE | PIN_INPUT_ENABLE) & (~PIN_PULL_DIRECTION))
+    },
+    /* MyUART6 -> UART6_TXD -> V26 */
+    {
+        PIN_MCAN1_TX, PIN_MODE(11) | \
+        ((PIN_PULL_DISABLE | PIN_INPUT_ENABLE) & (~PIN_PULL_DIRECTION))
+    },
+    {PINMUX_END}
+};
+
+static pinmuxPerCfg_t gUart9PinCfg[] =
+{
+    /* MyUART9 -> UART9_RXD -> V27 */
+    {
+        PIN_MCASP1_AXR1, PIN_MODE(12) | \
+        ((PIN_PULL_DISABLE | PIN_INPUT_ENABLE) & (~PIN_PULL_DIRECTION))
+    },
+    /* MyUART9 -> UART9_TXD -> W27 */
+    {
+        PIN_MCASP1_AXR2, PIN_MODE(12) | \
+        ((PIN_PULL_DISABLE | PIN_INPUT_ENABLE) & (~PIN_PULL_DIRECTION))
+    },
+    {PINMUX_END}
+};
+
 static pinmuxModuleCfg_t gUartPinCfg[] =
 {
     {8, TRUE, gUart8PinCfg},
     {2, TRUE, gUart2PinCfg},
     {5, TRUE, gUart5PinCfg},
+    {3, TRUE, gUart3PinCfg},
+    {6, TRUE, gUart6PinCfg},
+    {9, TRUE, gUart9PinCfg},
     {PINMUX_END}
 };
 
