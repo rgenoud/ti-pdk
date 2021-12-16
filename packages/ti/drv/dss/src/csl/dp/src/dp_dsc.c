@@ -713,7 +713,7 @@ uint32_t DP_DscSoftwareReset(DP_PrivateData* pD)
 
     if (CDN_EOK == retVal) {
         regTransfer.addr = offsetof(MHDP_ApbRegs, mhdp_apb_regs.mhdp_vif_ctrl[0].DSC_CTRL_p);
-        /* Might need a timeout// */
+        /* Might need a timeout */
         do {
             retVal = DP_ReadRegister(pD, &regTransfer);
             if (CDN_EOK != retVal) {
