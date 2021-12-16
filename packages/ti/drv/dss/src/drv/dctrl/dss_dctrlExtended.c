@@ -67,7 +67,11 @@ typedef enum
 #define DP_PRIVATE_DATA_SIZE          (131072U)
 #define DP_PHY_PRIVATE_DATA_SIZE      (1024U)
 #define DP_INTR                       (64U)
-#define ADDR_AFE                      (0x05060000)
+#if defined (SOC_J721S2)
+#define ADDR_AFE                   (0x05060000)
+#else
+#define ADDR_AFE                   (0x05050000)
+#endif
 
 /* ========================================================================== */
 /*                         Structure Declarations                             */
