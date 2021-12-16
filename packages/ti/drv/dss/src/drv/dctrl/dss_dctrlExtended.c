@@ -51,7 +51,6 @@
 #include <ti/drv/dss/src/drv/dctrl/dss_dctrlIntr.h>
 #include <ti/drv/dss/src/drv/dctrl/dss_dctrlPriv.h>
 #include <dss_soc_priv.h>
-#include <ti/board/src/j721s2_evm/include/board_control.h>
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
@@ -304,13 +303,12 @@ int32_t Dss_dctrlDrvInitDp(uint32_t isHpdSupported)
      * XXX push this things to some CSL kind of functions
      */
 
+#if defined(SOC_J721S2)
+#else
     /* HPD Pin Mux */
-    Board_unlockMMR();
-
     CSL_REG32_WR(CSL_CTRL_MMR0_CFG0_BASE + CSL_MAIN_CTRL_MMR_CFG0_PADCONFIG0 + 0x1c4, 0x00040005);
-
-    /* Select EDP PHY CLK source */
-    CSL_REG32_WR(CSL_CTRL_MMR0_CFG0_BASE + CSL_MAIN_CTRL_MMR_CFG0_EDP_PHY0_CLKSEL, 0x0);
+#endif
+    
 
 #if defined (SOC_J721S2)
     CSL_REG32_WR(CSL_CTRL_MMR0_CFG0_BASE + CSL_MAIN_CTRL_MMR_CFG0_EDP0_CTRL, 0x10000000);
@@ -318,13 +316,8 @@ int32_t Dss_dctrlDrvInitDp(uint32_t isHpdSupported)
     CSL_REG32_WR(CSL_CTRL_MMR0_CFG0_BASE + CSL_MAIN_CTRL_MMR_CFG0_SERDES0_LN1_CTRL, 0x1);
     CSL_REG32_WR(CSL_CTRL_MMR0_CFG0_BASE + CSL_MAIN_CTRL_MMR_CFG0_SERDES0_LN2_CTRL, 0x0);
     CSL_REG32_WR(CSL_CTRL_MMR0_CFG0_BASE + CSL_MAIN_CTRL_MMR_CFG0_SERDES0_LN3_CTRL, 0x0);
-#endif
-    /* Set DPTX_SRC_CFG, 0:vif0_en, 1:vif_1_en, 2:vif_2_en, 3: vif_3_en, 4: vif_0_sel, TBD */
-    CSL_REG32_WR(CSL_DSS_EDP0_INTG_CFG_VP_BASE + CSL_DPTX_DPTX_SRC_CFG, 0x1F);
-
+   
     /* WIZ PHY */
-
-#if defined (SOC_J721S2)
     CSL_REG32_WR(ADDR_AFE + 0x408, 0x30000000);
     CSL_REG32_WR(ADDR_AFE + 0x40c, 0x39000000);
     CSL_REG32_WR(ADDR_AFE + 0x480, 0x70000000);
@@ -348,6 +341,12 @@ int32_t Dss_dctrlDrvInitDp(uint32_t isHpdSupported)
     CSL_REG32_WR(ADDR_AFE + 0x504, 0x10001   );
     CSL_REG32_WR(ADDR_AFE + 0x544, 0x10001   );
 #endif
+
+    /* Select EDP PHY CLK source */
+    CSL_REG32_WR(CSL_CTRL_MMR0_CFG0_BASE + CSL_MAIN_CTRL_MMR_CFG0_EDP_PHY0_CLKSEL, 0x0);
+    /* Set DPTX_SRC_CFG, 0:vif0_en, 1:vif_1_en, 2:vif_2_en, 3: vif_3_en, 4: vif_0_sel, TBD */
+    CSL_REG32_WR(CSL_DSS_EDP0_INTG_CFG_VP_BASE + CSL_DPTX_DPTX_SRC_CFG, 0x1F);
+
     retVal = Dss_dctrlDrvInitDPTX(isHpdSupported);
 
     return retVal;
@@ -480,8 +479,10 @@ static int32_t Dss_dctrlDrvDetectDp()
     {
         dpApiRet = DP_GetHpdStatus(pObj->dpPrivData, &hpdState);
 
+#if defined (SOC_J721S2)
         /* HPD pin is not connected on j721s2_evm, so setting hpdDtate as true to avoid error. */
         hpdState = true;    
+#endif        
         if((CDN_EOK != dpApiRet) ||
         (true != hpdState))
         {
@@ -666,9 +667,13 @@ static int32_t Dss_dctrlDrvInitDPTX(uint32_t isHpdSupported)
 
     pObj->dpCbInfo.event = NULL;
     pObj->dpClkInfo.mhz = 125;
-
+#if defined (SOC_J721S2)
     pObj->srcCaps.maxLinkRate = DP_LINK_RATE_2_70;
     pObj->srcCaps.laneCount = 2;
+#else
+    pObj->srcCaps.maxLinkRate = DP_LINK_RATE_8_10;
+    pObj->srcCaps.laneCount = 4;
+#endif
     pObj->srcCaps.ssc = false;
     pObj->srcCaps.scramblerDisable = false;
     pObj->srcCaps.tps3 = true;
@@ -797,8 +802,6 @@ static int32_t Dss_dctrlDrvInitDPTX(uint32_t isHpdSupported)
         }
     }
 
-    // test echo missing here
-
     if(FVID2_SOK == retVal)
     {
         dpApiRet = DP_ConfigurePhyAuxCtrl(pObj->dpPrivData);
@@ -811,10 +814,17 @@ static int32_t Dss_dctrlDrvInitDPTX(uint32_t isHpdSupported)
 
     if(FVID2_SOK == retVal)
     {
+#if defined (SOC_J721S2)        
         dpApiRet = DP_ConfigurePhyStartUp(pObj->dpPrivData,
                 0x2,
-                0x2,
+                pObj->srcCaps.laneCount,
                 pObj->srcCaps.maxLinkRate);
+#else          
+        dpApiRet = DP_ConfigurePhyStartUp(pObj->dpPrivData,
+                0x2,
+                pObj->srcCaps.laneCount,
+                pObj->srcCaps.maxLinkRate);
+#endif                      
         if(CDN_EOK != dpApiRet)
         {
             GT_0trace(DssTrace, GT_ERR, "error : DP_ConfigurePhyStartUp\r\n");

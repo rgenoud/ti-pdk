@@ -111,8 +111,11 @@ extern "C" {
 #define DISP_APP_ENABLE_FLIP              (0U)
 
 #define DISP_APP_RAW_DATA_INPUT           (0U)
-
+#if defined (SOC_J721S2)
 #define DISP_APP_TEST_EDP                 (1U)
+#else
+#define DISP_APP_TEST_EDP                 (0U)
+#endif
 
 #define DISP_APP_TEST_MULTISYNC           (0U)
 
@@ -136,7 +139,13 @@ extern "C" {
 #undef CIO_CONSOLE
 
 #ifndef CIO_CONSOLE
+
+#if defined (SOC_J721S2)
 #define DSS_log                printf
+#else
+#define DSS_log                UART_printf
+#endif
+
 #else
 #define DSS_log                printf
 #endif
