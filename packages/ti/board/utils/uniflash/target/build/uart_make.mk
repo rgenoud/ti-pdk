@@ -126,8 +126,9 @@ EXTERNAL_LNKCMD_FILE_LOCAL = $(UNIFLASH_BASE_DIR)/soc/k3/linker_j7.cmd
 endif
 
 ifeq ($(BOARD), $(filter $(BOARD), j721s2_evm))
-SRCS_COMMON += ospi.c ospi_nand.c
-EXTERNAL_LNKCMD_FILE_LOCAL = $(UNIFLASH_BASE_DIR)/soc/k3/linker_j7.cmd
+SRCS_COMMON += ospi.c ospi_nand.c emmc.c
+SRCS_ASM_COMMON += ufp_misc.asm
+EXTERNAL_LNKCMD_FILE_LOCAL = $(UNIFLASH_BASE_DIR)/soc/k3/linker_j721s2.cmd
 INCDIR += $(UNIFLASH_BASE_DIR)/src/ospi_nand
 SRCDIR += $(UNIFLASH_BASE_DIR)/src/ospi_nand
 endif

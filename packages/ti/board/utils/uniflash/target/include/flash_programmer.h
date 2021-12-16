@@ -91,6 +91,7 @@ extern "C" {
 
 #define OSPI_FLASH
 #define OSPI_NAND_FLASH
+#define EMMC_FLASH
 #endif
 
 #if defined(am65xx_evm) || defined(am65xx_idk)

@@ -55,6 +55,8 @@ uint8_t uart_inst = BOARD_UART_INSTANCE;
 
 void _resetvectors (void);
 int8_t UFP_openUartHandle(void);
+void utilsCopyVecs2ATcm(void);
+void ufpTcmEn(void);
 
 #if defined(am64x_evm)
 static int32_t UFP_isNoBootEnabled(void)
@@ -88,24 +90,6 @@ static int32_t UFP_isNoBootEnabled(void)
     return (FALSE);
 }
 #endif
-
-static void UFP_asmAtcmEn(void)
-{
-    asm volatile ("    MRC     p15, #0, r0, c9, c1, #1");
-    asm volatile ("    ORR     r0, r0, #0x1");
-    asm volatile ("    MCR     p15, #0, r0, c9, c1, #1");
-}
-
-static void UFP_enableATCM(void)
-{
-    UFP_asmAtcmEn();
-
-    /* Initialize the ATCM */
-    memset((void *)UFP_MCU_ARMSS_ATCM_BASE, 0xFF, 0x8000);
-
-    /* Relocate CSL Vectors to ATCM*/
-    memcpy((void *)UFP_MCU_ARMSS_ATCM_BASE, (void *)_resetvectors, 0x100);
-}
 
 static void UFP_initUARTPwrClk(void)
 {
@@ -403,8 +387,8 @@ int8_t UFP_socInit(Board_initCfg *cfg)
         UART_socSetInitCfg(BOARD_UART_INSTANCE, &uart_cfg);
 
         UFP_uartConfig(UFP_BAUDRATE_115200);
-
-        UFP_enableATCM();
+        ufpTcmEn();
+        utilsCopyVecs2ATcm();
     }
 
     return 0;
