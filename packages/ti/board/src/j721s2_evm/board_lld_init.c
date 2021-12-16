@@ -38,6 +38,7 @@
  *
  */
 
+#include <ti/csl/arch/csl_arch.h>
 #include "board_internal.h"
 #include "board_utils.h"
 #include "board_cfg.h"
@@ -138,9 +139,28 @@ Board_STATUS Board_uartStdioInit(void)
     uint32_t uartBaseAddr;
     uint32_t socDomainUART;
     uint32_t socDomainCore;
+#ifdef BUILD_MCU
+    CSL_ArmR5CPUInfo info;
 
-    uartInst      = gBoardInitParams.uartInst;
+    CSL_armR5GetCpuID(&info);
+    if (info.grpId != (uint32_t)CSL_ARM_R5_CLUSTER_GROUP_ID_0)
+    {
+        /* Main R5 cores will use main domain UART instances */
+        socDomainUART = BOARD_SOC_DOMAIN_MAIN;
+        uartInst      = gBoardInitParams.uartInst;
+    }
+    else
+    {
+        socDomainUART = gBoardInitParams.uartSocDomain;
+        if(socDomainUART == BOARD_SOC_DOMAIN_MCU)
+        {
+            uartInst = BOARD_MCU_UART_INSTANCE;
+        }
+    }
+#else
     socDomainUART = gBoardInitParams.uartSocDomain;
+    uartInst      = gBoardInitParams.uartInst;
+#endif
 
     socDomainCore = Board_getSocDomain();
 
