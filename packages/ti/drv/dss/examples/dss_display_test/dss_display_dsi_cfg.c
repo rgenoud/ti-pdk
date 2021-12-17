@@ -71,8 +71,8 @@
 /* ========================================================================== */
 
 extern void App_wait(uint32_t wait_in_ms);
-static int32_t DispApp_SetBoardMux();
-static int32_t DispApp_InitI2c(DispApp_Obj *appObj);
+int32_t DispApp_SetBoardMux();
+int32_t DispApp_InitI2c(DispApp_Obj *appObj);
 
 
 /* ========================================================================== */
@@ -150,8 +150,9 @@ uint8_t serdesConfig[][4] = {
 
 };
 
-static int32_t DispApp_SetBoardMux()
+int32_t DispApp_SetBoardMux()
 {
+#if defined (SOC_J721E)
     Board_I2cInitCfg_t i2cCfg;
 
     /*setting power mux for dsi lcd*/
@@ -188,11 +189,11 @@ static int32_t DispApp_SetBoardMux()
                               PIN_NUM_2,
                               GPIO_SIGNAL_LEVEL_HIGH);
     Board_i2cIoExpDeInit();
-
+#endif
     return (FVID2_SOK);
 }
 
-static int32_t DispApp_InitI2c(DispApp_Obj *appObj)
+int32_t DispApp_InitI2c(DispApp_Obj *appObj)
 {
     int32_t status = FVID2_SOK;
 
@@ -232,7 +233,8 @@ static int32_t DispApp_InitI2c(DispApp_Obj *appObj)
 
 int32_t DispApp_SetDsiSerdesCfg(DispApp_Obj *appObj)
 {
-    int32_t status;
+    int32_t status = FVID2_SOK;
+#if defined (SOC_J721E)
     uint32_t cnt, clientAddr;
 
     status = DispApp_SetBoardMux();
@@ -263,6 +265,6 @@ int32_t DispApp_SetDsiSerdesCfg(DispApp_Obj *appObj)
     }
 
     I2C_close(gI2cHandle);
-
+#endif
     return (status);
 }
