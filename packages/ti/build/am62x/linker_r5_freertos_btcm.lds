@@ -42,7 +42,7 @@ MEMORY
    
     /* am62x HSM RAM location */
     HSM_RAM             (RWIX)      : ORIGIN = 0x43C00000 LENGTH = 0x3FF00
-    DDR                 (RWIX)      : ORIGIN = 0xa0000000 LENGTH = 0xFFFFF
+    DDR                 (RWIX)      : ORIGIN = 0xa0000000 LENGTH = 0x200000
 }
 
 /*--------------------------------------------------------------*/
