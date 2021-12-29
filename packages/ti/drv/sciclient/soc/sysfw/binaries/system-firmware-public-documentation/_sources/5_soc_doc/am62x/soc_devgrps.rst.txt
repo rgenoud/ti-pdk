@@ -20,9 +20,9 @@ Enumeration of Device group IDs
 +-----------------+---------------------+--------------+------------------------------------------------------------------------------+
 | SoC Devgrp ID   | Generic Devgrp ID   | Flag Value   | Description                                                                  |
 +=================+=====================+==============+==============================================================================+
-| MCU_WAKEUP      | DEVGRP_00           | 0x1U <<  0U  | Set of MCU domain peripherals to initialize at boot and use during runtime.  |
+| MCU_WAKEUP      | DEVGRP_01           | 0x1U <<  1U  | Set of MCU domain peripherals to initialize at boot and use during runtime.  |
 +-----------------+---------------------+--------------+------------------------------------------------------------------------------+
-| MAIN            | DEVGRP_01           | 0x1U <<  1U  | Set of Main domain peripherals to initialize at boot and use during runtime. |
+| MAIN            | DEVGRP_00           | 0x1U <<  0U  | Set of Main domain peripherals to initialize at boot and use during runtime. |
 +-----------------+---------------------+--------------+------------------------------------------------------------------------------+
 
 .. _soc_doc_am62x_public_devgrp_desc_mcu_wakeup_ip_list:
@@ -78,6 +78,8 @@ Enumeration Devices accessible in devgrp "MCU_WAKEUP"
 |         188 | AM62X_DEV_MCU_MCAN0                   |
 +-------------+---------------------------------------+
 |         189 | AM62X_DEV_MCU_MCAN1                   |
++-------------+---------------------------------------+
+|         193 | AM62X_DEV_CLK_32K_RC_SEL_DEV_VD       |
 +-------------+---------------------------------------+
 
 .. _soc_doc_am62x_public_devgrp_desc_main_ip_list:

@@ -1012,6 +1012,46 @@ represented in this section from the <em>perspective of the board</em>.</p>
 </tbody>
 </table>
 </div>
+<div class="section" id="clocks-for-clk-32k-rc-sel-dev-vd-device">
+<span id="soc-doc-am62x-public-clks-clk-32k-rc-sel-dev-vd"></span><h3>Clocks for CLK_32K_RC_SEL_DEV_VD Device<a class="headerlink" href="#clocks-for-clk-32k-rc-sel-dev-vd-device" title="Permalink to this headline">¶</a></h3>
+<p>Device: <a class="reference internal" href="devices.html#soc-doc-am62x-public-devices-desc-device-list"><span class="std std-ref">AM62X_DEV_CLK_32K_RC_SEL_DEV_VD</span></a> (ID = 193)</p>
+<p>Following is a mapping of Clocks IDs to function:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="53%" />
+<col width="39%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Clock ID</th>
+<th class="head">Name</th>
+<th class="head">Function</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>0</td>
+<td>DEV_CLK_32K_RC_SEL_DEV_VD_CLK</td>
+<td>Input muxed clock</td>
+</tr>
+<tr class="row-odd"><td>1</td>
+<td>DEV_CLK_32K_RC_SEL_DEV_VD_CLK_PARENT_GLUELOGIC_RCOSC_CLK_1P0V_97P65K3</td>
+<td>Parent input clock option to DEV_CLK_32K_RC_SEL_DEV_VD_CLK</td>
+</tr>
+<tr class="row-even"><td>2</td>
+<td>DEV_CLK_32K_RC_SEL_DEV_VD_CLK_PARENT_HSDIV0_16FFT_MCU_32KHZ_GEN_0_HSDIVOUT0_CLK8</td>
+<td>Parent input clock option to DEV_CLK_32K_RC_SEL_DEV_VD_CLK</td>
+</tr>
+<tr class="row-odd"><td>3</td>
+<td>DEV_CLK_32K_RC_SEL_DEV_VD_CLK_PARENT_CLK_32K_RC_SEL_DIV_CLKOUT</td>
+<td>Parent input clock option to DEV_CLK_32K_RC_SEL_DEV_VD_CLK</td>
+</tr>
+<tr class="row-even"><td>4</td>
+<td>DEV_CLK_32K_RC_SEL_DEV_VD_CLK_PARENT_BOARD_0_LFOSC0_CLK_OUT</td>
+<td>Parent input clock option to DEV_CLK_32K_RC_SEL_DEV_VD_CLK</td>
+</tr>
+</tbody>
+</table>
+</div>
 <div class="section" id="clocks-for-cmp-event-introuter0-device">
 <span id="soc-doc-am62x-public-clks-cmp-event-introuter0"></span><h3>Clocks for CMP_EVENT_INTROUTER0 Device<a class="headerlink" href="#clocks-for-cmp-event-introuter0-device" title="Permalink to this headline">¶</a></h3>
 <p>Device: <a class="reference internal" href="devices.html#soc-doc-am62x-public-devices-desc-device-list"><span class="std std-ref">AM62X_DEV_CMP_EVENT_INTROUTER0</span></a> (ID = 1)</p>
@@ -3226,9 +3266,9 @@ represented in this section from the <em>perspective of the board</em>.</p>
 <p>Following is a mapping of Clocks IDs to function:</p>
 <table border="1" class="docutils">
 <colgroup>
-<col width="21%" />
-<col width="54%" />
-<col width="25%" />
+<col width="9%" />
+<col width="49%" />
+<col width="43%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Clock ID</th>
@@ -3239,49 +3279,89 @@ represented in this section from the <em>perspective of the board</em>.</p>
 <tbody valign="top">
 <tr class="row-even"><td>0</td>
 <td>DEV_MCASP2_AUX_CLK</td>
-<td>Input clock</td>
+<td>Input muxed clock</td>
 </tr>
 <tr class="row-odd"><td>1</td>
+<td>DEV_MCASP2_AUX_CLK_PARENT_POSTDIV4_16FF_MAIN_2_HSDIVOUT8_CLK</td>
+<td>Parent input clock option to DEV_MCASP2_AUX_CLK</td>
+</tr>
+<tr class="row-even"><td>2</td>
+<td>DEV_MCASP2_AUX_CLK_PARENT_POSTDIV1_16FFT_MAIN_1_HSDIVOUT6_CLK</td>
+<td>Parent input clock option to DEV_MCASP2_AUX_CLK</td>
+</tr>
+<tr class="row-odd"><td>3</td>
 <td>DEV_MCASP2_MCASP_ACLKR_PIN</td>
 <td>Input clock</td>
 </tr>
-<tr class="row-even"><td>2</td>
+<tr class="row-even"><td>4</td>
 <td>DEV_MCASP2_MCASP_ACLKR_POUT</td>
 <td>Output clock</td>
 </tr>
-<tr class="row-odd"><td>3</td>
+<tr class="row-odd"><td>5</td>
 <td>DEV_MCASP2_MCASP_ACLKX_PIN</td>
 <td>Input clock</td>
 </tr>
-<tr class="row-even"><td>4</td>
+<tr class="row-even"><td>6</td>
 <td>DEV_MCASP2_MCASP_ACLKX_POUT</td>
 <td>Output clock</td>
 </tr>
-<tr class="row-odd"><td>5</td>
+<tr class="row-odd"><td>7</td>
 <td>DEV_MCASP2_MCASP_AFSR_POUT</td>
 <td>Output clock</td>
 </tr>
-<tr class="row-even"><td>6</td>
+<tr class="row-even"><td>8</td>
 <td>DEV_MCASP2_MCASP_AFSX_POUT</td>
 <td>Output clock</td>
 </tr>
-<tr class="row-odd"><td>7</td>
+<tr class="row-odd"><td>9</td>
 <td>DEV_MCASP2_MCASP_AHCLKR_PIN</td>
-<td>Input clock</td>
+<td>Input muxed clock</td>
 </tr>
-<tr class="row-even"><td>8</td>
+<tr class="row-even"><td>10</td>
+<td>DEV_MCASP2_MCASP_AHCLKR_PIN_PARENT_BOARD_0_EXT_REFCLK1_OUT</td>
+<td>Parent input clock option to DEV_MCASP2_MCASP_AHCLKR_PIN</td>
+</tr>
+<tr class="row-odd"><td>11</td>
+<td>DEV_MCASP2_MCASP_AHCLKR_PIN_PARENT_GLUELOGIC_HFOSC0_CLKOUT</td>
+<td>Parent input clock option to DEV_MCASP2_MCASP_AHCLKR_PIN</td>
+</tr>
+<tr class="row-even"><td>12</td>
+<td>DEV_MCASP2_MCASP_AHCLKR_PIN_PARENT_BOARD_0_AUDIO_EXT_REFCLK0_OUT</td>
+<td>Parent input clock option to DEV_MCASP2_MCASP_AHCLKR_PIN</td>
+</tr>
+<tr class="row-odd"><td>13</td>
+<td>DEV_MCASP2_MCASP_AHCLKR_PIN_PARENT_BOARD_0_AUDIO_EXT_REFCLK1_OUT</td>
+<td>Parent input clock option to DEV_MCASP2_MCASP_AHCLKR_PIN</td>
+</tr>
+<tr class="row-even"><td>14</td>
 <td>DEV_MCASP2_MCASP_AHCLKR_POUT</td>
 <td>Output clock</td>
 </tr>
-<tr class="row-odd"><td>9</td>
+<tr class="row-odd"><td>15</td>
 <td>DEV_MCASP2_MCASP_AHCLKX_PIN</td>
-<td>Input clock</td>
+<td>Input muxed clock</td>
 </tr>
-<tr class="row-even"><td>10</td>
+<tr class="row-even"><td>16</td>
+<td>DEV_MCASP2_MCASP_AHCLKX_PIN_PARENT_BOARD_0_EXT_REFCLK1_OUT</td>
+<td>Parent input clock option to DEV_MCASP2_MCASP_AHCLKX_PIN</td>
+</tr>
+<tr class="row-odd"><td>17</td>
+<td>DEV_MCASP2_MCASP_AHCLKX_PIN_PARENT_GLUELOGIC_HFOSC0_CLKOUT</td>
+<td>Parent input clock option to DEV_MCASP2_MCASP_AHCLKX_PIN</td>
+</tr>
+<tr class="row-even"><td>18</td>
+<td>DEV_MCASP2_MCASP_AHCLKX_PIN_PARENT_BOARD_0_AUDIO_EXT_REFCLK0_OUT</td>
+<td>Parent input clock option to DEV_MCASP2_MCASP_AHCLKX_PIN</td>
+</tr>
+<tr class="row-odd"><td>19</td>
+<td>DEV_MCASP2_MCASP_AHCLKX_PIN_PARENT_BOARD_0_AUDIO_EXT_REFCLK1_OUT</td>
+<td>Parent input clock option to DEV_MCASP2_MCASP_AHCLKX_PIN</td>
+</tr>
+<tr class="row-even"><td>20</td>
 <td>DEV_MCASP2_MCASP_AHCLKX_POUT</td>
 <td>Output clock</td>
 </tr>
-<tr class="row-odd"><td>11</td>
+<tr class="row-odd"><td>21</td>
 <td>DEV_MCASP2_VBUSP_CLK</td>
 <td>Input clock</td>
 </tr>
