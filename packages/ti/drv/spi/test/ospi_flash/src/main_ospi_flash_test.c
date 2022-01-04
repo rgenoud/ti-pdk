@@ -808,7 +808,7 @@ void OSPI_initConfig(OSPI_Tests *test)
         ospi_cfg.devDelays[2] = OSPI_DEV_DELAY_CSDA_A;
         ospi_cfg.devDelays[3] = OSPI_DEV_DELAY_CSDA_A;
         ospi_cfg.blkSize = 16;
-        ospi_cfg.baudRateDiv = 8;
+        ospi_cfg.baudRateDiv = 6;
     }
 
     if(ospi_cfg.intrEnable)

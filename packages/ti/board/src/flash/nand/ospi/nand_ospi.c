@@ -597,15 +597,14 @@ static NAND_STATUS Nand_ospiWaitReady(SPI_Handle handle, uint32_t timeOut)
     {
         cmd[0] = NAND_CMD_RDSR;
         cmd[1] = NAND_SR3_ADDR;  /* Address Bytes */
+        cmd[2] = 0x00;
 
         cmdDummyCycles = 7;
         SPI_control(handle, SPI_V0_CMD_EXT_RD_DUMMY_CLKS, (void *)&cmdDummyCycles);
 
         do
         {
-            /* TO DO - Implement check for BUSY bit in Octal mode */
-            /*
-            if (NAND_ospiCmdRead(handle, cmd, 2, &status, 1))
+            if (NAND_ospiCmdRead(handle, cmd, 3, &status, 1))
             {
                 return NAND_FAIL;
             }
@@ -613,7 +612,7 @@ static NAND_STATUS Nand_ospiWaitReady(SPI_Handle handle, uint32_t timeOut)
             {
                 break;
             }
-            */
+
             timeOut--;
             if (!timeOut) {
                 status = 0;
@@ -675,7 +674,6 @@ NAND_STATUS Nand_ospiRead(NAND_HANDLE handle, uint32_t addr, uint32_t len, uint8
     OSPI_v0_HwAttrs *hwAttrs;
     uint8_t          pageReadCmd[4];
     uint32_t         pageReadCmdLen = 4;
-    volatile uint32_t delay = 1000;
 
     if (!handle)
     {
@@ -730,8 +728,11 @@ NAND_STATUS Nand_ospiRead(NAND_HANDLE handle, uint32_t addr, uint32_t len, uint8
             Nand_ospiCmdWrite(spiHandle, pageReadCmd, pageReadCmdLen, 0);
         }
 
-        delay = 0xFFFFFF;
-        while(delay--);
+        /* Check BUSY bit of Flash */
+        if (Nand_ospiWaitReady(spiHandle, NAND_WRR_WRITE_TIMEOUT))
+        {
+            return NAND_FAIL;
+        }
 
         /* Set transfer mode and read type */
         SPI_control(spiHandle, SPI_V0_CMD_SET_XFER_MODE, NULL);
@@ -767,7 +768,6 @@ NAND_STATUS Nand_ospiWrite(NAND_HANDLE handle, uint32_t addr, uint32_t len, uint
     uint8_t          progExecuteCmd[4];
     uint32_t         progExecuteCmdLen = 4;
     uint8_t          cmdWren = NAND_CMD_WREN;
-    volatile uint32_t delay;
 
     if (!handle)
     {
@@ -794,9 +794,6 @@ NAND_STATUS Nand_ospiWrite(NAND_HANDLE handle, uint32_t addr, uint32_t len, uint
 
     for (actual = 0; actual < len; actual += chunkLen)
     {
-        delay = 0xFFFFFF;
-        while(delay--);
-
         /* Send Write Enable command */
         if(Nand_ospiCmdWrite(spiHandle, &cmdWren, 1, 0))
         {
@@ -832,8 +829,11 @@ NAND_STATUS Nand_ospiWrite(NAND_HANDLE handle, uint32_t addr, uint32_t len, uint
             return NAND_FAIL;
         }
 
-        delay = 0xFFFFFF;
-        while(delay--);
+        /* Check BUSY bit of Flash */
+        if (Nand_ospiWaitReady(spiHandle, NAND_WRR_WRITE_TIMEOUT))
+        {
+            return NAND_FAIL;
+        }
 
         if (hwAttrs->xferLines == OSPI_XFER_LINES_OCTAL)
         {
