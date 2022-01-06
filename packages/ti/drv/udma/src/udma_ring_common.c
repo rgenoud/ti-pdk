@@ -192,20 +192,6 @@ int32_t Udma_ringAlloc(Udma_DrvHandle drvHandle,
         {
             Udma_printf(drvHandle, "[Error] Ring config failed!!!\n");
         }
-#ifdef PDK_10850_WA
-        if(UDMA_INST_TYPE_LCDMA_BCDMA == drvHandle->instType)
-        {
-            if(ringHandle->ringNum < CSL_NAVSS_BCDMA_NUM_TX_CHANS)
-            {
-                ringHandle->lcdmaCfg.mode = CSL_LCDMA_RINGACC_RING_MODE_TX_RING;
-            }
-            else
-            {
-                ringHandle->lcdmaCfg.mode = CSL_LCDMA_RINGACC_RING_MODE_RX_RING;
-            }
-            retVal += CSL_lcdma_ringaccInitRing(&drvHandle->lcdmaRaRegs, ringHandle->ringNum, &ringHandle->lcdmaCfg);
-        }
-#endif
     }
 
     if(UDMA_SOK == retVal)
