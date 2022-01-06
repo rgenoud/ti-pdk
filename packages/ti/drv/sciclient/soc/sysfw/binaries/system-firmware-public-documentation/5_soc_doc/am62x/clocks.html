@@ -2142,9 +2142,9 @@ represented in this section from the <em>perspective of the board</em>.</p>
 <p>Following is a mapping of Clocks IDs to function:</p>
 <table border="1" class="docutils">
 <colgroup>
-<col width="24%" />
-<col width="48%" />
-<col width="28%" />
+<col width="9%" />
+<col width="50%" />
+<col width="40%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Clock ID</th>
@@ -2159,13 +2159,21 @@ represented in this section from the <em>perspective of the board</em>.</p>
 </tr>
 <tr class="row-odd"><td>2</td>
 <td>DEV_DSS0_DPI_1_IN_CLK</td>
-<td>Input clock</td>
+<td>Input muxed clock</td>
 </tr>
 <tr class="row-even"><td>3</td>
+<td>DEV_DSS0_DPI_1_IN_CLK_PARENT_HSDIV0_16FFT_MAIN_17_HSDIVOUT0_CLK</td>
+<td>Parent input clock option to DEV_DSS0_DPI_1_IN_CLK</td>
+</tr>
+<tr class="row-odd"><td>4</td>
+<td>DEV_DSS0_DPI_1_IN_CLK_PARENT_BOARD_0_VOUT0_EXTPCLKIN_OUT</td>
+<td>Parent input clock option to DEV_DSS0_DPI_1_IN_CLK</td>
+</tr>
+<tr class="row-even"><td>5</td>
 <td>DEV_DSS0_DPI_1_OUT_CLK</td>
 <td>Output clock</td>
 </tr>
-<tr class="row-odd"><td>4</td>
+<tr class="row-odd"><td>6</td>
 <td>DEV_DSS0_DSS_FUNC_CLK</td>
 <td>Input clock</td>
 </tr>
@@ -3729,15 +3737,19 @@ represented in this section from the <em>perspective of the board</em>.</p>
 <td>DEV_MCU_MCAN0_MCANSS_CCLK_CLK_PARENT_HSDIV4_16FFT_MCU_0_HSDIVOUT4_CLK</td>
 <td>Parent input clock option to DEV_MCU_MCAN0_MCANSS_CCLK_CLK</td>
 </tr>
-<tr class="row-even"><td>4</td>
+<tr class="row-even"><td>3</td>
+<td>DEV_MCU_MCAN0_MCANSS_CCLK_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT</td>
+<td>Parent input clock option to DEV_MCU_MCAN0_MCANSS_CCLK_CLK</td>
+</tr>
+<tr class="row-odd"><td>4</td>
 <td>DEV_MCU_MCAN0_MCANSS_CCLK_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT</td>
 <td>Parent input clock option to DEV_MCU_MCAN0_MCANSS_CCLK_CLK</td>
 </tr>
-<tr class="row-odd"><td>5</td>
+<tr class="row-even"><td>5</td>
 <td>DEV_MCU_MCAN0_MCANSS_CCLK_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT_DUP0</td>
 <td>Parent input clock option to DEV_MCU_MCAN0_MCANSS_CCLK_CLK</td>
 </tr>
-<tr class="row-even"><td>6</td>
+<tr class="row-odd"><td>6</td>
 <td>DEV_MCU_MCAN0_MCANSS_HCLK_CLK</td>
 <td>Input clock</td>
 </tr>
@@ -3769,15 +3781,19 @@ represented in this section from the <em>perspective of the board</em>.</p>
 <td>DEV_MCU_MCAN1_MCANSS_CCLK_CLK_PARENT_HSDIV4_16FFT_MCU_0_HSDIVOUT4_CLK</td>
 <td>Parent input clock option to DEV_MCU_MCAN1_MCANSS_CCLK_CLK</td>
 </tr>
-<tr class="row-even"><td>4</td>
+<tr class="row-even"><td>3</td>
+<td>DEV_MCU_MCAN1_MCANSS_CCLK_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT</td>
+<td>Parent input clock option to DEV_MCU_MCAN1_MCANSS_CCLK_CLK</td>
+</tr>
+<tr class="row-odd"><td>4</td>
 <td>DEV_MCU_MCAN1_MCANSS_CCLK_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT</td>
 <td>Parent input clock option to DEV_MCU_MCAN1_MCANSS_CCLK_CLK</td>
 </tr>
-<tr class="row-odd"><td>5</td>
+<tr class="row-even"><td>5</td>
 <td>DEV_MCU_MCAN1_MCANSS_CCLK_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT_DUP0</td>
 <td>Parent input clock option to DEV_MCU_MCAN1_MCANSS_CCLK_CLK</td>
 </tr>
-<tr class="row-even"><td>6</td>
+<tr class="row-odd"><td>6</td>
 <td>DEV_MCU_MCAN1_MCANSS_HCLK_CLK</td>
 <td>Input clock</td>
 </tr>
@@ -6289,15 +6305,19 @@ represented in this section from the <em>perspective of the board</em>.</p>
 <td>DEV_WKUP_TIMER0_TIMER_TCLK_CLK_PARENT_HSDIV4_16FFT_MCU_0_HSDIVOUT3_CLK</td>
 <td>Parent input clock option to DEV_WKUP_TIMER0_TIMER_TCLK_CLK</td>
 </tr>
-<tr class="row-even"><td>10</td>
+<tr class="row-even"><td>9</td>
+<td>DEV_WKUP_TIMER0_TIMER_TCLK_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT</td>
+<td>Parent input clock option to DEV_WKUP_TIMER0_TIMER_TCLK_CLK</td>
+</tr>
+<tr class="row-odd"><td>10</td>
 <td>DEV_WKUP_TIMER0_TIMER_TCLK_CLK_PARENT_CLK_32K_RC_SEL_OUT0</td>
 <td>Parent input clock option to DEV_WKUP_TIMER0_TIMER_TCLK_CLK</td>
 </tr>
-<tr class="row-odd"><td>11</td>
+<tr class="row-even"><td>11</td>
 <td>DEV_WKUP_TIMER0_TIMER_TCLK_CLK_PARENT_CPSW_3GUSS_MAIN_0_CPTS_GENF0</td>
 <td>Parent input clock option to DEV_WKUP_TIMER0_TIMER_TCLK_CLK</td>
 </tr>
-<tr class="row-even"><td>12</td>
+<tr class="row-odd"><td>12</td>
 <td>DEV_WKUP_TIMER0_TIMER_TCLK_CLK_PARENT_WKUP_TIMERCLKN_SEL_OUT0_DIV_CLKOUT</td>
 <td>Parent input clock option to DEV_WKUP_TIMER0_TIMER_TCLK_CLK</td>
 </tr>
@@ -6353,15 +6373,19 @@ represented in this section from the <em>perspective of the board</em>.</p>
 <td>DEV_WKUP_TIMER1_TIMER_TCLK_CLK_PARENT_HSDIV4_16FFT_MCU_0_HSDIVOUT3_CLK</td>
 <td>Parent input clock option to DEV_WKUP_TIMER1_TIMER_TCLK_CLK</td>
 </tr>
-<tr class="row-even"><td>10</td>
+<tr class="row-even"><td>9</td>
+<td>DEV_WKUP_TIMER1_TIMER_TCLK_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT</td>
+<td>Parent input clock option to DEV_WKUP_TIMER1_TIMER_TCLK_CLK</td>
+</tr>
+<tr class="row-odd"><td>10</td>
 <td>DEV_WKUP_TIMER1_TIMER_TCLK_CLK_PARENT_CLK_32K_RC_SEL_OUT0</td>
 <td>Parent input clock option to DEV_WKUP_TIMER1_TIMER_TCLK_CLK</td>
 </tr>
-<tr class="row-odd"><td>11</td>
+<tr class="row-even"><td>11</td>
 <td>DEV_WKUP_TIMER1_TIMER_TCLK_CLK_PARENT_CPSW_3GUSS_MAIN_0_CPTS_GENF0</td>
 <td>Parent input clock option to DEV_WKUP_TIMER1_TIMER_TCLK_CLK</td>
 </tr>
-<tr class="row-even"><td>12</td>
+<tr class="row-odd"><td>12</td>
 <td>DEV_WKUP_TIMER1_TIMER_TCLK_CLK_PARENT_WKUP_TIMERCLKN_SEL_OUT1_DIV_CLKOUT</td>
 <td>Parent input clock option to DEV_WKUP_TIMER1_TIMER_TCLK_CLK</td>
 </tr>
@@ -6466,7 +6490,7 @@ represented in this section from the <em>perspective of the board</em>.</p>
 
   <div role="contentinfo">
     <p>
-      <a href="http://www.ti.com/corp/docs/legal/copyright.shtml">&copy; Copyright 2016-2021</a>, Texas Instruments Incorporated. All rights reserved. <br>
+      <a href="http://www.ti.com/corp/docs/legal/copyright.shtml">&copy; Copyright 2016-2022</a>, Texas Instruments Incorporated. All rights reserved. <br>
       <a href="http://www.ti.com/corp/docs/legal/trademark/trademrk.htm">Trademarks</a> | <a href="http://www.ti.com/corp/docs/legal/privacy.shtml">Privacy policy</a> | <a href="http://www.ti.com/corp/docs/legal/termsofuse.shtml">Terms of use</a> | <a href="http://www.ti.com/lsds/ti/legal/termsofsale.page">Terms of sale</a>
 
     </p>

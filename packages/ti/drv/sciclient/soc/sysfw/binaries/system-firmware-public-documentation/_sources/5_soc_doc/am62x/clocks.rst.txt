@@ -1172,17 +1172,21 @@ Device: :ref:`AM62X_DEV_DSS0 <soc_doc_am62x_public_devices_desc_device_list>` (I
 
 Following is a mapping of Clocks IDs to function:
 
-+------------+------------------------+--------------+
-|   Clock ID | Name                   | Function     |
-+============+========================+==============+
-|          0 | DEV_DSS0_DPI_0_IN_CLK  | Input clock  |
-+------------+------------------------+--------------+
-|          2 | DEV_DSS0_DPI_1_IN_CLK  | Input clock  |
-+------------+------------------------+--------------+
-|          3 | DEV_DSS0_DPI_1_OUT_CLK | Output clock |
-+------------+------------------------+--------------+
-|          4 | DEV_DSS0_DSS_FUNC_CLK  | Input clock  |
-+------------+------------------------+--------------+
++------------+-----------------------------------------------------------------+----------------------------------------------------+
+|   Clock ID | Name                                                            | Function                                           |
++============+=================================================================+====================================================+
+|          0 | DEV_DSS0_DPI_0_IN_CLK                                           | Input clock                                        |
++------------+-----------------------------------------------------------------+----------------------------------------------------+
+|          2 | DEV_DSS0_DPI_1_IN_CLK                                           | Input muxed clock                                  |
++------------+-----------------------------------------------------------------+----------------------------------------------------+
+|          3 | DEV_DSS0_DPI_1_IN_CLK_PARENT_HSDIV0_16FFT_MAIN_17_HSDIVOUT0_CLK | Parent input clock option to DEV_DSS0_DPI_1_IN_CLK |
++------------+-----------------------------------------------------------------+----------------------------------------------------+
+|          4 | DEV_DSS0_DPI_1_IN_CLK_PARENT_BOARD_0_VOUT0_EXTPCLKIN_OUT        | Parent input clock option to DEV_DSS0_DPI_1_IN_CLK |
++------------+-----------------------------------------------------------------+----------------------------------------------------+
+|          5 | DEV_DSS0_DPI_1_OUT_CLK                                          | Output clock                                       |
++------------+-----------------------------------------------------------------+----------------------------------------------------+
+|          6 | DEV_DSS0_DSS_FUNC_CLK                                           | Input clock                                        |
++------------+-----------------------------------------------------------------+----------------------------------------------------+
 
 .. _soc_doc_am62x_public_clks_ecap0:
 
@@ -2181,6 +2185,8 @@ Following is a mapping of Clocks IDs to function:
 +------------+-----------------------------------------------------------------------+------------------------------------------------------------+
 |          2 | DEV_MCU_MCAN0_MCANSS_CCLK_CLK_PARENT_HSDIV4_16FFT_MCU_0_HSDIVOUT4_CLK | Parent input clock option to DEV_MCU_MCAN0_MCANSS_CCLK_CLK |
 +------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|          3 | DEV_MCU_MCAN0_MCANSS_CCLK_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT      | Parent input clock option to DEV_MCU_MCAN0_MCANSS_CCLK_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
 |          4 | DEV_MCU_MCAN0_MCANSS_CCLK_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT          | Parent input clock option to DEV_MCU_MCAN0_MCANSS_CCLK_CLK |
 +------------+-----------------------------------------------------------------------+------------------------------------------------------------+
 |          5 | DEV_MCU_MCAN0_MCANSS_CCLK_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT_DUP0     | Parent input clock option to DEV_MCU_MCAN0_MCANSS_CCLK_CLK |
@@ -2204,6 +2210,8 @@ Following is a mapping of Clocks IDs to function:
 |          1 | DEV_MCU_MCAN1_MCANSS_CCLK_CLK                                         | Input muxed clock                                          |
 +------------+-----------------------------------------------------------------------+------------------------------------------------------------+
 |          2 | DEV_MCU_MCAN1_MCANSS_CCLK_CLK_PARENT_HSDIV4_16FFT_MCU_0_HSDIVOUT4_CLK | Parent input clock option to DEV_MCU_MCAN1_MCANSS_CCLK_CLK |
++------------+-----------------------------------------------------------------------+------------------------------------------------------------+
+|          3 | DEV_MCU_MCAN1_MCANSS_CCLK_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT      | Parent input clock option to DEV_MCU_MCAN1_MCANSS_CCLK_CLK |
 +------------+-----------------------------------------------------------------------+------------------------------------------------------------+
 |          4 | DEV_MCU_MCAN1_MCANSS_CCLK_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT          | Parent input clock option to DEV_MCU_MCAN1_MCANSS_CCLK_CLK |
 +------------+-----------------------------------------------------------------------+------------------------------------------------------------+
@@ -3727,6 +3735,8 @@ Following is a mapping of Clocks IDs to function:
 +------------+--------------------------------------------------------------------------+-------------------------------------------------------------+
 |          8 | DEV_WKUP_TIMER0_TIMER_TCLK_CLK_PARENT_HSDIV4_16FFT_MCU_0_HSDIVOUT3_CLK   | Parent input clock option to DEV_WKUP_TIMER0_TIMER_TCLK_CLK |
 +------------+--------------------------------------------------------------------------+-------------------------------------------------------------+
+|          9 | DEV_WKUP_TIMER0_TIMER_TCLK_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT        | Parent input clock option to DEV_WKUP_TIMER0_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------+-------------------------------------------------------------+
 |         10 | DEV_WKUP_TIMER0_TIMER_TCLK_CLK_PARENT_CLK_32K_RC_SEL_OUT0                | Parent input clock option to DEV_WKUP_TIMER0_TIMER_TCLK_CLK |
 +------------+--------------------------------------------------------------------------+-------------------------------------------------------------+
 |         11 | DEV_WKUP_TIMER0_TIMER_TCLK_CLK_PARENT_CPSW_3GUSS_MAIN_0_CPTS_GENF0       | Parent input clock option to DEV_WKUP_TIMER0_TIMER_TCLK_CLK |
@@ -3762,6 +3772,8 @@ Following is a mapping of Clocks IDs to function:
 |          7 | DEV_WKUP_TIMER1_TIMER_TCLK_CLK_PARENT_GLUELOGIC_RCOSC_CLKOUT             | Parent input clock option to DEV_WKUP_TIMER1_TIMER_TCLK_CLK |
 +------------+--------------------------------------------------------------------------+-------------------------------------------------------------+
 |          8 | DEV_WKUP_TIMER1_TIMER_TCLK_CLK_PARENT_HSDIV4_16FFT_MCU_0_HSDIVOUT3_CLK   | Parent input clock option to DEV_WKUP_TIMER1_TIMER_TCLK_CLK |
++------------+--------------------------------------------------------------------------+-------------------------------------------------------------+
+|          9 | DEV_WKUP_TIMER1_TIMER_TCLK_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT        | Parent input clock option to DEV_WKUP_TIMER1_TIMER_TCLK_CLK |
 +------------+--------------------------------------------------------------------------+-------------------------------------------------------------+
 |         10 | DEV_WKUP_TIMER1_TIMER_TCLK_CLK_PARENT_CLK_32K_RC_SEL_OUT0                | Parent input clock option to DEV_WKUP_TIMER1_TIMER_TCLK_CLK |
 +------------+--------------------------------------------------------------------------+-------------------------------------------------------------+
