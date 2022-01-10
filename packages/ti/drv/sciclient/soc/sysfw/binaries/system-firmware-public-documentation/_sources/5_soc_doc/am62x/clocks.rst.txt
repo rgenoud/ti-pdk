@@ -465,7 +465,7 @@ Following is a mapping of Clocks IDs to function:
 +------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------+
 |        159 | DEV_BOARD0_WKUP_CLKOUT0_IN_PARENT_GLUELOGIC_HFOSC0_CLKOUT                                            | Parent input clock option to DEV_BOARD0_WKUP_CLKOUT0_IN      |
 +------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------+
-|        160 | DEV_BOARD0_WKUP_CLKOUT0_IN_PARENT_BOARD_0_LFOSC0_CLK_OUT                                             | Parent input clock option to DEV_BOARD0_WKUP_CLKOUT0_IN      |
+|        160 | DEV_BOARD0_WKUP_CLKOUT0_IN_PARENT_GLUELOGIC_LFOSC0_CLKOUT                                            | Parent input clock option to DEV_BOARD0_WKUP_CLKOUT0_IN      |
 +------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------+
 |        161 | DEV_BOARD0_WKUP_CLKOUT0_IN_PARENT_HSDIV4_16FFT_MAIN_0_HSDIVOUT2_CLK                                  | Parent input clock option to DEV_BOARD0_WKUP_CLKOUT0_IN      |
 +------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------+
@@ -478,8 +478,6 @@ Following is a mapping of Clocks IDs to function:
 |        165 | DEV_BOARD0_WKUP_CLKOUT0_IN_PARENT_GLUELOGIC_RCOSC_CLKOUT                                             | Parent input clock option to DEV_BOARD0_WKUP_CLKOUT0_IN      |
 +------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------+
 |        166 | DEV_BOARD0_WKUP_CLKOUT0_IN_PARENT_GLUELOGIC_HFOSC0_CLKOUT_DUP0                                       | Parent input clock option to DEV_BOARD0_WKUP_CLKOUT0_IN      |
-+------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------+
-|        167 | DEV_BOARD0_LFOSC0_CLK_OUT                                                                            | Output clock                                                 |
 +------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------+
 
 .. _soc_doc_am62x_public_clks_clk_32k_rc_sel_dev_vd:
@@ -503,7 +501,7 @@ Following is a mapping of Clocks IDs to function:
 +------------+----------------------------------------------------------------------------------+------------------------------------------------------------+
 |          3 | DEV_CLK_32K_RC_SEL_DEV_VD_CLK_PARENT_CLK_32K_RC_SEL_DIV_CLKOUT                   | Parent input clock option to DEV_CLK_32K_RC_SEL_DEV_VD_CLK |
 +------------+----------------------------------------------------------------------------------+------------------------------------------------------------+
-|          4 | DEV_CLK_32K_RC_SEL_DEV_VD_CLK_PARENT_BOARD_0_LFOSC0_CLK_OUT                      | Parent input clock option to DEV_CLK_32K_RC_SEL_DEV_VD_CLK |
+|          4 | DEV_CLK_32K_RC_SEL_DEV_VD_CLK_PARENT_GLUELOGIC_LFOSC0_CLKOUT                     | Parent input clock option to DEV_CLK_32K_RC_SEL_DEV_VD_CLK |
 +------------+----------------------------------------------------------------------------------+------------------------------------------------------------+
 
 .. _soc_doc_am62x_public_clks_cmp_event_introuter0:
@@ -2093,7 +2091,7 @@ Following is a mapping of Clocks IDs to function:
 +------------+---------------------------------------------------------------------------+----------------------------------------------------+
 |          1 | DEV_MCU_GPIO0_MMR_CLK_PARENT_SAM62_PLL_CTRL_WRAP_MCU_0_CHIP_DIV1_CLK_CLK4 | Parent input clock option to DEV_MCU_GPIO0_MMR_CLK |
 +------------+---------------------------------------------------------------------------+----------------------------------------------------+
-|          2 | DEV_MCU_GPIO0_MMR_CLK_PARENT_BOARD_0_LFOSC0_CLK_OUT                       | Parent input clock option to DEV_MCU_GPIO0_MMR_CLK |
+|          2 | DEV_MCU_GPIO0_MMR_CLK_PARENT_GLUELOGIC_LFOSC0_CLKOUT                      | Parent input clock option to DEV_MCU_GPIO0_MMR_CLK |
 +------------+---------------------------------------------------------------------------+----------------------------------------------------+
 |          3 | DEV_MCU_GPIO0_MMR_CLK_PARENT_GLUELOGIC_RCOSC_CLK_1P0V_97P65K3             | Parent input clock option to DEV_MCU_GPIO0_MMR_CLK |
 +------------+---------------------------------------------------------------------------+----------------------------------------------------+
