@@ -842,12 +842,12 @@ static bool OSPI_flash_test(void *arg)
     if(test->norFlash)
     {
         deviceId = BOARD_FLASH_ID_S28HS512T;
-        Board_setFlashTypeMux(OSPI_FLASH_SEL_NOR);
+        Board_setFlashTypeMux(BOARD_FLASH_SEL_NOR);
     }
     else
     {
         deviceId = BOARD_FLASH_ID_W35N01JWTBAG;
-        Board_setFlashTypeMux(OSPI_FLASH_SEL_NAND);
+        Board_setFlashTypeMux(BOARD_FLASH_SEL_NAND);
     }
 #else
     deviceId = BOARD_FLASH_ID_MT35XU512ABA1G12;
