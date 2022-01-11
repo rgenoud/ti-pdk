@@ -72,11 +72,6 @@
 #else
 #include <ti/board/src/flash/nor/ospi/nor_ospi.h>
 #endif
-#if defined(SOC_J721S2)
-#include <ti/csl/csl_gpio.h>
-#include <ti/drv/gpio/GPIO.h>
-#include <ti/drv/gpio/soc/GPIO_soc.h>
-#endif
 
 #ifdef SPI_DMA_ENABLE
 #include <ti/osal/CacheP.h>
@@ -182,13 +177,6 @@ typedef struct OSPI_Tests_s
 
 /* Flash offset where the PHY tuning data pattern stored */
 #define TEST_TUNE_PATTERN_OFFSET  (NOR_TUNING_DATA_OFFSET)
-
-/* Flash selection mux */
-#if defined(SOC_J721S2)
-#define OSPI_FLASH_SEL_PIN      (6U)
-#define OSPI_FLASH_SEL_NOR      (0U)
-#define OSPI_FLASH_SEL_NAND     (1U)
-#endif
 
 /**********************************************************************
  ************************** Internal functions ************************
@@ -565,54 +553,6 @@ void OSPI_configClk(uint32_t freq, bool usePHY)
 }
 #endif
 
-/**
- * \brief  OSPI mux selection function.
- *
- * This function selects the flash by enabling the GPIO pin which is used
- * for selecting NOR/NAND flash interfaces by muxer.
- *
- */
-#if defined(SOC_J721S2)
-
-/* GPIO Driver board specific pin configuration structure */
-GPIO_PinConfig gpioPinConfigs[] = {
-	OSPI_FLASH_SEL_PIN  | GPIO_CFG_OUTPUT,
-};
-
-/* GPIO Driver call back functions */
-GPIO_CallbackFxn gpioCallbackFunctions[] = {
-    NULL,
-};
-
-/* GPIO Driver configuration structure */
-GPIO_v0_Config GPIO_v0_config = {
-    gpioPinConfigs,
-    gpioCallbackFunctions,
-    sizeof(gpioPinConfigs) / sizeof(GPIO_PinConfig),
-    sizeof(gpioCallbackFunctions) / sizeof(GPIO_CallbackFxn),
-    0,
-};
-
-static void OSPI_flashMux(uint32_t flashType)
-{
-    GPIO_v0_HwAttrs gpioCfg;
-    GPIO_socGetInitCfg(0, &gpioCfg);
-    gpioCfg.baseAddr = CSL_WKUP_GPIO0_BASE;
-    GPIO_socSetInitCfg(0, &gpioCfg);
-
-    GPIO_init();
-
-    if(flashType == OSPI_FLASH_SEL_NOR)
-    {
-        GPIO_write(0, GPIO_PIN_LOW);
-    }
-    else
-    {
-        GPIO_write(0, GPIO_PIN_HIGH);
-    }
-}
-#endif
-
 #if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_AM64X) || defined(SOC_J721S2)
 void OSPI_configClk(uint32_t freq, bool usePHY)
 {
@@ -902,12 +842,12 @@ static bool OSPI_flash_test(void *arg)
     if(test->norFlash)
     {
         deviceId = BOARD_FLASH_ID_S28HS512T;
-        OSPI_flashMux(OSPI_FLASH_SEL_NOR);
+        Board_setFlashTypeMux(OSPI_FLASH_SEL_NOR);
     }
     else
     {
         deviceId = BOARD_FLASH_ID_W35N01JWTBAG;
-        OSPI_flashMux(OSPI_FLASH_SEL_NAND);
+        Board_setFlashTypeMux(OSPI_FLASH_SEL_NAND);
     }
 #else
     deviceId = BOARD_FLASH_ID_MT35XU512ABA1G12;

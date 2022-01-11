@@ -48,6 +48,46 @@ Board_FlashInfo Board_flashInfo[MAX_BOARD_FLASH_INSTANCE_NUM] =
     {0, },
 };
 
+/* GPIO Driver board specific pin configuration structure */
+GPIO_PinConfig gpioPinConfigs[] = {
+	OSPI_FLASH_SEL_PIN  | GPIO_CFG_OUTPUT,
+};
+
+/* GPIO Driver call back functions */
+GPIO_CallbackFxn gpioCallbackFunctions[] = {
+    NULL,
+};
+
+/* GPIO Driver configuration structure */
+GPIO_v0_Config GPIO_v0_config = {
+    gpioPinConfigs,
+    gpioCallbackFunctions,
+    sizeof(gpioPinConfigs) / sizeof(GPIO_PinConfig),
+    sizeof(gpioCallbackFunctions) / sizeof(GPIO_CallbackFxn),
+    0,
+};
+
+Board_flash_STATUS Board_setFlashTypeMux(uint32_t flashType)
+{
+    GPIO_v0_HwAttrs gpioCfg;
+    GPIO_socGetInitCfg(0, &gpioCfg);
+    gpioCfg.baseAddr = CSL_WKUP_GPIO0_BASE;
+    GPIO_socSetInitCfg(0, &gpioCfg);
+
+    GPIO_init();
+
+    if(flashType == OSPI_FLASH_SEL_NOR)
+    {
+        GPIO_write(0, GPIO_PIN_LOW);
+    }
+    else
+    {
+        GPIO_write(0, GPIO_PIN_HIGH);
+    }
+
+    return BOARD_FLASH_EOK;
+}
+
 static uint32_t Board_getFlashIntf(uint32_t deviceId)
 {
     uint32_t flashIntf = 0;
