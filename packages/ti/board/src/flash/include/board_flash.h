@@ -39,9 +39,6 @@ extern "C" {
 
 #include <stdbool.h>
 #include <ti/csl/tistdtypes.h>
-#include <ti/csl/csl_gpio.h>
-#include <ti/drv/gpio/GPIO.h>
-#include <ti/drv/gpio/soc/GPIO_soc.h>
 
 #if defined(BOARD_NOR_FLASH_IN)
 #include <ti/board/src/flash/nor/nor.h>
@@ -147,15 +144,6 @@ typedef int32_t Board_flash_STATUS;       /** Board Flash API return type */
 #define BOARD_FLASH_DEV_ID         BOARD_FLASH_ID_W25X32VSFIG
 #endif
 
-/**
- * @brief Flash selection mux
- *
- */
-#if defined(SOC_J721S2)
-#define OSPI_FLASH_SEL_PIN      (6U)
-#define OSPI_FLASH_SEL_NOR      (0U)
-#define OSPI_FLASH_SEL_NAND     (1U)
-#endif
 
 /**
  * @brief Indicates the type of NOR flash peripheral
@@ -427,16 +415,6 @@ Board_flash_STATUS Board_flashOffsetToSectorPage(Board_flashHandle  handle,
 Board_flash_STATUS Board_flashEraseBlk(Board_flashHandle handle,
                                        uint32_t          block_number);
 
-
-/**
- *  @brief       set the flash type mux
- *
- *  @param[in]   flashType  Flash device type
- *
- *  @retval      BOARD_FLASH_EOK on Success
- *
- */
-Board_flash_STATUS Board_setFlashTypeMux(uint32_t flashType);
 
 #ifdef __cplusplus
 }
