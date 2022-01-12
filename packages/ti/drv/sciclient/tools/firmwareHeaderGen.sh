@@ -104,6 +104,9 @@ if [[ $FW_SOC == *"hsp"* ]]; then
   IS_PRIME=y
 fi
 
+if [[ $FW_SOC == *"stub"* ]]; then
+  BIN_EXT=-stub
+fi
 if [[ $FW_SOC == *"vlab"* ]]; then
   FW_SOC=${FW_SOC%-vlab}
   FW_SOC_TYPE=-gp-vlab
@@ -194,6 +197,16 @@ SYSFW_SE_SIGNED=$SCI_CLIENT_OUT_SOC_DIR/tifs$BIN_EXT.bin
 export SCICLIENT_FIRMWARE_HEADER=sciclient_firmware_V5$BIN_EXT.h
 export FIRMWARE_SILICON=$SCI_CLIENT_IN_SOC_DIR/ti-fs-firmware-$FW_SOC$FW_SOC_TYPE.bin
 export SYSFW_SE_INNER_CERT=$SCI_CLIENT_IN_SOC_DIR/ti-fs-firmware-$FW_SOC${FW_SOC_TYPE%-enc}-cert.bin
+export SYSFW_SE_CUST_CERT=$SCI_CLIENT_OUT_SOC_DIR/tifs_cert.bin
+export SYSFW_LOAD_ADDR=0x44000
+fi
+
+if [ "$FW_SOC" = "am62x-stub" ]; then
+export SCI_CLIENT_OUT_SOC_DIR=$SCI_CLIENT_DIR/soc/V5
+SYSFW_SE_SIGNED=$SCI_CLIENT_OUT_SOC_DIR/tifs$BIN_EXT.bin
+export SCICLIENT_FIRMWARE_HEADER=sciclient_firmware_V5$BIN_EXT.h
+export FIRMWARE_SILICON=$SCI_CLIENT_IN_SOC_DIR/ti-fs-stub-firmware-am62x$FW_SOC_TYPE.bin
+export SYSFW_SE_INNER_CERT=$SCI_CLIENT_IN_SOC_DIR/ti-fs-stub-firmware-am62x${FW_SOC_TYPE%-enc}-cert.bin
 export SYSFW_SE_CUST_CERT=$SCI_CLIENT_OUT_SOC_DIR/tifs_cert.bin
 export SYSFW_LOAD_ADDR=0x44000
 fi
