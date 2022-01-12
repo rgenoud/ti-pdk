@@ -151,9 +151,11 @@ typedef int32_t Board_flash_STATUS;       /** Board Flash API return type */
  * @brief Flash selection mux
  *
  */
-#define BOARD_FLASH_SEL_PIN      (6U)
-#define BOARD_FLASH_SEL_NOR      (0U)
-#define BOARD_FLASH_SEL_NAND     (1U)
+#if defined(SOC_J721S2)
+#define OSPI_FLASH_SEL_PIN      (6U)
+#define OSPI_FLASH_SEL_NOR      (0U)
+#define OSPI_FLASH_SEL_NAND     (1U)
+#endif
 
 /**
  * @brief Indicates the type of NOR flash peripheral

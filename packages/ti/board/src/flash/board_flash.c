@@ -50,7 +50,7 @@ Board_FlashInfo Board_flashInfo[MAX_BOARD_FLASH_INSTANCE_NUM] =
 
 /* GPIO Driver board specific pin configuration structure */
 GPIO_PinConfig gpioPinConfigs[] = {
-	BOARD_FLASH_SEL_PIN  | GPIO_CFG_OUTPUT,
+	OSPI_FLASH_SEL_PIN  | GPIO_CFG_OUTPUT,
 };
 
 /* GPIO Driver call back functions */
@@ -76,7 +76,7 @@ Board_flash_STATUS Board_setFlashTypeMux(uint32_t flashType)
 
     GPIO_init();
 
-    if(flashType == BOARD_FLASH_SEL_NOR)
+    if(flashType == OSPI_FLASH_SEL_NOR)
     {
         GPIO_write(0, GPIO_PIN_LOW);
     }
