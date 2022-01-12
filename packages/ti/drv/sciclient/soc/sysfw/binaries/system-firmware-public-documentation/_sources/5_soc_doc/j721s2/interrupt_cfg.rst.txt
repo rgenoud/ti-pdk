@@ -47,7 +47,7 @@ MAIN2MCU_LVL_INTRTR0 Interrupt Router Input Sources
 
 .. warning::
 
-    Resources marked as reserved for use by DMSC **cannot** be assigned to a
+    Resources marked as reserved for use by TIFS **cannot** be assigned to a
     host within the RM Board Configuration resource assignment array.  The RM
     Board Configuration is rejected if an overlap with a reserved resource is
     detected.
@@ -704,7 +704,7 @@ MAIN2MCU_LVL_INTRTR0 Interrupt Router Output Destinations
 
 .. warning::
 
-    Resources marked as reserved for use by DMSC **cannot** be assigned to a
+    Resources marked as reserved for use by TIFS **cannot** be assigned to a
     host within the RM Board Configuration resource assignment array.  The RM
     Board Configuration is rejected if an overlap with a reserved resource is
     detected.
@@ -1009,7 +1009,7 @@ MAIN2MCU_PLS_INTRTR0 Interrupt Router Input Sources
 
 .. warning::
 
-    Resources marked as reserved for use by DMSC **cannot** be assigned to a
+    Resources marked as reserved for use by TIFS **cannot** be assigned to a
     host within the RM Board Configuration resource assignment array.  The RM
     Board Configuration is rejected if an overlap with a reserved resource is
     detected.
@@ -1250,7 +1250,7 @@ MAIN2MCU_PLS_INTRTR0 Interrupt Router Output Destinations
 
 .. warning::
 
-    Resources marked as reserved for use by DMSC **cannot** be assigned to a
+    Resources marked as reserved for use by TIFS **cannot** be assigned to a
     host within the RM Board Configuration resource assignment array.  The RM
     Board Configuration is rejected if an overlap with a reserved resource is
     detected.
@@ -1491,7 +1491,7 @@ TIMESYNC_INTRTR0 Interrupt Router Input Sources
 
 .. warning::
 
-    Resources marked as reserved for use by DMSC **cannot** be assigned to a
+    Resources marked as reserved for use by TIFS **cannot** be assigned to a
     host within the RM Board Configuration resource assignment array.  The RM
     Board Configuration is rejected if an overlap with a reserved resource is
     detected.
@@ -1620,7 +1620,7 @@ TIMESYNC_INTRTR0 Interrupt Router Output Destinations
 
 .. warning::
 
-    Resources marked as reserved for use by DMSC **cannot** be assigned to a
+    Resources marked as reserved for use by TIFS **cannot** be assigned to a
     host within the RM Board Configuration resource assignment array.  The RM
     Board Configuration is rejected if an overlap with a reserved resource is
     detected.
@@ -1733,7 +1733,7 @@ WKUP_GPIOMUX_INTRTR0 Interrupt Router Input Sources
 
 .. warning::
 
-    Resources marked as reserved for use by DMSC **cannot** be assigned to a
+    Resources marked as reserved for use by TIFS **cannot** be assigned to a
     host within the RM Board Configuration resource assignment array.  The RM
     Board Configuration is rejected if an overlap with a reserved resource is
     detected.
@@ -1990,7 +1990,7 @@ WKUP_GPIOMUX_INTRTR0 Interrupt Router Output Destinations
 
 .. warning::
 
-    Resources marked as reserved for use by DMSC **cannot** be assigned to a
+    Resources marked as reserved for use by TIFS **cannot** be assigned to a
     host within the RM Board Configuration resource assignment array.  The RM
     Board Configuration is rejected if an overlap with a reserved resource is
     detected.
@@ -2375,7 +2375,7 @@ GPIOMUX_INTRTR0 Interrupt Router Input Sources
 
 .. warning::
 
-    Resources marked as reserved for use by DMSC **cannot** be assigned to a
+    Resources marked as reserved for use by TIFS **cannot** be assigned to a
     host within the RM Board Configuration resource assignment array.  The RM
     Board Configuration is rejected if an overlap with a reserved resource is
     detected.
@@ -2752,7 +2752,7 @@ GPIOMUX_INTRTR0 Interrupt Router Output Destinations
 
 .. warning::
 
-    Resources marked as reserved for use by DMSC **cannot** be assigned to a
+    Resources marked as reserved for use by TIFS **cannot** be assigned to a
     host within the RM Board Configuration resource assignment array.  The RM
     Board Configuration is rejected if an overlap with a reserved resource is
     detected.
@@ -3393,7 +3393,7 @@ CMPEVENT_INTRTR0 Interrupt Router Input Sources
 
 .. warning::
 
-    Resources marked as reserved for use by DMSC **cannot** be assigned to a
+    Resources marked as reserved for use by TIFS **cannot** be assigned to a
     host within the RM Board Configuration resource assignment array.  The RM
     Board Configuration is rejected if an overlap with a reserved resource is
     detected.
@@ -3442,7 +3442,7 @@ CMPEVENT_INTRTR0 Interrupt Router Output Destinations
 
 .. warning::
 
-    Resources marked as reserved for use by DMSC **cannot** be assigned to a
+    Resources marked as reserved for use by TIFS **cannot** be assigned to a
     host within the RM Board Configuration resource assignment array.  The RM
     Board Configuration is rejected if an overlap with a reserved resource is
     detected.
@@ -3523,7 +3523,7 @@ NAVSS0_INTR_0 Interrupt Router Input Sources
 
 .. warning::
 
-    Resources marked as reserved for use by DMSC **cannot** be assigned to a
+    Resources marked as reserved for use by TIFS **cannot** be assigned to a
     host within the RM Board Configuration resource assignment array.  The RM
     Board Configuration is rejected if an overlap with a reserved resource is
     detected.
@@ -4554,7 +4554,7 @@ NAVSS0_INTR_0 Interrupt Router Output Destinations
 
 .. warning::
 
-    Resources marked as reserved for use by DMSC **cannot** be assigned to a
+    Resources marked as reserved for use by TIFS **cannot** be assigned to a
     host within the RM Board Configuration resource assignment array.  The RM
     Board Configuration is rejected if an overlap with a reserved resource is
     detected.
@@ -6093,7 +6093,7 @@ MCU_NAVSS0_INTR_ROUTER_0 Interrupt Router Input Sources
 
 .. warning::
 
-    Resources marked as reserved for use by DMSC **cannot** be assigned to a
+    Resources marked as reserved for use by TIFS **cannot** be assigned to a
     host within the RM Board Configuration resource assignment array.  The RM
     Board Configuration is rejected if an overlap with a reserved resource is
     detected.
@@ -6656,7 +6656,7 @@ MCU_NAVSS0_INTR_ROUTER_0 Interrupt Router Output Destinations
 
 .. warning::
 
-    Resources marked as reserved for use by DMSC **cannot** be assigned to a
+    Resources marked as reserved for use by TIFS **cannot** be assigned to a
     host within the RM Board Configuration resource assignment array.  The RM
     Board Configuration is rejected if an overlap with a reserved resource is
     detected.
@@ -6883,7 +6883,7 @@ interrupts are used in interrupt management based TISCI messages.
 
 .. warning::
 
-    Resources marked as reserved for use by DMSC **cannot** be assigned to a
+    Resources marked as reserved for use by TIFS **cannot** be assigned to a
     host within the RM Board Configuration resource assignment array.  The RM
     Board Configuration is rejected if an overlap with a reserved resource is
     detected.
@@ -6916,7 +6916,7 @@ NAVSS0_MODSS_INTA_0 Interrupt Aggregator Virtual Interrupt Destinations
 
 .. warning::
 
-    Resources marked as reserved for use by DMSC **cannot** be assigned to a
+    Resources marked as reserved for use by TIFS **cannot** be assigned to a
     host within the RM Board Configuration resource assignment array.  The RM
     Board Configuration is rejected if an overlap with a reserved resource is
     detected.
@@ -7061,7 +7061,7 @@ NAVSS0_MODSS_INTA_1 Interrupt Aggregator Virtual Interrupt Destinations
 
 .. warning::
 
-    Resources marked as reserved for use by DMSC **cannot** be assigned to a
+    Resources marked as reserved for use by TIFS **cannot** be assigned to a
     host within the RM Board Configuration resource assignment array.  The RM
     Board Configuration is rejected if an overlap with a reserved resource is
     detected.
@@ -7206,7 +7206,7 @@ NAVSS0_UDMASS_INTA_0 Interrupt Aggregator Virtual Interrupt Destinations
 
 .. warning::
 
-    Resources marked as reserved for use by DMSC **cannot** be assigned to a
+    Resources marked as reserved for use by TIFS **cannot** be assigned to a
     host within the RM Board Configuration resource assignment array.  The RM
     Board Configuration is rejected if an overlap with a reserved resource is
     detected.
@@ -7769,7 +7769,7 @@ MCU_NAVSS0_UDMASS_INTA_0 Interrupt Aggregator Virtual Interrupt Destinations
 
 .. warning::
 
-    Resources marked as reserved for use by DMSC **cannot** be assigned to a
+    Resources marked as reserved for use by TIFS **cannot** be assigned to a
     host within the RM Board Configuration resource assignment array.  The RM
     Board Configuration is rejected if an overlap with a reserved resource is
     detected.
@@ -8320,7 +8320,7 @@ MCU_SA3_SS0_INTAGGR_0 Interrupt Aggregator Virtual Interrupt Destinations
 
 .. warning::
 
-    Resources marked as reserved for use by DMSC **cannot** be assigned to a
+    Resources marked as reserved for use by TIFS **cannot** be assigned to a
     host within the RM Board Configuration resource assignment array.  The RM
     Board Configuration is rejected if an overlap with a reserved resource is
     detected.
@@ -8452,7 +8452,7 @@ interrupt management based TISCI messages.
 
 .. warning::
 
-    Resources marked as reserved for use by DMSC **cannot** be assigned to a
+    Resources marked as reserved for use by TIFS **cannot** be assigned to a
     host within the RM Board Configuration resource assignment array.  The RM
     Board Configuration is rejected if an overlap with a reserved resource is
     detected.

@@ -27,7 +27,7 @@ endif
 # Leave RMPMHAL_SCMVERSION blank if you want a script to generate it from git tag/commit
 RMPMHAL_SCMVERSION ?=
 
-SCISERVER_MAJOR_VERSION_NAME ?= "v2021.12"
+SCISERVER_MAJOR_VERSION_NAME ?= "v2022.01"
 SCISERVER_SUBVERSION ?= 01
 SCISERVER_PATCHVERSION ?= 00
 # Leave SCISERVER_SCMVERSION blank if you want a script to generate it from git tag/commit

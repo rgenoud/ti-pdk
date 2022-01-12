@@ -37,7 +37,7 @@ based TISCI messages.
 
 .. warning::
 
-    Resources marked as reserved for use by DMSC **cannot** be assigned to a
+    Resources marked as reserved for use by TIFS **cannot** be assigned to a
     host within the RM Board Configuration resource assignment array.  The RM
     Board Configuration is rejected if an overlap with a reserved resource is
     detected.

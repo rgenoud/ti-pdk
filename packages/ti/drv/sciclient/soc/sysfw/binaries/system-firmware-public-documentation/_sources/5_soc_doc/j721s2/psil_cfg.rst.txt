@@ -39,7 +39,7 @@ thread type. The thread IDs are used in the PSI-L based TISCI messages.
 
 .. warning::
 
-    PSI-L threads marked as reserved for use by DMSC **cannot** be linked to
+    PSI-L threads marked as reserved for use by TIFS **cannot** be linked to
     another thread.
 
 +---------------------------------------+------------------+
