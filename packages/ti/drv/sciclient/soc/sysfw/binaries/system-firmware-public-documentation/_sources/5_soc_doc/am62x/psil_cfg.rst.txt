@@ -84,7 +84,7 @@ thread type. The thread IDs are used in the PSI-L based TISCI messages.
 +-----------------------------------+------------------+
 | cpsw2_rx                          | 0x4600 to 0x4600 |
 +-----------------------------------+------------------+
-| csi_rx                            | 0x4700 to 0x4700 |
+| csi_rx                            | 0x4700 to 0x471f |
 +-----------------------------------+------------------+
 | saul0_rx                          | 0x74fc to 0x74fd |
 | (**Reserved by System Firmware**) |                  |
@@ -132,7 +132,7 @@ thread type. The thread IDs are used in the PSI-L based TISCI messages.
 +-----------------------------------+------------------+
 | cpsw2_tx                          | 0xc600 to 0xc607 |
 +-----------------------------------+------------------+
-| csi_tx                            | 0xc700 to 0xc707 |
+| csi_tx                            | 0xc700 to 0xc71f |
 +-----------------------------------+------------------+
 | saul0_tx                          | 0xf4fc to 0xf4fc |
 | (**Reserved by System Firmware**) |                  |
