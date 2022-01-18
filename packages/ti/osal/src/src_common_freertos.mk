@@ -52,6 +52,6 @@ ifeq ($(CORE),$(filter $(CORE), c7x_1 c7x_2))
   PACKAGE_SRCS_COMMON += src/freertos/CacheP_freertos_c7x.c
   PACKAGE_SRCS_COMMON += src/freertos/HwiP_freertos_c7x.c
 else
-  SRCS_COMMON += HwiP_nonos.c
-  PACKAGE_SRCS_COMMON += src/nonos/HwiP_nonos.c
+  SRCS_COMMON += HwiP_freertos.c
+  PACKAGE_SRCS_COMMON += src/nonos/HwiP_freertos.c
 endif
