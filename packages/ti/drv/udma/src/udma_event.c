@@ -1430,6 +1430,7 @@ static int32_t Udma_eventReset(Udma_DrvHandle drvHandle,
 
     if(UDMA_SOK == retVal)
     {
+#if (UDMA_SOC_CFG_INTR_ROUTER_PRESENT == 0U)
         if((drvHandle->instType    != UDMA_INST_TYPE_NORMAL) &&
            (UDMA_EVENT_TYPE_MASTER == eventPrms->eventType))
         {
@@ -1437,6 +1438,7 @@ static int32_t Udma_eventReset(Udma_DrvHandle drvHandle,
                no need to release the Global Master event using DMSC RM */
         }
         else
+#endif
         {
             /* Reset event */
             retVal = Sciclient_rmIrqRelease(&rmIrqReq, UDMA_SCICLIENT_TIMEOUT);
