@@ -34,7 +34,7 @@ const struct Sciserver_SecureProxy gSciserverSecureProxyInstances[SOC_MAX_SEC_PR
 		.sproxy_ring_index_base		= 0U,
 		.sproxy_ring_index_max		= 19U,
 		.num_threads			= 76U,
-		.devgrp				= SOC_DEVGRP_AM62X_DMSC_INTERNAL,
+		.devgrp				= SOC_DEVGRP_AM62X_TIFS_INTERNAL,
 		.ra_idx				= AM62X_RA_IDX_DMASS0_RINGACC_0,
 		.buffer_idx			= AM62X_SPROXY_MEM_IDX_DMSS_IPC_SRAM,
 		.buffer_neg_offset		= 0x00001300U,
