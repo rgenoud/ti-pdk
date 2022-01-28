@@ -27,7 +27,7 @@
 /**
  * Set of peripherals to initialize for System Firmware internal usage
  */
-#define SOC_DEVGRP_AM62X_DMSC_INTERNAL DEVGRP_DMSC
+#define SOC_DEVGRP_AM62X_TIFS_INTERNAL DEVGRP_DMSC
 
 
 #endif /* SOC_AM62X_DEVGRPS_H */
