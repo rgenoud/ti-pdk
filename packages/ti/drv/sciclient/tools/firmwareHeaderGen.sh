@@ -185,7 +185,7 @@ export SCICLIENT_FIRMWARE_HEADER=sciclient_firmware_V5$BIN_EXT.h
 export FIRMWARE_SILICON=$SCI_CLIENT_IN_SOC_DIR/ti-fs-stub-firmware-am62x$FW_SOC_TYPE.bin
 export SYSFW_SE_INNER_CERT=$SCI_CLIENT_IN_SOC_DIR/ti-fs-stub-firmware-am62x${FW_SOC_TYPE%-enc}-cert.bin
 export SYSFW_SE_CUST_CERT=$SCI_CLIENT_OUT_SOC_DIR/tifs_cert.bin
-export SYSFW_LOAD_ADDR=0x44000
+export SYSFW_LOAD_ADDR=0x60000
 fi
 
 if [ "$FW_SOC" = "j721s2" ]; then
