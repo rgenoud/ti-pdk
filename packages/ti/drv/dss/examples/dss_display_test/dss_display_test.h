@@ -130,6 +130,9 @@ extern "C" {
 #elif (1u == DISP_APP_TEST_DSI)
 #define DISP_APP_LCD_WIDTH              (1280U)
 #define DISP_APP_LCD_HEIGHT             (800U)
+#elif (DISP_APP_USE_TEST_PARAMS == DISP_APP_BGR24)
+#define DISP_APP_LCD_WIDTH              (1280U)
+#define DISP_APP_LCD_HEIGHT             (720U)
 #else
 #define DISP_APP_LCD_WIDTH              (1920U)
 #define DISP_APP_LCD_HEIGHT             (1080U)

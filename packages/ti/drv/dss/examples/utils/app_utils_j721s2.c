@@ -211,7 +211,7 @@ void App_configureLCD(App_utilsLcdCfgParams cfgParams)
             printf("\n TISCI_DEV_DSS0 device shutdown NOT successful !!!\r\n");
         }
 
-        minRate = 148450000;
+        minRate = cfgParams.pixelClk;
         status = Sciclient_pmQueryModuleClkFreq(TISCI_DEV_DSS0,
                                             TISCI_DEV_DSS0_DSS_INST0_DPI_0_IN_2X_CLK_PARENT_HSDIV1_16FFT_MAIN_16_HSDIVOUT0_CLK,
                                             cfgParams.pixelClk,
@@ -280,7 +280,7 @@ void App_configureLCD(App_utilsLcdCfgParams cfgParams)
             PMLIBClkRateGet(TISCI_DEV_DSS0,
                 TISCI_DEV_DSS0_DSS_INST0_DPI_0_IN_2X_CLK_PARENT_HSDIV1_16FFT_MAIN_16_HSDIVOUT0_CLK,
                 &clkFreq);
-            printf("\n TISCI_DEV_DSS0_DSS_INST0_DPI_0_IN_2X_CLK_PARENT_HSDIV1_16FFT_MAIN_16_HSDIVOUT0_CLK Expected %lld but getting %lld Hz\r\n", cfgParams.pixelClk, respClkRate);
+            printf("\n TISCI_DEV_DSS0_DSS_INST0_DPI_0_IN_2X_CLK_PARENT_HSDIV1_16FFT_MAIN_16_HSDIVOUT0_CLK Expected %lld but getting %lld Hz\r\n", cfgParams.pixelClk, clkFreq);
         }
 
         if(PM_SUCCESS == status)

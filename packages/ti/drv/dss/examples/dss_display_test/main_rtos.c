@@ -166,6 +166,10 @@ static void taskFxn(void* a0, void* a1)
     #elif (1U == DISP_APP_TEST_EDP)
         lcdParams.outType  = (uint32_t)APP_OUTPUT_EDP;
         lcdParams.pixelClk = (uint64_t)148500000ULL;
+        if(DISP_APP_USE_TEST_PARAMS == DISP_APP_BGR24)
+        {
+            lcdParams.pixelClk = (uint64_t)74250000u;
+        }
         App_configureLCD(lcdParams);
     #else
         lcdParams.outType  = (uint32_t)APP_OUTPUT_HDMI;
