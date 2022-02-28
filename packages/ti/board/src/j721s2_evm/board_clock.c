@@ -104,7 +104,7 @@ uint32_t gBoardClkModuleMainIDInitGroup1[] = {
     TISCI_DEV_MMCSD0,
     TISCI_DEV_MMCSD1,
     TISCI_DEV_GPIO4,
-    TISCI_DEV_UART0,
+    TISCI_DEV_UART8,
     TISCI_DEV_GTC0,
 };
 
@@ -194,6 +194,7 @@ uint32_t gBoardClkModuleMainIDGroup2[] = {
     TISCI_DEV_I2C5,
     TISCI_DEV_I2C6,
     TISCI_DEV_PCIE1,
+    TISCI_DEV_UART0,
     TISCI_DEV_UART1,
     TISCI_DEV_UART2,
     TISCI_DEV_UART3,
@@ -201,7 +202,6 @@ uint32_t gBoardClkModuleMainIDGroup2[] = {
     TISCI_DEV_UART5,
     TISCI_DEV_UART6,
     TISCI_DEV_UART7,
-    TISCI_DEV_UART8,
     TISCI_DEV_UART9,
     TISCI_DEV_USB0,
     TISCI_DEV_SERDES_10G0,
