@@ -176,6 +176,7 @@ static int32_t Dss_dctrlDrvProcessDpHpdIoctl(
 static int32_t Dss_dctrlSetDsiParamsIoctl(Dss_DctrlDrvInstObj *instObj,
                                           const Dss_DctrlDsiParams *dsiPrms);
 static uint32_t Dss_dctrlDrvIsOutputDSI(uint32_t vpId);
+static int32_t Dss_dctrlIsDPConnectedIoctl(int32_t *isDpConnected);
 #endif
 
 
@@ -849,6 +850,11 @@ static int32_t Dss_dctrlDrvControl(Fdrv_Handle handle,
                 break;
 #endif
 #if defined (SOC_J721E) || defined (SOC_J721S2)
+            case IOCTL_DSS_DCTRL_IS_DP_CONNECTED:
+                retVal = Dss_dctrlIsDPConnectedIoctl(
+                    (int32_t *) cmdArgs
+                );
+                break;
             case IOCTL_DSS_DCTRL_PROCESS_DP_HPD:
                 retVal = Dss_dctrlDrvProcessDpHpdIoctl(
                     instObj,
@@ -2368,6 +2374,20 @@ static int32_t Dss_dctrlSetDsiParamsIoctl(Dss_DctrlDrvInstObj *instObj,
     /* Post the instance semaphore */
     (void) SemaphoreP_post(instObj->lockSem);
 
+    return retVal;
+}
+static int32_t Dss_dctrlIsDPConnectedIoctl(int32_t *isDpConnected)
+{
+    int32_t retVal = FVID2_SOK;
+    retVal = Dss_dctrlDrvDetectDp();
+    if (FVID2_SOK == retVal)
+    {
+        *isDpConnected = TRUE;
+    }
+    else
+    {
+        *isDpConnected = FALSE;
+    }
     return retVal;
 }
 #endif

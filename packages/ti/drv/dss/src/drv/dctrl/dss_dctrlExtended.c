@@ -144,7 +144,6 @@ static int32_t Dss_dctrlDrvInitDPTX(uint32_t isHpdSupported);
 static void Dss_dctrlDrvDpIntr(uintptr_t arg);
 static int32_t Dss_dctrlDrvDpStartVideo(Dss_DctrlDisplayPortDrvObj *pObj);
 static int32_t Dss_dctrlDrvDpStopVideo(Dss_DctrlDisplayPortDrvObj *pObj);
-static int32_t Dss_dctrlDrvDetectDp(void);
 
 /* ========================================================================== */
 /*                          Function Definitions                              */
@@ -470,7 +469,7 @@ int32_t Dss_dctrlDrvProcessHpdDp(uint32_t hpdState)
 /*                       Static Function Definitions                          */
 /* ========================================================================== */
 
-static int32_t Dss_dctrlDrvDetectDp()
+int32_t Dss_dctrlDrvDetectDp()
 {
     int32_t retVal = FVID2_SOK, dpApiRet;
     bool hpdState;
