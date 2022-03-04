@@ -2379,15 +2379,24 @@ static int32_t Dss_dctrlSetDsiParamsIoctl(Dss_DctrlDrvInstObj *instObj,
 static int32_t Dss_dctrlIsDPConnectedIoctl(int32_t *isDpConnected)
 {
     int32_t retVal = FVID2_SOK;
-    retVal = Dss_dctrlDrvDetectDp();
-    if (FVID2_SOK == retVal)
+
+    if(NULL == isDpConnected)
     {
-        *isDpConnected = TRUE;
+        retVal = FVID2_EBADARGS;
     }
-    else
+
+    if(FVID2_SOK == retVal)
     {
-        *isDpConnected = FALSE;
+        if (FVID2_SOK == Dss_dctrlDrvDetectDp())
+        {
+            *isDpConnected = TRUE;
+        }
+        else 
+        {
+            *isDpConnected = FALSE;
+        }
     }
+    
     return retVal;
 }
 #endif
