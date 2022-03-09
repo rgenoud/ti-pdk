@@ -176,6 +176,17 @@ int8_t BoardDiag_octalNandTest(void)
     return ret;
 }
 
+static void BoardDiag_ospiNandFlashMux(void)
+{
+    GPIO_v0_HwAttrs gpioCfg;
+    GPIO_socGetInitCfg(0, &gpioCfg);
+    gpioCfg.baseAddr = CSL_WKUP_GPIO0_BASE;
+    GPIO_socSetInitCfg(0, &gpioCfg);
+
+    GPIO_init();
+    GPIO_write(BOARD_DIAG_OSPI_NAND_BUS_SEL_PIN, 1);
+}
+
 /**
  *  \brief   Octal NAND Diagnostic test main function
  *
@@ -209,6 +220,9 @@ int main(void)
     UART_printf("\n**********************************************\n");
     UART_printf  ("*                OSPI NAND Test              *\n");
     UART_printf  ("**********************************************\n");
+
+    /* Enable Mux for routing OSPI lines to Nand Flash */
+    BoardDiag_ospiNandFlashMux();
 
     ret = BoardDiag_octalNandTest();
     return ret;

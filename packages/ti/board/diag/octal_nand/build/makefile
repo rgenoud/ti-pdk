@@ -78,7 +78,7 @@ PACKAGE_SRCS_COMMON += ../../common/$(SOC)
 PACKAGE_SRCS_COMMON += ../../board_diag_component.mk
 PACKAGE_SRCS_COMMON += ../../create_sd.bat ../../create_sd.sh
 
-SRCS_COMMON += octal_nand_test.c diag_common_cfg.c
+SRCS_COMMON += octal_nand_test.c diag_common_cfg.c ospi_mux_gpio_pin_config.c
 
 ifeq ($(CORE),$(filter $(CORE), mcu1_0))
 SRCS_ASM_COMMON += diag_entry_r5.asm

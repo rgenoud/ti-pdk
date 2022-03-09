@@ -51,7 +51,7 @@
 
 /* GPIO Driver board specific pin configuration structure */
 GPIO_PinConfig gpioPinConfigs[] = {
-	OSPI_HYPER_BUS_SEL  | GPIO_CFG_OUTPUT,
+	OSPI_NAND_BUS_SEL  | GPIO_CFG_OUTPUT,
 };
 
 /* GPIO Driver call back functions */

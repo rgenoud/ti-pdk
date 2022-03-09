@@ -42,6 +42,7 @@
 #define _OCTAL_NAND_TEST_H_
 
 #include <ti/drv/uart/UART_stdio.h>
+#include <ti/drv/gpio/soc/GPIO_soc.h>
 #include <ti/board/src/flash/include/board_flash.h>
 #include <ti/board/src/flash/nand/ospi/nand_ospi.h>
 #include "board.h"
@@ -58,6 +59,8 @@ extern "C" {
 #define BOARD_DIAG_OCTAL_NAND_FIRST_VERIFY_ADDR            (0x0U)
 #define BOARD_DIAG_OCTAL_NAND_LAST_VERIFY_ADDR             (0x3FFFC00U)
 #define BOARD_DIAG_OCTAL_NAND_TEST_BYTES                   (NAND_PAGE_SIZE)
+
+#define BOARD_DIAG_OSPI_NAND_BUS_SEL_PIN                   (0U)
 
 /**
  * \brief   The function performs the Hyperbus Diagnostic test.
