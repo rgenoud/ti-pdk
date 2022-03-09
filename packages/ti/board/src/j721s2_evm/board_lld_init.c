@@ -139,6 +139,7 @@ Board_STATUS Board_uartStdioInit(void)
     uint32_t uartBaseAddr;
     uint32_t socDomainUART;
     uint32_t socDomainCore;
+
 #ifdef BUILD_MCU
     CSL_ArmR5CPUInfo info;
 
@@ -155,6 +156,10 @@ Board_STATUS Board_uartStdioInit(void)
         if(socDomainUART == BOARD_SOC_DOMAIN_MCU)
         {
             uartInst = BOARD_MCU_UART_INSTANCE;
+        }
+        else
+        {
+            uartInst = gBoardInitParams.uartInst;
         }
     }
 #else

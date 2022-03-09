@@ -515,8 +515,9 @@ int main(void)
      * Need update HW attrs to enable MAIN I2C instance.
      */
     enableMAINI2C(2, CSL_I2C2_CFG_BASE);
+#elif (defined(SOC_J721S2) && !defined (__aarch64__))
+	enableMAINI2C(1, CSL_I2C1_CFG_BASE);
 #endif
-
 #if defined(j721s2_evm)
     /* Enable the Mux for routing I2C lines */
     BoardDiag_configI2CMux();
