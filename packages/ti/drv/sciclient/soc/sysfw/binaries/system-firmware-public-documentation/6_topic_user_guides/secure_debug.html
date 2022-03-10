@@ -79,7 +79,7 @@
             
             
               <div class="version">
-                22.01.00
+                08.03.00
               </div>
             
           
@@ -343,7 +343,7 @@ ways.</p>
 <p>If the board configuration allows a wild card jtag unlock i.e. skipping the
 SOC UID match, you can set the SOC UID to a 256 bit all zeros string.
 See example below.</p>
-<div class="code highlight-cpp"><div class="highlight"><pre><span></span><span class="n">debugUID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nl">FORMAT</span><span class="p">:</span><span class="n">HEX</span><span class="p">,</span><span class="nl">OCT</span><span class="p">:</span><span class="mo">0000000000000000000000000000000000000000000000000000000000000000</span><span class="w"></span>
+<div class="code highlight-cpp"><div class="highlight"><pre><span></span><span class="n">debugUID</span> <span class="o">=</span> <span class="nl">FORMAT</span><span class="p">:</span><span class="n">HEX</span><span class="p">,</span><span class="nl">OCT</span><span class="p">:</span><span class="mo">0000000000000000000000000000000000000000000000000000000000000000</span>
 </pre></div>
 </div>
 </li>
@@ -374,7 +374,7 @@ The processor ID’s can be obtained from the SOC specific information in this d
 Processor ID’s are encoded as a string of hexadecimal values.
 Each processor ID takes a byte.</p>
 <p>E.g. For AM65x, the processor ID’s are listed in
-<a class="reference internal" href="../5_soc_doc/am6x/processors.html#soc-doc-am6-public-proc-desc-processors-list"><span class="std std-ref">AM65x Processor Descriptions</span></a>.
+<a class="reference internal" href="../5_soc_doc/am65x/processors.html#soc-doc-am6-public-proc-desc-processors-list"><span class="std std-ref">AM65x Processor Descriptions</span></a>.
 If non-secure debug needs to be enabled for the following four cores on AM65x,</p>
 <table border="1" class="docutils">
 <colgroup>
@@ -408,16 +408,26 @@ If non-secure debug needs to be enabled for the following four cores on AM65x,</
 </tbody>
 </table>
 <p>the <code class="docutils literal"><span class="pre">coreDbgEn</span></code> field is populated by concatenating the processor ID’s.</p>
-<div class="code highlight-cpp"><div class="highlight"><pre><span></span><span class="n">coreDbgEn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nl">INTEGER</span><span class="p">:</span><span class="mh">0x20210102</span><span class="w"></span>
+<div class="code highlight-cpp"><div class="highlight"><pre><span></span><span class="n">coreDbgEn</span> <span class="o">=</span> <span class="nl">INTEGER</span><span class="p">:</span><span class="mh">0x20210102</span>
 </pre></div>
 </div>
 </li>
+</ol>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The SoC reset enables both invasive and non-invasive debug for all
+non secure cores, so the non secure cores not listed in <code class="docutils literal"><span class="pre">coreDbgEn</span></code>
+also will be open for debug, in a case where <code class="docutils literal"><span class="pre">debugType</span></code> is set
+as one of <code class="docutils literal"><span class="pre">DEBUG_PUBLIC</span></code>, <code class="docutils literal"><span class="pre">DEBUG_PUBLIC_USER</span></code>, <code class="docutils literal"><span class="pre">DEBUG_FULL</span></code>, or
+<code class="docutils literal"><span class="pre">DEBUG_SECURE_USER</span></code>.</p>
+</div>
+<ol class="arabic" start="4">
 <li><p class="first">The <code class="docutils literal"><span class="pre">coreDbgSecEn</span></code> lists the ID’s of processors for which secure debug is enabled.
 The processor ID’s can be obtained from the SOC specific information in this documentation.
 Processor ID’s are encoded as a string of hexadecimal values.
 Each processor ID takes a byte.</p>
 <p>E.g. For AM65x, the processor ID’s are listed in
-<a class="reference internal" href="../5_soc_doc/am6x/processors.html#soc-doc-am6-public-proc-desc-processors-list"><span class="std std-ref">AM65x Processor Descriptions</span></a>
+<a class="reference internal" href="../5_soc_doc/am65x/processors.html#soc-doc-am6-public-proc-desc-processors-list"><span class="std std-ref">AM65x Processor Descriptions</span></a>
 If secure debug needs to be enabled for the following two cores on AM65x,</p>
 <table border="1" class="docutils">
 <colgroup>
@@ -443,7 +453,7 @@ If secure debug needs to be enabled for the following two cores on AM65x,</p>
 </tbody>
 </table>
 <p>the <code class="docutils literal"><span class="pre">coreSecDbgEn</span></code> field is populated by concatenating the processor ID’s.</p>
-<div class="code highlight-cpp"><div class="highlight"><pre><span></span><span class="n">coreDbgSecEn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nl">INTEGER</span><span class="p">:</span><span class="mh">0x2223</span><span class="w"></span>
+<div class="code highlight-cpp"><div class="highlight"><pre><span></span><span class="n">coreDbgSecEn</span> <span class="o">=</span> <span class="nl">INTEGER</span><span class="p">:</span><span class="mh">0x2223</span>
 </pre></div>
 </div>
 </li>
@@ -760,7 +770,7 @@ to unlock the jtag port by using a special host id. Please refer to
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'22.01.00',
+            VERSION:'08.03.00',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

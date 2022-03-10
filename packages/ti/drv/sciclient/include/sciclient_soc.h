@@ -76,7 +76,7 @@
 #if defined (SOC_AM62X)
 #include <ti/drv/sciclient/soc/sysfw/include/am62x/tisci_resasg_types.h>
 #include <ti/drv/sciclient/soc/V5/sciclient_fmwMsgParams.h>
-#include <ti/drv/sciclient/soc/V5/sciclient_firmware_V5-zebu.h>
+#include <ti/drv/sciclient/soc/V5/sciclient_firmware_V5.h>
 #endif
 
 #ifdef __cplusplus
