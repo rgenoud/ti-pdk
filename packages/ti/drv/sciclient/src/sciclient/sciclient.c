@@ -595,9 +595,9 @@ int32_t Sciclient_serviceGetThreadIds (const Sciclient_ReqPrm_t *pReqPrm,
 #if ! defined(SOC_AM62X)
             *txThread = TISCI_SEC_PROXY_DM2DMSC_WRITE_NOTIFY_RESP_THREAD_ID;
 #else
-            *txThread = TISCI_SEC_PROXY_DM2DMSC_WRITE_LOW_PRIORITY_THREAD_ID;
+            *txThread = TISCI_SEC_PROXY_DM2TIFS_WRITE_LOW_PRIORITY_THREAD_ID;
 #endif
-            *rxThread = TISCI_SEC_PROXY_DM2DMSC_READ_RESPONSE_THREAD_ID;
+            *rxThread = TISCI_SEC_PROXY_DM2TIFS_READ_RESPONSE_THREAD_ID;
            /*
             * On j721e and j7200 devices, all services sent on non-secure queues
             * are first processed by the Sciserver instance on MCU R5F0 and

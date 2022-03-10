@@ -308,7 +308,7 @@ int32_t Sciserver_processtask(Sciserver_taskData *utd)
     if (ret == CSL_PASS)
     {
         respHost = utd->user_msg_data[utd->state->current_buffer_idx]->host;
-        if (respHost == TISCI_HOST_ID_DMSC2DM)
+        if (respHost == TISCI_HOST_ID_TIFS2DM)
         {
             /* DMSC2DM is processed by DM. Need to update response message value
              * so the host verification on TIFS can succeed */
@@ -353,7 +353,7 @@ static int32_t Sciserver_MsgVerifyHost(uint32_t *msg, uint8_t known_host)
              * process the message on behalf of the host who made the original
              * request.
              */
-            if (known_host != TISCI_HOST_ID_DMSC2DM) {
+            if (known_host != TISCI_HOST_ID_TIFS2DM) {
                 ret = CSL_EFAIL;
             }
         }
@@ -608,7 +608,7 @@ static int32_t Sciserver_UserProcessMsg(uint32_t *msg_recv,
         case TISCI_MSG_RM_UDMAP_TX_CH_CFG:
         case TISCI_MSG_RM_UDMAP_RX_CH_CFG:
         case TISCI_MSG_RM_PROXY_CFG:
-            if (hw_host_id == TISCI_HOST_ID_DMSC2DM)
+            if (hw_host_id == TISCI_HOST_ID_TIFS2DM)
             {
                 runLocalRmOnly = 1;
             }

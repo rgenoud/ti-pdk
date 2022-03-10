@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2017-2021 Texas Instruments Incorporated
+ *  Copyright (C) 2017-2022 Texas Instruments Incorporated
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -49,7 +49,7 @@
  *
  * Secure Proxy indices for AM62X device
  *
- * Data version: 210712_165720
+ * Data version: 220228_160153
  *
  */
 #ifndef AM62X_TISCI_SEC_PROXY_H
@@ -210,32 +210,32 @@
 #define TISCI_SEC_PROXY_ICSSG_0_WRITE_LOW_PRIORITY_NUM_MESSAGES (1U)
 
 /*
- * Secure Proxy configurations for DM2DMSC host
+ * Secure Proxy configurations for DM2TIFS host
  */
 
-/** Thread ID macro for DM2DMSC response */
-#define TISCI_SEC_PROXY_DM2DMSC_READ_RESPONSE_THREAD_ID (22U)
-/** Num messages macro for DM2DMSC response */
-#define TISCI_SEC_PROXY_DM2DMSC_READ_RESPONSE_NUM_MESSAGES (4U)
+/** Thread ID macro for DM2TIFS response */
+#define TISCI_SEC_PROXY_DM2TIFS_READ_RESPONSE_THREAD_ID (22U)
+/** Num messages macro for DM2TIFS response */
+#define TISCI_SEC_PROXY_DM2TIFS_READ_RESPONSE_NUM_MESSAGES (4U)
 
-/** Thread ID macro for DM2DMSC low_priority */
-#define TISCI_SEC_PROXY_DM2DMSC_WRITE_LOW_PRIORITY_THREAD_ID (23U)
-/** Num messages macro for DM2DMSC low_priority */
-#define TISCI_SEC_PROXY_DM2DMSC_WRITE_LOW_PRIORITY_NUM_MESSAGES (2U)
+/** Thread ID macro for DM2TIFS low_priority */
+#define TISCI_SEC_PROXY_DM2TIFS_WRITE_LOW_PRIORITY_THREAD_ID (23U)
+/** Num messages macro for DM2TIFS low_priority */
+#define TISCI_SEC_PROXY_DM2TIFS_WRITE_LOW_PRIORITY_NUM_MESSAGES (2U)
 
 /*
- * Secure Proxy configurations for DMSC2DM host
+ * Secure Proxy configurations for TIFS2DM host
  */
 
-/** Thread ID macro for DMSC2DM response */
-#define TISCI_SEC_PROXY_DMSC2DM_READ_RESPONSE_THREAD_ID (24U)
-/** Num messages macro for DMSC2DM response */
-#define TISCI_SEC_PROXY_DMSC2DM_READ_RESPONSE_NUM_MESSAGES (4U)
+/** Thread ID macro for TIFS2DM response */
+#define TISCI_SEC_PROXY_TIFS2DM_READ_RESPONSE_THREAD_ID (24U)
+/** Num messages macro for TIFS2DM response */
+#define TISCI_SEC_PROXY_TIFS2DM_READ_RESPONSE_NUM_MESSAGES (4U)
 
-/** Thread ID macro for DMSC2DM low_priority */
-#define TISCI_SEC_PROXY_DMSC2DM_WRITE_LOW_PRIORITY_THREAD_ID (25U)
-/** Num messages macro for DMSC2DM low_priority */
-#define TISCI_SEC_PROXY_DMSC2DM_WRITE_LOW_PRIORITY_NUM_MESSAGES (2U)
+/** Thread ID macro for TIFS2DM low_priority */
+#define TISCI_SEC_PROXY_TIFS2DM_WRITE_LOW_PRIORITY_THREAD_ID (25U)
+/** Num messages macro for TIFS2DM low_priority */
+#define TISCI_SEC_PROXY_TIFS2DM_WRITE_LOW_PRIORITY_NUM_MESSAGES (2U)
 
 
 #endif /* AM62X_TISCI_SEC_PROXY_H */
