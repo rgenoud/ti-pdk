@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2017-2021 Texas Instruments Incorporated
+ *  Copyright (C) 2017-2022 Texas Instruments Incorporated
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -49,7 +49,7 @@
  *
  * Resource Assignment Subtype definitions
  *
- * Data version: 210712_165720
+ * Data version: 220228_160153
  *
  */
 #ifndef TISCI_RESASG_TYPES_H
@@ -161,7 +161,7 @@
 /**
  * Total number of unique resource types for SoC
  */
-#define TISCI_RESASG_UTYPE_CNT 82U
+#define TISCI_RESASG_UTYPE_CNT 90U
 
 /**
  * Total number of resource entries allowed for SoC

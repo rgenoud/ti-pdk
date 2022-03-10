@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2017-2021 Texas Instruments Incorporated
+ *  Copyright (C) 2017-2022 Texas Instruments Incorporated
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -49,14 +49,14 @@
  *
  * Host IDs for AM62X device
  *
- * Data version: 210712_165720
+ * Data version: 220228_160153
  *
  */
 #ifndef TISCI_HOSTS_H
 #define TISCI_HOSTS_H
 
-/** DMSC(Secure): Device Management and Security Control */
-#define TISCI_HOST_ID_DMSC (0U)
+/** TIFS(Secure): Device Management and Security Control */
+#define TISCI_HOST_ID_TIFS (0U)
 /** DM(Non Secure): Device Management */
 #define TISCI_HOST_ID_DM (254U)
 /** MAIN_0_R5_0(Secure): Cortex R5_0 context 0 on Main island(BOOT) */
@@ -81,10 +81,10 @@
 #define TISCI_HOST_ID_GPU (31U)
 /** ICSSG_0(Non Secure): ICSSG context 0 on Main island */
 #define TISCI_HOST_ID_ICSSG_0 (50U)
-/** DM2DMSC(Secure): DM to DMSC communication */
-#define TISCI_HOST_ID_DM2DMSC (250U)
-/** DMSC2DM(Non Secure): DMSC to DM communication */
-#define TISCI_HOST_ID_DMSC2DM (251U)
+/** DM2TIFS(Secure): DM to TIFS communication */
+#define TISCI_HOST_ID_DM2TIFS (250U)
+/** TIFS2DM(Non Secure): TIFS to DM communication */
+#define TISCI_HOST_ID_TIFS2DM (251U)
 
 /**
  * Host catch all. Used in board configuration resource assignments to define
