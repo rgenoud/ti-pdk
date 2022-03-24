@@ -175,9 +175,7 @@ extern "C" {
 /* @} */
 
 /** \brief Number of UTC instance */
-// #define UDMA_NUM_UTC_INSTANCE           (CSL_NAVSS_UTC_CNT)
-/* CSL_NAVSS_UTC_CNT has defined incorrectly temporarily hardcoding*/
-#define UDMA_NUM_UTC_INSTANCE           (4U)
+#define UDMA_NUM_UTC_INSTANCE           (CSL_NAVSS_UTC_CNT)
 
 /**
  *  \anchor Udma_UtcIdSoc
