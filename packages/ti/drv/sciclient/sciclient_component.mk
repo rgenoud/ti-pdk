@@ -86,6 +86,7 @@ drvsciclient_j721e_CORELIST += qnx_mpu1_0
 drvsciclient_j7200_CORELIST += qnx_mpu1_0
 drvsciclient_j721s2_CORELIST += qnx_mpu1_0
 drvsciclient_j784s4_CORELIST += qnx_mpu1_0
+drvsciclient_am62x_CORELIST += qnx_mpu1_0
 endif
 
 define DRV_SCICLIENT_RTOS_BOARDLIST_RULE

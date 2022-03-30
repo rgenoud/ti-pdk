@@ -69,6 +69,8 @@ extern "C" {
 #define VRING_BASE_ADDRESS      0xA4000000U
 #elif defined (SOC_AM64X)
 #define VRING_BASE_ADDRESS      0xA5000000U
+#elif defined (SOC_AM62X)
+#define VRING_BASE_ADDRESS      0x9CD00000U
 #elif defined (SOC_J721S2)
 #define VRING_BASE_ADDRESS      0xA8000000U
 #elif defined (SOC_J784S4)

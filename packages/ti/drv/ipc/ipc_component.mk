@@ -43,8 +43,8 @@ ipc_LIB_LIST = ipc
 
 drvipc_RTOS_LIST       = $(DEFAULT_RTOS_LIST)
 
-drvipc_SOCLIST         = j721e j7200 j721s2 j784s4
-drvipc_BOARDLIST       = j721e_sim j721e_qt j721e_evm j7200_evm j721s2_evm j784s4_evm
+drvipc_SOCLIST         = j721e j7200 j721s2 j784s4 am62x
+drvipc_BOARDLIST       = j721e_sim j721e_qt j721e_evm j7200_evm j721s2_evm j784s4_evm am62x_evm
 drvipc_j721e_CORELIST  = mpu1_0 mcu1_0 mcu2_0 mcu3_0 mcu1_1 mcu2_1 mcu3_1 c66xdsp_1 c66xdsp_2 c7x_1
 drvipc_j721e_LASTCORE := $(word $(words $(drvipc_j721e_CORELIST)), $(drvipc_j721e_CORELIST))
 drvipc_j721e_BAREMETAL_CORELIST = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1
@@ -61,6 +61,9 @@ drvipc_j784s4_CORELIST  = mpu1_0 mcu1_0 mcu2_0 mcu3_0 mcu4_0 mcu1_1 mcu2_1 mcu3_
 drvipc_j784s4_LASTCORE := $(word $(words $(drvipc_j784s4_CORELIST)), $(drvipc_j784s4_CORELIST))
 drvipc_j784s4_BAREMETAL_CORELIST = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mcu4_0 mcu4_1
 drvipc_j784s4_RTOS_CORELIST = $(drvipc_j784s4_CORELIST)
+drvipc_am62x_CORELIST = mpu1_0 m4f_0
+drvipc_am62x_BAREMETAL_CORELIST = m4f_0
+drvipc_am62x_LASTCORE := $(word $(words $(drvipc_am62x_BAREMETAL_CORELIST)), $(drvipc_am62x_BAREMETAL_CORELIST))
 drvipc_DISABLE_PARALLEL_MAKE = yes
 
 ifeq ($(BUILD_OS_TYPE), qnx)
@@ -68,6 +71,7 @@ drvipc_j721e_CORELIST += qnx_mpu1_0
 drvipc_j7200_CORELIST += qnx_mpu1_0
 drvipc_j721s2_CORELIST += qnx_mpu1_0
 drvipc_j784s4_CORELIST += qnx_mpu1_0
+drvipc_am62x_CORELIST += qnx_mpu1_0
 endif
 
 ############################

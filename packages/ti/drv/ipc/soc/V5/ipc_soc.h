@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) Texas Instruments Incorporated 2018
+ *  Copyright (c) Texas Instruments Incorporated 2020
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -32,87 +32,76 @@
  */
 
 /**
- *  \file ipc_soc.h
+ *  \ingroup DRV_IPC_MODULE
+ *  \defgroup DRV_IPC_SOC_MODULE IPC SoC Config
+ *            This is IPC documentation specific to AM62x SoC
  *
- *  \brief IPC Low Level Driver SOC specific file.
+ *  @{
  */
 
-#ifndef IPC_SOC_TOP_H_
-#define IPC_SOC_TOP_H_
+/**
+ *  \file ipc_soc.h
+ *
+ *  \brief IPC Low Level Driver AM62x SOC specific file.
+ */
+#ifndef IPC_SOC_V4_H_
+#define IPC_SOC_V4_H_
+
+#include <ti/drv/ipc/include/ipc_config.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define    IPC_INVALID_PROCID (0XFFU)   /**< Invalid Proc ID */
+/**
+ * \brief VRing Buffer Size required for all core
+ * combinations.
+ */
+#define IPC_VRING_BUFFER_SIZE   (0x200000U)
+
+/** \brief Core definitions */
+#define    IPC_MPU1_0           (0U)    /**< ARM A53 - VM0 */
+#define    IPC_M4F_0            (1U)    /**< ARM MCU  M4F */
+#define    IPC_MAX_PROCS        (2U)    /**< Maximum Processors */
 
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
 
+/* None */
 
-/*
- * These functions and structure is for internal use use and
- * are not expected to be called from app
- */
+
+/* ========================================================================== */
+/*                           Macros & Typedefs                                */
+/* ========================================================================== */
+
+
+
+/* @} */
 
 /* ========================================================================== */
 /*                         Structure Declarations                             */
 /* ========================================================================== */
 
+/* None */
+
 /* ========================================================================== */
 /*                          Function Declarations                             */
 /* ========================================================================== */
-int32_t Ipc_getMailboxInfoTx(uint32_t selfId, uint32_t remoteId, 
-                 uint32_t *clusterId, uint32_t *userId, uint32_t *queueId);
-int32_t Ipc_getMailboxInfoRx(uint32_t selfId, uint32_t remoteId, 
-                 uint32_t *clusterId, uint32_t *userId, uint32_t *queueId);
-int32_t Ipc_getMailboxIntrRouterCfg(uint32_t selfId, uint32_t clusterId,
-                 uint32_t userId, Ipc_MbConfig* cfg, uint32_t cnt);
-uintptr_t Ipc_getMailboxBaseAddr(uint32_t clusterId);
 
-/**
- * \brief Returns the core name for get core id
- *
- * \param procId [IN] Id of desired core.
- *
- * \return name of the given core id
- * */
-const char* Ipc_getCoreName(uint32_t procId);
+uint32_t Ipc_rprocIdToMboxId(uint32_t id);
+uint32_t Ipc_mboxIdToRprocId(uint32_t id);
 
-/**
- * \brief Returns Core ID based on core build flag
- *
- * \return Code ID of the current core
- **/
-uint32_t Ipc_getCoreId(void);
+/* ========================================================================== */
+/*                       Static Function Definitions                          */
+/* ========================================================================== */
 
-/**
- *  \brief Returns TRUE if the memory is cache coherent
- *
- *  \return TRUE/FALSE
- */
-uint32_t Ipc_isCacheCoherent(void);
-
-/* For J7ES device */
-#if defined (SOC_J721E) || defined (SOC_J7200)
-#include <ti/drv/ipc/soc/V1/ipc_soc.h>
-#endif
-
-#if defined (SOC_J721S2)
-#include <ti/drv/ipc/soc/V3/ipc_soc.h>
-#endif
-
-#if defined (SOC_J784S4)
-#include <ti/drv/ipc/soc/V4/ipc_soc.h>
-#endif
-
-#if defined (SOC_AM62X)
-#include <ti/drv/ipc/soc/V5/ipc_soc.h>
-#endif
+/* None */
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* #ifndef IPC_SOC_TOP_H_ */
+#endif /* #ifndef IPC_SOC_V4_H_ */
+
+/* @} */

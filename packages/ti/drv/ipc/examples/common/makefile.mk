@@ -24,7 +24,7 @@ ifeq ($(BUILD_OS_TYPE), baremetal)
   ifeq ($(ISA), r5f)
 	  SRCS_COMMON += r5f_mpu_$(SOC)_default.c
   endif
-  ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4))
+  ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 am62x))
     EXTERNAL_LNKCMD_FILE_LOCAL = $(PDK_INSTALL_PATH)/ti/drv/ipc/examples/common/$(SOC)/linker_$(ISA)_$(CORE).lds
     ifeq ($(ECHO_TEST_BTCM), 1)
       ifeq ($(ISA), r5f)
@@ -98,6 +98,10 @@ ifeq ($(BUILD_OS_TYPE), safertos)
       EXTERNAL_LNKCMD_FILE_LOCAL = $(PDK_INSTALL_PATH)/ti/drv/ipc/examples/common/$(SOC)/$(BUILD_OS_TYPE)/linker_$(ISA)_$(CORE)_btcm_$(BUILD_OS_TYPE).lds
     endif
   endif
+endif
+
+ifeq ($(SOC), am64x am62x)
+  COMP_LIST_COMMON += mailbox
 endif
 
 CFLAGS_LOCAL_COMMON += $(PDK_CFLAGS)

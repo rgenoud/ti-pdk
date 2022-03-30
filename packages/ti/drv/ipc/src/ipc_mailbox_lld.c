@@ -72,6 +72,7 @@ typedef struct Ipc_MailboxData_s
 /* ========================================================================== */
 /*                             Globals                                        */
 /* ========================================================================== */
+uint32_t               g_ipc_mBoxCnt = 0U;
 Ipc_MailboxData        g_ipc_mBoxData[IPC_MAX_PROCS];
 
 /* ========================================================================== */
@@ -113,7 +114,11 @@ void Mailbox_Poll_Task(void* argNotUsed)
 		(g_ipc_mBoxData[n].func)(&msg, g_ipc_mBoxData[n].arg);
 	}
         /* Temporarily we use Task_yield() */
+#ifdef QNX_OS
+        TaskP_sleep(IPC_POLL_TIMER);
+#else
         TaskP_yield();
+#endif
     }
 }
 

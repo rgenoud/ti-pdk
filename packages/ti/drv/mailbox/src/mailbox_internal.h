@@ -265,13 +265,13 @@ typedef struct Mailbox_Driver_t
      */
     Mailbox_RemoteCfg     *remoteCfgPtr;
     /**
-     * @brief   Base Address of the Tx Mailbox for this instance (used for am65xx/am64x/j721e/j7200)
+     * @brief   Base Address of the Tx Mailbox for this instance (used for am65xx/am64x/j721e/j7200/am62x)
      */
-    uint32_t              baseAddrTx;
+    uintptr_t             baseAddrTx;
     /**
-     * @brief   Base Address of the Rx Mailbox for this instance (used for am65xx/am64x/j721e/j7200)
+     * @brief   Base Address of the Rx Mailbox for this instance (used for am65xx/am64x/j721e/j7200/am62x)
      */
-    uint32_t              baseAddrRx;
+    uintptr_t             baseAddrRx;
 }Mailbox_Driver;
 
 /*!

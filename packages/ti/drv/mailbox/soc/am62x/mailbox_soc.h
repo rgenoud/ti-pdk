@@ -1,6 +1,5 @@
 /*
- *  Copyright (c) Texas Instruments Incorporated 2018
- *  All rights reserved.
+ *  Copyright (c) Texas Instruments Incorporated 2020
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -32,87 +31,89 @@
  */
 
 /**
- *  \file ipc_soc.h
+ *  \file mailbox_soc.h
  *
- *  \brief IPC Low Level Driver SOC specific file.
+ *  \brief MAILBOX Driver SOC specific file.
  */
 
-#ifndef IPC_SOC_TOP_H_
-#define IPC_SOC_TOP_H_
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#define    IPC_INVALID_PROCID (0XFFU)   /**< Invalid Proc ID */
+#ifndef MAILBOX_SOC_H_
+#define MAILBOX_SOC_H_
 
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
 
+#include <ti/csl/csl_types.h>
+#include <ti/csl/csl_mailbox.h>
+#include <ti/csl/soc.h>
+#include <ti/csl/arch/csl_arch.h>
+#include <ti/csl/src/ip/mailbox/V0/mailbox.h>
+//#include <ti/drv/mailbox/mailbox.h>
+//#include <ti/drv/mailbox/src/mailbox_internal.h>
 
-/*
- * These functions and structure is for internal use use and
- * are not expected to be called from app
- */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/* ========================================================================== */
+/*                           Macros & Typedefs                                */
+/* ========================================================================== */
+/*! @brief Mailbox Instance Number */
+typedef uint32_t Mailbox_Instance;
+
+/** @defgroup MAILBOX_INSTANCE Instance IDs
+\ingroup DRV_MAILBOX_MODULE
+ *
+ @{ */
+
+/*! \brief MPU1_0 Mailbox INST */
+#define MAILBOX_INST_MPU1_0        (0U)
+/*! \brief M4F_0 Mailbox INST */
+#define MAILBOX_INST_M4F_0         (1U)
+/*! \brief Last Mailbox INST */
+#define MAILBOX_INST_LAST          (MAILBOX_INST_M4F_0)
+/*! \brief Invalid Mailbox INST */
+#define MAILBOX_INST_INVALID       (0xFFU)
+
+/** @}*/ /* end defgroup MAILBOX_INSTANCE */
+
+/*! \brief */
+#define MAILBOX_MAX_INST           (MAILBOX_INST_LAST + 1U)
+
+#define  MAILBOX_CLUSTER_INVALID   (0xFFU)
+#define  MAILBOX_USER_INVALID      (0xFFU)
+
+#define TEST_VIM_BASE_ADDR (CSL_MAIN_DOMAIN_VIM_BASE_ADDR)
 
 /* ========================================================================== */
 /*                         Structure Declarations                             */
 /* ========================================================================== */
 
+/**
+ * \brief Mailbox interrupt router configuration
+ */
+typedef struct Mailbox_MbConfig_s
+{
+    uint32_t   priority;
+    uint32_t   eventId;
+    uint32_t   inputIntrNum;
+    uint32_t   outputIntrNum;
+}Mailbox_MbConfig;
+
 /* ========================================================================== */
 /*                          Function Declarations                             */
 /* ========================================================================== */
-int32_t Ipc_getMailboxInfoTx(uint32_t selfId, uint32_t remoteId, 
-                 uint32_t *clusterId, uint32_t *userId, uint32_t *queueId);
-int32_t Ipc_getMailboxInfoRx(uint32_t selfId, uint32_t remoteId, 
-                 uint32_t *clusterId, uint32_t *userId, uint32_t *queueId);
-int32_t Ipc_getMailboxIntrRouterCfg(uint32_t selfId, uint32_t clusterId,
-                 uint32_t userId, Ipc_MbConfig* cfg, uint32_t cnt);
-uintptr_t Ipc_getMailboxBaseAddr(uint32_t clusterId);
 
-/**
- * \brief Returns the core name for get core id
- *
- * \param procId [IN] Id of desired core.
- *
- * \return name of the given core id
- * */
-const char* Ipc_getCoreName(uint32_t procId);
+/* None */
 
-/**
- * \brief Returns Core ID based on core build flag
- *
- * \return Code ID of the current core
- **/
-uint32_t Ipc_getCoreId(void);
+/* ========================================================================== */
+/*                       Static Function Definitions                          */
+/* ========================================================================== */
 
-/**
- *  \brief Returns TRUE if the memory is cache coherent
- *
- *  \return TRUE/FALSE
- */
-uint32_t Ipc_isCacheCoherent(void);
-
-/* For J7ES device */
-#if defined (SOC_J721E) || defined (SOC_J7200)
-#include <ti/drv/ipc/soc/V1/ipc_soc.h>
-#endif
-
-#if defined (SOC_J721S2)
-#include <ti/drv/ipc/soc/V3/ipc_soc.h>
-#endif
-
-#if defined (SOC_J784S4)
-#include <ti/drv/ipc/soc/V4/ipc_soc.h>
-#endif
-
-#if defined (SOC_AM62X)
-#include <ti/drv/ipc/soc/V5/ipc_soc.h>
-#endif
+/* None */
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* #ifndef IPC_SOC_TOP_H_ */
+#endif /* #ifndef MAILBOX_SOC_H_ */

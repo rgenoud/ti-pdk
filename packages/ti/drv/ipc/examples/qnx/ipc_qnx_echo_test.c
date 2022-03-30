@@ -77,6 +77,8 @@
 #define CORE_IN_TEST            4
 #elif defined (SOC_AM64X)
 #define CORE_IN_TEST            6
+#elif defined (SOC_AM62X)
+#define CORE_IN_TEST            1
 #elif defined (SOC_J721S2)
 #define CORE_IN_TEST            8
 #elif defined (SOC_J784S4)
@@ -137,6 +139,8 @@ uint32_t remoteProc[] =
     IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1
 #elif defined (SOC_AM64X)
     IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1, IPC_M4F_0
+#elif defined (SOC_AM62X)
+    IPC_M4F_0
 #elif defined (SOC_J721S2)
     IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1, IPC_MCU3_0, IPC_MCU3_1, IPC_C7X_1, IPC_C7X_2
 #elif defined (SOC_J784S4)
@@ -341,6 +345,8 @@ uint32_t remoteProc[] =
 {
 #if defined (SOC_AM64X)
     IPC_MPU1_0, IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1
+#elif defined (SOC_AM62X)
+    IPC_MPU1_0
 #endif
 };
 #endif

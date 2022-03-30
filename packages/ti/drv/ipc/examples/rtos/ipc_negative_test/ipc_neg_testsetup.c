@@ -57,8 +57,8 @@
 #define MSGSIZE  256U
 #define SERVICE  "ti.ipc4.ping-pong"
 #define FAKE_SERVICE "negative-test"
-#define ENDPT1   13U
-#define ENDPT2   14U
+#define ENDPT1   14U
+#define ENDPT2   13U
 #define NUMMSGS  10000 /* number of message sent per task */
 //#define NUMMSGS  1000000   /* number of message sent per task */
 
