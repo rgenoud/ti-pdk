@@ -35,16 +35,22 @@
 ifeq ($(mailbox_component_make_include), )
 
 drvmailbox_RTOS_LIST = $(DEFAULT_RTOS_LIST)
-drvmailbox_SOCLIST          = tpr12 am64x awr294x
+drvmailbox_SOCLIST          = tpr12 am64x awr294x am62x
 drvmailbox_tpr12_CORELIST   = mcu1_0 mcu1_1 c66xdsp_1
 drvmailbox_awr294x_CORELIST = mcu1_0 mcu1_1 c66xdsp_1
 drvmailbox_am64x_CORELIST   = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 m4f_0
 drvmailbox_am64x_rtos_CORELIST = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1
 drvmailbox_am64x_LASTCORE := $(word $(words $(drvmailbox_am64x_CORELIST)), $(drvmailbox_am64x_CORELIST))
 drvmailbox_am64x_rtos_LASTCORE := $(word $(words $(drvmailbox_am64x_rtos_CORELIST)), $(drvmailbox_am64x_rtos_CORELIST))
+drvmailbox_am62x_CORELIST   = mpu1_0 m4f_0
+drvmailbox_am62x_LASTCORE := $(word $(words $(drvmailbox_am62x_CORELIST)), $(drvmailbox_am62x_CORELIST))
 
-drvmailbox_BOARDLIST        = tpr12_evm tpr12_qt am64x_evm awr294x_evm
-drvmailbox_k3_BOARDLIST     = am64x_evm
+ifeq ($(BUILD_OS_TYPE), qnx)
+drvmailbox_am62x_CORELIST += qnx_mpu1_0
+endif
+
+drvmailbox_BOARDLIST        = tpr12_evm tpr12_qt am64x_evm awr294x_evm am62x_evm
+drvmailbox_k3_BOARDLIST     = am64x_evm am62x_evm
 drvmailbox_tpr_BOARDLIST    = tpr12_evm tpr12_qt awr294x_evm
 drvmailbox_safertos_tpr_BOARDLIST    = tpr12_evm
 

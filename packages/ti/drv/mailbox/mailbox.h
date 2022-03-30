@@ -380,7 +380,7 @@ typedef enum
  *  @warning    For TPR12,AWR294X making Mailbox_read() calls within its own callback
  *              routines are STRONGLY discouraged as it will impact Task and
  *              System stack size requirements!
- *              For AM64x, it is advised to call Mailbox_read() within the callback
+ *              For AM64x & AM62x, it is advised to call Mailbox_read() within the callback
  *              routine in this mode, because the interrupt will remain asserted until the
  *              message is read.
  *
@@ -840,7 +840,7 @@ extern int32_t Mailbox_read(Mbox_Handle handle, uint8_t *buffer, uint32_t size);
  * Remote endpoint can not send a new message to the local endpoint until Mailbox_readFlush() is issued by the local endpoint.
  * Once Mailbox_readFlush() is issued, the local endpoint must assume that the previously received message
  * is no longer in the mailbox buffer and subsequent Mailbox_read() will return no data until a new message arrives in the mailbox.
- * This applies only for TPR12, AWR294X Mailbox LLD. It is not needed for AM64X.
+ * This applies only for TPR12, AWR294X Mailbox LLD. It is not needed for AM64X and AM62X.
  *
  *  @pre    Mailbox_open() has been called
  *

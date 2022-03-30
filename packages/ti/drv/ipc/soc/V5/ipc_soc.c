@@ -1,5 +1,6 @@
 /*
  *  Copyright (c) Texas Instruments Incorporated 2020
+ *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -31,64 +32,98 @@
  */
 
 /**
- *  \file mailbox_soc.h
+ *  \file ipc_soc.c
  *
- *  \brief MAILBOX Low Level Driver SOC specific file.
+ *  \brief File containing the IPC driver - soc specific implementation.
+ *
  */
-
-#ifndef MAILBOX_SOC_TOP_H_
-#define MAILBOX_SOC_TOP_H_
 
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
+#include <ti/drv/ipc/ipc.h>
+#include <ti/drv/ipc/soc/ipc_soc.h>
+#include <ti/drv/ipc/src/ipc_priv.h>
+#include <ti/drv/ipc/src/ipc_mailbox_lld.h>
+#include <ti/drv/mailbox/mailbox.h>
 
-#if defined (SOC_TPR12)
-#include <ti/drv/mailbox/soc/tpr12/mailbox_soc.h>
-#endif
+/**
+ *  \brief Processor IDs to name mapping for all processor in AM62x
+ */
+static Ipc_ProcInfo g_Ipc_mp_procInfo[IPC_MAX_PROCS] =
+{
+    {IPC_MPU1_0,      "mpu1_0"},      /**< ARM A53 - VM0 */
+    {IPC_M4F_0,       "m4f_0"}        /**< ARM M4F */
+};
 
-#if defined (SOC_AWR294X)
-#include <ti/drv/mailbox/soc/awr294x/mailbox_soc.h>
-#endif
+const char* Ipc_getCoreName(uint32_t procId)
+{
+    char*     p = (char*)0;
+    uint32_t id = procId;
 
-#if defined (SOC_AM64X)
-#include <ti/drv/mailbox/soc/am64x/mailbox_soc.h>
-#endif
-
-#if defined (SOC_AM62X)
-#include <ti/drv/mailbox/soc/am62x/mailbox_soc.h>
-#endif
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-/* ========================================================================== */
-/*                           Macros & Typedefs                                */
-/* ========================================================================== */
-
-/* None */
-
-/* ========================================================================== */
-/*                         Structure Declarations                             */
-/* ========================================================================== */
-
-/* None */
-
-/* ========================================================================== */
-/*                          Function Declarations                             */
-/* ========================================================================== */
-
-/* None */
-
-/* ========================================================================== */
-/*                       Static Function Definitions                          */
-/* ========================================================================== */
-
-/* None */
-
-#ifdef __cplusplus
+    if(id < IPC_MAX_PROCS)
+    {
+       p = g_Ipc_mp_procInfo[id].name;
+    }
+    return p;
 }
+
+uint32_t Ipc_rprocIdToMboxId(uint32_t id)
+{
+    uint32_t mbId = MAILBOX_INST_INVALID;
+
+    if (id == IPC_MPU1_0)
+    {
+        mbId = MAILBOX_INST_MPU1_0;
+    }
+    else if (id == IPC_M4F_0)
+    {
+        mbId = MAILBOX_INST_M4F_0;
+    }
+
+    return mbId;
+}
+
+uint32_t Ipc_mboxIdToRprocId(uint32_t id)
+{
+    uint32_t procId = IPC_INVALID_PROCID;
+
+    if (id == MAILBOX_INST_MPU1_0)
+    {
+        procId = IPC_MPU1_0;
+    }
+    else if (id == MAILBOX_INST_M4F_0)
+    {
+        procId = IPC_M4F_0;
+    }
+
+    return procId;
+}
+
+uint32_t Ipc_getCoreId(void)
+{
+    uint32_t selfId =  IPC_INVALID_PROCID;
+
+#if defined(BUILD_MPU1_0)
+    selfId = IPC_MPU1_0;
+#elif defined(BUILD_M4F)
+    selfId = IPC_M4F_0;
+#else
+#error "Unsupported core Id"
 #endif
 
-#endif /* #ifndef MAILBOX_SOC_TOP_H_ */
+    return (selfId);
+}
+
+uint32_t Ipc_isCacheCoherent(void)
+{
+    uint32_t isCacheCoherent;
+
+#if defined (BUILD_MPU1_0)
+    isCacheCoherent = TRUE;
+#else
+    isCacheCoherent = FALSE;
+#endif
+
+    return (isCacheCoherent);
+}

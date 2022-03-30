@@ -68,7 +68,7 @@
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-#define ENDPT1                  13U
+#define ENDPT1                  14U
 #define MSGSIZE                 256U
 #define SERVICE                 "ti.ipc4.ping-pong"
 

@@ -18,7 +18,7 @@ ifeq ($(SOC),$(filter $(SOC), tpr12 awr294x))
   SRCS_COMMON += csl_mbox.c
 endif
 CFLAGS_LOCAL_COMMON = $(PDK_CFLAGS) $(MAILBOX_CFLAGS)
-ifeq ($(SOC),$(filter $(SOC), am64x))
+ifeq ($(SOC),$(filter $(SOC), am64x am62x))
 CFLAGS_LOCAL_COMMON += -DVIM_DIRECT_REGISTRATION
 endif
 

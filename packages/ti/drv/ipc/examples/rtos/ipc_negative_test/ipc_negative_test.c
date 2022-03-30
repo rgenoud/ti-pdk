@@ -77,6 +77,8 @@
 #define CORE_IN_TEST            4
 #elif defined (SOC_AM64X)
 #define CORE_IN_TEST            5
+#elif defined (SOC_AM62X)
+#define CORE_IN_TEST            1
 #elif defined (SOC_J721S2)
 #define CORE_IN_TEST            8
 #elif defined (SOC_J784S4)
