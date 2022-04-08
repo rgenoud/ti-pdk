@@ -79,7 +79,7 @@
             
             
               <div class="version">
-                22.01.01
+                22.01.02
               </div>
             
           
@@ -184,7 +184,7 @@
 <p>This chapter provides information of Board Configuration resource assignment
 type IDs that are permitted in the J721S2 SoC.  The resource type IDs represent
 J721S2 resources ranges assignable to SoC processing entities (or PEs).</p>
-<p><strong>WARNING</strong>: System Firmware RM currently supports a maximum of 900 RM board
+<p><strong>WARNING</strong>: System Firmware RM currently supports a maximum of 980 RM board
 configuration resource assignment ranges on the J721S2 SoC.  Sending more
 entries than the maximum will result in the RM board configuration being NACK’d</p>
 <table border="1" class="docutils">
@@ -833,7 +833,7 @@ entries than the maximum will result in the RM board configuration being NACK’
 <td>0x17</td>
 <td>0x4B17</td>
 <td>4608</td>
-<td>8</td>
+<td>16</td>
 </tr>
 <tr class="row-even"><td>&#160;</td>
 <td>&#160;</td>
@@ -885,13 +885,21 @@ entries than the maximum will result in the RM board configuration being NACK’
 </tr>
 <tr class="row-even"><td>&#160;</td>
 <td>&#160;</td>
+<td>RESASG_SUBTYPE_PKTDMA_RING_SAUL_TX_1_CHAN</td>
+<td>0x13</td>
+<td>0x4B53</td>
+<td>8</td>
+<td>8</td>
+</tr>
+<tr class="row-odd"><td>&#160;</td>
+<td>&#160;</td>
 <td>RESASG_SUBTYPE_PKTDMA_RING_SAUL_RX_0_CHAN</td>
 <td>0x18</td>
 <td>0x4B58</td>
 <td>16</td>
-<td>0</td>
+<td>8</td>
 </tr>
-<tr class="row-odd"><td>&#160;</td>
+<tr class="row-even"><td>&#160;</td>
 <td>&#160;</td>
 <td>RESASG_SUBTYPE_PKTDMA_RING_SAUL_RX_1_CHAN</td>
 <td>0x19</td>
@@ -899,13 +907,37 @@ entries than the maximum will result in the RM board configuration being NACK’
 <td>24</td>
 <td>0</td>
 </tr>
+<tr class="row-odd"><td>&#160;</td>
+<td>&#160;</td>
+<td>RESASG_SUBTYPE_PKTDMA_RING_SAUL_RX_2_CHAN</td>
+<td>0x1A</td>
+<td>0x4B5A</td>
+<td>24</td>
+<td>8</td>
+</tr>
 <tr class="row-even"><td>&#160;</td>
+<td>&#160;</td>
+<td>RESASG_SUBTYPE_PKTDMA_RING_SAUL_RX_3_CHAN</td>
+<td>0x1B</td>
+<td>0x4B5B</td>
+<td>24</td>
+<td>8</td>
+</tr>
+<tr class="row-odd"><td>&#160;</td>
 <td>&#160;</td>
 <td>RESASG_SUBTYPE_PKTDMA_SAUL_TX_0_CHAN</td>
 <td>0x25</td>
 <td>0x4B65</td>
 <td>1</td>
 <td>0</td>
+</tr>
+<tr class="row-even"><td>&#160;</td>
+<td>&#160;</td>
+<td>RESASG_SUBTYPE_PKTDMA_SAUL_TX_1_CHAN</td>
+<td>0x26</td>
+<td>0x4B66</td>
+<td>1</td>
+<td>1</td>
 </tr>
 <tr class="row-odd"><td>&#160;</td>
 <td>&#160;</td>
@@ -936,6 +968,38 @@ entries than the maximum will result in the RM board configuration being NACK’
 <td>RESASG_SUBTYPE_PKTDMA_FLOW_SAUL_RX_1_CHAN</td>
 <td>0x30</td>
 <td>0x4B70</td>
+<td>0</td>
+<td>8</td>
+</tr>
+<tr class="row-odd"><td>&#160;</td>
+<td>&#160;</td>
+<td>RESASG_SUBTYPE_PKTDMA_SAUL_RX_2_CHAN</td>
+<td>0x31</td>
+<td>0x4B71</td>
+<td>2</td>
+<td>1</td>
+</tr>
+<tr class="row-even"><td>&#160;</td>
+<td>&#160;</td>
+<td>RESASG_SUBTYPE_PKTDMA_FLOW_SAUL_RX_2_CHAN</td>
+<td>0x32</td>
+<td>0x4B72</td>
+<td>8</td>
+<td>8</td>
+</tr>
+<tr class="row-odd"><td>&#160;</td>
+<td>&#160;</td>
+<td>RESASG_SUBTYPE_PKTDMA_SAUL_RX_3_CHAN</td>
+<td>0x33</td>
+<td>0x4B73</td>
+<td>3</td>
+<td>1</td>
+</tr>
+<tr class="row-even"><td>&#160;</td>
+<td>&#160;</td>
+<td>RESASG_SUBTYPE_PKTDMA_FLOW_SAUL_RX_3_CHAN</td>
+<td>0x34</td>
+<td>0x4B74</td>
 <td>8</td>
 <td>8</td>
 </tr>
@@ -1001,7 +1065,7 @@ entries than the maximum will result in the RM board configuration being NACK’
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'22.01.01',
+            VERSION:'22.01.02',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

@@ -160,6 +160,8 @@ use case configurations.  The configurable flows can be delegated using
 | SAUL_TX_0_CHAN                    | 0 to 0                   |
 | (**RESERVED BY SYSTEM FIRMWARE**) |                          |
 +-----------------------------------+--------------------------+
+| SAUL_TX_1_CHAN                    | 1 to 1                   |
++-----------------------------------+--------------------------+
 
 +-----------------------------------+--------------------------+
 | Rx Channel Type                   | Rx Channel Index Range   |
@@ -170,6 +172,10 @@ use case configurations.  The configurable flows can be delegated using
 | SAUL_RX_1_CHAN                    | 1 to 1                   |
 | (**RESERVED BY SYSTEM FIRMWARE**) |                          |
 +-----------------------------------+--------------------------+
+| SAUL_RX_2_CHAN                    | 2 to 2                   |
++-----------------------------------+--------------------------+
+| SAUL_RX_3_CHAN                    | 3 to 3                   |
++-----------------------------------+--------------------------+
 
 +-----------------------------------+-----------------------+
 | Rx Flow Type                      | Rx Flow Index Range   |
@@ -177,10 +183,15 @@ use case configurations.  The configurable flows can be delegated using
 | SAUL_TX_0_CHAN                    | 0 to 7                |
 | (**RESERVED BY SYSTEM FIRMWARE**) |                       |
 +-----------------------------------+-----------------------+
-| SAUL_RX_0_CHAN                    | 8 to 15               |
-| (**RESERVED BY SYSTEM FIRMWARE**) |                       |
+| SAUL_TX_1_CHAN                    | 8 to 15               |
 +-----------------------------------+-----------------------+
 | SAUL_RX_1_CHAN                    | 16 to 23              |
 | (**RESERVED BY SYSTEM FIRMWARE**) |                       |
++-----------------------------------+-----------------------+
+| SAUL_RX_0_CHAN                    | 16 to 23              |
++-----------------------------------+-----------------------+
+| SAUL_RX_2_CHAN                    | 24 to 31              |
++-----------------------------------+-----------------------+
+| SAUL_RX_3_CHAN                    | 24 to 31              |
 +-----------------------------------+-----------------------+
 
