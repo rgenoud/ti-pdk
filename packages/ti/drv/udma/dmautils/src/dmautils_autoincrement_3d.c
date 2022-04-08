@@ -57,7 +57,6 @@
 #include <math.h>
 #include <stdint.h>
 
-#include "ti/drv/udma/udma.h"
 #include "ti/drv/udma/dmautils/src/dmautils_autoincrement_3d_priv.h"
 #include "ti/drv/udma/dmautils/include/dmautils_autoincrement_3d.h"
 
@@ -148,13 +147,17 @@ static void hostEmulation_triggerDMA(struct Udma_DrvObj * udmaDrvHandle)
 {
   uint32_t chId;
   CSL_DRU_t * druRegs;
+
+#if ( DMA_UTILS_STANDALONE == 0 )
   CSL_UdmapCfg  * udmapRegs;
   CSL_ringacc_cfgRegs * ringAccCfgRegs;
 
-
-  druRegs             = udmaDrvHandle->utcInfo[0].druRegs;
   ringAccCfgRegs  = udmaDrvHandle->raRegs.pCfgRegs;
   udmapRegs        = &udmaDrvHandle->udmapRegs;
+#endif
+
+  druRegs             = udmaDrvHandle->utcInfo[0].druRegs;
+
 
 
   for ( chId = 0; chId < 32; chId++)//:TODO: Remove hard coded value of 32
@@ -480,6 +483,7 @@ static void hostEmulation_triggerDMA(struct Udma_DrvObj * udmaDrvHandle)
 
       if (( nextTransferRecord->icnt3 == 0 ) || ( nextTransferRecord->dicnt3 == 0 ))
       {
+#if ( DMA_UTILS_STANDALONE == 0 )
         /* this indicates that TR is received from PSIL */
         if ( (druRegs->CHNRT[chId].CFG & CSL_DRU_CHNRT_CFG_CHAN_TYPE_OWNER_MASK) != 0 )
         {
@@ -511,6 +515,7 @@ static void hostEmulation_triggerDMA(struct Udma_DrvObj * udmaDrvHandle)
 
             }
         }
+#endif
       }
       if ( interimBuffer != NULL)
       {
@@ -577,11 +582,11 @@ int32_t DmaUtilsAutoInc3d_getTotalBlockCount(uint8_t * trMem, uint32_t numTr)
 
 }
 
-static inline uintptr_t DmaUtilsAutoInc3d_getPhysicalAddress(DmaUtilsAutoInc3d_Context * dmautilsContext,
+static inline uintptr_t DmaUtilsAutoInc3d_getPhysicalAddress(Udma_VirtToPhyFxn       virtToPhyFxn,
                                                                  const uintptr_t virtualAddr,
                                                                  int32_t chNum);
 
-static inline uintptr_t DmaUtilsAutoInc3d_getPhysicalAddress(DmaUtilsAutoInc3d_Context * dmautilsContext,
+static inline uintptr_t DmaUtilsAutoInc3d_getPhysicalAddress(Udma_VirtToPhyFxn       virtToPhyFxn,
                                                                  const uintptr_t virtualAddr,
                                                                  int32_t chNum)
 {
@@ -589,12 +594,11 @@ static inline uintptr_t DmaUtilsAutoInc3d_getPhysicalAddress(DmaUtilsAutoInc3d_C
 
   /* If virtual to physical address conversion function is available then use it for
   conversion else directly program the address as it is */
-  if ( dmautilsContext->initParams.udmaDrvHandle->initPrms.virtToPhyFxn != NULL )
+  if ( virtToPhyFxn != NULL )
   {
-      phyAddr = (uintptr_t) dmautilsContext->initParams.udmaDrvHandle->initPrms.virtToPhyFxn(
-                                                          (void *)virtualAddr,
-                                                          chNum,
-                                                          NULL);
+      phyAddr = (uintptr_t) virtToPhyFxn((void *)virtualAddr,
+                                        chNum,
+                                        NULL);
   }
   return phyAddr;
 }
@@ -848,9 +852,9 @@ int32_t DmaUtilsAutoInc3d_init(void * autoIncrementContext , DmaUtilsAutoInc3d_I
   }
 
   /* Initialize the channel params to default */
-   chType = UDMA_CH_TYPE_UTC;
-   UdmaChPrms_init(&chPrms, chType);
-   chPrms.utcId = UDMA_UTC_ID_MSMC_DRU0;
+  chType = UDMA_CH_TYPE_UTC;
+  UdmaChPrms_init(&chPrms, chType);
+  chPrms.utcId = UDMA_UTC_ID_MSMC_DRU0;
 
   UdmaChUtcPrms_init(&utcPrms);
 
@@ -858,6 +862,7 @@ int32_t DmaUtilsAutoInc3d_init(void * autoIncrementContext , DmaUtilsAutoInc3d_I
   {
       channelContext = dmautilsContext->channelContext[i];
 
+#if (DMA_UTILS_STANDALONE == 0 )
       if ( chInitParams[i].druOwner == DMAUTILSAUTOINC3D_DRUOWNER_DIRECT_TR )
       {
           chPrms.fqRingPrms.ringMem      = NULL;
@@ -883,7 +888,7 @@ int32_t DmaUtilsAutoInc3d_init(void * autoIncrementContext , DmaUtilsAutoInc3d_I
 
           utcPrms.druOwner = CSL_DRU_OWNER_UDMAC_TR;
       }
-
+#endif
       channelHandle = &(channelContext->chHandle);
 
       retVal = Udma_chOpen(initParams->udmaDrvHandle, channelHandle, chType, &chPrms);
@@ -989,6 +994,7 @@ int32_t DmaUtilsAutoInc3d_prepareTr(DmaUtilsAutoInc3d_TrPrepareParam * trPrepPar
 
     pTrArray = (CSL_UdmapTR *)trPrepParam->trMem;
 
+#if (DMA_UTILS_STANDALONE == 0 )
     if ( isRingBasedFlowReq == 1 )
     {
       /* This needs to be updated with correct value during configure */
@@ -1002,7 +1008,7 @@ int32_t DmaUtilsAutoInc3d_prepareTr(DmaUtilsAutoInc3d_TrPrepareParam * trPrepPar
       pTrArray = pTr;
 
     }
-
+#endif
     for ( i = 0; i < trPrepParam->numTRs ; i++)
     {
         DmaUtilsAutoInc3d_setupTr(&pTrArray[i], &transferProp[i]);
@@ -1092,14 +1098,14 @@ int32_t DmaUtilsAutoInc3d_convertTrVirtToPhyAddr(void * autoIncrementContext,
             if (( convertMask & DMAUTILSAUTOINC3D_ADDRCONVERTMASK_SRCADDR) ==
               DMAUTILSAUTOINC3D_ADDRCONVERTMASK_SRCADDR)
             {
-                pTrArray[i].addr = DmaUtilsAutoInc3d_getPhysicalAddress(dmautilsContext,
+                pTrArray[i].addr = DmaUtilsAutoInc3d_getPhysicalAddress(dmautilsContext->initParams.udmaDrvHandle->initPrms.virtToPhyFxn,
                                                                         pTrArray[i].addr,
                                                                         druChannelNum);
             }
             if (( convertMask & DMAUTILSAUTOINC3D_ADDRCONVERTMASK_DSTADDR) ==
               DMAUTILSAUTOINC3D_ADDRCONVERTMASK_DSTADDR)
             {
-                pTrArray[i].daddr = DmaUtilsAutoInc3d_getPhysicalAddress(dmautilsContext,
+                pTrArray[i].daddr = DmaUtilsAutoInc3d_getPhysicalAddress(dmautilsContext->initParams.udmaDrvHandle->initPrms.virtToPhyFxn,
                                                                         pTrArray[i].daddr,
                                                                         druChannelNum);
             }
@@ -1167,6 +1173,7 @@ int32_t DmaUtilsAutoInc3d_configure(void * autoIncrementContext, int32_t channel
 #endif
         }
     }
+#if (DMA_UTILS_STANDALONE == 0 )
     else
     {
       uint32_t cqRingNum = Udma_chGetCqRingNum(channelHandle);
@@ -1199,6 +1206,7 @@ int32_t DmaUtilsAutoInc3d_configure(void * autoIncrementContext, int32_t channel
 
 #endif
     }
+#endif
 
     dmautilsContext->blkIdx[channelId] = DmaUtilsAutoInc3d_getTotalBlockCount(trMem, numTr);
 Exit :
@@ -1287,6 +1295,7 @@ int32_t DmaUtilsAutoInc3d_deconfigure(void * autoIncrementContext, int32_t chann
         isRingBasedFlowReq = 1U;
     }
 
+#if (DMA_UTILS_STANDALONE == 0 )
     if ( isRingBasedFlowReq  == 1 )
     {
        uint64_t    pDesc = 0;
@@ -1298,6 +1307,7 @@ int32_t DmaUtilsAutoInc3d_deconfigure(void * autoIncrementContext, int32_t chann
           goto Exit;
       }
     }
+#endif
 
 Exit:
     return retVal;
