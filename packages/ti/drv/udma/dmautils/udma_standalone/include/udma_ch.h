@@ -388,6 +388,7 @@ struct Udma_ChObj
     Udma_ChUtcPrms          utcPrms;
     /**< UTC channel parameter passed during channel config. */
     volatile CSL_DRU_CHRTRegs_CHRT      *pDruRtRegs;
+    volatile CSL_DRU_CHNRTRegs_CHNRT    *pDruNrtRegs;
 };
 
 

@@ -346,6 +346,8 @@ struct Udma_DrvObj
      *   Each CPU should have a unique submit register to avoid corrupting
      *   submit word when SW is running from multiple CPU at the same time.
      *   Refer \ref Udma_DruSubmitCoreId */
+     uint64_t druChannelStatus;
+    /**< Each bit here represents the status of corresponding channel*/
 };
 
 

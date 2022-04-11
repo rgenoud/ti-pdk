@@ -72,8 +72,17 @@
 
 //:TODO:
 #define Udma_printf
-#define UDMA_EVENT_INVALID              ((uint32_t) 0xFFFFU)
 
+#ifdef HOST_EMULATION
+CSL_DRU_t                gHost_DRU_t;
+#define UDMA_UTC_BASE_DRU0              (&gHost_DRU_t)
+#else
+//:TODO:
+#define UDMA_UTC_BASE_DRU0           (NULL)
+#endif
+
+//:TODO: Check from where this info can come directly
+#define NUM_DUM_CHNNALES (32U)
 
 int32_t Udma_init(Udma_DrvHandle drvHandle, const Udma_InitPrms *initPrms)
 {
@@ -88,6 +97,10 @@ int32_t Udma_init(Udma_DrvHandle drvHandle, const Udma_InitPrms *initPrms)
     {
       (void) memset(drvHandle, 0, sizeof(*drvHandle));
       (void) memcpy(&drvHandle->initPrms, initPrms, sizeof(Udma_InitPrms));
+
+      drvHandle->utcInfo[0].druRegs = ((CSL_DRU_t *) UDMA_UTC_BASE_DRU0);
+      drvHandle->utcInfo[0].numCh   = NUM_DUM_CHNNALES;
+      drvHandle->drvInitDone = UDMA_INIT_DONE;
     }
 
     return (retVal);
@@ -101,6 +114,10 @@ int32_t Udma_deinit(Udma_DrvHandle drvHandle)
     if((NULL_PTR == drvHandle) || (drvHandle->drvInitDone != UDMA_INIT_DONE))
     {
         retVal = UDMA_EBADARGS;
+    }
+    else
+    {
+      drvHandle->drvInitDone = UDMA_DEINIT_DONE;
     }
 
     return (retVal);
@@ -132,6 +149,67 @@ int32_t UdmaInitPrms_init(uint32_t instId, Udma_InitPrms *initPrms)
 
 
 /* Channel specific functions */
+
+static int32_t Udma_chAllocResource(Udma_ChHandle chHandle)
+{
+  int32_t                 retVal = UDMA_SOK;
+  Udma_DrvHandle          drvHandle;
+
+  int32_t i;
+  drvHandle = chHandle->drvHandle;
+
+  if ( chHandle->chPrms.chNum == UDMA_DMA_CH_ANY )
+  {
+    for ( i = drvHandle->initPrms.rmInitPrms.druStartId; i < drvHandle->initPrms.rmInitPrms.druEndId; i++)
+    {
+      if ( ( drvHandle->druChannelStatus & ( 1 << i )) == 0 )
+      {
+        drvHandle->druChannelStatus |= ( 1 << i );
+        chHandle->druChNum = i;
+        break;
+      }
+      else
+      {
+        continue;
+      }
+    }
+
+
+    if ( i == drvHandle->initPrms.rmInitPrms.druEndId )
+    {
+      chHandle->druChNum = UDMA_DMA_CH_INVALID;
+      retVal = UDMA_EFAIL;
+      /* No free DRU channel available and hence return failure */
+    }
+  }
+  else
+  {
+    return UDMA_EFAIL;
+  }
+
+  return retVal;
+}
+
+static int32_t Udma_chFreeResource(Udma_ChHandle chHandle)
+{
+  int32_t                 retVal = UDMA_SOK;
+  Udma_DrvHandle          drvHandle;
+
+  int32_t i;
+  drvHandle = chHandle->drvHandle;
+
+  if ( chHandle->druChNum  != UDMA_DMA_CH_INVALID )
+  {
+    drvHandle->druChannelStatus &= ~((uint64_t)(1<< chHandle->druChNum));
+    chHandle->druChNum  = UDMA_DMA_CH_INVALID;
+  }
+  else
+  {
+    return UDMA_EFAIL;
+  }
+
+  return retVal;
+}
 
 void UdmaChPrms_init(Udma_ChPrms *chPrms, uint32_t chType)
 {
@@ -199,8 +277,8 @@ int32_t Udma_chOpen(Udma_DrvHandle drvHandle,
     if(UDMA_SOK == retVal)
     {
         /* Alloc UDMA channel/rings */
-        //:TODO:
-       //retVal = Udma_chAllocResource(chHandle);
+
+        retVal = Udma_chAllocResource(chHandle);
         if(UDMA_SOK == retVal)
         {
             allocDone = (uint32_t) TRUE;
@@ -214,13 +292,17 @@ int32_t Udma_chOpen(Udma_DrvHandle drvHandle,
     if(UDMA_SOK == retVal)
     {
         chHandle->chInitDone        = UDMA_INIT_DONE;
+        chHandle->utcInfo = &drvHandle->utcInfo[0];
+        chHandle->pDruNrtRegs  = &chHandle->utcInfo->druRegs->CHNRT[chHandle->druChNum];
+        chHandle->pDruRtRegs   = &chHandle->utcInfo->druRegs->CHRT[chHandle->druChNum];
+
     }
     else
     {
         /* Error. Free-up resource if allocated */
         if(((uint32_t) TRUE) == allocDone)
         {
-//            tempRetVal = Udma_chFreeResource(chHandle);
+            tempRetVal = Udma_chFreeResource(chHandle);
             if(UDMA_SOK != tempRetVal)
             {
                 Udma_printf(drvHandle, "[Error] Free resource failed!!!\n");
@@ -257,7 +339,7 @@ int32_t Udma_chConfigUtc(Udma_ChHandle chHandle, const Udma_ChUtcPrms *utcPrms)
     if(UDMA_SOK == retVal)
     {
         utcInfo = chHandle->utcInfo;
-        utcChNum = chHandle->chPrms.chNum;
+        utcChNum = chHandle->druChNum;
         /* Configure DRU */
         /* Disable the channel before any configuration */
         retVal = CSL_druChDisable(utcInfo->druRegs, utcChNum);
@@ -315,7 +397,7 @@ int32_t Udma_chEnable(Udma_ChHandle chHandle)
 
     if(UDMA_SOK == retVal)
     {
-        utcChNum = chHandle->chPrms.chNum;
+        utcChNum = chHandle->druChNum;
         /* Enable channel based on channel type */
         retVal = CSL_druChEnable(chHandle->utcInfo->druRegs, utcChNum);
         if(CSL_PASS != retVal)
@@ -450,7 +532,7 @@ int32_t Udma_chClose(Udma_ChHandle chHandle)
     if(UDMA_SOK == retVal)
     {
         /* Free-up UDMA channel/rings */
-//:TODO:        retVal += Udma_chFreeResource(chHandle);
+        retVal += Udma_chFreeResource(chHandle);
         if(UDMA_SOK != retVal)
         {
             Udma_printf(drvHandle, "[Error] Free resource failed!!!\n");

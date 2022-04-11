@@ -8,13 +8,21 @@ APP_NAME = dmautils_baremetal_autoincrement_testapp
 SRCDIR = .
 INCDIR = .
 
+ifeq ($(DMA_UTILS_STANDALONE), 1)
+DMAUTILS_COMP_LIST=csl
+else
+DMAUTILS_COMP_LIST=$(PDK_COMMON_BAREMETAL_COMP)
+endif
+DMAUTILS_COMP_LIST += dmautils
 # List all the external components/interfaces, whose interface header files
 #  need to be included for this component
 INCLUDE_EXTERNAL_INTERFACES = pdk
 
+
+
 # List all the components required by the application
-COMP_LIST_COMMON = $(PDK_COMMON_BAREMETAL_COMP) 
-COMP_LIST_COMMON += dmautils
+COMP_LIST_COMMON = 
+COMP_LIST_COMMON += $(DMAUTILS_COMP_LIST)
 
 # Common source files and CFLAGS across all platforms and cores
 PACKAGE_SRCS_COMMON = .
