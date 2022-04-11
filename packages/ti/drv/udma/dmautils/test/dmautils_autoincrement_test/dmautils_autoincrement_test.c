@@ -36,12 +36,12 @@
 /**
  *  \file dmautils_autoincrement_test.c
  *
- *  \brief Simple application demonstrating 2D auto increment feature of dmautils along with handling 
+ *  \brief Simple application demonstrating 2D auto increment feature of dmautils along with handling
  *        of last block.
  *
  *  Requirement: DOX_REQ_TAG(PDK-2643:PDK-2649:PDK-2646)
  */
- 
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -117,7 +117,7 @@ dmautilsAutoIncTest_config gTestConfig[] =
 
 };
 
-
+#if not defined (DMA_UTILS_STANDALONE)
 int32_t test_sciclientDmscGetVersion(char *version_str, uint32_t version_str_size)
 {
     int32_t retVal = 0;
@@ -171,7 +171,7 @@ int32_t test_sciclientDmscGetVersion(char *version_str, uint32_t version_str_siz
 
     return (retVal);
 }
-
+#endif
 int32_t main()
 {
   uint16_t   width;
@@ -202,6 +202,8 @@ int32_t main()
     pIntMmeBase = (uint8_t*)memalign(L2SRAM_SIZE, L2SRAM_SIZE);
 #endif
 #else
+
+#if not defined (DMA_UTILS_STANDALONE)
     int32_t retVal = 0;
     Sciclient_ConfigPrms_t  sciClientCfg;
     Sciclient_configPrmsInit(&sciClientCfg);
@@ -212,7 +214,8 @@ int32_t main()
       goto Exit;
     }
 
-    test_sciclientDmscGetVersion(NULL, 0 ); 
+    test_sciclientDmscGetVersion(NULL, 0 );
+#endif
 #endif
 
   for (testcaseIdx = 0; testcaseIdx < sizeof(gTestConfig)/ sizeof(dmautilsAutoIncTest_config); testcaseIdx++)

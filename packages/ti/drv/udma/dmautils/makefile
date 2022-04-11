@@ -13,8 +13,6 @@ $(info Building in standalone mode with only csl depdendency)
 DMAUTILS_CFLAGS=-DDMA_UTILS_STANDALONE
 SRCDIR += udma_standalone/src
 SRCS_COMMON+= udma.c
-else
-
 endif
 
 # List all the external components/interfaces, whose interface header files
@@ -24,7 +22,7 @@ INCLUDE_EXTERNAL_INTERFACES = pdk
 
 # Common source files and CFLAGS across all platforms and cores
 SRCS_COMMON += dmautils_autoincrement_3d.c
-
+SRCS_COMMON += dmautils_autoincrement_3d_hostemu.c
 PACKAGE_SRCS_COMMON = .
 CFLAGS_LOCAL_COMMON = $(PDK_CFLAGS) $(UDMA_CFLAGS) $(DMAUTILS_CFLAGS)
 
