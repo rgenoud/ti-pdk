@@ -64,9 +64,9 @@
 
 #include <ti/csl/csl_dru.h>
 
-#include <udma_standalone/include/udma_types.h>
-#include <udma_standalone/include/udma_ch.h>
-#include <udma_standalone/include/udma_event.h>
+#include <ti/drv/udma/dmautils/udma_standalone/include/udma_types.h>
+#include <ti/drv/udma/dmautils/udma_standalone/include/udma_ch.h>
+#include <ti/drv/udma/dmautils/udma_standalone/include/udma_event.h>
 
 
 
@@ -81,7 +81,7 @@ extern "C" {
 
 #define UDMA_CH_TYPE_UTC                (0)
 #define UDMA_UTC_ID_MSMC_DRU0           (0)
-
+#define UDMA_INST_ID_MAIN_0             (0)
 
 
 /**
