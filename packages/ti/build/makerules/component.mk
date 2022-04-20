@@ -1372,7 +1372,7 @@ ifeq ($(SOC),$(filter $(SOC), am62x))
 endif
 
 ifeq ($(SOC),$(filter $(SOC), am62a))
-  PDK_COMMON_COMP = csl board
+  PDK_COMMON_COMP = csl board uart
 endif
 
 ifeq ($(SOC),$(filter $(SOC), awr294x))
