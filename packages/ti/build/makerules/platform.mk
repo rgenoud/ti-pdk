@@ -202,6 +202,11 @@ ifeq ($(BOARD),$(filter $(BOARD), am62x_evm ))
  SOC = am62x
 endif
 
+# AM62A
+ifeq ($(BOARD),$(filter $(BOARD), am62a_evm ))
+ SOC = am62a
+endif
+
 # TPR12
 ifeq ($(BOARD),$(filter $(BOARD), tpr12_evm tpr12_qt))
  SOC = tpr12
