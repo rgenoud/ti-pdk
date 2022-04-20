@@ -54,6 +54,8 @@
 #include <ti/osal/soc/j784s4/osal_soc.h>
 #elif defined (SOC_AM62X)
 #include <ti/osal/soc/am62x/osal_soc.h>
+#elif defined (SOC_AM62A)
+#include <ti/osal/soc/am62a/osal_soc.h>
 #else
 /* No known Soc is defined, have below defaults */
 /* Max number of semaphores for NonOs */

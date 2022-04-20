@@ -550,6 +550,11 @@ UT_Timer_Type_t  timer_type =             UT_Timer_TIMER64;
     #define OSAL_TEST_TIMER_ID2               (2U)
     #define OSAL_TEST_TIMER_PERIOD            (5000U)
   #endif
+#elif defined(SOC_AM62A)
+  UT_Timer_Type_t  timer_type    =          UT_Timer_DMTIMER;
+  #define OSAL_TEST_TIMER_ID                (1U)
+  #define OSAL_TEST_TIMER_ID2               (0U)
+  #define OSAL_TEST_TIMER_PERIOD            (5000U)
   
 #elif (defined(SOC_TPR12) || defined (SOC_AWR294X))
     UT_Timer_Type_t  timer_type =           UT_Timer_RTITIMER;
