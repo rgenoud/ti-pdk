@@ -202,6 +202,11 @@ ifeq ($(BOARD),$(filter $(BOARD), am62x_evm ))
  SOC = am62x
 endif
 
+# AM62A
+ifeq ($(BOARD),$(filter $(BOARD), am62a_evm ))
+ SOC = am62a
+endif
+
 # SBL related macro
 export SBL_CERT_KEY_HS=$(ROOTDIR)/ti/build/makerules/k3_dev_mpk.pem
 export SBL_CERT_KEY=$(ROOTDIR)/ti/build/makerules/rom_degenerateKey.pem
