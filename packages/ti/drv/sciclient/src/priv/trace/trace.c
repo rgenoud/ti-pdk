@@ -78,7 +78,7 @@ struct trace_local_cfg {
 
 /** By default, enable all of trace. */
 static struct trace_local_cfg cfg = {
-    .src_enables    = (TISCI_BOARDCFG_TRACE_SRC_PM | TISCI_BOARDCFG_TRACE_SRC_RM |
+    .src_enables    = (TISCI_BOARDCFG_TRACE_SRC_PM |
                TISCI_BOARDCFG_TRACE_SRC_SEC | TISCI_BOARDCFG_TRACE_SRC_BASE),
     .dst_enables    = (TISCI_BOARDCFG_TRACE_DST_UART0 | TISCI_BOARDCFG_TRACE_DST_ITM |
                TISCI_BOARDCFG_TRACE_DST_MEM),
