@@ -409,7 +409,7 @@ int32_t DmaUtilsAutoInc3d_init(void * autoIncrementContext , DmaUtilsAutoInc3d_I
   {
       channelContext = dmautilsContext->channelContext[i];
 
-#if not defined (DMA_UTILS_STANDALONE)
+#ifndef DMA_UTILS_STANDALONE
       if ( chInitParams[i].druOwner == DMAUTILSAUTOINC3D_DRUOWNER_DIRECT_TR )
       {
           chPrms.fqRingPrms.ringMem      = NULL;
@@ -541,9 +541,9 @@ int32_t DmaUtilsAutoInc3d_prepareTr(DmaUtilsAutoInc3d_TrPrepareParam * trPrepPar
 
     pTrArray = (CSL_UdmapTR *)trPrepParam->trMem;
 
-#if not defined (DMA_UTILS_STANDALONE)
     if ( isRingBasedFlowReq == 1 )
     {
+#ifndef DMA_UTILS_STANDALONE      
       /* This needs to be updated with correct value during configure */
       uint32_t cqRingNum = 0;
       /* Setup TR descriptor */
@@ -553,9 +553,9 @@ int32_t DmaUtilsAutoInc3d_prepareTr(DmaUtilsAutoInc3d_TrPrepareParam * trPrepPar
 
       UdmaUtils_makeTrpd(pTrpd, UDMA_TR_TYPE_9, trPrepParam->numTRs, cqRingNum);
       pTrArray = pTr;
-
-    }
 #endif
+    }
+
     for ( i = 0; i < trPrepParam->numTRs ; i++)
     {
         DmaUtilsAutoInc3d_setupTr(&pTrArray[i], &transferProp[i]);
@@ -720,7 +720,7 @@ int32_t DmaUtilsAutoInc3d_configure(void * autoIncrementContext, int32_t channel
 #endif
         }
     }
-#if not defined (DMA_UTILS_STANDALONE)
+#ifndef DMA_UTILS_STANDALONE
     else
     {
       uint32_t cqRingNum = Udma_chGetCqRingNum(channelHandle);
@@ -811,10 +811,7 @@ void  DmaUtilsAutoInc3d_wait(void * autoIncrementContext, int32_t channelId)
 int32_t DmaUtilsAutoInc3d_deconfigure(void * autoIncrementContext, int32_t channelId, uint8_t * trMem, int32_t numTr)
 {
     int32_t     retVal = UDMA_SOK;
-    DmaUtilsAutoInc3d_Context              * dmautilsContext;
-    DmaUtilsAutoInc3d_ChannelContext * channelContext;
-    uint32_t isRingBasedFlowReq =0;
-    Udma_ChHandle channelHandle;
+        uint32_t isRingBasedFlowReq =0;
 
     if ( autoIncrementContext == NULL)
     {
@@ -830,21 +827,15 @@ int32_t DmaUtilsAutoInc3d_deconfigure(void * autoIncrementContext, int32_t chann
       goto Exit;
     }
 
-    dmautilsContext = ( DmaUtilsAutoInc3d_Context *)autoIncrementContext;
-
-    channelContext = dmautilsContext->channelContext[channelId];
-    channelHandle = &channelContext->chHandle;
-
-
     /* disable  The channel */
     if ( numTr > DMAUTILS_MAX_NUM_TR_DIRECT_TR_MODE)
     {
         isRingBasedFlowReq = 1U;
     }
 
-#if not defined (DMA_UTILS_STANDALONE)
     if ( isRingBasedFlowReq  == 1 )
     {
+#ifndef DMA_UTILS_STANDALONE      
        uint64_t    pDesc = 0;
       retVal = Udma_ringDequeueRaw(Udma_chGetCqRingHandle(channelHandle), &pDesc);
       if(UDMA_SOK != retVal)
@@ -853,8 +844,9 @@ int32_t DmaUtilsAutoInc3d_deconfigure(void * autoIncrementContext, int32_t chann
           retVal = UDMA_EFAIL;
           goto Exit;
       }
+#endif      
     }
-#endif
+
 
 Exit:
     return retVal;

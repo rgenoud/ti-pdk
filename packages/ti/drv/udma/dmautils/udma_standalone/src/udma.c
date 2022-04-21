@@ -71,7 +71,10 @@
 /* ========================================================================== */
 
 //:TODO:
-#define Udma_printf
+void Udma_printf(Udma_DrvHandle drvHandle, const char *format, ...)
+{
+
+}
 
 #ifdef HOST_EMULATION
 CSL_DRU_t                gHost_DRU_t;
@@ -194,8 +197,7 @@ static int32_t Udma_chFreeResource(Udma_ChHandle chHandle)
 {
   int32_t                 retVal = UDMA_SOK;
   Udma_DrvHandle          drvHandle;
-
-  int32_t i;
+  
   drvHandle = chHandle->drvHandle;
 
   if ( chHandle->druChNum  != UDMA_DMA_CH_INVALID )
@@ -227,7 +229,6 @@ void UdmaChPrms_init(Udma_ChPrms *chPrms, uint32_t chType)
 uint32_t Udma_chGetNum(Udma_ChHandle chHandle)
 {
     int32_t         retVal = UDMA_SOK;
-    Udma_DrvHandle  drvHandle;
     uint32_t        chNum = UDMA_DMA_CH_INVALID;
 
     /* Error check */
@@ -462,8 +463,7 @@ int32_t Udma_chDisable(Udma_ChHandle chHandle, uint32_t timeout)
 volatile uint64_t *Udma_druGetTriggerRegAddr(Udma_ChHandle chHandle)
 {
     int32_t                 retVal = UDMA_SOK;
-    Udma_DrvHandle          drvHandle;
-    const Udma_UtcInstInfo *utcInfo;
+    Udma_DrvHandle          drvHandle;   
     volatile uint64_t      *pSwTrigReg = (volatile uint64_t *) NULL_PTR;
 
     /* Error check */
@@ -482,33 +482,12 @@ volatile uint64_t *Udma_druGetTriggerRegAddr(Udma_ChHandle chHandle)
     }
 
     if(UDMA_SOK == retVal)
-    {
-        utcInfo = chHandle->utcInfo;
+    {        
         pSwTrigReg = &chHandle->pDruRtRegs->CHRT_SWTRIG;
     }
 
     return (pSwTrigReg);
 }
-
-
-
-void Udma_chDruSubmitTr(Udma_ChHandle chHandle, const CSL_UdmapTR *tr)
-{
-    uint32_t                utcChNum;
-    const Udma_UtcInstInfo *utcInfo;
-
-    utcInfo = chHandle->utcInfo;
-    utcChNum = chHandle->druChNum;
-#if defined (__C7100__) || (__C7120__)
-    CSL_druChSubmitAtomicTr(utcInfo->druRegs, utcChNum, (__ulong8 *)  tr);
-#else
-    Udma_DrvHandle          drvHandle = chHandle->drvHandle;
-    CSL_druChSubmitTr(utcInfo->druRegs, utcChNum, drvHandle->druCoreId, tr);
-#endif
-
-    return;
-}
-
 
 int32_t Udma_chClose(Udma_ChHandle chHandle)
 {
@@ -551,3 +530,20 @@ void UdmaChUtcPrms_init(Udma_ChUtcPrms *utcPrms)
     return;
 }
 
+
+void Udma_chDruSubmitTr(Udma_ChHandle chHandle, const CSL_UdmapTR *tr)
+{
+    uint32_t                utcChNum;   
+    const Udma_UtcInstInfo *utcInfo;
+
+    utcInfo = chHandle->utcInfo;
+    utcChNum = chHandle->druChNum;
+#if defined (__C7100__)
+    CSL_druChSubmitAtomicTr(utcInfo->druRegs, utcChNum, (__ulong8 *)  tr);
+#else
+    Udma_DrvHandle          drvHandle = chHandle->drvHandle;
+    CSL_druChSubmitTr(utcInfo->druRegs, utcChNum, drvHandle->druCoreId, tr);
+#endif
+
+    return;
+}
