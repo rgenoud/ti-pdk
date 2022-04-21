@@ -79,10 +79,10 @@ extern "C" {
 /* ========================================================================== */
 
 
-#define UDMA_CH_TYPE_UTC                (0)
+
 #define UDMA_UTC_ID_MSMC_DRU0           (0)
 #define UDMA_INST_ID_MAIN_0             (0)
-
+#define UDMA_DEFAULT_CH_DISABLE_TIMEOUT     (100U)
 
 /**
  *  \brief UDMA Virtual to Physical address translation callback function.
@@ -254,6 +254,7 @@ int32_t Udma_deinit(Udma_DrvHandle drvHandle);
  */
 int32_t UdmaInitPrms_init(uint32_t instId, Udma_InitPrms *initPrms);
 
+void Udma_chDruSubmitTr(Udma_ChHandle chHandle, const CSL_UdmapTR *tr);
 /* ========================================================================== */
 /*      Internal Function Declarations (Needed for other static inlines)      */
 /* ========================================================================== */
@@ -350,9 +351,6 @@ struct Udma_DrvObj
     /**< Each bit here represents the status of corresponding channel*/
 };
 
-
-/** \brief UDMA driver handle */
-typedef struct Udma_DrvObj *            Udma_DrvHandle;
 
 
 #ifdef __cplusplus
