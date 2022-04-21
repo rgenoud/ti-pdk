@@ -79,7 +79,7 @@
             
             
               <div class="version">
-                08.03.01
+                08.03.02
               </div>
             
           
@@ -109,6 +109,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#trace-layer-overview">Trace Layer Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#trace-configuration">Trace Configuration</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#trace-memory-buffer-location">Trace Memory Buffer Location</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#trace-uart-allocation">Trace UART Allocation</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#trace-debug-data-format">Trace Debug Data Format</a><ul>
@@ -257,13 +258,57 @@ about the location and size can be found below.</p>
 <td>0x44083000</td>
 <td>0x1000</td>
 </tr>
-<tr class="row-even"><td>am64x</td>
+<tr class="row-even"><td>AM64x</td>
 <td>0x44043000</td>
 <td>0x0FE0</td>
 </tr>
 <tr class="row-odd"><td>J7200</td>
 <td>0x44083000</td>
 <td>0x1000</td>
+</tr>
+<tr class="row-even"><td>AM62x</td>
+<td>0x4405F000</td>
+<td>0x1000</td>
+</tr>
+<tr class="row-odd"><td>J721S2</td>
+<td>0x4406A000</td>
+<td>0x1000</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="trace-uart-allocation">
+<span id="pub-trace-uart-allocation"></span><h3>Trace UART Allocation<a class="headerlink" href="#trace-uart-allocation" title="Permalink to this headline">¶</a></h3>
+<p>The table below shows the UART instances used for routing TIFS trace messages
+over the UART.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="38%" />
+<col width="62%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">SoC</th>
+<th class="head">UART Instance</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>AM65x</td>
+<td>WKUP UART0</td>
+</tr>
+<tr class="row-odd"><td>J721e</td>
+<td>WKUP UART0</td>
+</tr>
+<tr class="row-even"><td>AM64x</td>
+<td>MAIN UART1</td>
+</tr>
+<tr class="row-odd"><td>J7200</td>
+<td>WKUP UART0</td>
+</tr>
+<tr class="row-even"><td>AM62x</td>
+<td>MAIN UART1</td>
+</tr>
+<tr class="row-odd"><td>J721S2</td>
+<td>WKUP UART0</td>
 </tr>
 </tbody>
 </table>
@@ -1957,7 +2002,7 @@ to the requested device</td>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'08.03.01',
+            VERSION:'08.03.02',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

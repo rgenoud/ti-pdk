@@ -2616,7 +2616,17 @@ Following is a mapping of Clocks IDs to function:
 Clocks for PSC0 Device
 ----------------------
 
-**This device has no defined clocks.**
+Device: :ref:`AM62X_DEV_PSC0 <soc_doc_am62x_public_devices_desc_device_list>` (ID = 169)
+
+Following is a mapping of Clocks IDs to function:
+
++------------+-------------------+-------------+
+|   Clock ID | Name              | Function    |
++============+===================+=============+
+|          0 | DEV_PSC0_CLK      | Input clock |
++------------+-------------------+-------------+
+|          1 | DEV_PSC0_SLOW_CLK | Input clock |
++------------+-------------------+-------------+
 
 .. _soc_doc_am62x_public_clks_psc0_fw_0:
 
@@ -2634,23 +2644,13 @@ Following is a mapping of Clocks IDs to function:
 |          0 | DEV_PSC0_FW_0_CLK | Input clock |
 +------------+-------------------+-------------+
 
-.. _soc_doc_am62x_public_clks_psc0_psc_0:
+.. _soc_doc_am62x_public_clks_pscss0:
 
 
-Clocks for PSC0_PSC_0 Device
-----------------------------
+Clocks for PSCSS0 Device
+------------------------
 
-Device: :ref:`AM62X_DEV_PSC0_PSC_0 <soc_doc_am62x_public_devices_desc_device_list>` (ID = 169)
-
-Following is a mapping of Clocks IDs to function:
-
-+------------+-------------------------+-------------+
-|   Clock ID | Name                    | Function    |
-+============+=========================+=============+
-|          0 | DEV_PSC0_PSC_0_CLK      | Input clock |
-+------------+-------------------------+-------------+
-|          1 | DEV_PSC0_PSC_0_SLOW_CLK | Input clock |
-+------------+-------------------------+-------------+
+**This device has no defined clocks.**
 
 .. _soc_doc_am62x_public_clks_r5fss0:
 

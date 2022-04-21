@@ -159,4 +159,5 @@ J721S2
    j721s2/proxy_cfg
    j721s2/sec_proxy
    j721s2/processors
+   j721s2/firewalls
    j721s2/soc_devgrps
