@@ -174,7 +174,7 @@ export dmautils_baremetal_autoincrement_testapp_BOARD_DEPENDENCY = yes
 export dmautils_baremetal_autoincrement_testapp_CORE_DEPENDENCY = yes
 dmautils_baremetal_autoincrement_testapp_PKG_LIST = dmautils_baremetal_autoincrement_testapp
 dmautils_baremetal_autoincrement_testapp_INCLUDE = $(dmautils_baremetal_autoincrement_testapp_PATH)
-export dmautils_baremetal_autoincrement_testapp_BOARDLIST = j721e_hostemu j721e_sim j721e_loki j721e_ccqt j721e_evm
+export dmautils_baremetal_autoincrement_testapp_BOARDLIST = j721e_hostemu j721e_sim j721e_loki j721e_ccqt j721e_evm j721s2_evm
 export dmautils_baremetal_autoincrement_testapp_$(SOC)_CORELIST = c7x_1 c7x-hostemu
 udma_EXAMPLE_LIST += dmautils_baremetal_autoincrement_testapp
 

@@ -41,10 +41,31 @@
 /*                             Include Files                                  */
 /* ========================================================================== */
 #include <string.h>
+#include <stdio.h>
 #include "ti/drv/udma/dmautils/udma_standalone/udma.h"
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
+
+#ifdef HOST_EMULATION
+CSL_DRU_t                gHost_DRU_t;
+#define UDMA_UTC_BASE_DRU0              (&gHost_DRU_t)
+#else
+//:TODO:
+#if defined (SOC_J721S2) || defined (SOC_AM62A)
+  #include <ti/csl/soc/am62a/src/cslr_soc_baseaddress.h>
+//  #define UDMA_UTC_BASE_DRU0           (CSL_C7X256V0_DRU_BASE)
+  #define UDMA_UTC_BASE_DRU0 (0x7c400000UL)
+
+#else
+  #include <ti/csl/soc/j721e/src/cslr_soc_baseaddress.h>
+  #define UDMA_UTC_BASE_DRU0           (CSL_COMPUTE_CLUSTER0_DRU_BASE)
+#endif
+#endif
+
+
+//:TODO: Check from where this info can come directly
+#define NUM_DUM_CHNNALES (32U)
 
 /* None */
 
@@ -76,16 +97,6 @@ void Udma_printf(Udma_DrvHandle drvHandle, const char *format, ...)
 
 }
 
-#ifdef HOST_EMULATION
-CSL_DRU_t                gHost_DRU_t;
-#define UDMA_UTC_BASE_DRU0              (&gHost_DRU_t)
-#else
-//:TODO:
-#define UDMA_UTC_BASE_DRU0           (NULL)
-#endif
-
-//:TODO: Check from where this info can come directly
-#define NUM_DUM_CHNNALES (32U)
 
 int32_t Udma_init(Udma_DrvHandle drvHandle, const Udma_InitPrms *initPrms)
 {
@@ -440,7 +451,7 @@ int32_t Udma_chDisable(Udma_ChHandle chHandle, uint32_t timeout)
     {
         if(CSL_DRU_OWNER_DIRECT_TR == chHandle->utcPrms.druOwner)
         {
-            utcChNum = chHandle->chPrms.chNum;
+            utcChNum = chHandle->druChNum;
 
             retVal = CSL_druChTeardown(chHandle->utcInfo->druRegs, utcChNum);
             if(CSL_PASS != retVal)

@@ -48,7 +48,7 @@ operate a function on internal memory and transfer back the result.
 #include "dmautils_autoincrement_example.h"
 
 #include "ti/drv/udma/dmautils/dmautils.h"
-#include "ti/drv/udma/udma.h"
+
 
 
 int32_t flipHorizontalKernel(

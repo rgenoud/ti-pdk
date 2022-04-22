@@ -409,20 +409,21 @@ int32_t DmaUtilsAutoInc3d_init(void * autoIncrementContext , DmaUtilsAutoInc3d_I
   {
       channelContext = dmautilsContext->channelContext[i];
 
-#ifndef DMA_UTILS_STANDALONE
       if ( chInitParams[i].druOwner == DMAUTILSAUTOINC3D_DRUOWNER_DIRECT_TR )
       {
+#ifndef DMA_UTILS_STANDALONE
           chPrms.fqRingPrms.ringMem      = NULL;
           chPrms.cqRingPrms.ringMem     = NULL;
           chPrms.tdCqRingPrms.ringMem = NULL;
           chPrms.fqRingPrms.elemCnt     = 0U;
           chPrms.cqRingPrms.elemCnt     = 0U;
           chPrms.tdCqRingPrms.elemCnt  = 0U;
-
+#endif
           utcPrms.druOwner = CSL_DRU_OWNER_DIRECT_TR;
       }
       else
       {
+#ifndef DMA_UTILS_STANDALONE
           chPrms.fqRingPrms.ringMem     = &channelContext->ringMem;
           chPrms.cqRingPrms.ringMem    = &channelContext->responseRingMem;
           chPrms.tdCqRingPrms.ringMem = NULL;
@@ -432,10 +433,10 @@ int32_t DmaUtilsAutoInc3d_init(void * autoIncrementContext , DmaUtilsAutoInc3d_I
           chPrms.fqRingPrms.elemCnt      = 1U;/* We have only one element per ring */
           chPrms.cqRingPrms.elemCnt     = 1U;/* We have only one element per ring */
           chPrms.tdCqRingPrms.elemCnt  = 0U;/* We have only one element per ring */
-
+#endif
           utcPrms.druOwner = CSL_DRU_OWNER_UDMAC_TR;
       }
-#endif
+
       channelHandle = &(channelContext->chHandle);
 
       retVal = Udma_chOpen(initParams->udmaDrvHandle, channelHandle, chType, &chPrms);
@@ -543,7 +544,7 @@ int32_t DmaUtilsAutoInc3d_prepareTr(DmaUtilsAutoInc3d_TrPrepareParam * trPrepPar
 
     if ( isRingBasedFlowReq == 1 )
     {
-#ifndef DMA_UTILS_STANDALONE      
+#ifndef DMA_UTILS_STANDALONE
       /* This needs to be updated with correct value during configure */
       uint32_t cqRingNum = 0;
       /* Setup TR descriptor */
@@ -835,7 +836,7 @@ int32_t DmaUtilsAutoInc3d_deconfigure(void * autoIncrementContext, int32_t chann
 
     if ( isRingBasedFlowReq  == 1 )
     {
-#ifndef DMA_UTILS_STANDALONE      
+#ifndef DMA_UTILS_STANDALONE
        uint64_t    pDesc = 0;
       retVal = Udma_ringDequeueRaw(Udma_chGetCqRingHandle(channelHandle), &pDesc);
       if(UDMA_SOK != retVal)
@@ -844,7 +845,7 @@ int32_t DmaUtilsAutoInc3d_deconfigure(void * autoIncrementContext, int32_t chann
           retVal = UDMA_EFAIL;
           goto Exit;
       }
-#endif      
+#endif
     }
 
 
