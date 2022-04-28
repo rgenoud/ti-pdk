@@ -164,6 +164,11 @@ typedef int32_t Board_STATUS;
 #include <ti/board/src/am62x_evm/include/board_pinmux.h>
 #include <ti/board/src/am62x_evm/include/board_utils.h>
 
+#elif defined (am62a_evm)
+#include <ti/board/src/am62a_evm/include/board_cfg.h>
+#include <ti/board/src/am62a_evm/include/board_pinmux.h>
+#include <ti/board/src/am62a_evm/include/board_utils.h>
+
 #elif defined (am64x_svb)
 #include <ti/board/src/am64x_svb/include/board_cfg.h>
 

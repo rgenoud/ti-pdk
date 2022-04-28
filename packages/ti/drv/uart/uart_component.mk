@@ -70,11 +70,11 @@ ifeq ($(uart_component_make_include), )
 drvuart_RTOS_LIST 		= $(DEFAULT_RTOS_LIST)
 
 drvuart_BOARDLIST       = am65xx_evm am65xx_idk j721e_sim j721e_evm j7200_evm am64x_evm
-drvuart_BOARDLIST      += tpr12_evm tpr12_qt awr294x_evm j721s2_evm j784s4_evm am62x_evm
+drvuart_BOARDLIST      += tpr12_evm tpr12_qt awr294x_evm j721s2_evm j784s4_evm am62x_evm am62a_evm
 
 drvuart_SOCLIST         = tda2xx tda2px tda2ex tda3xx dra78x am574x am572x am571x dra72x
 drvuart_SOCLIST        += dra75x k2h k2k k2l k2e k2g c6678 c6657 am437x am335x omapl137
-drvuart_SOCLIST        += omapl138 am65xx j721e j7200 am64x tpr12 awr294x j721s2 j784s4 am62x
+drvuart_SOCLIST        += omapl138 am65xx j721e j7200 am64x tpr12 awr294x j721s2 j784s4 am62x am62a
 
 drvuart_dma_SOCLIST     = am574x am572x am571x dra72x dra75x dra78x k2h k2k k2l k2e k2g
 drvuart_dma_SOCLIST    += c6678 c6657 omapl137 omapl138 am437x am65xx j721e j7200 am335x
@@ -116,6 +116,7 @@ drvuart_am64x_CORELISTARM  = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1
 drvuart_j721s2_CORELISTARM = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1
 drvuart_j784s4_CORELISTARM = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mcu4_0 mcu4_1
 drvuart_am62x_CORELIST = mcu1_0 m4f_0
+drvuart_am62a_CORELIST = mcu1_0
 
 
 ############################
