@@ -86,7 +86,7 @@ extern void UART_socInitFwCfg(void);
 #endif
 #endif
 
-#if defined(SOC_AM62X)
+#if defined(SOC_AM62X) || defined(SOC_AM62A)
 #define UART_MODULE_CLOCK    (48000000U)
 #endif
 
