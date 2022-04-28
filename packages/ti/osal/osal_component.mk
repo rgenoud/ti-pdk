@@ -72,8 +72,8 @@ libosal_BOARDLIST  = j721e_evm j7200_evm j721s2_evm j784s4_evm am62x_evm am62a_e
 
 libosal_SOCLIST   =  j721e j7200 j721s2 j784s4 am62x am62a
 
-libosal_freertos_BOARDLIST  = j721e_evm j7200_evm j721s2_evm j784s4_evm am62x_evm
-libosal_freertos_SOCLIST    = j721e j7200 j721s2 j784s4 am62x
+libosal_freertos_BOARDLIST  = j721e_evm j7200_evm j721s2_evm j784s4_evm am62x_evm am62a_evm
+libosal_freertos_SOCLIST    = j721e j7200 j721s2 j784s4 am62x am62a
 libosal_safertos_BOARDLIST  = j721e_evm
 libosal_safertos_SOCLIST    = j721e
 
@@ -260,6 +260,7 @@ endif
 
 ifeq ($(SOC),$(filter $(SOC), am62a))
  OSAL_Baremetal_TestApp_$(SOC)_CORELIST = mcu1_0
+ OSAL_TestApp_freertos_$(SOC)_CORELIST = mcu1_0
 endif
 
 export OSAL_Baremetal_TestApp_$(SOC)_CORELIST
