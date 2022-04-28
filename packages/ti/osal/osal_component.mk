@@ -71,8 +71,8 @@ libosal_BOARDLIST       = evmAM572x evmAM335x evmAM437x iceK2G idkAM574x idkAM57
 libosal_SOCLIST         = tda2xx tda2px tda2ex tda3xx dra78x dra72x dra75x am574x am572x am571x k2h k2k k2l k2e k2g c6678 c6657 am437x am335x omapl137 omapl138 am65xx j721e j7200 am64x tpr12 awr294x j721s2 am62x am62a
 libosal_tirtos_SOCLIST         = tda2xx tda2px tda2ex tda3xx dra78x dra72x dra75x am574x am572x am571x k2h k2k k2l k2e k2g c6678 c6657 am437x am335x omapl137 omapl138 am65xx j721e j7200 am64x tpr12 awr294x j721s2
 libosal_tirtos_BOARDLIST    = evmAM572x evmAM335x evmAM437x iceK2G idkAM574x idkAM572x idkAM571x idkAM437x am65xx_evm am65xx_idk evmOMAPL137 lcdkOMAPL138 evmK2E evmK2H evmK2K evmK2L j721e_evm j7200_evm am64x_evm tpr12_evm tpr12_qt awr294x_evm j721s2_evm
-libosal_freertos_BOARDLIST  = am65xx_evm j721e_evm j7200_evm tpr12_evm awr294x_evm am62x_evm
-libosal_freertos_SOCLIST    = am65xx j721e j7200 tpr12 awr294x am62x
+libosal_freertos_BOARDLIST  = am65xx_evm j721e_evm j7200_evm tpr12_evm awr294x_evm am62x_evm am62a_evm
+libosal_freertos_SOCLIST    = am65xx j721e j7200 tpr12 awr294x am62x am62a
 libosal_safertos_BOARDLIST  = tpr12_evm awr294x_evm j721e_evm
 libosal_safertos_SOCLIST    = tpr12 awr294x j721e
 libosal_tda2xx_CORELIST = a15_0 ipu1_0
@@ -478,6 +478,7 @@ endif
 
 ifeq ($(SOC),$(filter $(SOC), am62a))
  OSAL_Baremetal_TestApp_$(SOC)_CORELIST = mcu1_0
+ OSAL_TestApp_freertos_$(SOC)_CORELIST = mcu1_0
 endif
 
 ifeq ($(SOC),$(filter $(SOC), am65xx))
