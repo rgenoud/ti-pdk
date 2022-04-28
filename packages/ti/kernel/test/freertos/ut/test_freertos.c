@@ -95,6 +95,13 @@
     #endif
 #endif
 
+#ifdef SOC_AM62A
+    #if defined (BUILD_MCU1_0)
+        #define PING_INT_NUM           (CSLR_R5FSS0_CORE0_INTR_WKUP_MCU_GPIOMUX_INTROUTER0_OUTP_0)
+        #define PONG_INT_NUM           (CSLR_R5FSS0_CORE0_INTR_WKUP_MCU_GPIOMUX_INTROUTER0_OUTP_1)
+    #endif
+#endif
+
 #ifdef SOC_J721E
     #ifdef BUILD_MCU1_0
         #define PING_INT_NUM           (CSLR_MCU_R5FSS0_CORE0_INTR_MAIN2MCU_LVL_INTRTR0_OUTL_0)
