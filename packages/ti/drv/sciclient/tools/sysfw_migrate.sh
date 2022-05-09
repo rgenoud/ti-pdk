@@ -227,6 +227,12 @@ if [ "$SKIP_BUILD" != "YES" ]; then
     make -j -s sciserver_testapp_freertos_clean BOARD=am62x_evm
     make -j -s sciserver_testapp_freertos BOARD=am62x_evm
 
+    # AM62ax
+    make -j -s allclean
+    make -j -s sciclient_boardcfg BOARD=am62a_evm
+    make -j -s sciserver_testapp_freertos_clean BOARD=am62a_evm
+    make -j -s sciserver_testapp_freertos BOARD=am62a_evm
+
     cd -
 fi
 
@@ -248,6 +254,8 @@ if [ "$SKIP_GEN_BIN" != "YES" ];  then
     # ./firmwareHeaderGen.sh j721s2-zebu
     ./firmwareHeaderGen.sh am62x
     ./firmwareHeaderGen.sh am62x-stub
+    ./firmwareHeaderGen.sh am62a-zebu
+    ./firmwareHeaderGen.sh am62a-vlab
 
 fi
 

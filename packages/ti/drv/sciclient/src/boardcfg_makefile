@@ -26,6 +26,9 @@ endif
 ifeq ($(SOC),$(filter $(SOC), am62x))
   SCICLIENT_SOCVER = V5
 endif
+ifeq ($(SOC),$(filter $(SOC), am62a))
+  SCICLIENT_SOCVER = V7
+endif
 
 # Special case for Windows Build
 ifeq ($(OS),Windows_NT)
@@ -99,6 +102,9 @@ PARSER_SOC := am64x
 endif
 ifeq ($(SOC),$(filter $(SOC), am62x))
 PARSER_SOC := am62x
+endif
+ifeq ($(SOC),$(filter $(SOC), am62a))
+PARSER_SOC := am62a
 endif
 ifeq ($(SOC),$(filter $(SOC), j721s2))
 PARSER_SOC := j721s2

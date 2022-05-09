@@ -78,6 +78,10 @@
 #include <ti/drv/sciclient/soc/V5/sciclient_defaultBoardcfg.h>
 #endif
 
+#if defined (SOC_AM62A)
+#include <ti/drv/sciclient/soc/V7/sciclient_defaultBoardcfg.h>
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -112,14 +116,14 @@ typedef struct
 
     uint32_t hostId;
     /**< CPU ID of the A53/A72/R5F/DSP */
-#if !( defined (SOC_AM64X) || defined (SOC_AM62X))
+#if !( defined (SOC_AM64X) || defined (SOC_AM62X) || defined (SOC_AM62A))
     uint32_t reqHighPrioThreadId;
     /**< Thread ID of the high priority thread(write) allowed for the CPU */
 #endif
     uint32_t reqLowPrioThreadId;
     /**< Thread ID of the low priority thread(write) allowed for the CPU */
 
-#if !( defined (SOC_AM64X) || defined (SOC_AM62X))
+#if !( defined (SOC_AM64X) || defined (SOC_AM62X) || defined (SOC_AM62A))
     uint32_t notificationRespThreadId;
     /**< Thread ID of the thread(write) for sending a notification to the
      *   firmware
@@ -128,7 +132,7 @@ typedef struct
     uint32_t respThreadId;
     /**< Thread ID of the response thread(read) available for the CPU */
 
-#if !( defined (SOC_AM64X) || defined (SOC_AM62X))
+#if !( defined (SOC_AM64X) || defined (SOC_AM62X) || defined (SOC_AM62A))
     uint32_t notificationThreadId;
     /**< Thread ID of the notification thread(read) available for the CPU */
 #endif
@@ -168,7 +172,7 @@ typedef struct
     /**< Variable to check whether Core context is secure/non-secure. This has
      * to be given by the user via configParams. Default value is 0.
      */
-#if defined(BUILD_MCU1_0) && (defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_AM62X)) 
+#if defined(BUILD_MCU1_0) && (defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_AM62X) || defined (SOC_AM62A)) 
     uint32_t              pmBoardConfigComplete;
     /**< Status flag indicating PM Board config went through successfully */
     uint32_t              rmBoardConfigComplete;

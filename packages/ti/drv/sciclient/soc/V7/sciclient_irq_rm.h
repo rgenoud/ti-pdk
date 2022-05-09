@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2019 Texas Instruments Incorporated
+ *  Copyright (C) 2021 Texas Instruments Incorporated
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -31,55 +31,29 @@
  *
  */
 /**
- *  \file soc/sciclient_soc_priv.h
+ *  \file V5/sciclient_irq_rm.h
  *
- *  \brief Private SOC file
+ *  \brief Private am62x Family specific RM interrupt data
  */
 
-#ifndef SCICLIENT_SOC_PRIV_TOP_H_
-#define SCICLIENT_SOC_PRIV_TOP_H_
+#ifndef SCICLIENT_IRQ_RM_H_
+#define SCICLIENT_IRQ_RM_H_
 
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
 
-#if defined (SOC_AM65XX)
-#include <ti/drv/sciclient/soc/V0/sciclient_soc_priv.h>
-#endif
-
-#if defined (SOC_J721E)
-#include <ti/drv/sciclient/soc/V1/sciclient_soc_priv.h>
-#endif
-
-#if defined (SOC_J7200)
-#include <ti/drv/sciclient/soc/V2/sciclient_soc_priv.h>
-#endif
-
-#if defined (SOC_AM64X)
-#include <ti/drv/sciclient/soc/V3/sciclient_soc_priv.h>
-#endif
-
-#if defined (SOC_J721S2)
-#include <ti/drv/sciclient/soc/V4/sciclient_soc_priv.h>
-#endif
-
-#if defined (SOC_AM62X)
-#include <ti/drv/sciclient/soc/V5/sciclient_soc_priv.h>
-#endif
-
-#if defined (SOC_AM62A)
-#include <ti/drv/sciclient/soc/V7/sciclient_soc_priv.h>
-#endif
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include <stdint.h>
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-/* None */
+#define SCICLIENT_RM_IA_NUM_INST 3
+
+#define SCICLIENT_RM_IR_NUM_INST 4
+
+#define SCICLIENT_IRQ_MAX_ROUTE_DEPTH 3
 
 /* ========================================================================== */
 /*                         Structure Declarations                             */
@@ -88,19 +62,9 @@ extern "C" {
 /* None */
 
 /* ========================================================================== */
-/*                          Function Declarations                             */
+/*                            Global Variables                                */
 /* ========================================================================== */
 
 /* None */
 
-/* ========================================================================== */
-/*                       Static Function Definitions                          */
-/* ========================================================================== */
-
-/* None */
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* SCICLIENT_SOC_PRIV_TOP_H_ */
+#endif /* SCICLIENT_IRQ_RM_H_ */

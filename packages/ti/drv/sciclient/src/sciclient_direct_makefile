@@ -36,6 +36,9 @@ endif
 ifeq ($(SOC),$(filter $(SOC), am62x))
   SCICLIENT_SOCVER = V5
 endif
+ifeq ($(SOC),$(filter $(SOC), am62a))
+  SCICLIENT_SOCVER = V7
+endif
 
 SRCDIR += soc/$(SCICLIENT_SOCVER)
 INCDIR += soc/$(SCICLIENT_SOCVER)
@@ -45,7 +48,7 @@ INCDIR += soc/$(SCICLIENT_SOCVER)
 INCLUDE_EXTERNAL_INTERFACES = pdk osal
 
 # Common source files and CFLAGS across all platforms and cores
-ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200 j721s2 am64x am62x))
+ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200 j721s2 am64x am62x am62a))
 # Keep the sciclient.c the first file in this list. This is used to trigger
 # the generation of the header files from the firware binary file.
 SRCS_COMMON  = sciclient.c
