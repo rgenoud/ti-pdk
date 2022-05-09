@@ -210,7 +210,7 @@ int32_t Sciclient_configPrmsInit(Sciclient_ConfigPrms_t *pCfgPrms)
 
     if(NULL != pCfgPrms)
     {
-#if defined(BUILD_MCU1_0) && (defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined (SOC_J784S4)  || defined (SOC_AM62X))
+#if defined(BUILD_MCU1_0) && (defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined (SOC_J784S4)  || defined (SOC_AM62X) || defined (SOC_AM62A))
         Sciclient_DefaultBoardCfgInfo_t boardCfgInfo = {0};
 
         /* populate the default board configuration */
@@ -504,7 +504,7 @@ int32_t Sciclient_init(const Sciclient_ConfigPrms_t *pCfgPrms)
         {
             gSciclientHandle.isSecureMode = 0U;
         }
-#if defined(BUILD_MCU1_0) && (defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined (SOC_J784S4)  || defined (SOC_AM62X))
+#if defined(BUILD_MCU1_0) && (defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined (SOC_J784S4)  || defined (SOC_AM62X) || defined (SOC_AM62A)) 
         if (pCfgPrms != NULL)
         {
             if (pCfgPrms->skipLocalBoardCfgProcess == FALSE)
@@ -580,7 +580,7 @@ int32_t Sciclient_serviceGetThreadIds (const Sciclient_ReqPrm_t *pReqPrm,
     }
     if(*contextId < SCICLIENT_CONTEXT_MAX_NUM)
     {
-#if defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)  || defined (SOC_AM62X)
+#if defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)  || defined (SOC_AM62X) || defined (SOC_AM62A) 
         /*
          * Derive the thread ID from the context. If the message is to be
          * forwarded, use the dedicated DM2DMSC queue. Otherwise, use the queue
@@ -592,7 +592,7 @@ int32_t Sciclient_serviceGetThreadIds (const Sciclient_ReqPrm_t *pReqPrm,
          */
         if (pReqPrm->forwardStatus == SCISERVER_FORWARD_MSG)
         {
-#if ! defined(SOC_AM62X)
+#if ! (defined(SOC_AM62X) || defined (SOC_AM62A))
             *txThread = TISCI_SEC_PROXY_DM2DMSC_WRITE_NOTIFY_RESP_THREAD_ID;
 #else
             *txThread = TISCI_SEC_PROXY_DM2TIFS_WRITE_LOW_PRIORITY_THREAD_ID;
@@ -616,13 +616,13 @@ int32_t Sciclient_serviceGetThreadIds (const Sciclient_ReqPrm_t *pReqPrm,
         else
         {
 #endif
-#if defined (SOC_AM64X) || defined (SOC_AM62X)
+#if defined (SOC_AM64X) || defined (SOC_AM62X) || defined (SOC_AM62A)
             *txThread = gSciclientMap[*contextId].reqLowPrioThreadId;
 #else
             *txThread = gSciclientMap[*contextId].reqHighPrioThreadId;
 #endif
             *rxThread = gSciclientMap[*contextId].respThreadId;
-#if defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)  || defined (SOC_AM62X)
+#if defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)  || defined (SOC_AM62X) || defined (SOC_AM62A) 
         }
 #endif
 

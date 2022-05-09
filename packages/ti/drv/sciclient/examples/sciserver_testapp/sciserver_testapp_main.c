@@ -90,7 +90,7 @@ int main(void)
     TaskP_Handle task;
     TaskP_Params taskParams;
 
-#if defined (SOC_AM62X)
+#if defined (SOC_AM62X) || defined (SOC_AM62X)
     void _freertosresetvectors (void);
     memcpy((void *)0x0, (void *)_freertosresetvectors , 0x40);
 #endif
@@ -164,7 +164,7 @@ static void taskFxn(void* a0, void* a1)
        App_sciclientPrintf("Starting Sciserver..... PASSED\n");
 
         uint32_t freqHz;
-#if defined (SOC_AM62X)
+#if defined (SOC_AM62X) || defined (SOC_AM62A)
         Sciclient_pmGetModuleClkFreq(TISCI_DEV_WKUP_GTC0, TISCI_DEV_WKUP_GTC0_GTC_CLK,
             (uint64_t *) &freqHz, SCICLIENT_SERVICE_WAIT_FOREVER);
 #else
