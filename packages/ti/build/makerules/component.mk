@@ -1387,6 +1387,9 @@ endif
 
 ifeq ($(SOC),$(filter $(SOC), am62a))
   PDK_COMMON_COMP = csl board uart
+  ifeq ($(CORE),mcu1_0)
+    PDK_COMMON_COMP +=  sciclient_direct rm_pm_hal self_reset #dm_stub
+  endif
 endif
 
 PDK_COMMON_BAREMETAL_COMP = $(PDK_COMMON_COMP) osal_nonos

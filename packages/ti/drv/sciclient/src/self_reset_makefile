@@ -19,7 +19,7 @@ INCLUDE_EXTERNAL_INTERFACES = pdk osal
 
 CFLAGS_LOCAL_COMMON = $(PDK_CFLAGS)
 
-ifeq ($(SOC),$(filter $(SOC), am62x))
+ifeq ($(SOC),$(filter $(SOC), am62x am62a))
     SRCS_COMMON  = dm_self_reset.c
     SRCS_ASM_COMMON = self_reset_startup.asm
 endif
