@@ -87,7 +87,7 @@ libosal_safertos_j721e_CORELIST   = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 c6
 libosal_am62x_CORELIST = $(DEFAULT_am62x_CORELIST)
 libosal_am62a_CORELIST = $(DEFAULT_am62a_CORELIST)
 libosal_freertos_am62x_CORELIST = mcu1_0
-libosal_freertos_am62a_CORELIST = mcu1_0
+libosal_freertos_am62a_CORELIST = mcu1_0 c7x_1
 
 ############################
 # osal package

@@ -42,6 +42,7 @@
 #include <ti/osal/src/nonos/Nonos_config.h>
 
 
+#define CLEC_OFFSET       (256u)
 
 /* This information is derived from sysbios timer implmentation for multiple SoCs */
 /* Below defines are for R5 Cores */
@@ -49,16 +50,50 @@ TimerP_dmTimerDefault gDmTimerPInfoTbl[TimerP_numTimerDevices] = {
   /* Timer ID 0 */
   {
     "DMTimer0",        /* Timer Name */
+#if defined (BUILD_C7X)
+     (uint32_t)CSL_TIMER0_CFG_BASE,                                /* Main domain's DM Timer base address */
+     (int32_t)0xe,                                                 /* intNum */
+     CLEC_OFFSET + CSLR_C7X256V0_CLEC_GIC_SPI_TIMER0_INTR_PEND_0, /* eventId It is the CLEC event ID from where the SPI events
+                                                            are mapped to the clec */
+#endif
+#if defined (BUILD_MCU1_0)
      CSL_WKUP_TIMER0_CFG_BASE,  /* base address */
      CSLR_R5FSS0_CORE0_INTR_WKUP_TIMER0_INTR_PEND_0,           /* Interrupt Number */
      TIMERP_EVENT_NOT_AVAILABLE               /* Event Id */
+#endif
   },  
   /* Timer ID 1 */
   {
     "DMTimer1",        /* Timer Name */
+#if defined (BUILD_C7X)
+     (uint32_t)CSL_TIMER1_CFG_BASE,                                /* Main domain's DM Timer base address */
+     (int32_t)0xf,                                                 /* intNum */
+     CLEC_OFFSET + CSLR_C7X256V0_CLEC_GIC_SPI_TIMER1_INTR_PEND_0, /* eventId It is the CLEC event ID from where the SPI events
+                                                            are mapped to the clec */
+#endif
+#if defined (BUILD_MCU1_0)
      CSL_WKUP_TIMER1_CFG_BASE,  /* base address */
      CSLR_R5FSS0_CORE0_INTR_WKUP_TIMER1_INTR_PEND_0,               /* Interrupt Number */
      TIMERP_EVENT_NOT_AVAILABLE               /* Event Id */
+#endif
+  },
+  {
+     "DMTimer2",        /* Timer Name */ 
+#if defined (BUILD_C7X)
+     (uint32_t)CSL_TIMER2_CFG_BASE,                                /* Main domain's DM Timer base address */
+     (int32_t)0x10,                                                 /* intNum */
+     CLEC_OFFSET + CSLR_C7X256V0_CLEC_GIC_SPI_TIMER2_INTR_PEND_0, /* eventId It is the CLEC event ID from where the SPI events
+                                                            are mapped to the clec */
+#endif
+  },
+  {
+     "DMTimer3",        /* Timer Name */ 
+#if defined (BUILD_C7X)
+     (uint32_t)CSL_TIMER2_CFG_BASE,                                /* Main domain's DM Timer base address */
+     (int32_t)0x11,                                                 /* intNum */
+     CLEC_OFFSET + CSLR_C7X256V0_CLEC_GIC_SPI_TIMER3_INTR_PEND_0, /* eventId It is the CLEC event ID from where the SPI events
+                                                            are mapped to the clec */
+#endif
   }
 };
 

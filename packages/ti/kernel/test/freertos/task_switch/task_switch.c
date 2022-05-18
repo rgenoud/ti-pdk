@@ -95,9 +95,19 @@ TaskHandle_t TaskP_getFreertosHandle(TaskP_Handle handle);
 #endif
 
 #ifdef SOC_AM62A
+    #define CLEC_OFFSET             (256u)  /* eventId It is the CLEC event ID from where the SPI events
+                                               are mapped to the clec */
     #if defined (BUILD_MCU1_0)
         #define PING_INT_NUM           (CSLR_R5FSS0_CORE0_INTR_WKUP_MCU_GPIOMUX_INTROUTER0_OUTP_0)
         #define PONG_INT_NUM           (CSLR_R5FSS0_CORE0_INTR_WKUP_MCU_GPIOMUX_INTROUTER0_OUTP_1)
+    #endif
+     #ifdef BUILD_C7X_1
+        #define PING_INT_NUM           (14u) /*clec intr number*/
+        #define PING_EVT_ID            (CLEC_OFFSET + CSLR_C7X256V0_CLEC_GIC_SPI_TIMER0_INTR_PEND_0) /* eventId It is the CLEC event ID from where the SPI events
+                                                            are mapped to the clec */
+        #define PONG_INT_NUM           (15u) /*clec intr number*/
+        #define PONG_EVT_ID            (CLEC_OFFSET + CSLR_C7X256V0_CLEC_GIC_SPI_TIMER1_INTR_PEND_0) /* eventId It is the CLEC event ID from where the SPI events
+                                                            are mapped to the clec */
     #endif
 #endif
 

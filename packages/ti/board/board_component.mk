@@ -98,7 +98,7 @@ board_lib_am64x_CORELIST  = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 m4f_0
 board_lib_tpr12_CORELIST  = mcu1_0 c66xdsp_1
 board_lib_awr294x_CORELIST  = mcu1_0 c66xdsp_1
 board_lib_am62x_CORELIST  = mcu1_0 m4f_0
-board_lib_am62a_CORELIST  = mcu1_0
+board_lib_am62a_CORELIST  = mcu1_0 c7x_1
 
 board_RTOS_LIST = $(DEFAULT_RTOS_LIST)
 

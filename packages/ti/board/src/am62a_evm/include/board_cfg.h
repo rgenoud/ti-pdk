@@ -64,8 +64,14 @@ extern "C" {
  /* UART0 on the WKUP domain */
 #define BOARD_WKUP_UART0_INSTANCE                       (6U)
 
+#if defined (BUILD_C7X)
+    #define BOARD_UART_INSTANCE (BOARD_UART0_INSTANCE)
+#elif defined (BUILD_M4F)
+    #define BOARD_UART_INSTANCE (BOARD_MCU_UART0_INSTANCE)
+#else
+    #define BOARD_UART_INSTANCE (BOARD_WKUP_UART0_INSTANCE)
+#endif
 
-#define BOARD_UART_INSTANCE (BOARD_WKUP_UART0_INSTANCE)
 
 /** @brief Number of UART instances */
 #define BOARD_UART_PER_CNT                              (6U)
