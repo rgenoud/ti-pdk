@@ -100,6 +100,10 @@
         #define PING_INT_NUM           (CSLR_R5FSS0_CORE0_INTR_WKUP_MCU_GPIOMUX_INTROUTER0_OUTP_0)
         #define PONG_INT_NUM           (CSLR_R5FSS0_CORE0_INTR_WKUP_MCU_GPIOMUX_INTROUTER0_OUTP_1)
     #endif
+    #ifdef BUILD_C7X_1
+        #define PING_INT_NUM           (14u)  /*clec intr number*/
+        #define PONG_INT_NUM           (15u)  /*clec intr number*/
+    #endif
 #endif
 
 #ifdef SOC_J721E

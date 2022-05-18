@@ -315,6 +315,10 @@ ifeq ($(CORE),$(filter $(CORE), c7x_1 c7x_2 c7x_3 c7x_4))
  ifeq ($(SOC),$(filter $(SOC), j721s2 j784s4)) 
   SI_VER = 7120
  endif
+ ifeq ($(SOC),$(filter $(SOC), am62a)) 
+  ISA = c75x
+  SI_VER = 7504
+ endif
 endif
 
 # C7x DSP

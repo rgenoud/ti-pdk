@@ -46,6 +46,36 @@ SRCS_ASM_COMMON :=       \
     TaskSupport_asm.asm
 endif
 
+# Common source files and CFLAGS across all platforms and cores
+ifeq ($(ISA),$(filter $(ISA), c75x))
+SRCS_COMMON += \
+            boot.c                        \
+            Mmu.c                         \
+            Cache.c                       \
+            Hwi.c                         \
+            IntrinsicsSupport.c           \
+            TaskSupport.c                 \
+            Exception.c                   \
+            TimestampProvider.c           \
+            Startup.c                     \
+            Mmu_table.c                   \
+            c7x_module_config.c
+endif
+
+ifeq ($(ISA),$(filter $(ISA), c75x))
+SRCS_ASM_COMMON :=       \
+    Cache_asm.asm        \
+    Clobber_asm.asm      \
+    Exception_asm.asm    \
+    Hwi_asm.asm          \
+    Hwi_asm_switch.asm   \
+    Hwi_disp_always.asm  \
+    Mmu_asm.asm          \
+    TaskSupport_asm.asm  \
+    csl_c7xecr.asm  
+endif
+
+
 SRCS_COMMON += \
     timers.c \
     queue.c \
@@ -89,7 +119,7 @@ endif
 
 
 CFLAGS_LOCAL_COMMON = $(PDK_CFLAGS)
-ifeq ($(ISA),$(filter $(ISA), c7x))
+ifeq ($(ISA),$(filter $(ISA), c7x, c75x))
 CFLAGS_LOCAL_COMMON += -DHwi_bootToNonSecure__D=true
 CFLAGS_LOCAL_COMMON += -DException_vectors__D
 endif
