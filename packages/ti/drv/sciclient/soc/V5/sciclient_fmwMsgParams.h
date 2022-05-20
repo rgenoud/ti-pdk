@@ -92,17 +92,17 @@ extern "C" {
 /** a53(Secure): Cortex A53 context 0 */
 #define SCICLIENT_CONTEXT_A53_SEC_0                    (4U)
 /** a53(Non Secure): Cortex A53 context 1 */
-#define SCICLIENT_CONTEXT_A53_NONSEC_0                 (5U)
+#define SCICLIENT_CONTEXT_A53_SEC_1                 (5U)
 /** a53(Non Secure): Cortex A53 context 2 */
-#define SCICLIENT_CONTEXT_A53_NONSEC_1                 (6U)
+#define SCICLIENT_CONTEXT_A53_NONSEC_0                 (6U)
 /** a53(Non Secure): Cortex A53 context 3 */
-#define SCICLIENT_CONTEXT_A53_NONSEC_2                 (7U)
+#define SCICLIENT_CONTEXT_A53_NONSEC_1                 (7U)
 /** M4 (Non Secure): Cortex M4 context 1 */
 #define SCICLIENT_CONTEXT_M4_NONSEC_0                  (8U)
 /** r5(Secure):  GPU Context 0 */
 #define SCICLIENT_CONTEXT_GPU_NONSEC_0                 (9U)
 /** r5(Non Secure): ICSSG_0 Context 1 */
-#define SCICLIENT_CONTEXT_ICSSG_0_NONSEC_0             (10U)
+#define SCICLIENT_CONTEXT_A53_NONSEC_2             (10U)
 
 /** Total number of possible contexts for application. */
 #define SCICLIENT_CONTEXT_MAX_NUM                      (11U)
