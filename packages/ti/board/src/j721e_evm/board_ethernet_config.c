@@ -720,11 +720,11 @@ Board_STATUS Board_ethConfigCpsw9g(void)
         {
             if (1U == portNum)
             {
-                status = Board_cpsw9gEthConfig(portNum, QSGMII);
+                status = Board_cpsw9gEthConfig(portNum, SGMII);
             }
             else
             {
-                status = Board_cpsw9gEthConfig(portNum, QSGMII_SUB);
+                status = Board_cpsw9gEthConfig(portNum, SGMII);
             }
         }
 
