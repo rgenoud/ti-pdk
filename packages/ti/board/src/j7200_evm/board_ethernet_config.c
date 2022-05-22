@@ -583,11 +583,11 @@ Board_STATUS Board_ethConfigCpsw5g(void)
     {
         if (CPSW5G_QGMII_PORTNUM == portNum)
         {
-            status = Board_cpsw5gEthConfig(portNum, QSGMII);
+            status = Board_cpsw5gEthConfig(portNum, XFI);
         }
         else
         {
-            status = Board_cpsw5gEthConfig(portNum, QSGMII_SUB);
+            status = Board_cpsw5gEthConfig(portNum, XFI);
         }
 
         if(status != BOARD_SOK)
