@@ -50,6 +50,7 @@
 #include <pm.h>
 #include <rm.h>
 #include <lpm_handler.h>
+#include <fw_caps.h>
 /* Sciclient APIs are kept in the end of the include list to make sure the
  * RM and PM HAL typedefs are used.
  */
@@ -396,6 +397,18 @@ int32_t Sciclient_service (const Sciclient_ReqPrm_t *pReqPrm,
                 pRespPrm->flags = hdr->flags;
                 break;
 #endif
+            case TISCI_MSG_QUERY_FW_CAPS:
+                memcpy(message, pReqPrm->pReqPayload, pReqPrm->reqPayloadSize);
+                /* Processing enter sleep message locally */
+                ret = Sciclient_query_fw_caps_handler(pReqPrm->flags,message);
+                if (pRespPrm->pRespPayload != NULL)
+                {
+                    memcpy(pRespPrm->pRespPayload, message, pRespPrm->respPayloadSize);
+                }
+                hdr = (struct tisci_header *) &message;
+                pRespPrm->flags = hdr->flags;
+
+                break;
             /* RM messages processed by Secure RM within TIFS on M3 */
             case TISCI_MSG_RM_PSIL_PAIR:
             case TISCI_MSG_RM_PSIL_UNPAIR:
@@ -526,6 +539,23 @@ static int32_t Sciclient_pmSetCpuResetMsgProxy(uint32_t *msg_recv, uint32_t proc
             ret = -EINVAL;
             break;
     }
+    return ret;
+}
+int32_t Sciclient_query_fw_caps_handler(const uint32_t reqFlags, void *tx_msg)
+{
+    int32_t ret = CSL_PASS;
+    uint32_t flags = ((struct tisci_header *) tx_msg)->flags;
+
+    ret = query_fw_caps_handler((uint32_t*)tx_msg);
+
+    if ((flags & TISCI_MSG_FLAG_AOP) != 0UL) {
+        if (ret == CSL_PASS) {
+            Sciclient_TisciMsgSetAckResp((struct tisci_header *) tx_msg);
+        } else {
+            Sciclient_TisciMsgSetNakResp((struct tisci_header *) tx_msg);
+        }
+    }
+
     return ret;
 }
 
