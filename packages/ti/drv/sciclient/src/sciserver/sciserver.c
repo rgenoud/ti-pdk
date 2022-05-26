@@ -583,6 +583,10 @@ static int32_t Sciserver_UserProcessMsg(uint32_t *msg_recv,
             reqMsgSize = sizeof(struct tisci_msg_sys_reset_req);
             respMsgSize = sizeof(struct tisci_msg_sys_reset_resp);
             break;
+        case TISCI_MSG_QUERY_FW_CAPS:
+            reqMsgSize = sizeof(struct tisci_query_fw_caps_req);
+            respMsgSize = sizeof(struct tisci_query_fw_caps_resp);
+            break;
 #ifdef CONFIG_LPM_DM 
         case TISCI_MSG_PREPARE_SLEEP:
             reqMsgSize = sizeof(struct tisci_msg_prepare_sleep_req);

@@ -88,6 +88,7 @@ CONFIG_INTERRUPT_AGGREGATOR_UNMAPPED_EVENTS=y
 CONFIG_SEC_PROXY_DRIVER=y
 CONFIG_UDMAP_BCDMA=y
 CONFIG_UDMAP_PKTDMA=y
+CONFIG_GET_FW_CAPS=y
 endif
 
 ifeq ($(SOC),$(filter $(SOC), am62a))
@@ -121,6 +122,13 @@ ifeq ($(SOC),$(filter $(SOC), am62a))
 endif
 
 TARGET_SOC = $(shell echo $(CONFIG_SOC_FOLDER_STRING))
+
+#
+# Core Feature support
+#
+ifeq ($(CONFIG_GET_FW_CAPS),y)
+CFLAGS_LOCAL_COMMON += -DCONFIG_GET_FW_CAPS
+endif
 
 #
 # Power Management Feature support
