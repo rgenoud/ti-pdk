@@ -52,25 +52,6 @@
 	},
 };
  uint8_t vint_usage_count_DMSS_AM62_0_INTAGGR_0[184U]= {0};
- static struct Sciclient_rmIaUsedMapping rom_usage_SA3_SS0_INTAGGR_0[4U] = {
-	{
-		.event = 20U,
-		.cleared = false,
-	},
-	{
-		.event = 21U,
-		.cleared = false,
-	},
-	{
-		.event = 22U,
-		.cleared = false,
-	},
-	{
-		.event = 23U,
-		.cleared = false,
-	},
-};
- uint8_t vint_usage_count_SA3_SS0_INTAGGR_0[8U]= {0};
 
 struct Sciclient_rmIaInst gRmIaInstances[SCICLIENT_RM_IA_NUM_INST] =
 {
@@ -84,18 +65,7 @@ struct Sciclient_rmIaInst gRmIaInstances[SCICLIENT_RM_IA_NUM_INST] =
         .v0_b0_evt          = 0,
         .rom_usage = &rom_usage_DMASS0_INTAGGR_0[0U],
 		.n_rom_usage = 1,
-    },
-     {
-        .dev_id             = TISCI_DEV_SA3_SS0_INTAGGR_0,
-        .imap               = 0x44809000,
-        .sevt_offset        = 0u,
-        .n_sevt             = 100u,
-        .n_vint             = 8,
-        .vint_usage_count   = &vint_usage_count_SA3_SS0_INTAGGR_0[0],
-        .v0_b0_evt          = 0,
-        .rom_usage = &rom_usage_SA3_SS0_INTAGGR_0[0U],
-		.n_rom_usage = 4,
-    },
+    }
 };
 
 struct Sciclient_rmIrInst gRmIrInstances[SCICLIENT_RM_IR_NUM_INST] =
