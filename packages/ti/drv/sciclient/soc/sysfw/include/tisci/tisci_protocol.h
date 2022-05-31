@@ -141,6 +141,7 @@ struct tisci_sec_header {
 #define TISCI_MSG_SYS_RESET                     (0x0005U)
 
 #define TISCI_MSG_QUERY_MSMC                    (0x0020U)
+#define TISCI_MSG_GET_TRACE_CONFIG              (0x0021U)
 
 #define TISCI_MSG_SET_CLOCK                     (0x0100U)
 #define TISCI_MSG_GET_CLOCK                     (0x0101U)
