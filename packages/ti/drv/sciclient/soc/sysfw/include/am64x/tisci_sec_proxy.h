@@ -49,7 +49,7 @@
  *
  * Secure Proxy indices for AM64X device
  *
- * Data version: 220420_174316
+ * Data version: 220519_153621
  *
  */
 #ifndef AM64X_TISCI_SEC_PROXY_H
@@ -132,12 +132,12 @@
 /** Thread ID macro for A53_1 response */
 #define TISCI_SEC_PROXY_A53_1_READ_RESPONSE_THREAD_ID (10U)
 /** Num messages macro for A53_1 response */
-#define TISCI_SEC_PROXY_A53_1_READ_RESPONSE_NUM_MESSAGES (6U)
+#define TISCI_SEC_PROXY_A53_1_READ_RESPONSE_NUM_MESSAGES (11U)
 
 /** Thread ID macro for A53_1 low_priority */
 #define TISCI_SEC_PROXY_A53_1_WRITE_LOW_PRIORITY_THREAD_ID (11U)
 /** Num messages macro for A53_1 low_priority */
-#define TISCI_SEC_PROXY_A53_1_WRITE_LOW_PRIORITY_NUM_MESSAGES (5U)
+#define TISCI_SEC_PROXY_A53_1_WRITE_LOW_PRIORITY_NUM_MESSAGES (10U)
 
 /*
  * Secure Proxy configurations for A53_2 host
@@ -238,18 +238,18 @@
 #define TISCI_SEC_PROXY_MAIN_1_R5_3_WRITE_LOW_PRIORITY_NUM_MESSAGES (1U)
 
 /*
- * Secure Proxy configurations for ICSSG_0 host
+ * Secure Proxy configurations for A53_4 host
  */
 
-/** Thread ID macro for ICSSG_0 response */
-#define TISCI_SEC_PROXY_ICSSG_0_READ_RESPONSE_THREAD_ID (26U)
-/** Num messages macro for ICSSG_0 response */
-#define TISCI_SEC_PROXY_ICSSG_0_READ_RESPONSE_NUM_MESSAGES (2U)
+/** Thread ID macro for A53_4 response */
+#define TISCI_SEC_PROXY_A53_4_READ_RESPONSE_THREAD_ID (26U)
+/** Num messages macro for A53_4 response */
+#define TISCI_SEC_PROXY_A53_4_READ_RESPONSE_NUM_MESSAGES (6U)
 
-/** Thread ID macro for ICSSG_0 low_priority */
-#define TISCI_SEC_PROXY_ICSSG_0_WRITE_LOW_PRIORITY_THREAD_ID (27U)
-/** Num messages macro for ICSSG_0 low_priority */
-#define TISCI_SEC_PROXY_ICSSG_0_WRITE_LOW_PRIORITY_NUM_MESSAGES (1U)
+/** Thread ID macro for A53_4 low_priority */
+#define TISCI_SEC_PROXY_A53_4_WRITE_LOW_PRIORITY_THREAD_ID (27U)
+/** Num messages macro for A53_4 low_priority */
+#define TISCI_SEC_PROXY_A53_4_WRITE_LOW_PRIORITY_NUM_MESSAGES (5U)
 
 
 #endif /* AM64X_TISCI_SEC_PROXY_H */
