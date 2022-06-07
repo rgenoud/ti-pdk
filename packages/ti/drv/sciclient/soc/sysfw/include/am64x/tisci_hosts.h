@@ -49,7 +49,7 @@
  *
  * Host IDs for AM64X device
  *
- * Data version: 220420_174316
+ * Data version: 220519_153621
  *
  */
 #ifndef TISCI_HOSTS_H
@@ -65,13 +65,13 @@
 #define TISCI_HOST_ID_MAIN_0_R5_2 (37U)
 /** MAIN_0_R5_3(Non Secure): Cortex R5_0 context 3 on Main island */
 #define TISCI_HOST_ID_MAIN_0_R5_3 (38U)
-/** A53_0(Secure): Cortex a53 context 0 on Main islana - ATF */
+/** A53_0(Secure): Cortex a53 context 0 on Main island */
 #define TISCI_HOST_ID_A53_0 (10U)
-/** A53_1(Non Secure): Cortex A53 context 1 on Main island - EL2/Hyp */
+/** A53_1(Secure): Cortex A53 context 1 on Main island */
 #define TISCI_HOST_ID_A53_1 (11U)
-/** A53_2(Non Secure): Cortex A53 context 2 on Main island - VM/OS1 */
+/** A53_2(Non Secure): Cortex A53 context 2 on Main island */
 #define TISCI_HOST_ID_A53_2 (12U)
-/** A53_3(Non Secure): Cortex A53 context 3 on Main island - VM2/OS2 */
+/** A53_3(Non Secure): Cortex A53 context 3 on Main island */
 #define TISCI_HOST_ID_A53_3 (13U)
 /** M4_0(Non Secure): M4 */
 #define TISCI_HOST_ID_M4_0 (30U)
@@ -83,8 +83,8 @@
 #define TISCI_HOST_ID_MAIN_1_R5_2 (42U)
 /** MAIN_1_R5_3(Non Secure): Cortex R5_1 context 3 on Main island */
 #define TISCI_HOST_ID_MAIN_1_R5_3 (43U)
-/** ICSSG_0(Non Secure): ICSSG context 0 on Main island */
-#define TISCI_HOST_ID_ICSSG_0 (50U)
+/** A53_4(Non Secure): Cortex A53 context 1 on Main island */
+#define TISCI_HOST_ID_A53_4 (14U)
 
 /**
  * Host catch all. Used in board configuration resource assignments to define
