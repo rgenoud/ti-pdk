@@ -49,7 +49,7 @@
  *
  * Host IDs for AM62X device
  *
- * Data version: 220420_070512
+ * Data version: 220527_134115
  *
  */
 #ifndef TISCI_HOSTS_H
@@ -76,7 +76,7 @@
 /** A53_3(Non Secure): Cortex A53 context 3 on Main island */
 #define TISCI_HOST_ID_A53_3 (13U)
 /** M4_0(Non Secure): M4 */
-#define TISCI_HOST_ID_M4_0 (30U)  
+#define TISCI_HOST_ID_M4_0 (30U)
 /** GPU(Non Secure): GPU context 0 on Main island */
 #define TISCI_HOST_ID_GPU (31U)
 /** A53_4(Non Secure): Cortex A53 context 1 on Main island */
