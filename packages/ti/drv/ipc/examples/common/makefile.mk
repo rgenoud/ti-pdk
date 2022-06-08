@@ -24,7 +24,7 @@ ifeq ($(BUILD_OS_TYPE), baremetal)
   ifeq ($(ISA), r5f)
 	  SRCS_COMMON += r5f_mpu_$(SOC)_default.c
   endif
-  ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 am62x))
+  ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 am62x am62a))
     EXTERNAL_LNKCMD_FILE_LOCAL = $(PDK_INSTALL_PATH)/ti/drv/ipc/examples/common/$(SOC)/linker_$(ISA)_$(CORE).lds
     ifeq ($(ECHO_TEST_BTCM), 1)
       ifeq ($(ISA), r5f)
@@ -39,7 +39,7 @@ endif
 ifeq ($(BUILD_OS_TYPE), freertos)
   COMP_LIST_COMMON =  $(PDK_COMMON_FREERTOS_COMP)
   COMP_LIST_COMMON += ipc
-  ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4))
+  ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 am62a))
     ifeq ($(CORE),mcu1_0)
       COMP_LIST_COMMON += sciserver_tirtos
     endif
@@ -56,6 +56,10 @@ ifeq ($(BUILD_OS_TYPE), freertos)
     SRCS_COMMON += c66_cache_mar.c
   endif
   ifeq ($(ISA), c7x)
+    INCDIR += $(IPC_COMMON_PATH)/$(SOC)/$(BUILD_OS_TYPE)/
+    SRCS_COMMON += c7x_mmu.c
+  endif
+  ifeq ($(ISA), c75x)
     INCDIR += $(IPC_COMMON_PATH)/$(SOC)/$(BUILD_OS_TYPE)/
     SRCS_COMMON += c7x_mmu.c
   endif
@@ -100,7 +104,7 @@ ifeq ($(BUILD_OS_TYPE), safertos)
   endif
 endif
 
-ifeq ($(SOC), am64x am62x)
+ifeq ($(SOC), am64x am62x am62a)
   COMP_LIST_COMMON += mailbox
 endif
 

@@ -172,7 +172,7 @@ static void *Mbox_osalRegisterDirectIntr(Mbox_OsalDirectIsrFxn isrFxn,
                                          uint32_t coreIntrNum,
                                          uint32_t intrPriority)
 {
-#if (defined(SOC_AM64X) || defined(SOC_AM62X)) && defined(BUILD_MCU)
+#if (defined(SOC_AM64X) || defined(SOC_AM62X) || defined(SOC_AM62A)) && defined(BUILD_MCU)
     OsalRegisterIntrParams_t    intrPrms;
     OsalInterruptRetCode_e      osalRetVal;
     HwiP_Handle                 hwiHandle = NULL;

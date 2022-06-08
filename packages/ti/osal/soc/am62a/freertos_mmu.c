@@ -49,7 +49,7 @@
 
 #include <ti/csl/soc.h>
 
-#if defined (BUILD_C7X) || (__c7100__)
+#if defined (BUILD_C7X) || (__C7100__)
 #include <ti/csl/csl_clec.h>
 #include <ti/csl/arch/csl_arch.h>
 #include "Mmu.h"

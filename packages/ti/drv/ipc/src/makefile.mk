@@ -15,6 +15,9 @@ endif
 ifeq ($(SOC),$(filter $(SOC), am62x))
   SRCDIR += soc/V5
 endif
+ifeq ($(SOC),$(filter $(SOC), am62a))
+  SRCDIR += soc/V6
+endif
 INCDIR =
 
 #$(ECHO) $(ISA)
@@ -32,6 +35,11 @@ ifeq ($(BUILD_OS_TYPE), qnx)
 SRCS_COMMON += ipc_osal_qnx.c
 else
 SRCS_COMMON += ipc_osal.c
+endif
+ifeq ($(SOC),$(filter $(SOC), am64x am62x am62a))
+SRCS_COMMON += ipc_mailbox_lld.c
+else
+SRCS_COMMON += ipc_mailbox.c
 endif
 
 PACKAGE_SRCS_COMMON = ipc.h ipc_component.mk makefile .gitignore include $(SRCDIR)
