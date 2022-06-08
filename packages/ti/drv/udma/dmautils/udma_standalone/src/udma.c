@@ -46,6 +46,9 @@
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
+#if defined (LOKI_BUILD)
+#define HOST_EMULATION (1U)
+#endif
 
 #ifdef HOST_EMULATION
 CSL_DRU_t                gHost_DRU_t;

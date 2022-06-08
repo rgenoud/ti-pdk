@@ -88,7 +88,7 @@ dmautilsAutoIncTest_config gTestConfig[] =
         8,/*Image blockWidth */
         8/*Image blockHeight */
     },
-
+#if 0
     {
           1,
           1,
@@ -114,7 +114,7 @@ dmautilsAutoIncTest_config gTestConfig[] =
           16,/*Image blockWidth */
           8/*Image blockHeight */
      }
-
+#endif
 };
 
 #if 0

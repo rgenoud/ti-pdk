@@ -39,7 +39,15 @@
 #     1. All environment variables for Visual Studio compiler
 
 # Set compiler/archiver/linker commands and include paths
+ifeq ($(SOC),$(filter $(SOC), j721e))  
 CODEGEN_INCLUDE = $(C7X_GEN_INSTALL_PATH)/host_emulation/include/C7100
+else ifeq  ($(SOC),$(filter $(SOC), j721s2))
+CODEGEN_INCLUDE = $(C7X_GEN_INSTALL_PATH)/host_emulation/include/C7120
+else ifeq  ($(SOC),$(filter $(SOC), am62a))
+CODEGEN_INCLUDE = $(C7X_GEN_INSTALL_PATH)/host_emulation/include/C7504
+else
+CODEGEN_INCLUDE = $(C7X_GEN_INSTALL_PATH)/host_emulation/include/C7100
+endif
 
 
 ifeq ($(OS),Windows_NT)
