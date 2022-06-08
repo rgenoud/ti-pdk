@@ -117,7 +117,7 @@ dmautilsAutoIncTest_config gTestConfig[] =
 
 };
 
-#if not defined (DMA_UTILS_STANDALONE)
+#if 0
 int32_t test_sciclientDmscGetVersion(char *version_str, uint32_t version_str_size)
 {
     int32_t retVal = 0;
@@ -203,7 +203,7 @@ int32_t main()
 #endif
 #else
 
-#if not defined (DMA_UTILS_STANDALONE)
+#if 0
     int32_t retVal = 0;
     Sciclient_ConfigPrms_t  sciClientCfg;
     Sciclient_configPrmsInit(&sciClientCfg);
@@ -341,7 +341,7 @@ printf("wi %d \n", width);
       free(pIntMmeBase);
 #endif
 #endif
-Exit:
+//Exit:
   return 0;
 }
 
