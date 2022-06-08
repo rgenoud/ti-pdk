@@ -111,6 +111,11 @@ DEFAULT_BOARDLIST_safertos = j721e_evm
 ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 am62x am62a))
 # FreeRTOS is not supported on mpu core
 DEFAULT_CORELIST_EXCLUDE_CORES_freertos += mpu1_0
+
+ifeq ($(SOC),$(filter $(SOC), j721e j721s2, am62a))
+# FreeRTOS is not currently supported on J7 c66x/c7x cores
+DEFAULT_CORELIST_EXCLUDE_CORES_freertos += c7x_2 c7x-hostemu
+endif
 ifeq ($(SOC),$(filter $(SOC), am62x))
 # FreeRTOS is not currently supported on m4 core
 DEFAULT_CORELIST_EXCLUDE_CORES_freertos += m4f_0
