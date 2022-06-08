@@ -34,23 +34,24 @@ MEMORY
   L2SRAM   (RWX): org = 0x64800000, len = 0x080000
   MSMCSRAM (RWX): org = 0x70000000, len = 0x800000
   L1D           : org = 0x64E00000, len = 0x4000
+  DDR           : org = 0x80000000, len = 0x800000
 }
 
 
 SECTIONS
 {
-    .text       >       MSMCSRAM
+    .text       >       DDR
 
-    .bss        >       MSMCSRAM  /* Zero-initialized data */
-    .data       >       MSMCSRAM  /* Initialized data */
+    .bss        >       DDR  /* Zero-initialized data */
+    .data       >       DDR  /* Initialized data */
 
-    .cinit      >       MSMCSRAM  /* could be part of const */
-    .init_array >       MSMCSRAM  /* C++ initializations */
-    .stack      >       MSMCSRAM
-    .args       >       MSMCSRAM
-    .cio        >       MSMCSRAM
-    .const      >       MSMCSRAM
-    .switch     >       MSMCSRAM /* For exception handling. */
+    .cinit      >       DDR  /* could be part of const */
+    .init_array >       DDR  /* C++ initializations */
+    .stack      >       DDR
+    .args       >       DDR
+    .cio        >       DDR
+    .const      >       DDR
+    .switch     >       DDR /* For exception handling. */
                              /* Not a default ELF section -- remove?  */
                              /* could be part of const */
     .sysmem     >       MSMCSRAM /* heap */

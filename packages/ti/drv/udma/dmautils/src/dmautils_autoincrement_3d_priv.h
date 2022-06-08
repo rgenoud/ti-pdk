@@ -42,6 +42,11 @@
 
 #include "stdint.h"
 
+/* If its a Loki Build then force the mode to be in hostemulation as Loki doesnt support DRU */
+#if defined (LOKI_BUILD)
+#define HOST_EMULATION (1U)
+#endif
+
 #define UDMA_RM_MAX_BLK_COPY_CH             (32U)
 
 #include "udma.h"
