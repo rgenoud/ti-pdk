@@ -10,6 +10,7 @@ INCDIR = .
 
 ifeq ($(DMA_UTILS_STANDALONE), 1)
 DMAUTILS_COMP_LIST=csl
+DMAUTILS_CFLAGS=-DDMA_UTILS_STANDALONE
 else
 DMAUTILS_COMP_LIST=$(PDK_COMMON_BAREMETAL_COMP)
 endif
@@ -29,6 +30,9 @@ PACKAGE_SRCS_COMMON = .
 SRCS_COMMON = dmautils_autoincrement_example.c dmautils_autoincrement_test.c
 
 CFLAGS_LOCAL_COMMON = $(PDK_CFLAGS)
+CFLAGS_LOCAL_COMMON += $(DMAUTILS_CFLAGS)
+
+$(info CFLAGS_LOCAL_COMMON $(CFLAGS_LOCAL_COMMON))
 
 # Core/SoC/platform specific source files and CFLAGS
 # Example:
