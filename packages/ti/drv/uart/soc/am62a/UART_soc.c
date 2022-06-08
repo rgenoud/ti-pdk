@@ -404,7 +404,6 @@ static int32_t UART_socConfigIntrPath(const void *pHwAttrs, bool setIntrPath)
     return(ret);
 }
 
-
 #if defined (BUILD_MCU)
 /**
  * \brief  This API initializes the SoC level of UART configuration

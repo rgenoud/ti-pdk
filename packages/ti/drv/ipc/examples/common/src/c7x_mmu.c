@@ -92,6 +92,19 @@ void IpcInitMmu(bool isSecure)
         attrs.ns = 1;
     }
 
+    #if defined(SOC_AM62A)
+    /* Register region */
+    (void)Mmu_map(0x00000000U, 0x00000000U, 0x20000000U, &attrs, isSecure);
+    (void)Mmu_map(0x20000000U, 0x20000000U, 0x20000000U, &attrs, isSecure);
+    (void)Mmu_map(0x40000000U, 0x40000000U, 0x20000000U, &attrs, isSecure);
+    (void)Mmu_map(0x60000000U, 0x60000000U, 0x10000000U, &attrs, isSecure);
+    (void)Mmu_map(0x7C200000U, 0x7C200000U, 0x00100000U, &attrs, isSecure); /* CLEC */
+    (void)Mmu_map(0x7C400000U, 0x7C400000U, 0x00100000U, &attrs, isSecure); /* DRU */
+
+    attrs.attrIndx = Mmu_AttrIndx_MAIR7;
+    (void)Mmu_map(0x80000000U, 0x80000000U, 0x20000000U, &attrs, isSecure); /* DDR */
+    (void)Mmu_map(0xA0000000U, 0xA0000000U, 0x20000000U, &attrs, isSecure); /* DDR */
+    #else
     /* Register region */
     attrs.attrIndx = Mmu_AttrIndx_MAIR0;
     (void)Mmu_map(0x00000000U, 0x00000000U, 0x20000000U, &attrs, isSecure);
@@ -119,7 +132,7 @@ void IpcInitMmu(bool isSecure)
 #elif defined(BUILD_C7X_4)
     (void)Mmu_map(C7x_4_IPC_DATA_BASE, C7x_4_IPC_DATA_BASE, 0x00100000U, &attrs, isSecure); /* C7X_4 DDR */
 #endif
-
+#endif
     return;
 }
 

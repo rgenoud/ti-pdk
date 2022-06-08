@@ -75,7 +75,12 @@ extern "C" {
 #define SCICLIENT_FIRMWARE_ABI_MINOR                     (5U)
 /* @} */
 
+/** C7X_1(Non Secure): C7x context 1 on Main island */
+#define SCICLIENT_CONTEXT_C7X_NONSEC_0 (10U)
+#define SCICLIENT_CONTEXT_C7X_SEC_0 (9U)
 
+#define SCICLIENT_C7X_NON_SECURE_INTERRUPT_NUM (9U)
+#define SCICLIENT_C7X_SECURE_INTERRUPT_NUM     (10U)
 /**
  *  \anchor Sciclient_ContextIds
  *  \name Sciclient Context Ids

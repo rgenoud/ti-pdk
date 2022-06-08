@@ -114,7 +114,7 @@
 
 static void taskFxn(void* a0, void* a1);
 
-#if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)))
+#if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_AM62A)))
 void Ipc_setupSciServer(void);
 /**< Initialize SCI Server, to process RM/PM Requests by other cores */
 #endif
@@ -165,7 +165,7 @@ void ipc_initSciclient()
         App_printf("Sciclient_configPrmsInit Failed\n");
     }
 
-#if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)))
+#if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_AM62A)))
     if (ret == CSL_PASS)
     {
         ret = Sciclient_boardCfgParseHeader(
@@ -176,6 +176,12 @@ void ipc_initSciclient()
             App_printf("Sciclient_boardCfgParseHeader Failed\n");
         }
     }
+
+    if (ret == CSL_PASS)
+    {
+        App_sciclientConsoleInit();
+    }
+
 #endif
 
     if (ret == CSL_PASS)
@@ -259,7 +265,7 @@ static void taskFxn(void* a0, void* a1)
     gBoardinit=1;
 #endif
 
-#if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)))
+#if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_AM62A)))
     TaskP_Handle sciserverInitTask;
     TaskP_Params sciserverInitTaskParams;
 
@@ -307,7 +313,7 @@ void InitMmu(void)
 }
 #endif
 
-#if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)))
+#if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_AM62A)))
 void Ipc_setupSciServer(void)
 {
 

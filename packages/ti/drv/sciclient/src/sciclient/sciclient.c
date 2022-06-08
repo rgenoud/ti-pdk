@@ -43,7 +43,7 @@
 #include <ti/drv/sciclient/src/sciclient/sciclient_priv.h>
 #include <ti/csl/soc.h>
 #include <string.h> /*For memcpy*/
-#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined (SOC_J784S4)
+#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined (SOC_J784S4)  || defined(SOC_AM62A)
 #include <ti/csl/csl_clec.h>
 #endif
 #include <ti/csl/csl_rat.h>
@@ -388,6 +388,8 @@ int32_t Sciclient_init(const Sciclient_ConfigPrms_t *pCfgPrms)
 
                     #if defined (SOC_J721S2) || defined (SOC_J784S4)
                     CSL_CLEC_EVTRegs * regs = (CSL_CLEC_EVTRegs *) CSL_COMPUTE_CLUSTER0_CLEC_BASE;
+                    #elif defined(SOC_AM62A)
+                    CSL_CLEC_EVTRegs   *regs = (CSL_CLEC_EVTRegs*) CSL_C7X256V0_CLEC_BASE;
                     #else
                     CSL_CLEC_EVTRegs * regs = (CSL_CLEC_EVTRegs *) CSL_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
                     #endif
@@ -397,7 +399,11 @@ int32_t Sciclient_init(const Sciclient_ConfigPrms_t *pCfgPrms)
                     evtCfg.rtMap = 0x3C;
                     evtCfg.extEvtNum = 0x0;
                     evtCfg.c7xEvtNum = SCICLIENT_C7X_NON_SECURE_INTERRUPT_NUM;
+                    #if defined(SOC_J721E)
                     CSL_clecConfigEvent(regs, evtNum, &evtCfg);
+                    #elif defined(SOC_AM62A)
+                    CSL_clecConfigEvent(regs, 256, &evtCfg);
+                    #endif
                     intrPrms.corepacConfig.priority = 1U;
                 }
                 #endif
@@ -458,6 +464,8 @@ int32_t Sciclient_init(const Sciclient_ConfigPrms_t *pCfgPrms)
 
                     #if defined (SOC_J721S2) || defined (SOC_J784S4)
                     CSL_CLEC_EVTRegs * regs = (CSL_CLEC_EVTRegs *) CSL_COMPUTE_CLUSTER0_CLEC_BASE;
+                    #elif defined(SOC_AM62A)
+                    CSL_CLEC_EVTRegs   *regs = (CSL_CLEC_EVTRegs*) CSL_C7X256V0_CLEC_BASE;
                     #else
                     CSL_CLEC_EVTRegs * regs = (CSL_CLEC_EVTRegs *) CSL_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
                     #endif
@@ -991,6 +999,8 @@ int32_t Sciclient_serviceSecureProxy(const Sciclient_ReqPrm_t *pReqPrm,
         {
             #if defined (SOC_J721S2) || defined (SOC_J784S4)
             CSL_CLEC_EVTRegs * regs = (CSL_CLEC_EVTRegs *) CSL_COMPUTE_CLUSTER0_CLEC_BASE;
+            #elif defined(SOC_AM62A)
+            CSL_CLEC_EVTRegs   *regs = (CSL_CLEC_EVTRegs*) CSL_C7X256V0_CLEC_BASE;
             #else
             CSL_CLEC_EVTRegs * regs = (CSL_CLEC_EVTRegs *) CSL_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
             #endif
@@ -1004,6 +1014,7 @@ int32_t Sciclient_serviceSecureProxy(const Sciclient_ReqPrm_t *pReqPrm,
              * Due to this for CLEC programming one needs to add an offset of 992 (1024 - 32)
              * to the event number which is shared between GIC and CLEC.
              */ 
+            #if defined(SOC_J721E)
             if (SCICLIENT_NON_SECURE_CONTEXT == gSciclientMap[contextId].context)
             {
                 #if defined (SOC_J721S2) || defined (SOC_J784S4)
@@ -1020,6 +1031,16 @@ int32_t Sciclient_serviceSecureProxy(const Sciclient_ReqPrm_t *pReqPrm,
                 CSL_clecConfigEvent(regs, CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_NAVSS0_INTR_ROUTER_0_OUTL_INTR_191 + 992, &evtCfg);
                 #endif
             }
+            #elif defined(SOC_AM62A)
+            if (SCICLIENT_NON_SECURE_CONTEXT == gSciclientMap[contextId].context)
+            {
+                CSL_clecConfigEvent(regs, 256, &evtCfg);
+            }
+            else
+            {
+                CSL_clecConfigEvent(regs, 256, &evtCfg);
+            }
+            #endif
         }
         #endif
         Osal_ClearInterrupt(0, (int32_t) gSciclientMap[contextId].respIntrNum);
@@ -1186,6 +1207,8 @@ static void Sciclient_ISR(uintptr_t arg)
             {
                 #if defined (SOC_J721S2) || defined (SOC_J784S4)
                 CSL_CLEC_EVTRegs * regs = (CSL_CLEC_EVTRegs *) CSL_COMPUTE_CLUSTER0_CLEC_BASE;
+                #elif defined(SOC_AM62A)
+                CSL_CLEC_EVTRegs   *regs = (CSL_CLEC_EVTRegs*) CSL_C7X256V0_CLEC_BASE;
                 #else
                 CSL_CLEC_EVTRegs * regs = (CSL_CLEC_EVTRegs *) CSL_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
                 #endif
@@ -1199,6 +1222,7 @@ static void Sciclient_ISR(uintptr_t arg)
                  * Due to this for CLEC programming one needs to add an offset of 992 (1024 - 32)
                  * to the event number which is shared between GIC and CLEC.
                  */
+                #if defined(SOC_J721E)
                 if (SCICLIENT_NON_SECURE_CONTEXT == gSciclientMap[contextId].context)
                 {
                     #if defined (SOC_J721S2) || defined (SOC_J784S4)
@@ -1215,6 +1239,16 @@ static void Sciclient_ISR(uintptr_t arg)
                     CSL_clecConfigEvent(regs, CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_NAVSS0_INTR_ROUTER_0_OUTL_INTR_191 + 992, &evtCfg);
                     #endif
                 }
+                #elif defined(SOC_AM62A)
+                if (SCICLIENT_NON_SECURE_CONTEXT == gSciclientMap[contextId].context)
+                {
+                    CSL_clecConfigEvent(regs, 256, &evtCfg);
+                }
+                else
+                {
+                    CSL_clecConfigEvent(regs, 256, &evtCfg);
+                }
+                #endif
             }
             Osal_ClearInterrupt(0, (int32_t) gSciclientMap[contextId].respIntrNum);
             #endif
