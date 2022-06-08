@@ -203,7 +203,7 @@ ifeq ($(BOARD),$(filter $(BOARD), am62x_evm ))
 endif
 
 # AM62A
-ifeq ($(BOARD),$(filter $(BOARD), am62a_evm ))
+ifeq ($(BOARD),$(filter $(BOARD), am62a_evm am62a_hostemu am62a_loki ))
  SOC = am62a
 endif
 

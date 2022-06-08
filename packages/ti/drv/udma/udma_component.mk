@@ -48,8 +48,9 @@ drvudma_j7200_CORELIST  = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1
 drvudma_am64x_CORELIST  = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 m4f_0
 drvudma_j721s2_CORELIST  = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 c7x_1 c7x_2 c7x-hostemu
 drvudma_j784s4_CORELIST  = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mcu4_0 mcu4_1 c7x_1 c7x_2 c7x_3 c7x_4 c7x-hostemu
-drvudma_am62x_CORELIST  = mpu1_0
-drvudma_am62a_CORELIST  = mpu1_0
+drvudma_am62x_CORELIST  = mpu1_0 m4f_0
+drvudma_am62a_CORELIST   = c7x_1 c7x-hostemu
+
 
 # Define the rule to generate UDMA Drivers BOARDLIST for each rtos_type
 # Default BOARDLIST for each rtos_type is defined in 'ti/build/makerules/component.mk'
@@ -112,7 +113,7 @@ export udma_LIBNAME = udma
 export udma_LIBPATH = $(PDK_UDMA_COMP_PATH)/lib
 export udma_MAKEFILE = -fsrc/makefile
 export udma_BOARD_DEPENDENCY = no
-ifeq ($(BOARD),$(filter $(BOARD), j721e_ccqt j721e_loki j721e_hostemu j721s2_hostemu j784s4_hostemu))
+ifeq ($(BOARD),$(filter $(BOARD), j721e_ccqt j721e_loki j721e_hostemu j721s2_hostemu j784s4_hostemu am62a_hostemu))
 export udma_BOARD_DEPENDENCY = yes
 endif
 export udma_CORE_DEPENDENCY = yes
@@ -133,13 +134,13 @@ export dmautils_LIBNAME = dmautils
 export dmautils_LIBPATH = $(PDK_UDMA_COMP_PATH)/lib
 export dmautils_MAKEFILE = -fmakefile
 export dmautils_BOARD_DEPENDENCY = no
-ifeq ($(BOARD),$(filter $(BOARD), j721e_ccqt j721e_loki j721e_hostemu j721s2_hostemu j784s4_hostemu))
+ifeq ($(BOARD),$(filter $(BOARD), j721e_ccqt j721e_loki j721e_hostemu j721s2_hostemu j784s4_hostemu am62a_hostemu am62a_loki))
 export dmautils_BOARD_DEPENDENCY = yes
 endif
 export dmautils_CORE_DEPENDENCY = yes
 dmautils_PKG_LIST = dmautils
 dmautils_INCLUDE = $(dmautils_PATH)
-export dmautils_SOCLIST = j721e j721s2 j784s4
+export dmautils_SOCLIST = j721e j721s2 j784s4 am62a
 export dmautils_$(SOC)_CORELIST = c7x_1 c7x_2 c7x_3 c7x_4 c7x-hostemu
 udma_LIB_LIST += dmautils
 
@@ -174,7 +175,7 @@ export dmautils_baremetal_autoincrement_testapp_BOARD_DEPENDENCY = yes
 export dmautils_baremetal_autoincrement_testapp_CORE_DEPENDENCY = yes
 dmautils_baremetal_autoincrement_testapp_PKG_LIST = dmautils_baremetal_autoincrement_testapp
 dmautils_baremetal_autoincrement_testapp_INCLUDE = $(dmautils_baremetal_autoincrement_testapp_PATH)
-export dmautils_baremetal_autoincrement_testapp_BOARDLIST = j721e_hostemu j721e_sim j721e_loki j721e_ccqt j721e_evm j721s2_evm
+export dmautils_baremetal_autoincrement_testapp_BOARDLIST = j721e_hostemu j721e_sim j721e_loki j721e_ccqt j721e_evm j721s2_hostemu j721s2_evm j721s2_loki am62a_hostemu am62a_evm am62a_loki
 export dmautils_baremetal_autoincrement_testapp_$(SOC)_CORELIST = c7x_1 c7x-hostemu
 udma_EXAMPLE_LIST += dmautils_baremetal_autoincrement_testapp
 
@@ -185,7 +186,7 @@ export dmautils_baremetal_autoinc_1d2d3d_testapp_BOARD_DEPENDENCY = yes
 export dmautils_baremetal_autoinc_1d2d3d_testapp_CORE_DEPENDENCY = yes
 dmautils_baremetal_autoinc_1d2d3d_testapp_PKG_LIST = dmautils_baremetal_autoinc_1d2d3d_testapp
 dmautils_baremetal_autoinc_1d2d3d_testapp_INCLUDE = $(dmautils_baremetal_autoinc_1d2d3d_testapp_PATH)
-export dmautils_baremetal_autoinc_1d2d3d_testapp_BOARDLIST = j721e_hostemu j721e_sim j721e_loki j721e_ccqt j721e_evm
+export dmautils_baremetal_autoinc_1d2d3d_testapp_BOARDLIST = j721e_hostemu j721e_sim j721e_loki j721e_ccqt j721e_evm am62a_loki
 export dmautils_baremetal_autoinc_1d2d3d_testapp_$(SOC)_CORELIST = c7x_1 c7x-hostemu
 udma_EXAMPLE_LIST += dmautils_baremetal_autoinc_1d2d3d_testapp
 
@@ -196,7 +197,7 @@ export dmautils_baremetal_autoinc_circular_testapp_BOARD_DEPENDENCY = yes
 export dmautils_baremetal_autoinc_circular_testapp_CORE_DEPENDENCY = yes
 dmautils_baremetal_autoinc_circular_testapp_PKG_LIST = dmautils_baremetal_autoinc_circular_testapp
 dmautils_baremetal_autoinc_circular_testapp_INCLUDE = $(dmautils_baremetal_autoinc_circular_testapp_PATH)
-export dmautils_baremetal_autoinc_circular_testapp_BOARDLIST = j721e_hostemu j721e_sim j721e_loki j721e_ccqt j721e_evm
+export dmautils_baremetal_autoinc_circular_testapp_BOARDLIST = j721e_hostemu j721e_sim j721e_loki j721e_ccqt j721e_evm am62a_loki
 export dmautils_baremetal_autoinc_circular_testapp_$(SOC)_CORELIST = c7x_1 c7x-hostemu
 udma_EXAMPLE_LIST += dmautils_baremetal_autoinc_circular_testapp
 
