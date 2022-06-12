@@ -3,9 +3,9 @@
  *
  * Software defined Device groups (devgrps) for AM62X device.
  *
- * Data version: 210623_104925
+ * Data version: 220527_134115
  *
- * Copyright (C) 2021 Texas Instruments Incorporated - http://www.ti.com/
+ * Copyright (C) 2021-2022 Texas Instruments Incorporated - http://www.ti.com/
  * ALL RIGHTS RESERVED
  */
 #ifndef SOC_AM62X_DEVGRPS_H
