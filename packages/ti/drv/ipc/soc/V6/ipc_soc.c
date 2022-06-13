@@ -56,6 +56,7 @@ static Ipc_ProcInfo g_Ipc_mp_procInfo[IPC_MAX_PROCS] =
     {IPC_MPU1_0,      "mpu1_0"},      /**< ARM A53 - VM0 */
     {IPC_M4F_0,       "m4f_0"}        /**< ARM M4F */
     {IPC_C7X_1,       "c7x_1"}        /**< DSP C7x - core0 */
+    {IPC_MCU1_0,      "mcu1_0"},      /**< ARM Main R5F0 - core0 */
 };
 
 const char* Ipc_getCoreName(uint32_t procId)
@@ -78,6 +79,10 @@ uint32_t Ipc_rprocIdToMboxId(uint32_t id)
     {
         mbId = MAILBOX_INST_MPU1_0;
     }
+    else if (id == IPC_MCU1_0)
+    {
+        mbId = MAILBOX_INST_MCU1_0;
+    }
     else if (id == IPC_M4F_0)
     {
         mbId = MAILBOX_INST_M4F_0;
@@ -98,6 +103,10 @@ uint32_t Ipc_mboxIdToRprocId(uint32_t id)
     {
         procId = IPC_MPU1_0;
     }
+    else if (id == MAILBOX_INST_MCU1_0)
+    {
+        procId = IPC_MCU1_0;
+    }
     else if (id == MAILBOX_INST_M4F_0)
     {
         procId = IPC_M4F_0;
@@ -116,6 +125,8 @@ uint32_t Ipc_getCoreId(void)
 
 #if defined(BUILD_MPU1_0)
     selfId = IPC_MPU1_0;
+#elif defined(BUILD_MCU1_0)
+    selfId = IPC_MCU1_0;
 #elif defined(BUILD_M4F)
     selfId = IPC_M4F_0;
 #elif defined(BUILD_C7X)
