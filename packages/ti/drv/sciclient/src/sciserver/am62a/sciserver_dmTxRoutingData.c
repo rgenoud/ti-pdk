@@ -44,15 +44,15 @@ const struct sproxy_host_tx_thread_data sproxy_route_data[AM62A_CONFIG_MAX] = {
 	 * Secure Host DM2TIFS[250]
 	 */
 	[HOST_ID_DM2TIFS] =	{
-		.sproxy_resp_conf_id	= AM62A_DMASS0_SEC_PROXY_0_TX_TIFS_SEC_DM2TIFS_RESPONSE_TX_THR071_CONF003,
-		.sproxy_ntfy_conf_id	= AM62A_DMASS0_SEC_PROXY_0_TX_TIFS_SEC_DM2TIFS_RESPONSE_TX_THR071_CONF003,
+		.sproxy_resp_conf_id	= AM62A_DMASS0_SEC_PROXY_0_TX_TIFS_SEC_DM2TIFS_RESPONSE_TX_THR070_CONF004,
+		.sproxy_ntfy_conf_id	= AM62A_DMASS0_SEC_PROXY_0_TX_TIFS_SEC_DM2TIFS_RESPONSE_TX_THR070_CONF004,
 	},
 	/*
 	 * Non Secure Host A53_1[11]
 	 */
 	[HOST_ID_A53_1] =	{
-		.sproxy_resp_conf_id	= AM62A_DMASS0_SEC_PROXY_0_TX_DM_NONSEC_A53_1_RESPONSE_TX_THR067_CONF006,
-		.sproxy_ntfy_conf_id	= AM62A_DMASS0_SEC_PROXY_0_TX_DM_NONSEC_A53_1_RESPONSE_TX_THR067_CONF006,
+		.sproxy_resp_conf_id	= AM62A_DMASS0_SEC_PROXY_0_RX_A53_1_RESPONSE_THR010_CONF008,
+		.sproxy_ntfy_conf_id	= AM62A_DMASS0_SEC_PROXY_0_RX_A53_1_RESPONSE_THR010_CONF008,
 	},
 	/*
 	 * Secure Host A53_2[12]
@@ -81,5 +81,12 @@ const struct sproxy_host_tx_thread_data sproxy_route_data[AM62A_CONFIG_MAX] = {
 	[HOST_ID_MCU_0_R5_0] =	{
 		.sproxy_resp_conf_id	= AM62A_DMASS0_SEC_PROXY_0_TX_MCU_0_R5_0_LOW_PRIORITY_THR017_CONF020,
 		.sproxy_ntfy_conf_id	= AM62A_DMASS0_SEC_PROXY_0_TX_MCU_0_R5_0_LOW_PRIORITY_THR017_CONF020,
+	},
+	/*
+	 * Secure Host A53_4[14]
+	 */
+	[HOST_ID_A53_3] =	{
+		.sproxy_resp_conf_id	= AM62A_DMASS0_SEC_PROXY_0_TX_A53_4_LOW_PRIORITY_THR019_CONF021,
+		.sproxy_ntfy_conf_id	= AM62A_DMASS0_SEC_PROXY_0_TX_A53_4_LOW_PRIORITY_THR019_CONF021,
 	},
 };
