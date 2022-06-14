@@ -161,6 +161,20 @@ void Osal_initMmuDefault(void)
 void OsalCfgClecAccessCtrl (Bool onlyInSecure)
 {
     CSL_ClecEventConfig cfgClec;
+    #if defined(SOC_AM62A)
+     CSL_CLEC_EVTRegs   *clecBaseAddr = (CSL_CLEC_EVTRegs*) CSL_C7X256V0_CLEC_BASE;
+    uint32_t            i, maxInputs = 511U;
+
+    cfgClec.secureClaimEnable = onlyInSecure;
+    cfgClec.evtSendEnable     = false;
+    cfgClec.rtMap             = CSL_CLEC_RTMAP_DISABLE;
+    cfgClec.extEvtNum         = 0U;
+    cfgClec.c7xEvtNum         = 0U;
+    for(i = 1U; i < maxInputs; i++)
+    {
+        CSL_clecConfigEvent(clecBaseAddr, i, &cfgClec);
+    }
+    #else
     CSL_CLEC_EVTRegs   *clecBaseAddr = (CSL_CLEC_EVTRegs*) CSL_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
     uint32_t            i, maxInputs = 2048U;
 
@@ -173,6 +187,7 @@ void OsalCfgClecAccessCtrl (Bool onlyInSecure)
     {
         CSL_clecConfigEvent(clecBaseAddr, i, &cfgClec);
     }
+    #endif
 }
 
 #endif /* */
