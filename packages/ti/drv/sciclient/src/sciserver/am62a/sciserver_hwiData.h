@@ -98,7 +98,7 @@ static const Sciserver_hwiData sciserver_hwi_list[] = {
        /* user_mcu_nav_low_priority */
     {
         .irq_num = CSLR_R5FSS0_CORE0_INTR_DMASS0_INTAGGR_0_INTAGGR_VINTR_PEND_43,
-        .hw_msg_queue_id = AM62A_DMASS0_SEC_PROXY_0_RX_DM_NONSEC_LOW_PRIORITY_RX_THR070_CONF001,
+        .hw_msg_queue_id = AM62A_DMASS0_SEC_PROXY_0_RX_DM_NONSEC_LOW_PRIORITY_RX_THR069_CONF001,
         .hw_msg_buffer = user_hi_msg_buffer,
         .semaphore_id = SCISERVER_SEMAPHORE_USER_HI,
         .user_msg_data = &user_hi_msg_data,

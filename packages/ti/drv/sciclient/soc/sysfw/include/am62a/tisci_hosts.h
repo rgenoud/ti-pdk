@@ -77,8 +77,8 @@
 #define TISCI_HOST_ID_A53_3 (13U)
 /** MCU_0_R5_0(Non Secure): MCU R5 */
 #define TISCI_HOST_ID_MCU_0_R5_0 (30U)
-/** ICSSG_0(Non Secure): ICSSG context 0 on Main island */
-#define TISCI_HOST_ID_ICSSG_0 (50U)
+/** A53_4(Non Secure): Cortex A53 context 1 on Main island */
+#define TISCI_HOST_ID_A53_4 (14U)
 /** DM2TIFS(Secure): DM to TIFS communication */
 #define TISCI_HOST_ID_DM2TIFS (250U)
 /** TIFS2DM(Non Secure): TIFS to DM communication */

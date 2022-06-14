@@ -83,25 +83,25 @@ extern "C" {
  *  Context IDs for Sciclient_ConfigPrms_t .
  */
 /** r5(Secure): Cortex R5 Context 0 */
-#define SCICLIENT_CONTEXT_R5_SEC_0                   (0U)
+#define SCICLIENT_CONTEXT_R5_SEC_0                      (0U)
 /** r5(Non Secure): Cortex R5 Context 1 */
-#define SCICLIENT_CONTEXT_R5_NONSEC_0                (1U)
+#define SCICLIENT_CONTEXT_R5_NONSEC_0                   (1U)
 /** r5(Secure): Cortex R5 Context 2 */
-#define SCICLIENT_CONTEXT_R5_SEC_1                   (2U)
+#define SCICLIENT_CONTEXT_R5_SEC_1                      (2U)
 /** r5(Non Secure): Cortex R5 Context 3 */
-#define SCICLIENT_CONTEXT_R5_NONSEC_1                (3U)
+#define SCICLIENT_CONTEXT_R5_NONSEC_1                   (3U)
 /** a53(Secure): Cortex A53 context 0 */
-#define SCICLIENT_CONTEXT_A53_SEC_0                    (4U)
+#define SCICLIENT_CONTEXT_A53_SEC_0                     (4U)
 /** a53(Non Secure): Cortex A53 context 1 */
-#define SCICLIENT_CONTEXT_A53_NONSEC_0                 (5U)
+#define SCICLIENT_CONTEXT_A53_SEC_1                     (5U)
 /** a53(Non Secure): Cortex A53 context 2 */
-#define SCICLIENT_CONTEXT_A53_NONSEC_1                 (6U)
+#define SCICLIENT_CONTEXT_A53_NONSEC_1                  (6U)
 /** a53(Non Secure): Cortex A53 context 3 */
-#define SCICLIENT_CONTEXT_A53_NONSEC_2                 (7U)
+#define SCICLIENT_CONTEXT_A53_NONSEC_2                  (7U)
 /** R5 (Non Secure): Cortex R5 context 1 */
-#define SCICLIENT_CONTEXT_MCU_R5_0_NONSEC_0            (8U)
-/** (Non Secure): ICSSG_0 Context 1 */
-#define SCICLIENT_CONTEXT_ICSSG_0_NONSEC_0             (9U)
+#define SCICLIENT_CONTEXT_MCU_R5_0_NONSEC_0             (8U)
+/** a53(Non Secure): Cortex A53 context 4 */
+#define SCICLIENT_CONTEXT_A53_NONSEC_3                  (9U)
 
 /** Total number of possible contexts for application. */
 #define SCICLIENT_CONTEXT_MAX_NUM                      (10U)
