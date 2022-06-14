@@ -44,8 +44,10 @@ drvmailbox_am64x_LASTCORE := $(word $(words $(drvmailbox_am64x_CORELIST)), $(drv
 drvmailbox_am64x_rtos_LASTCORE := $(word $(words $(drvmailbox_am64x_rtos_CORELIST)), $(drvmailbox_am64x_rtos_CORELIST))
 drvmailbox_am62x_CORELIST   = mpu1_0 m4f_0
 drvmailbox_am62x_LASTCORE := $(word $(words $(drvmailbox_am62x_CORELIST)), $(drvmailbox_am62x_CORELIST))
-drvmailbox_am62a_CORELIST   = mpu1_0 m4f_0 c7x_1
+drvmailbox_am62a_CORELIST   = mpu1_0 mcu1_0 m4f_0 c7x_1
 drvmailbox_am62a_LASTCORE := $(word $(words $(drvmailbox_am62a_CORELIST)), $(drvmailbox_am62a_CORELIST))
+drvmailbox_am62a_rtos_CORELIST   = mpu1_0 mcu1_0 m4f_0 c7x_1
+drvmailbox_am62a_rtos_LASTCORE := $(word $(words $(drvmailbox_am62a_rtos_CORELIST)), $(drvmailbox_am62a_rtos_CORELIST))
 
 ifeq ($(BUILD_OS_TYPE), qnx)
 drvmailbox_am62x_CORELIST += qnx_mpu1_0
