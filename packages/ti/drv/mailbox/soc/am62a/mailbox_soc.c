@@ -586,17 +586,14 @@ static inline void Mailbox_directClrNewMsgStatus(Mbox_Handle handle)
 
 __attribute__((interrupt("IRQ")))     void mailboxIsr_0(void);
 __attribute__((interrupt("IRQ")))     void mailboxIsr_1(void);
-__attribute__((interrupt("IRQ")))     void mailboxIsr_2(void);
-__attribute__((interrupt("IRQ")))     void mailboxIsr_3(void);
-__attribute__((interrupt("IRQ")))     void mailboxIsr_4(void);
 __attribute__((interrupt("IRQ")))     void mailboxIsr_5(void);
 
 
 
 #ifdef __cplusplus
-#pragma CODE_STATE (32)
+__attribute__((target("code_state")))
 #else
-#pragma CODE_STATE (mailboxIsr_0,32)
+__attribute__((target("code_state"))) void mailboxIsr_0(void);
 #endif  /* #ifdef __cplusplus */
 void mailboxIsr_0(void)
 {
@@ -605,9 +602,21 @@ void mailboxIsr_0(void)
 }
 
 #ifdef __cplusplus
+__attribute__((target("code_state")))
+#else
+__attribute__((target("code_state"))) void mailboxIsr_1(void);
+#endif  /* #ifdef __cplusplus */
+void mailboxIsr_1(void)
+{
+    (g_VimCallback[MAILBOX_INST_MCU1_0])(g_VimCallbackArg[MAILBOX_INST_MCU1_0], MAILBOX_INST_MCU1_0);
+    Mailbox_directClrNewMsgStatus(g_VimCallbackArg[MAILBOX_INST_MCU1_0]);
+}
+
+#ifdef __cplusplus
+__attribute__((target("code_state")))
 #pragma CODE_STATE (32)
 #else
-#pragma CODE_STATE (mailboxIsr_5,32)
+__attribute__((target("code_state"))) void mailboxIsr_5(void);
 #endif  /* #ifdef __cplusplus */
 void mailboxIsr_5(void)
 {
@@ -619,9 +628,6 @@ uintptr_t mailboxIsrArray[6] =
 {
     (uintptr_t)&mailboxIsr_0,
     (uintptr_t)&mailboxIsr_1,
-    (uintptr_t)&mailboxIsr_2,
-    (uintptr_t)&mailboxIsr_3,
-    (uintptr_t)&mailboxIsr_4,
     (uintptr_t)&mailboxIsr_5
 };
 #endif
