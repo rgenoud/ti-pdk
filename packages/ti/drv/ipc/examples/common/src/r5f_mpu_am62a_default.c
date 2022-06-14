@@ -155,7 +155,7 @@ const CSL_ArmR5MpuRegionCfg  gCslR5MpuCfg[CSL_ARM_R5F_MPU_REGIONS_MAX] =
         .regionId         = 7U,
         .enable           = 1U,
 #if defined(BUILD_MCU1_0)
-        .baseAddr         = 0xA0000000,
+        .baseAddr         = 0x9db00000,
 #elif defined(BUILD_MCU1_1)
         .baseAddr         = 0xA1000000,
 #elif defined(BUILD_MCU2_0)
