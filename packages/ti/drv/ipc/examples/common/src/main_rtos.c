@@ -292,8 +292,12 @@ static void taskFxn(void* a0, void* a1)
 #if defined(BUILD_C7X)
 void InitMmu(void)
 {
+    #if defined(SOC_AM62A)
+    IpcInitMmu(FALSE);
+    #else
     IpcInitMmu(FALSE);
     IpcInitMmu(TRUE);
+    #endif
     OsalCfgClecAccessCtrl(false);
 
 }

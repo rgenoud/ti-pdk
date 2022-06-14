@@ -54,8 +54,8 @@
 static Ipc_ProcInfo g_Ipc_mp_procInfo[IPC_MAX_PROCS] =
 {
     {IPC_MPU1_0,      "mpu1_0"},      /**< ARM A53 - VM0 */
-    {IPC_M4F_0,       "m4f_0"}        /**< ARM M4F */
-    {IPC_C7X_1,       "c7x_1"}        /**< DSP C7x - core0 */
+    {IPC_M4F_0,       "m4f_0"},        /**< ARM M4F */
+    {IPC_C7X_1,       "c7x_1"},        /**< DSP C7x - core0 */
     {IPC_MCU1_0,      "mcu1_0"},      /**< ARM Main R5F0 - core0 */
 };
 
@@ -158,16 +158,19 @@ void Ipc_configClecRouter(uint32_t corePackEvent)
     CSL_ClecEventConfig   cfgClec;
     CSL_CLEC_EVTRegs     *clecBaseAddr = (CSL_CLEC_EVTRegs*)C7X_CLEC_BASE_ADDR;
     uint32_t              corepackIrq;
-
+/*
     corepackIrq = (corePackEvent - IPC_C7X_COMPUTE_CLUSTER_OFFSET) +
 #if defined(BUILD_C7X_1)
             C7X1_MBINTR_OFFSET;
 #else
             C7X2_MBINTR_OFFSET;
 #endif
+*/
 
+corepackIrq = 20;
 #if defined(BUILD_C7X_1)
-    input = IPC_C7X_COMPUTE_CLUSTER_OFFSET + 192;     /*192 is added as soc event is mapped to 192 onwrads in clec*/
+    //input = C7X1_CLEC_BASE_GR2_NAVSS + corepackIrq;
+    input = IPC_C7X_COMPUTE_CLUSTER_OFFSET + 256;
 #else
     input = C7X2_CLEC_BASE_GR2_NAVSS + corepackIrq;
 #endif

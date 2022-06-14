@@ -182,7 +182,7 @@ static uintptr_t g_Mailbox_BaseAddr[MAILBOX_CLUSTER_CNT] =
 
 Mailbox_HwCfg g_Mailbox_HwCfg[MAILBOX_MAX_INST][MAILBOX_MAX_INST] =
 {
-    /* Host Processor - A53-vm0 */
+     /* Host Processor - A53-vm0 */
     {
         { { 0xFFU, 0xFFU,  0U}, { 0xFFU, 0xFFU,  0U}, true, 0 },  /* Self - A53-vm0 */
         { {    0U,    1U,  2U}, {    0U,    1U,  2U}, true, 0 },  /* m4f_0 */
@@ -195,7 +195,7 @@ Mailbox_HwCfg g_Mailbox_HwCfg[MAILBOX_MAX_INST][MAILBOX_MAX_INST] =
     },
     /* Host Processor - c7x_1	*/
     {
-        { {    4U,    3U,  6U}, {    4U,    3U,  7U}, false, 0 },  /* Self - C7x-1 */
+        { {    0U,    0U,  6U}, {    0U,    0U,  7U}, false, 0 },  /* Self - C7x-1 */
         { { 0xFFU, 0xFFU,  0U}, { 0xFFU, 0xFFU,  0U}, false, 0 },  /* A53-vm0 */
     },
     /* Host Processor - r5f_0 */
