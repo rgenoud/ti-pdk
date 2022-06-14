@@ -543,14 +543,23 @@ int32_t Mailbox_getMailboxIntrRouterCfg(uint32_t selfId, uint32_t clusterId, uin
         case MAILBOX_INST_MCU1_0:
             if (clusterId == 0 && userId == 2)
             {
-                cfg->eventId = 255U;   /* interrupt line MCU1_0 */
+                cfg->eventId = 240U;   /* interrupt line MCU1_0 */
             }
             else
             {
                 retVal = MAILBOX_EINVAL;
             }
             break;
-
+        case MAILBOX_INST_C7X_1:
+            if (clusterId == 0 && userId == 1)
+            {
+                cfg->eventId = 256U;   /* interrupt line CX_1 */
+            }
+            else
+            {
+                retVal = MAILBOX_EINVAL;
+            }
+            break;
        default:
            retVal = MAILBOX_EINVAL;
             break;
