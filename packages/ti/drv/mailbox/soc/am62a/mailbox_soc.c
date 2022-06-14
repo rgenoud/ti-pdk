@@ -186,6 +186,7 @@ Mailbox_HwCfg g_Mailbox_HwCfg[MAILBOX_MAX_INST][MAILBOX_MAX_INST] =
     {
         { { 0xFFU, 0xFFU,  0U}, { 0xFFU, 0xFFU,  0U}, true, 0 },  /* Self - A53-vm0 */
         { {    0U,    1U,  2U}, {    0U,    1U,  2U}, true, 0 },  /* m4f_0 */
+        { {    0U,    1U,  2U}, {    0U,    1U,  2U}, true, 0 },  /* r5f_0 */
     },
     /* Host Processor - m4f_0 */
     {
@@ -196,7 +197,12 @@ Mailbox_HwCfg g_Mailbox_HwCfg[MAILBOX_MAX_INST][MAILBOX_MAX_INST] =
     {
         { {    4U,    3U,  6U}, {    4U,    3U,  7U}, false, 0 },  /* Self - C7x-1 */
         { { 0xFFU, 0xFFU,  0U}, { 0xFFU, 0xFFU,  0U}, false, 0 },  /* A53-vm0 */
-    }
+    },
+    /* Host Processor - r5f_0 */
+    {
+        { {    0U,    2U,  3U}, {    0U,    2U,  2U}, false, 0 },  /* A53-vm0 */
+        { { 0xFFU, 0xFFU,  0U}, { 0xFFU, 0xFFU,  0U}, false, 0 },  /* Self r5f0 */
+    },
 };
 
 /* ========================================================================== */
@@ -213,6 +219,8 @@ Mailbox_Instance Mailbox_getLocalEndPoint(void)
     localEndpoint = MAILBOX_INST_M4F_0;
 #elif defined (BUILD_C7X)
     localEndpoint = MAILBOX_INST_C7X_1;
+#elif defined (BUILD_MCU1_0)
+    localEndpoint = MAILBOX_INST_MCU1_0;
 #endif
     return localEndpoint;
 }
@@ -233,6 +241,11 @@ int32_t Mailbox_validateLocalEndPoint(Mailbox_Instance localEndpoint)
     }
 #elif defined (BUILD_C7X)
     if (localEndpoint != MAILBOX_INST_C7X_1)
+    {
+        retVal = MAILBOX_EINVAL;
+    }
+#elif defined (BUILD_MCU1_0)
+    if (localEndpoint != MAILBOX_INST_MCU1_0)
     {
         retVal = MAILBOX_EINVAL;
     }
@@ -527,8 +540,19 @@ int32_t Mailbox_getMailboxIntrRouterCfg(uint32_t selfId, uint32_t clusterId, uin
                 retVal = MAILBOX_EINVAL;
             }
             break;
-        default:
-            retVal = MAILBOX_EINVAL;
+        case MAILBOX_INST_MCU1_0:
+            if (clusterId == 0 && userId == 2)
+            {
+                cfg->eventId = 255U;   /* interrupt line MCU1_0 */
+            }
+            else
+            {
+                retVal = MAILBOX_EINVAL;
+            }
+            break;
+
+       default:
+           retVal = MAILBOX_EINVAL;
             break;
     }
 
