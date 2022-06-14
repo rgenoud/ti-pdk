@@ -70,7 +70,7 @@
 #include <ti/drv/sciclient/sciclient.h>
 #include <ti/board/board.h>
 
-#if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)))
+#if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_AM62A)))
 #include <ti/drv/sciclient/src/sciclient/sciclient_priv.h>
 #include <ti/drv/sciclient/sciserver_tirtos.h>
 #endif
@@ -86,7 +86,7 @@
 #define APP_TSK_STACK_MAIN              (32U * 1024U)
 /**< Test application stack size */
 
-#if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)))
+#if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_AM62A)))
 /**< SCI Server Init Task stack size */
 #define APP_SCISERVER_INIT_TSK_STACK        (32U * 1024U)
 /* SCI Server Init Task Priority - must be higher than High priority Sciserver task */
@@ -136,7 +136,7 @@ __attribute__ ((aligned(8192)));
 /* Variable to check if ipc_boardInit has completed or not*/
 uint8_t  gBoardinit=0;
 
-#if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)))
+#if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_AM62A)))
 /* Sciserver Init TAsk stack */
 #if defined(SAFERTOS)
 static uint8_t  gSciserverInitTskStack[APP_SCISERVER_INIT_TSK_STACK]
