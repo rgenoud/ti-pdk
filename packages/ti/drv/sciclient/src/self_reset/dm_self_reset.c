@@ -134,6 +134,19 @@ uint32_t dm_r5_self_reset(){
 
 	// TODO do this for second core also
 
+     /* Release the processor core(s) */
+    struct tisci_msg_proc_release_req proc_release_req = {
+        .hdr = {
+            .type = TISCI_MSG_PROC_RELEASE,
+	        .seq = 0,
+	        .flags = 0,
+            .host = TISCI_HOST_ID_MAIN_0_R5_0
+        },
+        .processor_id = SELF_RESET_PROCESSOR_ID
+    };
+
+    sproxy_send_msg_r5_to_tifs_fw(&proc_release_req , sizeof(proc_release_req));
+
 	/* 4. Call WFI */
 	 asm ( " WFI " );
 
