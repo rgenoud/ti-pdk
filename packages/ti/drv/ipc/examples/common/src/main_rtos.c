@@ -176,12 +176,6 @@ void ipc_initSciclient()
             App_printf("Sciclient_boardCfgParseHeader Failed\n");
         }
     }
-
-    if (ret == CSL_PASS)
-    {
-        App_sciclientConsoleInit();
-    }
-
 #endif
 
     if (ret == CSL_PASS)
