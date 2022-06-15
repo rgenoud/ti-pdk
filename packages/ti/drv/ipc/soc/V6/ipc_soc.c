@@ -83,10 +83,6 @@ uint32_t Ipc_rprocIdToMboxId(uint32_t id)
     {
         mbId = MAILBOX_INST_MCU1_0;
     }
-    else if (id == IPC_M4F_0)
-    {
-        mbId = MAILBOX_INST_M4F_0;
-    }
     else if (id == IPC_C7X_1)
     {
         mbId = MAILBOX_INST_C7X_1;
@@ -106,10 +102,6 @@ uint32_t Ipc_mboxIdToRprocId(uint32_t id)
     else if (id == MAILBOX_INST_MCU1_0)
     {
         procId = IPC_MCU1_0;
-    }
-    else if (id == MAILBOX_INST_M4F_0)
-    {
-        procId = IPC_M4F_0;
     }
     else if (id == MAILBOX_INST_C7X_1)
     {
