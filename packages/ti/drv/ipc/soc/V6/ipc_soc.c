@@ -54,9 +54,8 @@
 static Ipc_ProcInfo g_Ipc_mp_procInfo[IPC_MAX_PROCS] =
 {
     {IPC_MPU1_0,      "mpu1_0"},      /**< ARM A53 - VM0 */
-    {IPC_M4F_0,       "m4f_0"},        /**< ARM M4F */
-    {IPC_C7X_1,       "c7x_1"},        /**< DSP C7x - core0 */
     {IPC_MCU1_0,      "mcu1_0"},      /**< ARM Main R5F0 - core0 */
+    {IPC_C7X_1,       "c7x_1"},        /**< DSP C7x - core0 */
 };
 
 const char* Ipc_getCoreName(uint32_t procId)
