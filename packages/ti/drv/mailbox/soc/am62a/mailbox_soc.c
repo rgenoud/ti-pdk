@@ -540,7 +540,7 @@ int32_t Mailbox_getMailboxIntrRouterCfg(uint32_t selfId, uint32_t clusterId, uin
         case MAILBOX_INST_C7X_1:
             if (clusterId == 0 && userId == 1)
             {
-                cfg->eventId = 256U + CSLR_C7X256V0_CLEC_SOC_EVENTS_IN_MAILBOX0_MAILBOX_CLUSTER_0_MAILBOX_CLUSTER0_PEND_1;   /* interrupt line CX_1 */
+                cfg->eventId = 192U + CSLR_C7X256V0_CLEC_SOC_EVENTS_IN_MAILBOX0_MAILBOX_CLUSTER_0_MAILBOX_CLUSTER0_PEND_1;   /* interrupt line CX_1 */
             }
             else
             {
