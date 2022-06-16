@@ -8,6 +8,10 @@ MODULE_NAME = dmautils
 SRCDIR = src
 INCDIR = . src inc
 
+ifeq ($(SOC),$(filter $(SOC), am62a))
+DMA_UTILS_STANDALONE:=1
+endif
+
 ifeq ($(DMA_UTILS_STANDALONE), 1)
 $(info Building in standalone mode with only csl depdendency)
 DMAUTILS_CFLAGS=-DDMA_UTILS_STANDALONE
