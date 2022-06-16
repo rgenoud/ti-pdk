@@ -164,7 +164,7 @@ uint32_t remoteProc[] =
 #elif defined (SOC_AM64X)
     IPC_MPU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1, IPC_M4F_0
 #elif defined (SOC_AM62A)
-    IPC_MPU1_0,
+    IPC_MPU1_0, IPC_C7X_1
 #elif defined (SOC_J721S2)
     IPC_MPU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1, IPC_MCU3_0, IPC_MCU3_1, IPC_C7X_1, IPC_C7X_2
 #elif defined (SOC_J784S4)

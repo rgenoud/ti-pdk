@@ -61,10 +61,9 @@ extern "C" {
 
 /** \brief Core definitions */
 #define    IPC_MPU1_0           (0U)    /**< ARM A53 - VM0 */
-#define    IPC_M4F_0            (1U)    /**< ARM MCU  M4F */
+#define    IPC_MCU1_0           (1U)    /**< ARM Main R5F0 - core0 */
 #define    IPC_C7X_1            (2U)    /**< DSP C7x - core0 */
-#define    IPC_MCU1_0           (3U)    /**< ARM Main R5F0 - core0 */
-#define    IPC_MAX_PROCS        (4U)    /**< Maximum Processors */
+#define    IPC_MAX_PROCS        (3U)    /**< Maximum Processors */
 
 /* ========================================================================== */
 /*                             Include Files                                  */
