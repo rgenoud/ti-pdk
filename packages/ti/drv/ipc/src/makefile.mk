@@ -30,7 +30,7 @@ INCLUDE_EXTERNAL_INTERFACES += osal_qnx csl_init
 endif
 
 # Common source files and CFLAGS across all platforms and cores
-SRCS_COMMON += ipc_api.c ipc_mp.c ipc_soc.c ipc_virtio.c ipc_utils.c ipc_mailbox.c
+SRCS_COMMON += ipc_api.c ipc_mp.c ipc_soc.c ipc_virtio.c ipc_utils.c
 ifeq ($(BUILD_OS_TYPE), qnx)
 SRCS_COMMON += ipc_osal_qnx.c
 else

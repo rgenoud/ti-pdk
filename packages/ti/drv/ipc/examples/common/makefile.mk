@@ -39,6 +39,9 @@ endif
 ifeq ($(BUILD_OS_TYPE), freertos)
   COMP_LIST_COMMON =  $(PDK_COMMON_FREERTOS_COMP)
   COMP_LIST_COMMON += ipc
+   ifeq ($(SOC),$(filter $(SOC), am62a))
+      COMP_LIST_COMMON += mailbox
+  endif
   ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 am62a))
     ifeq ($(CORE),mcu1_0)
       COMP_LIST_COMMON += sciserver_tirtos
