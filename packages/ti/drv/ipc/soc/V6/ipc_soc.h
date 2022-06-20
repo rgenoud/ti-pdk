@@ -100,7 +100,7 @@ uint32_t Ipc_rprocIdToMboxId(uint32_t id);
 uint32_t Ipc_mboxIdToRprocId(uint32_t id);
 
 #if defined(BUILD_C7X_1) || defined(BUILD_C7X_2)
-void Ipc_configClecRouter(uint32_t coreEvent);
+uint32_t Ipc_configClecRouter(uint32_t corePackEvent, uint32_t corePackEventBase);
 #endif
 
 /* ========================================================================== */

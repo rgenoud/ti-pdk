@@ -143,28 +143,22 @@ uint32_t Ipc_isCacheCoherent(void)
 }
 
 #if defined(BUILD_C7X_1) || defined(BUILD_C7X_2)
-void Ipc_configClecRouter(uint32_t corePackEvent)
+uint32_t Ipc_configClecRouter(uint32_t corePackEvent, uint32_t corePackEventBase)
 {
     uint32_t              input;
     CSL_ClecEventConfig   cfgClec;
     CSL_CLEC_EVTRegs     *clecBaseAddr = (CSL_CLEC_EVTRegs*)C7X_CLEC_BASE_ADDR;
     uint32_t              corepackIrq;
-/*
-    corepackIrq = (corePackEvent - IPC_C7X_COMPUTE_CLUSTER_OFFSET) +
-#if defined(BUILD_C7X_1)
-            C7X1_MBINTR_OFFSET;
-#else
-            C7X2_MBINTR_OFFSET;
-#endif
-*/
 
-corepackIrq = 20;
-#if defined(BUILD_C7X_1)
+    corepackIrq = 20;//(corePackEvent - corePackEventBase) + IPC_C7X_MBINTR_OFFSET;
+
+    #if defined(BUILD_C7X_1)
     //input = C7X1_CLEC_BASE_GR2_NAVSS + corepackIrq;
     input = IPC_C7X_COMPUTE_CLUSTER_OFFSET + 192;     /*192 is added as soc event is mapped to 192 onwrads in clec*/
-#else
-    input = C7X2_CLEC_BASE_GR2_NAVSS + corepackIrq;
-#endif
+    #else
+    input = corePackEvent + C7X_CLEC_OFFSET;
+    #endif
+    
 
     /* Configure CLEC */
     cfgClec.secureClaimEnable = FALSE;
@@ -173,5 +167,7 @@ corepackIrq = 20;
     cfgClec.extEvtNum         = 0U;
     cfgClec.c7xEvtNum         = corepackIrq;
     CSL_clecConfigEvent(clecBaseAddr, input, &cfgClec);
+
+    return corepackIrq;
 }
 #endif
