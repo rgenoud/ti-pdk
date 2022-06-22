@@ -338,7 +338,6 @@ typedef uint8_t devgrp_t;
 #define TISCI_SEC_PROXY_DM2DMSC_READ_RESPONSE_THREAD_ID \
 	TISCI_SEC_PROXY_DM2TIFS_READ_RESPONSE_THREAD_ID
 #endif
-
 #if defined (SOC_J784S4)
 #include <ti/drv/sciclient/soc/sysfw/include/j784s4/tisci_resasg_types.h>
 #include <ti/drv/sciclient/soc/sysfw/include/j784s4/tisci_hosts.h>

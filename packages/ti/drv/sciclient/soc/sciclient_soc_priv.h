@@ -63,7 +63,6 @@
 #include <ti/drv/sciclient/soc/V4/sciclient_soc_priv.h>
 #endif
 
-
 #if defined (SOC_J784S4)
 #include <ti/drv/sciclient/soc/V6/sciclient_soc_priv.h>
 #endif

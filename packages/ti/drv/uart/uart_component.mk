@@ -72,6 +72,9 @@ drvuart_RTOS_LIST 		= $(DEFAULT_RTOS_LIST)
 drvuart_BOARDLIST       = am65xx_evm am65xx_idk j721e_sim j721e_evm j7200_evm am64x_evm
 drvuart_BOARDLIST      += tpr12_evm tpr12_qt awr294x_evm j721s2_evm j784s4_evm am62x_evm am62a_evm
 
+drv_dma_uart_BOARDLIST  = am65xx_evm am65xx_idk j721e_sim j721e_evm j7200_evm am64x_evm
+drv_dma_uart_BOARDLIST  += tpr12_evm tpr12_qt awr294x_evm j721s2_evm j784s4_evm
+
 drvuart_SOCLIST         = tda2xx tda2px tda2ex tda3xx dra78x am574x am572x am571x dra72x
 drvuart_SOCLIST        += dra75x k2h k2k k2l k2e k2g c6678 c6657 am437x am335x omapl137
 drvuart_SOCLIST        += omapl138 am65xx j721e j7200 am64x tpr12 awr294x j721s2 j784s4 am62x am62a
@@ -317,7 +320,7 @@ export UART_Baremetal_DMA_TestApp_CORE_DEPENDENCY = no
 export UART_Baremetal_DMA_TestApp_MAKEFILE = -f makefile BUILD_OS_TYPE=baremetal DMA=enable
 UART_Baremetal_DMA_TestApp_PKG_LIST = UART_Baremetal_DMA_TestApp
 UART_Baremetal_DMA_TestApp_INCLUDE = $(UART_Baremetal_DMA_TestApp_PATH)
-export UART_Baremetal_DMA_TestApp_BOARDLIST = $(drvuart_BOARDLIST)
+export UART_Baremetal_DMA_TestApp_BOARDLIST = $(drv_dma_uart_BOARDLIST)
 ifeq ($(SOC),$(filter $(SOC), j721e j7200 am64x j721s2 j784s4))
 export UART_Baremetal_DMA_TestApp_$(SOC)_CORELIST = $(drvuart_$(SOC)_CORELISTARM)
 else
@@ -376,7 +379,7 @@ export UART_DMA_TestApp_$(1)_XDC_CONFIGURO =  $(if $(findstring tirtos,$(1)),yes
 export UART_DMA_TestApp_$(1)_MAKEFILE = -f makefile BUILD_OS_TYPE=$(1) DMA=enable
 UART_DMA_TestApp_$(1)_PKG_LIST = UART_DMA_TestApp_$(1)
 UART_DMA_TestApp_$(1)_INCLUDE = $(UART_DMA_TestApp_$(1)_PATH)
-export UART_DMA_TestApp_$(1)_BOARDLIST = $(filter $(DEFAULT_BOARDLIST_$(1)), $(drvuart_BOARDLIST))
+export UART_DMA_TestApp_$(1)_BOARDLIST = $(filter $(DEFAULT_BOARDLIST_$(1)), $(drv_dma_uart_BOARDLIST))
 ifeq ($(SOC),$(filter $(SOC), j721e j7200 am64x j721s2 j784s4))
 export UART_DMA_TestApp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), $(drvuart_$(SOC)_CORELISTARM))
 else
