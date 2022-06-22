@@ -303,7 +303,7 @@ export UART_Baremetal_TestApp_BOARDLIST = $(drvuart_BOARDLIST)
 ifeq ($(SOC),$(filter $(SOC), j721e j7200 am64x j721s2 j784s4))
 export UART_Baremetal_TestApp_$(SOC)_CORELIST = $(drvuart_$(SOC)_CORELISTARM)
 else
-export UART_Baremetal_TestApp_$(SOC)_CORELIST = $(drvuart_$(SOC)_CORELIST)
+export UART_Baremetal_TestApp_$(SOC)_CORELIST = $(filter-out c7x_1, $(drvuart_$(SOC)_CORELIST))
 endif
 ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200 am64x j721s2 j784s4))
 export UART_Baremetal_TestApp_SBL_APPIMAGEGEN = yes
@@ -347,7 +347,7 @@ export UART_TestApp_$(1)_BOARDLIST = $(filter $(DEFAULT_BOARDLIST_$(1)), $(drvua
 ifeq ($(SOC),$(filter $(SOC), am64x))
 export UART_TestApp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1)
 else
-export UART_TestApp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), $(drvuart_$(SOC)_CORELIST))
+export UART_TestApp_$(1)_$(SOC)_CORELIST = $(filter-out c7x_1 $(DEFAULT_$(SOC)_CORELIST_$(1)), $(drvuart_$(SOC)_CORELIST))
 endif
 ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200 am64x tpr12 awr294x j721s2 j784s4))
 export UART_TestApp_$(1)_SBL_APPIMAGEGEN = yes

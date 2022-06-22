@@ -235,7 +235,7 @@ export rm_pm_hal_PKG_LIST = rm_pm_hal
 export rm_pm_hal_INCLUDE = $(rm_pm_hal_PATH)
 export rm_pm_hal_SOCLIST = j721e j7200 j721s2 j784s4 am62x am62a
 export rm_pm_hal_BOARDLIST = j721e_evm j7200_evm j721s2_evm j784s4_evm am62x_evm am62a_evm
-export rm_pm_hal_$(SOC)_CORELIST = mcu1_0 c7x_1
+export rm_pm_hal_$(SOC)_CORELIST = mcu1_0
 
 export dm_stub_COMP_LIST = dm_stub
 export dm_stub_RELPATH = ti/drv/sciclient/src/rm_pm_hal
@@ -250,7 +250,7 @@ export dm_stub_PKG_LIST = dm_stub
 export dm_stub_INCLUDE = $(dm_stub_PATH)
 export dm_stub_SOCLIST = am62x am62a
 export dm_stub_BOARDLIST = am62x_evm am62a_evm
-export dm_stub_$(SOC)_CORELIST = mcu1_0 c7x_1
+export dm_stub_$(SOC)_CORELIST = mcu1_0
 
 
 export self_reset_COMP_LIST = self_reset
@@ -266,7 +266,7 @@ export self_reset_PKG_LIST = self_reset
 export self_reset_INCLUDE = $(self_reset_PATH)
 export self_reset_SOCLIST = am62x am62a
 export self_reset_BOARDLIST = am62x_evm am62a_evm
-export self_reset_$(SOC)_CORELIST = mcu1_0 c7x_1
+export self_reset_$(SOC)_CORELIST = mcu1_0
 
 ############################
 # sciclient examples
@@ -358,7 +358,7 @@ export sciclient_unit_testapp_$(1)_BOARD_DEPENDENCY = no
 export sciclient_unit_testapp_$(1)_CORE_DEPENDENCY = yes
 export sciclient_unit_testapp_$(1)_PKG_LIST = sciclient_unit_testapp_$(1)
 export sciclient_unit_testapp_$(1)_INCLUDE = $(sciclient_unit_testapp_$(1)_PATH)
-export sciclient_unit_testapp_$(1)_BOARDLIST = $(filter $(DEFAULT_BOARDLIST_$(1)), am65xx_evm j721e_sim j721e_evm am64x_evm j7200_evm j721s2_evm j784s4_evm)
+export sciclient_unit_testapp_$(1)_BOARDLIST = $(filter $(DEFAULT_BOARDLIST_$(1)), am65xx_evm j721e_sim j721e_evm am64x_evm j7200_evm j721s2_evm j784s4_evm am62a_evm)
 
 ifeq ($(SOC),am64x)
 # No M4F for the RTOS App

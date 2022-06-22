@@ -995,7 +995,7 @@ int32_t App_pmSetFrequency(void)
 }
 
 #endif
-#if defined(BUILD_MPU) || defined (__C7100__)
+#if defined(BUILD_MPU) || defined (__C7100__) || defined (BUILD_C7X)
 extern void Osal_initMmuDefault(void);
 void InitMmu(void)
 {
