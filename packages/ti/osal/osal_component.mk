@@ -85,6 +85,7 @@ endif
 
 libosal_safertos_j721e_CORELIST   = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 c66xdsp_1 c66xdsp_2 c7x_1
 libosal_am62x_CORELIST = $(DEFAULT_am62x_CORELIST)
+libosal_am62a_CORELIST = $(DEFAULT_am62a_CORELIST)
 libosal_freertos_am62x_CORELIST = mcu1_0
 libosal_freertos_am62a_CORELIST = mcu1_0
 
@@ -202,7 +203,11 @@ export OSAL_Baremetal_TestApp_CORE_DEPENDENCY = no
 OSAL_Baremetal_TestApp_PKG_LIST = OSAL_Baremetal_TestApp
 OSAL_Baremetal_TestApp_INCLUDE = $(OSAL_Baremetal_TestApp_PATH)
 export OSAL_Baremetal_TestApp_BOARDLIST = $(libosal_BOARDLIST)
+ifeq ($(SOC),$(filter $(SOC), am62x am62a))
+export OSAL_Baremetal_TestApp_SBL_APPIMAGEGEN = no
+else
 export OSAL_Baremetal_TestApp_SBL_APPIMAGEGEN = yes
+endif
 osal_EXAMPLE_LIST += OSAL_Baremetal_TestApp
 
 define OSAL_TestApp_RULE
@@ -224,7 +229,11 @@ ifneq ($(wildcard $(SAFERTOS_KERNEL_INSTALL_PATH)),)
 osal_EXAMPLE_LIST += OSAL_TestApp_$(1)
 endif
 endif
+ifeq ($(SOC),$(filter $(SOC), am62x am62a))
+export OSAL_TestApp_$(1)_SBL_APPIMAGEGEN = no
+else
 export OSAL_TestApp_$(1)_SBL_APPIMAGEGEN = yes
+endif
 
 endef
 

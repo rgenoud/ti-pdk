@@ -74,7 +74,6 @@
 #include <ti/drv/sciclient/soc/V4/sciclient_defaultBoardcfg.h>
 #endif
 
-
 #if defined (SOC_J784S4)
 #include <ti/drv/sciclient/soc/V6/sciclient_defaultBoardcfg.h>
 #endif
