@@ -53,8 +53,8 @@ ifeq ($(BUILD_OS_TYPE), qnx)
 drvmailbox_am62x_CORELIST += qnx_mpu1_0
 endif
 
-drvmailbox_BOARDLIST        = tpr12_evm tpr12_qt am64x_evm awr294x_evm am62x_evm am62a_evm
-drvmailbox_k3_BOARDLIST     = am64x_evm am62x_evm am62a_evm
+drvmailbox_BOARDLIST        = tpr12_evm tpr12_qt am64x_evm awr294x_evm
+drvmailbox_k3_BOARDLIST     = am64x_evm
 drvmailbox_tpr_BOARDLIST    = tpr12_evm tpr12_qt awr294x_evm
 drvmailbox_safertos_tpr_BOARDLIST    = tpr12_evm
 
@@ -133,7 +133,7 @@ export mailbox_perf_testapp_XDC_CONFIGURO = yes
 mailbox_perf_testapp_PKG_LIST = mailbox_perf_testapp
 mailbox_perf_testapp_INCLUDE = $(mailbox_perf_testapp_PATH)
 export mailbox_perf_testapp_BOARDLIST = $(drvmailbox_k3_BOARDLIST)
-export mailbox_perf_testapp_$(SOC)_CORELIST = $(drvmailbox_$(SOC)_rtos_CORELIST)
+export mailbox_perf_testapp_$(SOC)_CORELIST = $(filter-out c7x_1, $(drvmailbox_$(SOC)_rtos_CORELIST))
 mailbox_EXAMPLE_LIST += mailbox_perf_testapp
 export mailbox_perf_testapp_SBL_APPIMAGEGEN = yes
 
@@ -147,7 +147,7 @@ export mailbox_baremetal_perf_testapp_CORE_DEPENDENCY = yes
 mailbox_baremetal_perf_testapp_PKG_LIST = mailbox_baremetal_perf_testapp
 mailbox_baremetal_perf_testapp_INCLUDE = $(mailbox_baremetal_perf_testapp_PATH)
 export mailbox_baremetal_perf_testapp_BOARDLIST = $(drvmailbox_k3_BOARDLIST)
-export mailbox_baremetal_perf_testapp_$(SOC)_CORELIST = $(drvmailbox_$(SOC)_CORELIST)
+export mailbox_baremetal_perf_testapp_$(SOC)_CORELIST = $(filter-out c7x_1, $(drvmailbox_$(SOC)_CORELIST))
 mailbox_EXAMPLE_LIST += mailbox_baremetal_perf_testapp
 export mailbox_baremetal_perf_testapp_SBL_APPIMAGEGEN = yes
 
@@ -162,7 +162,7 @@ export mailbox_baremetal_multicore_perf_testapp_CORE_DEPENDENCY = yes
 mailbox_baremetal_multicore_perf_testapp_PKG_LIST = mailbox_baremetal_multicore_perf_testapp
 mailbox_baremetal_multicore_perf_testapp_INCLUDE = $(mailbox_baremetal_multicore_perf_testapp_PATH)
 export mailbox_baremetal_multicore_perf_testapp_BOARDLIST = $(drvmailbox_k3_BOARDLIST)
-export mailbox_baremetal_multicore_perf_testapp_$(SOC)_CORELIST := $(drvmailbox_$(SOC)_LASTCORE)
+export mailbox_baremetal_multicore_perf_testapp_$(SOC)_CORELIST := $(filter-out c7x_1, $(drvmailbox_$(SOC)_LASTCORE))
 mailbox_DUP_EXAMPLE_LIST += mailbox_baremetal_multicore_perf_testapp
 mailbox_baremetal_multicore_perf_testapp_SBL_APPIMAGEGEN = no
 export mailbox_baremetal_multicore_perf_testapp_SBL_APPIMAGEGEN
@@ -177,8 +177,8 @@ export mailbox_multicore_perf_testapp_BOARD_DEPENDENCY = yes
 export mailbox_multicore_perf_testapp_CORE_DEPENDENCY = yes
 mailbox_multicore_perf_testapp_PKG_LIST = mailbox_multicore_perf_testapp
 mailbox_multicore_perf_testapp_INCLUDE = $(mailbox_multicore_perf_testapp_PATH)
-export mailbox_multicore_perf_testapp_BOARDLIST = $(drvmailbox_k3_BOARDLIST)
-export mailbox_multicore_perf_testapp_$(SOC)_CORELIST := $(drvmailbox_$(SOC)_rtos_LASTCORE)
+export mailbox_multicore_perf_testapp_BOARDLIST = $(filter-out am62a_evm, $(drvmailbox_k3_BOARDLIST))
+export mailbox_multicore_perf_testapp_$(SOC)_CORELIST := $(filter-out c7x_1, $(drvmailbox_$(SOC)_rtos_LASTCORE))
 mailbox_DUP_EXAMPLE_LIST += mailbox_multicore_perf_testapp
 mailbox_multicore_perf_testapp_SBL_APPIMAGEGEN = no
 export mailbox_multicore_perf_testapp_SBL_APPIMAGEGEN

@@ -38,7 +38,7 @@ endif
 
 COMP = drvipc
 
-lib_$(COMP)_BUILD_DEPENDENCY = board drvmailbox drvsciclient
+lib_$(COMP)_BUILD_DEPENDENCY = board drvmailbox
 
 $(COMP)_DOXYGEN_SUPPORT = yes
 

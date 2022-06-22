@@ -19,7 +19,7 @@ endif
   MMWAVE_DFP_VERSION=02_04_00_01
 
 ifeq ($(BOARD),$(filter $(BOARD), am62a_evm ))
-  CGT_C7X_VERSION=2.2.0A22110
+  CGT_C7X_VERSION=2.2.0A22172
 else
   CGT_C7X_VERSION=2.1.1.LTS
 endif
