@@ -182,15 +182,15 @@ static uintptr_t g_Mailbox_BaseAddr[MAILBOX_CLUSTER_CNT] =
 
 Mailbox_HwCfg g_Mailbox_HwCfg[MAILBOX_MAX_INST][MAILBOX_MAX_INST] =
 {
-    /* Host Processor - A53-vm0 */
+    /* Host Processor - A53-vm0 cluster user fifo */
     {
         { { 0xFFU, 0xFFU,  0U}, { 0xFFU, 0xFFU,  0U}, true, 0 },  /* Self - A53-vm0 */
-        { {    0U,    1U,  2U}, {    0U,    1U,  2U}, true, 0 },  /* m4f_0 */
+        { {    0U,    0U,  2U}, {    0U,    0U,  3U}, true, 0 },  /* DM_r5f_0 */
     },
-    /* Host Processor - m4f_0 */
+    /* Host Processor - r5f_0 */
     {
-        { {    0U,    0U,  0U }, {    0U,    0U,  0U}, false, 0 }, /* A53-vm0 */
-        { { 0xFFU, 0xFFU,  0U }, { 0xFFU, 0xFFU,  0U}, false, 0 }, /* Self - m4f_0 */
+        { {    0U,    1U,  3U }, {    0U,    1U,  2U}, false, 0 }, /* A53-vm0 */
+        { { 0xFFU, 0xFFU,  0U }, { 0xFFU, 0xFFU,  0U}, false, 0 }, /* DM R5 */
     }
 };
 
@@ -204,8 +204,8 @@ Mailbox_Instance Mailbox_getLocalEndPoint(void)
 
 #if defined (BUILD_MPU1_0)
     localEndpoint = MAILBOX_INST_MPU1_0;
-#elif defined (BUILD_M4F_0)
-    localEndpoint = MAILBOX_INST_M4F_0;
+#elif defined (BUILD_MCU1_0)
+    localEndpoint = MAILBOX_INST_MCU1_0;
 #endif
 
     return localEndpoint;
@@ -220,8 +220,8 @@ int32_t Mailbox_validateLocalEndPoint(Mailbox_Instance localEndpoint)
     {
         retVal = MAILBOX_EINVAL;
     }
-#elif defined (BUILD_M4F_0)
-    if (localEndpoint != MAILBOX_INST_M4F_0)
+#elif defined (BUILD_MCU1_0)
+    if (localEndpoint != MAILBOX_INST_MCU1_0)
     {
         retVal = MAILBOX_EINVAL;
     }
@@ -494,30 +494,41 @@ int32_t Mailbox_getMailboxIntrRouterCfg(uint32_t selfId, uint32_t clusterId, uin
 {
     int32_t    retVal         = MAILBOX_SOK;
 
+
     switch(selfId)
     {
         case MAILBOX_INST_MPU1_0:
-            if (clusterId == 0 && userId == 1)
+            if (clusterId == 0 && userId == 0)
             {
                 cfg->eventId = 108U;   /* interrupt line on A53SS0_0 CPU */
             }
-            else
+            else if (clusterId == 0 && userId == 0)
             {
-                retVal = MAILBOX_EINVAL;
+                cfg->eventId = 109U;   /* interrupt line on A53SS0_1 CPU */
             }
+	    else {
+		    retVal = MAILBOX_EINVAL;
+	    }
             break;
-        case MAILBOX_INST_M4F_0:
-            if (clusterId == 0 && userId == 0)
-            {
-                cfg->eventId = 16U + 50U;   /* interrupt line on M4FSS CPU, +16 offset to account for M4 internal interrupts */
-            }
-            else
-            {
-                retVal = MAILBOX_EINVAL;
-            }
-            break;
+
+	case MAILBOX_INST_MCU1_0:
+	    if (clusterId == 0 && userId == 3)
+	    {
+		    cfg->eventId = 255U;   /* interrupt line MCU1_0 */
+	    }
+	    else if (clusterId == 0 && userId == 1)
+	    {
+		    cfg->eventId = 254U;   /* interrupt line MCU1_0 */
+	    }
+	    else
+	    {
+		    retVal = MAILBOX_EINVAL;
+	    }
+	    break;
+
         default:
-            retVal = MAILBOX_EINVAL;
+
+	    retVal = MAILBOX_EINVAL;
             break;
     }
 
@@ -542,17 +553,14 @@ static inline void Mailbox_directClrNewMsgStatus(Mbox_Handle handle)
 
 __attribute__((interrupt("IRQ")))     void mailboxIsr_0(void);
 __attribute__((interrupt("IRQ")))     void mailboxIsr_1(void);
-__attribute__((interrupt("IRQ")))     void mailboxIsr_2(void);
-__attribute__((interrupt("IRQ")))     void mailboxIsr_3(void);
-__attribute__((interrupt("IRQ")))     void mailboxIsr_4(void);
 __attribute__((interrupt("IRQ")))     void mailboxIsr_5(void);
 
 
 
 #ifdef __cplusplus
-#pragma CODE_STATE (32)
+__attribute__((target("code_state")))
 #else
-#pragma CODE_STATE (mailboxIsr_0,32)
+ __attribute__((target("code_state"))) void mailboxIsr_0(void);
 #endif  /* #ifdef __cplusplus */
 void mailboxIsr_0(void)
 {
@@ -561,24 +569,20 @@ void mailboxIsr_0(void)
 }
 
 #ifdef __cplusplus
-#pragma CODE_STATE (32)
+__attribute__((target("code_state")))
 #else
-#pragma CODE_STATE (mailboxIsr_5,32)
+__attribute__((target("code_state"))) void mailboxIsr_1(void);
 #endif  /* #ifdef __cplusplus */
-void mailboxIsr_5(void)
+void mailboxIsr_1(void)
 {
-    (g_VimCallback[MAILBOX_INST_M4F_0])(g_VimCallbackArg[MAILBOX_INST_M4F_0], MAILBOX_INST_M4F_0);
-    Mailbox_directClrNewMsgStatus(g_VimCallbackArg[MAILBOX_INST_M4F_0]);
+    (g_VimCallback[MAILBOX_INST_MCU1_0])(g_VimCallbackArg[MAILBOX_INST_MCU1_0], MAILBOX_INST_MCU1_0);
+    Mailbox_directClrNewMsgStatus(g_VimCallbackArg[MAILBOX_INST_MCU1_0]);
 }
 
 uintptr_t mailboxIsrArray[6] =
 {
     (uintptr_t)&mailboxIsr_0,
     (uintptr_t)&mailboxIsr_1,
-    (uintptr_t)&mailboxIsr_2,
-    (uintptr_t)&mailboxIsr_3,
-    (uintptr_t)&mailboxIsr_4,
-    (uintptr_t)&mailboxIsr_5
 };
 #endif
 
