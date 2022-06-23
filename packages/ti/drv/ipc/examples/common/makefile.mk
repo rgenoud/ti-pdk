@@ -39,10 +39,10 @@ endif
 ifeq ($(BUILD_OS_TYPE), freertos)
   COMP_LIST_COMMON =  $(PDK_COMMON_FREERTOS_COMP)
   COMP_LIST_COMMON += ipc
-   ifeq ($(SOC),$(filter $(SOC), am62a))
+   ifeq ($(SOC),$(filter $(SOC), am62a am62x))
       COMP_LIST_COMMON += mailbox
   endif
-  ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 am62a))
+  ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 am62a am62x))
     ifeq ($(CORE),mcu1_0)
       COMP_LIST_COMMON += sciserver_tirtos
     endif
@@ -69,8 +69,8 @@ ifeq ($(BUILD_OS_TYPE), freertos)
   EXTERNAL_LNKCMD_FILE_LOCAL = $(PDK_INSTALL_PATH)/ti/drv/ipc/examples/common/$(SOC)/$(BUILD_OS_TYPE)/linker_$(ISA)_$(CORE)_$(BUILD_OS_TYPE).lds
   ifeq ($(ECHO_TEST_BTCM), 1)
     ifeq ($(ISA), r5f)
-      ifeq ($(SOC),$(filter $(SOC), am62a))
-        EXTERNAL_LNKCMD_FILE_LOCAL = $(PDK_INSTALL_PATH)/ti/build/am62a/linker_r5_freertos_btcm.lds
+      ifeq ($(SOC),$(filter $(SOC), am62a am62x))
+        EXTERNAL_LNKCMD_FILE_LOCAL = $(PDK_INSTALL_PATH)/ti/build/$(SOC)/linker_r5_freertos_btcm.lds
        else
         EXTERNAL_LNKCMD_FILE_LOCAL = $(PDK_INSTALL_PATH)/ti/drv/ipc/examples/common/$(SOC)/$(BUILD_OS_TYPE)/linker_$(ISA)_$(CORE)_btcm_$(BUILD_OS_TYPE).lds
        endif
