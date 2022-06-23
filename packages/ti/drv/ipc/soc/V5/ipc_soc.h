@@ -61,7 +61,7 @@ extern "C" {
 
 /** \brief Core definitions */
 #define    IPC_MPU1_0           (0U)    /**< ARM A53 - VM0 */
-#define    IPC_M4F_0            (1U)    /**< ARM MCU  M4F */
+#define    IPC_MCU1_0            (1U)    /**< ARM MCU  M4F */
 #define    IPC_MAX_PROCS        (2U)    /**< Maximum Processors */
 
 /* ========================================================================== */
