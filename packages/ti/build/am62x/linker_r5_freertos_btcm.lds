@@ -42,7 +42,8 @@ MEMORY
    
     /* am62x HSM RAM location */
     HSM_RAM             (RWIX)      : ORIGIN = 0x43C00000 LENGTH = 0x3FF00
-    DDR                 (RWIX)      : ORIGIN = 0x9DB00000 LENGTH = 0x200000
+    DDR                 (RWIX)      : ORIGIN = 0x9DC00000 LENGTH = 0xb00000
+    DDR_MCU1_0          (RWIX)      : ORIGIN = 0x9BC00000 LENGTH = 0xf00000
 }
 
 /*--------------------------------------------------------------*/
@@ -112,7 +113,18 @@ SECTIONS
     .boardcfg_data   : {} align(4)       > DDR
 
     /* USB or any other LLD buffer for benchmarking */
-    .benchmark_buffer (NOLOAD) {} ALIGN (8) > DDR
+    GROUP {
+	    .resource_table          : {} palign(4096)
+	    {
+		    __RESOURCE_TABLE = .;
+	    }
+
+	    .tracebuf                : {} align(1024)
+
+             ipc_data_buffer (NOINIT) : {} palign(128)
+            .benchmark_buffer (NOLOAD) {} ALIGN (8)
+
+    } > DDR_MCU1_0
 
     .stack      : {} align(4)                               > DDR  (HIGH)
 
