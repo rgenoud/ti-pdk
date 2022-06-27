@@ -125,3 +125,6 @@ struct Sciclient_rmIrInst gRmIrInstances[SCICLIENT_RM_IR_NUM_INST] =
         .n_rom_usage    = 0U,
     },
 };
+
+const struct Sciclient_rmIrqNode * const gRmIrqTree[] = { };
+const uint32_t gRmIrqTreeCount = sizeof(gRmIrqTree)/sizeof(gRmIrqTree[0]);
