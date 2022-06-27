@@ -248,8 +248,8 @@ export dm_stub_BOARD_DEPENDENCY = no
 export dm_stub_CORE_DEPENDENCY = yes
 export dm_stub_PKG_LIST = dm_stub
 export dm_stub_INCLUDE = $(dm_stub_PATH)
-export dm_stub_SOCLIST = am62x am62a
-export dm_stub_BOARDLIST = am62x_evm am62a_evm
+export dm_stub_SOCLIST = am62x
+export dm_stub_BOARDLIST = am62x_evm
 export dm_stub_$(SOC)_CORELIST = mcu1_0
 
 
