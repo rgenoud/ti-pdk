@@ -198,6 +198,29 @@ extern "C" {
 #define SCICLIENT_DEV_MCU_R5FSS0_CORE0  (TISCI_DEV_R5FSS0_CORE0)
 #define SCICLIENT_DEV_MCU_R5FSS0_CORE1  (TISCI_DEV_R5FSS0_CORE0)
 /* @} */
+
+/**
+ * \brief Special ISC ID to refer to compute cluster privid registers
+ */
+#define TISCI_ISC_CC_ID                (160U)
+/* @} */
+
+/**
+ *  \anchor Sciclient_IrqSrcIdxStart
+ *  \name IRQ source index start
+ *  @{
+ *  Start offset of IRQ source index.
+ */
+#define TISCI_RINGACC0_OES_IRQ_SRC_IDX_START        (0U)
+#define TISCI_RINGACC0_MON_IRQ_SRC_IDX_START        (1024U)
+#define TISCI_RINGACC0_EOES_IRQ_SRC_IDX_START       (2048U)
+#define TISCI_UDMAP0_TX_OES_IRQ_SRC_IDX_START       (0U)
+#define TISCI_UDMAP0_TX_EOES_IRQ_SRC_IDX_START      (512U)
+#define TISCI_UDMAP0_RX_OES_IRQ_SRC_IDX_START       (1024U)
+#define TISCI_UDMAP0_RX_EOES_IRQ_SRC_IDX_START      (1280U)
+#define TISCI_UDMAP0_RX_FLOW_EOES_IRQ_SRC_IDX_START (1536U)
+/* @} */
+
 /**
  *  \anchor Sciclient_McuR5fProcIds
  *  \name MCU Pulsar Processor IDs
