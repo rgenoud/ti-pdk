@@ -181,7 +181,7 @@ export sciserver_tirtos_PKG_LIST = sciserver_tirtos
 export sciserver_tirtos_INCLUDE = $(sciserver_PATH)
 export sciserver_tirtos_SOCLIST = j721e j7200 j721s2 j784s4 am62x am62a
 export sciserver_tirtos_BOARDLIST = j721e_evm j7200_evm j721s2_evm j784s4_evm am62x_evm am62a_evm
-export sciserver_tirtos_$(SOC)_CORELIST = mcu1_0 c7x_1
+export sciserver_tirtos_$(SOC)_CORELIST = mcu1_0
 
 export sciserver_baremetal_COMP_LIST = sciserver_baremetal
 export sciserver_baremetal_RELPATH = ti/drv/sciserver_baremetal
