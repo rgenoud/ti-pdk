@@ -152,6 +152,17 @@ extern Sciclient_ServiceHandle_t gSciclientHandle;
 /*                          Function Definitions                              */
 /* ========================================================================== */
 
+#if (!defined(A72_LINUX_OS) || ((defined (SOC_AM62X) || defined (SOC_AM62A)) && defined (BUILD_MCU1_0)))
+void ipc_boardInit()
+{
+    Board_initCfg           boardCfg;
+
+    boardCfg = BOARD_INIT_PINMUX_CONFIG |
+               BOARD_INIT_UART_STDIO;
+    Board_init(boardCfg);
+
+}
+#endif
 
 void ipc_initSciclient()
 {
@@ -175,10 +186,14 @@ void ipc_initSciclient()
         {
             App_printf("Sciclient_boardCfgParseHeader Failed\n");
         }
-    }
+#if defined (SOC_AM62X) || defined (SOC_AM62A)
+		ipc_boardInit();
+		gBoardinit=1;
+#endif
+	}
 #endif
 
-    if (ret == CSL_PASS)
+	if (ret == CSL_PASS)
     {
         ret = Sciclient_init(&config);
         if (ret != CSL_PASS)
@@ -197,18 +212,6 @@ void ipc_initSciclient()
 #endif
     }
 }
-
-#if !defined(A72_LINUX_OS)
-void ipc_boardInit()
-{
-    Board_initCfg           boardCfg;
-
-    boardCfg = BOARD_INIT_PINMUX_CONFIG |
-               BOARD_INIT_UART_STDIO;
-    Board_init(boardCfg);
-
-}
-#endif
 
 int main(void)
 {
