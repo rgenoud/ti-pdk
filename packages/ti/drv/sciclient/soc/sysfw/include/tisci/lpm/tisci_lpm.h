@@ -270,6 +270,31 @@ struct tisci_msg_core_resume_resp {
     struct tisci_header hdr;
 } __attribute__((__packed__));
 
+/**
+ * \brief Request for TISCI_MSG_ABORT_ENTER_SLEEP.
+ *
+ * \param hdr TISCI header to provide ACK/NAK flags to the host.
+ *
+ * This message is sent from the DM firmware to the TIFS firmware during lpm
+ * suspend sequence to indicate that DM was not able to successfully suspend
+ * the SOC and DM is aborting the sleep cycle. On receiving this message TIFS
+ * will wake from WFI and the same message will be forwarded to the power
+ * master to wake it from WFI
+ */
+struct tisci_msg_abort_enter_sleep_req {
+    struct tisci_header hdr;
+} __attribute__((__packed__));
+
+/**
+ * \brief Response for TISCI_MSG_ABORT_ENTER_SLEEP.
+ *
+ * \param hdr TISCI header to provide ACK/NAK flags to the host.
+ *
+ */
+struct tisci_msg_abort_enter_sleep_resp {
+    struct tisci_header hdr;
+} __attribute__((__packed__));
+
 #endif
 
 /* @} */

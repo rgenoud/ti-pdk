@@ -93,7 +93,29 @@ AM62x
    am62x/proxy_cfg
    am62x/sec_proxy
    am62x/processors
+   am62x/firewalls
    am62x/soc_devgrps
+
+=====
+AM62A
+=====
+
+.. toctree::
+   :maxdepth: 1
+
+   am62a/hosts
+   am62a/devices
+   am62a/clocks
+   am62a/pll_data
+   am62a/resasg_types
+   am62a/interrupt_cfg
+   am62a/ra_cfg
+   am62a/dma_cfg
+   am62a/psil_cfg
+   am62a/proxy_cfg
+   am62a/sec_proxy
+   am62a/processors
+   am62a/soc_devgrps
 
 =====
 J721E
@@ -159,4 +181,27 @@ J721S2
    j721s2/proxy_cfg
    j721s2/sec_proxy
    j721s2/processors
+   j721s2/firewalls
    j721s2/soc_devgrps
+
+======
+J784S4
+======
+
+.. toctree::
+   :maxdepth: 1
+
+   j784s4/hosts
+   j784s4/devices
+   j784s4/clocks
+   j784s4/pll_data
+   j784s4/resasg_types
+   j784s4/interrupt_cfg
+   j784s4/ra_cfg
+   j784s4/dma_cfg
+   j784s4/psil_cfg
+   j784s4/proxy_cfg
+   j784s4/sec_proxy
+   j784s4/processors
+   j784s4/firewalls
+   j784s4/soc_devgrps

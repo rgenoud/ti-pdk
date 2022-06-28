@@ -1,0 +1,91 @@
+<project>
+    <version>${version}</version>
+    <licenseFile>${licenseFile}</licenseFile>
+    <readmeFile>${readmeFile}</readmeFile>
+    <wrapLicenseFileText>0</wrapLicenseFileText>
+    <installerFilename>${project.fullName}-${project.version}-installer.${platform_exec_suffix}</installerFilename>
+    <leftImage>ti_stk_2c_pos_rgbRev1.gif</leftImage>
+    <logoImage>ti_stk_2c_pos_rgbRev1.gif</logoImage>
+    <splashImage>ti_hz_2c_pos_rgbRev1.gif</splashImage>
+    <componentList>
+        <component>
+            <name>default</name>
+            <description>Default Component</description>
+            <canBeEdited>1</canBeEdited>
+            <selected>1</selected>
+            <show>1</show>
+            <folderList>
+                <folder>
+                    <description>${shortName}_package</description>
+                    <destination>${installdir}</destination>
+                    <name>package</name>
+                    <platforms>all</platforms>
+                    <distributionFileList>
+                        <distributionDirectory allowWildcards="1">
+                            <origin>${inputdir}/*</origin>
+                        </distributionDirectory>
+                    </distributionFileList>
+                </folder>
+                <folder>
+                    <description>Program Files</description>
+                    <destination>${installdir}</destination>
+                    <name>programfileslinux</name>
+                    <platforms>linux</platforms>
+                </folder>
+                <folder>
+                    <description>Program Files</description>
+                    <destination>${installdir}</destination>
+                    <name>programfileswindows</name>
+                    <platforms>windows</platforms>
+                </folder>
+                <folder>
+                    <description>Program Files</description>
+                    <destination>${installdir}</destination>
+                    <name>programfilesosx</name>
+                    <platforms>osx</platforms>
+                </folder>
+            </folderList>
+        </component>
+    </componentList>
+    <preInstallationActionList>
+        <setInstallerVariable>
+            <name>ti_install_prefix</name>
+	    <value>C:/ti/${project.shortname}_${project.version}</value>
+            <ruleList>
+                <platformTest type="windows"/>
+            </ruleList>
+        </setInstallerVariable>
+        <setInstallerVariable>
+            <name>ti_install_prefix</name>
+	    <value>${platform_install_prefix}/${project.shortname}_${project.version}</value>
+            <ruleList>
+                <platformTest type="linux"/>
+            </ruleList>
+        </setInstallerVariable>
+    </preInstallationActionList>
+    <enableRollback>1</enableRollback>
+    <enableTimestamp>1</enableTimestamp>
+    <height>600</height>
+    <removeLogFile>1</removeLogFile>
+    <removeUninstallationLogFile>1</removeUninstallationLogFile>
+    <requestedExecutionLevel>asInvoker</requestedExecutionLevel>
+    <saveRelativePaths>1</saveRelativePaths>
+    <uninstallerDirectory>${installdir}/</uninstallerDirectory>
+    <vendor>Texas Instruments Inc</vendor>
+    <width>800</width>
+    <parameterList>
+        <directoryParameter>
+            <name>installdir</name>
+            <description>Installer.Parameter.installdir.description</description>
+            <explanation>Installer.Parameter.installdir.explanation</explanation>
+            <value>${ti_install_prefix}</value>
+            <default>${ti_install_prefix}</default>
+            <allowEmptyValue>0</allowEmptyValue>
+            <cliOptionName>prefix</cliOptionName>
+            <mustBeWritable>1</mustBeWritable>
+            <mustExist>0</mustExist>
+            <width>40</width>
+        </directoryParameter>
+    </parameterList>
+</project>
+

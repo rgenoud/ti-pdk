@@ -1564,6 +1564,22 @@ Following is a mapping of Clocks IDs to function:
 |          0 | DEV_GPU_WS_BW_LIMITER3_CLK_CLK | Input clock |
 +------------+--------------------------------+-------------+
 
+.. _soc_doc_am62x_public_clks_hsm0:
+
+
+Clocks for HSM0 Device
+----------------------
+
+Device: :ref:`AM62X_DEV_HSM0 <soc_doc_am62x_public_devices_desc_device_list>` (ID = 225)
+
+Following is a mapping of Clocks IDs to function:
+
++------------+------------------+-------------+
+|   Clock ID | Name             | Function    |
++============+==================+=============+
+|          0 | DEV_HSM0_DAP_CLK | Input clock |
++------------+------------------+-------------+
+
 .. _soc_doc_am62x_public_clks_i2c0:
 
 
@@ -2616,7 +2632,17 @@ Following is a mapping of Clocks IDs to function:
 Clocks for PSC0 Device
 ----------------------
 
-**This device has no defined clocks.**
+Device: :ref:`AM62X_DEV_PSC0 <soc_doc_am62x_public_devices_desc_device_list>` (ID = 169)
+
+Following is a mapping of Clocks IDs to function:
+
++------------+-------------------+-------------+
+|   Clock ID | Name              | Function    |
++============+===================+=============+
+|          0 | DEV_PSC0_CLK      | Input clock |
++------------+-------------------+-------------+
+|          1 | DEV_PSC0_SLOW_CLK | Input clock |
++------------+-------------------+-------------+
 
 .. _soc_doc_am62x_public_clks_psc0_fw_0:
 
@@ -2634,23 +2660,13 @@ Following is a mapping of Clocks IDs to function:
 |          0 | DEV_PSC0_FW_0_CLK | Input clock |
 +------------+-------------------+-------------+
 
-.. _soc_doc_am62x_public_clks_psc0_psc_0:
+.. _soc_doc_am62x_public_clks_pscss0:
 
 
-Clocks for PSC0_PSC_0 Device
-----------------------------
+Clocks for PSCSS0 Device
+------------------------
 
-Device: :ref:`AM62X_DEV_PSC0_PSC_0 <soc_doc_am62x_public_devices_desc_device_list>` (ID = 169)
-
-Following is a mapping of Clocks IDs to function:
-
-+------------+-------------------------+-------------+
-|   Clock ID | Name                    | Function    |
-+============+=========================+=============+
-|          0 | DEV_PSC0_PSC_0_CLK      | Input clock |
-+------------+-------------------------+-------------+
-|          1 | DEV_PSC0_PSC_0_SLOW_CLK | Input clock |
-+------------+-------------------------+-------------+
+**This device has no defined clocks.**
 
 .. _soc_doc_am62x_public_clks_r5fss0:
 
@@ -2819,98 +2835,6 @@ Following is a mapping of Clocks IDs to function:
 +------------+-----------------------------------------------------------+-----------------------------------------------+
 |          5 | DEV_RTI3_VBUSP_CLK                                        | Input clock                                   |
 +------------+-----------------------------------------------------------+-----------------------------------------------+
-
-.. _soc_doc_am62x_public_clks_sa3_ss0:
-
-
-Clocks for SA3_SS0 Device
--------------------------
-
-**This device has no defined clocks.**
-
-.. _soc_doc_am62x_public_clks_sa3_ss0_dmss_eccaggr_0:
-
-
-Clocks for SA3_SS0_DMSS_ECCAGGR_0 Device
-----------------------------------------
-
-Device: :ref:`AM62X_DEV_SA3_SS0_DMSS_ECCAGGR_0 <soc_doc_am62x_public_devices_desc_device_list>` (ID = 66)
-
-Following is a mapping of Clocks IDs to function:
-
-+------------+-----------------------------------+-------------+
-|   Clock ID | Name                              | Function    |
-+============+===================================+=============+
-|          0 | DEV_SA3_SS0_DMSS_ECCAGGR_0_X1_CLK | Input clock |
-+------------+-----------------------------------+-------------+
-
-.. _soc_doc_am62x_public_clks_sa3_ss0_intaggr_0:
-
-
-Clocks for SA3_SS0_INTAGGR_0 Device
------------------------------------
-
-Device: :ref:`AM62X_DEV_SA3_SS0_INTAGGR_0 <soc_doc_am62x_public_devices_desc_device_list>` (ID = 67)
-
-Following is a mapping of Clocks IDs to function:
-
-+------------+------------------------------+-------------+
-|   Clock ID | Name                         | Function    |
-+============+==============================+=============+
-|          0 | DEV_SA3_SS0_INTAGGR_0_X1_CLK | Input clock |
-+------------+------------------------------+-------------+
-
-.. _soc_doc_am62x_public_clks_sa3_ss0_pktdma_0:
-
-
-Clocks for SA3_SS0_PKTDMA_0 Device
-----------------------------------
-
-Device: :ref:`AM62X_DEV_SA3_SS0_PKTDMA_0 <soc_doc_am62x_public_devices_desc_device_list>` (ID = 68)
-
-Following is a mapping of Clocks IDs to function:
-
-+------------+-----------------------------+-------------+
-|   Clock ID | Name                        | Function    |
-+============+=============================+=============+
-|          0 | DEV_SA3_SS0_PKTDMA_0_X1_CLK | Input clock |
-+------------+-----------------------------+-------------+
-
-.. _soc_doc_am62x_public_clks_sa3_ss0_ringacc_0:
-
-
-Clocks for SA3_SS0_RINGACC_0 Device
------------------------------------
-
-Device: :ref:`AM62X_DEV_SA3_SS0_RINGACC_0 <soc_doc_am62x_public_devices_desc_device_list>` (ID = 69)
-
-Following is a mapping of Clocks IDs to function:
-
-+------------+------------------------------+-------------+
-|   Clock ID | Name                         | Function    |
-+============+==============================+=============+
-|          0 | DEV_SA3_SS0_RINGACC_0_X1_CLK | Input clock |
-+------------+------------------------------+-------------+
-
-.. _soc_doc_am62x_public_clks_sa3_ss0_sa_ul_0:
-
-
-Clocks for SA3_SS0_SA_UL_0 Device
----------------------------------
-
-Device: :ref:`AM62X_DEV_SA3_SS0_SA_UL_0 <soc_doc_am62x_public_devices_desc_device_list>` (ID = 70)
-
-Following is a mapping of Clocks IDs to function:
-
-+------------+--------------------------------+-------------+
-|   Clock ID | Name                           | Function    |
-+============+================================+=============+
-|          0 | DEV_SA3_SS0_SA_UL_0_PKA_IN_CLK | Input clock |
-+------------+--------------------------------+-------------+
-|          1 | DEV_SA3_SS0_SA_UL_0_X1_CLK     | Input clock |
-+------------+--------------------------------+-------------+
-|          2 | DEV_SA3_SS0_SA_UL_0_X2_CLK     | Input clock |
-+------------+--------------------------------+-------------+
 
 .. _soc_doc_am62x_public_clks_sms0:
 

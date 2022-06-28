@@ -1,0 +1,75 @@
+<project>
+    <shortName>PDKOTPKEYWRITER</shortName>
+	<installerFilename>${project.fullName}_${project.version}-${platform_name}-installer.${platform_exec_suffix}</installerFilename>
+	<readmeFile>README.txt</readmeFile>
+	<licenseFile>ti_license.txt</licenseFile>
+    <leftImage>ti_logo_side.png</leftImage>
+    <logoImage>ti_logo.png</logoImage>
+    <splashImage>ti_logo_splash.png</splashImage>
+    <allowLanguageSelection>1</allowLanguageSelection>
+    <componentList>
+        <component>
+            <name>pdk</name>
+            <description>pdk</description>
+            <canBeEdited>1</canBeEdited>
+            <detailedDescription>TI OTP Keywriter Software add on package.
+This package installs over the General Purpose PDK package available on ti.com.</detailedDescription>
+            <selected>1</selected>
+            <show>1</show>
+            <folderList>
+                <folder>
+                    <description>pdk</description>
+                    <destination>${installdir}</destination>
+                    <name>pdk</name>
+                    <platforms>all</platforms>
+                    <distributionFileList>
+                        <distributionDirectory allowWildcards="1">
+                            <origin>${inputdir}/*</origin>
+                        </distributionDirectory>
+                    </distributionFileList>
+                </folder>
+            </folderList>
+        </component>
+    </componentList>
+    <preInstallationActionList>
+        <setInstallerVariable>
+            <name>ti_install_prefix</name>
+	    <value>C:/ti/${product_fullname}_${project.version}</value>
+            <ruleList>
+                <platformTest type="windows"/>
+            </ruleList>
+        </setInstallerVariable>
+        <setInstallerVariable>
+            <name>ti_install_prefix</name>
+	    <value>${platform_install_prefix}/${product_fullname}_${project.version}</value>
+            <ruleList>
+                <platformTest type="linux-x64"/>
+            </ruleList>
+        </setInstallerVariable>
+    </preInstallationActionList>
+    <postInstallationActionList>
+        <deleteFile path="${project.rollbackBackupDirectory}"/>
+    </postInstallationActionList>
+    <cdromDirectory></cdromDirectory>
+    <compressionAlgorithm>lzma</compressionAlgorithm>
+    <enableRollback>1</enableRollback>
+    <enableTimestamp>1</enableTimestamp>
+    <startMenuGroupName></startMenuGroupName>
+    <vendor>TexasInstrument</vendor>
+    <parameterList>
+        <directoryParameter>
+            <name>installdir</name>
+            <description>Installer.Parameter.installdir.description</description>
+            <explanation>Installer.Parameter.installdir.explanation</explanation>
+            <value>${ti_install_prefix}</value>
+            <default>${ti_install_prefix}</default>
+            <allowEmptyValue>0</allowEmptyValue>
+            <ask>yes</ask>
+            <cliOptionName>prefix</cliOptionName>
+            <mustBeWritable>yes</mustBeWritable>
+            <mustExist>0</mustExist>
+            <width>40</width>
+        </directoryParameter>
+    </parameterList>
+</project>
+
