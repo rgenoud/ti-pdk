@@ -247,6 +247,24 @@ const Sciclient_MapStruct_t gSciclientMap[SCICLIENT_CONTEXT_MAX_NUM] =
         /** Notification Interrupt Number.**/
         0U
 
+    },
+    
+    {
+        /** Context **/
+        SCICLIENT_NON_SECURE_CONTEXT,
+
+        /** CPU ID of the C7x */
+        TISCI_HOST_ID_C7X_0_0,
+
+        /** Thread ID of the low priority thread(write) allowed for the CPU */
+        TISCI_SEC_PROXY_C7X_0_0_WRITE_LOW_PRIORITY_THREAD_ID,
+
+        /** Thread ID of the response thread(read) available for the CPU */
+        TISCI_SEC_PROXY_C7X_0_0_READ_RESPONSE_THREAD_ID,
+
+        /** Notification Interrupt Number.**/
+        0U
+
     }
 };
 
