@@ -49,7 +49,7 @@
  *
  * Resource Assignment Subtype definitions
  *
- * Data version: 220316_180112
+ * Data version: 220624_085730
  *
  */
 #ifndef TISCI_RESASG_TYPES_H
@@ -161,7 +161,7 @@
 /**
  * Total number of unique resource types for SoC
  */
-#define TISCI_RESASG_UTYPE_CNT 100U
+#define TISCI_RESASG_UTYPE_CNT 71U
 
 /**
  * Total number of resource entries allowed for SoC

@@ -1,0 +1,2 @@
+d76c8cc1400c29dad50ea2a1bbb0f173  OTP_KEYWRITER_ADD_ON_j721e_v2021.05b-linux-installer.run
+06a12dd91a9660209612e71cd07a5ff4  OTP_KEYWRITER_ADD_ON_j721e_v2021.05b-windows-installer.exe

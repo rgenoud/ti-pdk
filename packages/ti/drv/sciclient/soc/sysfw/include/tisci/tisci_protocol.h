@@ -166,6 +166,7 @@ struct tisci_sec_header {
 #define TISCI_MSG_SYNC_RESUME                   (0x0302U)
 #define TISCI_MSG_CONTINUE_RESUME               (0x0303U)
 #define TISCI_MSG_CORE_RESUME                   (0x0304U)
+#define TISCI_MSG_ABORT_ENTER_SLEEP             (0x0305U)
 
 #define TISCI_MSG_FIRMWARE_LOAD                 (0x8105U)
 #define MSG_FIRMWARE_LOAD_RESULT                (0x8805U)
