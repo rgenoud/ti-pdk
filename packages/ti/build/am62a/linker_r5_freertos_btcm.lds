@@ -61,44 +61,7 @@ SECTIONS
         .text.mpu    : palign(8)
         .text.boot   : palign(8)
     }                                    > DDR
-    GROUP{
-
-        .dm_stub_text : {
-            _privileged_code_begin = .;
-            _text_secure_start = .;
-            dm_stub*(.text)
-        }  palign(8)
-
-        .dm_stub_const : {
-            dm_stub*(.const)
-            _text_secure_end = .;
-            _privileged_code_end = .;
-        }  palign(8)
-
-        .dm_stub_data : {
-            _privileged_data_begin = .;
-            dm_stub*(.data)
-            _privileged_data_end = .;
-        }  palign(8)
-
-        .dm_stub_bss : {
-            _start_bss = .;
-            dm_stub*(.bss)
-            _end_bss = .;
-        }  palign(8)
-
-         .dm_stub_rodata : {
-            _start_rodata = .;
-            dm_stub*(.rodata)
-            _end_rodata = .;
-        }  palign(8)
-
-       .dm_stub_stack : {
-            _start_stack = .;
-            . += __DM_STUB_STACK_SIZE;
-            _end_stack = .;
-        }  palign(8)
-}  load = MCU0_R5F_TCMB, run = MCU0_R5F_TCMA
+   
     .text            : {} palign(8)      > DDR
     .const           : {} palign(8)      > DDR
     .rodata          : {} palign(8)      > DDR
