@@ -70,7 +70,7 @@ const struct Sciserver_SecureProxyTxThreadConfig Sciserver_SecureProxyTxConfigur
 		.threshold		= 1U,
 		.evt_threshold		= SOC_SAFE_EVENT,
 		.evt_error		= SOC_SAFE_EVENT,
-		.rx_thread_instance_id	= AM62A_DMASS0_SEC_PROXY_0_RX_DM2TIFS_RESPONSE_THR020_CONF013,
+		.rx_thread_instance_id	= AM62A_DMASS0_SEC_PROXY_0_RX_DM2TIFS_RESPONSE_THR022_CONF014,
 	},
 	[AM62A_DMASS0_SEC_PROXY_0_TX_DM_NONSEC_MAIN_0_R5_1_RESPONSE_TX_THR068_CONF005] = {
 		.host_id		= HOST_ID_DM,
@@ -126,16 +126,25 @@ const struct Sciserver_SecureProxyTxThreadConfig Sciserver_SecureProxyTxConfigur
 		.evt_error		= SOC_SAFE_EVENT,
 		.rx_thread_instance_id	= AM62A_DMASS0_SEC_PROXY_0_RX_A53_4_RESPONSE_THR018_CONF012,
 	},
-	[AM62A_DMASS0_SEC_PROXY_0_TX_DM_NONSEC_TIFS2DM_RESPONSE_TX_THR062_CONF011] =	 {
+	[AM62A_DMASS0_SEC_PROXY_0_TX_DM_NONSEC_C7X_0_0_RESPONSE_TX_THR062_CONF011] =	 {
 		.host_id		= HOST_ID_DM,
 		.thread_id		= 62U,
+		.num_credits		= 7U,
+		.threshold		= 1U,
+		.evt_threshold		= SOC_SAFE_EVENT,
+		.evt_error		= SOC_SAFE_EVENT,
+		.rx_thread_instance_id	= AM62A_DMASS0_SEC_PROXY_0_RX_C7X_0_0_RESPONSE_THR020_CONF013,
+	},
+	[AM62A_DMASS0_SEC_PROXY_0_TX_DM_NONSEC_TIFS2DM_RESPONSE_TX_THR061_CONF012] =	 {
+		.host_id		= HOST_ID_DM,
+		.thread_id		= 61U,
 		.num_credits		= 4U,
 		.threshold		= 1U,
 		.evt_threshold		= SOC_SAFE_EVENT,
 		.evt_error		= SOC_SAFE_EVENT,
-		.rx_thread_instance_id	= AM62A_DMASS0_SEC_PROXY_0_RX_TIFS2DM_RESPONSE_THR022_CONF014,
+		.rx_thread_instance_id	= AM62A_DMASS0_SEC_PROXY_0_RX_TIFS2DM_RESPONSE_THR024_CONF015,
 	},
-	[AM62A_DMASS0_SEC_PROXY_0_TX_MAIN_0_R5_0_LOW_PRIORITY_THR001_CONF012] =		 {
+	[AM62A_DMASS0_SEC_PROXY_0_TX_MAIN_0_R5_0_LOW_PRIORITY_THR001_CONF013] =		 {
 		.host_id		= HOST_ID_MAIN_0_R5_0,
 		.thread_id		= 1U,
 		.num_credits		= 10U,
@@ -144,7 +153,7 @@ const struct Sciserver_SecureProxyTxThreadConfig Sciserver_SecureProxyTxConfigur
 		.evt_error		= SOC_SAFE_EVENT,
 		.rx_thread_instance_id	= AM62A_DMASS0_SEC_PROXY_0_RX_TIFS_SEC_LOW_PRIORITY_RX_THR075_CONF000,
 	},
-	[AM62A_DMASS0_SEC_PROXY_0_TX_MAIN_0_R5_1_LOW_PRIORITY_THR003_CONF013] =		 {
+	[AM62A_DMASS0_SEC_PROXY_0_TX_MAIN_0_R5_1_LOW_PRIORITY_THR003_CONF014] =		 {
 		.host_id		= HOST_ID_MAIN_0_R5_1,
 		.thread_id		= 3U,
 		.num_credits		= 10U,
@@ -153,7 +162,7 @@ const struct Sciserver_SecureProxyTxThreadConfig Sciserver_SecureProxyTxConfigur
 		.evt_error		= SOC_SAFE_EVENT,
 		.rx_thread_instance_id	= AM62A_DMASS0_SEC_PROXY_0_RX_DM_NONSEC_LOW_PRIORITY_RX_THR069_CONF001,
 	},
-	[AM62A_DMASS0_SEC_PROXY_0_TX_MAIN_0_R5_2_LOW_PRIORITY_THR005_CONF014] =		 {
+	[AM62A_DMASS0_SEC_PROXY_0_TX_MAIN_0_R5_2_LOW_PRIORITY_THR005_CONF015] =		 {
 		.host_id		= HOST_ID_MAIN_0_R5_2,
 		.thread_id		= 5U,
 		.num_credits		= 1U,
@@ -162,7 +171,7 @@ const struct Sciserver_SecureProxyTxThreadConfig Sciserver_SecureProxyTxConfigur
 		.evt_error		= SOC_SAFE_EVENT,
 		.rx_thread_instance_id	= AM62A_DMASS0_SEC_PROXY_0_RX_TIFS_SEC_LOW_PRIORITY_RX_THR075_CONF000,
 	},
-	[AM62A_DMASS0_SEC_PROXY_0_TX_MAIN_0_R5_3_LOW_PRIORITY_THR007_CONF015] =		 {
+	[AM62A_DMASS0_SEC_PROXY_0_TX_MAIN_0_R5_3_LOW_PRIORITY_THR007_CONF016] =		 {
 		.host_id		= HOST_ID_MAIN_0_R5_3,
 		.thread_id		= 7U,
 		.num_credits		= 1U,
@@ -171,7 +180,7 @@ const struct Sciserver_SecureProxyTxThreadConfig Sciserver_SecureProxyTxConfigur
 		.evt_error		= SOC_SAFE_EVENT,
 		.rx_thread_instance_id	= AM62A_DMASS0_SEC_PROXY_0_RX_DM_NONSEC_LOW_PRIORITY_RX_THR069_CONF001,
 	},
-	[AM62A_DMASS0_SEC_PROXY_0_TX_A53_0_LOW_PRIORITY_THR009_CONF016] =		 {
+	[AM62A_DMASS0_SEC_PROXY_0_TX_A53_0_LOW_PRIORITY_THR009_CONF017] =		 {
 		.host_id		= HOST_ID_A53_0,
 		.thread_id		= 9U,
 		.num_credits		= 10U,
@@ -180,7 +189,7 @@ const struct Sciserver_SecureProxyTxThreadConfig Sciserver_SecureProxyTxConfigur
 		.evt_error		= SOC_SAFE_EVENT,
 		.rx_thread_instance_id	= AM62A_DMASS0_SEC_PROXY_0_RX_TIFS_SEC_LOW_PRIORITY_RX_THR075_CONF000,
 	},
-	[AM62A_DMASS0_SEC_PROXY_0_TX_A53_1_LOW_PRIORITY_THR011_CONF017] =		 {
+	[AM62A_DMASS0_SEC_PROXY_0_TX_A53_1_LOW_PRIORITY_THR011_CONF018] =		 {
 		.host_id		= HOST_ID_A53_1,
 		.thread_id		= 11U,
 		.num_credits		= 10U,
@@ -189,7 +198,7 @@ const struct Sciserver_SecureProxyTxThreadConfig Sciserver_SecureProxyTxConfigur
 		.evt_error		= SOC_SAFE_EVENT,
 		.rx_thread_instance_id	= AM62A_DMASS0_SEC_PROXY_0_RX_TIFS_SEC_LOW_PRIORITY_RX_THR075_CONF000,
 	},
-	[AM62A_DMASS0_SEC_PROXY_0_TX_A53_2_LOW_PRIORITY_THR013_CONF018] =		 {
+	[AM62A_DMASS0_SEC_PROXY_0_TX_A53_2_LOW_PRIORITY_THR013_CONF019] =		 {
 		.host_id		= HOST_ID_A53_2,
 		.thread_id		= 13U,
 		.num_credits		= 5U,
@@ -198,7 +207,7 @@ const struct Sciserver_SecureProxyTxThreadConfig Sciserver_SecureProxyTxConfigur
 		.evt_error		= SOC_SAFE_EVENT,
 		.rx_thread_instance_id	= AM62A_DMASS0_SEC_PROXY_0_RX_DM_NONSEC_LOW_PRIORITY_RX_THR069_CONF001,
 	},
-	[AM62A_DMASS0_SEC_PROXY_0_TX_A53_3_LOW_PRIORITY_THR015_CONF019] =		 {
+	[AM62A_DMASS0_SEC_PROXY_0_TX_A53_3_LOW_PRIORITY_THR015_CONF020] =		 {
 		.host_id		= HOST_ID_A53_3,
 		.thread_id		= 15U,
 		.num_credits		= 5U,
@@ -207,7 +216,7 @@ const struct Sciserver_SecureProxyTxThreadConfig Sciserver_SecureProxyTxConfigur
 		.evt_error		= SOC_SAFE_EVENT,
 		.rx_thread_instance_id	= AM62A_DMASS0_SEC_PROXY_0_RX_DM_NONSEC_LOW_PRIORITY_RX_THR069_CONF001,
 	},
-	[AM62A_DMASS0_SEC_PROXY_0_TX_MCU_0_R5_0_LOW_PRIORITY_THR017_CONF020] =		 {
+	[AM62A_DMASS0_SEC_PROXY_0_TX_MCU_0_R5_0_LOW_PRIORITY_THR017_CONF021] =		 {
 		.host_id		= HOST_ID_MCU_0_R5_0,
 		.thread_id		= 17U,
 		.num_credits		= 5U,
@@ -216,7 +225,7 @@ const struct Sciserver_SecureProxyTxThreadConfig Sciserver_SecureProxyTxConfigur
 		.evt_error		= SOC_SAFE_EVENT,
 		.rx_thread_instance_id	= AM62A_DMASS0_SEC_PROXY_0_RX_DM_NONSEC_LOW_PRIORITY_RX_THR069_CONF001,
 	},
-	[AM62A_DMASS0_SEC_PROXY_0_TX_A53_4_LOW_PRIORITY_THR019_CONF021] =		 {
+	[AM62A_DMASS0_SEC_PROXY_0_TX_A53_4_LOW_PRIORITY_THR019_CONF022] =		 {
 		.host_id		= HOST_ID_A53_4,
 		.thread_id		= 19U,
 		.num_credits		= 5U,
@@ -225,18 +234,27 @@ const struct Sciserver_SecureProxyTxThreadConfig Sciserver_SecureProxyTxConfigur
 		.evt_error		= SOC_SAFE_EVENT,
 		.rx_thread_instance_id	= AM62A_DMASS0_SEC_PROXY_0_RX_DM_NONSEC_LOW_PRIORITY_RX_THR069_CONF001,
 	},
-	[AM62A_DMASS0_SEC_PROXY_0_TX_DM2TIFS_LOW_PRIORITY_THR021_CONF022] =		 {
-		.host_id		= HOST_ID_DM2TIFS,
+	[AM62A_DMASS0_SEC_PROXY_0_TX_C7X_0_0_LOW_PRIORITY_THR021_CONF023] =		 {
+		.host_id		= HOST_ID_C7X_0_0,
 		.thread_id		= 21U,
+		.num_credits		= 5U,
+		.threshold		= 1U,
+		.evt_threshold		= SOC_SAFE_EVENT,
+		.evt_error		= SOC_SAFE_EVENT,
+		.rx_thread_instance_id	= AM62A_DMASS0_SEC_PROXY_0_RX_DM_NONSEC_LOW_PRIORITY_RX_THR069_CONF001,
+	},
+	[AM62A_DMASS0_SEC_PROXY_0_TX_DM2TIFS_LOW_PRIORITY_THR023_CONF024] =		 {
+		.host_id		= HOST_ID_DM2TIFS,
+		.thread_id		= 23U,
 		.num_credits		= 2U,
 		.threshold		= 1U,
 		.evt_threshold		= SOC_SAFE_EVENT,
 		.evt_error		= SOC_SAFE_EVENT,
-		.rx_thread_instance_id	= AM62A_DMASS0_SEC_PROXY_0_RX_TIFS_SEC_DM2TIFS_LOW_PRIORITY_RX_THR061_CONF002,
+		.rx_thread_instance_id	= AM62A_DMASS0_SEC_PROXY_0_RX_TIFS_SEC_DM2TIFS_LOW_PRIORITY_RX_THR060_CONF002,
 	},
-	[AM62A_DMASS0_SEC_PROXY_0_TX_TIFS2DM_LOW_PRIORITY_THR023_CONF023] =		 {
+	[AM62A_DMASS0_SEC_PROXY_0_TX_TIFS2DM_LOW_PRIORITY_THR025_CONF025] =		 {
 		.host_id		= HOST_ID_TIFS2DM,
-		.thread_id		= 23U,
+		.thread_id		= 25U,
 		.num_credits		= 2U,
 		.threshold		= 1U,
 		.evt_threshold		= SOC_SAFE_EVENT,
@@ -252,8 +270,8 @@ const struct Sciserver_SecureProxyRxThreadConfig gSciserverSecureProxyRxConfigur
 		.host_id			= HOST_ID_TIFS,
 		.thread_id			= 75U,
 		.threshold			= 1U,
-		.evt_threshold			= 0x0008U,
-		.evt_error			= 0x0007U,
+		.evt_threshold			= 0x0009U,
+		.evt_error			= 0x0008U,
 		.secure_proxy_instance_id	= AM62A_SPROXY_IDX_DMASS0_SEC_PROXY_0,
 		.ring_config_instance_id	= AM62A_DMASS0_RINGACC_0_RING_0019_CONF_000,
 	},
@@ -261,19 +279,19 @@ const struct Sciserver_SecureProxyRxThreadConfig gSciserverSecureProxyRxConfigur
 		.host_id			= HOST_ID_DM,
 		.thread_id			= 69U,
 		.threshold			= 1U,
-		.evt_threshold			= 0x000CU,
-		.evt_error			= 0x000BU,
+		.evt_threshold			= 0x000DU,
+		.evt_error			= 0x000CU,
 		.secure_proxy_instance_id	= AM62A_SPROXY_IDX_DMASS0_SEC_PROXY_0,
 		.ring_config_instance_id	= AM62A_DMASS0_RINGACC_0_RING_0018_CONF_001,
 	},
-	[AM62A_DMASS0_SEC_PROXY_0_RX_TIFS_SEC_DM2TIFS_LOW_PRIORITY_RX_THR061_CONF002] = {
+	[AM62A_DMASS0_SEC_PROXY_0_RX_TIFS_SEC_DM2TIFS_LOW_PRIORITY_RX_THR060_CONF002] = {
 		.host_id			= HOST_ID_TIFS,
-		.thread_id			= 61U,
+		.thread_id			= 60U,
 		.threshold			= 1U,
-		.evt_threshold			= 0x0009U,
-		.evt_error			= 0x0007U,
+		.evt_threshold			= 0x000AU,
+		.evt_error			= 0x0008U,
 		.secure_proxy_instance_id	= AM62A_SPROXY_IDX_DMASS0_SEC_PROXY_0,
-		.ring_config_instance_id	= AM62A_DMASS0_RINGACC_0_RING_0005_CONF_014,
+		.ring_config_instance_id	= AM62A_DMASS0_RINGACC_0_RING_0004_CONF_015,
 	},
 	[AM62A_DMASS0_SEC_PROXY_0_RX_MAIN_0_R5_0_RESPONSE_THR000_CONF003] =		{
 		.host_id			= HOST_ID_MAIN_0_R5_0,
@@ -365,22 +383,31 @@ const struct Sciserver_SecureProxyRxThreadConfig gSciserverSecureProxyRxConfigur
 		.secure_proxy_instance_id	= AM62A_SPROXY_IDX_DMASS0_SEC_PROXY_0,
 		.ring_config_instance_id	= AM62A_DMASS0_RINGACC_0_RING_0008_CONF_011,
 	},
-	[AM62A_DMASS0_SEC_PROXY_0_RX_DM2TIFS_RESPONSE_THR020_CONF013] =			{
-		.host_id			= HOST_ID_DM2TIFS,
+	[AM62A_DMASS0_SEC_PROXY_0_RX_C7X_0_0_RESPONSE_THR020_CONF013] =			{
+		.host_id			= HOST_ID_C7X_0_0,
 		.thread_id			= 20U,
+		.threshold			= 1U,
+		.evt_threshold			= 0x0007U,
+		.evt_error			= 0x0007U,
+		.secure_proxy_instance_id	= AM62A_SPROXY_IDX_DMASS0_SEC_PROXY_0,
+		.ring_config_instance_id	= AM62A_DMASS0_RINGACC_0_RING_0007_CONF_012,
+	},
+	[AM62A_DMASS0_SEC_PROXY_0_RX_DM2TIFS_RESPONSE_THR022_CONF014] =			{
+		.host_id			= HOST_ID_DM2TIFS,
+		.thread_id			= 22U,
 		.threshold			= 1U,
 		.evt_threshold			= SOC_SAFE_EVENT,
 		.evt_error			= SOC_SAFE_EVENT,
 		.secure_proxy_instance_id	= AM62A_SPROXY_IDX_DMASS0_SEC_PROXY_0,
-		.ring_config_instance_id	= AM62A_DMASS0_RINGACC_0_RING_0007_CONF_012,
-	},
-	[AM62A_DMASS0_SEC_PROXY_0_RX_TIFS2DM_RESPONSE_THR022_CONF014] =			{
-		.host_id			= HOST_ID_TIFS2DM,
-		.thread_id			= 22U,
-		.threshold			= 1U,
-		.evt_threshold			= 0x000AU,
-		.evt_error			= 0x0007U,
-		.secure_proxy_instance_id	= AM62A_SPROXY_IDX_DMASS0_SEC_PROXY_0,
 		.ring_config_instance_id	= AM62A_DMASS0_RINGACC_0_RING_0006_CONF_013,
+	},
+	[AM62A_DMASS0_SEC_PROXY_0_RX_TIFS2DM_RESPONSE_THR024_CONF015] =			{
+		.host_id			= HOST_ID_TIFS2DM,
+		.thread_id			= 24U,
+		.threshold			= 1U,
+		.evt_threshold			= 0x000BU,
+		.evt_error			= 0x0008U,
+		.secure_proxy_instance_id	= AM62A_SPROXY_IDX_DMASS0_SEC_PROXY_0,
+		.ring_config_instance_id	= AM62A_DMASS0_RINGACC_0_RING_0005_CONF_014,
 	},
 };

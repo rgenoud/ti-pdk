@@ -102,9 +102,11 @@ extern "C" {
 #define SCICLIENT_CONTEXT_MCU_R5_0_NONSEC_0             (8U)
 /** a53(Non Secure): Cortex A53 context 4 */
 #define SCICLIENT_CONTEXT_A53_NONSEC_3                  (9U)
+/** C7x(Non Secure): C7x core*/
+#define SCICLIENT_CONTEXT_C7_NONSEC_0                   (10U)
 
 /** Total number of possible contexts for application. */
-#define SCICLIENT_CONTEXT_MAX_NUM                      (10U)
+#define SCICLIENT_CONTEXT_MAX_NUM                      (11U)
 /* @} */
 
 /**
