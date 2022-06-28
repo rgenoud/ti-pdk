@@ -116,14 +116,14 @@ SECTIONS
     .benchmark_buffer (NOLOAD) {} ALIGN (8) > DDR
 
     GROUP {
-	    .resource_table          : {} palign(4096)
+	    .resource_table          :
 	    {
 		    __RESOURCE_TABLE = .;
 	    }
 
 	    .tracebuf                : {} align(1024)
 
-             ipc_data_buffer (NOINIT) : {} palign(128)
+        ipc_data_buffer (NOINIT) : {} palign(128)
 
     } > DDR_MCU1_0
 
