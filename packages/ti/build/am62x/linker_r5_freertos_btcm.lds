@@ -114,7 +114,7 @@ SECTIONS
 
     /* USB or any other LLD buffer for benchmarking */
     GROUP {
-	    .resource_table          : {} palign(4096)
+	    .resource_table          :
 	    {
 		    __RESOURCE_TABLE = .;
 	    }
