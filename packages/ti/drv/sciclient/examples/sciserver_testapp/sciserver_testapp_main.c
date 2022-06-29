@@ -162,17 +162,6 @@ static void taskFxn(void* a0, void* a1)
     if (ret == CSL_PASS)
     {
        App_sciclientPrintf("Starting Sciserver..... PASSED\n");
-
-        uint32_t freqHz;
-#if defined (SOC_AM62X)
-        Sciclient_pmGetModuleClkFreq(TISCI_DEV_WKUP_GTC0, TISCI_DEV_WKUP_GTC0_GTC_CLK,
-            (uint64_t *) &freqHz, SCICLIENT_SERVICE_WAIT_FOREVER);
-#else
-        Sciclient_pmGetModuleClkFreq(TISCI_DEV_GTC0, TISCI_DEV_GTC0_GTC_CLK,
-            (uint64_t *) &freqHz, SCICLIENT_SERVICE_WAIT_FOREVER);
-#endif
-       App_sciclientPrintf("GTC freq: %d\n", freqHz);
-
     }
     else
     {
