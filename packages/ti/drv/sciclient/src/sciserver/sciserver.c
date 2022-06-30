@@ -592,6 +592,14 @@ static int32_t Sciserver_UserProcessMsg(uint32_t *msg_recv,
             reqMsgSize = sizeof(struct tisci_msg_enter_sleep_req );
             respMsgSize = sizeof(struct tisci_msg_enter_sleep_resp);
             break;
+        case TISCI_MSG_LPM_WAKE_REASON:
+            reqMsgSize = sizeof(struct tisci_msg_lpm_wake_reason_req );
+            respMsgSize = sizeof(struct tisci_msg_lpm_wake_reason_resp);
+            break;
+        case TISCI_MSG_SET_IO_ISOLATION:
+            reqMsgSize = sizeof(struct tisci_msg_set_io_isolation_req );
+            respMsgSize = sizeof(struct tisci_msg_set_io_isolation_resp);
+            break;
 #endif
         default:
             /* Forward the full message size */
