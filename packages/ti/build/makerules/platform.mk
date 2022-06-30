@@ -504,6 +504,25 @@ ifeq ($(ISA),c7x)
   ASMEXT = s$(FORMAT_EXT)$(ISA_EXT)$(ENDIAN_EXT)
 endif
 
+#########C75x DSP Support############
+ifeq ($(ISA),c75x)
+  ifeq ($(FORMAT),ELF)
+    FORMAT_EXT = e
+  endif
+
+  # If ENDIAN is set to "big", set ENDIAN_EXT to "e", that would be used in
+  #    in the filename extension of object/library/executable files
+  ifeq ($(ENDIAN),big)
+    ENDIAN_EXT = e
+  endif
+
+  # Define the file extensions
+  OBJEXT = o$(FORMAT_EXT)$(ISA_EXT)$(ENDIAN_EXT)
+  LIBEXT = a$(FORMAT_EXT)$(ISA_EXT)$(ENDIAN_EXT)
+  EXEEXT = x$(FORMAT_EXT)$(ISA_EXT)$(ENDIAN_EXT)
+  ASMEXT = s$(FORMAT_EXT)$(ISA_EXT)$(ENDIAN_EXT)
+endif
+
 #########C7x Host Support############
 ifeq ($(ISA),c7x-hostemu)
   # Define the file extensions
