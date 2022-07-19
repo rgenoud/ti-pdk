@@ -143,8 +143,11 @@ uint32_t remoteProc[] =
     IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1, IPC_M4F_0
 #elif defined (SOC_AM62X)
     IPC_MCU1_0
+<<<<<<< HEAD
 #elif defined (SOC_AM62A)
     IPC_MCU1_0, IPC_C7X_1
+=======
+>>>>>>> 0667918d2... [QNX][AM62X] Inital updates
 #elif defined (SOC_J721S2)
     IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1, IPC_MCU3_0, IPC_MCU3_1, IPC_C7X_1, IPC_C7X_2
 #elif defined (SOC_J784S4)
