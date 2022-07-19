@@ -444,6 +444,15 @@ int32_t Ipc_echo_test(void)
     Ipc_InitPrms      initPrms;
     uint32_t          index = 0;
 
+#if 0
+    volatile int i = 1;
+    while (i == 1)
+    {
+        //loop here
+        TaskP_sleep(100);
+    }
+#endif
+
     /* Step1 : Initialize the multiproc */
     Ipc_mpSetConfig(selfProcId, numProc, pRemoteProcArray);
 
