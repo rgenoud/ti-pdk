@@ -39,9 +39,9 @@ ifeq ($(udma_component_make_include), )
 # This list will be used to generate RTOS app make rule for each rtos_type.
 drvudma_RTOS_LIST       = $(DEFAULT_RTOS_LIST)
 
-drvudma_SOCLIST         = am65xx j721e j7200 am64x j721s2 j784s4 am62a
-drvudma_BOARDLIST       = am65xx_evm am65xx_idk j721e_sim j721e_evm j7200_evm am64x_evm j721s2_evm j784s4_evm am62a_evm
-drvudma_dru_BOARDLIST   = am65xx_evm am65xx_idk j721e_evm j721s2_evm j784s4_evm am62a_evm
+drvudma_SOCLIST         = am65xx j721e j7200 am64x j721s2 j784s4 am62x am62a
+drvudma_BOARDLIST       = am65xx_evm am65xx_idk j721e_sim j721e_evm j7200_evm am64x_evm j721s2_evm j784s4_evm am62x_evm am62a_evm
+drvudma_dru_BOARDLIST   = am65xx_evm am65xx_idk j721e_evm j721s2_evm j784s4_evm
 drvudma_am65xx_CORELIST = mpu1_0 mcu1_0 mcu1_1
 drvudma_j721e_CORELIST  = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 c66xdsp_1 c66xdsp_2 c7x_1 c7x-hostemu
 drvudma_j7200_CORELIST  = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1
@@ -83,6 +83,12 @@ drvudma_j721e_CORELIST += qnx_mpu1_0
 drvudma_j7200_CORELIST += qnx_mpu1_0
 drvudma_am62x_CORELIST += qnx_mpu1_0
 drvudma_am62a_CORELIST += qnx_mpu1_0
+endif
+ifeq ($(BUILD_OS_TYPE), qnx)
+drvudma_j721e_CORELIST += qnx_mpu1_0
+drvudma_j7200_CORELIST += qnx_mpu1_0
+#drvudma_am62x_CORELIST += qnx_mpu1_0
+#drvudma_am62a_CORELIST += qnx_mpu1_0
 endif
 
 ############################
