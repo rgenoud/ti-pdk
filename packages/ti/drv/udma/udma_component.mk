@@ -84,6 +84,12 @@ drvudma_j7200_CORELIST += qnx_mpu1_0
 drvudma_am62x_CORELIST += qnx_mpu1_0
 drvudma_am62a_CORELIST += qnx_mpu1_0
 endif
+ifeq ($(BUILD_OS_TYPE), qnx)
+drvudma_j721e_CORELIST += qnx_mpu1_0
+drvudma_j7200_CORELIST += qnx_mpu1_0
+#drvudma_am62x_CORELIST += qnx_mpu1_0
+#drvudma_am62a_CORELIST += qnx_mpu1_0
+endif
 
 ############################
 # udma package
