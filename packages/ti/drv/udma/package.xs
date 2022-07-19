@@ -21,6 +21,7 @@ function getLibs(prog)
                      'j7200',
                      'j721s2',
                      'am64x',
+                     'am62x',
                    ];
     var libNames = [
                      'udma'
