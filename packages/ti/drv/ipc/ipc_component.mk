@@ -360,7 +360,11 @@ export ipc_qnx_echo_test_$(1)_XDC_CONFIGURO = $(if $(findstring tirtos, $(1)), y
 export ipc_qnx_echo_test_$(1)_MAKEFILE = -f makefile BUILD_OS_TYPE=$(1)
 ipc_qnx_echo_test_$(1)_PKG_LIST = ipc_qnx_echo_test_$(1)
 ipc_qnx_echo_test_$(1)_INCLUDE = $(ipc_qnx_echo_test_$(1)_PATH)
+<<<<<<< HEAD
 export ipc_qnx_echo_test_$(1)_BOARDLIST = $(filter-out am62x_evm, $(DEFAULT_BOARDLIST_$(1)), $(drvipc_BOARDLIST))
+=======
+export ipc_qnx_echo_test_$(1)_BOARDLIST = $(filter-out am62a_evm, $(DEFAULT_BOARDLIST_$(1)), $(drvipc_BOARDLIST))
+>>>>>>> 0667918d2... [QNX][AM62X] Inital updates
 export ipc_qnx_echo_test_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), $(drvipc_$(SOC)_RTOS_CORELIST))
 ipc_EXAMPLE_LIST += ipc_qnx_echo_test_$(1)
 endef
@@ -378,7 +382,11 @@ export ipc_qnx_echo_testb_$(1)_XDC_CONFIGURO = $(if $(findstring tirtos, $(1)), 
 export ipc_qnx_echo_testb_$(1)_MAKEFILE = -fmakefile.btcm BUILD_OS_TYPE=$(1)
 ipc_qnx_echo_testb_$(1)_PKG_LIST = ipc_qnx_echo_testb_$(1)
 ipc_qnx_echo_testb_$(1)_INCLUDE = $(ipc_qnx_echo_testb_$(1)_PATH)
+<<<<<<< HEAD
 export ipc_qnx_echo_testb_$(1)_BOARDLIST = $(filter-out am62x_evm, $(DEFAULT_BOARDLIST_$(1)), $(drvipc_BOARDLIST))
+=======
+export ipc_qnx_echo_testb_$(1)_BOARDLIST = $(filter-out am62a_evm, $(DEFAULT_BOARDLIST_$(1)), $(drvipc_BOARDLIST))
+>>>>>>> 0667918d2... [QNX][AM62X] Inital updates
 export ipc_qnx_echo_testb_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), $(drvipc_$(SOC)_RTOS_CORELIST))
 ipc_EXAMPLE_LIST += ipc_qnx_echo_testb_$(1)
 endef
