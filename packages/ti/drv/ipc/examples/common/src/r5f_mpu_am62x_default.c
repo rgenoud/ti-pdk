@@ -198,7 +198,7 @@ const CSL_ArmR5MpuRegionCfg  gCslR5MpuCfg[CSL_ARM_R5F_MPU_REGIONS_MAX] =
         /* Region 9 configuration: Ring buffer */
         .regionId         = 9U,
         .enable           = 1U,
-        .baseAddr         = 0xA5000000,
+        .baseAddr         = 0xA0000000,
         .size             = CSL_ARM_R5_MPU_REGION_SIZE_8MB,
         .subRegionEnable  = CSL_ARM_R5_MPU_SUB_REGION_ENABLE_ALL,
         .exeNeverControl  = 1U,
