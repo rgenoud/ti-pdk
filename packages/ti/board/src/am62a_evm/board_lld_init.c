@@ -44,6 +44,18 @@
 
 extern Board_initParams_t gBoardInitParams;
 
+#ifdef QNX_OS
+void UART_Params_init(UART_Params *params)
+{
+    // dummy function
+}
+
+void UART_stdioInit2(uint32_t uartInst,UART_Params *params)
+{
+    // dummy function
+}
+#endif
+
 /**
  *  \brief   This function initializes the default UART instance for use for
  *           console operations.

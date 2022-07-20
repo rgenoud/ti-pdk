@@ -76,6 +76,7 @@ drvipc_j7200_CORELIST += qnx_mpu1_0
 drvipc_j721s2_CORELIST += qnx_mpu1_0
 drvipc_j784s4_CORELIST += qnx_mpu1_0
 drvipc_am62x_CORELIST += qnx_mpu1_0
+drvipc_am62a_CORELIST += qnx_mpu1_0
 endif
 
 ############################
