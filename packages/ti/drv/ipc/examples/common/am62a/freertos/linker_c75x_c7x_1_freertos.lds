@@ -71,7 +71,7 @@
 
 MEMORY
 {
-    L2SRAM (RWX):  org = 0x64800000,          len = 0x00070000
+    L2SRAM (RWX):  org = 0x7E000000,          len = 0x00070000
 }
 
 --ram_model
