@@ -115,6 +115,7 @@ AM62A
    am62a/proxy_cfg
    am62a/sec_proxy
    am62a/processors
+   am62a/firewalls
    am62a/soc_devgrps
 
 =====
