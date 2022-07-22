@@ -49,7 +49,7 @@
  *
  * Host IDs for AM62A device
  *
- * Data version: 220624_085730
+ * Data version: 220715_165134
  *
  */
 #ifndef TISCI_HOSTS_H
