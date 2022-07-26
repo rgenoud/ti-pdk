@@ -94,6 +94,7 @@ void IpcInitMmu(bool isSecure)
 
     #if defined(SOC_AM62A)
     /* Register region */
+    attrs.attrIndx = Mmu_AttrIndx_MAIR0;
     (void)Mmu_map(0x00000000U, 0x00000000U, 0x20000000U, &attrs, isSecure);
     (void)Mmu_map(0x20000000U, 0x20000000U, 0x20000000U, &attrs, isSecure);
     (void)Mmu_map(0x40000000U, 0x40000000U, 0x20000000U, &attrs, isSecure);
