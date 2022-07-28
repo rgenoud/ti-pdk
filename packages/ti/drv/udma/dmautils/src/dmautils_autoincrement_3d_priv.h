@@ -49,7 +49,12 @@
 
 #define UDMA_RM_MAX_BLK_COPY_CH             (32U)
 
-#include "udma.h"
+#if defined (DMA_UTILS_STANDALONE)
+#include "ti/drv/udma/dmautils/udma_standalone/udma.h"
+#else
+#include "ti/drv/udma/udma.h"
+#endif
+
 #include "ti/drv/udma/dmautils/include/dmautils_autoincrement_3d.h"
 
 #ifdef __cplusplus

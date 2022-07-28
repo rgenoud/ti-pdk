@@ -47,6 +47,11 @@ operate a function on internal memory and transfer back the result.
 
 #include "dmautils_autoincrement_example.h"
 
+#if defined (DMA_UTILS_STANDALONE)
+#include "ti/drv/udma/dmautils/udma_standalone/udma.h"
+#else
+#include "ti/drv/udma/udma.h"
+#endif
 #include "ti/drv/udma/dmautils/dmautils.h"
 
 
@@ -184,6 +189,7 @@ static int32_t testDmaAutoIncSetupTr(  int16_t   width,
 
     transferPropIn[0].syncType = DMAUTILSAUTOINC3D_SYNC_2D;
 
+    transferPropIn[0].dmaDfmt = DMAUTILSAUTOINC3D_DFMT_NONE;
     transferPropIn[0].circProp.circDir = DMAUTILSAUTOINC3D_CIRCDIR_SRC;
     transferPropIn[0].circProp.circSize1 = 0;
     transferPropIn[0].circProp.circSize2 = 0;
