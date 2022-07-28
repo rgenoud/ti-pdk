@@ -32,7 +32,8 @@
 /**
  *  \file V5/sciclient_irq_rm.c
  *
- *  \brief Dummy File
+ *  \brief File containing the AM62x specific interrupt management data for
+ *         RM.
  *
  */
 /* ========================================================================== */

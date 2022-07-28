@@ -67,6 +67,14 @@
 #include <ti/drv/udma/soc/am64x/udma_soc.h>
 #endif
 
+#if defined (SOC_AM62X)
+#include <ti/drv/udma/soc/am62x/udma_soc.h>
+#endif
+
+#if defined (SOC_AM62A)
+#include <ti/drv/udma/soc/am62a/udma_soc.h>
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif

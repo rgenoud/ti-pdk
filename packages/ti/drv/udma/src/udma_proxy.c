@@ -203,7 +203,9 @@ int32_t Udma_proxyConfig(Udma_ProxyHandle proxyHandle,
 {
     int32_t             retVal = UDMA_SOK;
     Udma_DrvHandle      drvHandle;
+#if (UDMA_SOC_CFG_PROXY_PRESENT == 1)
     CSL_ProxyThreadCfg  threadCfg;
+#endif
 
     /* Error check */
     if(NULL_PTR == proxyHandle)
