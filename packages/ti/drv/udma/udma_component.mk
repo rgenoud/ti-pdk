@@ -48,6 +48,8 @@ drvudma_j7200_CORELIST  = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1
 drvudma_am64x_CORELIST  = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 m4f_0
 drvudma_j721s2_CORELIST  = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 c7x_1 c7x_2 c7x-hostemu
 drvudma_j784s4_CORELIST  = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mcu4_0 mcu4_1 c7x_1 c7x_2 c7x_3 c7x_4 c7x-hostemu
+drvudma_am62x_CORELIST  = mpu1_0
+drvudma_am62a_CORELIST  = mpu1_0
 
 # Define the rule to generate UDMA Drivers BOARDLIST for each rtos_type
 # Default BOARDLIST for each rtos_type is defined in 'ti/build/makerules/component.mk'
@@ -72,6 +74,15 @@ drvudma_$(SOC)_example_CORELIST = $(drvudma_$(SOC)_CORELIST)
 else
 drvudma_am65xx_example_CORELIST = mpu1_0 mcu1_0
 drvudma_am64x_example_CORELIST  = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mpu1_0 #m4f for baremetal examples only
+drvudma_am62x_example_CORELIST  = mpu1_0 #m4f for baremetal examples only
+drvudma_am62a_example_CORELIST  = mpu1_0 #m4f for baremetal examples only
+endif
+
+ifeq ($(BUILD_OS_TYPE), qnx)
+drvudma_j721e_CORELIST += qnx_mpu1_0
+drvudma_j7200_CORELIST += qnx_mpu1_0
+drvudma_am62x_CORELIST += qnx_mpu1_0
+drvudma_am62a_CORELIST += qnx_mpu1_0
 endif
 
 ############################

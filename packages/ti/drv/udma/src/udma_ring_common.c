@@ -561,7 +561,9 @@ int32_t Udma_ringMonAlloc(Udma_DrvHandle drvHandle,
                           uint16_t ringMonNum)
 {
     int32_t     retVal = UDMA_SOK;
+#if (UDMA_SOC_CFG_RING_MON_PRESENT == 1)
     uint32_t    allocDone = (uint32_t) FALSE;
+#endif
     uint32_t    instType;
 
     /* Error check */
