@@ -205,17 +205,21 @@ static uint32_t DmaUtilsAutoInc3d_getTrFlags(int32_t syncType)
     return flags;
 }
 
-static uint32_t DmaUtilsAutoInc3d_getTrFmtFlags(DmaUtilsAutoInc3d_TransferCirc * circProp)
+static uint32_t DmaUtilsAutoInc3d_getTrFmtFlags(DmaUtilsAutoInc3d_TransferCirc * circProp, int32_t dmaDfmt)
 {
     uint32_t fmtflags = 0;
-    if ( ( circProp->circSize1 != 0 ) ||
+    uint32_t  eltype    = CSL_UDMAP_TR_FMTFLAGS_ELYPE_1;
+    uint32_t  sectrType = CSL_UDMAP_TR_FMTFLAGS_SECTR_NONE;
+    int32_t  CBK0      = CSL_UDMAP_TR_FMTFLAGS_AMODE_SPECIFIC_CBK_512B;
+    int32_t  CBK1      = CSL_UDMAP_TR_FMTFLAGS_AMODE_SPECIFIC_CBK_512B;
+    uint32_t circDir    = CSL_UDMAP_TR_FMTFLAGS_DIR_DST_USES_AMODE;
+    uint32_t  AMODE     = CSL_UDMAP_TR_FMTFLAGS_AMODE_LINEAR;
+
+	  if ( ( circProp->circSize1 != 0 ) ||
                 ( circProp->circSize2 != 0 ) )
     {
-        int32_t CBK0;
-        int32_t CBK1;
         uint32_t circSize1 = circProp->circSize1;
         uint32_t circSize2 = circProp->circSize2;
-        uint32_t circDir;
 
         if ( circProp->circDir == DMAUTILSAUTOINC3D_CIRCDIR_SRC )
         {
@@ -233,21 +237,77 @@ static uint32_t DmaUtilsAutoInc3d_getTrFmtFlags(DmaUtilsAutoInc3d_TransferCirc *
         {
            CBK1 = 0;
         }
-
-        fmtflags = CSL_FMK(UDMAP_TR_FMTFLAGS_AMODE, CSL_UDMAP_TR_FMTFLAGS_AMODE_CIRCULAR) |
-                   CSL_FMK(UDMAP_TR_FMTFLAGS_DIR, circDir) |
-                   CSL_FMK(UDMAP_TR_FMTFLAGS_ELYPE, CSL_UDMAP_TR_FMTFLAGS_ELYPE_1) |
-                   CSL_FMK(UDMAP_TR_FMTFLAGS_DFMT, CSL_UDMAP_TR_FMTFLAGS_DFMT_NO_CHANGE ) |
-                   CSL_FMK(UDMAP_TR_FMTFLAGS_SECTR, CSL_UDMAP_TR_FMTFLAGS_SECTR_NONE ) |
+        AMODE = CSL_UDMAP_TR_FMTFLAGS_AMODE_CIRCULAR;
+     }
+    if (dmaDfmt == DMAUTILSAUTOINC3D_DFMT_COMP || dmaDfmt == DMAUTILSAUTOINC3D_DFMT_DECOMP ) /*TODO (de)compression CSLs don't exist yet*/
+    {
+      eltype    = CSL_UDMAP_TR_FMTFLAGS_ELYPE_16;
+      sectrType = CSL_UDMAP_TR_FMTFLAGS_SECTR_64;
+	  }
+    fmtflags =     CSL_FMK(UDMAP_TR_FMTFLAGS_AMODE,                   AMODE                  ) |
+                   CSL_FMK(UDMAP_TR_FMTFLAGS_DIR,                 circDir                ) |
+                   CSL_FMK(UDMAP_TR_FMTFLAGS_ELYPE,               eltype                 ) |
+               	   CSL_FMK(UDMAP_TR_FMTFLAGS_DFMT,                dmaDfmt                ) |
+                   CSL_FMK(UDMAP_TR_FMTFLAGS_SECTR,               sectrType                            ) |
                    CSL_FMK(UDMAP_TR_FMTFLAGS_AMODE_SPECIFIC_CBK0, CBK0 ) |
                    CSL_FMK(UDMAP_TR_FMTFLAGS_AMODE_SPECIFIC_CBK1, CBK1 ) |
                    CSL_FMK(UDMAP_TR_FMTFLAGS_AMODE_SPECIFIC_AM0, circProp->addrModeIcnt0) |
                    CSL_FMK(UDMAP_TR_FMTFLAGS_AMODE_SPECIFIC_AM1, circProp->addrModeIcnt1) |
                    CSL_FMK(UDMAP_TR_FMTFLAGS_AMODE_SPECIFIC_AM2, circProp->addrModeIcnt2) |
                    CSL_FMK(UDMAP_TR_FMTFLAGS_AMODE_SPECIFIC_AM3, circProp->addrModeIcnt3);
-    }
 
     return fmtflags;
+}
+
+
+static uint32_t DmaUtilsAutoInc3d_SetupCmpSecTr(DmaUtilsAutoInc3d_TransferProp * transferProp);
+
+static uint32_t DmaUtilsAutoInc3d_SetupCmpSecTr(DmaUtilsAutoInc3d_TransferProp * transferProp)
+{
+    uint32_t cmpFlags = 0;
+    CSL_UdmapSecTR * secondaryTR = (CSL_UdmapSecTR *) transferProp->ioPointers.strPtr;
+
+    if ( transferProp->dmaDfmt == DMAUTILSAUTOINC3D_DFMT_COMP )
+    {
+      secondaryTR->addr    = (uint64_t)transferProp->ioPointers.dstPtr;
+      secondaryTR->data[4] = 0x0UL; /*maximum offset*/
+    }
+    else
+    {
+      secondaryTR->addr = (uint64_t)transferProp->ioPointers.srcPtr;
+      secondaryTR->data[4] = (uint64_t)transferProp->ioPointers.cdbPtr - (uint64_t)transferProp->ioPointers.strPtr; /*offset to CDB table*/
+    }
+    
+    uint32_t sectrFlags  = 1U; /*TODO CSL doesn't exist yet for compression secTR type*/
+
+    secondaryTR->flags   = (sectrFlags & 0xF) | (transferProp->cmpProp.sbDim1 & 0xFFFFFFF0);
+    secondaryTR->data[1] = ( (transferProp->cmpProp.sbIcnt0 & 0xFFFF)       )
+                         | ( (transferProp->cmpProp.sbIcnt1 & 0xFFFF) << 16 );
+    secondaryTR->data[2] = transferProp->cmpProp.sDim0;
+    secondaryTR->data[3] = transferProp->cmpProp.dDim0;
+    if ( transferProp->cmpProp.cmpAlg == 3 ) /*TODO CSL doesn't exist yet for variable K SEG type */  
+    { /*Image/video compression flags setup*/
+      cmpFlags    = ( (transferProp->cmpProp.cmpAlg       & 0xF )       )
+                  | ( (transferProp->cmpProp.varKStartK   & 0x7 ) << 8  )
+                  | ( (transferProp->cmpProp.varKUpdateK  & 0x3 ) << 12 )
+                  | ( (transferProp->cmpProp.varKElemSize & 0x3 ) << 16 )
+                  | ( (transferProp->cmpProp.varKSubType  & 0x7 ) << 20 )
+                  | ( (transferProp->cmpProp.varKSubSel0  & 0x3 ) << 24 )
+                  | ( (transferProp->cmpProp.varKSubSel1  & 0x3 ) << 26 )
+                  | ( (transferProp->cmpProp.varKSubSel2  & 0x3 ) << 28 )
+                  | ( (transferProp->cmpProp.varKSubSel3  & 0x3 ) << 30 );
+    }
+    else
+    { /*Analytical compression flags setup*/
+      cmpFlags    = ( (transferProp->cmpProp.cmpAlg  & 0xF )      )
+                  | ( (transferProp->cmpProp.sbAM0   & 0x3 ) << 4 )
+                  | ( (transferProp->cmpProp.sbAM1   & 0x3 ) << 6 )
+                  | ( (transferProp->cmpProp.cmpBias & 0xFF) << 8 );
+    
+    }
+    secondaryTR->data[0] = cmpFlags;
+ 
+  return DMAUTILS_SOK;
 }
 
 static void DmaUtilsAutoInc3d_setupTr(CSL_UdmapTR * tr,
@@ -259,7 +319,11 @@ static void DmaUtilsAutoInc3d_setupTr(CSL_UdmapTR * tr,
      /* Setup flags in TR*/
     tr->flags     = DmaUtilsAutoInc3d_getTrFlags(transferProp->syncType);
     /* Configure circularity parameters if required */
-    tr->fmtflags    = DmaUtilsAutoInc3d_getTrFmtFlags(&transferProp->circProp);
+    tr->fmtflags    = DmaUtilsAutoInc3d_getTrFmtFlags(&transferProp->circProp, transferProp->dmaDfmt);
+    if ( transferProp->dmaDfmt == DMAUTILSAUTOINC3D_DFMT_DECOMP ) /*TODO decompression CSLs don't exist yet*/
+      tr->addr       = (uintptr_t)transferProp->ioPointers.strPtr;
+    else
+      tr->addr       = (uintptr_t)transferProp->ioPointers.srcPtr;
     tr->icnt0        = transferProp->transferDim.sicnt0;
     tr->icnt1        = transferProp->transferDim.sicnt1;
     tr->icnt2        = transferProp->transferDim.sicnt2;
@@ -267,6 +331,10 @@ static void DmaUtilsAutoInc3d_setupTr(CSL_UdmapTR * tr,
     tr->dim1        = transferProp->transferDim.sdim1;
     tr->dim2        = transferProp->transferDim.sdim2;
     tr->dim3        = transferProp->transferDim.sdim3;
+    if ( transferProp->dmaDfmt == DMAUTILSAUTOINC3D_DFMT_COMP ) /*TODO compression CSLs don't exist yet*/
+      tr->daddr      = (uintptr_t) transferProp->ioPointers.strPtr;
+    else
+      tr->daddr      = (uintptr_t) transferProp->ioPointers.dstPtr;
     tr->dicnt0       = transferProp->transferDim.dicnt0;
     tr->dicnt1       = transferProp->transferDim.dicnt1;
     tr->dicnt2       = transferProp->transferDim.dicnt2;
@@ -274,9 +342,10 @@ static void DmaUtilsAutoInc3d_setupTr(CSL_UdmapTR * tr,
     tr->ddim1      =  transferProp->transferDim.ddim1;
     tr->ddim2      =  transferProp->transferDim.ddim2;
     tr->ddim3      =  transferProp->transferDim.ddim3;
-
-    tr->addr  = (uintptr_t)transferProp->ioPointers.srcPtr;
-    tr->daddr = (uintptr_t)transferProp->ioPointers.dstPtr;
+    if (transferProp->dmaDfmt == DMAUTILSAUTOINC3D_DFMT_COMP || transferProp->dmaDfmt == DMAUTILSAUTOINC3D_DFMT_DECOMP)
+    {
+      int32_t success = DmaUtilsAutoInc3d_SetupCmpSecTr(transferProp);
+    }
 }
 
 static void DmaUtilsAutoInc3d_printf(void * autoIncrementContext, int traceLevel, const char *format, ...);
@@ -306,7 +375,7 @@ static void  DmaUtilsAutoInc3d_initializeContext(void * autoIncrementContext)
 
     memset(autoIncHandle, 0, sizeof(DmaUtilsAutoInc3d_Context));
 
-//:TODO: This needs to be done at appropriate place
+/*:TODO: This needs to be done at appropriate place*/
 #ifdef HOST_EMULATION
 
 #endif
@@ -712,7 +781,7 @@ int32_t DmaUtilsAutoInc3d_configure(void * autoIncrementContext, int32_t channel
         //:TODO: currently host emulation doesn't handle multiple TR in direct TR mode
         for ( i = 0; i < numTr; i++)
         {
-#ifndef HOST_EMULATION
+#if !defined(HOST_EMULATION)
               Udma_chDruSubmitTr(channelHandle, tr + i);
 #else
               druChannelNum = Udma_chGetNum(channelHandle);
@@ -742,7 +811,7 @@ int32_t DmaUtilsAutoInc3d_configure(void * autoIncrementContext, int32_t channel
 
 #ifdef HOST_EMULATION
       CSL_UdmapTR           *pTr = (CSL_UdmapTR *)(trMem + sizeof(CSL_UdmapTR));
-
+      udmaDrvHandle = (Udma_DrvHandle)dmautilsContext->initParams.udmaDrvHandle;
       druChannelNum = (channelHandle->extChNum - channelHandle->utcInfo->startCh);
       hostEmulation_druChSubmitAtomicTr(dmautilsContext->initParams.udmaDrvHandle->utcInfo[UDMA_UTC_ID_MSMC_DRU0].druRegs,
                                                                         druChannelNum,
@@ -789,7 +858,7 @@ void  DmaUtilsAutoInc3d_wait(void * autoIncrementContext, int32_t channelId)
 
     dmautilsContext = (DmaUtilsAutoInc3d_Context *)autoIncrementContext;
 
-#ifndef HOST_EMULATION
+#if !defined(HOST_EMULATION)
     volatile uint64_t eflRegisterVal;
     uint64_t waitWord;
 
