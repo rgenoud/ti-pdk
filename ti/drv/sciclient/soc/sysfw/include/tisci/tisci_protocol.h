@@ -156,6 +156,9 @@ struct tisci_sec_header {
 #define TISCI_MSG_SET_DEVICE_RESETS             (0x0202U)
 #define TISCI_MSG_DEVICE_DROP_POWERUP_REF       (0x0203U)
 
+#define TISCI_MSG_PREPARE_SLEEP                 (0x0300U)
+#define TISCI_MSG_ENTER_SLEEP                   (0x0301U)
+
 /** Message to set a firewall region configuration */
 #define TISCI_MSG_SET_FWL_REGION                (0x9000U)
 /** Message to get a firewall region configuration */

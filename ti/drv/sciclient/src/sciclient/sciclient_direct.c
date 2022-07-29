@@ -259,6 +259,10 @@ int32_t Sciclient_service (const Sciclient_ReqPrm_t *pReqPrm,
             case TISCI_MSG_GET_DEVICE:
             case TISCI_MSG_SET_DEVICE_RESETS:
             case TISCI_MSG_SYS_RESET:
+            case TISCI_MSG_PREPARE_SLEEP:
+		    if (msgType == TISCI_MSG_PREPARE_SLEEP)
+			    UART_printf("TISCI_MSG_PREPARE_SLEEP\n");
+	    case TISCI_MSG_PROC_WAIT_STATUS:
                 memcpy(message, pReqPrm->pReqPayload, pReqPrm->reqPayloadSize);
                 ret = Sciclient_ProcessPmMessage(pReqPrm->flags, message);
                 if (pRespPrm->pRespPayload != NULL)
@@ -562,6 +566,10 @@ int32_t Sciclient_ProcessPmMessage(const uint32_t reqFlags, void *tx_msg)
             break;
         case TISCI_MSG_SYS_RESET               :
             ret = sys_reset_handler((uint32_t*)tx_msg); break;
+	case TISCI_MSG_PREPARE_SLEEP           :
+		ret = CSL_PASS; break;
+        case TISCI_MSG_PROC_WAIT_STATUS           :
+		ret = CSL_PASS; break;
         default:
             ret = CSL_EFAIL; msg_inval = 1U;
     }
