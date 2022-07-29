@@ -119,6 +119,9 @@ void Ipc_setupSciServer(void);
 /**< Initialize SCI Server, to process RM/PM Requests by other cores */
 #endif
 
+#if defined(CONFIG_DM_TRACE_UART)
+#include <ti/board/src/j7200_evm/include/board_internal.h>
+#endif
 /* ========================================================================== */
 /*                            Global Variables                                */
 /* ========================================================================== */
@@ -245,6 +248,10 @@ int main(void)
     TaskP_Params taskParams;
 
 
+#if defined(CONFIG_DM_TRACE_UART)
+    Board_uartStdioInit();
+    Board_pinmuxConfig();
+#endif
 
 #if defined ECHO_TEST_BTCM && defined FREERTOS && defined BUILD_MCU
     /* Relocate FreeRTOS Reset Vectors from BTCM*/
