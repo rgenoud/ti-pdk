@@ -301,6 +301,7 @@ static void taskFxn(void* a0, void* a1)
     sciserverInitTaskParams.stacksize    = sizeof (gSciserverInitTskStack);
 
     sciserverInitTask = TaskP_create(Ipc_setupSciServer, &sciserverInitTaskParams);
+
     if(NULL == sciserverInitTask)
     {
         OS_stop();

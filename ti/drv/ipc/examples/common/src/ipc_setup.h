@@ -49,8 +49,13 @@ extern "C" {
   #include <xdc/runtime/System.h>
   #define App_printf System_printf
 #else
-  #include "ipc_trace.h"
-  #define App_printf  Ipc_Trace_printf
+  #if defined(CONFIG_DM_TRACE_UART)
+    #include <ti/drv/uart/UART_stdio.h>
+    #define App_printf UART_printf
+  #else
+    #include "ipc_trace.h"
+    #define App_printf  Ipc_Trace_printf
+  #endif
 #endif
 
 /* this should be >= RPMessage_getObjMemRequired() */

@@ -55,6 +55,7 @@
 #include <ti/drv/sciclient/sciclient.h>
 #include <ti/drv/sciclient/src/sciclient/sciclient_priv.h>
 #include <ti/drv/sciclient/sciserver.h>
+void UART_printf(const char *pcString, ...);
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
@@ -236,6 +237,7 @@ int32_t Sciclient_service (const Sciclient_ReqPrm_t *pReqPrm,
         ret = Sciclient_serviceGetThreadIds (pReqPrm, &contextId, &txThread,
                                          &rxThread);
     }
+//    UART_printf("type = 0x%x, flags = %d\n", msgType, pReqPrm->flags);
     if (CSL_PASS == ret)
     {
         ret = Sciclient_servicePrepareHeader(pReqPrm, &localSeqId,
