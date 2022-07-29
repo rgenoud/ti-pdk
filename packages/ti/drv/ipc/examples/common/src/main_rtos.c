@@ -85,6 +85,10 @@
 #include <ti/drv/ipc/examples/rtos/ipc_extended_test/ipc_extended_setup.h>
 #endif
 
+#ifdef CONFIG_DM_TRACE_UART
+#include <ti/board/src/j7200_evm/include/board_internal.h>
+#endif
+
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
@@ -227,7 +231,10 @@ int main(void)
     TaskP_Handle task;
     TaskP_Params taskParams;
 
-
+#ifdef CONFIG_DM_TRACE_UART
+    Board_uartStdioInit();
+    Board_pinmuxConfig();
+#endif
 
 #if defined ECHO_TEST_BTCM && defined FREERTOS && defined BUILD_MCU
     /* Relocate FreeRTOS Reset Vectors from BTCM*/
