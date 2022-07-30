@@ -76,7 +76,7 @@
 
 #include <stdint.h>
 #include <stdarg.h>
-//#include "udma.h"
+#include <ti/csl/csl_types.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -460,7 +460,7 @@ typedef struct
     int32_t(*DmaUtilsVprintf)(const char * format, va_list arg);
     /** Handle to the UDMA driver to be used for the utility. If user sets
     it to NULL then utility will use a default udma driver handle */
-    Udma_DrvHandle                    udmaDrvHandle;
+    void *                    udmaDrvHandle;
 }DmaUtilsAutoInc3d_InitParam;
 
 

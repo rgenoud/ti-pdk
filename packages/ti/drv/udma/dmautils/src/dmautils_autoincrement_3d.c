@@ -397,7 +397,7 @@ int32_t DmaUtilsAutoInc3d_getContextSize(int32_t numChannels)
 static int32_t DmaUtilsAutoInc3d_setupContext(void * autoIncrementContext, DmaUtilsAutoInc3d_InitParam * initParams);
 static int32_t DmaUtilsAutoInc3d_setupContext(void * autoIncrementContext, DmaUtilsAutoInc3d_InitParam * initParams)
 {
-    int32_t     retVal = UDMA_SOK;
+    int32_t     retVal = DMAUTILS_SOK;
     int32_t memLocation = 0;
     uint8_t * memPointer;
     int32_t i;
@@ -418,7 +418,7 @@ static int32_t DmaUtilsAutoInc3d_setupContext(void * autoIncrementContext, DmaUt
     if ( memLocation > initParams->contextSize)
     {
         DmaUtilsAutoInc3d_printf(autoIncrementContext, 0, " DmaUtilsAutoInc3d_setupContext : Failed \n");
-        retVal = UDMA_EINVALID_PARAMS;
+        retVal = DMAUTILS_EINVALID_PARAMS;
     }
 
     return retVal;
@@ -439,13 +439,13 @@ int32_t DmaUtilsAutoInc3d_init(void * autoIncrementContext , DmaUtilsAutoInc3d_I
 
   if ( initParams == NULL)
   {
-    retVal = UDMA_EBADARGS;
+    retVal = DMAUTILS_EBADARGS;
     goto Exit;
   }
 
   if ( autoIncrementContext == NULL)
   {
-    retVal = UDMA_EBADARGS;
+    retVal = DMAUTILS_EBADARGS;
     goto Exit;
   }
 
@@ -508,7 +508,7 @@ int32_t DmaUtilsAutoInc3d_init(void * autoIncrementContext , DmaUtilsAutoInc3d_I
 
       channelHandle = &(channelContext->chHandle);
 
-      retVal = Udma_chOpen(initParams->udmaDrvHandle, channelHandle, chType, &chPrms);
+      retVal = Udma_chOpen((Udma_DrvHandle)initParams->udmaDrvHandle, channelHandle, chType, &chPrms);
       if(UDMA_SOK != retVal)
       {
           DmaUtilsAutoInc3d_printf(autoIncrementContext, 0, "Udma_chOpen : Failed \n");
@@ -586,7 +586,7 @@ int32_t DmaUtilsAutoInc3d_prepareTr(DmaUtilsAutoInc3d_TrPrepareParam * trPrepPar
 
     if ( trPrepParam == NULL )
     {
-      retVal = UDMA_EBADARGS;
+      retVal = DMAUTILS_EBADARGS;
       goto Exit;
     }
 
@@ -600,7 +600,7 @@ int32_t DmaUtilsAutoInc3d_prepareTr(DmaUtilsAutoInc3d_TrPrepareParam * trPrepPar
 
     if ( trPrepParam->trMem == NULL )
     {
-      retVal = UDMA_EBADARGS;
+      retVal = DMAUTILS_EBADARGS;
       goto Exit;
     }
 
@@ -667,29 +667,30 @@ int32_t DmaUtilsAutoInc3d_convertTrVirtToPhyAddr(void * autoIncrementContext,
     int32_t i;
     DmaUtilsAutoInc3d_Context        * dmautilsContext;
     DmaUtilsAutoInc3d_ChannelContext * channelContext;
+    Udma_DrvHandle udmaDrvHandle;
     int32_t druChannelNum;
 
-    if ( autoIncrementContext == NULL )
+    if ( autoIncrementContext == NULL  )
     {
-      retVal = UDMA_EBADARGS;
+      retVal = DMAUTILS_EBADARGS;
       DmaUtilsAutoInc3d_printf(autoIncrementContext, 0, "DmaUtilsAutoInc3d_convertTrVirtToPhyAddr : Failed :autoIncrementContext == NULL \n");
       goto Exit;
     }
     dmautilsContext = (DmaUtilsAutoInc3d_Context *)autoIncrementContext;
-
+    udmaDrvHandle = (Udma_DrvHandle)dmautilsContext->initParams.udmaDrvHandle;
     /* Do not call the translation function if the pointer is already NULL */
-    if ( dmautilsContext->initParams.udmaDrvHandle->initPrms.virtToPhyFxn != NULL )
+    if ( udmaDrvHandle->initPrms.virtToPhyFxn != NULL )
     {
         if ( trPrepParam == NULL )
         {
-          retVal = UDMA_EBADARGS;
+          retVal = DMAUTILS_EBADARGS;
           DmaUtilsAutoInc3d_printf(autoIncrementContext, 0, "DmaUtilsAutoInc3d_convertTrVirtToPhyAddr : Failed :trPrepParam == NULL \n");
           goto Exit;
         }
 
         if ( trPrepParam->trMem == NULL )
         {
-          retVal = UDMA_EBADARGS;
+          retVal = DMAUTILS_EBADARGS;
           goto Exit;
         }
 
@@ -715,14 +716,14 @@ int32_t DmaUtilsAutoInc3d_convertTrVirtToPhyAddr(void * autoIncrementContext,
             if (( convertMask & DMAUTILSAUTOINC3D_ADDRCONVERTMASK_SRCADDR) ==
               DMAUTILSAUTOINC3D_ADDRCONVERTMASK_SRCADDR)
             {
-                pTrArray[i].addr = DmaUtilsAutoInc3d_getPhysicalAddress(dmautilsContext->initParams.udmaDrvHandle->initPrms.virtToPhyFxn,
+                pTrArray[i].addr = DmaUtilsAutoInc3d_getPhysicalAddress(udmaDrvHandle->initPrms.virtToPhyFxn,
                                                                         pTrArray[i].addr,
                                                                         druChannelNum);
             }
             if (( convertMask & DMAUTILSAUTOINC3D_ADDRCONVERTMASK_DSTADDR) ==
               DMAUTILSAUTOINC3D_ADDRCONVERTMASK_DSTADDR)
             {
-                pTrArray[i].daddr = DmaUtilsAutoInc3d_getPhysicalAddress(dmautilsContext->initParams.udmaDrvHandle->initPrms.virtToPhyFxn,
+                pTrArray[i].daddr = DmaUtilsAutoInc3d_getPhysicalAddress(udmaDrvHandle->initPrms.virtToPhyFxn,
                                                                         pTrArray[i].daddr,
                                                                         druChannelNum);
             }
@@ -740,31 +741,33 @@ int32_t DmaUtilsAutoInc3d_configure(void * autoIncrementContext, int32_t channel
     DmaUtilsAutoInc3d_ChannelContext * channelContext;
     uint32_t isRingBasedFlowReq =0;
     Udma_ChHandle channelHandle;
+    
 
     uint32_t i;
 
-#ifdef HOST_EMULATION
-    uint32_t druChannelNum;
-#endif
-    if ( autoIncrementContext == NULL)
+    if ( autoIncrementContext == NULL )
     {
-      retVal = UDMA_EBADARGS;
+      retVal = DMAUTILS_EBADARGS;
       DmaUtilsAutoInc3d_printf(autoIncrementContext, 0, "DmaUtilsAutoInc3d_configure : Failed :autoIncrementContext == NULL \n");
       goto Exit;
     }
 
     if ( trMem == NULL )
     {
-      retVal = UDMA_EBADARGS;
+      retVal = DMAUTILS_EBADARGS;
       DmaUtilsAutoInc3d_printf(autoIncrementContext, 0, "DmaUtilsAutoInc3d_configure : Failed : trMem == NULL \n");
       goto Exit;
     }
 
-    dmautilsContext = (DmaUtilsAutoInc3d_Context *)autoIncrementContext;
 
+    dmautilsContext = (DmaUtilsAutoInc3d_Context *)autoIncrementContext;    
     channelContext = dmautilsContext->channelContext[channelId];
     channelHandle = &channelContext->chHandle;
-
+#ifdef HOST_EMULATION
+    uint32_t druChannelNum;
+    Udma_DrvHandle udmaDrvHandle;
+    udmaDrvHandle = (Udma_DrvHandle)dmautilsContext->initParams.udmaDrvHandle;
+#endif
     if ( numTr > DMAUTILS_MAX_NUM_TR_DIRECT_TR_MODE)
     {
         isRingBasedFlowReq = 1U;
@@ -785,7 +788,7 @@ int32_t DmaUtilsAutoInc3d_configure(void * autoIncrementContext, int32_t channel
               Udma_chDruSubmitTr(channelHandle, tr + i);
 #else
               druChannelNum = Udma_chGetNum(channelHandle);
-              hostEmulation_druChSubmitAtomicTr(dmautilsContext->initParams.udmaDrvHandle->utcInfo[UDMA_UTC_ID_MSMC_DRU0].druRegs,
+              hostEmulation_druChSubmitAtomicTr(udmaDrvHandle->utcInfo[UDMA_UTC_ID_MSMC_DRU0].druRegs,
                                                                                 druChannelNum , (void *)tr);
 #endif
         }
@@ -811,15 +814,15 @@ int32_t DmaUtilsAutoInc3d_configure(void * autoIncrementContext, int32_t channel
 
 #ifdef HOST_EMULATION
       CSL_UdmapTR           *pTr = (CSL_UdmapTR *)(trMem + sizeof(CSL_UdmapTR));
-      udmaDrvHandle = (Udma_DrvHandle)dmautilsContext->initParams.udmaDrvHandle;
+      
       druChannelNum = (channelHandle->extChNum - channelHandle->utcInfo->startCh);
-      hostEmulation_druChSubmitAtomicTr(dmautilsContext->initParams.udmaDrvHandle->utcInfo[UDMA_UTC_ID_MSMC_DRU0].druRegs,
+      hostEmulation_druChSubmitAtomicTr(udmaDrvHandle->utcInfo[UDMA_UTC_ID_MSMC_DRU0].druRegs,
                                                                         druChannelNum,
                                                                         (void *)pTr);
 
       /* Use this field to track the TR, For the target build this would be handled by hardware */
       /* In real hardware this will not be like this it is done just for host emulation*/
-      dmautilsContext->initParams.udmaDrvHandle->utcInfo[UDMA_UTC_ID_MSMC_DRU0].druRegs->CHATOMIC[druChannelNum].DEBUG[1].NEXT_TR_WORD0_1 = 1;
+      udmaDrvHandle->utcInfo[UDMA_UTC_ID_MSMC_DRU0].druRegs->CHATOMIC[druChannelNum].DEBUG[1].NEXT_TR_WORD0_1 = 1;
 
 #endif
     }
@@ -841,7 +844,8 @@ int32_t DmaUtilsAutoInc3d_trigger(void * autoIncrementContext, int32_t channelId
 
     CSL_druChSetGlobalTrigger0Raw(dmautilsContext->channelContext[channelId]->swTriggerPointer);//:TODO: This should be replaced by something else as we are not suppose to directly use these registers
 #ifdef HOST_EMULATION
-    hostEmulation_updateTriggerCount(dmautilsContext->initParams.udmaDrvHandle,
+    Udma_DrvHandle udmaDrvHandle = (Udma_DrvHandle)dmautilsContext->initParams.udmaDrvHandle;
+    hostEmulation_updateTriggerCount(udmaDrvHandle,
                                                      dmautilsContext->channelContext[channelId]->swTriggerPointer);
 #endif
 
@@ -870,8 +874,9 @@ void  DmaUtilsAutoInc3d_wait(void * autoIncrementContext, int32_t channelId)
     }
     __set_indexed(__EFCLR,0, waitWord);
 #else
+    Udma_DrvHandle udmaDrvHandle = (Udma_DrvHandle)dmautilsContext->initParams.udmaDrvHandle;
     /* Do the actual Transfer for host emulation*/
-    hostEmulation_triggerDMA(dmautilsContext->initParams.udmaDrvHandle);
+    hostEmulation_triggerDMA(udmaDrvHandle);
 #endif
 
     return;
@@ -885,14 +890,14 @@ int32_t DmaUtilsAutoInc3d_deconfigure(void * autoIncrementContext, int32_t chann
 
     if ( autoIncrementContext == NULL)
     {
-      retVal = UDMA_EBADARGS;
+      retVal = DMAUTILS_EBADARGS;
       DmaUtilsAutoInc3d_printf(autoIncrementContext, 0, "DmaUtilsAutoInc3d_configure : Failed :autoIncrementContext == NULL \n");
       goto Exit;
     }
 
     if ( trMem == NULL )
     {
-      retVal = UDMA_EBADARGS;
+      retVal = DMAUTILS_EBADARGS;
       DmaUtilsAutoInc3d_printf(autoIncrementContext, 0, "DmaUtilsAutoInc3d_configure : Failed : trMem == NULL \n");
       goto Exit;
     }
@@ -933,7 +938,7 @@ int32_t DmaUtilsAutoInc3d_deinit(void * autoIncrementContext)
     int32_t i;
     if ( autoIncrementContext == NULL)
     {
-        retVal = UDMA_EBADARGS;
+        retVal = DMAUTILS_EBADARGS;
         DmaUtilsAutoInc3d_printf(autoIncrementContext, 0, "DmaUtilsAutoInc3d_configure : Failed :autoIncrementContext == NULL \n");
         goto Exit;
     }
