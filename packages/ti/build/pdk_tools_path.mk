@@ -18,7 +18,7 @@ endif
   XDC_VERSION=3_61_04_40_core
   MMWAVE_DFP_VERSION=02_04_00_01
 
-ifeq ($(BOARD),$(filter $(BOARD), am62a_evm ))
+ifeq ($(BOARD),$(filter $(BOARD), am62a_evm am62a_hostemu am62a_loki))
   CGT_C7X_VERSION=3.0.0.STS
 else
   CGT_C7X_VERSION=2.1.1.LTS
