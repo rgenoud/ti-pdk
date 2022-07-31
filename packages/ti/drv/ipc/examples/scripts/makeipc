@@ -83,7 +83,7 @@ then
         done
     fi
 
-    # Iterate all cores of am62x
+    # Iterate all cores of am62a
     if [ "${MY_BOARD}" = "am62a_evm" ]
     then
         for i in "${cores_am62a[@]}"
