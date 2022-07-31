@@ -90,7 +90,7 @@ int main(void)
     TaskP_Handle task;
     TaskP_Params taskParams;
 
-#if defined (SOC_AM62X) || defined (SOC_AM62X)
+#if defined (SOC_AM62X) || defined (SOC_AM62A)
     void _freertosresetvectors (void);
     memcpy((void *)0x0, (void *)_freertosresetvectors , 0x40);
 #endif

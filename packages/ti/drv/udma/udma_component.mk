@@ -69,7 +69,7 @@ DRV_UDMA_BOARDLIST_MACRO_LIST := $(foreach curos, $(drvudma_RTOS_LIST), $(call D
 # Evaluate the macro list to generate BOARDLIST for all rtos_types
 $(eval ${DRV_UDMA_BOARDLIST_MACRO_LIST})
 
-ifneq ($(SOC),$(filter $(SOC), am64x am65xx am62x))
+ifneq ($(SOC),$(filter $(SOC), am64x am65xx am62x am62a))
 drvudma_$(SOC)_example_CORELIST = $(drvudma_$(SOC)_CORELIST)
 else
 drvudma_am65xx_example_CORELIST = mpu1_0 mcu1_0
@@ -83,12 +83,6 @@ drvudma_j721e_CORELIST += qnx_mpu1_0
 drvudma_j7200_CORELIST += qnx_mpu1_0
 drvudma_am62x_CORELIST += qnx_mpu1_0
 drvudma_am62a_CORELIST += qnx_mpu1_0
-endif
-ifeq ($(BUILD_OS_TYPE), qnx)
-drvudma_j721e_CORELIST += qnx_mpu1_0
-drvudma_j7200_CORELIST += qnx_mpu1_0
-#drvudma_am62x_CORELIST += qnx_mpu1_0
-#drvudma_am62a_CORELIST += qnx_mpu1_0
 endif
 
 ############################
