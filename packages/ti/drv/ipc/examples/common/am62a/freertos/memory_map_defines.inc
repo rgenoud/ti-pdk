@@ -4,8 +4,8 @@
 
 #define DDR0_ALLOCATED_START    0xA0000000 /* DDR0_RESERVED_START + DDR0_RESERVED_SIZE */
 
-#define SHARED_DDR_SPACE_START  0xAA000000
-#define SHARED_DDR_SPACE_SIZE   0x01C00000  /*  28MB */
+#define SHARED_DDR_SPACE_START  0xA0000000
+#define SHARED_DDR_SPACE_SIZE   0x00300000  /*  3MB */
 
 /*------------------------------------------------*/
 /* Size of various Memory Locations for each core */ 

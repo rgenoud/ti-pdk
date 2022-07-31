@@ -34,7 +34,7 @@
 /**
  *  \ingroup DRV_IPC_MODULE
  *  \defgroup DRV_IPC_SOC_MODULE IPC SoC Config
- *            This is IPC documentation specific to AM62x SoC
+ *            This is IPC documentation specific to AM62A SoC
  *
  *  @{
  */
@@ -42,10 +42,10 @@
 /**
  *  \file ipc_soc.h
  *
- *  \brief IPC Low Level Driver AM62x SOC specific file.
+ *  \brief IPC Low Level Driver AM62A SOC specific file.
  */
-#ifndef IPC_SOC_V4_H_
-#define IPC_SOC_V4_H_
+#ifndef IPC_SOC_V6_H_
+#define IPC_SOC_V6_H_
 
 #include <ti/drv/ipc/include/ipc_config.h>
 
@@ -57,7 +57,7 @@ extern "C" {
  * \brief VRing Buffer Size required for all core
  * combinations.
  */
-#define IPC_VRING_BUFFER_SIZE   (0x200000U)
+#define IPC_VRING_BUFFER_SIZE   (0x300000U)
 
 /** \brief Core definitions */
 #define    IPC_MPU1_0           (0U)    /**< ARM A53 - VM0 */
@@ -113,6 +113,6 @@ uint32_t Ipc_configClecRouter(uint32_t corePackEvent, uint32_t corePackEventBase
 }
 #endif
 
-#endif /* #ifndef IPC_SOC_V4_H_ */
+#endif /* #ifndef IPC_SOC_V6_H_ */
 
 /* @} */

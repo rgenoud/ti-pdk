@@ -49,7 +49,7 @@
 #include <ti/csl/csl_clec.h>
 
 /**
- *  \brief Processor IDs to name mapping for all processor in AM62x
+ *  \brief Processor IDs to name mapping for all processor in AM62A
  */
 static Ipc_ProcInfo g_Ipc_mp_procInfo[IPC_MAX_PROCS] =
 {
