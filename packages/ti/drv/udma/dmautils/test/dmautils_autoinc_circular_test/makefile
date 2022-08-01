@@ -28,8 +28,11 @@ CFLAGS_LOCAL_COMMON = $(PDK_CFLAGS)
 #   CFLAGS_LOCAL_<core/SoC/platform-name> =
 
 # Include common make files
-
-EXTERNAL_LNKCMD_FILE_LOCAL := c7x_vcop_lnk.cmd
+ifeq ($(SOC),$(filter $(SOC), am62a)) 
+EXTERNAL_LNKCMD_FILE_LOCAL := c7x_vcop_lnk_am62a.cmd
+else
+EXTERNAL_LNKCMD_FILE_LOCAL := c7x_lnk.cmd
+endif
 
 ifeq ($(MAKERULEDIR), )
 #Makerule path not defined, define this and assume relative path from ROOTDIR

@@ -45,10 +45,11 @@ operate a function on internal memory and transfer back the result.
 #include <stdio.h>
 #include <stdint.h>
 
+#include "ti/drv/udma/dmautils/udma_standalone/udma.h"
 #include "dmautils_autoinc_circular_example.h"
-
 #include "ti/drv/udma/dmautils/dmautils.h"
-#include "ti/drv/udma/udma.h"
+//#include "ti/drv/udma/udma.h"
+
 
 
 int32_t flipHorizontalKernel(
@@ -169,6 +170,7 @@ static int32_t testDmaAutoIncSetupTr(  int16_t   width,
     testDmaAutoIncNumTrRequired(width, height, blockWidth, blockHeight, &numHorzTrsRequired, &numVertTrRowsRequired);
 
     transferPropIn[0].syncType = DMAUTILSAUTOINC3D_SYNC_2D;
+    transferPropIn[0].dmaDfmt = DMAUTILSAUTOINC3D_DFMT_NONE;
 
     transferPropIn[0].circProp.circDir = DMAUTILSAUTOINC3D_CIRCDIR_DST;
     transferPropIn[0].circProp.circSize1 = circularPitch;
@@ -310,6 +312,8 @@ int32_t blockCopy(
     instId = UDMA_INST_ID_MAIN_0;
     UdmaInitPrms_init(instId, &initPrms);
     initPrms.printFxn = &testDmaAutoIncPrintf;
+    //PC-- commented for now	
+    //initPrms.skipGlobalEventReg = 1;
     retVal = Udma_init(drvHandle, &initPrms);
     if(UDMA_SOK != retVal)
     {
