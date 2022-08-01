@@ -75,6 +75,7 @@
 #endif
 uint8_t L2SRAM[L2SRAM_SIZE] __attribute__((aligned(128)));
 
+#if 0
 #if !defined(HOST_EMULATION)
 /*Configure CLEC*/
 static void appC7xClecInitDru(void)
@@ -109,6 +110,7 @@ static void appC7xClecInitDru(void)
         CSL_clecConfigEvent(clecBaseAddr, i, &cfgClec);
     }
 }
+#endif
 #endif
 
 typedef struct
@@ -162,124 +164,124 @@ dmautilsAutoIncTest_config gTestConfig[] =
 
 DmautilsAutoInc_AnalyticCompTest_config gAnalyticCompTestConfig[] =
 { 
-  {
-    0, /*testcaseId*/
-    0, /*requirementId*/
-    32, /*featurePlaneWidth*/
-    32, /*featurePlaneHeight*/
-    1024, /*tensorWidth*/
-    128, /*tensorHeight*/
-    128, /*outProcSize*/ 
-    1024, /*inProcSize*/  
-    128, /*Nco*/      
-    16, /*Nci*/       
-    DMAUTILSAUTOINC_ROW_FLOW, /*outDataFlowType*/ 
-    DMAUTILSAUTOINC_COLUMN_FLOW, /*inDataFlowType*/  
-    0, /*circularity*/     
-    128, /*sbWidth*/
-    8, /*sbHeight*/
-    0, /*algorithm*/
-    0, /*bias*/
-  },
+   {
+     0, /*testcaseId*/
+     0, /*requirementId*/
+     32, /*featurePlaneWidth*/
+     32, /*featurePlaneHeight*/
+     1024, /*tensorWidth*/
+     128, /*tensorHeight*/
+     128, /*outProcSize*/ 
+     1024, /*inProcSize*/  
+     128, /*Nco*/      
+     16, /*Nci*/       
+     DMAUTILSAUTOINC_ROW_FLOW, /*outDataFlowType*/ 
+     DMAUTILSAUTOINC_COLUMN_FLOW, /*inDataFlowType*/  
+     0, /*circularity*/     
+     128, /*sbWidth*/
+     8, /*sbHeight*/
+     0, /*algorithm*/
+     0, /*bias*/
+   },
 
-  {
-    1, /*testcaseId*/
-    0, /*requirementId*/
-    32, /*featurePlaneWidth*/
-    32, /*featurePlaneHeight*/
-    1024, /*tensorWidth*/
-    128, /*tensorHeight*/
-    1024, /*outProcSize*/ 
-    128, /*inProcSize*/  
-    16, /*Nco*/      
-    128, /*Nci*/       
-    DMAUTILSAUTOINC_COLUMN_FLOW, /*outDataFlowType*/ 
-    DMAUTILSAUTOINC_ROW_FLOW, /*inDataFlowType*/  
-    0, /*circularity*/     
-    128, /*sbWidth*/
-    8, /*sbHeight*/
-    1, /*algorithm*/
-    0, /*bias*/
-  },
+   {
+     1, /*testcaseId*/
+     0, /*requirementId*/
+     32, /*featurePlaneWidth*/
+     32, /*featurePlaneHeight*/
+     1024, /*tensorWidth*/
+     128, /*tensorHeight*/
+     1024, /*outProcSize*/ 
+     128, /*inProcSize*/  
+     16, /*Nco*/      
+     128, /*Nci*/       
+     DMAUTILSAUTOINC_COLUMN_FLOW, /*outDataFlowType*/ 
+     DMAUTILSAUTOINC_ROW_FLOW, /*inDataFlowType*/  
+     0, /*circularity*/     
+     128, /*sbWidth*/
+     8, /*sbHeight*/
+     1, /*algorithm*/
+     0, /*bias*/
+   },
 
-  {
-    2, /*testcaseId*/
-    0, /*requirementId*/
-    32, /*featurePlaneWidth*/
-    32, /*featurePlaneHeight*/
-    1024, /*tensorWidth*/
-    128, /*tensorHeight*/
-    128, /*outProcSize*/ 
-    64, /*inProcSize*/  
-    128, /*Nco*/      
-    128, /*Nci*/       
-    DMAUTILSAUTOINC_ROW_FLOW, /*outDataFlowType*/ 
-    DMAUTILSAUTOINC_ROW_FLOW, /*inDataFlowType*/  
-    0, /*circularity*/     
-    64, /*sbWidth*/
-    128, /*sbHeight*/
-    1, /*algorithm*/
-    0, /*bias*/
-  },
-  {
-    3, /*testcaseId*/
-    0, /*requirementId*/
-    32, /*featurePlaneWidth*/
-    32, /*featurePlaneHeight*/
-    1024, /*tensorWidth*/
-    128, /*tensorHeight*/
-    1024, /*outProcSize*/ 
-    1024, /*inProcSize*/  
-    16, /*Nco*/      
-    8, /*Nci*/       
-    DMAUTILSAUTOINC_COLUMN_FLOW, /*outDataFlowType*/ 
-    DMAUTILSAUTOINC_COLUMN_FLOW, /*inDataFlowType*/  
-    0, /*circularity*/     
-    1024, /*sbWidth*/
-    8, /*sbHeight*/
-    2, /*algorithm*/
-    0, /*bias*/
-  },
+   {
+     2, /*testcaseId*/
+     0, /*requirementId*/
+     32, /*featurePlaneWidth*/
+     32, /*featurePlaneHeight*/
+     1024, /*tensorWidth*/
+     128, /*tensorHeight*/
+     128, /*outProcSize*/ 
+     64, /*inProcSize*/  
+     128, /*Nco*/      
+     128, /*Nci*/       
+     DMAUTILSAUTOINC_ROW_FLOW, /*outDataFlowType*/ 
+     DMAUTILSAUTOINC_ROW_FLOW, /*inDataFlowType*/  
+     0, /*circularity*/     
+     64, /*sbWidth*/
+     128, /*sbHeight*/
+     1, /*algorithm*/
+     0, /*bias*/
+   },
+   {
+     3, /*testcaseId*/
+     0, /*requirementId*/
+     32, /*featurePlaneWidth*/
+     32, /*featurePlaneHeight*/
+     1024, /*tensorWidth*/
+     128, /*tensorHeight*/
+     1024, /*outProcSize*/ 
+     1024, /*inProcSize*/  
+     16, /*Nco*/      
+     8, /*Nci*/       
+     DMAUTILSAUTOINC_COLUMN_FLOW, /*outDataFlowType*/ 
+     DMAUTILSAUTOINC_COLUMN_FLOW, /*inDataFlowType*/  
+     0, /*circularity*/     
+     1024, /*sbWidth*/
+     8, /*sbHeight*/
+     2, /*algorithm*/
+     0, /*bias*/
+   },
   
-  {
-    4, /*testcaseId*/
-    0, /*requirementId*/
-    32, /*featurePlaneWidth*/
-    32, /*featurePlaneHeight*/
-    1024, /*tensorWidth*/
-    128, /*tensorHeight*/
-    1024, /*outProcSize*/ 
-    1024, /*inProcSize*/  
-    1, /*Nco*/      
-    1, /*Nci*/       
-    DMAUTILSAUTOINC_COLUMN_FLOW, /*outDataFlowType*/ 
-    DMAUTILSAUTOINC_COLUMN_FLOW, /*inDataFlowType*/  
-    0, /*circularity*/     
-    1024, /*sbWidth*/
-    1, /*sbHeight*/
-    2, /*algorithm*/
-    0, /*bias*/
-  },
+   {
+     4, /*testcaseId*/
+     0, /*requirementId*/
+     32, /*featurePlaneWidth*/
+     32, /*featurePlaneHeight*/
+     1024, /*tensorWidth*/
+     128, /*tensorHeight*/
+     1024, /*outProcSize*/ 
+     1024, /*inProcSize*/  
+     1, /*Nco*/      
+     1, /*Nci*/       
+     DMAUTILSAUTOINC_COLUMN_FLOW, /*outDataFlowType*/ 
+     DMAUTILSAUTOINC_COLUMN_FLOW, /*inDataFlowType*/  
+     0, /*circularity*/     
+     1024, /*sbWidth*/
+     1, /*sbHeight*/
+     2, /*algorithm*/
+     0, /*bias*/
+   },
 
-  {
-    0, /*testcaseId*/
-    0, /*requirementId*/
-    32, /*featurePlaneWidth*/
-    32, /*featurePlaneHeight*/
-    1024, /*tensorWidth*/
-    128, /*tensorHeight*/
-    128, /*outProcSize*/ 
-    1024, /*inProcSize*/  
-    128, /*Nco*/      
-    16, /*Nci*/       
-    DMAUTILSAUTOINC_ROW_FLOW, /*outDataFlowType*/ 
-    DMAUTILSAUTOINC_COLUMN_FLOW, /*inDataFlowType*/  
-    0, /*circularity*/     
-    128, /*sbWidth*/
-    8, /*sbHeight*/
-    0, /*algorithm*/
-    39, /*bias*/
-  },
+   {
+     0, /*testcaseId*/
+     0, /*requirementId*/
+     32, /*featurePlaneWidth*/
+     32, /*featurePlaneHeight*/
+     1024, /*tensorWidth*/
+     128, /*tensorHeight*/
+     128, /*outProcSize*/ 
+     1024, /*inProcSize*/  
+     128, /*Nco*/      
+     16, /*Nci*/       
+     DMAUTILSAUTOINC_ROW_FLOW, /*outDataFlowType*/ 
+     DMAUTILSAUTOINC_COLUMN_FLOW, /*inDataFlowType*/  
+     0, /*circularity*/     
+     128, /*sbWidth*/
+     8, /*sbHeight*/
+     0, /*algorithm*/
+     39, /*bias*/
+   },
   
 };
 
@@ -405,8 +407,10 @@ int32_t main()
 
   uint8_t*    pIntMmeBase  = L2SRAM;
   uint32_t   intMemSize   = L2SRAM_SIZE;
+  
   //uint8_t    useDMA      ;
   uint8_t    compress;
+  
   int32_t status = -1;
   uint32_t testcaseIdx;
 
@@ -431,7 +435,7 @@ int32_t main()
     }
     test_sciclientDmscGetVersion(NULL, 0 ); 
 #endif 
-    appC7xClecInitDru();
+    //appC7xClecInitDru(); //PC-- commented for now while we check clec
 #endif
   
   for (testcaseIdx = 0; testcaseIdx < sizeof(gAnalyticCompTestConfig)/ sizeof(DmautilsAutoInc_AnalyticCompTest_config); testcaseIdx++) 
@@ -459,11 +463,18 @@ int32_t main()
         sectr      = (uint8_t *)malloc(width * height + 64); // need two headers since compression and decompression have different fields and they will be interleaved...
         refOut     = input;
       #else
-        input      = (uint8_t *)0x70220000;
-        output     = (uint8_t *)0x70260000;
-        sectr      = (uint8_t *)0x702A0000;
-        compressed = (uint8_t *)0x80000000;
+        
+        sectr      = (uint8_t *)malloc(width * height + 64 + 128); // need two headers since compression and decompression have different fields and they will be interleaved...
+        input      = (uint8_t *)malloc(width * height + 128);
+        output     = (uint8_t *)malloc(width * height + 128);
+        compressed = (uint8_t *)malloc(width * height * 3 + 128);  
+        //malloc alignment to 128
+        sectr   = (uint8_t*)((((uint64_t)(sectr)+127)/128)*128);
+        input   = (uint8_t*)((((uint64_t)(input)+127)/128)*128);
+        output   = (uint8_t*)((((uint64_t)(output)+127)/128)*128);
+        compressed   = (uint8_t*)((((uint64_t)(compressed)+127)/128)*128);
         refOut     = input;
+        
       #endif
       memset(output,     0, tensorSize);
       memset(compressed, 0, tensorSize * 3);
@@ -471,7 +482,7 @@ int32_t main()
       
       fillBufferRandom(input, width, height, 0);
       printf("Tensor Filled\n");
-            compress = 1;
+      compress = 1;
 
 #if (!HOST_EMULATION) && (CORE_DSP)
       tscStart = _TSC_read();

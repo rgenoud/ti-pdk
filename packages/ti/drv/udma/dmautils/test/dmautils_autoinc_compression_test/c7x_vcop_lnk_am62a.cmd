@@ -23,7 +23,7 @@
 /*                                                                          */
 /****************************************************************************/
 -c
--heap  0x2000
+-heap  0x800000
 -stack 0x2000
 --args 0x1000
 --diag_suppress=10068 // "no matching section"
@@ -31,20 +31,21 @@
 
 MEMORY
 {
-  L2SRAM   (RWX): org = 0x7f000000, len = 0x3C000 /* Assuming 448KB of SRAM */
-  MSMCSRAM (RWX): org = 0x7e000000, len = 0x100000
-  L1D           : org = 0x7f03C000, len = 0x4000
-  DDR           : org = 0x83000000, len = 0x4C000000
+  L2_Main (RWX): org = 0x7e000000, len = 0x100000
+  L2_Aux  (RWX): org = 0x7f000000, len = 0x40000
+  L1D          : org = 0x64E00000, len = 0x4000
+  DDR          : org = 0x83000000, len = 0x4C000000
+// L2_Main          : org = 0x80000100, len = 0x800000
+// L2_Main_CINIT    : org = 0x80000000, len = 0x000100
 }
 
 
 SECTIONS
 {
-    .text       >       DDR
-
+    .text:_c_int00:   > DDR
+    .text       >       DDR    
     .bss        >       DDR  /* Zero-initialized data */
     .data       >       DDR  /* Initialized data */
-
     .cinit      >       DDR  /* could be part of const */
     .init_array >       DDR  /* C++ initializations */
     .stack      >       DDR
@@ -54,7 +55,7 @@ SECTIONS
     .switch     >       DDR /* For exception handling. */
                              /* Not a default ELF section -- remove?  */
                              /* could be part of const */
-    .sysmem     >       MSMCSRAM /* heap */
-	.L2SramSect >       L2SRAM /* TODO */
-	.MSMCSramSect >     MSMCSRAM
+    .sysmem     >       DDR /* heap */
+	.L2SramSect >       L2_Aux /* TODO */
+	.MSMCSramSect >     DDR
 }
