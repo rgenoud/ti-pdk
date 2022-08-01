@@ -54,12 +54,13 @@
 #ifndef MESSAGES_CORE_H
 #define MESSAGES_CORE_H
 
+
 /** Bit fields of TISCI_MSG_QUERY_FW_CAPS message */
-#define TISCI_MSG_FLAG_FW_CAP_GENERIC_CAP          BIT(0)
-#define TISCI_MSG_FLAG_FW_CAP_LPM_DEEP_SLEEP       BIT(1)
-#define TISCI_MSG_FLAG_FW_CAP_LPM_MCU_ONLY         BIT(2)
-#define TISCI_MSG_FLAG_FW_CAP_LPM_STANDBY          BIT(3)
-#define TISCI_MSG_FLAG_FW_CAP_LPM_PARTIAL_IO_ON    BIT(4)
+#define TISCI_MSG_FLAG_FW_CAP_GENERIC_CAP          TISCI_BIT(0)
+#define TISCI_MSG_FLAG_FW_CAP_LPM_DEEP_SLEEP       TISCI_BIT(1)
+#define TISCI_MSG_FLAG_FW_CAP_LPM_MCU_ONLY         TISCI_BIT(2)
+#define TISCI_MSG_FLAG_FW_CAP_LPM_STANDBY          TISCI_BIT(3)
+#define TISCI_MSG_FLAG_FW_CAP_LPM_PARTIAL_IO_ON    TISCI_BIT(4)
 
 /**
  * \brief Notification message to indicate the DMSC is available.
@@ -302,7 +303,7 @@ struct tisci_query_msmc_resp {
  * \param hdr TISCI header
  */
 struct tisci_get_trace_config_req {
-	struct tisci_header hdr;
+    struct tisci_header hdr;
 } __attribute__((__packed__));
 
 /**
@@ -314,9 +315,9 @@ struct tisci_get_trace_config_req {
  * \param trace_src_enables enabled source traces
  */
 struct tisci_get_trace_config_resp {
-	struct tisci_header	hdr;
-	uint16_t			trace_dst_enables;
-	uint16_t			trace_src_enables;
+    struct tisci_header    hdr;
+    uint16_t            trace_dst_enables;
+    uint16_t            trace_src_enables;
 } __attribute__((__packed__));
 
 /**
@@ -328,7 +329,7 @@ struct tisci_get_trace_config_resp {
  * \param hdr TISCI header
  */
 struct tisci_query_fw_caps_req {
-	struct tisci_header hdr;
+    struct tisci_header hdr;
 } __attribute__((__packed__));
 
 /**
@@ -340,8 +341,8 @@ struct tisci_query_fw_caps_req {
  *
  */
 struct tisci_query_fw_caps_resp {
-	struct tisci_header	hdr;
-	uint64_t			fw_caps;
+    struct tisci_header    hdr;
+    uint64_t            fw_caps;
 } __attribute__((__packed__));
 
 #endif /* MESSAGES_CORE_H */
