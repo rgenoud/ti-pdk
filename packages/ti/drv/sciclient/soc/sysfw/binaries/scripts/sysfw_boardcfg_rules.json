@@ -3025,6 +3025,18 @@
             "j784s4": {
                 "values": [
                     {
+                        "name": "RESASG_UTYPE(J784S4_DEV_GPIOMUX_INTRTR0, RESASG_SUBTYPE_IR_OUTPUT)",
+                        "type": 640,
+                        "start_resource": 0,
+                        "num_resource": 64
+                    },
+                    {
+                        "name": "RESASG_UTYPE(J784S4_DEV_CMPEVENT_INTRTR0, RESASG_SUBTYPE_IR_OUTPUT)",
+                        "type": 704,
+                        "start_resource": 0,
+                        "num_resource": 16
+                    },
+                    {
                         "name": "RESASG_UTYPE(J784S4_DEV_MAIN2MCU_LVL_INTRTR0, RESASG_SUBTYPE_IR_OUTPUT)",
                         "type": 11072,
                         "start_resource": 0,
@@ -3047,18 +3059,6 @@
                         "type": 11328,
                         "start_resource": 0,
                         "num_resource": 32
-                    },
-                    {
-                        "name": "RESASG_UTYPE(J784S4_DEV_GPIOMUX_INTRTR0, RESASG_SUBTYPE_IR_OUTPUT)",
-                        "type": 13376,
-                        "start_resource": 0,
-                        "num_resource": 64
-                    },
-                    {
-                        "name": "RESASG_UTYPE(J784S4_DEV_CMPEVENT_INTRTR0, RESASG_SUBTYPE_IR_OUTPUT)",
-                        "type": 13440,
-                        "start_resource": 0,
-                        "num_resource": 16
                     },
                     {
                         "name": "RESASG_UTYPE(J784S4_DEV_NAVSS0_BCDMA_0, RESASG_SUBTYPE_RA_ERROR_OES)",
@@ -3485,233 +3485,11 @@
                         "type": 21197,
                         "start_resource": 16406,
                         "num_resource": 1514
-                    },
-                    {
-                        "name": "RESASG_UTYPE(J784S4_DEV_MCU_SA3_SS0_INTAGGR_0, RESASG_SUBTYPE_IA_VINT)",
-                        "type": 23818,
-                        "start_resource": 8,
-                        "num_resource": 0
-                    },
-                    {
-                        "name": "RESASG_UTYPE(J784S4_DEV_MCU_SA3_SS0_INTAGGR_0, RESASG_SUBTYPE_GLOBAL_EVENT_SEVT)",
-                        "type": 23821,
-                        "start_resource": 100,
-                        "num_resource": 0
-                    },
-                    {
-                        "name": "RESASG_UTYPE(J784S4_DEV_MCU_SA3_SS0_INTAGGR_0, RESASG_SUBTYPE_IA_TIMERMGR_EVT_OES)",
-                        "type": 23829,
-                        "start_resource": 0,
-                        "num_resource": 1024
-                    },
-                    {
-                        "name": "RESASG_UTYPE(J784S4_DEV_MCU_SA3_SS0_INTAGGR_0, RESASG_SUBTYPE_IA_PKTDMA_TX_CHAN_ERROR_OES)",
-                        "type": 23830,
-                        "start_resource": 4096,
-                        "num_resource": 29
-                    },
-                    {
-                        "name": "RESASG_UTYPE(J784S4_DEV_MCU_SA3_SS0_INTAGGR_0, RESASG_SUBTYPE_IA_PKTDMA_TX_FLOW_COMPLETION_OES)",
-                        "type": 23831,
-                        "start_resource": 4608,
-                        "num_resource": 99
-                    },
-                    {
-                        "name": "RESASG_UTYPE(J784S4_DEV_MCU_SA3_SS0_INTAGGR_0, RESASG_SUBTYPE_IA_PKTDMA_RX_CHAN_ERROR_OES)",
-                        "type": 23832,
-                        "start_resource": 5120,
-                        "num_resource": 24
-                    },
-                    {
-                        "name": "RESASG_UTYPE(J784S4_DEV_MCU_SA3_SS0_INTAGGR_0, RESASG_SUBTYPE_IA_PKTDMA_RX_FLOW_COMPLETION_OES)",
-                        "type": 23833,
-                        "start_resource": 5632,
-                        "num_resource": 51
-                    },
-                    {
-                        "name": "RESASG_UTYPE(J784S4_DEV_MCU_SA3_SS0_INTAGGR_0, RESASG_SUBTYPE_IA_PKTDMA_RX_FLOW_STARVATION_OES)",
-                        "type": 23834,
-                        "start_resource": 6144,
-                        "num_resource": 51
-                    },
-                    {
-                        "name": "RESASG_UTYPE(J784S4_DEV_MCU_SA3_SS0_INTAGGR_0, RESASG_SUBTYPE_IA_PKTDMA_RX_FLOW_FIREWALL_OES)",
-                        "type": 23835,
-                        "start_resource": 6656,
-                        "num_resource": 51
-                    },
-                    {
-                        "name": "RESASG_UTYPE(AM62X_DEV_DMASS0_INTAGGR_0, RESASG_SUBTYPE_IA_BCDMA_CHAN_ERROR_OES)",
-                        "type": 1814,
-                        "start_resource": 8192,
-                        "num_resource": 32
-                    },
-                    {
-                        "name": "RESASG_UTYPE(AM62X_DEV_DMASS0_INTAGGR_0, RESASG_SUBTYPE_IA_BCDMA_CHAN_DATA_COMPLETION_OES)",
-                        "type": 1815,
-                        "start_resource": 8704,
-                        "num_resource": 32
-                    },
-                    {
-                        "name": "RESASG_UTYPE(AM62X_DEV_DMASS0_INTAGGR_0, RESASG_SUBTYPE_IA_BCDMA_CHAN_RING_COMPLETION_OES)",
-                        "type": 1816,
-                        "start_resource": 9216,
-                        "num_resource": 32
-                    },
-                    {
-                        "name": "RESASG_UTYPE(J784S4_DEV_MCU_SA3_SS0_PKTDMA_0, RESASG_SUBTYPE_RA_ERROR_OES)",
-                        "type": 23872,
-                        "start_resource": 0,
-                        "num_resource": 1
-                    },
-                    {
-                        "name": "RESASG_UTYPE(J784S4_DEV_MCU_SA3_SS0_PKTDMA_0, RESASG_SUBTYPE_UDMAP_GLOBAL_CONFIG)",
-                        "type": 23875,
-                        "start_resource": 0,
-                        "num_resource": 1
-                    },
-                    {
-                        "name": "RESASG_UTYPE(J784S4_DEV_MCU_SA3_SS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_RING_SAUL_TX_0_CHAN)",
-                        "type": 23890,
-                        "start_resource": 8,
-                        "num_resource": 0
-                    },
-                    {
-                        "name": "RESASG_UTYPE(J784S4_DEV_MCU_SA3_SS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_RING_SAUL_TX_1_CHAN)",
-                        "type": 23891,
-                        "start_resource": 8,
-                        "num_resource": 8
-                    },
-                    {
-                        "name": "RESASG_UTYPE(J784S4_DEV_MCU_SA3_SS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_RING_SAUL_RX_0_CHAN)",
-                        "type": 23896,
-                        "start_resource": 16,
-                        "num_resource": 8
-                    },
-                    {
-                        "name": "RESASG_UTYPE(J784S4_DEV_MCU_SA3_SS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_RING_SAUL_RX_1_CHAN)",
-                        "type": 23897,
-                        "start_resource": 24,
-                        "num_resource": 0
-                    },
-                    {
-                        "name": "RESASG_UTYPE(J784S4_DEV_MCU_SA3_SS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_RING_SAUL_RX_2_CHAN)",
-                        "type": 23898,
-                        "start_resource": 24,
-                        "num_resource": 8
-                    },
-                    {
-                        "name": "RESASG_UTYPE(J784S4_DEV_MCU_SA3_SS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_RING_SAUL_RX_3_CHAN)",
-                        "type": 23899,
-                        "start_resource": 24,
-                        "num_resource": 8
-                    },
-                    {
-                        "name": "RESASG_UTYPE(J784S4_DEV_MCU_SA3_SS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_SAUL_TX_0_CHAN)",
-                        "type": 23909,
-                        "start_resource": 1,
-                        "num_resource": 0
-                    },
-                    {
-                        "name": "RESASG_UTYPE(J784S4_DEV_MCU_SA3_SS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_SAUL_TX_1_CHAN)",
-                        "type": 23910,
-                        "start_resource": 1,
-                        "num_resource": 1
-                    },
-                    {
-                        "name": "RESASG_UTYPE(J784S4_DEV_MCU_SA3_SS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_SAUL_RX_0_CHAN)",
-                        "type": 23917,
-                        "start_resource": 1,
-                        "num_resource": 0
-                    },
-                    {
-                        "name": "RESASG_UTYPE(J784S4_DEV_MCU_SA3_SS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_FLOW_SAUL_RX_0_CHAN)",
-                        "type": 23918,
-                        "start_resource": 0,
-                        "num_resource": 19
-                    },
-                    {
-                        "name": "RESASG_UTYPE(AM62X_DEV_DMASS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_FLOW_UNMAPPED_RX_CHAN)",
-                        "type": 1962,
-                        "start_resource": 0,
-                        "num_resource": 19
-                    },
-                    {
-                        "name": "RESASG_UTYPE(AM62X_DEV_DMASS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_CPSW_RX_CHAN)",
-                        "type": 1963,
-                        "start_resource": 19,
-                        "num_resource": 1
-                    },
-                    {
-                        "name": "RESASG_UTYPE(AM62X_DEV_DMASS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_FLOW_CPSW_RX_CHAN)",
-                        "type": 1964,
-                        "start_resource": 19,
-                        "num_resource": 16
-                    },
-                    {
-                        "name": "RESASG_UTYPE(AM62X_DEV_DMASS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_SAUL_RX_0_CHAN)",
-                        "type": 1965,
-                        "start_resource": 20,
-                        "num_resource": 1
-                    },
-                    {
-                        "name": "RESASG_UTYPE(AM62X_DEV_DMASS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_FLOW_SAUL_RX_0_CHAN)",
-                        "type": 1966,
-                        "start_resource": 35,
-                        "num_resource": 8
-                    },
-                    {
-                        "name": "RESASG_UTYPE(J784S4_DEV_MCU_SA3_SS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_SAUL_RX_1_CHAN)",
-                        "type": 23919,
-                        "start_resource": 2,
-                        "num_resource": 0
-                    },
-                    {
-                        "name": "RESASG_UTYPE(J784S4_DEV_MCU_SA3_SS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_FLOW_SAUL_RX_1_CHAN)",
-                        "type": 23920,
-                        "start_resource": 0,
-                        "num_resource": 8
-                    },
-                    {
-                        "name": "RESASG_UTYPE(J784S4_DEV_MCU_SA3_SS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_SAUL_RX_2_CHAN)",
-                        "type": 23921,
-                        "start_resource": 2,
-                        "num_resource": 1
-                    },
-                    {
-                        "name": "RESASG_UTYPE(J784S4_DEV_MCU_SA3_SS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_FLOW_SAUL_RX_2_CHAN)",
-                        "type": 23922,
-                        "start_resource": 8,
-                        "num_resource": 8
-                    },
-                    {
-                        "name": "RESASG_UTYPE(J784S4_DEV_MCU_SA3_SS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_SAUL_RX_3_CHAN)",
-                        "type": 23923,
-                        "start_resource": 3,
-                        "num_resource": 1
-                    },
-                    {
-                        "name": "RESASG_UTYPE(J784S4_DEV_MCU_SA3_SS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_FLOW_SAUL_RX_3_CHAN)",
-                        "type": 23924,
-                        "start_resource": 8,
-                        "num_resource": 8
-                    },
-                    {
-                        "name": "RESASG_UTYPE(J784S4_DEV_MCU_SA3_SS0_RINGACC_0, RESASG_SUBTYPE_RA_ERROR_OES)",
-                        "type": 23936,
-                        "start_resource": 0,
-                        "num_resource": 1
-                    },
-                    {
-                        "name": "RESASG_UTYPE(J784S4_DEV_MCU_SA3_SS0_RINGACC_0, RESASG_SUBTYPE_RA_VIRTID)",
-                        "type": 23946,
-                        "start_resource": 0,
-                        "num_resource": 4096
                     }
                 ],
                 "constraints": [
                     {
-                        "max_resource_entries": 1274
+                        "max_resource_entries": 897
                     }
                 ]
             },
@@ -3816,8 +3594,8 @@
                     {
                         "name": "RESASG_UTYPE(AM62A_DEV_DMASS0_INTAGGR_0, RESASG_SUBTYPE_GLOBAL_EVENT_SEVT)",
                         "type": 1805,
-                        "start_resource": 13,
-                        "num_resource": 1523
+                        "start_resource": 14,
+                        "num_resource": 1522
                     },
                     {
                         "name": "RESASG_UTYPE(AM62A_DEV_DMASS0_INTAGGR_0, RESASG_SUBTYPE_IA_TIMERMGR_EVT_OES)",
