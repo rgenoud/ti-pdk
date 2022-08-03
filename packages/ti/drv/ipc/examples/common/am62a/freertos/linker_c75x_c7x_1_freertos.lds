@@ -62,16 +62,16 @@
 
 #include "memory_map_defines.inc"
 
-#define C7X_ALLOCATED_START DDR0_ALLOCATED_START + 0x08000000
+#define C7X_ALLOCATED_START DDR0_ALLOCATED_START
 
-#define C7X_EXT_DATA_BASE   (C7X_ALLOCATED_START + 0x00100000)
-#define C7X_MEM_TEXT_BASE   (C7X_ALLOCATED_START + 0x00200000)
-#define C7X_MEM_DATA_BASE   (C7X_ALLOCATED_START + 0x00300000)
-#define C7X_DDR_SPACE_BASE  (C7X_ALLOCATED_START + 0x00400000)
+#define C7X_RESOURCE_TABLE_BASE (C7X_ALLOCATED_START + 0x00100000)
+#define C7X_BOOT_BASE           (C7X_ALLOCATED_START + 0x00200000)
+#define C7X_VECTOR_BASE         (C7X_ALLOCATED_START + 0x00400000)
+#define C7X_DDR_SPACE_BASE      (C7X_ALLOCATED_START + 0x00404000)
 
 MEMORY
 {
-    L2SRAM (RWX):  org = 0x7E000000,          len = 0x00070000
+    L2SRAM (RWX):  org = 0x7E000000,          len = 0x00100000
 }
 
 --ram_model
@@ -89,11 +89,11 @@ SECTIONS
     boot:
     {
       boot.*<boot.oe71>(.text)
-    } load > C7X_TEXT ALIGN(0x200000)
-    .vecs       >       C7X_DDR_SPACE ALIGN(0x400000)
-    .secure_vecs >      C7X_DDR_SPACE ALIGN(0x200000)
-    .text:_c_int00_secure > C7X_DDR_SPACE ALIGN(0x200000)
-    .text       >       C7X_DDR_SPACE ALIGN(0x200000)
+    } load > C7X_BOOT_D
+    .vecs       >       C7X_VECS_D
+    .secure_vecs >      C7X_DDR_SPACE ALIGN(0x100000)
+    .text:_c_int00_secure > C7X_DDR_SPACE ALIGN(0x100000)
+    .text       >       C7X_DDR_SPACE ALIGN(0x100000)
 
     .bss        >       C7X_DDR_SPACE  /* Zero-initialized data */
     .data       >       C7X_DDR_SPACE  /* Initialized data */
@@ -118,5 +118,5 @@ SECTIONS
     }
 
     ipc_data_buffer:       > C7X_DDR_SPACE
-    .resource_table: { __RESOURCE_TABLE = .;} > C7X_EXT_D
+    .resource_table: { __RESOURCE_TABLE = .;} > C7X_RT_D
 }

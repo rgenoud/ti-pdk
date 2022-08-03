@@ -178,6 +178,9 @@ Mailbox_Driver         g_mBoxDrivers[MAILBOX_MAX_INST];
 static uintptr_t g_Mailbox_BaseAddr[MAILBOX_CLUSTER_CNT] =
 {
     CSL_MAILBOX0_REGS0_BASE,
+    CSL_MAILBOX0_REGS1_BASE,
+    CSL_MAILBOX0_REGS2_BASE,
+    CSL_MAILBOX0_REGS3_BASE,
 };
 
 Mailbox_HwCfg g_Mailbox_HwCfg[MAILBOX_MAX_INST][MAILBOX_MAX_INST] =
@@ -186,18 +189,18 @@ Mailbox_HwCfg g_Mailbox_HwCfg[MAILBOX_MAX_INST][MAILBOX_MAX_INST] =
     {
         { { 0xFFU, 0xFFU,  0U}, { 0xFFU, 0xFFU,  0U}, true, 0 },  /* Self - A53-vm0 */
         { {    0U,    0U,  0U}, {    0U,    0U,  1U}, true, 0 },  /* r5f_0 */
-        { {    0U,    0U,  2U}, {    0U,    0U,  3U}, true, 0 },  /* c7x_0 */
+        { {    1U,    0U,  0U}, {    1U,    0U,  1U}, true, 0 },  /* c7x_0 */
     },
     /* Host Processor - r5f_0 */
     {
         { {    0U,    3U,  1U}, {    0U,    3U,  0U}, false, 0 },  /* A53-vm0 */
         { { 0xFFU, 0xFFU,  0U}, { 0xFFU, 0xFFU,  0U}, false, 0 },  /*Self - r5f_0 */
-        { {    0U,    3U,  4U}, {    0U,    3U,  5U}, false, 0 },  /* C7x-1 */
+        { {    3U,    3U,  0U}, {    3U,    3U,  1U}, false, 0 },  /* C7x_0 */
     },
     /* Host Processor - c7x_1	*/
     {
-        { {    0U,    1U,  3U}, {    0U,    1U,  2U}, false, 0 },  /* A53-vm0 */
-        { {    0U,    1U,  5U}, {    0U,    1U,  4U}, false, 0 },  /* r5f_0 */
+        { {    1U,    1U,  1U}, {    1U,    1U,  0U}, false, 0 },  /* A53-vm0 */
+        { {    3U,    1U,  1U}, {    3U,    1U,  0U}, false, 0 },  /* r5f_0 */
         { {    0xFFU,    0xFFU,  0U}, {    0xFFU,    0xFFU,  0U}, false, 0 },  /* Self - c7x_0 */
     },
 };
@@ -522,6 +525,18 @@ int32_t Mailbox_getMailboxIntrRouterCfg(uint32_t selfId, uint32_t clusterId, uin
             {
                 cfg->eventId = 108U;   /* interrupt line on A53SS0_0 CPU */
             }
+            else if (clusterId == 1 && userId == 0)
+            {
+                cfg->eventId = 109U;
+            }
+            else if (clusterId == 2 && userId == 0)
+            {
+                cfg->eventId = 140U;
+            }
+            else if (clusterId == 3 && userId == 0)
+            {
+                cfg->eventId = 141U;
+            }
             else
             {
                 retVal = MAILBOX_EINVAL;
@@ -532,6 +547,18 @@ int32_t Mailbox_getMailboxIntrRouterCfg(uint32_t selfId, uint32_t clusterId, uin
             {
                 cfg->eventId = 240U;   /* interrupt line MCU1_0 */
             }
+            else if (clusterId == 1 && userId == 3)
+            {
+                cfg->eventId = 241U;
+            }
+            else if (clusterId == 2 && userId == 3)
+            {
+                cfg->eventId = 242U;
+            }
+            else if (clusterId == 3 && userId == 3)
+            {
+                cfg->eventId = 243U;
+            }
             else
             {
                 retVal = MAILBOX_EINVAL;
@@ -540,7 +567,19 @@ int32_t Mailbox_getMailboxIntrRouterCfg(uint32_t selfId, uint32_t clusterId, uin
         case MAILBOX_INST_C7X_1:
             if (clusterId == 0 && userId == 1)
             {
-                cfg->eventId = 192U + CSLR_C7X256V0_CLEC_SOC_EVENTS_IN_MAILBOX0_MAILBOX_CLUSTER_0_MAILBOX_CLUSTER0_PEND_1;   /* interrupt line CX_1 */
+                cfg->eventId = 192U + CSLR_C7X256V0_CLEC_SOC_EVENTS_IN_MAILBOX0_MAILBOX_CLUSTER_0_MAILBOX_CLUSTER0_PEND_1;   /* (192 - soc interrupt start, ref: clec_spec am62a_soc_event_out_mapping)*/
+            }                                                                                                                /* interrupt line CX_1 */   
+            else if (clusterId == 1 && userId == 1)
+            {
+                cfg->eventId = 192U + CSLR_C7X256V0_CLEC_SOC_EVENTS_IN_MAILBOX0_MAILBOX_CLUSTER_0_MAILBOX_CLUSTER1_PEND_1;
+            }
+            else if (clusterId == 2 && userId == 1)
+            {
+                cfg->eventId = 192U + CSLR_C7X256V0_CLEC_SOC_EVENTS_IN_MAILBOX0_MAILBOX_CLUSTER_0_MAILBOX_CLUSTER2_PEND_1;
+            }
+            else if (clusterId == 3 && userId == 1)
+            {
+                cfg->eventId = 192U + CSLR_C7X256V0_CLEC_SOC_EVENTS_IN_MAILBOX0_MAILBOX_CLUSTER_0_MAILBOX_CLUSTER3_PEND_1;
             }
             else
             {

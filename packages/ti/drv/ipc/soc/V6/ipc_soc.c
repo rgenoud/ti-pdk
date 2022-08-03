@@ -154,7 +154,7 @@ uint32_t Ipc_configClecRouter(uint32_t corePackEvent, uint32_t corePackEventBase
 
     #if defined(BUILD_C7X_1)
     //input = C7X1_CLEC_BASE_GR2_NAVSS + corepackIrq;
-    input = IPC_C7X_COMPUTE_CLUSTER_OFFSET + 192;     /*192 is added as soc event is mapped to 192 onwrads in clec*/
+    input = corePackEvent;    
     #else
     input = corePackEvent + C7X_CLEC_OFFSET;
     #endif
