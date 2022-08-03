@@ -63,6 +63,8 @@
 #define DRU_LOCAL_EVENT_START_DEFAULT  (192U)   // Default for J721E and J721S2
 #define DRU_LOCAL_EVENT_START_J784S4   (664U)
 
+#define ALIGN(ptr) (uint8_t*)((((uint64_t)(ptr)+127)/128)*128)
+ 
 #if HOST_EMULATION
   #define L2SRAM_SIZE (512*1024)
 #else
@@ -75,7 +77,7 @@
 #endif
 uint8_t L2SRAM[L2SRAM_SIZE] __attribute__((aligned(128)));
 
-#if 0
+#if !defined(SOC_AM62A)
 #if !defined(HOST_EMULATION)
 /*Configure CLEC*/
 static void appC7xClecInitDru(void)
@@ -335,7 +337,7 @@ int32_t compareBuffers(uint8_t* buffer1, uint8_t* buffer2, int32_t width, int32_
   return fail;
 }
 
-#if 0
+#if !defined(SOC_AM62A)
 int32_t test_sciclientDmscGetVersion(char *version_str, uint32_t version_str_size)
 {
     int32_t retVal = 0;
@@ -422,7 +424,7 @@ int32_t main()
 #endif
 #else
 
-#if 0
+#if !defined(SOC_AM62A)
     int32_t retVal = 0;
 
     Sciclient_ConfigPrms_t  sciClientCfg;
@@ -434,8 +436,8 @@ int32_t main()
       goto Exit;
     }
     test_sciclientDmscGetVersion(NULL, 0 ); 
+    appC7xClecInitDru();
 #endif 
-    //appC7xClecInitDru(); //PC-- commented for now while we check clec
 #endif
   
   for (testcaseIdx = 0; testcaseIdx < sizeof(gAnalyticCompTestConfig)/ sizeof(DmautilsAutoInc_AnalyticCompTest_config); testcaseIdx++) 
@@ -463,16 +465,16 @@ int32_t main()
         sectr      = (uint8_t *)malloc(width * height + 64); // need two headers since compression and decompression have different fields and they will be interleaved...
         refOut     = input;
       #else
-        
+        //Malloc alignment to 128        
         sectr      = (uint8_t *)malloc(width * height + 64 + 128); // need two headers since compression and decompression have different fields and they will be interleaved...
         input      = (uint8_t *)malloc(width * height + 128);
         output     = (uint8_t *)malloc(width * height + 128);
         compressed = (uint8_t *)malloc(width * height * 3 + 128);  
-        //malloc alignment to 128
-        sectr   = (uint8_t*)((((uint64_t)(sectr)+127)/128)*128);
-        input   = (uint8_t*)((((uint64_t)(input)+127)/128)*128);
-        output   = (uint8_t*)((((uint64_t)(output)+127)/128)*128);
-        compressed   = (uint8_t*)((((uint64_t)(compressed)+127)/128)*128);
+        //Alignment to 128
+        sectr   = ALIGN(sectr);
+        input   = ALIGN(input);
+        output  = ALIGN(output);
+        compressed  = ALIGN(compressed);
         refOut     = input;
         
       #endif
