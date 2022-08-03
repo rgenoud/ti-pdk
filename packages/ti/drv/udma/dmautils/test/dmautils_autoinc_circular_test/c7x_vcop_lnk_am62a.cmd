@@ -27,15 +27,12 @@
 -stack 0x2000
 --args 0x1000
 --diag_suppress=10068 // "no matching section"
-//--cinit_compression=off
 
 MEMORY
 {
   L2_Main (RWX): org = 0x7e000000, len = 0x100000
   L2_Aux  (RWX): org = 0x7f000000, len = 0x40000
   L1D          : org = 0x64E00000, len = 0x4000
-// L2_Main          : org = 0x80000100, len = 0x800000
-// L2_Main_CINIT    : org = 0x80000000, len = 0x000100
 }
 
 

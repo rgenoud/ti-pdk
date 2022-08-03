@@ -93,7 +93,7 @@ dmautilsAutoIncTest_config gTestConfig[] =
         8,/*Image blockWidth */
         8/*Image blockHeight */
     },
-#if 0
+    #if !defined(SOC_AM62A)   
     {
           1,
           1,
@@ -119,10 +119,11 @@ dmautilsAutoIncTest_config gTestConfig[] =
           16,/*Image blockWidth */
           8/*Image blockHeight */
      }
-#endif
+    #endif    
 };
 
-#if 0
+
+#if !defined(SOC_AM62A)
 int32_t test_sciclientDmscGetVersion(char *version_str, uint32_t version_str_size)
 {
     int32_t retVal = 0;
@@ -178,7 +179,7 @@ int32_t test_sciclientDmscGetVersion(char *version_str, uint32_t version_str_siz
 }
 #endif
 
-#if 0
+#if !defined(SOC_AM62A)
 #if !defined(HOST_EMULATION)
 /*Configure CLEC*/
 static void appC7xClecInitDru(void)
@@ -251,7 +252,7 @@ int32_t main()
 #endif
 #else
 
-#if 0
+#if !defined(SOC_AM62A)
     int32_t retVal = 0;
     Sciclient_ConfigPrms_t  sciClientCfg;
     Sciclient_configPrmsInit(&sciClientCfg);
@@ -263,18 +264,16 @@ int32_t main()
     }
 
     test_sciclientDmscGetVersion(NULL, 0 ); 
+    appC7xClecInitDru();
 #endif
 
-printf("Before appC7xClecInitDru \n");
-//    appC7xClecInitDru();
-printf("After appC7xClecInitDru \n");
 #endif
 
   for (testcaseIdx = 0; testcaseIdx < sizeof(gTestConfig)/ sizeof(dmautilsAutoIncTest_config); testcaseIdx++)
   {
       width    = gTestConfig[testcaseIdx].imageWidth;
       height   = gTestConfig[testcaseIdx].imageHeight;
-printf("wi %d \n", width);
+      printf("wi %d \n", width);
       printf("height %d \n", height);
 
       inPitch  = gTestConfig[testcaseIdx].imageWidth;
@@ -287,7 +286,7 @@ printf("wi %d \n", width);
       input = (uint8_t *)malloc(width * height);
       output = (uint8_t *)malloc(width * height);
       refOut = (uint8_t *)malloc(width * height);
-
+      
       pInputBlock = (uint8_t *)malloc(blockWidth * blockHeight * 2);
       pOutputBlock = (uint8_t *)malloc(blockWidth * blockHeight * 2);
 

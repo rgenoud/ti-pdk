@@ -99,7 +99,7 @@ dmautilsAutoIncTest_config gTestConfig[] =
 
 };
 
-#if 0
+#if !defined(SOC_AM62A)
 int32_t test_sciclientDmscGetVersion(char *version_str, uint32_t version_str_size)
 {
     int32_t retVal = 0;
@@ -155,7 +155,7 @@ int32_t test_sciclientDmscGetVersion(char *version_str, uint32_t version_str_siz
 }
 #endif
 
-#if 0
+#if !defined(SOC_AM62A)
 #if !defined(HOST_EMULATION)
 /*Configure CLEC*/
 static void appC7xClecInitDru(void)
@@ -227,7 +227,7 @@ int32_t main()
 #endif
 #else
 
-#if 0
+#if !defined(SOC_AM62A)
     int32_t retVal = 0;
 
     Sciclient_ConfigPrms_t  sciClientCfg;
@@ -238,9 +238,10 @@ int32_t main()
       printf("Sciclient Init Failed \n");
       goto Exit;
     }
-    test_sciclientDmscGetVersion(NULL, 0 ); 
+    test_sciclientDmscGetVersion(NULL, 0 );
+    appC7xClecInitDru();
 #endif 
-    //appC7xClecInitDru(); //PC-- commented for now while we check clec
+
 #endif
 
   for (testcaseIdx = 0; testcaseIdx < sizeof(gTestConfig)/ sizeof(dmautilsAutoIncTest_config); testcaseIdx++)
