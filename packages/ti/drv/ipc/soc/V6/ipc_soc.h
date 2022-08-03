@@ -65,6 +65,15 @@ extern "C" {
 #define    IPC_C7X_1            (2U)    /**< DSP C7x - core0 */
 #define    IPC_MAX_PROCS        (3U)    /**< Maximum Processors */
 
+
+#define corePackEventBaseoffset  (192U)  /**< offset is subtracted from input event to get a unique nummber */
+                                         /**<  for corepack intr mapping (because of 5 bit max value)*/ 
+
+/* User selected IRQ number */
+/* Start of C7x events associated to CLEC that IPC Driver will manage */
+/* Events 59 - 63  : managed by IPC for routing various Mailbox events to C7x */ 
+#define   IPC_C7X_MBINTR_OFFSET            (59U)
+
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
