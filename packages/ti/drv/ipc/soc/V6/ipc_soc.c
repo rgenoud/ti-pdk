@@ -150,7 +150,7 @@ uint32_t Ipc_configClecRouter(uint32_t corePackEvent, uint32_t corePackEventBase
     CSL_CLEC_EVTRegs     *clecBaseAddr = (CSL_CLEC_EVTRegs*)C7X_CLEC_BASE_ADDR;
     uint32_t              corepackIrq;
 
-    corepackIrq = 20;//(corePackEvent - corePackEventBase) + IPC_C7X_MBINTR_OFFSET;
+    corepackIrq = (corePackEvent-corePackEventBaseoffset) +IPC_C7X_MBINTR_OFFSET;
 
     #if defined(BUILD_C7X_1)
     //input = C7X1_CLEC_BASE_GR2_NAVSS + corepackIrq;
