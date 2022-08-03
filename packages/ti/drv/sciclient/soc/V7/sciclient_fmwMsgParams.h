@@ -190,7 +190,16 @@ extern "C" {
 #include <ti/drv/sciclient/soc/sysfw/include/am62ax/tisci_clocks.h>
 /* @} */
 
-// TODO - Praveen - Just added to avoid compilation error - need to check
+/**
+ *  \anchor Sciclient_IrqSrcIdxStart
+ *  \name IRQ source index start
+ *  @{
+ *  Start offset of IRQ source index.
+ */
+
+#define TISCI_RINGACC0_OES_IRQ_SRC_IDX_START         (20U)
+#define TISCI_RINGACC0_EOES_IRQ_SRC_IDX_START        (32U)
+#define TISCI_TIMERMGR_OES_IRQ_SRC_IDX_START         (0U)
 #define TISCI_PKTDMA0_TX_EOES_IRQ_SRC_IDX_START      (4096U)
 #define TISCI_PKTDMA0_TX_FLOW_OES_IRQ_SRC_IDX_START  (4608U)
 #define TISCI_PKTDMA0_RX_EOES_IRQ_SRC_IDX_START      (5120U)
@@ -206,6 +215,8 @@ extern "C" {
 #define TISCI_BCDMA0_RX_EOES_IRQ_SRC_IDX_START       (11264U)
 #define TISCI_BCDMA0_RX_DC_OES_IRQ_SRC_IDX_START     (11776U)
 #define TISCI_BCDMA0_RX_RC_OES_IRQ_SRC_IDX_START     (12288U)
+
+/* @} */
 
 /**
  *  \anchor Sciclient_IrqSrcIdxStart
