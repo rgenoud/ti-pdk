@@ -2996,23 +2996,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for SMS0 Device
 ----------------------
 
-Device: :ref:`AM62A_DEV_SMS0 <soc_doc_am62a_public_devices_desc_device_list>` (ID = 22)
-
-Following is a mapping of Clocks IDs to function:
-
-+------------+--------------------------+-------------+
-|   Clock ID | Name                     | Function    |
-+============+==========================+=============+
-|          0 | DEV_SMS0_EXT_CLK         | Input clock |
-+------------+--------------------------+-------------+
-|          1 | DEV_SMS0_FUNC_32K_RC_CLK | Input clock |
-+------------+--------------------------+-------------+
-|          2 | DEV_SMS0_FUNC_32K_RT_CLK | Input clock |
-+------------+--------------------------+-------------+
-|          3 | DEV_SMS0_FUNC_MOSC_CLK   | Input clock |
-+------------+--------------------------+-------------+
-|          7 | DEV_SMS0_VBUS_CLK        | Input clock |
-+------------+--------------------------+-------------+
+**This device has no defined clocks.**
 
 .. _soc_doc_am62a_public_clks_spinlock0:
 
@@ -3599,6 +3583,36 @@ Following is a mapping of Clocks IDs to function:
 +============+===================================+=============+
 |          0 | DEV_VPAC_RSWS_BW_LIMITER8_CLK_CLK | Input clock |
 +------------+-----------------------------------+-------------+
+
+.. _soc_doc_am62a_public_clks_wkup_clkout_sel_dev_vd:
+
+
+Clocks for WKUP_CLKOUT_SEL_DEV_VD Device
+----------------------------------------
+
+Device: :ref:`AM62A_DEV_WKUP_CLKOUT_SEL_DEV_VD <soc_doc_am62a_public_devices_desc_device_list>` (ID = 226)
+
+Following is a mapping of Clocks IDs to function:
+
++------------+--------------------------------------------------------------------------+-------------------------------------------------------------+
+|   Clock ID | Name                                                                     | Function                                                    |
++============+==========================================================================+=============================================================+
+|          0 | DEV_WKUP_CLKOUT_SEL_DEV_VD_CLK                                           | Input muxed clock                                           |
++------------+--------------------------------------------------------------------------+-------------------------------------------------------------+
+|          1 | DEV_WKUP_CLKOUT_SEL_DEV_VD_CLK_PARENT_GLUELOGIC_LFOSC0_CLKOUT            | Parent input clock option to DEV_WKUP_CLKOUT_SEL_DEV_VD_CLK |
++------------+--------------------------------------------------------------------------+-------------------------------------------------------------+
+|          2 | DEV_WKUP_CLKOUT_SEL_DEV_VD_CLK_PARENT_HSDIV4_16FFT_MAIN_0_HSDIVOUT2_CLK  | Parent input clock option to DEV_WKUP_CLKOUT_SEL_DEV_VD_CLK |
++------------+--------------------------------------------------------------------------+-------------------------------------------------------------+
+|          3 | DEV_WKUP_CLKOUT_SEL_DEV_VD_CLK_PARENT_HSDIV4_16FFT_MAIN_1_HSDIVOUT2_CLK  | Parent input clock option to DEV_WKUP_CLKOUT_SEL_DEV_VD_CLK |
++------------+--------------------------------------------------------------------------+-------------------------------------------------------------+
+|          4 | DEV_WKUP_CLKOUT_SEL_DEV_VD_CLK_PARENT_POSTDIV4_16FF_MAIN_2_HSDIVOUT9_CLK | Parent input clock option to DEV_WKUP_CLKOUT_SEL_DEV_VD_CLK |
++------------+--------------------------------------------------------------------------+-------------------------------------------------------------+
+|          5 | DEV_WKUP_CLKOUT_SEL_DEV_VD_CLK_PARENT_CLK_32K_RC_SEL_OUT0                | Parent input clock option to DEV_WKUP_CLKOUT_SEL_DEV_VD_CLK |
++------------+--------------------------------------------------------------------------+-------------------------------------------------------------+
+|          6 | DEV_WKUP_CLKOUT_SEL_DEV_VD_CLK_PARENT_GLUELOGIC_RCOSC_CLKOUT             | Parent input clock option to DEV_WKUP_CLKOUT_SEL_DEV_VD_CLK |
++------------+--------------------------------------------------------------------------+-------------------------------------------------------------+
+|          7 | DEV_WKUP_CLKOUT_SEL_DEV_VD_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT            | Parent input clock option to DEV_WKUP_CLKOUT_SEL_DEV_VD_CLK |
++------------+--------------------------------------------------------------------------+-------------------------------------------------------------+
 
 .. _soc_doc_am62a_public_clks_wkup_deepsleep_sources0:
 

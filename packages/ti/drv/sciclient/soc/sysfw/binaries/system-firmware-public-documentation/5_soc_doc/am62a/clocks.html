@@ -4978,43 +4978,7 @@ represented in this section from the <em>perspective of the board</em>.</p>
 </div>
 <div class="section" id="clocks-for-sms0-device">
 <span id="soc-doc-am62a-public-clks-sms0"></span><h3>Clocks for SMS0 Device<a class="headerlink" href="#clocks-for-sms0-device" title="Permalink to this headline">¶</a></h3>
-<p>Device: <a class="reference internal" href="devices.html#soc-doc-am62a-public-devices-desc-device-list"><span class="std std-ref">AM62A_DEV_SMS0</span></a> (ID = 22)</p>
-<p>Following is a mapping of Clocks IDs to function:</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="24%" />
-<col width="51%" />
-<col width="25%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Clock ID</th>
-<th class="head">Name</th>
-<th class="head">Function</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td>0</td>
-<td>DEV_SMS0_EXT_CLK</td>
-<td>Input clock</td>
-</tr>
-<tr class="row-odd"><td>1</td>
-<td>DEV_SMS0_FUNC_32K_RC_CLK</td>
-<td>Input clock</td>
-</tr>
-<tr class="row-even"><td>2</td>
-<td>DEV_SMS0_FUNC_32K_RT_CLK</td>
-<td>Input clock</td>
-</tr>
-<tr class="row-odd"><td>3</td>
-<td>DEV_SMS0_FUNC_MOSC_CLK</td>
-<td>Input clock</td>
-</tr>
-<tr class="row-even"><td>7</td>
-<td>DEV_SMS0_VBUS_CLK</td>
-<td>Input clock</td>
-</tr>
-</tbody>
-</table>
+<p><strong>This device has no defined clocks.</strong></p>
 </div>
 <div class="section" id="clocks-for-spinlock0-device">
 <span id="soc-doc-am62a-public-clks-spinlock0"></span><h3>Clocks for SPINLOCK0 Device<a class="headerlink" href="#clocks-for-spinlock0-device" title="Permalink to this headline">¶</a></h3>
@@ -6000,6 +5964,58 @@ represented in this section from the <em>perspective of the board</em>.</p>
 <tr class="row-even"><td>0</td>
 <td>DEV_VPAC_RSWS_BW_LIMITER8_CLK_CLK</td>
 <td>Input clock</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="clocks-for-wkup-clkout-sel-dev-vd-device">
+<span id="soc-doc-am62a-public-clks-wkup-clkout-sel-dev-vd"></span><h3>Clocks for WKUP_CLKOUT_SEL_DEV_VD Device<a class="headerlink" href="#clocks-for-wkup-clkout-sel-dev-vd-device" title="Permalink to this headline">¶</a></h3>
+<p>Device: <a class="reference internal" href="devices.html#soc-doc-am62a-public-devices-desc-device-list"><span class="std std-ref">AM62A_DEV_WKUP_CLKOUT_SEL_DEV_VD</span></a> (ID = 226)</p>
+<p>Following is a mapping of Clocks IDs to function:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="50%" />
+<col width="41%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Clock ID</th>
+<th class="head">Name</th>
+<th class="head">Function</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>0</td>
+<td>DEV_WKUP_CLKOUT_SEL_DEV_VD_CLK</td>
+<td>Input muxed clock</td>
+</tr>
+<tr class="row-odd"><td>1</td>
+<td>DEV_WKUP_CLKOUT_SEL_DEV_VD_CLK_PARENT_GLUELOGIC_LFOSC0_CLKOUT</td>
+<td>Parent input clock option to DEV_WKUP_CLKOUT_SEL_DEV_VD_CLK</td>
+</tr>
+<tr class="row-even"><td>2</td>
+<td>DEV_WKUP_CLKOUT_SEL_DEV_VD_CLK_PARENT_HSDIV4_16FFT_MAIN_0_HSDIVOUT2_CLK</td>
+<td>Parent input clock option to DEV_WKUP_CLKOUT_SEL_DEV_VD_CLK</td>
+</tr>
+<tr class="row-odd"><td>3</td>
+<td>DEV_WKUP_CLKOUT_SEL_DEV_VD_CLK_PARENT_HSDIV4_16FFT_MAIN_1_HSDIVOUT2_CLK</td>
+<td>Parent input clock option to DEV_WKUP_CLKOUT_SEL_DEV_VD_CLK</td>
+</tr>
+<tr class="row-even"><td>4</td>
+<td>DEV_WKUP_CLKOUT_SEL_DEV_VD_CLK_PARENT_POSTDIV4_16FF_MAIN_2_HSDIVOUT9_CLK</td>
+<td>Parent input clock option to DEV_WKUP_CLKOUT_SEL_DEV_VD_CLK</td>
+</tr>
+<tr class="row-odd"><td>5</td>
+<td>DEV_WKUP_CLKOUT_SEL_DEV_VD_CLK_PARENT_CLK_32K_RC_SEL_OUT0</td>
+<td>Parent input clock option to DEV_WKUP_CLKOUT_SEL_DEV_VD_CLK</td>
+</tr>
+<tr class="row-even"><td>6</td>
+<td>DEV_WKUP_CLKOUT_SEL_DEV_VD_CLK_PARENT_GLUELOGIC_RCOSC_CLKOUT</td>
+<td>Parent input clock option to DEV_WKUP_CLKOUT_SEL_DEV_VD_CLK</td>
+</tr>
+<tr class="row-odd"><td>7</td>
+<td>DEV_WKUP_CLKOUT_SEL_DEV_VD_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT</td>
+<td>Parent input clock option to DEV_WKUP_CLKOUT_SEL_DEV_VD_CLK</td>
 </tr>
 </tbody>
 </table>

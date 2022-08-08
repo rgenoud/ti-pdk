@@ -77,6 +77,8 @@ Enumeration Devices accessible in devgrp "MCU_WAKEUP"
 +-------------+---------------------------------------+
 |         193 | AM62A_DEV_CLK_32K_RC_SEL_DEV_VD       |
 +-------------+---------------------------------------+
+|         226 | AM62A_DEV_WKUP_CLKOUT_SEL_DEV_VD      |
++-------------+---------------------------------------+
 
 .. _soc_doc_am62a_public_devgrp_desc_main_ip_list:
 
