@@ -129,10 +129,12 @@ if [ "$SKIP_CHECKOUT" != "YES" ]; then
     $RM binaries/t32-qt-lsf
     $RM binaries/*hs.bin
     $RM binaries/*hs-fs.bin
-    $RM -fr binaries/am6
+    $RM -fr binaries/am65x
     $RM -fr binaries/am65x_sr2
     $RM -fr binaries/j721e
-    $RM -fr binaries/am64
+    $RM -fr binaries/am64x
+    $RM -fr binaries/am62x
+    $RM -fr binaries/am62ax
     $RM -fr binaries/j7200
     $RM -fr binaries/j721s2
     $RM -fr binaries/j784s4
@@ -226,6 +228,15 @@ if [ "$SKIP_GEN_BIN" != "YES" ];  then
                 ./firmwareHeaderGen.sh j784s4
                 shift
                 ;;
+            "am62x")
+                ./firmwareHeaderGen.sh am62x
+                ./firmwareHeaderGen.sh am62x-stub
+                shift
+                ;;
+            "am62ax")
+                ./firmwareHeaderGen.sh am62ax
+                shift
+                ;;
         esac
     done
 
@@ -269,6 +280,18 @@ if [ "$SKIP_COMMIT" != "YES" ]; then
                 git add $SCI_CLIENT_DIR/soc/sysfw/include/j784s4
                 git add $SCI_CLIENT_DIR/soc/V6
                 git add $SCI_CLIENT_DIR/tools/ccsLoadDmsc/j784s4
+                shift
+                ;;
+            "am62x")
+                git add $SCI_CLIENT_DIR/soc/sysfw/binaries/*am62x*
+                git add $SCI_CLIENT_DIR/soc/sysfw/include/am62x
+                git add $SCI_CLIENT_DIR/soc/V5
+                shift
+                ;;
+            "am62ax")
+                git add $SCI_CLIENT_DIR/soc/sysfw/binaries/*am62ax*
+                git add $SCI_CLIENT_DIR/soc/sysfw/include/am62ax
+                git add $SCI_CLIENT_DIR/soc/V7
                 shift
                 ;;
         esac
