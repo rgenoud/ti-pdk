@@ -1,20 +1,20 @@
-============================
-AM62A Processor Descriptions
-============================
+=============================
+AM62AX Processor Descriptions
+=============================
 
-.. _soc_doc_am62a_public_proc_desc_intro:
+.. _soc_doc_am62ax_public_proc_desc_intro:
 
 
 Introduction
 ============
 
 This chapter provides information of Processor and Host IDs that are permitted
-in the AM62A SoC. These Processor IDs represent an actual physical processor
+in the AM62AX SoC. These Processor IDs represent an actual physical processor
 on the SoC.
 
 NOTE: This should not be confused with HOST_ID.
 
-.. _soc_doc_am62a_public_proc_desc_processors_list:
+.. _soc_doc_am62ax_public_proc_desc_processors_list:
 
 
 Enumeration of Processor IDs

@@ -1,18 +1,18 @@
-===============================
-AM62A Secure Proxy Descriptions
-===============================
+================================
+AM62AX Secure Proxy Descriptions
+================================
 
-.. _soc_doc_am62a_public_sproxy_desc_intro:
+.. _soc_doc_am62ax_public_sproxy_desc_intro:
 
 Introduction
 ============
 
 This chapter provides information of Secure Proxies and communication paths
-that are permitted in the AM62A SoC. These host IDs represent processing entities
+that are permitted in the AM62AX SoC. These host IDs represent processing entities
 (or PEs) which is mandatory identification of a Host in a processor. See
 PE/Host documentation for further information
 
-.. _soc_doc_am62a_public_sproxy_desc_sproxy_list:
+.. _soc_doc_am62ax_public_sproxy_desc_sproxy_list:
 
 Enumeration of Secure Proxies
 =============================
@@ -25,12 +25,12 @@ Enumeration of Secure Proxies
 |           1 | SA3_SS0_SEC_PROXY_0 |
 +-------------+---------------------+
 
-.. _soc_doc_am62a_public_sproxy_desc_sproxy_per_list:
+.. _soc_doc_am62ax_public_sproxy_desc_sproxy_per_list:
 
 Thread Allocation per Secure Proxy
 ==================================
 
-.. _soc_doc_am62a_public_sproxy_desc_sproxy_per_list_dmass0_sec_proxy_0:
+.. _soc_doc_am62ax_public_sproxy_desc_sproxy_per_list_dmass0_sec_proxy_0:
 
 Secure Proxy thread allocation for DMASS0_SEC_PROXY_0
 -----------------------------------------------------
@@ -109,7 +109,7 @@ Secure Proxy thread allocation for DMASS0_SEC_PROXY_0
 |                       25 | write                       |                    2 | TIFS2DM     | low_priority                   | N/A                      | N/A                      |
 +--------------------------+-----------------------------+----------------------+-------------+--------------------------------+--------------------------+--------------------------+
 
-.. _soc_doc_am62a_public_sproxy_desc_sproxy_per_list_sa3_ss0_sec_proxy_0:
+.. _soc_doc_am62ax_public_sproxy_desc_sproxy_per_list_sa3_ss0_sec_proxy_0:
 
 Secure Proxy thread allocation for SA3_SS0_SEC_PROXY_0
 ------------------------------------------------------

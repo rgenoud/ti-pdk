@@ -3,5 +3,5 @@ AM62A Proxy Device Descriptions
 ===============================
 
 
-AM62A does not contain any Proxy devices
+AM62Ax does not contain any Proxy devices
 

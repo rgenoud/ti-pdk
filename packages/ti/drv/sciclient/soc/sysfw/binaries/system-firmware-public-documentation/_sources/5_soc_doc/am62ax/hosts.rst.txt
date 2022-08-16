@@ -1,21 +1,21 @@
-=======================
-AM62A Host Descriptions
-=======================
+========================
+AM62AX Host Descriptions
+========================
 
-.. _soc_doc_am62a_public_host_desc_intro:
+.. _soc_doc_am62ax_public_host_desc_intro:
 
 Introduction
 ============
 
 This chapter provides information of Host IDs that are permitted in
-the AM62A SoC. These host IDs represent processing entities (or PEs)
+the AM62AX SoC. These host IDs represent processing entities (or PEs)
 which is mandatory identification of a Host in a processor.
 
 Typically a host is a 'compute entity' which may be an actual
 processor or even a virtual machine. We just use host or processing
 entity to indicate the same thing.
 
-.. _soc_doc_am62a_public_host_desc_host_list:
+.. _soc_doc_am62ax_public_host_desc_host_list:
 
 Enumeration of Host IDs
 =======================

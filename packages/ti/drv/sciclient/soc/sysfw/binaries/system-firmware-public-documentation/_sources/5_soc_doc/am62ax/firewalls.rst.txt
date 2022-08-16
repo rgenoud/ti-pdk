@@ -1,6 +1,6 @@
-===========================
-AM62A Firewall Descriptions
-===========================
+============================
+AM62AX Firewall Descriptions
+============================
 
 .. _soc_doc_am62a_public_fwl_desc_intro:
 
@@ -13,7 +13,7 @@ below. For more details on firewalls refer to "Interconnect Firewalls" section
 of TRM and :ref:`Firewall TISCI Description <sec_ap_fwl_tisci_desc>`.
 
 - Firewall ID: The firewall ID uniquely identifies each firewall
-- Owner: :ref:`Host ID <soc_doc_am62a_public_host_desc_host_list>` that is owner of the firewall
+- Owner: :ref:`Host ID <soc_doc_am62ax_public_host_desc_host_list>` that is owner of the firewall
 - CBA_PERMISSION_x: Each firewall region/channel can have up to 3 slots for configuring permissions. Each permission slot takes the form of [user, permission], where user is a host and permission is a combination of r-read, w-write, c-cache, d-debug. The priv-id, secure/non-secure, user/privileged information are derived from the host id.
 
 .. note::

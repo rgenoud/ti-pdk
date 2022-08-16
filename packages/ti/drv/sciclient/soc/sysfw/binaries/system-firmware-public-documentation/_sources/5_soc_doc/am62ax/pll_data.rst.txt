@@ -1,15 +1,15 @@
-==================
-AM62A PLL Defaults
-==================
+===================
+AM62AX PLL Defaults
+===================
 
-.. _soc_doc_am62a_public_plls_desc_intro:
+.. _soc_doc_am62ax_public_plls_desc_intro:
 
 
-PLL Defaults for AM62A Device
-=============================
+PLL Defaults for AM62AX Device
+==============================
 
 This chapter provides information on the PLL defaults which the System firmware programs
-for AM62A SoC.
+for AM62AX SoC.
 
 
 This is what the system firmware programs after the PM board configuration is provided.
