@@ -79,7 +79,7 @@
             
             
               <div class="version">
-                08.04.02
+                08.04.04
               </div>
             
           
@@ -110,6 +110,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../index.html#am65x-sr2">AM65x SR2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../index.html#am64x">AM64x</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../index.html#am62x">AM62x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#am62ax">AM62Ax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../index.html#j721e">J721E</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../index.html#j7200">J7200</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../index.html#j721s2">J721S2</a></li>
@@ -187,7 +188,7 @@
 <p>This chapter provides information of Board Configuration resource assignment
 type IDs that are permitted in the J784S4 SoC.  The resource type IDs represent
 J784S4 resources ranges assignable to SoC processing entities (or PEs).</p>
-<p><strong>WARNING</strong>: System Firmware RM currently supports a maximum of 1274 RM board
+<p><strong>WARNING</strong>: System Firmware RM currently supports a maximum of 897 RM board
 configuration resource assignment ranges on the J784S4 SoC.  Sending more
 entries than the maximum will result in the RM board configuration being NACK’d</p>
 <table border="1" class="docutils">
@@ -214,6 +215,22 @@ entries than the maximum will result in the RM board configuration being NACK’
 </tr>
 </thead>
 <tbody valign="top">
+<tr class="row-even"><td>J784S4_DEV_GPIOMUX_INTRTR0</td>
+<td>0x00A</td>
+<td>RESASG_SUBTYPE_IR_OUTPUT</td>
+<td>0x00</td>
+<td>0x0280</td>
+<td>0</td>
+<td>64</td>
+</tr>
+<tr class="row-odd"><td>J784S4_DEV_CMPEVENT_INTRTR0</td>
+<td>0x00B</td>
+<td>RESASG_SUBTYPE_IR_OUTPUT</td>
+<td>0x00</td>
+<td>0x02C0</td>
+<td>0</td>
+<td>16</td>
+</tr>
 <tr class="row-even"><td>J784S4_DEV_MAIN2MCU_LVL_INTRTR0</td>
 <td>0x0AD</td>
 <td>RESASG_SUBTYPE_IR_OUTPUT</td>
@@ -245,22 +262,6 @@ entries than the maximum will result in the RM board configuration being NACK’
 <td>0x2C40</td>
 <td>0</td>
 <td>32</td>
-</tr>
-<tr class="row-even"><td>J784S4_DEV_GPIOMUX_INTRTR0</td>
-<td>0x0D1</td>
-<td>RESASG_SUBTYPE_IR_OUTPUT</td>
-<td>0x00</td>
-<td>0x3440</td>
-<td>0</td>
-<td>64</td>
-</tr>
-<tr class="row-odd"><td>J784S4_DEV_CMPEVENT_INTRTR0</td>
-<td>0x0D2</td>
-<td>RESASG_SUBTYPE_IR_OUTPUT</td>
-<td>0x00</td>
-<td>0x3480</td>
-<td>0</td>
-<td>16</td>
 </tr>
 <tr class="row-even"><td>J784S4_DEV_NAVSS0_BCDMA_0</td>
 <td>0x119</td>
@@ -822,230 +823,6 @@ entries than the maximum will result in the RM board configuration being NACK’
 <td>16406</td>
 <td>1514</td>
 </tr>
-<tr class="row-even"><td>J784S4_DEV_MCU_SA3_SS0_INTAGGR_0</td>
-<td>0x174</td>
-<td>RESASG_SUBTYPE_IA_VINT</td>
-<td>0x0A</td>
-<td>0x5D0A</td>
-<td>8</td>
-<td>0</td>
-</tr>
-<tr class="row-odd"><td>&#160;</td>
-<td>&#160;</td>
-<td>RESASG_SUBTYPE_GLOBAL_EVENT_SEVT</td>
-<td>0x0D</td>
-<td>0x5D0D</td>
-<td>100</td>
-<td>0</td>
-</tr>
-<tr class="row-even"><td>&#160;</td>
-<td>&#160;</td>
-<td>RESASG_SUBTYPE_IA_TIMERMGR_EVT_OES</td>
-<td>0x15</td>
-<td>0x5D15</td>
-<td>0</td>
-<td>1024</td>
-</tr>
-<tr class="row-odd"><td>&#160;</td>
-<td>&#160;</td>
-<td>RESASG_SUBTYPE_IA_PKTDMA_TX_CHAN_ERROR_OES</td>
-<td>0x16</td>
-<td>0x5D16</td>
-<td>4096</td>
-<td>2</td>
-</tr>
-<tr class="row-even"><td>&#160;</td>
-<td>&#160;</td>
-<td>RESASG_SUBTYPE_IA_PKTDMA_TX_FLOW_COMPLETION_OES</td>
-<td>0x17</td>
-<td>0x5D17</td>
-<td>4608</td>
-<td>16</td>
-</tr>
-<tr class="row-odd"><td>&#160;</td>
-<td>&#160;</td>
-<td>RESASG_SUBTYPE_IA_PKTDMA_RX_CHAN_ERROR_OES</td>
-<td>0x18</td>
-<td>0x5D18</td>
-<td>5120</td>
-<td>4</td>
-</tr>
-<tr class="row-even"><td>&#160;</td>
-<td>&#160;</td>
-<td>RESASG_SUBTYPE_IA_PKTDMA_RX_FLOW_COMPLETION_OES</td>
-<td>0x19</td>
-<td>0x5D19</td>
-<td>5632</td>
-<td>16</td>
-</tr>
-<tr class="row-odd"><td>&#160;</td>
-<td>&#160;</td>
-<td>RESASG_SUBTYPE_IA_PKTDMA_RX_FLOW_STARVATION_OES</td>
-<td>0x1A</td>
-<td>0x5D1A</td>
-<td>6144</td>
-<td>16</td>
-</tr>
-<tr class="row-even"><td>&#160;</td>
-<td>&#160;</td>
-<td>RESASG_SUBTYPE_IA_PKTDMA_RX_FLOW_FIREWALL_OES</td>
-<td>0x1B</td>
-<td>0x5D1B</td>
-<td>6656</td>
-<td>16</td>
-</tr>
-<tr class="row-odd"><td>J784S4_DEV_MCU_SA3_SS0_PKTDMA_0</td>
-<td>0x175</td>
-<td>RESASG_SUBTYPE_UDMAP_GLOBAL_CONFIG</td>
-<td>0x03</td>
-<td>0x5D43</td>
-<td>0</td>
-<td>1</td>
-</tr>
-<tr class="row-even"><td>&#160;</td>
-<td>&#160;</td>
-<td>RESASG_SUBTYPE_PKTDMA_RING_SAUL_TX_0_CHAN</td>
-<td>0x12</td>
-<td>0x5D52</td>
-<td>8</td>
-<td>0</td>
-</tr>
-<tr class="row-odd"><td>&#160;</td>
-<td>&#160;</td>
-<td>RESASG_SUBTYPE_PKTDMA_RING_SAUL_TX_1_CHAN</td>
-<td>0x13</td>
-<td>0x5D53</td>
-<td>8</td>
-<td>8</td>
-</tr>
-<tr class="row-even"><td>&#160;</td>
-<td>&#160;</td>
-<td>RESASG_SUBTYPE_PKTDMA_RING_SAUL_RX_0_CHAN</td>
-<td>0x18</td>
-<td>0x5D58</td>
-<td>16</td>
-<td>8</td>
-</tr>
-<tr class="row-odd"><td>&#160;</td>
-<td>&#160;</td>
-<td>RESASG_SUBTYPE_PKTDMA_RING_SAUL_RX_1_CHAN</td>
-<td>0x19</td>
-<td>0x5D59</td>
-<td>24</td>
-<td>0</td>
-</tr>
-<tr class="row-even"><td>&#160;</td>
-<td>&#160;</td>
-<td>RESASG_SUBTYPE_PKTDMA_RING_SAUL_RX_2_CHAN</td>
-<td>0x1A</td>
-<td>0x5D5A</td>
-<td>24</td>
-<td>8</td>
-</tr>
-<tr class="row-odd"><td>&#160;</td>
-<td>&#160;</td>
-<td>RESASG_SUBTYPE_PKTDMA_RING_SAUL_RX_3_CHAN</td>
-<td>0x1B</td>
-<td>0x5D5B</td>
-<td>24</td>
-<td>8</td>
-</tr>
-<tr class="row-even"><td>&#160;</td>
-<td>&#160;</td>
-<td>RESASG_SUBTYPE_PKTDMA_SAUL_TX_0_CHAN</td>
-<td>0x25</td>
-<td>0x5D65</td>
-<td>1</td>
-<td>0</td>
-</tr>
-<tr class="row-odd"><td>&#160;</td>
-<td>&#160;</td>
-<td>RESASG_SUBTYPE_PKTDMA_SAUL_TX_1_CHAN</td>
-<td>0x26</td>
-<td>0x5D66</td>
-<td>1</td>
-<td>1</td>
-</tr>
-<tr class="row-even"><td>&#160;</td>
-<td>&#160;</td>
-<td>RESASG_SUBTYPE_PKTDMA_SAUL_RX_0_CHAN</td>
-<td>0x2D</td>
-<td>0x5D6D</td>
-<td>1</td>
-<td>0</td>
-</tr>
-<tr class="row-odd"><td>&#160;</td>
-<td>&#160;</td>
-<td>RESASG_SUBTYPE_PKTDMA_FLOW_SAUL_RX_0_CHAN</td>
-<td>0x2E</td>
-<td>0x5D6E</td>
-<td>0</td>
-<td>8</td>
-</tr>
-<tr class="row-even"><td>&#160;</td>
-<td>&#160;</td>
-<td>RESASG_SUBTYPE_PKTDMA_SAUL_RX_1_CHAN</td>
-<td>0x2F</td>
-<td>0x5D6F</td>
-<td>2</td>
-<td>0</td>
-</tr>
-<tr class="row-odd"><td>&#160;</td>
-<td>&#160;</td>
-<td>RESASG_SUBTYPE_PKTDMA_FLOW_SAUL_RX_1_CHAN</td>
-<td>0x30</td>
-<td>0x5D70</td>
-<td>0</td>
-<td>8</td>
-</tr>
-<tr class="row-even"><td>&#160;</td>
-<td>&#160;</td>
-<td>RESASG_SUBTYPE_PKTDMA_SAUL_RX_2_CHAN</td>
-<td>0x31</td>
-<td>0x5D71</td>
-<td>2</td>
-<td>1</td>
-</tr>
-<tr class="row-odd"><td>&#160;</td>
-<td>&#160;</td>
-<td>RESASG_SUBTYPE_PKTDMA_FLOW_SAUL_RX_2_CHAN</td>
-<td>0x32</td>
-<td>0x5D72</td>
-<td>8</td>
-<td>8</td>
-</tr>
-<tr class="row-even"><td>&#160;</td>
-<td>&#160;</td>
-<td>RESASG_SUBTYPE_PKTDMA_SAUL_RX_3_CHAN</td>
-<td>0x33</td>
-<td>0x5D73</td>
-<td>3</td>
-<td>1</td>
-</tr>
-<tr class="row-odd"><td>&#160;</td>
-<td>&#160;</td>
-<td>RESASG_SUBTYPE_PKTDMA_FLOW_SAUL_RX_3_CHAN</td>
-<td>0x34</td>
-<td>0x5D74</td>
-<td>8</td>
-<td>8</td>
-</tr>
-<tr class="row-even"><td>J784S4_DEV_MCU_SA3_SS0_RINGACC_0</td>
-<td>0x176</td>
-<td>RESASG_SUBTYPE_RA_ERROR_OES</td>
-<td>0x00</td>
-<td>0x5D80</td>
-<td>0</td>
-<td>1</td>
-</tr>
-<tr class="row-odd"><td>&#160;</td>
-<td>&#160;</td>
-<td>RESASG_SUBTYPE_RA_VIRTID</td>
-<td>0x0A</td>
-<td>0x5D8A</td>
-<td>0</td>
-<td>4096</td>
-</tr>
 </tbody>
 </table>
 </div>
@@ -1092,7 +869,7 @@ entries than the maximum will result in the RM board configuration being NACK’
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'08.04.02',
+            VERSION:'08.04.04',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
