@@ -1,34 +1,34 @@
-=============================
-AM62A DMA Device Descriptions
-=============================
+==============================
+AM62AX DMA Device Descriptions
+==============================
 
 Introduction
 ============
 
-This chapter provides information on the DMA devices in the AM62A SoC.  Some
+This chapter provides information on the DMA devices in the AM62AX SoC.  Some
 System Firmware TISCI messages take device specific inputs. This chapter
 provides information on the valid values for DMA TISCI message parameters.
 
-.. _pub_soc_am62a_dma_device_ids:
+.. _pub_soc_am62ax_dma_device_ids:
 
 DMA Device IDs
 ==============
 
 Some System Firmware TISCI message APIs require the DMA device ID be provided as
-part of the request. Based on :doc:`AM62A Device IDs <devices>` these are the
+part of the request. Based on :doc:`AM62AX Device IDs <devices>` these are the
 valid DMA device IDs.
 
-+---------------------------+-----------------+
-| DMA Device Name           |   DMA Device ID |
-+===========================+=================+
-| AM62A_DEV_DMASS0_BCDMA_0  |              26 |
-+---------------------------+-----------------+
-| AM62A_DEV_DMASS0_PKTDMA_0 |              30 |
-+---------------------------+-----------------+
-| AM62A_DEV_DMASS1_BCDMA_0  |             199 |
-+---------------------------+-----------------+
++----------------------------+-----------------+
+| DMA Device Name            |   DMA Device ID |
++============================+=================+
+| AM62AX_DEV_DMASS0_BCDMA_0  |              26 |
++----------------------------+-----------------+
+| AM62AX_DEV_DMASS0_PKTDMA_0 |              30 |
++----------------------------+-----------------+
+| AM62AX_DEV_DMASS1_BCDMA_0  |             199 |
++----------------------------+-----------------+
 
-.. _pub_soc_am62a_dma_channels_and_flows:
+.. _pub_soc_am62ax_dma_channels_and_flows:
 
 DMA Channel and Flow Indices
 ============================

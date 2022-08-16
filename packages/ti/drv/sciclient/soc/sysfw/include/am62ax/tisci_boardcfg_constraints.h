@@ -56,13 +56,13 @@
  * \brief Boardcfg Constraints for AM62x Devices
  */
 
-#ifndef TISCI_BOARDCFG_CONSTRAINTS_H
-#define TISCI_BOARDCFG_CONSTRAINTS_H
+#ifndef AM62A_BOARDCFG_CONSTRAINTS_H
+#define AM62A_BOARDCFG_CONSTRAINTS_H
 
 
 #define TISCI_BOARDCFG_MAX_MAIN_HOST_COUNT                            (8U)
 #define TISCI_BOARDCFG_MAX_MCU_HOST_COUNT                             (4U)
 
-#endif /* TISCI_BOARDCFG_CONSTRAINTS_H */
+#endif /* AM62A_BOARDCFG_CONSTRAINTS_H */
 
 /* @} */
