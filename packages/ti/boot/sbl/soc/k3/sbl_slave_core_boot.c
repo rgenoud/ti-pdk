@@ -242,6 +242,20 @@ static const sblSlaveCoreInfo_t sbl_slave_core_info[] =
     SBL_CLK_ID_DSP4_C7X,
     SBL_DSP4_C7X_FREQ_HZ,
     },
+    /* DSP1_C7X HOST_EMU (invalid) */
+    {
+    SBL_INVALID_ID,
+    SBL_INVALID_ID,
+    SBL_INVALID_ID,
+    SBL_INVALID_ID,
+    },
+    /* HSM M4F */
+    {
+    SBL_PROC_ID_HSM_M4,
+    SBL_DEV_ID_HSM_M4,
+    SBL_CLK_ID_HSM_M4,
+    SBL_HSM_M4_FREQ_HZ
+    }
 };
 
 static const uint32_t SblAtcmAddr[] =
