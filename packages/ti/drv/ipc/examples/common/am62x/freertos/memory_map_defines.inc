@@ -4,13 +4,8 @@
 
 #define DDR0_ALLOCATED_START    0xA0000000 /* DDR0_RESERVED_START + DDR0_RESERVED_SIZE */
 
-<<<<<<< HEAD
 #define SHARED_DDR_SPACE_START  0xA0000000
 #define SHARED_DDR_SPACE_SIZE   0x00300000  /*  3MB */
-=======
-#define SHARED_DDR_SPACE_START  0x9CD00000
-#define SHARED_DDR_SPACE_SIZE   0x00200000  /*  2MB */
->>>>>>> c4711f7e6... IPC fixes for QNX
 
 /*------------------------------------------------*/
 /* Size of various Memory Locations for each core */ 

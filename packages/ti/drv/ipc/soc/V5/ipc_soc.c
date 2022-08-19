@@ -52,8 +52,9 @@
  */
 static Ipc_ProcInfo g_Ipc_mp_procInfo[IPC_MAX_PROCS] =
 {
-    {IPC_MPU1_0,      "mpu1_0"},      /**< ARM A53 - VM0 */
-    {IPC_MCU1_0,       "mcu1_0"}       /**< ARM MCU R5 - core0 */
+    {IPC_MCU0_0,       "mcu0_0_m4"},       /**< ARM MCU M4 - core0 */
+    {IPC_MCU1_0,       "mcu1_0_r5"},       /**< ARM MCU R5 - core0 */
+    {IPC_MPU1_0,       "mpu1_0"},          /**< ARM A53 - VM0 */
 };
 
 const char* Ipc_getCoreName(uint32_t procId)
@@ -76,6 +77,10 @@ uint32_t Ipc_rprocIdToMboxId(uint32_t id)
     {
         mbId = MAILBOX_INST_MPU1_0;
     }
+	else if (id == IPC_MCU0_0)
+    {
+        mbId = MAILBOX_INST_MCU0_0;
+    }
     else if (id == IPC_MCU1_0)
     {
         mbId = MAILBOX_INST_MCU1_0;
@@ -91,6 +96,10 @@ uint32_t Ipc_mboxIdToRprocId(uint32_t id)
     if (id == MAILBOX_INST_MPU1_0)
     {
         procId = IPC_MPU1_0;
+    }
+    else if (id == MAILBOX_INST_MCU0_0)
+    {
+        procId = IPC_MCU0_0;
     }
     else if (id == MAILBOX_INST_MCU1_0)
     {
@@ -108,6 +117,8 @@ uint32_t Ipc_getCoreId(void)
     selfId = IPC_MPU1_0;
 #elif defined(BUILD_MCU1_0)
     selfId = IPC_MCU1_0;
+#elif defined(BUILD_MCU0_0)
+    selfId = IPC_MCU0_0;
 #else
 #error "Unsupported core Id"
 #endif
