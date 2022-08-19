@@ -215,8 +215,8 @@ Mailbox_Instance Mailbox_getLocalEndPoint(void)
     localEndpoint = MAILBOX_INST_MPU1_0;
 #elif defined (BUILD_MCU1_0)
     localEndpoint = MAILBOX_INST_MCU1_0;
-#elif defined (BUILD_M4F_0)
-    localEndpoint = MAILBOX_INST_M4F_0;
+#elif defined (BUILD_MCU0_0)
+    localEndpoint = MAILBOX_INST_MCU0_0;
 #endif
 
     return localEndpoint;
@@ -236,8 +236,8 @@ int32_t Mailbox_validateLocalEndPoint(Mailbox_Instance localEndpoint)
     {
         retVal = MAILBOX_EINVAL;
     }
-#elif defined (BUILD_M4F_0)
-    if (localEndpoint != MAILBOX_INST_M4F_0)
+#elif defined (BUILD_MCU0_0)
+    if (localEndpoint != MAILBOX_INST_MCU0_0)
     {
         retVal = MAILBOX_EINVAL;
     }
@@ -542,7 +542,7 @@ int32_t Mailbox_getMailboxIntrRouterCfg(uint32_t selfId, uint32_t clusterId, uin
             }
 	        break;
 
-        case MAILBOX_INST_M4F_0:
+        case MAILBOX_INST_MCU0_0:
             if (clusterId == 0 && userId == 0)
             {
                 cfg->eventId = 16U + 50U;   /* interrupt line on M4FSS CPU, +16 offset to account for M4 internal interrupts */
