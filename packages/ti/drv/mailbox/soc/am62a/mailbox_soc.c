@@ -190,18 +190,28 @@ Mailbox_HwCfg g_Mailbox_HwCfg[MAILBOX_MAX_INST][MAILBOX_MAX_INST] =
         { { 0xFFU, 0xFFU,  0U}, { 0xFFU, 0xFFU,  0U}, true, 0 },  /* Self - A53-vm0 */
         { {    0U,    0U,  0U}, {    0U,    0U,  1U}, true, 0 },  /* r5f_0 */
         { {    1U,    0U,  0U}, {    1U,    0U,  1U}, true, 0 },  /* c7x_0 */
+        { {    2U,    0U,  0U}, {    2U,    0U,  1U}, true, 0 },  /* mcu_r5f_0 */
     },
     /* Host Processor - r5f_0 */
     {
         { {    0U,    3U,  1U}, {    0U,    3U,  0U}, false, 0 },  /* A53-vm0 */
         { { 0xFFU, 0xFFU,  0U}, { 0xFFU, 0xFFU,  0U}, false, 0 },  /*Self - r5f_0 */
         { {    3U,    3U,  0U}, {    3U,    3U,  1U}, false, 0 },  /* C7x_0 */
+        { {    1U,    3U,  2U}, {    1U,    3U,  3U}, false, 0 },  /* mcu_r5f_0 */
     },
     /* Host Processor - c7x_1	*/
     {
         { {    1U,    1U,  1U}, {    1U,    1U,  0U}, false, 0 },  /* A53-vm0 */
         { {    3U,    1U,  1U}, {    3U,    1U,  0U}, false, 0 },  /* r5f_0 */
         { {    0xFFU,    0xFFU,  0U}, {    0xFFU,    0xFFU,  0U}, false, 0 },  /* Self - c7x_0 */
+        { {    0U,    1U,  3U}, {    0U,    1U,  2U}, false, 0 },  /* mcu_r5f_0 */
+    },
+        /* Host Processor - mcu_r5f_0	*/
+    {
+        { {    2U,    2U,  1U}, {    2U,    2U,  0U}, false, 0 },  /* A53-vm0 */
+        { {    1U,    2U,  3U}, {    1U,    2U,  2U}, false, 0 },  /* r5f_0 */
+        { { 0xFFU, 0xFFU,  0U}, { 0xFFU, 0xFFU,  0U}, false, 0 },  /* Self - mcu_r5f_0 */
+        { {    0U,    2U,  2U}, {    0U,    2U,  3U}, false, 0 },  /* c7x_0 */   
     },
 };
 
@@ -221,6 +231,8 @@ Mailbox_Instance Mailbox_getLocalEndPoint(void)
     localEndpoint = MAILBOX_INST_C7X_1;
 #elif defined (BUILD_MCU1_0)
     localEndpoint = MAILBOX_INST_MCU1_0;
+#elif defined (BUILD_MCU2_0)
+    localEndpoint = MAILBOX_INST_MCU2_0;
 #endif
     return localEndpoint;
 }
@@ -246,6 +258,11 @@ int32_t Mailbox_validateLocalEndPoint(Mailbox_Instance localEndpoint)
     }
 #elif defined (BUILD_MCU1_0)
     if (localEndpoint != MAILBOX_INST_MCU1_0)
+    {
+        retVal = MAILBOX_EINVAL;
+    }
+#elif defined (BUILD_MCU2_0)
+    if (localEndpoint != MAILBOX_INST_MCU2_0)
     {
         retVal = MAILBOX_EINVAL;
     }
