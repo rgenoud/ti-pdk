@@ -198,7 +198,7 @@ const CSL_ArmR5MpuRegionCfg  gCslR5MpuCfg[CSL_ARM_R5F_MPU_REGIONS_MAX] =
         /* Region 9 configuration: Ring buffer RTOS IPC */
         .regionId         = 9U,
         .enable           = 1U,
-        .baseAddr         = 0x9c800000,
+        .baseAddr         = 0xA0000000,
         .size             = CSL_ARM_R5_MPU_REGION_SIZE_2MB,
         .subRegionEnable  = CSL_ARM_R5_MPU_SUB_REGION_ENABLE_ALL,
         .exeNeverControl  = 1U,
@@ -212,8 +212,8 @@ const CSL_ArmR5MpuRegionCfg  gCslR5MpuCfg[CSL_ARM_R5F_MPU_REGIONS_MAX] =
         /* Region 10 configuration: Ring buffer RTOS IPC */
         .regionId         = 10U,
         .enable           = 1U,
-        .baseAddr         = 0x9CD00000,
-        .size             = CSL_ARM_R5_MPU_REGION_SIZE_8MB,
+        .baseAddr         = 0xA0200000,
+        .size             = CSL_ARM_R5_MPU_REGION_SIZE_1MB,
         .subRegionEnable  = CSL_ARM_R5_MPU_SUB_REGION_ENABLE_ALL,
         .exeNeverControl  = 1U,
         .accessPermission = CSL_ARM_R5_ACC_PERM_PRIV_USR_RD_WR,
