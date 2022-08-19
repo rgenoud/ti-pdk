@@ -66,12 +66,14 @@ typedef uint32_t Mailbox_Instance;
  *
  @{ */
 
-/*! \brief MPU1_0 Mailbox INST */
-#define MAILBOX_INST_MPU1_0        (0U)
-/*! \brief MCU1_0 Mailbox INST */
+/*! \brief M4F_0 Mailbox INST M4 */
+#define MAILBOX_INST_M4F_0         (0U)
+/*! \brief MCU1_0 Mailbox INST DM-R5*/
 #define MAILBOX_INST_MCU1_0        (1U)
+/*! \brief MPU1_0 Mailbox INST */
+#define MAILBOX_INST_MPU1_0        (2U)
 /*! \brief Last Mailbox INST */
-#define MAILBOX_INST_LAST          (MAILBOX_INST_MCU1_0)
+#define MAILBOX_INST_LAST          (MAILBOX_INST_MPU1_0)
 /*! \brief Invalid Mailbox INST */
 #define MAILBOX_INST_INVALID       (0xFFU)
 
