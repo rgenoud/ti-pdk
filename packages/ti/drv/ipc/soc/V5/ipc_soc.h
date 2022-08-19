@@ -60,9 +60,10 @@ extern "C" {
 #define IPC_VRING_BUFFER_SIZE   (0x300000U)
 
 /** \brief Core definitions */
-#define    IPC_MPU1_0           (0U)    /**< ARM A53 - VM0 */
-#define    IPC_MCU1_0            (1U)    /**< ARM MCU  M4F */
-#define    IPC_MAX_PROCS        (2U)    /**< Maximum Processors */
+#define    IPC_MCU0_0           (0U)    /**< ARM MCU M4F */
+#define    IPC_MCU1_0           (1U)    /**< ARM DM R5F */
+#define    IPC_MPU1_0           (2U)    /**< ARM A53 - VM0 */
+#define    IPC_MAX_PROCS        (3U)    /**< Maximum Processors */
 
 /* ========================================================================== */
 /*                             Include Files                                  */
