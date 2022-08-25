@@ -669,14 +669,15 @@ void Hwi_dispatchCore(int intNum)
         __set_indexed(__EECLR, 0, disableMask);
 
         Hwi_enable();
-
-        (fxn)(arg);
+        if ( fxn != NULL)
+            (fxn)(arg);
 
         Hwi_disable();
         __set_indexed(__EESET, 0, restoreMask & oldEER);
     }
     else {
-        (fxn)(arg);
+        if ( fxn != NULL)
+            (fxn)(arg);
     }
 
     DebugP_log1("Hwi_end intNum:%p", (uintptr_t)intNum);
