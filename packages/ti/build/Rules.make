@@ -81,7 +81,7 @@ endif
 ifeq ($(BOARD),$(filter $(BOARD), j721e_ccqt j721e_loki))
   CORE ?= c7x_1
 endif
-ifeq ($(BOARD),$(filter $(BOARD), j721e_hostemu j7200_hostemu j721s2_hostemu j784s4_hostemu))
+ifeq ($(BOARD),$(filter $(BOARD), j721e_hostemu j7200_hostemu j721s2_hostemu j784s4_hostemu am62a_hostemu))
   CORE = c7x-hostemu
 endif
 ifeq ($(BOARD),$(filter $(BOARD), tpr12_evm tpr12_qt awr294x_evm))
@@ -136,7 +136,7 @@ export CPLUSPLUS_BUILD ?= no
 include $(PDK_INSTALL_PATH)/ti/build/pdk_tools_path.mk
 
 #safertos_package_path.mk will be packaged only for SOCs with SafeRTOS Build is supported.
-#Hence, include only if available 
+#Hence, include only if available
 ifneq ($(wildcard $(PDK_INSTALL_PATH)/ti/build/safertos_package_path.mk),)
   include $(PDK_INSTALL_PATH)/ti/build/safertos_package_path.mk
 endif
