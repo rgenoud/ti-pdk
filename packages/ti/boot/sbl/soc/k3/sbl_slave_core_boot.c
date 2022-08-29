@@ -777,6 +777,11 @@ void SBL_SlaveCoreBoot(cpu_core_id_t core_id, uint32_t freqHz, sblEntryPoint_t *
     proc_set_config_req.config_flags_1_set = 0;
     proc_set_config_req.config_flags_1_clear = 0;
 
+    if (core_id == HSM_CPU_ID)
+    {
+        proc_set_config_req.config_flags_1_set = TISCI_MSG_VAL_PROC_BOOT_CFG_FLAG_HSM_DBG_EN;
+    }
+
     if (pAppEntry->CpuEntryPoint[core_id] <  SBL_INVALID_ENTRY_ADDR) /* Set entry point only is valid */
     {
         SBL_log(SBL_LOG_MAX, "Sciclient_procBootSetProcessorCfg, ProcId 0x%x, EntryPoint 0x%x...\n", proc_set_config_req.processor_id, proc_set_config_req.bootvector_lo);
