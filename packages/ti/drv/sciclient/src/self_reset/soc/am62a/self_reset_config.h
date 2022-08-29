@@ -3,7 +3,7 @@
 
 
 #include <ti/drv/sciclient/sciclient.h>
-#include <ti/drv/sciclient/soc/sysfw/include/am62a/tisci_hosts.h>
+#include <ti/drv/sciclient/soc/sysfw/include/am62ax/tisci_hosts.h>
 
 // This file contains the soc specific flags for dm r5 self reset
 

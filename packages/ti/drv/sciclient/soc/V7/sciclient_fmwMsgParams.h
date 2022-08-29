@@ -178,7 +178,7 @@ extern "C" {
  *  @{
  *  Power Management Module Device IDs
  */
-#include <ti/drv/sciclient/soc/sysfw/include/am62a/tisci_devices.h>
+#include <ti/drv/sciclient/soc/sysfw/include/am62ax/tisci_devices.h>
 /* @} */
 
 /**
@@ -187,7 +187,7 @@ extern "C" {
  *  @{
  *  Power Management Module Clock IDs for individual modules.
  */
-#include <ti/drv/sciclient/soc/sysfw/include/am62a/tisci_clocks.h>
+#include <ti/drv/sciclient/soc/sysfw/include/am62ax/tisci_clocks.h>
 /* @} */
 
 

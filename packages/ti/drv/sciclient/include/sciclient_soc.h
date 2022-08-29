@@ -86,7 +86,7 @@
 #endif
 
 #if defined (SOC_AM62A)
-#include <ti/drv/sciclient/soc/sysfw/include/am62a/tisci_resasg_types.h>
+#include <ti/drv/sciclient/soc/sysfw/include/am62ax/tisci_resasg_types.h>
 #include <ti/drv/sciclient/soc/V7/sciclient_fmwMsgParams.h>
 #include <ti/drv/sciclient/soc/V7/sciclient_firmware_V7.h>
 #endif

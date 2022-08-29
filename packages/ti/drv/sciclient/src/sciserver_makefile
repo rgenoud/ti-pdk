@@ -31,7 +31,12 @@ ifeq ($(SOC),$(filter $(SOC), am62x))
 endif
 ifeq ($(SOC),$(filter $(SOC), am62a))
   SCISERVER_SOCVER = V7
+  # There is a mismatch in soc name in PDK and SYSFW for am62a adding a hack to fix it
+  CONFIG_SOC_FOLDER_STRING="am62ax"
+else
+  CONFIG_SOC_FOLDER_STRING=$(SOC)
 endif
+
 
 # Leave RMPMHAL_SCMVERSION blank if you want a script to generate it from git tag/commit
 RMPMHAL_SCMVERSION ?=
@@ -51,13 +56,13 @@ SRCDIR = src/sciserver
 SRCDIR += src/sciserver/$(SOC)
 
 INCDIR = soc/sysfw/include 
-INCDIR += soc/sysfw/include/$(SOC)
+INCDIR += soc/sysfw/include/$(CONFIG_SOC_FOLDER_STRING)
 INCDIR += soc/$(SCISERVER_SOCVER)
 INCDIR += src/sciserver
 INCDIR += src/sciserver/$(SOC)
 INCDIR += src/version
 INCDIR += src/rm_pm_hal/include/
-INCDIR += src/rm_pm_hal/include/soc/$(SOC)
+INCDIR += src/rm_pm_hal/include/soc/$(CONFIG_SOC_FOLDER_STRING)
 INCDIR += src/rm_pm_hal/pm/include
 INCDIR += src/rm_pm_hal/rm
 
