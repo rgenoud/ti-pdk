@@ -45,7 +45,7 @@
 #include <ti/csl/csl_types.h>
 #include <ti/drv/sciclient/sciclient.h>
 #include <ti/drv/sciclient/soc/sysfw/include/tisci/tisci_boardcfg.h>
-#include <ti/drv/sciclient/soc/sysfw/include/am62a/tisci_resasg_types.h>
+#include <ti/drv/sciclient/soc/sysfw/include/am62ax/tisci_resasg_types.h>
 
 #ifdef __cplusplus
 extern "C" {

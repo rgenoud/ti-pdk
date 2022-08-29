@@ -361,10 +361,10 @@ typedef uint8_t devgrp_t;
 #include <ti/drv/sciclient/soc/sysfw/include/tisci/lpm/tisci_lpm.h>
 #endif
 #if defined (SOC_AM62A)
-#include <ti/drv/sciclient/soc/sysfw/include/am62a/tisci_resasg_types.h>
-#include <ti/drv/sciclient/soc/sysfw/include/am62a/tisci_hosts.h>
-#include <ti/drv/sciclient/soc/sysfw/include/am62a/tisci_sec_proxy.h>
-#include <ti/drv/sciclient/soc/sysfw/include/am62a/tisci_boardcfg_constraints.h>
+#include <ti/drv/sciclient/soc/sysfw/include/am62ax/tisci_resasg_types.h>
+#include <ti/drv/sciclient/soc/sysfw/include/am62ax/tisci_hosts.h>
+#include <ti/drv/sciclient/soc/sysfw/include/am62ax/tisci_sec_proxy.h>
+#include <ti/drv/sciclient/soc/sysfw/include/am62ax/tisci_boardcfg_constraints.h>
 #include <ti/drv/sciclient/soc/sysfw/include/tisci/lpm/tisci_lpm.h>
 #endif
 
