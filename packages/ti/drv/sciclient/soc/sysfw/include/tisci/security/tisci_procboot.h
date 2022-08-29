@@ -248,6 +248,9 @@ struct tisci_msg_proc_handover_resp {
 #define TISCI_MSG_VAL_PROC_BOOT_CFG_FLAG_M4F_DBG_EN            (0x00000001U)
 /** M4F Non-Invasive debug */
 #define TISCI_MSG_VAL_PROC_BOOT_CFG_FLAG_M4F_DBG_NIDEN         (0x00000002U)
+/** HSM M4F Debug Enable */
+#define TISCI_MSG_VAL_PROC_BOOT_CFG_FLAG_HSM_DBG_EN            (0x00000004U)
+
 /**
  * \brief Processor Boot Configuration
  * \param hdr Message header
