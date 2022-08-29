@@ -1011,6 +1011,8 @@ void SBL_SlaveCoreBoot(cpu_core_id_t core_id, uint32_t freqHz, sblEntryPoint_t *
                     {
                         SBL_ReleaseCore(core_id, TISCI_MSG_FLAG_AOP);
                     }
+
+                    SBL_log(SBL_LOG_ERR,"HSM processor boot successful!\nNow you may attach JTAG and reload a custom program. \n");
                 }
 
             }

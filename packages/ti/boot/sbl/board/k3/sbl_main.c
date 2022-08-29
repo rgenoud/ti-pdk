@@ -520,7 +520,23 @@ int main()
 
     SBL_log(SBL_LOG_MAX, "Begin parsing user application\n");
 
-    /* Boot all non-SBL cores in multi-core app image */
+    /* HACK: Boot HSM M4 core:
+     * - Set boot vector to 0x0 (HSM local SRAM view)
+     * - Copy basic image to SoC view of HSM SRAM
+     *      SP base
+     *      Reset Vector
+     *      label:
+     *          wfi
+     *          b label
+     *  - Boot HSM processor
+     */
+    k3xx_evmEntry.CpuEntryPoint[HSM_CPU_ID] = 0;
+    *((uint32_t *)(0x44080000)) = 0x0030;
+    *((uint32_t *)(0x44080004)) = 0x0009;
+    *((uint32_t *)(0x44080008)) = 0xE7FDBF30;
+    SBL_SlaveCoreBoot(HSM_CPU_ID, 0, &k3xx_evmEntry, SBL_REQUEST_CORE);
+
+/* Boot all non-SBL cores in multi-core app image */
     SBL_BootImage(&k3xx_evmEntry);
 
     /* Export SBL logs */
