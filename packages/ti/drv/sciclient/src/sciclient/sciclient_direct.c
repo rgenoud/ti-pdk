@@ -384,7 +384,7 @@ int32_t Sciclient_service (const Sciclient_ReqPrm_t *pReqPrm,
                 }
                 break;
             case TISCI_MSG_ENTER_SLEEP:
-            case TISCI_MSG_WAKE_REASON:
+            case TISCI_MSG_LPM_WAKE_REASON:
             case TISCI_MSG_SET_IO_ISOLATION:
                 memcpy(message, pReqPrm->pReqPayload, pReqPrm->reqPayloadSize);
                 /* Processing enter sleep message locally */
@@ -640,7 +640,7 @@ int32_t Sciclient_ProcessPmMessage(const uint32_t reqFlags, void *tx_msg)
             ret = dm_prepare_sleep_handler((uint32_t*)tx_msg); break;
         case TISCI_MSG_ENTER_SLEEP               :
             ret = dm_enter_sleep_handler((uint32_t*)tx_msg); break;
-        case TISCI_MSG_WAKE_REASON               :
+        case TISCI_MSG_LPM_WAKE_REASON               :
             ret = dm_lpm_wake_reason_handler((uint32_t*)tx_msg); break;
         case TISCI_MSG_SET_IO_ISOLATION          :
             ret = dm_set_io_isolation_handler((uint32_t*)tx_msg); break;
