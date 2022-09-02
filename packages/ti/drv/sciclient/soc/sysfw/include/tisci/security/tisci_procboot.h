@@ -248,6 +248,9 @@ struct tisci_msg_proc_handover_resp {
 #define TISCI_MSG_VAL_PROC_BOOT_CFG_FLAG_M4F_DBG_EN            (0x00000001U)
 /** M4F Non-Invasive debug */
 #define TISCI_MSG_VAL_PROC_BOOT_CFG_FLAG_M4F_DBG_NIDEN         (0x00000002U)
+/** HSM M4F Debug Enable */
+#define TISCI_MSG_VAL_PROC_BOOT_CFG_FLAG_HSM_DBG_EN            (0x00000004U)
+
 /**
  * \brief Processor Boot Configuration
  * \param hdr Message header
@@ -302,6 +305,11 @@ struct tisci_msg_proc_set_config_resp {
 #define TISCI_MSG_VAL_PROC_BOOT_CTRL_FLAG_R5_LPSC                     (0x00000002U)
 /** R5F Processor Reset Control */
 #define TISCI_MSG_VAL_PROC_BOOT_CTRL_FLAG_R5_RESET                    (0x00000004U)
+
+/* M4 Control Flags */
+
+/** HSM M4 Processor Reset Control */
+#define TISCI_MSG_VAL_PROC_BOOT_CTRL_FLAG_HSM_M4_RESET                (0x00000001U)
 
 /**
  * \brief Optional processor specific message for sequence control
