@@ -1,1 +1,0 @@
-../../../src/system-firmware/README.rst
