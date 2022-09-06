@@ -1,1 +1,0 @@
-../j721e/README.txt
