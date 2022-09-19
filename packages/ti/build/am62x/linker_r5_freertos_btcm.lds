@@ -42,8 +42,12 @@ MEMORY
    
     /* am62x HSM RAM location */
     HSM_RAM             (RWIX)      : ORIGIN = 0x43C00000 LENGTH = 0x3FF00
-    DDR                 (RWIX)      : ORIGIN = 0x9DC00000 LENGTH = 0xb00000
-    DDR_MCU1_0          (RWIX)      : ORIGIN = 0x9BC00000 LENGTH = 0xf00000
+
+    DDR_DM_R5F_RESOURCE_TABLE ( RWIX ) : ORIGIN = 0x9DA00000 , LENGTH = 0x00000400
+    /* DDR for DM R5F for Linux IPC tracebuffer [ size 1023.00 KB ] */
+    DDR_DM_R5F_IPC_TRACEBUF  ( RWIX ) : ORIGIN = 0x9DA00400 , LENGTH = 0x000FFC00
+    /* DDR for DM R5F for code/data [ size 29.00 MB ] */
+    DDR_DM_R5F               ( RWIX ) : ORIGIN = 0x9DB00000 , LENGTH = 0x00C00000
 }
 
 /*--------------------------------------------------------------*/
@@ -54,13 +58,13 @@ SECTIONS
     .freertosrstvectors      : align = 8 ,load = MCU0_R5F_TCMB, run = MCU0_R5F_TCMA
     .bootCode        : align = 8 ,load = MCU0_R5F_TCMB, run = MCU0_R5F_TCMA
     .startupCode     : align = 8 ,load = MCU0_R5F_TCMB, run = MCU0_R5F_TCMA
-    .startupData     : {} palign(8)      > DDR, type = NOINIT  
+    .startupData     : {} palign(8)      > DDR_DM_R5F, type = NOINIT
     GROUP {
         .text.hwi    : palign(8)
         .text.cache  : palign(8)
         .text.mpu    : palign(8)
         .text.boot   : palign(8)
-    }                                    > DDR
+    }                                    > DDR_DM_R5F
     GROUP{
 
         .dm_stub_text : {
@@ -99,52 +103,45 @@ SECTIONS
             _end_stack = .;
         }  palign(8)
 }  load = MCU0_R5F_TCMB, run = MCU0_R5F_TCMA
-    .text            : {} palign(8)      > DDR
-    .const           : {} palign(8)      > DDR
-    .rodata          : {} palign(8)      > DDR
-    .cinit           : {} palign(8)      > DDR
-    .bss             : {} align(4)       > DDR
-    .far             : {} align(4)       > DDR
-    .data            : {} palign(128)    > DDR
-    .sysmem          : {}                > DDR
-    .data_buffer     : {} palign(128)    > DDR
-    .bss.devgroup*   : {} align(4)       > DDR
-    .const.devgroup* : {} align(4)       > DDR
-    .boardcfg_data   : {} align(4)       > DDR
+    .text            : {} palign(8)      > DDR_DM_R5F
+    .const           : {} palign(8)      > DDR_DM_R5F
+    .rodata          : {} palign(8)      > DDR_DM_R5F
+    .cinit           : {} palign(8)      > DDR_DM_R5F
+    .bss             : {} align(4)       > DDR_DM_R5F
+    .far             : {} align(4)       > DDR_DM_R5F
+    .data            : {} palign(128)    > DDR_DM_R5F
+    .sysmem          : {}                > DDR_DM_R5F
+    .data_buffer     : {} palign(128)    > DDR_DM_R5F
+    .bss.devgroup*   : {} align(4)       > DDR_DM_R5F
+    .const.devgroup* : {} align(4)       > DDR_DM_R5F
+    .boardcfg_data   : {} align(4)       > DDR_DM_R5F
 
-    /* USB or any other LLD buffer for benchmarking */
-    GROUP {
-	    .resource_table          :
-	    {
-		    __RESOURCE_TABLE = .;
-	    }
+    .resource_table          :
+    {
+        __RESOURCE_TABLE = .;
+    }                                           > DDR_DM_R5F_RESOURCE_TABLE
 
-	    .tracebuf                : {} align(1024)
+    .tracebuf                : {} align(1024)   > DDR_DM_R5F_IPC_TRACEBUF
 
-             ipc_data_buffer (NOINIT) : {} palign(128)
-            .benchmark_buffer (NOLOAD) {} ALIGN (8)
+    .stack      : {} align(4)                               > DDR_DM_R5F  (HIGH)
 
-    } > DDR_MCU1_0
-
-    .stack      : {} align(4)                               > DDR  (HIGH)
-
-    .irqStack   : {. = . + __IRQ_STACK_SIZE;} align(4)      > DDR  (HIGH)
+    .irqStack   : {. = . + __IRQ_STACK_SIZE;} align(4)      > DDR_DM_R5F  (HIGH)
     RUN_START(__IRQ_STACK_START)
     RUN_END(__IRQ_STACK_END)
 
-    .fiqStack   : {. = . + __FIQ_STACK_SIZE;} align(4)      > DDR  (HIGH)
+    .fiqStack   : {. = . + __FIQ_STACK_SIZE;} align(4)      > DDR_DM_R5F  (HIGH)
     RUN_START(__FIQ_STACK_START)
     RUN_END(__FIQ_STACK_END)
 
-    .abortStack : {. = . + __ABORT_STACK_SIZE;} align(4)    > DDR  (HIGH)
+    .abortStack : {. = . + __ABORT_STACK_SIZE;} align(4)    > DDR_DM_R5F  (HIGH)
     RUN_START(__ABORT_STACK_START)
     RUN_END(__ABORT_STACK_END)
 
-    .undStack   : {. = . + __UND_STACK_SIZE;} align(4)      > DDR  (HIGH)
+    .undStack   : {. = . + __UND_STACK_SIZE;} align(4)      > DDR_DM_R5F  (HIGH)
     RUN_START(__UND_STACK_START)
     RUN_END(__UND_STACK_END)
 
-    .svcStack   : {. = . + __SVC_STACK_SIZE;} align(4)      > DDR  (HIGH)
+    .svcStack   : {. = . + __SVC_STACK_SIZE;} align(4)      > DDR_DM_R5F  (HIGH)
     RUN_START(__SVC_STACK_START)
     RUN_END(__SVC_STACK_END)
 }
