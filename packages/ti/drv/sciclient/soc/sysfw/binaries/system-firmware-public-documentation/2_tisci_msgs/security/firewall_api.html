@@ -79,7 +79,7 @@
             
             
               <div class="version">
-                08.04.06
+                08.04.07
               </div>
             
           
@@ -300,11 +300,11 @@ configuration.</li>
 </tr>
 <tr class="row-even"><td>start_address</td>
 <td>soc_phys_addr_t</td>
-<td>Contents of the firewall START_ADDRESS register to set</td>
+<td>Contents of the firewall START_ADDRESS register to set. The address is restricted to 44-bit; otherwise, it returns failure.</td>
 </tr>
 <tr class="row-odd"><td>end_address</td>
 <td>soc_phys_addr_t</td>
-<td>Contents of the firewall END_ADDRESS register to set</td>
+<td>Contents of the firewall END_ADDRESS register to set. The address is restricted to 44-bit; otherwise, it returns failure.</td>
 </tr>
 </tbody>
 </table>
@@ -435,11 +435,11 @@ configuration.</li>
 </tr>
 <tr class="row-even"><td>start_address</td>
 <td>soc_phys_addr_t</td>
-<td>Contents of the firewall START_ADDRESS register This is not applicable for channelized firewalls.</td>
+<td>Contents of the firewall START_ADDRESS register This is not applicable for channelized firewalls. The returned address is restricted to 44-bit.</td>
 </tr>
 <tr class="row-odd"><td>end_address</td>
 <td>soc_phys_addr_t</td>
-<td>Contents of the firewall END_ADDRESS register This is not applicable for channelized firewalls.</td>
+<td>Contents of the firewall END_ADDRESS register This is not applicable for channelized firewalls. The returned address is restricted to 44-bit.</td>
 </tr>
 </tbody>
 </table>
@@ -589,7 +589,7 @@ configuration.</li>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'08.04.06',
+            VERSION:'08.04.07',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

@@ -59,6 +59,11 @@
 #define FWL_MAX_PRIVID_SLOTS (3U)
 
 /**
+ * \brief Maximum number of hosts assigned to a resource
+ */
+#define RES_MAX_HOST_CNT (2U)
+
+/**
  * \brief Length of UID
  */
 #define UID_LEN_WORDS (8U)
