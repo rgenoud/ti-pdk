@@ -115,9 +115,11 @@ struct tisci_msg_fwl_change_owner_info_resp {
  *
  * \param permissions Contents of the firewall PERMISSION register to set
  *
- * \param start_address Contents of the firewall START_ADDRESS register to set
+ * \param start_address Contents of the firewall START_ADDRESS register to set.
+ *   The address is restricted to 44-bit; otherwise, it returns failure.
  *
- * \param end_address Contents of the firewall END_ADDRESS register to set
+ * \param end_address Contents of the firewall END_ADDRESS register to set.
+ *   The address is restricted to 44-bit; otherwise, it returns failure.
  */
 
 struct tisci_msg_fwl_set_firewall_region_req {
@@ -189,10 +191,12 @@ struct tisci_msg_fwl_get_firewall_region_req {
  * \param permissions Contents of the firewall PERMISSION registers
  *
  * \param start_address Contents of the firewall START_ADDRESS register
- * This is not applicable for channelized firewalls.
+ * This is not applicable for channelized firewalls. The returned address is
+ * restricted to 44-bit.
  *
  * \param end_address Contents of the firewall END_ADDRESS register
- * This is not applicable for channelized firewalls.
+ * This is not applicable for channelized firewalls. The returned address is
+ * restricted to 44-bit.
  */
 
 struct tisci_msg_fwl_get_firewall_region_resp {
