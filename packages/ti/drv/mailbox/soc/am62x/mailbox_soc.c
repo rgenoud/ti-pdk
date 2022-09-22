@@ -182,25 +182,16 @@ static uintptr_t g_Mailbox_BaseAddr[MAILBOX_CLUSTER_CNT] =
 
 Mailbox_HwCfg g_Mailbox_HwCfg[MAILBOX_MAX_INST][MAILBOX_MAX_INST] =
 {
-    /* Host Processor - m4f_0 */
+    /* Host Processor - A53-vm0 cluster user fifo */
     {
-        { { 0xFFU, 0xFFU,  0U }, { 0xFFU, 0xFFU,  0U}, false, 0 },  /* Self - MCU_m4f_0 */
-        { {    0U,    2U,  5U }, {    0U,    2U,  4U}, false, 0 },  /* DM_r5f_0 */
-        { {    0U,    2U,  1U }, {    0U,    2U,  0U}, false, 0 },  /* A53-vm0 */
+        { { 0xFFU, 0xFFU,  0U}, { 0xFFU, 0xFFU,  0U}, true, 0 },  /* Self - A53-vm0 */
+        { {    0U,    0U,  2U}, {    0U,    0U,  3U}, true, 0 },  /* DM_r5f_0 */
     },
     /* Host Processor - r5f_0 */
     {
-        { {    0U,    1U,  4U }, {    0U,    1U,  5U}, false, 0 }, /* MCU_m4f_0 */
-        { { 0xFFU, 0xFFU,  0U }, { 0xFFU, 0xFFU,  0U}, false, 0 }, /* Self - DM R5 */
         { {    0U,    1U,  3U }, {    0U,    1U,  2U}, false, 0 }, /* A53-vm0 */
-    },
-    /* Host Processor - A53-vm0 cluster user fifo */
-    {
-        { {    0U,    0U,  0U}, {    0U,    0U,  1U}, true, 0 },  /* MCU_m4f_0 */
-        { {    0U,    0U,  2U}, {    0U,    0U,  3U}, true, 0 },  /* DM_r5f_0 */
-        { { 0xFFU, 0xFFU,  0U}, { 0xFFU, 0xFFU,  0U}, true, 0 },  /* Self - A53-vm0 */
-    },
-    
+        { { 0xFFU, 0xFFU,  0U }, { 0xFFU, 0xFFU,  0U}, false, 0 }, /* DM R5 */
+    }
 };
 
 /* ========================================================================== */
@@ -215,8 +206,6 @@ Mailbox_Instance Mailbox_getLocalEndPoint(void)
     localEndpoint = MAILBOX_INST_MPU1_0;
 #elif defined (BUILD_MCU1_0)
     localEndpoint = MAILBOX_INST_MCU1_0;
-#elif defined (BUILD_M4F_0)
-    localEndpoint = MAILBOX_INST_M4F_0;
 #endif
 
     return localEndpoint;
@@ -233,11 +222,6 @@ int32_t Mailbox_validateLocalEndPoint(Mailbox_Instance localEndpoint)
     }
 #elif defined (BUILD_MCU1_0)
     if (localEndpoint != MAILBOX_INST_MCU1_0)
-    {
-        retVal = MAILBOX_EINVAL;
-    }
-#elif defined (BUILD_M4F_0)
-    if (localEndpoint != MAILBOX_INST_M4F_0)
     {
         retVal = MAILBOX_EINVAL;
     }
@@ -527,31 +511,20 @@ int32_t Mailbox_getMailboxIntrRouterCfg(uint32_t selfId, uint32_t clusterId, uin
 	    }
             break;
 
-        case MAILBOX_INST_MCU1_0:
-            if (clusterId == 0 && userId == 3)
-            {
-                cfg->eventId = 255U;   /* interrupt line MCU1_0 */
-            }
-            else if (clusterId == 0 && userId == 1)
-            {
-                cfg->eventId = 254U;   /* interrupt line MCU1_0 */
-            }
-            else
-            {
-                retVal = MAILBOX_EINVAL;
-            }
-	        break;
-
-        case MAILBOX_INST_M4F_0:
-            if (clusterId == 0 && userId == 0)
-            {
-                cfg->eventId = 16U + 50U;   /* interrupt line on M4FSS CPU, +16 offset to account for M4 internal interrupts */
-            }
-            else
-            {
-                retVal = MAILBOX_EINVAL;
-            }
-            break;
+	case MAILBOX_INST_MCU1_0:
+	    if (clusterId == 0 && userId == 3)
+	    {
+		    cfg->eventId = 255U;   /* interrupt line MCU1_0 */
+	    }
+	    else if (clusterId == 0 && userId == 1)
+	    {
+		    cfg->eventId = 254U;   /* interrupt line MCU1_0 */
+	    }
+	    else
+	    {
+		    retVal = MAILBOX_EINVAL;
+	    }
+	    break;
 
         default:
 
