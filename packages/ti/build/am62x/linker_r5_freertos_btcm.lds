@@ -115,6 +115,7 @@ SECTIONS
     .bss.devgroup*   : {} align(4)       > DDR_DM_R5F
     .const.devgroup* : {} align(4)       > DDR_DM_R5F
     .boardcfg_data   : {} align(4)       > DDR_DM_R5F
+    .bss:taskStackSection         : {}   > DDR_DM_R5F
 
     .resource_table          :
     {
