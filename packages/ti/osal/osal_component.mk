@@ -140,6 +140,7 @@ osal_EXAMPLE_LIST =
 # OSAL Modules
 #
 
+ifneq ($(BUILD_OS_TYPE), qnx)
 # OSAL NONOS LIB
 export osal_nonos_COMP_LIST = osal_nonos
 osal_nonos_RELPATH = ti/osal
@@ -191,6 +192,7 @@ export osal_safertos_PKG_LIST = osal_safertos
 osal_safertos_INCLUDE = $(osal_safertos_PATH)
 export osal_safertos_SOCLIST = $(libosal_safertos_SOCLIST)
 export osal_safertos_$(SOC)_CORELIST = $(libosal_safertos_$(SOC)_CORELIST)
+endif
 
 #
 # OSAL Examples
