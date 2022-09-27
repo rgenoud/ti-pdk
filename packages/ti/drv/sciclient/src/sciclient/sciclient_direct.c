@@ -422,14 +422,9 @@ int32_t Sciclient_service (const Sciclient_ReqPrm_t *pReqPrm,
                  * these are treated as native calls to DMSC. If these requests
                  * are made from other CPUs, the sciserver will take care of
                  * setting the forward status prior to calling this function.
-                 * The MCU1_0 will always be secure when trying to send the message
-                 * to the TIFS directly to avoid self blocking.
                  */
-                uint32_t bkupMode;
-                bkupMode = gSciclientHandle.isSecureMode;
-                gSciclientHandle.isSecureMode = 1U;
+                *fwdStatus = SCISERVER_FORWARD_MSG;
                 ret = Sciclient_serviceSecureProxy(pReqPrm, pRespPrm);
-                gSciclientHandle.isSecureMode = bkupMode;
                 break;
             }
         }
