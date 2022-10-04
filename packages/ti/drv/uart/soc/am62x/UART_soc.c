@@ -57,7 +57,7 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
         0,
 #else
         CSL_UART0_BASE,                     /* baseAddr */
-        CSLR_R5FSS0_CORE0_INTR_UART0_USART_IRQ_0,
+        CSLR_WKUP_R5FSS0_CORE0_INTR_UART0_USART_IRQ_0,
 #endif
         0U,                                 /* eventId, not used for am64x */
         UART_MODULE_CLOCK,                  /* frequency, default 48MHz */
@@ -93,7 +93,7 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
         0,
 #else
         CSL_UART1_BASE,                     /* baseAddr */
-        CSLR_R5FSS0_CORE0_INTR_UART1_USART_IRQ_0,
+        CSLR_WKUP_R5FSS0_CORE0_INTR_UART1_USART_IRQ_0,
 #endif
         0U,                                 /* eventId, not used for am64x */
         UART_MODULE_CLOCK,                  /* frequency, default 48MHz */
@@ -130,7 +130,7 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
         0,
 #else
         CSL_UART2_BASE,                     /* baseAddr */
-        CSLR_R5FSS0_CORE0_INTR_UART2_USART_IRQ_0, /* IRQ*/
+        CSLR_WKUP_R5FSS0_CORE0_INTR_UART2_USART_IRQ_0, /* IRQ*/
 
 #endif
         0U,                                 /* eventId, not used for am64x */
@@ -168,7 +168,7 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
         0,
 #else
         CSL_UART3_BASE,                     /* baseAddr */
-        CSLR_R5FSS0_CORE0_INTR_UART3_USART_IRQ_0,  /* IRQ*/
+        CSLR_WKUP_R5FSS0_CORE0_INTR_UART3_USART_IRQ_0,  /* IRQ*/
 #endif
         0U,                                 /* eventId, not used for am64x */
         UART_MODULE_CLOCK,                  /* frequency, default 48MHz */
@@ -205,7 +205,7 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
         0,
 #else
         CSL_UART4_BASE,                     /* baseAddr */
-        CSLR_R5FSS0_CORE0_INTR_UART4_USART_IRQ_0,  /* IRQ*/
+        CSLR_WKUP_R5FSS0_CORE0_INTR_UART4_USART_IRQ_0,  /* IRQ*/
 #endif
         0U,                                 /* eventId, not used for am64x */
         UART_MODULE_CLOCK,                  /* frequency, default 48MHz */
@@ -272,7 +272,7 @@ UART_HwAttrs uartInitCfg[CSL_UART_PER_CNT] =
         0,
 #else
         CSL_WKUP_UART0_BASE,                     /* baseAddr */
-        CSLR_R5FSS0_CORE0_INTR_WKUP_UART0_USART_IRQ_0,
+        CSLR_WKUP_R5FSS0_CORE0_INTR_WKUP_UART0_USART_IRQ_0,
 #endif
         0U,                                 /* eventId, not used for am64x */
         UART_MODULE_CLOCK,                  /* frequency, default 48MHz */
