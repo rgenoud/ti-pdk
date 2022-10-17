@@ -43,11 +43,11 @@ MEMORY
     /* am62x HSM RAM location */
     HSM_RAM             (RWIX)      : ORIGIN = 0x43C00000 LENGTH = 0x3FF00
 
-    DDR_DM_R5F_RESOURCE_TABLE ( RWIX ) : ORIGIN = 0x9DA00000 , LENGTH = 0x00000400
+    DDR_DM_R5F_RESOURCE_TABLE ( RWIX ) : ORIGIN = 0x9DB00000 , LENGTH = 0x00000400
     /* DDR for DM R5F for Linux IPC tracebuffer [ size 1023.00 KB ] */
-    DDR_DM_R5F_IPC_TRACEBUF  ( RWIX ) : ORIGIN = 0x9DA00400 , LENGTH = 0x000FFC00
+    DDR_DM_R5F_IPC_TRACEBUF  ( RWIX ) : ORIGIN = 0x9DB00400 , LENGTH = 0x000FFC00
     /* DDR for DM R5F for code/data [ size 29.00 MB ] */
-    DDR_DM_R5F               ( RWIX ) : ORIGIN = 0x9DB00000 , LENGTH = 0x00C00000
+    DDR_DM_R5F               ( RWIX ) : ORIGIN = 0x9DC00000 , LENGTH = 0x00B00000
 }
 
 /*--------------------------------------------------------------*/
