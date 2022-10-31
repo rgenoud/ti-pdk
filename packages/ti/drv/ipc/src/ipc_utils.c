@@ -117,9 +117,9 @@ void* IpcUtils_QgetHead(IpcUtils_QHandle *handle)
     return (elem);
 }
 
-Bool IpcUtils_QisEmpty(IpcUtils_QHandle *handle)
+uint8_t IpcUtils_QisEmpty(IpcUtils_QHandle *handle)
 {
-    Bool  rtnVal = FALSE;
+    uint8_t rtnVal = 0U;
     if (handle->next == handle)
     {
         rtnVal = TRUE;
@@ -290,7 +290,7 @@ void *IpcUtils_HeapAlloc(IpcUtils_HeapHandle *pHndl, uint32_t size,
                             uint32_t align)
 {
     void *rtnVal = NULL;
-    if ((NULL != pHndl) && (TRUE!=IpcUtils_QisEmpty(&pHndl->qHandle)))
+    if (NULL != pHndl && !IpcUtils_QisEmpty(&pHndl->qHandle))
     {
         rtnVal = IpcUtils_QgetHead(&pHndl->qHandle);
         pHndl->numFreeBlocks--;
