@@ -122,6 +122,7 @@ PACKAGE_SRCS_COMMON += src/rm_pm_hal/pm
 PACKAGE_SRCS_COMMON += src/rm_pm_hal/rm
 PACKAGE_SRCS_COMMON += src/rm_pm_hal/scripts
 PACKAGE_SRCS_COMMON += src/rm_pm_hal/utils
+PACKAGE_SRCS_COMMON += src/sciclient/sram_s2r.h
 endif
 
 # Core/SoC/platform specific source files and CFLAGS

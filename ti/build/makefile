@@ -137,7 +137,7 @@ FINAL_FIRM_HAS_DEP_LIST = $(addsuffix _has_dep, $(filter-out $(FINAL_FIRM_LIST_D
 FINAL_UTILS_LIST_ALL_HAS_DEP_LIST = $(addsuffix _has_dep, $(filter-out $(FINAL_UTILS_LIST_ALL_DEP_LIST),$(FINAL_UTILS_LIST_ALL)))
 
 
-.PHONY : all all_libs all_apps all_apps_core version pdk_examples pdk_libs lib app_lib apps tar firm doxygen pdk_libs_clean pdk_app_libs pdk_app_libs_clean examples examples_clean clean package $(pdk_PKG_LIST_ALL) $(pdk_DUP_EXAMPLE_LIST) all_firm firm  all_firm_versions all_apps pdk_examples pdk_dup_apps $(FINAL_LIB_HAS_DEP_LIST) $(FINAL_APP_LIB_HAS_DEP_LIST) $(FINAL_EXAMPLE_HAS_DEP_LIST)    $(FINAL_DUP_EXAMPLE_HAS_DEP_LIST) $(FINAL_FIRM_HAS_DEP_LIST) %_has_dep $(FINAL_UTILS_LIST_ALL) $(FINAL_PKG_LIST_INFO) $(FINAL_DUP_EXAMPLE_INFO)
+.PHONY : all all_libs all_apps all_apps_core version pdk_examples pdk_libs lib app_lib apps tar firm doxygen pdk_libs_clean pdk_app_libs pdk_app_libs_clean examples examples_clean clean package $(pdk_PKG_LIST_ALL) $(pdk_DUP_EXAMPLE_LIST) all_firm firm  all_firm_versions all_apps pdk_examples pdk_dup_apps $(FINAL_LIB_HAS_DEP_LIST) $(FINAL_APP_LIB_HAS_DEP_LIST) $(FINAL_EXAMPLE_HAS_DEP_LIST)    $(FINAL_DUP_EXAMPLE_HAS_DEP_LIST) $(FINAL_FIRM_HAS_DEP_LIST) %_has_dep $(FINAL_UTILS_LIST_ALL) $(FINAL_PKG_LIST_INFO) $(FINAL_DUP_EXAMPLE_INFO) sram_suspend
 
 all: version all_apps
 
@@ -175,6 +175,11 @@ examples: $(FINAL_EXAMPLE_HAS_DEP_LIST)
 examples_clean: $(FINAL_EXAMPLE_LIST_CLEAN)
 
 examples_info: $(FINAL_PKG_LIST_INFO) $(FINAL_DUP_EXAMPLE_INFO)
+
+sram_suspend:
+	$(MAKE) -C $(PDK_INSTALL_PATH)/ti/sram_suspend/ \
+		-f $(PDK_INSTALL_PATH)/ti/sram_suspend/prebuild_sram.mk
+sciclient_direct: sram_suspend
 
 clean: pdk_libs_clean pdk_app_libs_clean examples_clean all_firm_clean
 	$(foreach dup_app, $(FINAL_DUP_EXAMPLE_LIST_CLEAN),\

@@ -1,0 +1,11 @@
+*.aer5f
+*.xer5f
+*.xer5f.map
+*.oer5f
+*.d
+*.rov.xs
+/ti/sram_suspend/sram_s2r.bin
+/ti/sram_suspend/sram_s2r.elf
+/ti/sram_suspend/sram_s2r.h
+/ti/sram_suspend/sram_s2r.o
+/ti/drv/sciclient/src/sciclient/sram_s2r.h
