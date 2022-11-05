@@ -55,13 +55,13 @@
  *
  */
 /* @} */
-
+#ifndef QNX_OS
 #include <ti/drv/uart/UART.h>
 #include <ti/drv/uart/UART_stdio.h>
 
 #include <ti/drv/i2c/I2C.h>
 #include <ti/drv/i2c/soc/I2C_soc.h>
-
+#endif
 #include <ti/board/board.h>
 
 #include <ti/osal/osal.h>
@@ -69,6 +69,12 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#if QNX_OS
+#include <errno.h>
+#include <fcntl.h>
+#include <hw/inout.h>
+#include <hw/i2c.h>
+#endif
 
 #ifdef __cplusplus
 extern "C" {

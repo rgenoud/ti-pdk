@@ -2079,6 +2079,13 @@ int32_t UdmaRmInitPrms_init(uint32_t instId, Udma_RmInitPrms *rmInitPrms)
             numRes = UDMA_RM_NUM_BCDMA_RES;
         }
     #endif
+    #if (UDMA_SOC_CFG_CSI_BCDMA_PRESENT == 1)
+        if(UDMA_INST_ID_CSI_BCDMA_0 == instId)
+        {
+            blkCopySubType = true;
+            numRes = UDMA_RM_NUM_BCDMA_RES;
+        }
+    #endif
     #if (UDMA_SOC_CFG_PKTDMA_PRESENT == 1)
         if(UDMA_INST_ID_PKTDMA_0 == instId)
         {
@@ -2093,7 +2100,7 @@ int32_t UdmaRmInitPrms_init(uint32_t instId, Udma_RmInitPrms *rmInitPrms)
             retVal += Udma_rmGetSciclientDefaultBoardCfgRmRange(&rmDefBoardCfgPrms[resIdx], &rmDefBoardCfgResp[resIdx], &splitResFlag[resIdx]);
         }
 
-    #if (UDMA_SOC_CFG_BCDMA_PRESENT == 1) || (UDMA_SOC_CFG_PKTDMA_PRESENT == 1)
+    #if (UDMA_SOC_CFG_BCDMA_PRESENT == 1) || (UDMA_SOC_CFG_PKTDMA_PRESENT == 1) || (UDMA_SOC_CFG_CSI_BCDMA_PRESENT == 1)
         if(blkCopySubType)
         {   
             /* Ultra High Capacity Block Copy Channels */

@@ -168,10 +168,12 @@ uint64_t Udma_virtToPhyFxn(const void *virtAddr,
     if((Udma_VirtToPhyFxn) NULL_PTR != drvHandle->initPrms.virtToPhyFxn)
     {
         phyAddr = drvHandle->initPrms.virtToPhyFxn(virtAddr, chNum, appData);
+        printf("from user virt_to phys physAddr %lx, virtaddr %lx", phyAddr, virtAddr);
     }
     else
     {
         phyAddr = Udma_defaultVirtToPhyFxn(virtAddr, chNum, appData);
+        printf("from default virt_to phys physAddr %lx, virtaddr %lx", phyAddr, virtAddr);
     }
 
     return (phyAddr);
@@ -293,7 +295,6 @@ void Udma_printf(Udma_DrvHandle drvHandle, const char *format, ...)
 
         drvHandle->initPrms.printFxn("[UDMA] ");
         drvHandle->initPrms.printFxn(buf);
-
         /* This assumes that both lock/unlock will be both provided or not
          * provided. Any other combo will result in invalid lock operation */
         if((Udma_OsalMutexUnlockFxn) NULL_PTR != drvHandle->initPrms.osalPrms.unlockMutex)

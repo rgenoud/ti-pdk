@@ -52,7 +52,7 @@ void Board_delay(uint32_t delayCycles)
 {
     Osal_delay(delayCycles);
 }
-
+#ifndef QNX_OS
 /**
  * \brief I2C 16-bit register read fuunction
  *
@@ -434,3 +434,246 @@ Board_STATUS Board_i2c10bit16bitRegWr(void *handle,
     }
     return 0;
 }
+#else
+/*
+ * Application main
+ */
+
+Board_STATUS Board_i2c8BitRegWr(void *handle,
+                                uint32_t slaveAddr,
+                                uint8_t regAddr,
+                                uint8_t *regData,
+                                uint8_t numOfBytes,
+                                uint32_t i2cTimeout)
+{
+    int             rc;
+    struct send_recv
+    {
+        i2c_send_t hdr;
+        uint8_t buf[2];
+    } i2c_data;
+
+    if (!handle) {
+        return -1;
+    }
+    
+    i2c_data.hdr.len = 2;
+    i2c_data.hdr.slave.addr = slaveAddr;
+    i2c_data.hdr.slave.fmt = I2C_ADDRFMT_7BIT;
+    i2c_data.hdr.stop = 1;
+    i2c_data.buf[0] = regAddr;
+    i2c_data.buf[1] = *regData;
+
+    rc = devctl(*((int *)handle), DCMD_I2C_SENDRECV, &i2c_data, sizeof (i2c_data), NULL);
+    if (rc != EOK) {
+        BOARD_DEVICES_ERR_LOG("%s: QNX i2c addr write failed(%d). \n", __func__, rc);
+    }
+    
+
+
+    return rc;
+}
+
+Board_STATUS Board_i2c8BitRegRd(void   *handle,
+                                uint32_t slaveAddr,
+                                uint8_t regAddr,
+                                uint8_t *regData,
+                                uint8_t numOfBytes,
+                                uint32_t i2cTimeout)
+{
+    int             rc;
+    struct send_recv
+    {
+        i2c_sendrecv_t hdr;
+        uint8_t buf;
+    } i2c_data;
+
+    if (!handle) {
+        return -1;
+    }
+
+    i2c_data.buf = regAddr;
+    i2c_data.hdr.send_len = 1;
+    i2c_data.hdr.recv_len = 1;
+    i2c_data.hdr.slave.addr = slaveAddr;
+    i2c_data.hdr.slave.fmt = I2C_ADDRFMT_7BIT;
+    i2c_data.hdr.stop = 1;
+
+    rc = devctl(*((int *)handle), DCMD_I2C_SENDRECV, &i2c_data, sizeof (i2c_data), NULL);
+    if (rc != EOK) {
+        BOARD_DEVICES_ERR_LOG("%s: QNX i2c addr write failed(%d). \n", __func__, rc);
+    }
+    else  {
+        *regData = i2c_data.buf;
+    }
+
+    return rc;
+}
+
+Board_STATUS Board_i2c10bit16bitRegWr(void *handle,
+                                      uint32_t slaveAddr,
+                                      uint16_t regAddr,
+                                      uint16_t regData,
+                                      uint32_t i2cTimeout)
+{
+     struct send
+    {
+        i2c_send_t hdr;
+        uint8_t buf[4];
+    } i2c_data;
+    int rc;
+
+    if (!handle) {
+        return -1;
+    }
+
+    i2c_data.hdr.len = 4;
+    i2c_data.hdr.slave.addr = slaveAddr;
+    i2c_data.hdr.slave.fmt = I2C_ADDRFMT_7BIT;
+    i2c_data.hdr.stop = 1;
+
+    i2c_data.buf[0] = (uint8_t)(regAddr & 0x00FF);
+    i2c_data.buf[1] = (uint8_t)((regAddr & 0xFF00) >> 8);
+    i2c_data.buf[2] = (uint8_t)(regData & 0x00FF);
+    i2c_data.buf[3] = (uint8_t)((regData & 0xFF00) >> 8);
+
+    rc = devctl(*((int *)handle), DCMD_I2C_SEND, &i2c_data, sizeof (i2c_data), NULL);
+    if (rc != EOK) {
+        BOARD_DEVICES_ERR_LOG("%s: QNX i2c write failed(%d). \n", __func__, rc);
+    }
+
+    return rc;
+}
+
+Board_STATUS Board_i2c10bit16bitRegRd(void *handle,
+                                      uint32_t slaveAddr,
+                                      uint16_t regAddr,
+                                      uint16_t *regData,
+                                      uint32_t i2cTimeout)
+{
+    int             rc;
+    struct send_recv
+    {
+        i2c_sendrecv_t hdr;
+        uint8_t buf[2];
+    } i2c_data;
+
+    if (!handle) {
+        return -1;
+    }
+
+    i2c_data.buf[0] = (uint8_t)(regAddr & 0x00FF);
+    i2c_data.buf[1] = (uint8_t)((regAddr & 0xFF00) >> 8);
+
+    i2c_data.hdr.send_len = 2;
+    i2c_data.hdr.recv_len = 2;
+    i2c_data.hdr.slave.addr = slaveAddr;
+    i2c_data.hdr.slave.fmt = I2C_ADDRFMT_7BIT;
+    i2c_data.hdr.stop = 1;
+
+    rc = devctl(*((int *)handle), DCMD_I2C_SENDRECV, &i2c_data, sizeof (i2c_data), NULL);
+    if (rc != EOK) {
+        BOARD_DEVICES_ERR_LOG("%s: QNX i2c addr write failed(%d). \n", __func__, rc);
+    } 
+    else  {
+        *regData = (uint16_t)i2c_data.buf[0] + (((uint16_t)i2c_data.buf[1]) << 8);
+    }
+    return rc;
+}
+
+Board_STATUS Board_i2c16BitRegWr(void *handle,
+                                 uint32_t slaveAddr,
+                                 uint16_t regAddr,
+                                 uint8_t *regData,
+                                 uint8_t numOfBytes,
+                                 uint8_t byteOrdSel,
+                                 uint32_t i2cTimeout)
+{
+    struct send
+    {
+        i2c_send_t hdr;
+        uint8_t buf[3];
+    } i2c_data;
+    int rc;
+
+    if (!handle) {
+        return -1;
+    }
+
+    i2c_data.hdr.len = 3;
+    i2c_data.hdr.slave.addr = slaveAddr;
+    i2c_data.hdr.slave.fmt = I2C_ADDRFMT_7BIT;
+    i2c_data.hdr.stop = 1;
+ 
+
+
+    /* 16-bit regAddr data to be sent */
+    if(byteOrdSel == BOARD_I2C_REG_ADDR_MSB_FIRST)
+    {
+        i2c_data.buf[0] = (uint8_t)((regAddr & 0xFF00) >> 8);
+        i2c_data.buf[1] = (uint8_t)(regAddr & 0x00FF);
+    }
+    else
+    {
+        i2c_data.buf[0] = (uint8_t)(regAddr & 0x00FF);
+        i2c_data.buf[1] = (uint8_t)((regAddr & 0xFF00) >> 8);
+    }
+
+    i2c_data.buf[2] = *regData;
+    rc = devctl(*((int *)handle), DCMD_I2C_SEND, &i2c_data, sizeof (i2c_data), NULL);
+    if (rc != EOK) {
+        BOARD_DEVICES_ERR_LOG("%s: QNX i2c write failed(%d). \n", __func__, rc);
+    }
+
+    return rc;
+}
+
+Board_STATUS Board_i2c16BitRegRd(void   *handle,
+                                 uint32_t slaveAddr,
+                                 uint16_t regAddr,
+                                 uint8_t *regData,
+                                 uint8_t numOfBytes,
+                                 uint8_t byteOrdSel,
+                                 uint32_t i2cTimeout)
+{
+    int             rc;
+    struct send_recv
+    {
+        i2c_sendrecv_t hdr;
+        uint8_t buf[2];
+    } i2c_data;
+
+    if (!handle) {
+        return -1;
+    }
+
+    /* 16-bit regAddr data to be sent */
+    if(byteOrdSel == BOARD_I2C_REG_ADDR_MSB_FIRST)
+    {
+        i2c_data.buf[0] = (uint8_t)((regAddr & 0xFF00) >> 8);
+        i2c_data.buf[1] = (uint8_t)(regAddr & 0x00FF);
+    }
+    else
+    {
+        i2c_data.buf[0] = (uint8_t)(regAddr & 0x00FF);
+        i2c_data.buf[1] = (uint8_t)((regAddr & 0xFF00) >> 8);
+    }
+
+    i2c_data.hdr.send_len = 2;
+    i2c_data.hdr.recv_len = 1;
+    i2c_data.hdr.slave.addr = slaveAddr;
+    i2c_data.hdr.slave.fmt = I2C_ADDRFMT_7BIT;
+    i2c_data.hdr.stop = 1;
+
+    rc = devctl(*((int *)handle), DCMD_I2C_SENDRECV, &i2c_data, sizeof (i2c_data), NULL);
+    if (rc != EOK) {
+        BOARD_DEVICES_ERR_LOG("%s: QNX i2c addr write failed(%d). \n", __func__, rc);
+    }
+    else  {
+        *regData = i2c_data.buf[0];
+    }
+
+    return rc;
+}
+
+#endif

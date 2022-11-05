@@ -38,8 +38,13 @@ drvfvid2_SOCLIST           = j721e j721s2 j784s4 am65xx am62a
 drvfvid2_j721e_CORELIST = $(DEFAULT_j721e_CORELIST)
 drvfvid2_j721s2_CORELIST = $(DEFAULT_j721s2_CORELIST)
 drvfvid2_j784s4_CORELIST = $(DEFAULT_j784s4_CORELIST)
-drvfvid2_am65xx_CORELIST   = mcu1_0 mpu1_0
-drvfvid2_am62a_CORELIST = mcu1_0
+drvfvid2_am65xx_CORELIST = mcu1_0 mpu1_0
+drvfvid2_am62a_CORELIST  = mpu1_0
+
+ifeq ($(BUILD_OS_TYPE), qnx)
+drvfvid2_am62a_CORELIST += qnx_mpu1_0
+drvfvid2_am62x_CORELIST += qnx_mpu1_0
+endif
 
 ############################
 # fvid2 package

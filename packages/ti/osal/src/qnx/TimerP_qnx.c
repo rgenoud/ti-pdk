@@ -39,7 +39,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
-
+#include <sys/time.h>
 
 /*
  *  ======== TimerP_Params_init ========
@@ -86,6 +86,20 @@ TimerP_Status TimerP_stop(TimerP_Handle timerHandle)
 {
     /* Not supported by QNX OSAL */
     return (TimerP_OK);
+}
+
+/*
+ *  ======== TimerP_getTimeInUsecs ========
+ */
+uint64_t TimerP_getTimeInUsecs(void)
+{   
+    struct timeval time;
+    uint64_t time_val = -1;
+    if( gettimeofday(&time, NULL) == 0 )
+    {
+        time_val = time.tv_sec * 1000000 + time.tv_usec;
+    }
+    return time_val;
 }
 
 /* Nothing past this point */
