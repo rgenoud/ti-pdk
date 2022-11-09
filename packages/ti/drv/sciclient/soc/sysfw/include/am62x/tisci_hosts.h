@@ -49,7 +49,7 @@
  *
  * Host IDs for AM62X device
  *
- * Data version: 220811_185331
+ * Data version: 221107_151433
  *
  */
 #ifndef TISCI_HOSTS_H
@@ -85,6 +85,8 @@
 #define TISCI_HOST_ID_DM2TIFS (250U)
 /** TIFS2DM(Non Secure): TIFS to DM communication */
 #define TISCI_HOST_ID_TIFS2DM (251U)
+/** HSM(Secure): HSM Controller */
+#define TISCI_HOST_ID_HSM (253U)
 
 /**
  * Host catch all. Used in board configuration resource assignments to define
@@ -93,7 +95,7 @@
 #define TISCI_HOST_ID_ALL (128U)
 
 /** Number of unique hosts on the SoC */
-#define TISCI_HOST_ID_CNT (15U)
+#define TISCI_HOST_ID_CNT (16U)
 
 #endif /* TISCI_HOSTS_H */
 

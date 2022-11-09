@@ -237,6 +237,20 @@
 /** Num messages macro for TIFS2DM low_priority */
 #define TISCI_SEC_PROXY_TIFS2DM_WRITE_LOW_PRIORITY_NUM_MESSAGES (2U)
 
+/*
+ * Secure Proxy configurations for HSM host
+ */
+
+/** Thread ID macro for HSM response */
+#define TISCI_SEC_PROXY_HSM_READ_RESPONSE_THREAD_ID (0U)
+/** Num messages macro for HSM response */
+#define TISCI_SEC_PROXY_HSM_READ_RESPONSE_NUM_MESSAGES (8U)
+
+/** Thread ID macro for HSM low_priority */
+#define TISCI_SEC_PROXY_HSM_WRITE_LOW_PRIORITY_THREAD_ID (1U)
+/** Num messages macro for HSM low_priority */
+#define TISCI_SEC_PROXY_HSM_WRITE_LOW_PRIORITY_NUM_MESSAGES (8U)
+
 
 #endif /* AM62AX_TISCI_SEC_PROXY_H */
 
