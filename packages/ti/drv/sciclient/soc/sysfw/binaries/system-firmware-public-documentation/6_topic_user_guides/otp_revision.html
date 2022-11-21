@@ -78,7 +78,7 @@
             
             
               <div class="version">
-                08.05.01
+                08.05.03
               </div>
             
           
@@ -323,7 +323,29 @@ efuses.</p>
 <p>After verification of these key hashes, keyrev will be programmed.</p>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p class="last">KEYREV by default is set to <code class="docutils literal"><span class="pre">1</span></code>. Maximum supported value is <code class="docutils literal"><span class="pre">2</span></code>.</p>
+<p>KEYREV by default is set to <code class="docutils literal"><span class="pre">1</span></code>. Maximum supported value is <code class="docutils literal"><span class="pre">2</span></code>.</p>
+<table border="1" class="last docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Key rev value</th>
+<th class="head">Valid State transition</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>0</td>
+<td>OTP Keywriter to set valid state to 1</td>
+</tr>
+<tr class="row-odd"><td>1</td>
+<td>Key rev API to set valid state to 2 (if key cnt is also 2)</td>
+</tr>
+<tr class="row-even"><td>2</td>
+<td>No other change allowed</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Following is the template for Primary Certificate (SMPK private key to be
 used for signing this)</p>
@@ -422,7 +444,7 @@ message</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'08.05.01',
+            VERSION:'08.05.03',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
