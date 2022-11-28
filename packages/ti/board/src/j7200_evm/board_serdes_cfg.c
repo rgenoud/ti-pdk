@@ -55,6 +55,7 @@ static Board_STATUS Board_serdesInitParams(CSL_SerdesLaneEnableParams *laneParam
     laneParams->operatingMode     = CSL_SERDES_FUNCTIONAL_MODE;
     laneParams->phyInstanceNum    = SERDES_LANE_SELECT_CPSW;
     laneParams->legacyclkovrd     = CSL_SERDES_LEGACY_CLK;
+    laneParams->pll0RefclkMap     = CSL_SERDES_CMN_PLL0_REFCLK0;
 
     laneParams->laneCtrlRate[0]   = CSL_SERDES_LANE_FULL_RATE;
     laneParams->loopbackMode[0]   = CSL_SERDES_LOOPBACK_DISABLED;
@@ -114,7 +115,8 @@ static Board_STATUS Board_serdesCfgEthernet(uint32_t phyType)
                                  serdesLane0EnableParams.refClkSrc,
                                  serdesLane0EnableParams.serdesInstance,
                                  serdesLane0EnableParams.phyType,
-                                 serdesLane0EnableParams.legacyclkovrd);
+                                 serdesLane0EnableParams.legacyclkovrd,
+                                 serdesLane0EnableParams.pll0RefclkMap);
 
     if (result != CSL_SERDES_NO_ERR)
     {
@@ -163,6 +165,8 @@ static Board_STATUS Board_serdesCfgEthernetUsxgmii(void)
     laneParams_serdes0.operatingMode     = CSL_SERDES_FUNCTIONAL_MODE;
     laneParams_serdes0.phyInstanceNum    = SERDES_LANE_SELECT_CPSW;
     laneParams_serdes0.legacyclkovrd     = CSL_SERDES_LEGACY_CLK;
+    laneParams_serdes0.pll0RefclkMap     = CSL_SERDES_CMN_PLL0_REFCLK0;
+
 
     laneParams_serdes0.laneCtrlRate[2]   = CSL_SERDES_LANE_FULL_RATE;
     laneParams_serdes0.loopbackMode[2]   = CSL_SERDES_LOOPBACK_DISABLED;
@@ -203,7 +207,8 @@ static Board_STATUS Board_serdesCfgEthernetUsxgmii(void)
                                  laneParams_serdes0.refClkSrc,
                                  laneParams_serdes0.serdesInstance,
                                  laneParams_serdes0.phyType,
-                                 laneParams_serdes0.legacyclkovrd);
+                                 laneParams_serdes0.legacyclkovrd,
+                                 laneParams_serdes0.pll0RefclkMap);
 
     if (result != CSL_SERDES_NO_ERR)
     {
