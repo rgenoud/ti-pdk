@@ -219,39 +219,14 @@ extern "C" {
 /* @} */
 
 /**
- *  \anchor Sciclient_IrqSrcIdxStart
- *  \name IRQ source index start
+ *  \anchor Sciclient_McuR5fIds
+ *  \name MCU Pulsar IDs
  *  @{
- *  Start offset of IRQ source index.
+ *  MCU Device CPU IDs.
  */
-
-#define TISCI_RINGACC0_OES_IRQ_SRC_IDX_START         (20U)
-#define TISCI_RINGACC0_EOES_IRQ_SRC_IDX_START        (32U)
-#define TISCI_TIMERMGR_OES_IRQ_SRC_IDX_START         (0U)
-#define TISCI_PKTDMA0_TX_EOES_IRQ_SRC_IDX_START      (4096U)
-#define TISCI_PKTDMA0_TX_FLOW_OES_IRQ_SRC_IDX_START  (4608U)
-#define TISCI_PKTDMA0_RX_EOES_IRQ_SRC_IDX_START      (5120U)
-#define TISCI_PKTDMA0_RX_FLOW_OES_IRQ_SRC_IDX_START  (5632U)
-#define TISCI_PKTDMA0_RX_FLOW_SOES_IRQ_SRC_IDX_START (6144U)
-#define TISCI_PKTDMA0_RX_FLOW_FOES_IRQ_SRC_IDX_START (6656U)
-#define TISCI_BCDMA0_BC_EOES_IRQ_SRC_IDX_START       (8192U)
-#define TISCI_BCDMA0_BC_DC_OES_IRQ_SRC_IDX_START     (8704U)
-#define TISCI_BCDMA0_BC_RC_OES_IRQ_SRC_IDX_START     (9216U)
-#define TISCI_BCDMA0_TX_EOES_IRQ_SRC_IDX_START       (9728U)
-#define TISCI_BCDMA0_TX_DC_OES_IRQ_SRC_IDX_START     (10240U)
-#define TISCI_BCDMA0_TX_RC_OES_IRQ_SRC_IDX_START     (10752U)
-#define TISCI_BCDMA0_RX_EOES_IRQ_SRC_IDX_START       (11264U)
-#define TISCI_BCDMA0_RX_DC_OES_IRQ_SRC_IDX_START     (11776U)
-#define TISCI_BCDMA0_RX_RC_OES_IRQ_SRC_IDX_START     (12288U)
-
+#define SCICLIENT_DEV_MCU_R5FSS0_CORE0  (TISCI_DEV_R5FSS0_CORE0)
+#define SCICLIENT_DEV_MCU_R5FSS0_CORE1  (TISCI_DEV_R5FSS0_CORE0)
 /* @} */
-
-/**
- *  \anchor Sciclient_IrqSrcIdxStart
- *  \name IRQ source index start
- *  @{
- *  Start offset of IRQ source index.
- */
 
 /**
  *  \anchor Sciclient_McuR5fProcIds
