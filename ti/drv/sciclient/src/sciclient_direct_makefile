@@ -61,6 +61,8 @@ SRCS_COMMON += sciclient_rom.c
 SRCS_COMMON += sciclient_secureProxyCfg.c
 SRCS_COMMON += sciclient_secureproxy.c
 SRCS_COMMON += sciclient_keywriter.c
+SRCS_COMMON += enter_suspend.c
+SRCS_COMMON += ../rm_pm_hal/pm/drivers/lpm/gtc.c
 endif
 
 #Use CSL implementation to bypass DMSC

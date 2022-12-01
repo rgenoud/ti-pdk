@@ -82,8 +82,7 @@
 
 extern void _stub_start(void);
 extern void lpm_populate_prepare_sleep_data(struct tisci_msg_prepare_sleep_req *p);
-/* not implemented yet */
-void go_retention(uint32_t core_resume_addr) {};
+extern void go_retention(uint32_t core_resume_addr);
 
 u32 key;
 

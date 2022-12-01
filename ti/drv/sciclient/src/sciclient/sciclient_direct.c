@@ -40,6 +40,7 @@
 /*                             Include Files                                  */
 /* ========================================================================== */
 
+//#define DEBUG_SUSPEND
 #include <stdint.h>
 #include <stddef.h>
 #include <string.h>
@@ -55,7 +56,16 @@
 #include <ti/drv/sciclient/sciclient.h>
 #include <ti/drv/sciclient/src/sciclient/sciclient_priv.h>
 #include <ti/drv/sciclient/sciserver.h>
-void UART_printf(const char *pcString, ...);
+
+#ifdef DEBUG_SUSPEND
+#include <ti/drv/uart/UART_stdio.h>
+#define debug_printf UART_printf
+#else
+#define debug_printf(...)
+#endif
+
+#include <tisci/lpm/tisci_lpm.h>
+#include <ti/drv/sciclient/src/rm_pm_hal/pm/include/lpm_handler.h>
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
@@ -206,7 +216,6 @@ extern Sciclient_ServiceHandle_t gSciclientHandle;
 /* ========================================================================== */
 /*                          Function Definitions                              */
 /* ========================================================================== */
-
 int32_t Sciclient_service (const Sciclient_ReqPrm_t *pReqPrm,
                            Sciclient_RespPrm_t      *pRespPrm)
 {
@@ -237,7 +246,7 @@ int32_t Sciclient_service (const Sciclient_ReqPrm_t *pReqPrm,
         ret = Sciclient_serviceGetThreadIds (pReqPrm, &contextId, &txThread,
                                          &rxThread);
     }
-//    UART_printf("type = 0x%x, flags = %d\n", msgType, pReqPrm->flags);
+//    debug_printf("type = 0x%x, flags = %d\n", msgType, pReqPrm->flags);
     if (CSL_PASS == ret)
     {
         ret = Sciclient_servicePrepareHeader(pReqPrm, &localSeqId,
@@ -259,11 +268,13 @@ int32_t Sciclient_service (const Sciclient_ReqPrm_t *pReqPrm,
             case TISCI_MSG_GET_DEVICE:
             case TISCI_MSG_SET_DEVICE_RESETS:
             case TISCI_MSG_SYS_RESET:
+	    case TISCI_MSG_ENTER_SLEEP:
             case TISCI_MSG_PREPARE_SLEEP:
 		    if (msgType == TISCI_MSG_PREPARE_SLEEP)
-			    UART_printf("TISCI_MSG_PREPARE_SLEEP\n");
+			    debug_printf("TISCI_MSG_PREPARE_SLEEP\n");
 	    case TISCI_MSG_PROC_WAIT_STATUS:
                 memcpy(message, pReqPrm->pReqPayload, pReqPrm->reqPayloadSize);
+
                 ret = Sciclient_ProcessPmMessage(pReqPrm->flags, message);
                 if (pRespPrm->pRespPayload != NULL)
                 {
@@ -544,6 +555,10 @@ int32_t Sciclient_ProcessPmMessage(const uint32_t reqFlags, void *tx_msg)
             break;
         case TISCI_MSG_GET_DEVICE              :
             ret = get_device_handler((uint32_t*)tx_msg); break;
+        case TISCI_MSG_ENTER_SLEEP             :
+		debug_printf("TISCI_MSG_ENTER_SLEEP\n");
+
+            ret = dm_enter_sleep_handler((uint32_t*)tx_msg); break;
         case TISCI_MSG_SET_DEVICE_RESETS       :
             {
                 struct tisci_msg_set_device_resets_req *req =
