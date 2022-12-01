@@ -31,7 +31,8 @@
 #
 
 cppflags-y += -I$(srctree)/rm_pm_hal/rm/drivers/lpm/
-cppflags-y += -I$(srctree)/rm_pm_hal/rm/drivers/lpm/soc/$(TARGET_SOC)/
-
+ifneq ($(SOC),$(filter $(SOC), j7200))
+ppflags-y += -I$(srctree)/rm_pm_hal/rm/drivers/lpm/soc/$(TARGET_SOC)/
 obj-y += ia_track_config.o ir_track_config.o
+endif
 obj-y += soc/

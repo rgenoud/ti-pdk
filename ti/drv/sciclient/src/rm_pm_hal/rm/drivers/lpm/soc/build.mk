@@ -30,4 +30,6 @@
 # EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
+ifneq ($(SOC),$(filter $(SOC), j7200))
 obj-y += $(TARGET_SOC)/
+endif

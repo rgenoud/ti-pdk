@@ -35,24 +35,46 @@
 #include <lib/ioremap.h>
 #include <lib/mmr_lock.h>
 #include <types/errno.h>
+#include <ti/csl/soc.h>
 
 /* TODO move the base addresses to device specific header files. */
-#define PADCFG_CTRL_BASE        (0xf0000UL)
-
-#define PADCFG_OFFSET		(0x4000U)
-#define PADCFG_SIZE		(((0x42a8U - PADCFG_OFFSET) >> 2) + 1)
-
+#ifdef SOC_J7200
+#define PADCFG_CTRL_BASE    (CSL_CTRL_MMR0_CFG0_BASE)
+#define PADCFG_OFFSET	    (CSL_MAIN_CTRL_MMR_CFG0_PADCONFIG0)
+#define PADCFG_SIZE	    (67 + 6) /* 0 to 66, 68, 71, 72, 73, 89,90 */
+#else
+#define PADCFG_CTRL_BASE    (0xf0000UL)
+#define PADCFG_OFFSET	    (0x4000U)
+#define PADCFG_SIZE	    (((0x42a8U - PADCFG_OFFSET) >> 2) + 1)
+#endif
 static u32 padcfg_data[PADCFG_SIZE];
+
+static void get_pad(u32 i, u32 p)
+{
+	padcfg_data[i] = readl(p);
+}
 
 s32 lpm_sleep_save_main_padconf()
 {
 	u32 p = PADCFG_CTRL_BASE + PADCFG_OFFSET;
 	u32 i;
 
-	for (i = 0; i < PADCFG_SIZE; i++, p+=4) {
+#ifdef SOC_J7200
+	for (i = 0; i < 67; i++, p+=4) {
+#else
+	for (i = 0; i < PADCFG_SIZE; i++, p+=4){
+#endif
 		padcfg_data[i] = readl(p);
 	}
 
+#ifdef SOC_J7200
+	get_pad(i++, PADCFG_CTRL_BASE + PADCFG_OFFSET + 68*4);
+	get_pad(i++, PADCFG_CTRL_BASE + PADCFG_OFFSET + 71*4);
+	get_pad(i++, PADCFG_CTRL_BASE + PADCFG_OFFSET + 72*4);
+	get_pad(i++, PADCFG_CTRL_BASE + PADCFG_OFFSET + 73*4);
+	get_pad(i++, PADCFG_CTRL_BASE + PADCFG_OFFSET + 89*4);
+	get_pad(i++, PADCFG_CTRL_BASE + PADCFG_OFFSET + 90*4);
+#endif
 	return SUCCESS;
 }
 
@@ -61,7 +83,11 @@ s32 lpm_resume_restore_main_padconf()
 	u32 p = PADCFG_CTRL_BASE + PADCFG_OFFSET;
 	u32 i;
 
+#ifdef SOC_J7200
+	mmr_unlock(PADCFG_CTRL_BASE, 5);
+#else
 	mmr_unlock(PADCFG_CTRL_BASE, 1);
+#endif
 
 	for (i = 0; i < PADCFG_SIZE; i++, p+=4) {
 		writel(padcfg_data[i], p);

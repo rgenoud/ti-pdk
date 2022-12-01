@@ -54,6 +54,7 @@ endif
 ifeq ($(SOC),$(filter $(SOC), j7200))
 CONFIG_SOC_FOLDER_STRING="j7200"
 CONFIG_CLK_PLL_16FFT_FRACF_CALIBRATION=y
+CONFIG_LPM_DM=y
 endif
 
 ifeq ($(SOC),$(filter $(SOC), j721s2))
