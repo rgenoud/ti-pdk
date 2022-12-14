@@ -6,10 +6,7 @@
 #include <ti/csl/arch/r5/csl_arm_r5.h>
 #include <ti/drv/sciclient/src/sciclient/sram_s2r.h>
 
-#define TCMB_USED_SIZE 0xd50
 extern void HwiP_save_task(void);
-static int* resumepxCurrentTCB  = (int*)0xa050ac30;
-extern int* pxCurrentTCB;
 extern void vPortRestoreTaskContext( void );
 void CSL_armR5StartupCacheEnableAllCache( uint32_t enable );
 void _freertosresetvectors (void);
@@ -47,7 +44,7 @@ void write_WKUP_UART(char val) {
 void debug_ll(void) {
     unsigned int iter_chars;
 
-    for(iter_chars = 0; iter_chars < 8; iter_chars++){
+    for(iter_chars = 0; iter_chars < 8 && (int)UART_buff[iter_chars] != 0; iter_chars++){
         write_WKUP_UART((int)UART_buff[iter_chars]);
     }
     write_WKUP_UART(10);

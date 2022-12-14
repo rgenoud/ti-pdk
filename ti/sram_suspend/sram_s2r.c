@@ -18,7 +18,7 @@
 
 static const char *const g_pcHex = "0123456789abcdef";
 static int ddr_retention(void);
-int32_t setup_pmic(int ioret);
+void setup_pmic(void);
 void clean_all_dcache(void);
 void DDR_freq_change(unsigned int x);
 void my_exit_DDR_ret();
@@ -35,11 +35,147 @@ static inline void uart_puts(const char *pTxBuffer) {}
 static inline void debug_printf(const char *pcString, ...) {}
 #endif
 
+/* Extracted from various places in the PDK. Used for IO retention. */
+
+#define MAIN_CTRL_BASE                                              (0x00100000U)
+
+#define CSL_WKUP_CTRL_MMR0_CFG0_BASE                                (0x43000000U)
+#define CSL_WKUP_CTRL_MMR_CFG0_MCU_GEN_WAKE_CTRL                    (0x00018310U)
+#define CSL_WKUP_CTRL_MMR_CFG0_CANUART_WAKE_CTRL                    (0x00018300U)
+
+#define CSL_STD_FW_WKUP_DMSC0_PWRCTRL_0_DMSC_PWR_MMR_PWR_START      (0x44130000U)
+#define CSL_PMMCCONTROL_PMCTRL_IO                                   (0x84U)
+#define CSL_PMMCCONTROL_PMCTRL_DDR                                  (0x88U)
+
+#define CSL_NAVSS0_SPINLOCK_BASE                                    (0x30e00000UL)
+#define SOC_NUM_SPINLOCKS                                           (256U)
+#define MMR_LOCK0_KICK0                                             (0x01008)
+#define MMR_LOCK0_KICK0_UNLOCK_VAL                                  (0x68EF3490)
+#define MMR_LOCK0_KICK1_UNLOCK_VAL                                  (0xD172BC5A)
+#define SOC_LOCK_MMR_UNLOCK                                         (0U)
+
+#define IO_TIMEOUT                                                  (150)
+
+/* Not used in SPL */
+#define CSL_WKUP_CTRL_MMR_CFG0_DEEPSLEEP_CTRL                       (0x00018160U)
+#define DMSC_CM_FW_CTRL_OUT0_SET                                    (0x44U)
+#define DMSC_CM_LOCK0_KICK0                                         (0x020U)
+#define DMSC_CM_LOCK0_KICK1                                         (0x024U)
+
+/* This only gets used to access registers. The original version from the PDK
+ * handled the full memory range and had redirects. */
+static volatile uint32_t *mkptr(uint32_t base, uint32_t offset)
+{
+	return (volatile uint32_t*)(base+offset);
+}
+
+static void busy_wait_10us(void)
+{
+	volatile unsigned int i = 0;
+	for(i = 0; i < IO_TIMEOUT; i++);
+}
+
+static void main_io_pm_seq(void)
+{
+	uint32_t read_data = 0;
+
+	/* Configure MAIN_MCAN0_TX PADCONF */
+	*mkptr(MAIN_CTRL_BASE, 0x1c020) = 0x20050000;
+
+	/* Configure MAIN_MCAN1_RX PADCONF */
+	*mkptr(MAIN_CTRL_BASE, 0x1c02c) = 0x20050000;
+
+	/* Configure PMIC_WAKE */
+	*mkptr(MAIN_CTRL_BASE, 0x1c124) = 0x38038000;
+
+	/* Unlock DMSC reg */
+	*mkptr(CSL_STD_FW_WKUP_DMSC0_PWRCTRL_0_DMSC_PWR_MMR_PWR_START, DMSC_CM_LOCK0_KICK0) = 0x8a6b7cda;
+	*mkptr(CSL_STD_FW_WKUP_DMSC0_PWRCTRL_0_DMSC_PWR_MMR_PWR_START, DMSC_CM_LOCK0_KICK1) = 0x823caef9;
+
+	/* Enable fw_ctrl_out[0] */
+	*mkptr(CSL_STD_FW_WKUP_DMSC0_PWRCTRL_0_DMSC_PWR_MMR_PWR_START, DMSC_CM_FW_CTRL_OUT0_SET) |= 0x2;
+	read_data = *mkptr(CSL_WKUP_CTRL_MMR0_CFG0_BASE, CSL_WKUP_CTRL_MMR_CFG0_DEEPSLEEP_CTRL);
+	*mkptr(CSL_WKUP_CTRL_MMR0_CFG0_BASE, CSL_WKUP_CTRL_MMR_CFG0_DEEPSLEEP_CTRL) = read_data | 0x100;
+
+	/* Enable Wakeup_enable */
+	read_data =  *mkptr(CSL_STD_FW_WKUP_DMSC0_PWRCTRL_0_DMSC_PWR_MMR_PWR_START, CSL_PMMCCONTROL_PMCTRL_DDR);
+	*mkptr(CSL_STD_FW_WKUP_DMSC0_PWRCTRL_0_DMSC_PWR_MMR_PWR_START, CSL_PMMCCONTROL_PMCTRL_DDR) = read_data | 0x10000;
+
+	/* Enable ISOIN */
+	read_data =  *mkptr(CSL_STD_FW_WKUP_DMSC0_PWRCTRL_0_DMSC_PWR_MMR_PWR_START, CSL_PMMCCONTROL_PMCTRL_DDR);
+	*mkptr(CSL_STD_FW_WKUP_DMSC0_PWRCTRL_0_DMSC_PWR_MMR_PWR_START, CSL_PMMCCONTROL_PMCTRL_DDR) = read_data | 0x1000000;
+	busy_wait_10us();
+
+	/* Check ISOIN status. Unsure if read has a side-effect; it is present in
+	 * the original code. */
+	read_data = *mkptr(CSL_STD_FW_WKUP_DMSC0_PWRCTRL_0_DMSC_PWR_MMR_PWR_START, CSL_PMMCCONTROL_PMCTRL_DDR);
+}
+
+static void main_configure_can_uart_lock_dmsc(void)
+{
+	main_io_pm_seq();
+
+	/* Load the Magic word */
+	*mkptr(CSL_WKUP_CTRL_MMR0_CFG0_BASE, CSL_WKUP_CTRL_MMR_CFG0_CANUART_WAKE_CTRL) = 0x55555554;
+	*mkptr(CSL_WKUP_CTRL_MMR0_CFG0_BASE, CSL_WKUP_CTRL_MMR_CFG0_CANUART_WAKE_CTRL) = 0x55555555;
+
+	/* re-lock DMSC reg */
+	*mkptr(CSL_STD_FW_WKUP_DMSC0_PWRCTRL_0_DMSC_PWR_MMR_PWR_START, DMSC_CM_LOCK0_KICK0) = 0x0;
+	*mkptr(CSL_STD_FW_WKUP_DMSC0_PWRCTRL_0_DMSC_PWR_MMR_PWR_START, DMSC_CM_LOCK0_KICK1) = 0x0;
+}
+
+/* SOC_lock, SOC_unlock, Lpm_mmr_isLocked and Lpm_mmr_unlock are extracted from
+ * the PDK lpm. */
+static int32_t SOC_lock(uint32_t lockNum)
+{
+	volatile uint32_t *spinLockReg;
+
+	if (lockNum >= SOC_NUM_SPINLOCKS)
+		return -1;
+
+	spinLockReg = mkptr(CSL_NAVSS0_SPINLOCK_BASE, 0x800);
+
+	while (spinLockReg[lockNum] != 0x0);
+
+	return 0;
+}
+
+static int32_t SOC_unlock(uint32_t lockNum)
+{
+	volatile uint32_t *spinLockReg;
+
+	if (lockNum >= SOC_NUM_SPINLOCKS)
+		return -1;
+
+	spinLockReg = mkptr(CSL_NAVSS0_SPINLOCK_BASE, 0x800);
+	spinLockReg[lockNum] = 0x0;
+
+	return 0;
+}
+
+static int Lpm_mmr_isLocked(uintptr_t base, uint32_t partition)
+{
+	volatile uint32_t * lock = mkptr(base, partition * 0x4000 + MMR_LOCK0_KICK0);
+
+	return (*lock & 0x1u) ? 0 : 1;
+}
+
+static void Lpm_mmr_unlock(uintptr_t base, uint32_t partition)
+{
+	volatile uint32_t * lock = mkptr(base, partition * 0x4000 + MMR_LOCK0_KICK0);
+
+	if (!Lpm_mmr_isLocked(base, partition)) {
+		return;
+	} else {
+		SOC_lock(SOC_LOCK_MMR_UNLOCK);
+		lock[0] = MMR_LOCK0_KICK0_UNLOCK_VAL;
+		lock[1] = MMR_LOCK0_KICK1_UNLOCK_VAL;
+		SOC_unlock(SOC_LOCK_MMR_UNLOCK);
+	}
+}
+
 void enter_retention(void)
 {
-	/* 1 => ioret 0 => deep sleep */
-	int ioret = 0;
-
 	uart_puts(__func__);
 	uart_puts(", time=");
 	uart_puts(__TIME__);
@@ -48,18 +184,22 @@ void enter_retention(void)
 	/* Make sure that nothing remains in cache before going to retention */
 	clean_all_dcache();
 
-	if (ioret)
-		uart_puts("=> I/O retention\n\r");
-	else
-		uart_puts("=> full DDR retention\n\r");
+	Lpm_mmr_unlock(CSL_WKUP_CTRL_MMR0_CFG0_BASE, 6);
+	Lpm_mmr_unlock(CSL_WKUP_CTRL_MMR0_CFG0_BASE, 7);
+	Lpm_mmr_unlock(MAIN_CTRL_BASE, 7);
 
 	debug_printf("%s %s\n", __func__,  __TIME__);
-	if (!ioret) {
-		ddr_retention();
-		debug_printf("DDRSS_CTL_141: 0x%08x\n", *( unsigned int *)DDRSS_CTL_141);
-		debug_printf("DDR retention done!\n");
-	}
-	setup_pmic(ioret);
+	ddr_retention();
+	debug_printf("DDRSS_CTL_141: 0x%08x\n", *( unsigned int *)DDRSS_CTL_141);
+	debug_printf("DDR retention done!\n");
+
+	uart_puts("=> I/O retention\n\r");
+
+	main_configure_can_uart_lock_dmsc();
+
+	debug_printf("%s %s\n", __func__,  __TIME__);
+
+	setup_pmic();
 	uart_puts("done ! Going to wait now \n\r");
 
 	while(1){};
@@ -337,71 +477,70 @@ uint8_t read_pmicB(uint8_t reg)
 	return rxd;
 }
 
-
-int32_t setup_pmic(int ioret)
+/* Taken from Lpm_pmicStateChangeActiveToIORetention, with some changes to
+ * FSM_I2C_TRIGGERS for DDRRET support. Explaination on this change is still
+ * obscure. */
+void setup_pmic(void)
 {
-	uint8_t out;
+	/* Write 0x02 to FSM_NSLEEP_TRIGGERS register
+	   This should happen before clearing the interrupts */
 
-	debug_printf("%s ioret=%d\n", __func__, ioret);
+	/* If you clear the interrupts before you write the NSLEEP bits,
+	 * it will transition to S2R state.
+	 * This is because as soon as you write NSLEEP2 to 0x0,
+	 * the trigger is present to move to S2R state.
+	 * By setting the NSLEEP bits before you clear the interrupts,
+	 * you can configure both NSLEEP bits before the PMIC reacts to the change.
+	 */
 
-	if (ioret) {
-		/* force bits 19:16 to 0110b from 1111b */
-		*( unsigned int *)CTRLMMR_WKUP_POR_RST_CTRL &= ~(9 << 16);
-	}
-	read_pmicA(0);
-	read_pmicA(0x86);
-	/* Set State machine to active on PMIC A */
+	uint8_t buf;
+
+	/* Change FSM_NSLEEP_TRIGGERS: NSLEEP1=high, NSLEEP2=high */
 	write_pmicA(0x86, 0x03);
+	debug_printf("%s %d: Write FSM_NSLEEP_TRIGGERS = 0x%x\n", __FUNCTION__, __LINE__, 0x03);
 	read_pmicA(0x86);
 
-	/* Clear Enable Interrupt on PMIC A and PMIC B */
+	/* Clear INT_STARTUP: clear ENABLE pin interrupt */
 	write_pmicA(0x65, 0x02);
-	write_pmicB(0x65, 0x02);
-	debug_printf("Clear Enable Interrupt on PMIC A and PMIC B done \n");
-	if (!ioret) {
-		/* Set Triggers for DDR Retention Mode on PMIC A and PMIC B*/
-		write_pmicB(0x85, 0x80);
-		write_pmicA(0x85, 0x80);
-	}
+	debug_printf("%s %d: Write INT_STARTUP = 0x%x\n", __FUNCTION__, __LINE__, 0x02);
+	read_pmicA(0x65);
 
-	/* Configure Wakeup Source on PMIC A.  We are using GPIO4 which is
-	 * tied to CAN_WAKE (SW12) on EVM. */
-	write_pmicA(0x50, ~(0x01 << 3));
-	write_pmicA(0x4F, 0xFF);
-	write_pmicA(0x51, 0x3F);
-	write_pmicA(0x34, 0xCA);
+	/* Configure GPIO4_CONF: input, no pull, signal LP_WKUP1 */
+	write_pmicA(0x34, 0xc0);
+	debug_printf("%s %d: Write GPIO4_CONF = 0x%x\n", __FUNCTION__, __LINE__, 0xc0);
+	read_pmicA(0x34);
 
-	/* Clear GPIO Interrupts on PMIC A, write to clear */
-	write_pmicA(0x64, read_pmicA(0x64));
-	write_pmicA(0x63, read_pmicA(0x63));
+	/* Configure INT_GPIO1_8 (enable GPIO4 interrupt): clear GPIO4_INT */
+	write_pmicA(0x64, 0x08);
+	debug_printf("%s %d: Write INT_GPIO1_8 = 0x%x\n", __FUNCTION__, __LINE__, 0x08);
+	read_pmicA(0x64);
 
-	/* Set DDR_RET Signal High on PMIC B*/
-	debug_printf("GPIO1_OUT init =  %X\n", read_pmicB(0x3D));
-	if (!ioret) {
-		out = (read_pmicB(0x3D) & 0xFF) | DDR_RET_VAL;
-		write_pmicB(0x3D, out);
+	/* Configure MASK_GPIO1_8_FALL (configure GPIO4 falling edge interrupt): enable INT on GPIO4 */
+	write_pmicA(0x4F, 0xF7);
+	debug_printf("%s %d: Write MASK_GPIO1_8_FALL = 0x%x\n", __FUNCTION__, __LINE__, 0xF7);
+	read_pmicA(0x4F);
 
-		/* Now toggle the CLK of the latch for DDR ret*/
-		write_pmicB(0x3D, out | DDR_RET_CLK);
-		debug_printf("GPIO1_OUT clk =  %X\n", read_pmicB(0x3D));
+	// GPIO_OUT_1
+	buf = read_pmicB(0x3D) | DDR_RET_VAL; // 1<<1, GPIO2_OUT on
+	write_pmicB(0x3D, buf);
+	write_pmicB(0x3D, buf | DDR_RET_CLK);  // 1<<2, GPIO3_OUT on
+	write_pmicB(0x3D, buf & ~DDR_RET_CLK); // 1<<2, GPIO3_OUT off
+	write_pmicB(0x3D, buf | DDR_RET_CLK);  // 1<<2, GPIO3_OUT on
 
-		write_pmicB(0x3D, out & ~DDR_RET_CLK);
-		debug_printf("GPIO1_OUT final =  %X\n", read_pmicB(0x3D));
+	/* Change FSM_I2C_TRIGGERS: trigger TRIGGER_I2C_6 */
+	write_pmicA(0x85, 0x40 | 0x80); // TRIGGER_I2C_6
+	debug_printf("%s %d: Write FSM_I2C_TRIGGERS = 0x%x\n", __FUNCTION__, __LINE__, 0x40);
+	read_pmicA(0x85);
 
-	}
-	/* set pin to signal we enter in suspend */
-	write_pmicB(0x3D, out | DDR_RET_CLK);
-	debug_printf("GPIO1_OUT final =  %X\n", read_pmicB(0x3D));
+	/* Change FSM_I2C_TRIGGERS - PMICB: trigger TRIGGER_I2C_6 */
+	write_pmicB(0x85, 0x40 | 0x80);
+	debug_printf("%s %d: Write FSM_NSLEEP_TRIGGERS = 0x%x\n", __FUNCTION__, __LINE__, 0x40);
+	read_pmicA(0x85);
 
-	if (ioret) {
-		/* force NSLEEP2B = 1 and NSLEEP1B = 0 => MCU ONLY */
-		write_pmicA(0x86, 0x01);
-	} else {
-		/* Enter Retention/Deep Sleep Power mode on PMIC A*/
-		write_pmicA(0x86, 0x00);
-	}
-
-	return 0;
+	/* Change FSM_NSLEEP_TRIGGERS: NSLEEP1=low, NSLEEP2=low */
+	write_pmicA(0x86, 0x00);
+	debug_printf("%s %d: Write FSM_NSLEEP_TRIGGERS = 0x%x\n", __FUNCTION__, __LINE__, 0x00);
+	read_pmicA(0x86);
 }
 
 #ifdef DEBUG_SRAM_S2R
