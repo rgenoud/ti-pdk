@@ -98,8 +98,8 @@ TaskHandle_t TaskP_getFreertosHandle(TaskP_Handle handle);
     #define CLEC_OFFSET             (256u)  /* eventId It is the CLEC event ID from where the SPI events
                                                are mapped to the clec */
     #if defined (BUILD_MCU1_0)
-        #define PING_INT_NUM           (CSLR_R5FSS0_CORE0_INTR_WKUP_MCU_GPIOMUX_INTROUTER0_OUTP_0)
-        #define PONG_INT_NUM           (CSLR_R5FSS0_CORE0_INTR_WKUP_MCU_GPIOMUX_INTROUTER0_OUTP_1)
+        #define PING_INT_NUM           (CSLR_WKUP_R5FSS0_CORE0_INTR_WKUP_MCU_GPIOMUX_INTROUTER0_OUTP_0)
+        #define PONG_INT_NUM           (CSLR_WKUP_R5FSS0_CORE0_INTR_WKUP_MCU_GPIOMUX_INTROUTER0_OUTP_1)
     #endif
      #ifdef BUILD_C7X_1
         #define PING_INT_NUM           (14u) /*clec intr number*/
