@@ -134,6 +134,11 @@ static void wkup_io_pm_seq(void)
     /* CONFIGURE MCU_MCAN1_TX with internal pull up resistor */
     *mkptr(CSL_WKUP_CTRL_MMR0_CFG0_BASE, 0x1C0D0) = 0x20060000;
 
+    /* CONFIGURE C18 (WKUP_GPIO0_7), C19 (WKUP_GPIO0_9) and AA19 (RMII1_TXD1) with pullup resistors */
+    // *mkptr(CSL_WKUP_CTRL_MMR0_CFG0_BASE, 0x1C0DC) = 0x20060007;
+    // *mkptr(CSL_WKUP_CTRL_MMR0_CFG0_BASE, 0x1C0DC) = 0x20060007;
+    // *mkptr(CSL_WKUP_CTRL_MMR0_CFG0_BASE, 0x1C0DC) = 0x20060000;
+
     /* Configure PMIC_WAKE1 */
     *mkptr(CSL_WKUP_CTRL_MMR0_CFG0_BASE, 0x1C190) = 0x38038000;
 
