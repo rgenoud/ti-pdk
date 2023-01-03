@@ -124,6 +124,70 @@ static void main_configure_can_uart_lock_dmsc(void)
 	*mkptr(CSL_STD_FW_WKUP_DMSC0_PWRCTRL_0_DMSC_PWR_MMR_PWR_START, DMSC_CM_LOCK0_KICK1) = 0x0;
 }
 
+static void wkup_io_pm_seq(void)
+{
+    uint32_t read_data = 0;
+
+    /* CONFIGURE MCU_MCAN0_TX with internal pull up resistor */
+    *mkptr(CSL_WKUP_CTRL_MMR0_CFG0_BASE, 0x1C0B8) = 0x20060000;
+
+    /* CONFIGURE MCU_MCAN1_TX with internal pull up resistor */
+    *mkptr(CSL_WKUP_CTRL_MMR0_CFG0_BASE, 0x1C0D0) = 0x20060000;
+
+    /* Configure PMIC_WAKE1 */
+    *mkptr(CSL_WKUP_CTRL_MMR0_CFG0_BASE, 0x1C190) = 0x38038000;
+
+    // UART_printf("MCAN1_TX (0x4301C0D0) immediately after pad value is set : 0x%x\n", *mkptr(CSL_WKUP_CTRL_MMR0_CFG0_BASE, 0x1C0D0));
+    // UART_printf("MCAN0_TX (0x4301C0B8) immediately after pad value is set : 0x%x\n", *mkptr(CSL_WKUP_CTRL_MMR0_CFG0_BASE, 0x1C0B8));
+
+    /* Bypass IO Isolation for I2C Pins. Those pins go to a mux behind which is the PMIC. */
+    *mkptr(CSL_WKUP_CTRL_MMR0_CFG0_BASE, 0x1C100) = 0x00840000; // WKUP_I2C0_SCL, F20
+    *mkptr(CSL_WKUP_CTRL_MMR0_CFG0_BASE, 0x1C104) = 0x00840000; // WKUP_I2C0_SDA, H21
+
+    /* Bypass IO Isolation for UART Pins so that we can print after entering IO Isolation */
+    /* REMOVE THIS IF YOU WOULD LIKE TO WAKEUP FROM THE UART PINS */
+    // *mkptr(CSL_WKUP_CTRL_MMR0_CFG0_BASE, 0x1C0E8) = 0x00840000;
+    // *mkptr(CSL_WKUP_CTRL_MMR0_CFG0_BASE, 0x1C0EC) = 0x00840000;
+    // *mkptr(CSL_WKUP_CTRL_MMR0_CFG0_BASE, 0x1C0F0) = 0x00840000;
+    // *mkptr(CSL_WKUP_CTRL_MMR0_CFG0_BASE, 0x1C0F4) = 0x00840000;
+    // *mkptr(CSL_WKUP_CTRL_MMR0_CFG0_BASE, 0x1C0F8) = 0x00840000;
+    // *mkptr(CSL_WKUP_CTRL_MMR0_CFG0_BASE, 0x1C0FC) = 0x00840000;
+
+    /* Unlock DMSC reg */
+    *mkptr(CSL_STD_FW_WKUP_DMSC0_PWRCTRL_0_DMSC_PWR_MMR_PWR_START, DMSC_CM_LOCK0_KICK0) = 0x8a6b7cda;
+    *mkptr(CSL_STD_FW_WKUP_DMSC0_PWRCTRL_0_DMSC_PWR_MMR_PWR_START, DMSC_CM_LOCK0_KICK1) = 0x823caef9;
+
+    /* Enable fw_ctrl_out[0] */
+    read_data = *mkptr(CSL_STD_FW_WKUP_DMSC0_PWRCTRL_0_DMSC_PWR_MMR_PWR_START, DMSC_CM_FW_CTRL_OUT0_SET);
+    *mkptr(CSL_STD_FW_WKUP_DMSC0_PWRCTRL_0_DMSC_PWR_MMR_PWR_START, DMSC_CM_FW_CTRL_OUT0_SET) = read_data | 0x1;
+
+    read_data = *mkptr(CSL_WKUP_CTRL_MMR0_CFG0_BASE, CSL_WKUP_CTRL_MMR_CFG0_DEEPSLEEP_CTRL);
+    *mkptr(CSL_WKUP_CTRL_MMR0_CFG0_BASE, CSL_WKUP_CTRL_MMR_CFG0_DEEPSLEEP_CTRL) = read_data | 0x1;
+
+    /* Enable Wakeup_enable */
+    read_data = *mkptr(CSL_STD_FW_WKUP_DMSC0_PWRCTRL_0_DMSC_PWR_MMR_PWR_START, CSL_PMMCCONTROL_PMCTRL_IO);
+    *mkptr(CSL_STD_FW_WKUP_DMSC0_PWRCTRL_0_DMSC_PWR_MMR_PWR_START, CSL_PMMCCONTROL_PMCTRL_IO) = read_data | 0x10000;
+
+    /* Enable ISOIN */
+    read_data = *mkptr(CSL_STD_FW_WKUP_DMSC0_PWRCTRL_0_DMSC_PWR_MMR_PWR_START, CSL_PMMCCONTROL_PMCTRL_IO);
+    *mkptr(CSL_STD_FW_WKUP_DMSC0_PWRCTRL_0_DMSC_PWR_MMR_PWR_START, CSL_PMMCCONTROL_PMCTRL_IO) = read_data | 0x1000000 | (0x1 << 6);
+
+    busy_wait_10us();
+}
+
+static void wkup_configure_can_uart_lock_dmsc(void)
+{
+	wkup_io_pm_seq();
+
+	/* Load the Magic Word */
+	*mkptr(CSL_WKUP_CTRL_MMR0_CFG0_BASE, CSL_WKUP_CTRL_MMR_CFG0_MCU_GEN_WAKE_CTRL) = 0x55555554;
+	*mkptr(CSL_WKUP_CTRL_MMR0_CFG0_BASE, CSL_WKUP_CTRL_MMR_CFG0_MCU_GEN_WAKE_CTRL) = 0x55555555;
+
+	/* re-lock DMSC reg */
+	*mkptr(CSL_STD_FW_WKUP_DMSC0_PWRCTRL_0_DMSC_PWR_MMR_PWR_START, DMSC_CM_LOCK0_KICK0) = 0x0;
+	*mkptr(CSL_STD_FW_WKUP_DMSC0_PWRCTRL_0_DMSC_PWR_MMR_PWR_START, DMSC_CM_LOCK0_KICK1) = 0x0;
+}
+
 /* SOC_lock, SOC_unlock, Lpm_mmr_isLocked and Lpm_mmr_unlock are extracted from
  * the PDK lpm. */
 static int32_t SOC_lock(uint32_t lockNum)
@@ -196,6 +260,7 @@ void enter_retention(void)
 	uart_puts("=> I/O retention\n\r");
 
 	main_configure_can_uart_lock_dmsc();
+	wkup_configure_can_uart_lock_dmsc();
 
 	debug_printf("%s %s\n", __func__,  __TIME__);
 
