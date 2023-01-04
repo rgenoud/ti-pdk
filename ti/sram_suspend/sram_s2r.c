@@ -151,12 +151,12 @@ static void wkup_io_pm_seq(void)
 
     /* Bypass IO Isolation for UART Pins so that we can print after entering IO Isolation */
     /* REMOVE THIS IF YOU WOULD LIKE TO WAKEUP FROM THE UART PINS */
-    // *mkptr(CSL_WKUP_CTRL_MMR0_CFG0_BASE, 0x1C0E8) = 0x00840000;
-    // *mkptr(CSL_WKUP_CTRL_MMR0_CFG0_BASE, 0x1C0EC) = 0x00840000;
-    // *mkptr(CSL_WKUP_CTRL_MMR0_CFG0_BASE, 0x1C0F0) = 0x00840000;
-    // *mkptr(CSL_WKUP_CTRL_MMR0_CFG0_BASE, 0x1C0F4) = 0x00840000;
-    // *mkptr(CSL_WKUP_CTRL_MMR0_CFG0_BASE, 0x1C0F8) = 0x00840000;
-    // *mkptr(CSL_WKUP_CTRL_MMR0_CFG0_BASE, 0x1C0FC) = 0x00840000;
+    *mkptr(CSL_WKUP_CTRL_MMR0_CFG0_BASE, 0x1C0E8) = 0x00840000;
+    *mkptr(CSL_WKUP_CTRL_MMR0_CFG0_BASE, 0x1C0EC) = 0x00840000;
+    *mkptr(CSL_WKUP_CTRL_MMR0_CFG0_BASE, 0x1C0F0) = 0x00840000;
+    *mkptr(CSL_WKUP_CTRL_MMR0_CFG0_BASE, 0x1C0F4) = 0x00840000;
+    *mkptr(CSL_WKUP_CTRL_MMR0_CFG0_BASE, 0x1C0F8) = 0x00840000;
+    *mkptr(CSL_WKUP_CTRL_MMR0_CFG0_BASE, 0x1C0FC) = 0x00840000;
 
     /* Unlock DMSC reg */
     *mkptr(CSL_STD_FW_WKUP_DMSC0_PWRCTRL_0_DMSC_PWR_MMR_PWR_START, DMSC_CM_LOCK0_KICK0) = 0x8a6b7cda;
@@ -547,6 +547,12 @@ uint8_t read_pmicB(uint8_t reg)
 	return rxd;
 }
 
+#ifdef DEBUG_FULL_SRAM_S2R
+#define debug_read_pmicA read_pmicA
+#else
+#define debug_read_pmicA(...) do {} while(0)
+#endif
+
 /* Taken from Lpm_pmicStateChangeActiveToIORetention, with some changes to
  * FSM_I2C_TRIGGERS for DDRRET support. Explaination on this change is still
  * obscure. */
@@ -568,27 +574,27 @@ void setup_pmic(void)
 	/* Change FSM_NSLEEP_TRIGGERS: NSLEEP1=high, NSLEEP2=high */
 	write_pmicA(0x86, 0x03);
 	debug_printf("%s %d: Write FSM_NSLEEP_TRIGGERS = 0x%x\n", __FUNCTION__, __LINE__, 0x03);
-	read_pmicA(0x86);
+	debug_read_pmicA(0x86);
 
 	/* Clear INT_STARTUP: clear ENABLE pin interrupt */
 	write_pmicA(0x65, 0x02);
 	debug_printf("%s %d: Write INT_STARTUP = 0x%x\n", __FUNCTION__, __LINE__, 0x02);
-	read_pmicA(0x65);
+	debug_read_pmicA(0x65);
 
 	/* Configure GPIO4_CONF: input, no pull, signal LP_WKUP1 */
 	write_pmicA(0x34, 0xc0);
 	debug_printf("%s %d: Write GPIO4_CONF = 0x%x\n", __FUNCTION__, __LINE__, 0xc0);
-	read_pmicA(0x34);
+	debug_read_pmicA(0x34);
 
 	/* Configure INT_GPIO1_8 (enable GPIO4 interrupt): clear GPIO4_INT */
 	write_pmicA(0x64, 0x08);
 	debug_printf("%s %d: Write INT_GPIO1_8 = 0x%x\n", __FUNCTION__, __LINE__, 0x08);
-	read_pmicA(0x64);
+	debug_read_pmicA(0x64);
 
 	/* Configure MASK_GPIO1_8_FALL (configure GPIO4 falling edge interrupt): enable INT on GPIO4 */
 	write_pmicA(0x4F, 0xF7);
 	debug_printf("%s %d: Write MASK_GPIO1_8_FALL = 0x%x\n", __FUNCTION__, __LINE__, 0xF7);
-	read_pmicA(0x4F);
+	debug_read_pmicA(0x4F);
 
 	// GPIO_OUT_1
 	buf = read_pmicB(0x3D) | DDR_RET_VAL; // 1<<1, GPIO2_OUT on
@@ -597,20 +603,24 @@ void setup_pmic(void)
 	write_pmicB(0x3D, buf & ~DDR_RET_CLK); // 1<<2, GPIO3_OUT off
 	write_pmicB(0x3D, buf | DDR_RET_CLK);  // 1<<2, GPIO3_OUT on
 
+	// Notes for ICON board: GPIO6 on PMIC for DDR, GPIO5 for GPIO. See "User
+	// Guide for Powering JacintoTM 7 J7200 DRA821 with Single TPS6594-Q1 PMIC,
+	// PDN-2A".
+
 	/* Change FSM_I2C_TRIGGERS: trigger TRIGGER_I2C_6 */
 	write_pmicA(0x85, 0x40 | 0x80); // TRIGGER_I2C_6
 	debug_printf("%s %d: Write FSM_I2C_TRIGGERS = 0x%x\n", __FUNCTION__, __LINE__, 0x40);
-	read_pmicA(0x85);
+	debug_read_pmicA(0x85);
 
 	/* Change FSM_I2C_TRIGGERS - PMICB: trigger TRIGGER_I2C_6 */
 	write_pmicB(0x85, 0x40 | 0x80);
 	debug_printf("%s %d: Write FSM_NSLEEP_TRIGGERS = 0x%x\n", __FUNCTION__, __LINE__, 0x40);
-	read_pmicA(0x85);
+	debug_read_pmicA(0x85);
 
 	/* Change FSM_NSLEEP_TRIGGERS: NSLEEP1=low, NSLEEP2=low */
 	write_pmicA(0x86, 0x00);
 	debug_printf("%s %d: Write FSM_NSLEEP_TRIGGERS = 0x%x\n", __FUNCTION__, __LINE__, 0x00);
-	read_pmicA(0x86);
+	debug_read_pmicA(0x86);
 }
 
 #ifdef DEBUG_SRAM_S2R
