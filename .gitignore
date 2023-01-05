@@ -9,3 +9,5 @@
 /ti/sram_suspend/sram_s2r.h
 /ti/sram_suspend/sram_s2r.o
 /ti/drv/sciclient/src/sciclient/sram_s2r.h
+/ti/drv/sciclient/src/version/rmpmhal_version.h
+/ti/drv/sciclient/src/version/sciserver_version.h
