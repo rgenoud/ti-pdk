@@ -120,6 +120,10 @@ u32's to represent data they can be used to describe events within the
 system. The below format describes the standard meaning of each bit inside
 the u32.
 
+.. note::
+
+   The trace version for this release is 0x03007
+
 +-----------------------+-----------+--------------------------------------------------------------+
 |         Type          | Bit Index |                             Use                              |
 +=======================+===========+==============================================================+
@@ -616,6 +620,10 @@ Resource Management Action IDs & Sub-Action IDs
 |                             |       |                       +-----------------------------+-------+-------------------------------------+
 |                             |       |                       | PSIL_SRC_THREAD_PEER        | 14    | Source thread peer register thread  |
 |                             |       |                       |                             |       | value                               |
++-----------------------------+-------+-----------------------+-----------------------------+-------+-------------------------------------+
+| PSIL_HOST_ID_CHECK          | 41    | Verify message host   | PSIL_HOST_ID_BCFG           | 19    | Resource host ID in RM boardcfg     |
+|                             |       | ID matches resource   +-----------------------------+-------+-------------------------------------+
+|                             |       | host ID               | PSIL_MSG_HOST_ID            | 20    | Message host ID                     |
 +-----------------------------+-------+-----------------------+-----------------------------+-------+-------------------------------------+
 | IRQ_INIT                    | 43    | IRQ driver init       | N/A                         | N/A   | N/A                                 |
 |                             |       | complete              |                             |       |                                     |

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2017-2022 Texas Instruments Incorporated
+ *  Copyright (C) 2017-2023 Texas Instruments Incorporated
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -49,7 +49,7 @@
  *
  * Secure Proxy indices for AM62AX device
  *
- * Data version: 220802_153654
+ * Data version: 221215_112230
  *
  */
 #ifndef AM62AX_TISCI_SEC_PROXY_H
