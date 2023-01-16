@@ -55,12 +55,14 @@ const bool Exception_useInternalBuffer = 0;
 const bool Exception_enablePrint = 1;
 
 /* exceptionHook */
+static void ExceptionHook(void);
 #pragma DATA_SECTION(Exception_exceptionHook, ".const:Exception_exceptionHook");
-const Exception_FuncPtr Exception_exceptionHook = ((Exception_FuncPtr)NULL);
+const Exception_FuncPtr Exception_exceptionHook = ((Exception_FuncPtr)ExceptionHook);
 
 /* internalHook */
+static void ExceptionInternalHook(void);
 #pragma DATA_SECTION(Exception_internalHook, ".const:Exception_internalHook");
-const Exception_FuncPtr Exception_internalHook = ((Exception_FuncPtr)NULL);
+const Exception_FuncPtr Exception_internalHook = ((Exception_FuncPtr)ExceptionInternalHook);
 
 /* returnHook */
 #pragma DATA_SECTION(Exception_returnHook, ".const:Exception_returnHook");
@@ -96,3 +98,15 @@ const bool Hwi_dispatcherAutoNestingSupport = 0;
 #pragma DATA_SECTION(Hwi_DEFAULT_INT_PRIORITY, ".const:Hwi_DEFAULT_INT_PRIORITY");
 const unsigned int Hwi_DEFAULT_INT_PRIORITY = (unsigned int)0x6U;
 
+static void ExceptionInternalHook(void)
+{
+    volatile int loop = 1;
+    while (loop);
+}
+
+
+static void ExceptionHook(void)
+{
+    volatile int loop = 1;
+    while (loop);
+}

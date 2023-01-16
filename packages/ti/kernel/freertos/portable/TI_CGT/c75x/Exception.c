@@ -187,10 +187,6 @@ void Exception_handler(bool abortFlag, int vectorType)
                       (int)Exception_Module_state.ntsr);
     }
 
-    if (*Exception_exceptionHook != NULL) {
-        (*Exception_exceptionHook)();
-    }
-
     /* process all possible causes of exception */
     if (vectorType == 0) {
         /* internal exception */
@@ -211,6 +207,10 @@ void Exception_handler(bool abortFlag, int vectorType)
             DebugP_log2("Exception_E_exceptionMin", nrp, (uintptr_t)excp->D15);
         }
     }
+
+    if (*Exception_exceptionHook != NULL) {
+        (*Exception_exceptionHook)();
+    }    
 }
 
 /*
@@ -461,6 +461,12 @@ Exception_FuncPtr Exception_setReturnPtr(Exception_FuncPtr ptr)
     return curPtr;
 }
 
+#ifdef __ti__
+struct Exception_Module_State Exception_Module_state __attribute__ ((section(".data:Exception_Module_state")));
+#elif !(defined(__MACH__) && defined(__APPLE__))
+struct Exception_Module_State Exception_Module_state __attribute__ ((section(".data:Exception_Module_state")));
+#endif
+static Exception_Context gExceptionContext;
 
 /* Module_state */
 #ifdef __ti__
@@ -475,9 +481,11 @@ struct Exception_Module_State Exception_Module_state = {
     (uint64_t)0x0U,  /* iear */
     (uint64_t)0x0U,  /* iesr */
     ((void(*)(void))NULL),  /* returnHook */
-    ((Exception_Context*)NULL),  /* excContext */
+    ((Exception_Context*)&gExceptionContext),  /* excContext */
     ((char*)NULL),  /* excPtr */
     {0},  /* contextBuf */
 };
+
+
 
 
