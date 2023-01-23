@@ -73,15 +73,6 @@ const Exception_FuncPtr Exception_returnHook = ((Exception_FuncPtr)NULL);
 #pragma DATA_SECTION(Cache_enableCache, ".const:Cache_enableCache");
 const bool Cache_enableCache = 1;
 
-/* initSize */
-#pragma DATA_SECTION(Cache_initSize, ".const:Cache_initSize");
-const Cache_Size Cache_initSize = {
-    Cache_L1Size_32K,  /* l1pSize */
-    Cache_L1Size_32K,  /* l1dSize */
-    Cache_L2Size_0K,  /* l2Size */
-};
-
-
 /* --> InitMmu */
 extern void InitMmu(void);
 

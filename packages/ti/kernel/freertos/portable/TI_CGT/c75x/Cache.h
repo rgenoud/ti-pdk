@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2018-2021 Texas Instruments Incorporated
+ *  Copyright (C) 2018-2023 Texas Instruments Incorporated
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -76,13 +76,7 @@ typedef struct Cache_Module_State Cache_Module_State;
 
 /* Type */
 enum Cache_Type {
-    Cache_Type_L1P = 0x1,
     Cache_Type_L1D = 0x2,
-    Cache_Type_L1 = 0x3,
-    Cache_Type_L2P = 0x4,
-    Cache_Type_L2D = 0x8,
-    Cache_Type_L2 = 0xC,
-    Cache_Type_ALLP = 0x5,
     Cache_Type_ALLD = 0xA,
     Cache_Type_ALL = 0x7fff
 };
@@ -107,22 +101,10 @@ enum Cache_L1Size {
     Cache_L1Size_4K = 1,
     Cache_L1Size_8K = 2,
     Cache_L1Size_16K = 3,
-    Cache_L1Size_32K = 4
+    Cache_L1Size_32K = 4,
+    Cache_L1Size_64K = 5
 };
 typedef enum Cache_L1Size Cache_L1Size;
-
-/* L2Size */
-enum Cache_L2Size {
-    Cache_L2Size_0K = 0,
-    Cache_L2Size_32K = 1,
-    Cache_L2Size_64K = 2,
-    Cache_L2Size_128K = 3,
-    Cache_L2Size_256K = 4,
-    Cache_L2Size_512K = 5,
-    Cache_L2Size_1024K = 6
-};
-typedef enum Cache_L2Size Cache_L2Size;
-
 /* PC */
 #define Cache_PC (1)
 
@@ -137,17 +119,11 @@ typedef enum Cache_L2Size Cache_L2Size;
 
 /* Size */
 struct Cache_Size {
-    Cache_L1Size l1pSize;
     Cache_L1Size l1dSize;
-    Cache_L2Size l2Size;
 };
-
 
 /* enableCache */
 extern const bool Cache_enableCache;
-
-/* initSize */
-extern const Cache_Size Cache_initSize;
 
 /* atomicBlockSize */
 extern const uint32_t Cache_atomicBlockSize;
@@ -162,6 +138,12 @@ extern const uint32_t Cache_atomicBlockSize;
 
 /* enable */
 void Cache_enable( uint16_t type);
+
+/* enable writeback */
+void Cache_enableWB(uint16_t type);
+
+/* enable writethrough */
+void Cache_enableWT(uint16_t type);
 
 /* inv */
 void Cache_inv( void * blockPtr, size_t byteCnt, uint16_t type, bool wait);
@@ -178,12 +160,6 @@ void Cache_wait( void);
 /* disable */
 void Cache_disable( uint16_t type);
 
-/* getSize */
-void Cache_getSize( Cache_Size *size);
-
-/* setSize */
-void Cache_setSize( Cache_Size *size);
-
 /* wbAll */
 void Cache_wbAll( void);
 
@@ -196,23 +172,14 @@ void Cache_wbInvAll( void);
 /* wbInvL1dAll */
 void Cache_wbInvL1dAll( void);
 
-/* setL2CFG */
-void Cache_setL2CFG( unsigned int size);
-
-/* getL2CFG */
-unsigned long Cache_getL2CFG( void);
+/* wbInvL1dAll */
+void Cache_invL1dAll( void);
 
 /* setL1DCFG */
-void Cache_setL1DCFG( unsigned int size);
+void Cache_setL1DCFG( unsigned long size);
 
 /* getL1DCFG */
 unsigned long Cache_getL1DCFG( void);
-
-/* setL2WB */
-void Cache_setL2WB( unsigned int flag);
-
-/* setL2WBINV */
-void Cache_setL2WBINV( unsigned int flag);
 
 /* setL1DWB */
 void Cache_setL1DWB( unsigned int flag);
@@ -220,9 +187,8 @@ void Cache_setL1DWB( unsigned int flag);
 /* setL1DWBINV */
 void Cache_setL1DWBINV( unsigned int flag);
 
-/* startup */
-void Cache_startup( void);
-
+/* setL1DINV */
+void Cache_setL1DINV( unsigned int flag);
 
 void Cache_Module_startup( void );
 
@@ -237,7 +203,6 @@ void Cache_Module_startup( void );
 /* Module_State */
 struct Cache_Module_State {
     uint64_t L1DCFG;
-    uint64_t L2CFG;
 };
 
 /* Module__state__V */

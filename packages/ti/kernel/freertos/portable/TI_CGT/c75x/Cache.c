@@ -48,175 +48,99 @@
 
 #include <ti/osal/DebugP.h>
 
-#define L2CFG_MODE_MASK         0x00000007      /* L2 Mode mask */
-
-/*
- *  ======== Cache_startup ========
- *  Sets the default cache size and MAR register values.
- */
-void Cache_startup()
-{
-    Cache_setSize((Cache_Size *)&(Cache_initSize));
-
-    Mmu_startup();
-}
-
 /*
  *  ======== Cache_Module_startup ========
  */
 void Cache_Module_startup(void)
 {
-    Cache_Size size;
-
-    Cache_getSize(&size);
-
-    Cache_Module_state.L2CFG = size.l2Size;
-    Cache_Module_state.L1DCFG = size.l1dSize;
-
+    Cache_enable(Cache_Type_L1D);
+    Cache_enableWB(Cache_Type_L1D);
 }
 
 /*
  *  ======== Cache_enable ========
- *  Set the size to the Cache_initSize.
+ *  Enables the L1D Cache
  */
 void Cache_enable(uint16_t type)
 {
-    Cache_Size size;
-
-    Cache_getSize(&size);
-
-    if (type == Cache_Type_L1D) {
-        size.l1dSize = Cache_initSize.l1dSize;
-        Cache_setSize(&size);
-    }
-    else if (type == Cache_Type_L2) {
-        size.l2Size = Cache_initSize.l2Size;
-        Cache_setSize(&size);
+    /* Enable L1D cache */
+    if (type == Cache_Type_L1D)
+    {
+        uint64_t L1D_cfg = Cache_getL1DCFG();
+        L1D_cfg |= 1U;
+        Cache_setL1DCFG(L1D_cfg);
+        Cache_Module_state.L1DCFG = L1D_cfg;
     }
 }
 
 /*
  *  ======== Cache_disable ========
- *  For L1P and L1D set the size to 0.
- *  This API should not be called to disable L2 Cache.
- *  To disable L2 use Cache_setSize().
+ *  Disables the L1D Cache
  */
 void Cache_disable(uint16_t type)
 {
-    Cache_Size size;
-
-    Cache_getSize(&size);
-
-    if (type == Cache_Type_L1D) {
-        size.l1dSize = Cache_L1Size_0K;
-        Cache_setSize(&size);
-    }
-    else if (type == Cache_Type_L2) {
-        size.l2Size = Cache_L2Size_0K;
-        Cache_setSize(&size);
+    /* Disable L1D cache */
+    if (type == Cache_Type_L1D)
+    {
+        uint64_t L1D_cfg = Cache_getL1DCFG();
+        L1D_cfg &= ~((uint64_t) 1);
+        Cache_setL1DCFG(L1D_cfg); 
+        Cache_Module_state.L1DCFG = L1D_cfg;       
     }
 }
 
 /*
- *  ======== Cache_setSize ========
- *  Set the L1D, L1P, and L2 cache sizes
+ *  ======== Cache_enableWB ========
+ *  Enables the Cache writeback
  */
-void Cache_setSize(Cache_Size *size)
+void Cache_enableWB(uint16_t type)
 {
-    unsigned int        mask;
-    unsigned long       reg;
-
-    if (Hwi_getCXM() != Hwi_TSR_CXM_SecureSupervisor) {
-        return;
+    /* Enable writeback */
+    if (type == Cache_Type_L1D)
+    {
+        uint64_t L1D_cfg = Cache_getL1DCFG();
+        L1D_cfg |= 0x10U;
+        Cache_setL1DCFG(L1D_cfg);
+        Cache_Module_state.L1DCFG = L1D_cfg;
     }
+}
 
-    /* critical section -- disable interrupts */
-    mask = Hwi_disable();
-
-    /*
-     *  Set size of L2 cache.
-     *  Read back CFG, this stalls CPU until the mode change completes.
-     */
-    reg = Cache_getL2CFG();
-    reg &= ~0x7UL;
-    reg |= size->l2Size;
-    Cache_setL2CFG(reg);
-
-    Cache_getL2CFG();
-
-    /*
-     *  Set size of L1D cache.
-     *  Set size of L1P cache.
-     *  Read back CFG, this stalls CPU until the mode change completes.
-     */
-    reg = Cache_getL1DCFG();
-    reg &= ~0x7UL;
-    reg |= size->l1dSize;
-    Cache_setL1DCFG(reg);
-
-    Cache_getL1DCFG();
-
-    /* end of critical section -- restore interrupts */
-    Hwi_restore(mask);
+/*
+ *  ======== Cache_enableWT ========
+ *  Enables the Cache writeback
+ */
+void Cache_enableWT(uint16_t type)
+{
+    /* Disabling the Writeback enable write through */
+    if (type == Cache_Type_L1D)
+    {
+        uint64_t L1D_cfg = Cache_getL1DCFG();
+        L1D_cfg &= ~((uint64_t) 0x10U);
+        Cache_setL1DCFG(L1D_cfg);
+        Cache_Module_state.L1DCFG = L1D_cfg;
+    }
 }
 
 /*
  *  ======== Cache_getSize ========
- *  Returns the L1D, L1P, and L2 cache sizes.
- *  If value of L2 size is greater than Cache_L2_1024K then return
- *  Cache_L2_1024K.
- *  If value of L1 size is greater than Cache_L1_32K then return
- *  Cache_L1_32K.
- *  If value of L1 size is less than Cache_L1_8K then return
- *  Cache_L1_8K.
+ *  Returns the L1D size. 
  */
 void Cache_getSize(Cache_Size *size)
-{
-    unsigned int        tmpSize;
-
+{    
     /*
-     *  Read the L2 CFG register
-     *  Return Cache_L2Size_1024K if register value is equal or greater than
-     *  Cache_L2Size_1024K. This is the largest size defined in the .xdc file.
+     * L1D is a non-configurable 64KB cache.
      */
-    tmpSize = Cache_getL2CFG() & L2CFG_MODE_MASK;
-    if (tmpSize > Cache_L2Size_1024K) {
-        tmpSize = Cache_L2Size_1024K;
-    }
-    size->l2Size = (Cache_L2Size)tmpSize;
-
-    /*
-     *  Read the L1D register
-     *  Its possible the register value is greater than 4 in which case
-     *  we simply return 4 since values greater than 4 is equivalent to 4.
-     *  Its possible the register value is less than 2 in which case
-     *  we simply return 2 since values less than 2 is equivalent to 2.
-     */
-    tmpSize = Cache_getL1DCFG();
-    if (tmpSize > Cache_L1Size_32K) {
-        tmpSize = Cache_L1Size_32K;
-    }
-    else if (tmpSize < Cache_L1Size_8K) {
-        tmpSize = Cache_L1Size_8K;
-    }
-    size->l1dSize = (Cache_L1Size)tmpSize;
-
-    /*
-     * L1P is a non-configurable 32KB cache.
-     */
-    size->l1pSize = Cache_L1Size_32K;
+    size->l1dSize = (Cache_L1Size)Cache_L1Size_64K;
 }
 
 /*
  *  ======== Cache_wbAll ========
- *  Perform a global write back.  There is no effect on L1P cache.  All cache
- *  lines are left valid in L1D cache and the data in L1D cache is written
- *  back L2 or external.  All cache lines are left valid in L2 cache and the
- *  data in L2 cache is written back to external.
+ *  Perform a global write back.  All cache lines are left valid in L1D 
+ *  cache and the data in L1D cache is written back external. 
  */
 void Cache_wbAll()
 {
-    Cache_setL2WB(1);
+    Cache_setL1DWB(1);
 }
 
 /*
@@ -230,14 +154,13 @@ void Cache_wbL1dAll()
 
 /*
  *  ======== Cache_wbInvAll ========
- *  Performs a global write back and invalidate.  All cache lines are
- *  invalidated in L1P cache.  All cache lines are written back to L2 or
- *  or external then invalidated in L1D cache.  All cache lines are
- *  written back to external and then invalidated in L2 cache.
+ *  Performs a global write back and invalidate. All cache lines are written back 
+ *  to external then invalidated in L1D cache.  
  */
+
 void Cache_wbInvAll()
 {
-    Cache_setL2WBINV(1);
+    Cache_setL1DWBINV(1);
 }
 
 /*
@@ -250,12 +173,20 @@ void Cache_wbInvL1dAll()
 }
 
 /*
+ *  ======== Cache_invAll ========
+ *  Performs a global invalidate of L1D cache. This does not trigger writeback.
+ */
+void Cache_invL1dAll()
+{
+    Cache_setL1DINV(1);
+}
+
+/*
  *  ======== Cache_inv ========
  *  Invalidate the range of memory within the specified starting address and
  *  byte count.  The range of addresses operated on gets quantized to whole
- *  cache lines in each cache.  All cache lines in range are invalidated in L1P
- *  cache.  All cache lines in range are invalidated in L1D cache.
- *  All cache lines in range are invaliated in L2 cache.
+ *  cache lines in each cache.  All cache lines in range are invalidated in L1D
+ *  cache. 
  */
 void Cache_inv(void * blockPtr, size_t byteCnt, uint16_t type, bool wait)
 {
@@ -270,11 +201,9 @@ void Cache_inv(void * blockPtr, size_t byteCnt, uint16_t type, bool wait)
  *  ======== Cache_wb ========
  *  Writes back the range of memory within the specified starting address
  *  and byte count.  The range of addresses operated on gets quantized to
- *  whole cache lines in each cache.  There is no effect on L1P cache.
- *  All cache lines within the range are left valid in L1D cache and the data
- *  within the range in L1D cache will be written back to L2 or external.
- *  All cache lines within the range are left valid in L2 cache and the data
- *  within the range in L2 cache will be written back to external.
+ *  whole cache lines in each cache.  All cache lines within the range 
+ *  are left valid in L1D cache and the data within the range in L1D cache 
+ *  will be written back to external.
  */
 void Cache_wb(void * blockPtr, size_t byteCnt, uint16_t type, bool wait)
 {
@@ -293,11 +222,8 @@ void Cache_wb(void * blockPtr, size_t byteCnt, uint16_t type, bool wait)
  *  ======== Cache_wbInv ========
  *  Writes back and invalidates the range of memory within the specified
  *  starting address and byte count.  The range of addresses operated on gets
- *  quantized to whole cache lines in each cache.  All cache lines within range
- *  are invalidated in L1P cache.  All cache lines within the range are
- *  written back to L2 or external and then invalidated in L1D cache
- *  All cache lines within the range are written back to external and then
- *  invalidated in L2 cache.
+ *  quantized to whole cache lines in each cache.  All cache lines within 
+ *  the range are written back to external and then invalidated in L1D cache.
  */
 void Cache_wbInv(void * blockPtr, size_t byteCnt, uint16_t type, bool wait)
 {
@@ -308,24 +234,19 @@ void Cache_wbInv(void * blockPtr, size_t byteCnt, uint16_t type, bool wait)
     }
 }
 
+
 /*
  *  ======== Cache_wait ========
- *  Wait for the L2 count to complete.  This function needs only to wait
- *  for L2 word count since all block cache operations in BIOS are done
- *  through the L2 registers and all global cache operations must already
- *  wait until the operation completes.  Note:  Its sufficient to wait
- *  on one of the L2 count registers since all 3 count registers are
- *  mirrors of one another and map to the same bits.
+ *  Wait for the cache operation to complete.
  */
 void Cache_wait()
 {
+    __SE0ADV(char);
     /*
      *  Stall CPU while memory system is busy.
      */
     _mfence();
 
-    /* do a 2nd mfence as per single mfence silicon errata */
-    _mfence();
 }
 
 
@@ -336,8 +257,7 @@ struct Cache_Module_State Cache_Module_state __attribute__ ((section(".data:Cach
 struct Cache_Module_State Cache_Module_state __attribute__ ((section(".data:Cache_Module_state")));
 #endif
 struct Cache_Module_State Cache_Module_state = {
-    (uint64_t)0x4U,  /* L1DCFG */
-    (uint64_t)0x0U,  /* L2CFG */
+    (uint64_t)0x11U,  /* L1DCFG */ /* L1DWBEN and L1DON */
 };
 
 

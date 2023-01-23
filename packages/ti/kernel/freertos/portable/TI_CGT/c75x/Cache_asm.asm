@@ -33,19 +33,6 @@
 ; ======== Cache_asm.s71 ========
 ;
 ;
-
-        .global Cache_getL2CFG
-        .sect ".text:Cache_getL2CFG"
-        .clink
-Cache_getL2CFG:
-;        .asmfunc
-
-        mvc.s1   L1DCFG, a4
-||      ret.b1
-
-;	.endasmfunc
-
-
         .global Cache_getL1DCFG
         .sect ".text:Cache_getL1DCFG"
         .clink
@@ -58,18 +45,6 @@ Cache_getL1DCFG:
 ;	.endasmfunc
 
 
-        .global Cache_setL2CFG
-        .sect ".text:Cache_setL2CFG"
-        .clink
-Cache_setL2CFG:
-;        .asmfunc
-
-        mvc.s1   a4, L2CFG
-||      ret.b1
-
-;	.endasmfunc
-
-
         .global Cache_setL1DCFG
         .sect ".text:Cache_setL1DCFG"
         .clink
@@ -77,30 +52,6 @@ Cache_setL1DCFG:
 ;        .asmfunc
 
         mvc.s1   a4, L1DCFG
-||      ret.b1
-
-;	.endasmfunc
-
-
-        .global Cache_setL2WB
-        .sect ".text:Cache_setL2WB"
-        .clink
-Cache_setL2WB:
-;        .asmfunc
-
-        mvc.s1   a4, L2WB
-||      ret.b1
-
-;	.endasmfunc
-
-
-        .global Cache_setL2WBINV
-        .sect ".text:Cache_setL2WBINV"
-        .clink
-Cache_setL2WBINV:
-;        .asmfunc
-
-        mvc.s1   a4, L2WBINV
 ||      ret.b1
 
 ;	.endasmfunc
@@ -125,6 +76,17 @@ Cache_setL1DWBINV:
 ;        .asmfunc
 
         mvc.s1   a4, L1DWBINV
+||      ret.b1
+
+;	.endasmfunc
+
+        .global Cache_setL1DINV
+        .sect ".text:Cache_setL1DINV"
+        .clink
+Cache_setL1DINV:
+;        .asmfunc
+
+        mvc.s1   a4, L1DINV
 ||      ret.b1
 
 ;	.endasmfunc

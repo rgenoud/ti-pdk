@@ -74,7 +74,6 @@ Mmu_setTCR
 ;        .endasmfunc
 
         .global  Cache_setL1DWBINV
-        .global  Cache_setL2WBINV
 
         .global Mmu_tlbInvAll
         .sect ".text:Mmu_tlbInvAll"
@@ -90,7 +89,6 @@ Mmu_tlbInvAll
         ;
 
         mvk64.l1  1, a5
-        mvc.s1   a5, L1DWBINV
         mvc.s1   a5, L1DWBINV
 
         mvc.s1   a4, TLB_INV
