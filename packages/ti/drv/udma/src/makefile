@@ -13,8 +13,10 @@ SRCDIR = src
 SRCDIR += soc/$(SOC)
 INCDIR =
 
+ifeq ($(BUILD_OS_TYPE), qnx)
 # Added for QNX
 INCDIR = $(QNX_INSTALL_PATH)/resmgr/udma_qnx_rsmgr/resmgr/src $(QNX_INSTALL_PATH)/resmgr/udma_qnx_rsmgr/usr
+endif
 
 # List all the external components/interfaces, whose interface header files
 # need to be included for this component

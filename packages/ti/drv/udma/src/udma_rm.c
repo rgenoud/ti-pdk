@@ -99,6 +99,10 @@ int32_t Udma_rmInit(Udma_DrvHandle drvHandle)
     uint32_t            mappedGrp;
 #endif
 
+#ifdef QNX_OS
+    if (0 == drvHandle->initPrms.isQnxRMInstance) return UDMA_SOK;
+#endif
+
     if(UDMA_SOK == retVal)
     {
         /* Mark all resources as free */
@@ -298,6 +302,10 @@ int32_t Udma_rmDeinit(Udma_DrvHandle drvHandle)
     uint32_t            mappedGrp;
 #endif
 
+#ifdef QNX_OS
+    if (0 == drvHandle->initPrms.isQnxRMInstance) return UDMA_SOK;
+#endif
+
     retVal += Udma_rmCheckResLeak(
                   drvHandle,
                   &drvHandle->blkCopyChFlag[0U],
@@ -428,6 +436,10 @@ uint32_t Udma_rmAllocBlkCopyCh(uint32_t preferredChNum, Udma_DrvHandle drvHandle
     uint32_t            chNum = UDMA_DMA_CH_INVALID;
     Udma_RmInitPrms    *rmInitPrms = &drvHandle->initPrms.rmInitPrms;
 
+#ifdef QNX_OS
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+#endif
+
     Udma_assert(drvHandle, drvHandle->initPrms.osalPrms.lockMutex != (Udma_OsalMutexLockFxn) NULL_PTR);
     drvHandle->initPrms.osalPrms.lockMutex(drvHandle->rmLock);
 
@@ -479,6 +491,10 @@ void Udma_rmFreeBlkCopyCh(uint32_t chNum, Udma_DrvHandle drvHandle)
     uint32_t            i, offset, bitPos, bitMask;
     Udma_RmInitPrms    *rmInitPrms = &drvHandle->initPrms.rmInitPrms;
 
+#ifdef QNX_OS
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+#endif
+
     Udma_assert(drvHandle, drvHandle->initPrms.osalPrms.lockMutex != (Udma_OsalMutexLockFxn) NULL_PTR);
     drvHandle->initPrms.osalPrms.lockMutex(drvHandle->rmLock);
 
@@ -505,6 +521,10 @@ uint32_t Udma_rmAllocBlkCopyHcCh(uint32_t preferredChNum, Udma_DrvHandle drvHand
     uint32_t            i, offset, bitPos, bitMask;
     uint32_t            chNum = UDMA_DMA_CH_INVALID;
     Udma_RmInitPrms    *rmInitPrms = &drvHandle->initPrms.rmInitPrms;
+
+#ifdef QNX_OS
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+#endif
 
     Udma_assert(drvHandle, drvHandle->initPrms.osalPrms.lockMutex != (Udma_OsalMutexLockFxn) NULL_PTR);
     drvHandle->initPrms.osalPrms.lockMutex(drvHandle->rmLock);
@@ -557,6 +577,10 @@ void Udma_rmFreeBlkCopyHcCh(uint32_t chNum, Udma_DrvHandle drvHandle)
     uint32_t            i, offset, bitPos, bitMask;
     Udma_RmInitPrms    *rmInitPrms = &drvHandle->initPrms.rmInitPrms;
 
+#ifdef QNX_OS
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+#endif
+
     Udma_assert(drvHandle, drvHandle->initPrms.osalPrms.lockMutex != (Udma_OsalMutexLockFxn) NULL_PTR);
     drvHandle->initPrms.osalPrms.lockMutex(drvHandle->rmLock);
 
@@ -583,6 +607,10 @@ uint32_t Udma_rmAllocBlkCopyUhcCh(uint32_t preferredChNum, Udma_DrvHandle drvHan
     uint32_t            i, offset, bitPos, bitMask;
     uint32_t            chNum = UDMA_DMA_CH_INVALID;
     Udma_RmInitPrms    *rmInitPrms = &drvHandle->initPrms.rmInitPrms;
+
+#ifdef QNX_OS
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+#endif
 
     Udma_assert(drvHandle, drvHandle->initPrms.osalPrms.lockMutex != (Udma_OsalMutexLockFxn) NULL_PTR);
     drvHandle->initPrms.osalPrms.lockMutex(drvHandle->rmLock);
@@ -635,6 +663,10 @@ void Udma_rmFreeBlkCopyUhcCh(uint32_t chNum, Udma_DrvHandle drvHandle)
     uint32_t            i, offset, bitPos, bitMask;
     Udma_RmInitPrms    *rmInitPrms = &drvHandle->initPrms.rmInitPrms;
 
+#ifdef QNX_OS
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+#endif
+
     Udma_assert(drvHandle, drvHandle->initPrms.osalPrms.lockMutex != (Udma_OsalMutexLockFxn) NULL_PTR);
     drvHandle->initPrms.osalPrms.lockMutex(drvHandle->rmLock);
 
@@ -661,6 +693,10 @@ uint32_t Udma_rmAllocTxCh(uint32_t preferredChNum, Udma_DrvHandle drvHandle)
     uint32_t            i, offset, bitPos, bitMask;
     uint32_t            chNum = UDMA_DMA_CH_INVALID;
     Udma_RmInitPrms    *rmInitPrms = &drvHandle->initPrms.rmInitPrms;
+
+#ifdef QNX_OS
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+#endif
 
     Udma_assert(drvHandle, drvHandle->initPrms.osalPrms.lockMutex != (Udma_OsalMutexLockFxn) NULL_PTR);
     drvHandle->initPrms.osalPrms.lockMutex(drvHandle->rmLock);
@@ -713,6 +749,10 @@ void Udma_rmFreeTxCh(uint32_t chNum, Udma_DrvHandle drvHandle)
     uint32_t            i, offset, bitPos, bitMask;
     Udma_RmInitPrms    *rmInitPrms = &drvHandle->initPrms.rmInitPrms;
 
+#ifdef QNX_OS
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+#endif
+
     Udma_assert(drvHandle, drvHandle->initPrms.osalPrms.lockMutex != (Udma_OsalMutexLockFxn) NULL_PTR);
     drvHandle->initPrms.osalPrms.lockMutex(drvHandle->rmLock);
 
@@ -739,6 +779,10 @@ uint32_t Udma_rmAllocRxCh(uint32_t preferredChNum, Udma_DrvHandle drvHandle)
     uint32_t            i, offset, bitPos, bitMask;
     uint32_t            chNum = UDMA_DMA_CH_INVALID;
     Udma_RmInitPrms    *rmInitPrms = &drvHandle->initPrms.rmInitPrms;
+
+#ifdef QNX_OS
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+#endif
 
     Udma_assert(drvHandle, drvHandle->initPrms.osalPrms.lockMutex != (Udma_OsalMutexLockFxn) NULL_PTR);
     drvHandle->initPrms.osalPrms.lockMutex(drvHandle->rmLock);
@@ -791,6 +835,10 @@ void Udma_rmFreeRxCh(uint32_t chNum, Udma_DrvHandle drvHandle)
     uint32_t            i, offset, bitPos, bitMask;
     Udma_RmInitPrms    *rmInitPrms = &drvHandle->initPrms.rmInitPrms;
 
+#ifdef QNX_OS
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+#endif
+
     Udma_assert(drvHandle, drvHandle->initPrms.osalPrms.lockMutex != (Udma_OsalMutexLockFxn) NULL_PTR);
     drvHandle->initPrms.osalPrms.lockMutex(drvHandle->rmLock);
 
@@ -817,6 +865,10 @@ uint32_t Udma_rmAllocTxHcCh(uint32_t preferredChNum, Udma_DrvHandle drvHandle)
     uint32_t            i, offset, bitPos, bitMask;
     uint32_t            chNum = UDMA_DMA_CH_INVALID;
     Udma_RmInitPrms    *rmInitPrms = &drvHandle->initPrms.rmInitPrms;
+
+#ifdef QNX_OS
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+#endif
 
     Udma_assert(drvHandle, drvHandle->initPrms.osalPrms.lockMutex != (Udma_OsalMutexLockFxn) NULL_PTR);
     drvHandle->initPrms.osalPrms.lockMutex(drvHandle->rmLock);
@@ -869,6 +921,10 @@ void Udma_rmFreeTxHcCh(uint32_t chNum, Udma_DrvHandle drvHandle)
     uint32_t            i, offset, bitPos, bitMask;
     Udma_RmInitPrms    *rmInitPrms = &drvHandle->initPrms.rmInitPrms;
 
+#ifdef QNX_OS
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+#endif
+
     Udma_assert(drvHandle, drvHandle->initPrms.osalPrms.lockMutex != (Udma_OsalMutexLockFxn) NULL_PTR);
     drvHandle->initPrms.osalPrms.lockMutex(drvHandle->rmLock);
 
@@ -895,6 +951,10 @@ uint32_t Udma_rmAllocRxHcCh(uint32_t preferredChNum, Udma_DrvHandle drvHandle)
     uint32_t            i, offset, bitPos, bitMask;
     uint32_t            chNum = UDMA_DMA_CH_INVALID;
     Udma_RmInitPrms    *rmInitPrms = &drvHandle->initPrms.rmInitPrms;
+
+#ifdef QNX_OS
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+#endif
 
     Udma_assert(drvHandle, drvHandle->initPrms.osalPrms.lockMutex != (Udma_OsalMutexLockFxn) NULL_PTR);
     drvHandle->initPrms.osalPrms.lockMutex(drvHandle->rmLock);
@@ -947,6 +1007,10 @@ void Udma_rmFreeRxHcCh(uint32_t chNum, Udma_DrvHandle drvHandle)
     uint32_t            i, offset, bitPos, bitMask;
     Udma_RmInitPrms    *rmInitPrms = &drvHandle->initPrms.rmInitPrms;
 
+#ifdef QNX_OS
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+#endif
+
     Udma_assert(drvHandle, drvHandle->initPrms.osalPrms.lockMutex != (Udma_OsalMutexLockFxn) NULL_PTR);
     drvHandle->initPrms.osalPrms.lockMutex(drvHandle->rmLock);
 
@@ -973,6 +1037,10 @@ uint32_t Udma_rmAllocTxUhcCh(uint32_t preferredChNum, Udma_DrvHandle drvHandle)
     uint32_t            i, offset, bitPos, bitMask;
     uint32_t            chNum = UDMA_DMA_CH_INVALID;
     Udma_RmInitPrms    *rmInitPrms = &drvHandle->initPrms.rmInitPrms;
+
+#ifdef QNX_OS
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+#endif
 
     Udma_assert(drvHandle, drvHandle->initPrms.osalPrms.lockMutex != (Udma_OsalMutexLockFxn) NULL_PTR);
     drvHandle->initPrms.osalPrms.lockMutex(drvHandle->rmLock);
@@ -1025,6 +1093,10 @@ void Udma_rmFreeTxUhcCh(uint32_t chNum, Udma_DrvHandle drvHandle)
     uint32_t            i, offset, bitPos, bitMask;
     Udma_RmInitPrms    *rmInitPrms = &drvHandle->initPrms.rmInitPrms;
 
+#ifdef QNX_OS
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+#endif
+
     Udma_assert(drvHandle, drvHandle->initPrms.osalPrms.lockMutex != (Udma_OsalMutexLockFxn) NULL_PTR);
     drvHandle->initPrms.osalPrms.lockMutex(drvHandle->rmLock);
 
@@ -1051,6 +1123,10 @@ uint32_t Udma_rmAllocRxUhcCh(uint32_t preferredChNum, Udma_DrvHandle drvHandle)
     uint32_t            i, offset, bitPos, bitMask;
     uint32_t            chNum = UDMA_DMA_CH_INVALID;
     Udma_RmInitPrms    *rmInitPrms = &drvHandle->initPrms.rmInitPrms;
+
+#ifdef QNX_OS
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+#endif
 
     Udma_assert(drvHandle, drvHandle->initPrms.osalPrms.lockMutex != (Udma_OsalMutexLockFxn) NULL_PTR);
     drvHandle->initPrms.osalPrms.lockMutex(drvHandle->rmLock);
@@ -1103,6 +1179,10 @@ void Udma_rmFreeRxUhcCh(uint32_t chNum, Udma_DrvHandle drvHandle)
     uint32_t            i, offset, bitPos, bitMask;
     Udma_RmInitPrms    *rmInitPrms = &drvHandle->initPrms.rmInitPrms;
 
+#ifdef QNX_OS
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+#endif
+
     Udma_assert(drvHandle, drvHandle->initPrms.osalPrms.lockMutex != (Udma_OsalMutexLockFxn) NULL_PTR);
     drvHandle->initPrms.osalPrms.lockMutex(drvHandle->rmLock);
 
@@ -1133,6 +1213,10 @@ uint32_t Udma_rmAllocExtCh(uint32_t preferredChNum,
     uint32_t            i, offset, bitPos, bitMask;
     uint32_t            utcId;
     Udma_RmInitPrms    *rmInitPrms = &drvHandle->initPrms.rmInitPrms;
+
+#ifdef QNX_OS
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+#endif
 
     Udma_assert(drvHandle, utcInfo != NULL_PTR);
     utcId = utcInfo->utcId;
@@ -1196,6 +1280,10 @@ void Udma_rmFreeExtCh(uint32_t chNum,
     uint32_t            utcId;
     Udma_RmInitPrms    *rmInitPrms = &drvHandle->initPrms.rmInitPrms;
 
+#ifdef QNX_OS
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+#endif
+
     Udma_assert(drvHandle, utcInfo != NULL_PTR);
     utcId = utcInfo->utcId;
 
@@ -1228,6 +1316,10 @@ uint32_t Udma_rmAllocMappedTxCh(uint32_t preferredChNum,
     uint32_t            chNum = UDMA_DMA_CH_INVALID;
     uint32_t            i, offset, bitPos, bitMask;
     Udma_RmInitPrms    *rmInitPrms = &drvHandle->initPrms.rmInitPrms;
+
+#ifdef QNX_OS
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+#endif
 
     Udma_assert(drvHandle, mappedChGrp < UDMA_NUM_MAPPED_TX_GROUP);
 
@@ -1284,6 +1376,10 @@ void Udma_rmFreeMappedTxCh(uint32_t chNum,
     uint32_t            i, offset, bitPos, bitMask;
     Udma_RmInitPrms    *rmInitPrms = &drvHandle->initPrms.rmInitPrms;
 
+#ifdef QNX_OS
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+#endif
+
     Udma_assert(drvHandle, drvHandle->initPrms.osalPrms.lockMutex != (Udma_OsalMutexLockFxn) NULL_PTR);
     drvHandle->initPrms.osalPrms.lockMutex(drvHandle->rmLock);
 
@@ -1314,6 +1410,10 @@ uint32_t Udma_rmAllocMappedRxCh(uint32_t preferredChNum,
     uint32_t            chNum = UDMA_DMA_CH_INVALID;
     uint32_t            i, offset, bitPos, bitMask;
     Udma_RmInitPrms    *rmInitPrms = &drvHandle->initPrms.rmInitPrms;
+
+#ifdef QNX_OS
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+#endif
 
     Udma_assert(drvHandle, mappedChGrp < UDMA_NUM_MAPPED_RX_GROUP);
 
@@ -1370,6 +1470,10 @@ void Udma_rmFreeMappedRxCh(uint32_t chNum,
     uint32_t            i, offset, bitPos, bitMask;
     Udma_RmInitPrms    *rmInitPrms = &drvHandle->initPrms.rmInitPrms;
 
+#ifdef QNX_OS
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+#endif
+
     Udma_assert(drvHandle, drvHandle->initPrms.osalPrms.lockMutex != (Udma_OsalMutexLockFxn) NULL_PTR);
     drvHandle->initPrms.osalPrms.lockMutex(drvHandle->rmLock);
 
@@ -1401,6 +1505,10 @@ uint32_t Udma_rmAllocMappedRing(Udma_DrvHandle drvHandle,
     uint32_t    i,offset, bitPos, bitMask;  
     uint32_t    loopStart, loopMax;      
     int32_t     retVal = UDMA_SOK;
+
+#ifdef QNX_OS
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+#endif
 
     Udma_RmInitPrms             *rmInitPrms = &drvHandle->initPrms.rmInitPrms;
     Udma_MappedChRingAttributes  chAttr;
@@ -1483,6 +1591,10 @@ void Udma_rmFreeMappedRing(uint32_t ringNum,
     Udma_MappedChRingAttributes  chAttr;   
     int32_t     retVal = UDMA_SOK;
 
+#ifdef QNX_OS
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+#endif
+
     Udma_assert(drvHandle, mappedRingGrp < (UDMA_NUM_MAPPED_TX_GROUP + UDMA_NUM_MAPPED_RX_GROUP));
 
     retVal = Udma_getMappedChRingAttributes(drvHandle, mappedRingGrp, mappedChNum, &chAttr);
@@ -1516,6 +1628,10 @@ void Udma_rmFreeMappedRing(uint32_t ringNum,
 uint16_t Udma_rmAllocFreeRing(Udma_DrvHandle drvHandle)
 {
     uint16_t            ringNum = UDMA_RING_INVALID;
+
+#ifdef QNX_OS
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+#endif
 
     if(UDMA_INST_TYPE_NORMAL == drvHandle->instType)
     {
@@ -1555,6 +1671,10 @@ uint16_t Udma_rmAllocFreeRing(Udma_DrvHandle drvHandle)
 
 void Udma_rmFreeFreeRing(uint16_t ringNum, Udma_DrvHandle drvHandle)
 {
+#ifdef QNX_OS
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+#endif
+
     if(UDMA_INST_TYPE_NORMAL == drvHandle->instType)
     {
 #if (UDMA_SOC_CFG_UDMAP_PRESENT == 1)
@@ -1594,6 +1714,10 @@ uint16_t Udma_rmAllocProxy(Udma_DrvHandle drvHandle)
     uint32_t            bitPos, bitMask;
     Udma_RmInitPrms    *rmInitPrms = &drvHandle->initPrms.rmInitPrms;
 
+#ifdef QNX_OS
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+#endif
+
     Udma_assert(drvHandle, drvHandle->initPrms.osalPrms.lockMutex != (Udma_OsalMutexLockFxn) NULL_PTR);
     drvHandle->initPrms.osalPrms.lockMutex(drvHandle->rmLock);
 
@@ -1624,6 +1748,10 @@ void Udma_rmFreeProxy(uint16_t proxyNum, Udma_DrvHandle drvHandle)
     uint32_t            i, offset, bitPos, bitMask;
     Udma_RmInitPrms    *rmInitPrms = &drvHandle->initPrms.rmInitPrms;
 
+#ifdef QNX_OS
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+#endif
+
     Udma_assert(drvHandle, drvHandle->initPrms.osalPrms.lockMutex != (Udma_OsalMutexLockFxn) NULL_PTR);
     drvHandle->initPrms.osalPrms.lockMutex(drvHandle->rmLock);
 
@@ -1646,6 +1774,10 @@ uint32_t Udma_rmAllocEvent(Udma_DrvHandle drvHandle)
     uint32_t            globalEvent = UDMA_EVENT_INVALID;
     uint32_t            i, offset, bitPos, bitMask;
     Udma_RmInitPrms    *rmInitPrms = &drvHandle->initPrms.rmInitPrms;
+
+#ifdef QNX_OS
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+#endif
 
     Udma_assert(drvHandle, drvHandle->initPrms.osalPrms.lockMutex != (Udma_OsalMutexLockFxn) NULL_PTR);
     drvHandle->initPrms.osalPrms.lockMutex(drvHandle->rmLock);
@@ -1675,6 +1807,10 @@ void Udma_rmFreeEvent(uint32_t globalEvent, Udma_DrvHandle drvHandle)
     uint32_t            i, offset, bitPos, bitMask;
     Udma_RmInitPrms    *rmInitPrms = &drvHandle->initPrms.rmInitPrms;
 
+#ifdef QNX_OS
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+#endif
+
     Udma_assert(drvHandle,
         globalEvent < (rmInitPrms->startGlobalEvent + rmInitPrms->numGlobalEvent));
     Udma_assert(drvHandle, globalEvent >= rmInitPrms->startGlobalEvent);
@@ -1701,6 +1837,10 @@ uint32_t Udma_rmAllocVintr(Udma_DrvHandle drvHandle)
     uint32_t            i, offset, bitPos, bitMask;
     uint32_t            vintrNum = UDMA_EVENT_INVALID;
     Udma_RmInitPrms    *rmInitPrms = &drvHandle->initPrms.rmInitPrms;
+
+#ifdef QNX_OS
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+#endif
 
     Udma_assert(drvHandle, drvHandle->initPrms.osalPrms.lockMutex != (Udma_OsalMutexLockFxn) NULL_PTR);
     drvHandle->initPrms.osalPrms.lockMutex(drvHandle->rmLock);
@@ -1729,6 +1869,10 @@ void Udma_rmFreeVintr(uint32_t vintrNum, Udma_DrvHandle drvHandle)
 {
     uint32_t            i, offset, bitPos, bitMask;
     Udma_RmInitPrms    *rmInitPrms = &drvHandle->initPrms.rmInitPrms;
+
+#ifdef QNX_OS
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+#endif
 
     Udma_assert(drvHandle,
         vintrNum < (rmInitPrms->startVintr + rmInitPrms->numVintr));
@@ -1759,6 +1903,10 @@ uint32_t Udma_rmAllocVintrBit(Udma_EventHandle eventHandle)
     Udma_EventHandle        masterEventHandle;
     const Udma_EventPrms   *eventPrms;
     Udma_DrvHandle          drvHandle = eventHandle->drvHandle;
+
+#ifdef QNX_OS
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+#endif
 
     masterEventHandle = eventHandle;
     eventPrms = &eventHandle->eventPrms;
@@ -1796,6 +1944,10 @@ void Udma_rmFreeVintrBit(uint32_t vintrBitNum,
     Udma_EventHandle        masterEventHandle;
     const Udma_EventPrms   *eventPrms;
 
+#ifdef QNX_OS
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+#endif
+
     masterEventHandle = eventHandle;
     eventPrms = &eventHandle->eventPrms;
     if(NULL_PTR != eventPrms->masterEventHandle)
@@ -1825,6 +1977,10 @@ uint32_t Udma_rmAllocIrIntr(uint32_t preferredIrIntrNum,
     uint32_t            i, offset, bitPos, bitMask;
     uint32_t            irIntrNum = UDMA_INTR_INVALID;
     Udma_RmInitPrms    *rmInitPrms = &drvHandle->initPrms.rmInitPrms;
+
+#ifdef QNX_OS
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+#endif
 
     Udma_assert(drvHandle, drvHandle->initPrms.osalPrms.lockMutex != (Udma_OsalMutexLockFxn) NULL_PTR);
     drvHandle->initPrms.osalPrms.lockMutex(drvHandle->rmLock);
@@ -1877,6 +2033,10 @@ void Udma_rmFreeIrIntr(uint32_t irIntrNum, Udma_DrvHandle drvHandle)
     uint32_t            i, offset, bitPos, bitMask;
     Udma_RmInitPrms    *rmInitPrms = &drvHandle->initPrms.rmInitPrms;
 
+#ifdef QNX_OS
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+#endif
+
     Udma_assert(drvHandle,
         irIntrNum < (rmInitPrms->startIrIntr + rmInitPrms->numIrIntr));
     Udma_assert(drvHandle, irIntrNum >= rmInitPrms->startIrIntr);
@@ -1903,6 +2063,10 @@ uint16_t Udma_rmAllocRingMon(Udma_DrvHandle drvHandle)
     uint16_t            i, offset, ringMonNum = UDMA_RING_MON_INVALID, temp;
     uint32_t            bitPos, bitMask;
     Udma_RmInitPrms    *rmInitPrms = &drvHandle->initPrms.rmInitPrms;
+
+#ifdef QNX_OS
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+#endif
 
     Udma_assert(drvHandle, drvHandle->initPrms.osalPrms.lockMutex != (Udma_OsalMutexLockFxn) NULL_PTR);
     drvHandle->initPrms.osalPrms.lockMutex(drvHandle->rmLock);
@@ -1935,6 +2099,10 @@ void Udma_rmFreeRingMon(uint16_t ringMonNum, Udma_DrvHandle drvHandle)
     Udma_RmInitPrms    *rmInitPrms = &drvHandle->initPrms.rmInitPrms;
     uint32_t            ringMonOffset = rmInitPrms->startRingMon;
 
+#ifdef QNX_OS
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+#endif
+
     if(ringMonNum >= ringMonOffset)
     {
         Udma_assert(drvHandle, drvHandle->initPrms.osalPrms.lockMutex != (Udma_OsalMutexLockFxn) NULL_PTR);
@@ -1958,6 +2126,10 @@ void Udma_rmFreeRingMon(uint16_t ringMonNum, Udma_DrvHandle drvHandle)
 uint32_t Udma_rmTranslateIrOutput(Udma_DrvHandle drvHandle, uint32_t irIntrNum)
 {
     uint32_t    coreIntrNum = UDMA_INTR_INVALID;
+
+#ifdef QNX_OS
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+#endif
 
 /* If Interrupt Router is present */
 #if (UDMA_SOC_CFG_INTR_ROUTER_PRESENT == 1)
@@ -1994,6 +2166,9 @@ uint32_t Udma_rmTranslateCoreIntrInput(Udma_DrvHandle drvHandle, uint32_t coreIn
 {
     uint32_t    irIntrNum = UDMA_INTR_INVALID;
 
+#ifdef QNX_OS
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+#endif
 
 #if (UDMA_SOC_CFG_INTR_ROUTER_PRESENT == 1)
 #if defined (_TMS320C6X)
@@ -2024,6 +2199,101 @@ uint32_t Udma_rmTranslateCoreIntrInput(Udma_DrvHandle drvHandle, uint32_t coreIn
 
     return (irIntrNum);
 } 
+
+#ifdef QNX_OS
+
+uint32_t Udma_rmAllocflow(uint32_t  flowCnt, Udma_DrvHandle drvHandle)
+{
+    uint32_t            flowStart = UDMA_FLOW_INVALID;
+    uint32_t            i, j, offset, bitPos, bitMask, freeFlowCnt = 0U;
+    Udma_RmInitPrms    *rmInitPrms = &drvHandle->initPrms.rmInitPrms;
+    uint32_t            freeFlowOffset = 0U;
+
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+
+    Udma_assert(drvHandle, drvHandle->initPrms.osalPrms.lockMutex != (Udma_OsalMutexLockFxn) NULL_PTR);
+    drvHandle->initPrms.osalPrms.lockMutex(drvHandle->rmLock);
+
+    freeFlowOffset =
+            rmInitPrms->startFreeFlow + drvHandle->udmapRegs.rxChanCnt;
+
+    for(i = 0U; i < rmInitPrms->numFreeFlow; i++)
+    {
+        offset = i >> 5U;
+        Udma_assert(drvHandle, offset < UDMA_RM_FREE_FLOW_ARR_SIZE);
+        bitPos = i - (offset << 5U);
+        bitMask = (uint32_t) 1U << bitPos;
+        if((drvHandle->freeFlowFlag[offset] & bitMask) == bitMask)
+        {
+            freeFlowCnt++;
+        }
+        else
+        {
+            freeFlowCnt = 0U;   /* Not contiguous; start again */
+        }
+        if(freeFlowCnt == flowCnt)
+        {
+            /* Contiguous flow found - allocate all */
+            Udma_assert(drvHandle, flowCnt <= (i + 1U));
+            flowStart = (i + 1U) - flowCnt;
+            for(j = flowStart; j < (flowStart + flowCnt); j++)
+            {
+                offset = j >> 5U;
+                Udma_assert(drvHandle, offset < UDMA_RM_FREE_FLOW_ARR_SIZE);
+                bitPos = j - (offset << 5U);
+                bitMask = (uint32_t) 1U << bitPos;
+                drvHandle->freeFlowFlag[offset] &= ~bitMask;
+            }
+            flowStart += freeFlowOffset;  /* Add start offset */
+            break;
+        }
+    }
+
+    if(freeFlowCnt != flowCnt)
+    {
+        /* Alloc not done */
+        flowStart = UDMA_FLOW_INVALID;;
+    }
+
+    Udma_assert(drvHandle, drvHandle->initPrms.osalPrms.unlockMutex != (Udma_OsalMutexUnlockFxn) NULL_PTR);
+    drvHandle->initPrms.osalPrms.unlockMutex(drvHandle->rmLock);
+
+    return (flowStart);
+}
+
+void Udma_rmFreeflow(uint32_t  flowStart, uint32_t  flowCnt, Udma_DrvHandle drvHandle)
+{
+    uint32_t            i, j, offset, bitPos, bitMask;
+    Udma_RmInitPrms    *rmInitPrms = &drvHandle->initPrms.rmInitPrms;
+    uint32_t            freeFlowOffset = 0U;
+
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+
+    Udma_assert(drvHandle, drvHandle->initPrms.osalPrms.lockMutex != (Udma_OsalMutexLockFxn) NULL_PTR);
+    drvHandle->initPrms.osalPrms.lockMutex(drvHandle->rmLock);
+
+    freeFlowOffset = rmInitPrms->startFreeFlow + drvHandle->udmapRegs.rxChanCnt;
+
+    Udma_assert(drvHandle, flowStart >= freeFlowOffset);
+    for(j = 0U; j < flowCnt; j++)
+    {
+        i = (flowStart - freeFlowOffset) + j;
+        offset = i >> 5U;
+        Udma_assert(drvHandle, offset < UDMA_RM_FREE_FLOW_ARR_SIZE);
+        bitPos = i - (offset << 5U);
+        bitMask = (uint32_t) 1U << bitPos;
+        Udma_assert(drvHandle,  (drvHandle->freeFlowFlag[offset] & bitMask) == 0U);
+        drvHandle->freeFlowFlag[offset] |= bitMask;
+    }
+
+    Udma_assert(drvHandle, drvHandle->initPrms.osalPrms.unlockMutex != (Udma_OsalMutexUnlockFxn) NULL_PTR);
+    drvHandle->initPrms.osalPrms.unlockMutex(drvHandle->rmLock);
+
+    return;
+}
+
+//*********** QNX_OS end ***********
+#endif
 
 int32_t UdmaRmInitPrms_init(uint32_t instId, Udma_RmInitPrms *rmInitPrms)
 {
@@ -2693,6 +2963,10 @@ static int32_t Udma_rmCheckResLeak(Udma_DrvHandle drvHandle,
 {
     int32_t     retVal = UDMA_SOK;
     uint32_t    i, offset, bitMask;
+
+#ifdef QNX_OS
+    Udma_assert(drvHandle, 1 == drvHandle->initPrms.isQnxRMInstance);
+#endif
 
     offset = 0;
     i = numRes;
