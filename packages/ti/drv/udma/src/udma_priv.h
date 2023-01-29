@@ -351,6 +351,11 @@ uint32_t Udma_rmAllocIrIntr(uint32_t preferredIrIntrNum,
 void Udma_rmFreeIrIntr(uint32_t irIntrNum, Udma_DrvHandle drvHandle);
 uint32_t Udma_rmTranslateIrOutput(Udma_DrvHandle drvHandle, uint32_t irIntrNum);
 uint32_t Udma_rmTranslateCoreIntrInput(Udma_DrvHandle drvHandle, uint32_t coreIntrNum);
+#ifdef QNX_OS
+/* Flow RM APIs */
+uint32_t Udma_rmAllocflow(uint32_t  flowCnt, Udma_DrvHandle drvHandle);
+void Udma_rmFreeflow(uint32_t  flowStart, uint32_t  flowCnt, Udma_DrvHandle drvHandle);
+#endif
 
 /* Utils APIs */
 #ifdef QNX_OS

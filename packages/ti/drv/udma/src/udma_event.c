@@ -735,6 +735,9 @@ static int32_t Udma_eventAllocResource(Udma_DrvHandle drvHandle,
         }
         else
         {
+#ifdef QNX_OS
+            Udma_printf(drvHandle, "eventHandle->globalEvent = %d!!!\n", eventHandle->globalEvent);
+#endif
             Udma_assert(drvHandle, drvHandle->iaRegs.pImapRegs != NULL_PTR);
             eventHandle->pIaGeviRegs =
                 &drvHandle->iaRegs.pImapRegs->GEVI[eventHandle->globalEvent];
@@ -758,6 +761,12 @@ static int32_t Udma_eventAllocResource(Udma_DrvHandle drvHandle,
                 retVal = UDMA_EALLOC;
                 Udma_printf(drvHandle, "[Error] VINTR alloc failed!!!\n");
             }
+#ifdef QNX_OS
+            else
+            {
+                Udma_printf(drvHandle, "eventHandle->vintrNum = %d!!!\n", eventHandle->vintrNum);
+            }
+#endif
         }
     }
 
@@ -776,6 +785,12 @@ static int32_t Udma_eventAllocResource(Udma_DrvHandle drvHandle,
                 retVal = UDMA_EALLOC;
                 Udma_printf(drvHandle, "[Error] VINTR bit alloc failed!!!\n");
             }
+#ifdef QNX_OS
+            else
+            {
+                Udma_printf(drvHandle, "eventHandle->vintrBitNum = %d!!!\n", eventHandle->vintrBitNum);
+            }
+#endif
         }
     }
 
@@ -790,7 +805,11 @@ static int32_t Udma_eventAllocResource(Udma_DrvHandle drvHandle,
         {
             if(UDMA_CORE_INTR_ANY != eventPrms->preferredCoreIntrNum)
             {
+#ifdef QNX_OS
+                preferredIrIntrNum = Udma_resmgr_rmTranslateCoreIntrInput(drvHandle, eventPrms->preferredCoreIntrNum);
+#else
                 preferredIrIntrNum = Udma_rmTranslateCoreIntrInput(drvHandle, eventPrms->preferredCoreIntrNum);
+#endif
             }
             else
             {
@@ -807,7 +826,11 @@ static int32_t Udma_eventAllocResource(Udma_DrvHandle drvHandle,
 #endif
                 if(UDMA_INTR_INVALID != eventHandle->irIntrNum)
                 {
+#ifdef QNX_OS
+                    eventHandle->coreIntrNum = Udma_resmgr_rmTranslateIrOutput(drvHandle, eventHandle->irIntrNum);
+#else
                     eventHandle->coreIntrNum = Udma_rmTranslateIrOutput(drvHandle, eventHandle->irIntrNum);
+#endif
                 }
             }
             if(UDMA_INTR_INVALID == eventHandle->coreIntrNum)
@@ -815,6 +838,13 @@ static int32_t Udma_eventAllocResource(Udma_DrvHandle drvHandle,
                 retVal = UDMA_EALLOC;
                 Udma_printf(drvHandle, "[Error] Core intr alloc failed!!!\n");
             }
+#ifdef QNX_OS
+            else
+            {
+                Udma_printf(drvHandle, "eventHandle->irIntrNum = %d!!!\n", eventHandle->irIntrNum);
+                Udma_printf(drvHandle, "eventHandle->coreIntrNum = %d!!!\n", eventHandle->coreIntrNum);
+            }
+#endif
         }
     }
 
