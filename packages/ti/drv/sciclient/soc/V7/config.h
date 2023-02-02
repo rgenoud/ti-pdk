@@ -46,6 +46,7 @@
 #define CONFIG_R5 1
 
 #define CONFIG_ADDR_REMAP_OFFSET 0x00000000
+#define CONFIG_GET_FW_CAPS 1
 
 #define CONFIG_PM 1
 #define CONFIG_PSC 1
