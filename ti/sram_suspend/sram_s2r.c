@@ -1,4 +1,7 @@
 #define DEBUG_SRAM_S2R
+//#define DEBUG_FULL_SRAM_S2R
+//#define PMIC_WAKEUP
+
 #include <stdint.h>
 #include <stdarg.h>
 #include "LPM_Libraries.h"
@@ -15,6 +18,16 @@
 #define UART_LSR		(0x14U)
 #define UART_LSR_TX_SR_E_MASK	(0x40U)
 #define UART_LSR_TX_FIFO_E_MASK	(0x20U)
+
+#ifdef PMIC_WAKEUP
+#define GPIO1_8_FALL 0xFF
+#define GPIO1_8_RISE ~(0x01 << 3)
+#define FSM_I2C_TRIGGERS (0x80)
+#else
+#define GPIO1_8_FALL 0xF7
+#define GPIO1_8_RISE 0xFF
+#define FSM_I2C_TRIGGERS (0x40 | 0x80)
+#endif
 
 static const char *const g_pcHex = "0123456789abcdef";
 static int ddr_retention(void);
@@ -262,10 +275,13 @@ void enter_retention(void)
 	debug_printf("DDRSS_CTL_141: 0x%08x\n", *( unsigned int *)DDRSS_CTL_141);
 	debug_printf("DDR retention done!\n");
 
+#ifdef PMIC_WAKEUP
+	uart_puts("=> DDR retention only\n\r");
+#else
 	uart_puts("=> I/O retention\n\r");
-
 	main_configure_can_uart_lock_dmsc();
 	wkup_configure_can_uart_lock_dmsc();
+#endif
 
 	debug_printf("%s %s\n", __func__,  __TIME__);
 
@@ -591,8 +607,12 @@ void setup_pmic(void)
 	debug_printf("%s %d: Write INT_GPIO1_8 = 0x%x\n", __FUNCTION__, __LINE__, 0x08);
 	debug_read_pmicA(0x64);
 
+	/* Configure MASK_GPIO*_RISE */
+	write_pmicA(0x50, GPIO1_8_RISE);
+	write_pmicA(0x51, 0x3F);
+
 	/* Configure MASK_GPIO1_8_FALL (configure GPIO4 falling edge interrupt): enable INT on GPIO4 */
-	write_pmicA(0x4F, 0xF7);
+	write_pmicA(0x4F, GPIO1_8_FALL);
 	debug_printf("%s %d: Write MASK_GPIO1_8_FALL = 0x%x\n", __FUNCTION__, __LINE__, 0xF7);
 	debug_read_pmicA(0x4F);
 
@@ -608,12 +628,12 @@ void setup_pmic(void)
 	// PDN-2A".
 
 	/* Change FSM_I2C_TRIGGERS: trigger TRIGGER_I2C_6 */
-	write_pmicA(0x85, 0x40 | 0x80); // TRIGGER_I2C_6
+	write_pmicA(0x85, FSM_I2C_TRIGGERS); // TRIGGER_I2C_6
 	debug_printf("%s %d: Write FSM_I2C_TRIGGERS = 0x%x\n", __FUNCTION__, __LINE__, 0x40);
 	debug_read_pmicA(0x85);
 
 	/* Change FSM_I2C_TRIGGERS - PMICB: trigger TRIGGER_I2C_6 */
-	write_pmicB(0x85, 0x40 | 0x80);
+	write_pmicB(0x85, FSM_I2C_TRIGGERS);
 	debug_printf("%s %d: Write FSM_NSLEEP_TRIGGERS = 0x%x\n", __FUNCTION__, __LINE__, 0x40);
 	debug_read_pmicA(0x85);
 
