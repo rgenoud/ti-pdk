@@ -85,6 +85,10 @@
 #define TISCI_HOST_ID_MAIN_1_R5_3 (43U)
 /** A53_4(Non Secure): Cortex A53 context 1 on Main island */
 #define TISCI_HOST_ID_A53_4 (14U)
+/** ICSSG_0(Non Secure): ICSSG context 0 on Main island */
+#define TISCI_HOST_ID_ICSSG_0 (50U)
+/** ICSSG_1(Non Secure): ICSSG context 1 on Main island */
+#define TISCI_HOST_ID_ICSSG_1 (51U)
 
 /**
  * Host catch all. Used in board configuration resource assignments to define
@@ -93,7 +97,7 @@
 #define TISCI_HOST_ID_ALL (128U)
 
 /** Number of unique hosts on the SoC */
-#define TISCI_HOST_ID_CNT (15U)
+#define TISCI_HOST_ID_CNT (17U)
 
 #endif /* TISCI_HOSTS_H */
 
