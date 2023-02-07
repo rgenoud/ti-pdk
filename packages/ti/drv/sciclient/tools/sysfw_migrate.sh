@@ -231,10 +231,14 @@ if [ "$SKIP_GEN_BIN" != "YES" ];  then
             "am62x")
                 ./firmwareHeaderGen.sh am62x
                 ./firmwareHeaderGen.sh am62x-stub
+                ./firmwareHeaderGen.sh am62x-hs
+                ./firmwareHeaderGen.sh am62x-hs-fs
                 shift
                 ;;
             "am62ax")
                 ./firmwareHeaderGen.sh am62ax
+                ./firmwareHeaderGen.sh am62ax-hs
+                ./firmwareHeaderGen.sh am62ax-hs-fs
                 shift
                 ;;
         esac

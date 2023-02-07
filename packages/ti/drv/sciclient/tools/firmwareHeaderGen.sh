@@ -98,6 +98,13 @@ if [[ $FW_SOC == *"hs"* ]]; then
   BIN_EXT=-hs-enc
 fi
 
+# Pickup correct sysfw binary
+if [[ $FW_SOC == *"hs-fs"* ]]; then
+  FW_SOC_TYPE=-hs-fs-enc
+  FW_SOC=${FW_SOC%-hs-fs}
+  BIN_EXT=-hs-fs-enc
+fi
+
 if [[ $FW_SOC == *"hsp"* ]]; then
   FW_SOC_TYPE=-hs
   FW_SOC=${FW_SOC%-hsp}
