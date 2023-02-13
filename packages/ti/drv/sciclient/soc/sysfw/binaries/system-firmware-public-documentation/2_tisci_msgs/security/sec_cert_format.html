@@ -79,7 +79,7 @@
             
             
               <div class="version">
-                08.06.03
+                08.06.04
               </div>
             
           
@@ -256,14 +256,18 @@ frameworks
 <td>HS Boardcfg extension</td>
 <td>1.3.6.1.4.1.294.1.36</td>
 </tr>
+<tr class="row-odd"><td><a class="reference internal" href="#sysfw-fwl-ext"><span class="std std-ref">System Firmware Firewall Extension</span></a></td>
+<td>Firewall configuration extension</td>
+<td>1.3.6.1.4.1.294.1.37</td>
+</tr>
 </tbody>
 </table>
 <p>Specific extensions are required for particular image types. The below table
 summarizes which extensions are mandatory (<strong>M</strong>) for a particular image type, which
 are optional (<strong>O</strong>) to take any additional specific actions, and which are ignored
 or not applicable (<strong>.</strong>).</p>
-<span id="sysfw-x509-ext-requirements"></span><table border="1" class="docutils align-center" id="id12">
-<caption><span class="caption-number">Table 2 </span><span class="caption-text">Applicability of certificate extensions to image types</span><a class="headerlink" href="#id12" title="Permalink to this table">¶</a></caption>
+<span id="sysfw-x509-ext-requirements"></span><table border="1" class="docutils align-center" id="id13">
+<caption><span class="caption-number">Table 2 </span><span class="caption-text">Applicability of certificate extensions to image types</span><a class="headerlink" href="#id13" title="Permalink to this table">¶</a></caption>
 <colgroup>
 <col width="14%" />
 <col width="14%" />
@@ -353,6 +357,14 @@ or not applicable (<strong>.</strong>).</p>
 <td>O <a class="footnote-reference" href="#opt-boardcfg-footnote" id="id8">[5]</a></td>
 <td>.</td>
 <td>.</td>
+<td>.</td>
+<td>.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#sysfw-fwl-ext"><span class="std std-ref">Firewall Config</span></a></td>
+<td>.</td>
+<td>.</td>
+<td>.</td>
+<td>O</td>
 <td>.</td>
 <td>.</td>
 </tr>
@@ -754,6 +766,67 @@ before performing in-place decryption at the loaded location.</p>
 </div>
 </div>
 </div>
+<div class="section" id="sysfw-firewall-extension">
+<span id="sysfw-fwl-ext"></span><h3>System Firmware Firewall Extension<a class="headerlink" href="#sysfw-firewall-extension" title="Permalink to this headline">¶</a></h3>
+<p>This extension allows author to request firewall configuration through
+<a class="reference internal" href="PROC_BOOT.html#proc-boot-authenticate-image-and-configure-processor"><span class="std std-ref">TISCI_MSG_PROC_AUTH_BOOT</span></a>.
+This is not a mandatory extension and must be included only when firewalls are to be configured
+through <a class="reference internal" href="PROC_BOOT.html#proc-boot-authenticate-image-and-configure-processor"><span class="std std-ref">TISCI_MSG_PROC_AUTH_BOOT</span></a>.
+It is identified by the OID <strong>1.3.6.1.4.1.294.1.37</strong>.
+The structure of the field is shown below in ASN.1 notation.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span></span><span class="n">SYSFW</span><span class="o">-</span><span class="nl">FIREWALL</span> <span class="p">:</span><span class="o">=</span> <span class="n">SEQUENCE</span>
+<span class="p">{</span>
+   <span class="n">numConfigs</span> <span class="n">INTEGER</span><span class="p">,</span>
+   <span class="n">fwlID0</span> <span class="n">INTEGER</span><span class="p">,</span>
+   <span class="n">control0</span> <span class="n">INTEGER</span><span class="p">,</span>
+   <span class="n">numPermissions0</span> <span class="n">INTEGER</span><span class="p">,</span>
+   <span class="n">permission00</span> <span class="n">INTEGER</span><span class="p">,</span>
+   <span class="n">permission01</span> <span class="n">INTEGER</span><span class="p">,</span>
+   <span class="n">permission02</span> <span class="n">INTEGER</span><span class="p">,</span>
+   <span class="n">startAddress0</span> <span class="n">OCTET</span> <span class="n">STRING</span><span class="p">,</span>
+   <span class="n">endAddress0</span> <span class="n">OCTET</span> <span class="n">STRING</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The certificate author may want to configure multiple firewall regions.
+Every region configuration requires a group of fields; these are fwlID,
+region, control, numPermissions, ‘numPermissions’ permission values, startAddress
+and endAddress. To configure multiple regions, author has to include an
+equal number of groups in the extension, one for each configuration. The field values
+are same as those provided to the <a class="reference internal" href="firewall_api.html#set-firewall-region"><span class="std std-ref">TISCI_MSG_SET_FWL_REGION</span></a>
+(refer to <a class="reference internal" href="firewall_api.html#set-firewall-region"><span class="std std-ref">TISCI_MSG_SET_FWL_REGION</span></a> for more information.)
+Every region configuration group is decoded into a structure shown below.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span></span><span class="k">struct</span> <span class="n">fwl_region_info</span> <span class="p">{</span>
+   <span class="n">u16</span>               <span class="n">fwl_id</span><span class="p">;</span>
+   <span class="n">u16</span>               <span class="n">region</span><span class="p">;</span>
+   <span class="n">u32</span>               <span class="n">control</span><span class="p">;</span>
+   <span class="n">u32</span>               <span class="n">n_permission_regs</span><span class="p">;</span>
+   <span class="n">u32</span>               <span class="n">permissions</span><span class="p">[</span><span class="n">FWL_MAX_PRIVID_SLOTS</span><span class="p">];</span>
+   <span class="n">u64</span>      <span class="n">start_address</span><span class="p">;</span>
+   <span class="n">u64</span>      <span class="n">end_address</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="section" id="id11">
+<h4>Populating the certificate fields<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h4>
+<p>For an example, please refer to the section <code class="docutils literal"><span class="pre">[</span> <span class="pre">sysfw_fwl_ext</span> <span class="pre">]</span></code> in <a class="reference internal" href="#sysfw-x509-template-example"><span class="std std-ref">Sample x509 template</span></a>.
+The examples demonstrates requesting two region configurations through the certificate.</p>
+<ol class="arabic simple">
+<li><code class="docutils literal"><span class="pre">fwlID</span></code> ID of the firewall to which the region belongs.</li>
+<li><code class="docutils literal"><span class="pre">region</span></code> The region number.</li>
+<li><code class="docutils literal"><span class="pre">control</span></code> The control value. This is a 32 bit field that represents the control register value for the
+region being configured.</li>
+<li><code class="docutils literal"><span class="pre">numPermissions</span></code> The number of permissions to be configured.</li>
+<li><code class="docutils literal"><span class="pre">permission</span></code> The actual permission value. There should same number of instances
+of this field as the value of numPermissions, for each configuration group.</li>
+<li><code class="docutils literal"><span class="pre">startAddress</span></code> The soc level start address.</li>
+<li><code class="docutils literal"><span class="pre">endAddress</span></code> The soc level end address.</li>
+</ol>
+<p>Author will also have to provide a host ID as specified in <a class="reference internal" href="#sysfw-load-ext"><span class="std std-ref">System Firmware Load Extension</span></a>
+(refer to <a class="reference internal" href="PROC_BOOT.html#proc-boot-authenticate-image-and-configure-processor"><span class="std std-ref">TISCI_MSG_PROC_AUTH_BOOT</span></a> for more information.)
+Adding firewall extension without a host ID would lead to API failure.</p>
+</div>
+</div>
 <div class="section" id="sysfw-debug-extension">
 <span id="sysfw-debug-ext"></span><h3>System Firmware Debug Extension<a class="headerlink" href="#sysfw-debug-extension" title="Permalink to this headline">¶</a></h3>
 <div class="admonition note">
@@ -911,8 +984,8 @@ extension is identified by OID <strong>1.3.6.1.4.1.294.1.36</strong>.</p>
 <span class="p">};</span>
 </pre></div>
 </div>
-<div class="section" id="id11">
-<h4>Populating the certificate fields<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="id12">
+<h4>Populating the certificate fields<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h4>
 <ol class="arabic simple">
 <li><code class="docutils literal"><span class="pre">initialVector</span></code><ul>
 <li>This is the 16 byte initialization vector to be used in AES-CBC
@@ -1443,6 +1516,7 @@ Image integrity (<code class="docutils literal"><span class="pre">sysfw_image_in
 <span class="m">1</span>.3.6.1.4.1.294.1.34<span class="o">=</span>ASN1:SEQUENCE:sysfw_image_integrity
 <span class="m">1</span>.3.6.1.4.1.294.1.35<span class="o">=</span>ASN1:SEQUENCE:sysfw_image_load
 <span class="m">1</span>.3.6.1.4.1.294.1.36<span class="o">=</span>ASN1:SEQUENCE:sysfw_hs_boardcfg
+<span class="m">1</span>.3.6.1.4.1.294.1.37<span class="o">=</span>ASN1:SEQUENCE:sysfw_fwl_ext
 
 <span class="o">[</span> sysfw_boot_seq <span class="o">]</span>
 <span class="nv">bootCore</span> <span class="o">=</span> INTEGER:0x20
@@ -1466,6 +1540,25 @@ Image integrity (<code class="docutils literal"><span class="pre">sysfw_image_in
 
 <span class="o">[</span> swrv <span class="o">]</span>
 <span class="nv">swrv</span> <span class="o">=</span> INTEGER:0
+
+<span class="o">[</span> sysfw_fwl_ext <span class="o">]</span>
+<span class="nv">numConfig</span> <span class="o">=</span> INTEGER:2
+<span class="nv">fwlID0</span> <span class="o">=</span> INTEGER:64
+<span class="nv">region0</span> <span class="o">=</span> INTEGER:0
+<span class="nv">control0</span> <span class="o">=</span> INTEGER:266
+<span class="nv">numPermissions0</span> <span class="o">=</span> INTEGER:3
+<span class="nv">permission00</span> <span class="o">=</span> INTEGER:12845055
+<span class="nv">permission01</span> <span class="o">=</span> INTEGER:0
+<span class="nv">permission02</span> <span class="o">=</span> INTEGER:0
+<span class="nv">startAddress0</span> <span class="o">=</span> FORMAT:HEX,OCT:70000000
+<span class="nv">endAddress0</span> <span class="o">=</span> FORMAT:HEX,OCT:7000ffff
+<span class="nv">fwlID1</span> <span class="o">=</span> INTEGER:64
+<span class="nv">region1</span> <span class="o">=</span> INTEGER:1
+<span class="nv">control1</span> <span class="o">=</span> INTEGER:10
+<span class="nv">numPermissions1</span> <span class="o">=</span> INTEGER:1
+<span class="nv">permission10</span> <span class="o">=</span> INTEGER:131071
+<span class="nv">startAddress1</span> <span class="o">=</span> FORMAT:HEX,OCT:70000000
+<span class="nv">endAddress1</span> <span class="o">=</span> FORMAT:HEX,OCT:70000fff
 
 <span class="o">[</span> debug <span class="o">]</span>
 <span class="nv">debugUID</span> <span class="o">=</span> FORMAT:HEX,OCT:0000000000000000000000000000000000000000000000000000000000000000
@@ -1540,7 +1633,7 @@ Image integrity (<code class="docutils literal"><span class="pre">sysfw_image_in
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'08.06.03',
+            VERSION:'08.06.04',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
