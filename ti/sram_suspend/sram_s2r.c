@@ -568,6 +568,8 @@ uint8_t read_pmicB(uint8_t reg)
 #else
 #define debug_read_pmicA(...) do {} while(0)
 #endif
+#define SCRATCH_PAD_REG_1 0xC9
+#define MAGIC_SUSPEND 0xBA
 
 /* Taken from Lpm_pmicStateChangeActiveToIORetention, with some changes to
  * FSM_I2C_TRIGGERS for DDRRET support. Explaination on this change is still
@@ -637,6 +639,9 @@ void setup_pmic(void)
 	debug_printf("%s %d: Write FSM_NSLEEP_TRIGGERS = 0x%x\n", __FUNCTION__, __LINE__, 0x40);
 	debug_read_pmicA(0x85);
 
+	/* Write magic number to scratch register to indicate the suspend */
+	write_pmicA(SCRATCH_PAD_REG_1, MAGIC_SUSPEND);
+	debug_read_pmicA(SCRATCH_PAD_REG_1);
 	/* Change FSM_NSLEEP_TRIGGERS: NSLEEP1=low, NSLEEP2=low */
 	write_pmicA(0x86, 0x00);
 	debug_printf("%s %d: Write FSM_NSLEEP_TRIGGERS = 0x%x\n", __FUNCTION__, __LINE__, 0x00);
