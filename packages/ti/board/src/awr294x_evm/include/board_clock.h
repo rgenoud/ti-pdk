@@ -123,7 +123,7 @@ extern "C" {
 #define BOARD_MSS_TOPRCM_TRCCLKOUT_DIV_VAL_OFFSET \
                                             (CSL_MSS_TOPRCM_TRCCLKOUT_DIV_VAL)
 
-#define BOARD_TOTAL_MODULE_NUM    (24U)
+#define BOARD_TOTAL_MODULE_NUM    (19U) /*  Updated after removing the peripherals not used by 2944  */
 
 /**
  *
