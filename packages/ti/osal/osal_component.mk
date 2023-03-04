@@ -101,7 +101,7 @@ osal_LIB_LIST += osal_safertos
 endif
 endif
 ifeq ($(BUILD_OS_TYPE), qnx)
-osal_LIB_LIST += osal_qnx
+osal_LIB_LIST = osal_qnx
 endif
 
 libosal_LIB_LIST = $(osal_LIB_LIST)
