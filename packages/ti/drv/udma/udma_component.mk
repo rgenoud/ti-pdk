@@ -74,10 +74,10 @@ drvudma_am65xx_example_CORELIST = mpu1_0 mcu1_0
 drvudma_am64x_example_CORELIST  = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mpu1_0 #m4f for baremetal examples only
 endif
 ifeq ($(BUILD_OS_TYPE), qnx)
-drvudma_j721e_CORELIST += qnx_mpu1_0
-drvudma_j7200_CORELIST += qnx_mpu1_0
-drvudma_j721s2_CORELIST += qnx_mpu1_0
-drvudma_j784s4_CORELIST += qnx_mpu1_0
+drvudma_j721e_CORELIST = qnx_mpu1_0
+drvudma_j7200_CORELIST = qnx_mpu1_0
+drvudma_j721s2_CORELIST = qnx_mpu1_0
+drvudma_j784s4_CORELIST = qnx_mpu1_0
 endif
 
 ############################
@@ -136,7 +136,9 @@ dmautils_PKG_LIST = dmautils
 dmautils_INCLUDE = $(dmautils_PATH)
 export dmautils_SOCLIST = j721e j721s2 j784s4
 export dmautils_$(SOC)_CORELIST = c7x_1 c7x_2 c7x_3 c7x_4 c7x-hostemu
+ifneq ($(BUILD_OS_TYPE), qnx)
 udma_LIB_LIST += dmautils
+endif
 
 # UDMA example library
 export udma_apputils_COMP_LIST = udma_apputils
@@ -150,8 +152,14 @@ export udma_apputils_CORE_DEPENDENCY = yes
 udma_apputils_PKG_LIST = udma_apputils
 udma_apputils_INCLUDE = $(udma_apputils_PATH)
 export udma_apputils_SOCLIST = $(drvudma_SOCLIST)
+ifeq ($(BUILD_OS_TYPE), qnx)
+export udma_apputils_$(SOC)_CORELIST = (filter $(drvudma_$(SOC)_CORELIST)), qnx_mpu1_0)
+else
 export udma_apputils_$(SOC)_CORELIST = $(drvudma_$(SOC)_CORELIST)
+endif
+ifneq ($(BUILD_OS_TYPE), qnx)
 udma_LIB_LIST += udma_apputils
+endif
 
 #
 # UDMA Examples

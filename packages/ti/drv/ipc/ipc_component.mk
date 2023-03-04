@@ -64,10 +64,10 @@ drvipc_j784s4_RTOS_CORELIST = $(drvipc_j784s4_CORELIST)
 drvipc_DISABLE_PARALLEL_MAKE = yes
 
 ifeq ($(BUILD_OS_TYPE), qnx)
-drvipc_j721e_CORELIST += qnx_mpu1_0
-drvipc_j7200_CORELIST += qnx_mpu1_0
-drvipc_j721s2_CORELIST += qnx_mpu1_0
-drvipc_j784s4_CORELIST += qnx_mpu1_0
+drvipc_j721e_CORELIST = qnx_mpu1_0
+drvipc_j7200_CORELIST = qnx_mpu1_0
+drvipc_j721s2_CORELIST = qnx_mpu1_0
+drvipc_j784s4_CORELIST = qnx_mpu1_0
 endif
 
 ############################
@@ -128,9 +128,15 @@ ipc_baremetal_PKG_LIST = ipc_baremetal
 ipc_baremetal_INCLUDE = $(ipc_baremetal_PATH)
 ipc_baremetal_SOCLIST = $(drvipc_SOCLIST)
 export ipc_baremetal_SOCLIST
+ifeq ($(BUILD_OS_TYPE), qnx)
+ipc_baremetal_$(SOC)_CORELIST = (filter $(drvipc_$(SOC)_CORELIST)), qnx_mpu1_0)
+else
 ipc_baremetal_$(SOC)_CORELIST = $(drvipc_$(SOC)_CORELIST)
+endif
 export ipc_baremetal_$(SOC)_CORELIST
+ifneq ($(BUILD_OS_TYPE), qnx)
 ipc_LIB_LIST += ipc_baremetal
+endif
 
 #
 # IPC Examples
