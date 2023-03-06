@@ -60,8 +60,8 @@ extern "C" {
 /* MAIN CTRL pinmux base address */
 #define BOARD_MAIN_PMUX_CTRL	             (CSL_PADCFG_CTRL0_CFG0_BASE + BOARD_PADCFG_PMUX_OFFSET)
 
-/* WKUP CTRL pinmux base address */
-#define BOARD_WKUP_PMUX_CTRL	              (CSL_WKUP_PADCFG_CTRL0_CFG0_BASE + BOARD_PADCFG_PMUX_OFFSET)
+/* MCU CTRL pinmux base address */
+#define BOARD_MCU_PMUX_CTRL	              (CSL_MCU_PADCFG_CTRL0_CFG0_BASE + BOARD_PADCFG_PMUX_OFFSET)
 
 
 #define KICK0_UNLOCK_VAL                     (0x68EF3490U)

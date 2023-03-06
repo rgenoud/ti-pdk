@@ -44,10 +44,10 @@
 
 #ifdef BUILD_M4F
 #define MAIN_PADCONFIG_CTRL_BASE    CSL_PADCFG_CTRL0_CFG0_BASE + 0x60000000
-#define MCU_PADCONFIG_CTRL_BASE     CSL_WKUP_PADCFG_CTRL0_CFG0_BASE + 0x60000000
+#define MCU_PADCONFIG_CTRL_BASE     CSL_MCU_PADCFG_CTRL0_CFG0_BASE + 0x60000000
 #else
 #define MAIN_PADCONFIG_CTRL_BASE    CSL_PADCFG_CTRL0_CFG0_BASE
-#define MCU_PADCONFIG_CTRL_BASE     CSL_WKUP_PADCFG_CTRL0_CFG0_BASE
+#define MCU_PADCONFIG_CTRL_BASE     CSL_MCU_PADCFG_CTRL0_CFG0_BASE
 #endif
 
 #define CTRL_MMR0_PARTITION_SIZE    0x4000
@@ -80,7 +80,7 @@ static uint32_t Board_pinmuxGetBaseAddr(uint8_t domain)
             baseAddr = BOARD_MAIN_PMUX_CTRL;
         break;
         case BOARD_SOC_DOMAIN_MCU:
-            baseAddr = BOARD_WKUP_PMUX_CTRL;
+            baseAddr = BOARD_MCU_PMUX_CTRL;
         break;
         default:
             baseAddr = 0;
