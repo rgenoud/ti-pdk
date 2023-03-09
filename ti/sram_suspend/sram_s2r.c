@@ -568,6 +568,10 @@ uint8_t read_pmicB(uint8_t reg)
 #else
 #define debug_read_pmicA(...) do {} while(0)
 #endif
+#define GPIO2_CONF  0x32
+#define GPIO3_CONF  0x33
+#define OD_SHIFT   1
+#define DIR_SHIFT   0
 #define SCRATCH_PAD_REG_3 0xCB
 #define MAGIC_SUSPEND 0xBA
 /* Taken from Lpm_pmicStateChangeActiveToIORetention, with some changes to
@@ -616,6 +620,10 @@ void setup_pmic(void)
 	write_pmicA(0x4F, GPIO1_8_FALL);
 	debug_printf("%s %d: Write MASK_GPIO1_8_FALL = 0x%x\n", __FUNCTION__, __LINE__, 0xF7);
 	debug_read_pmicA(0x4F);
+
+	//Put GPIO2 and GPIO3 as output push-pull no pull-up or pull down
+	write_pmicB(GPIO2_CONF, 1 << DIR_SHIFT | 0 << OD_SHIFT);
+	write_pmicB(GPIO3_CONF, 1 << DIR_SHIFT | 0 << OD_SHIFT);
 
 	// GPIO_OUT_1
 	buf = read_pmicB(0x3D) | DDR_RET_VAL; // 1<<1, GPIO2_OUT on
