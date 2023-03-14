@@ -58,6 +58,12 @@ TaskP_Handle TaskP_create(TaskP_Fxn taskfxn, const TaskP_Params *params)
         {
             pthread_attr_setstackaddr(&attr, params->stack);
         }
+        if (0 != params->priority)
+        {
+            struct sched_param  param;
+            param.sched_priority = params->priority;
+            pthread_attr_setschedparam(&attr, &param);
+        }
     }
 
     status = pthread_create(tid, &attr, (void *)taskfxn, (void *)(params->arg0));
@@ -66,7 +72,8 @@ TaskP_Handle TaskP_create(TaskP_Fxn taskfxn, const TaskP_Params *params)
     {
         retVal = ((TaskP_Handle) tid);
     }
-    
+
+    pthread_attr_destroy(&attr);
     return retVal;
 }
 
