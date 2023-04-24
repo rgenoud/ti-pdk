@@ -1,33 +1,55 @@
 #define DEBUG_SRAM_S2R
 #define DEBUG_FULL_SRAM_S2R
 #define PMIC_WAKEUP
+#define DEBUG_UART_MAIN
 
 #include <stdint.h>
 #include <stdarg.h>
 #include "LPM_Libraries.h"
 #include "i2c_reg_val.h"
-#define BOARD_PLL12_LOCK0                (0x68C010U)
-#define BOARD_PLL12_LOCK1                (0x68C014U)
-#define KICK0_UNLOCK             (0x68EF3490U)
-#define KICK1_UNLOCK             (0xD172BC5AU)
-#define PMICA_SLAVE_ADDR            (0x48U)
-#define PMICB_SLAVE_ADDR            (0x4CU)
-#define DDR_RET_VAL (1 << 1) /* BIT(1) */
-#define DDR_RET_CLK (1 << 2) /* BIT(2) */
+#define BOARD_PLL12_LOCK0	(0x68C010U)
+#define BOARD_PLL12_LOCK1	(0x68C014U)
+#define KICK0_UNLOCK		(0x68EF3490U)
+#define KICK1_UNLOCK		(0xD172BC5AU)
+
+/* Debug */
+#ifdef DEBUG_UART_MAIN
+/* MAIN UART 0 */
+#define UART_DEBUG_ADDR		(0x0002800000)
+#else
+/* MCU_UART 0 */
+#define UART_DEBUG_ADDR		(0x40a00000)
+#endif
 #define UART_THR		(0x00U)
 #define UART_LSR		(0x14U)
 #define UART_LSR_TX_SR_E_MASK	(0x40U)
 #define UART_LSR_TX_FIFO_E_MASK	(0x20U)
 
+/* PMIC */
+#define PMICA_SLAVE_ADDR	(0x48U)
+#define PMICB_SLAVE_ADDR	(0x4CU)
+#define GPIO2_CONF		(0x32)
+#define GPIO3_CONF		(0x33)
+#define GPIO6_CONF		(0x36)
+#define DDR_RET_VAL		(1 << 1) /* BIT(1) */
+#define DDR_RET_CLK		(1 << 2) /* BIT(2) */
+#define EN_DDR_RET_1V1		(1 << 5)
+#define GPIO4_BIT		(1 << 3)
+#define OD_SHIFT		1
+#define DIR_SHIFT		0
+#define SCRATCH_PAD_REG_3	(0xCB)
+#define MAGIC_SUSPEND		(0xBA)
 #ifdef PMIC_WAKEUP
-#define GPIO1_8_FALL 0xFF
-#define GPIO1_8_RISE ~(0x01 << 3)
+#define GPIO1_8_FALL ~(GPIO4_BIT) /* wake-up on fall */
+#define GPIO1_8_RISE 0xFF  /* wake-up on fall */
 #define FSM_I2C_TRIGGERS (0x80)
 #else
 #define GPIO1_8_FALL 0xF7
 #define GPIO1_8_RISE 0xFF
 #define FSM_I2C_TRIGGERS (0x40 | 0x80)
 #endif
+#define DEVICE_ID_PMICB		0x86
+#define I2C_DETECT_TIEMOUT	500 /* usually the I2C is ready after 221 loops */
 
 static const char *const g_pcHex = "0123456789abcdef";
 static int ddr_retention(void);
@@ -398,17 +420,22 @@ static int ddr_retention(void)
 	return 0;
 }
 
-void WKUP_LOCK7(void)  {
+void WKUP_LOCK7(void) {
 	*(unsigned int *)0x4301D008 = KICK0_UNLOCK;
 	*(unsigned int *)0x4301D00C = KICK1_UNLOCK;
 }
 
-unsigned char i2c_read(char add){
-	unsigned char rxd;
-	unsigned int n;
+int i2c_read_timeout(char add, unsigned char *rxd, unsigned int timeout) {
+	unsigned int n, loop = 0;
 
 	/* wait BB --> 0 */
-	while((*(unsigned int *)WKUP_I2C0_IRQSTATUS_RAW & (0x1 << 12)) != 0x00 ){}
+	while(((*(unsigned int *)WKUP_I2C0_IRQSTATUS_RAW & (0x1 << 12)) != 0x00 ) &&
+	      loop++ < timeout) {}
+
+	if (loop >=timeout) {
+		debug_printf("%s timeout loop exceed %d\n", __func__, timeout);
+		return -1;
+	}
 
 	*(unsigned int *)WKUP_I2C0_CNT = 1;
 	n = *(unsigned int *)WKUP_I2C0_CON & ~0x2;
@@ -417,13 +444,27 @@ unsigned char i2c_read(char add){
 	*(unsigned int *)WKUP_I2C0_CON = n;
 
 	/* wait XRDY --> 1 */
-	while((*(unsigned int *)WKUP_I2C0_IRQSTATUS_RAW & (0x1 << 4)) == 0x00){}
+	loop = 0;
+	while(((*(unsigned int *)WKUP_I2C0_IRQSTATUS_RAW & (0x1 << 4)) == 0x00) &&
+		loop++ < timeout) {}
+
+	if (loop >=timeout) {
+		debug_printf("%s timeout for XRDY: loop exceed %d\n", __func__, timeout);
+		return -1;
+	}
+
 
 	*(unsigned int *)WKUP_I2C0_DATA = add; // write enable to register lock
 	*(unsigned int *)WKUP_I2C0_IRQSTATUS = (0x1 << 4); //
 
 	/* wait ARDY --> 1 */
-	while((*(unsigned int *)WKUP_I2C0_IRQSTATUS_RAW & (0x1 << 2)) == 0x00){}
+	loop = 0;
+	while(((*(unsigned int *)WKUP_I2C0_IRQSTATUS_RAW & (0x1 << 2)) == 0x00) &&
+	      loop++ < timeout) {}
+	if (loop >=timeout) {
+		debug_printf("%s timeout for ARDY: loop exceed %d\n", __func__, timeout);
+		return -1;
+	}
 	*(unsigned int *)WKUP_I2C0_IRQSTATUS = *(unsigned int *)WKUP_I2C0_IRQSTATUS_RAW;
 
 	n = *(unsigned int *)WKUP_I2C0_CON & ~(0x1 << 9);
@@ -432,12 +473,31 @@ unsigned char i2c_read(char add){
 	*(unsigned int *)WKUP_I2C0_CON |= (3 << 0);
 
 	/* wait RRDY --> 1 */
-	while((*(unsigned int *)WKUP_I2C0_IRQSTATUS_RAW & (0x1 << 3)) == 0x00){}
-	rxd = *(unsigned int *)WKUP_I2C0_DATA;
+	loop = 0;
+	while(((*(unsigned int *)WKUP_I2C0_IRQSTATUS_RAW & (0x1 << 3)) == 0x00) &&
+	      loop++ < timeout) {}
+	if (loop >=timeout) {
+		debug_printf("%s timeout for RRDY: loop exceed %d\n", __func__, timeout);
+		return -1;
+	}
+	*rxd = *(unsigned int *)WKUP_I2C0_DATA;
 
 	/* wait ARDY --> 1 */
-	while((*(unsigned int *)WKUP_I2C0_IRQSTATUS_RAW & (0x1 << 2)) == 0x00){}
+	while(((*(unsigned int *)WKUP_I2C0_IRQSTATUS_RAW & (0x1 << 2)) == 0x00) &&
+	      loop++ < timeout) {}
+	if (loop >=timeout) {
+		debug_printf("%s timeout for ARDY: loop exceed %d\n", __func__, timeout);
+		return -1;
+	}
 	*(unsigned int *)WKUP_I2C0_IRQSTATUS = *(unsigned int *)WKUP_I2C0_IRQSTATUS_RAW;
+
+	return 0;
+}
+
+unsigned char i2c_read(char add){
+	unsigned char rxd;
+
+	i2c_read_timeout(add, &rxd, 0xFFFFFFFF);
 
 	return rxd;
 }
@@ -554,6 +614,17 @@ uint8_t read_pmicA(uint8_t reg)
 	return rxd;
 }
 
+uint8_t read_pmicA_timeout(uint8_t reg, unsigned char *rxd, int timeout)
+{
+	int ret;
+
+	Config_WKUP_I2C(PMICA_SLAVE_ADDR);
+	ret = i2c_read_timeout(reg, rxd, timeout);
+	debug_printf("%s reg=0x%x 0x%x ret=%d timeout=%d\n", __func__, reg, *rxd);
+
+	return ret;
+}
+
 uint8_t read_pmicB(uint8_t reg)
 {
 	unsigned char rxd;
@@ -563,17 +634,25 @@ uint8_t read_pmicB(uint8_t reg)
 	return rxd;
 }
 
+uint8_t read_pmicB_timeout(uint8_t reg, unsigned char *rxd, int timeout)
+{
+	int ret;
+
+	Config_WKUP_I2C(PMICB_SLAVE_ADDR);
+	ret = i2c_read_timeout(reg, rxd, timeout);
+	debug_printf("%s reg=0x%x 0x%x ret=%d timeout=%d\n", __func__, reg, *rxd);
+
+	return ret;
+}
+
 #ifdef DEBUG_FULL_SRAM_S2R
 #define debug_read_pmicA read_pmicA
+#define debug_read_pmicB read_pmicB
 #else
 #define debug_read_pmicA(...) do {} while(0)
+#define debug_read_pmicB(...) do {} while(0)
 #endif
-#define GPIO2_CONF  0x32
-#define GPIO3_CONF  0x33
-#define OD_SHIFT   1
-#define DIR_SHIFT   0
-#define SCRATCH_PAD_REG_3 0xCB
-#define MAGIC_SUSPEND 0xBA
+
 /* Taken from Lpm_pmicStateChangeActiveToIORetention, with some changes to
  * FSM_I2C_TRIGGERS for DDRRET support. Explaination on this change is still
  * obscure. */
@@ -591,25 +670,56 @@ void setup_pmic(void)
 	 */
 
 	uint8_t buf;
+	int single;
+
+	/* clear pending interrupt */
+	write_pmicA(0x60, 0x04);
+	write_pmicA(0x69, 0x04);
+	/*
+	 * If there an I2C device at the PMICB address and that have
+	 * the correct ID when reading DEV_REV then it means that
+	 * there are 2 PMICs.
+	 */
+	if ((!read_pmicB_timeout(0x1, &buf, I2C_DETECT_TIEMOUT)) &&
+	    (buf == DEVICE_ID_PMICB))
+		single = 0;
 
 	/* Change FSM_NSLEEP_TRIGGERS: NSLEEP1=high, NSLEEP2=high */
 	write_pmicA(0x86, 0x03);
-	debug_printf("%s %d: Write FSM_NSLEEP_TRIGGERS = 0x%x\n", __FUNCTION__, __LINE__, 0x03);
+	debug_printf("%s Write FSM_NSLEEP_TRIGGERS\n", __FUNCTION__);
 	debug_read_pmicA(0x86);
 
-	/* Clear INT_STARTUP: clear ENABLE pin interrupt */
-	write_pmicA(0x65, 0x02);
-	debug_printf("%s %d: Write INT_STARTUP = 0x%x\n", __FUNCTION__, __LINE__, 0x02);
-	debug_read_pmicA(0x65);
+	if (single)
+	{
+		/* Clear BIST_PASS_INT */
+		write_pmicA(0x66, 0x01);
+		debug_printf("%s Write INT_MISC\n", __FUNCTION__);
+		debug_read_pmicA(0x65);
+
+		/*  Clear all potential sources of the On Request */
+		write_pmicA(0x65, 0x26);
+		debug_printf("%s Write INT_STARTUP\n", __FUNCTION__);
+		debug_read_pmicA(0x65);
+	} else {
+		/* Clear INT_STARTUP: clear ENABLE pin interrupt */
+		write_pmicA(0x65, 0x02);
+		debug_printf("%s Write INT_STARTUP\n", __FUNCTION__);
+		debug_read_pmicA(0x65);
+	}
+
+	/* Change FSM_I2C_TRIGGERS on PMIC A*/
+	write_pmicA(0x85, FSM_I2C_TRIGGERS);
+	debug_printf("%s Write FSM_NSLEEP_TRIGGERS\n", __FUNCTION__);
+	debug_read_pmicA(0x85);
 
 	/* Configure GPIO4_CONF: input, no pull, signal LP_WKUP1 */
 	write_pmicA(0x34, 0xc0);
-	debug_printf("%s %d: Write GPIO4_CONF = 0x%x\n", __FUNCTION__, __LINE__, 0xc0);
+	debug_printf("%s Write GPIO4_CONF\n", __FUNCTION__);
 	debug_read_pmicA(0x34);
 
 	/* Configure INT_GPIO1_8 (enable GPIO4 interrupt): clear GPIO4_INT */
-	write_pmicA(0x64, 0x08);
-	debug_printf("%s %d: Write INT_GPIO1_8 = 0x%x\n", __FUNCTION__, __LINE__, 0x08);
+	write_pmicA(0x64, GPIO4_BIT);
+	debug_printf("%s Write INT_GPIO1_8\n", __FUNCTION__);
 	debug_read_pmicA(0x64);
 
 	/* Configure MASK_GPIO*_RISE */
@@ -618,41 +728,47 @@ void setup_pmic(void)
 
 	/* Configure MASK_GPIO1_8_FALL (configure GPIO4 falling edge interrupt): enable INT on GPIO4 */
 	write_pmicA(0x4F, GPIO1_8_FALL);
-	debug_printf("%s %d: Write MASK_GPIO1_8_FALL = 0x%x\n", __FUNCTION__, __LINE__, 0xF7);
+	debug_printf("%s Write MASK_GPIO1_8_FALL\n", __FUNCTION__);
 	debug_read_pmicA(0x4F);
 
-	//Put GPIO2 and GPIO3 as output push-pull no pull-up or pull down
-	write_pmicB(GPIO2_CONF, 1 << DIR_SHIFT | 0 << OD_SHIFT);
-	write_pmicB(GPIO3_CONF, 1 << DIR_SHIFT | 0 << OD_SHIFT);
+	if (single) {
+		//Put GPIO6 as output push-pull no pull-up or pull down
+		write_pmicA(GPIO6_CONF, 1 << DIR_SHIFT | 0 << OD_SHIFT);
+		// GPIO_OUT_1
 
-	// GPIO_OUT_1
-	buf = read_pmicB(0x3D) | DDR_RET_VAL; // 1<<1, GPIO2_OUT on
-	write_pmicB(0x3D, buf);
-	write_pmicB(0x3D, buf | DDR_RET_CLK);  // 1<<2, GPIO3_OUT on
-	write_pmicB(0x3D, buf & ~DDR_RET_CLK); // 1<<2, GPIO3_OUT off
-	write_pmicB(0x3D, buf | DDR_RET_CLK);  // 1<<2, GPIO3_OUT on
+		buf = read_pmicA(0x3D) | EN_DDR_RET_1V1; // 1<<5, GPIO6_OUT on
+		write_pmicA(0x3D, buf);
+	} else {
+		//Put GPIO2 and GPIO3 as output push-pull no pull-up or pull down
+		write_pmicB(GPIO2_CONF, 1 << DIR_SHIFT | 0 << OD_SHIFT);
+		write_pmicB(GPIO3_CONF, 1 << DIR_SHIFT | 0 << OD_SHIFT);
 
-	// Notes for ICON board: GPIO6 on PMIC for DDR, GPIO5 for GPIO. See "User
-	// Guide for Powering JacintoTM 7 J7200 DRA821 with Single TPS6594-Q1 PMIC,
-	// PDN-2A".
+		// GPIO_OUT_1
+		buf = read_pmicB(0x3D) | DDR_RET_VAL; // 1<<1, GPIO2_OUT on
+		write_pmicB(0x3D, buf);
+		write_pmicB(0x3D, buf | DDR_RET_CLK);  // 1<<2, GPIO3_OUT on
+		write_pmicB(0x3D, buf & ~DDR_RET_CLK); // 1<<2, GPIO3_OUT off
+		write_pmicB(0x3D, buf | DDR_RET_CLK);  // 1<<2, GPIO3_OUT on
+	}
 
-	/* Change FSM_I2C_TRIGGERS: trigger TRIGGER_I2C_6 */
-	write_pmicA(0x85, FSM_I2C_TRIGGERS); // TRIGGER_I2C_6
-	debug_printf("%s %d: Write FSM_I2C_TRIGGERS = 0x%x\n", __FUNCTION__, __LINE__, 0x40);
-	debug_read_pmicA(0x85);
+	if (!single) {
+		/* Change FSM_I2C_TRIGGERS - PMICB */
+		write_pmicB(0x85, FSM_I2C_TRIGGERS);
+		debug_printf("%s Write FSM_NSLEEP_TRIGGERS \n", __FUNCTION__);
+		debug_read_pmicB(0x85);
 
-	/* Change FSM_I2C_TRIGGERS - PMICB: trigger TRIGGER_I2C_6 */
-	write_pmicB(0x85, FSM_I2C_TRIGGERS);
-	debug_printf("%s %d: Write FSM_NSLEEP_TRIGGERS = 0x%x\n", __FUNCTION__, __LINE__, 0x40);
-	debug_read_pmicA(0x85);
+		/* Change FSM_I2C_TRIGGERS - PMICA */
+		write_pmicA(0x85, FSM_I2C_TRIGGERS);
+		debug_printf("%s Write FSM_NSLEEP_TRIGGERS\n", __FUNCTION__);
+		debug_read_pmicA(0x85);
+	}
 
 	/* Write magic number to scratch register to indicate the suspend */
 	write_pmicA(SCRATCH_PAD_REG_3, MAGIC_SUSPEND);
 	debug_read_pmicA(SCRATCH_PAD_REG_3);
+
 	/* Change FSM_NSLEEP_TRIGGERS: NSLEEP1=low, NSLEEP2=low */
 	write_pmicA(0x86, 0x00);
-	debug_printf("%s %d: Write FSM_NSLEEP_TRIGGERS = 0x%x\n", __FUNCTION__, __LINE__, 0x00);
-	debug_read_pmicA(0x86);
 }
 
 #ifdef DEBUG_SRAM_S2R
@@ -677,7 +793,7 @@ static void _debug_putc(unsigned int baseAdd, uint8_t byteTx)
 
 void debug_putc(uint8_t byteTx)
 {
-	_debug_putc(0x40a00000, byteTx);
+	_debug_putc(UART_DEBUG_ADDR, byteTx);
 }
 
 /* Write the string until a null character */
