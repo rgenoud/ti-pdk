@@ -123,10 +123,11 @@ HwiP_Handle HwiP_create(int32_t coreIntrNum, HwiP_Fxn hwiFxn,
     struct sched_param  param;
     qnx_osal_hwi_info  *hwi = NULL;
     char threadName[128];
-    uint32_t intrPriority;
+    uint32_t intrPriority = 21;
 
-    // NOTE: Override the interrupt priority pass as params->priority
-    intrPriority = 21;
+    if (params->priority != 0) {
+        intrPriority = params->priority;
+    }
 
     if (g_currIntrCount >= QNX_OSAL_MAX_INTR_COUNT) {
         DebugP_log0("MAXed out on the hwi structure");
@@ -136,9 +137,8 @@ HwiP_Handle HwiP_create(int32_t coreIntrNum, HwiP_Fxn hwiFxn,
     g_currIntrCount++;
 
 
-    hwi->chid = ChannelCreate( _NTO_CHF_DISCONNECT | _NTO_CHF_UNBLOCK);
-    if(hwi->chid == -1)
-    {
+    hwi->chid = ChannelCreate(_NTO_CHF_DISCONNECT | _NTO_CHF_UNBLOCK);
+    if(hwi->chid == -1) {
         DebugP_log1("Failed to create chid:%d", hwi->chid);
         OSAL_Assert(1);
     }
@@ -176,13 +176,11 @@ HwiP_Handle HwiP_create(int32_t coreIntrNum, HwiP_Fxn hwiFxn,
      * _NTO_INTR_FLAGS_NO_UNMASK - Start with interrupt masked
      */
     hwi->evtId = InterruptAttachEvent (coreIntrNum, &hwi->isr_event,  0 /*_NTO_INTR_FLAGS_NO_UNMASK*/);
-    if(hwi->evtId == -1)
-    {
+    if(hwi->evtId == -1) {
        DebugP_log0("InterruptAttachEvent failed");
        OSAL_Assert(1);
     }
-    else
-    {
+    else {
         //printf("%s: InterruptAttachEvent succeed irq/%d\n",__FUNCTION__, coreIntrNum);
     }
 

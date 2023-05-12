@@ -474,7 +474,11 @@ void UdmaEventPrms_init(Udma_EventPrms *eventPrms)
         eventPrms->ringHandle           = (Udma_RingHandle) NULL_PTR;
         eventPrms->masterEventHandle    = (Udma_EventHandle) NULL_PTR;
         eventPrms->eventCb              = (Udma_EventCallback) NULL_PTR;
+#ifdef QNX_OS
+        eventPrms->intrPriority         = 20U;
+#else
         eventPrms->intrPriority         = 1U;
+#endif
         eventPrms->appData              = NULL_PTR;
         eventPrms->osalRegisterDisable  = FALSE;
         eventPrms->preferredCoreIntrNum = UDMA_CORE_INTR_ANY;

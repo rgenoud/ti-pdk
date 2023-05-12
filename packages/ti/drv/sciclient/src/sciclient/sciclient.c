@@ -398,6 +398,7 @@ int32_t Sciclient_init(const Sciclient_ConfigPrms_t *pCfgPrms)
                 }
                 #endif
 #ifdef QNX_OS
+                intrPrms.corepacConfig.priority = 20U;
                 intrPrms.corepacConfig.intAutoEnable  = 0;
 #endif
                 /* Clear Interrupt */
@@ -464,6 +465,7 @@ int32_t Sciclient_init(const Sciclient_ConfigPrms_t *pCfgPrms)
                 }
                 #endif
 #ifdef QNX_OS
+                intrPrms.corepacConfig.priority = 20U;
                 intrPrms.corepacConfig.intAutoEnable  = 0;
 #endif
                 /* Clear Interrupt */

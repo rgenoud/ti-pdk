@@ -83,7 +83,6 @@ void Osal_RegisterInterrupt_initParams(OsalRegisterIntrParams_t *interruptRegPar
  */
 OsalInterruptRetCode_e Osal_RegisterInterrupt(OsalRegisterIntrParams_t *interruptRegParams,HwiP_Handle *hwiPHandlePtr)
 {
-
     OsalInterruptRetCode_e     ret = OSAL_INT_SUCCESS;
     HwiP_Handle                hwiPHandle = NULL;
     HwiP_Params                hwiInputParams;
