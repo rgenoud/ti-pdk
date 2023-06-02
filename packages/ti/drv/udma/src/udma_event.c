@@ -425,7 +425,7 @@ int32_t Udma_eventGetRxFlowIdFwStatus(Udma_EventHandle eventHandle,
             regVal = CSL_REG32_RD(&drvHandle->udmapRegs.pGenCfgRegs->RFLOWFWSTAT);
             if(CSL_FEXT(regVal, UDMAP_GCFG_RFLOWFWSTAT_PEND) != 0U)
             {
-                struct tisci_msg_rm_udmap_gcfg_cfg_resp resp;
+                struct tisci_msg_rm_udmap_gcfg_cfg_resp resp = {0};
                 status->flowId  = CSL_FEXT(regVal, UDMAP_GCFG_RFLOWFWSTAT_FLOWID);
                 status->chNum   = CSL_FEXT(regVal, UDMAP_GCFG_RFLOWFWSTAT_CHANNEL);
                 status->isException = TRUE;

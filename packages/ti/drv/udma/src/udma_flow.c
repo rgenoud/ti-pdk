@@ -552,7 +552,7 @@ int32_t Udma_flowConfig(Udma_FlowHandle flowHandle,
     int32_t             retVal = UDMA_SOK;
     Udma_DrvHandle      drvHandle;
     struct tisci_msg_rm_udmap_flow_cfg_req              rmFlowReq;
-    struct tisci_msg_rm_udmap_flow_cfg_resp             rmFlowResp;
+    struct tisci_msg_rm_udmap_flow_cfg_resp             rmFlowResp = {0};
     struct tisci_msg_rm_udmap_flow_size_thresh_cfg_req  rmOptFlowReq;
     struct tisci_msg_rm_udmap_flow_size_thresh_cfg_resp rmOptFlowResp;
 

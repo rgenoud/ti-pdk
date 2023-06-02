@@ -755,7 +755,7 @@ int32_t Udma_ringMonConfig(Udma_RingMonHandle monHandle,
         {
 #if (UDMA_SOC_CFG_RING_MON_PRESENT == 1)
             struct tisci_msg_rm_ring_mon_cfg_req    rmRingMonReq;
-            struct tisci_msg_rm_ring_mon_cfg_resp   rmRingMonResp;
+            struct tisci_msg_rm_ring_mon_cfg_resp   rmRingMonResp = {0};
             rmRingMonReq.valid_params   = TISCI_MSG_VALUE_RM_MON_SOURCE_VALID |
                                         TISCI_MSG_VALUE_RM_MON_MODE_VALID |
                                         TISCI_MSG_VALUE_RM_MON_QUEUE_VALID |
