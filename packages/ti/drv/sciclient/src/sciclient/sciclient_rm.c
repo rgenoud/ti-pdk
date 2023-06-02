@@ -122,7 +122,7 @@ int32_t Sciclient_rmIrqSet(const struct tisci_msg_rm_irq_set_req *req,
 int32_t Sciclient_rmIrqRelease(const struct tisci_msg_rm_irq_release_req *req,
                                uint32_t timeout)
 {
-    struct tisci_msg_rm_irq_release_resp resp;
+    struct tisci_msg_rm_irq_release_resp resp = {0};
 
     return Sciclient_rmClearInterruptRoute(req, &resp, timeout);
 }

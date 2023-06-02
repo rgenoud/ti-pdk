@@ -89,7 +89,11 @@ extern "C" {
             #IPC_MP_INVALID_ID for invalid parameter
  *
  */
+#ifdef QNX_OS
+int32_t Ipc_mpSetConfig(uint32_t selfId, uint16_t numProc, uint32_t* procArry);
+#else
 int32_t Ipc_mpSetConfig(uint32_t selfId, uint16_t numProc, uint32_t procArry[IPC_MAX_PROCS]);
+#endif
 
 /**
  *  \brief Gets the MultiProc id.

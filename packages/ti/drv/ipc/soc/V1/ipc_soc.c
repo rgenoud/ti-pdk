@@ -710,7 +710,7 @@ int32_t Ipc_sciclientIrqSet(uint16_t coreId, uint32_t clusterId,
 {
     int32_t                           retVal = IPC_SOK;
     struct tisci_msg_rm_irq_set_req   rmIrqReq;
-    struct tisci_msg_rm_irq_set_resp  rmIrqResp;
+    struct tisci_msg_rm_irq_set_resp  rmIrqResp = {0};
 
     rmIrqReq.ia_id                  = 0U;
     rmIrqReq.vint                   = 0U;
