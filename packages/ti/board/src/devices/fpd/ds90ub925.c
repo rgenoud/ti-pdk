@@ -58,9 +58,9 @@ Board_STATUS Board_fpdUb925SetRGBGateDEModeCtrl(void *handle,
 {
     Board_STATUS ret = BOARD_SOK;
     uint8_t regAddr;
-    uint8_t regData = 0;
+    uint8_t regData = 0U;
 
-    if(handle == NULL)
+    if(NULL == handle)
     {
         return BOARD_INVALID_PARAM;
     }
@@ -72,7 +72,7 @@ Board_STATUS Board_fpdUb925SetRGBGateDEModeCtrl(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -86,7 +86,7 @@ Board_STATUS Board_fpdUb925SetRGBGateDEModeCtrl(void *handle,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
 
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -113,9 +113,9 @@ Board_STATUS Board_fpdUb925SetI2SChBModeCtrl(void *handle,
 {
     Board_STATUS ret = BOARD_SOK;
     uint8_t regAddr;
-    uint8_t regData = 0;
+    uint8_t regData = 0U;
 
-    if(handle == NULL)
+    if(NULL == handle)
     {
         return BOARD_INVALID_PARAM;
     }
@@ -128,7 +128,7 @@ Board_STATUS Board_fpdUb925SetI2SChBModeCtrl(void *handle,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
 
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -142,7 +142,7 @@ Board_STATUS Board_fpdUb925SetI2SChBModeCtrl(void *handle,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
 
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -169,9 +169,9 @@ Board_STATUS Board_fpdUb925SetI2SChBOverrideModeCtrl(void *handle,
 {
     Board_STATUS ret = BOARD_SOK;
     uint8_t regAddr;
-    uint8_t regData = 0;
+    uint8_t regData = 0U;
 
-    if(handle == NULL)
+    if(NULL == handle)
     {
         return BOARD_INVALID_PARAM;
     }
@@ -184,7 +184,7 @@ Board_STATUS Board_fpdUb925SetI2SChBOverrideModeCtrl(void *handle,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
 
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -198,7 +198,7 @@ Board_STATUS Board_fpdUb925SetI2SChBOverrideModeCtrl(void *handle,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
 
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -225,9 +225,9 @@ Board_STATUS Board_fpdUb925SetI2STransSelModeCtrl(void *handle,
 {
     Board_STATUS ret = BOARD_SOK;
     uint8_t regAddr;
-    uint8_t regData = 0;
+    uint8_t regData = 0U;
 
-    if(handle == NULL)
+    if(NULL == handle)
     {
         return BOARD_INVALID_PARAM;
     }
@@ -240,7 +240,7 @@ Board_STATUS Board_fpdUb925SetI2STransSelModeCtrl(void *handle,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
 
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -254,7 +254,7 @@ Board_STATUS Board_fpdUb925SetI2STransSelModeCtrl(void *handle,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
 
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -281,9 +281,9 @@ Board_STATUS Board_fpdUb925SetRGB18bitModeCtrl(void *handle,
 {
     Board_STATUS ret = BOARD_SOK;
     uint8_t regAddr;
-    uint8_t regData = 0;
+    uint8_t regData = 0U;
 
-    if(handle == NULL)
+    if(NULL == handle)
     {
         return BOARD_INVALID_PARAM;
     }
@@ -296,7 +296,7 @@ Board_STATUS Board_fpdUb925SetRGB18bitModeCtrl(void *handle,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
 
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -310,7 +310,7 @@ Board_STATUS Board_fpdUb925SetRGB18bitModeCtrl(void *handle,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
 
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -337,9 +337,9 @@ Board_STATUS Board_fpdUb925GetPCLKLockStatus(void *handle,
 {
     Board_STATUS ret;
     uint8_t regAddr;
-    uint8_t regData = 0;
+    uint8_t regData = 0U;
 
-    if(handle == NULL)
+    if(NULL == handle)
     {
         return BOARD_INVALID_PARAM;
     }
@@ -352,18 +352,18 @@ Board_STATUS Board_fpdUb925GetPCLKLockStatus(void *handle,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
 
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
 
     if(regData & BOARD_FPD_UB925_PCLK_STATUS_BIT_MASK)
     {
-        *pclkLockStatus = 1;
+        *pclkLockStatus = BTRUE;
     }
     else
     {
-        *pclkLockStatus = 0;
+        *pclkLockStatus = BFALSE;
     }
     BOARD_DEVICES_STS_LOG("FPD Serializer Lock status : 0x%x\n", regData);
     

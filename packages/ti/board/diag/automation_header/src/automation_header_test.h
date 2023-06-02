@@ -71,17 +71,17 @@ extern "C" {
 
 #define SIGNAL_LEVEL_LOW                           (0U)
 
-#define CMD_INPUT_PORT0_REG_ACCESS                 (0x00)
-#define CMD_INPUT_PORT1_REG_ACCESS                 (0x01)
-#define CMD_INPUT_PORT2_REG_ACCESS                 (0x02)
+#define CMD_INPUT_PORT0_REG_ACCESS                 (0x00U)
+#define CMD_INPUT_PORT1_REG_ACCESS                 (0x01U)
+#define CMD_INPUT_PORT2_REG_ACCESS                 (0x02U)
 
-#define CMD_OUTPUT_PORT0_REG_ACCESS                (0x4)
-#define CMD_OUTPUT_PORT1_REG_ACCESS                (0x5)
-#define CMD_OUTPUT_PORT2_REG_ACCESS                (0x6)
+#define CMD_OUTPUT_PORT0_REG_ACCESS                (0x4U)
+#define CMD_OUTPUT_PORT1_REG_ACCESS                (0x5U)
+#define CMD_OUTPUT_PORT2_REG_ACCESS                (0x6U)
 
-#define CMD_CFG_PORT0_REG_ACCESS                   (0xC)
-#define CMD_CFG_PORT1_REG_ACCESS                   (0xD)
-#define CMD_CFG_PORT2_REG_ACCESS                   (0xE)
+#define CMD_CFG_PORT0_REG_ACCESS                   (0xCU)
+#define CMD_CFG_PORT1_REG_ACCESS                   (0xDU)
+#define CMD_CFG_PORT2_REG_ACCESS                   (0xEU)
 
 #define NUM_OF_SW2_CONFIGURABLE_POSITIONS          (9U)
 #define NUM_OF_SW3_CONFIGURABLE_POSITIONS          (9U)

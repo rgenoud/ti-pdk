@@ -85,7 +85,7 @@ static int8_t BoardDiag_read_register(I2C_Handle handle,
     transaction.readCount    = 0;
 
     ret = I2C_transfer(handle, &transaction);
-    if(ret != I2C_STS_SUCCESS)
+    if(I2C_STS_SUCCESS != ret)
     {
         ret = -1;
         return ret;
@@ -99,7 +99,7 @@ static int8_t BoardDiag_read_register(I2C_Handle handle,
     transaction.readCount    = 1;
 
     ret = I2C_transfer(handle, &transaction);
-    if(ret != I2C_STS_SUCCESS)
+    if(I2C_STS_SUCCESS != ret)
     {
         ret = -1;
     }
@@ -149,7 +149,7 @@ static int8_t BoardDiag_write_register(I2C_Handle handle,
     BOARD_delay(200);
 
     ret = I2C_transfer(handle, &transaction);
-    if(ret != I2C_STS_SUCCESS)
+    if(I2C_STS_SUCCESS != ret)
     {
         return -1;
     }
@@ -170,14 +170,14 @@ static void BoardDiag_configI2CMux(void)
     ioExpCfg.i2cInst     = BOARD_I2C_IOEXP_SOM_INSTANCE;
     ioExpCfg.socDomain   = BOARD_SOC_DOMAIN_MAIN;
     ioExpCfg.slaveAddr   = BOARD_I2C_IOEXP_SOM_ADDR;
-    ioExpCfg.enableIntr  = false;
+    ioExpCfg.enableIntr  = BFALSE;
     ioExpCfg.ioExpType   = ONE_PORT_IOEXP;
     ioExpCfg.portNum     = PORTNUM_0;
     ioExpCfg.pinNum      = PIN_NUM_1;
     ioExpCfg.signalLevel = GPIO_SIGNAL_LEVEL_HIGH;
 
     status = Board_control(BOARD_CTRL_CMD_SET_IO_EXP_PIN_OUT, &ioExpCfg);
-    if(status != BOARD_SOK)
+    if(BOARD_SOK != status)
     {
         UART_printf("Failed to enable the I2C mux selection\n");
     }
@@ -186,7 +186,7 @@ static void BoardDiag_configI2CMux(void)
     ioExpCfg.signalLevel = GPIO_SIGNAL_LEVEL_HIGH;
 
     status = Board_control(BOARD_CTRL_CMD_SET_IO_EXP_PIN_OUT, &ioExpCfg);
-    if(status != BOARD_SOK)
+    if(BOARD_SOK != status)
     {
         UART_printf("Failed to enable the I2C mux selection\n");
     }
@@ -195,7 +195,7 @@ static void BoardDiag_configI2CMux(void)
     ioExpCfg.signalLevel = GPIO_SIGNAL_LEVEL_HIGH;
 
     status = Board_control(BOARD_CTRL_CMD_SET_IO_EXP_PIN_OUT, &ioExpCfg);
-    if(status != BOARD_SOK)
+    if(BOARD_SOK != status)
     {
         UART_printf("Failed to enable the I2C mux selection\n");
     }
@@ -205,7 +205,7 @@ static void BoardDiag_configI2CMux(void)
 {
     Board_STATUS status = BOARD_SOK;
     status = Board_control(BOARD_CTRL_CMD_SET_IO_MUX_PORTB2, NULL);
-    if(status != BOARD_SOK)
+    if(BOARD_SOK != status)
     {
         UART_printf("Failed to enable the port2  mux selection\n");
     }
@@ -236,7 +236,7 @@ static int8_t BoardDiag_run_automation_header_test(void)
     for(index = 0; index < I2C_HWIP_MAX_CNT; index++)
     {
         I2C_socGetInitCfg(index, &i2cConfig);
-        i2cConfig.enableIntr = false;
+        i2cConfig.enableIntr = BFALSE;
         I2C_socSetInitCfg(index, &i2cConfig);
     }
 
@@ -249,7 +249,7 @@ static int8_t BoardDiag_run_automation_header_test(void)
 
     /* Configures the I2C instance with the passed parameters*/
     handle = I2C_open(BOARD_TEST_HEADER_I2C_INSTANCE, &i2cParams);
-    if(handle == NULL)
+    if(NULL == handle)
     {
         UART_printf("\nI2C Open failed!\n");
         ret = -1;
@@ -264,7 +264,7 @@ static int8_t BoardDiag_run_automation_header_test(void)
                                   BOARD_I2C_BOOT_MODE_SW_ADDR,
                                   CMD_INPUT_PORT0_REG_ACCESS,
                                   &port0RegData);
-    if(ret != 0)
+    if(0 != ret)
     {
         UART_printf("Reading the input PORT0 register of "
                     "I2C Boot mode buffer failed\n\r");
@@ -279,7 +279,7 @@ static int8_t BoardDiag_run_automation_header_test(void)
                                   BOARD_I2C_BOOT_MODE_SW_ADDR,
                                   CMD_INPUT_PORT1_REG_ACCESS,
                                   &port1RegData);
-    if(ret != 0)
+    if(0 != ret)
     {
         UART_printf("Reading the input PORT1 register of "
                     "I2C Boot mode buffer failed\n\r");
@@ -294,7 +294,7 @@ static int8_t BoardDiag_run_automation_header_test(void)
                                    BOARD_I2C_BOOT_MODE_SW_ADDR,
                                    CMD_CFG_PORT0_REG_ACCESS,
                                    0x0);
-    if(ret != 0)
+    if(0 != ret)
     {
         UART_printf("Reading the input PORT0 register of "
                     "I2C Boot mode buffer failed\n\r");
@@ -309,7 +309,7 @@ static int8_t BoardDiag_run_automation_header_test(void)
                                    BOARD_I2C_BOOT_MODE_SW_ADDR,
                                    CMD_CFG_PORT1_REG_ACCESS,
                                    0x0);
-    if(ret != 0)
+    if(0 != ret)
     {
         UART_printf("Reading the input PORT1 register of "
                     "I2C Boot mode buffer failed\n\r");
@@ -325,7 +325,7 @@ static int8_t BoardDiag_run_automation_header_test(void)
                                    BOARD_I2C_BOOT_MODE_SW_ADDR,
                                    CMD_CFG_PORT2_REG_ACCESS,
                                    0x0);
-    if(ret != 0)
+    if(0 != ret)
     {
         UART_printf("Reading the input PORT2 register of "
                     "I2C Boot mode buffer failed\n\r");
@@ -341,7 +341,7 @@ static int8_t BoardDiag_run_automation_header_test(void)
                                    BOARD_I2C_BOOT_MODE_SW_ADDR,
                                    CMD_OUTPUT_PORT0_REG_ACCESS,
                                    BOOTMODE_CFG_SET1_PIN_POS);
-    if(ret != 0)
+    if(0 != ret)
     {
         UART_printf("Reading the input PORT0 register of "
                     "I2C Boot mode buffer failed\n\r");
@@ -356,7 +356,7 @@ static int8_t BoardDiag_run_automation_header_test(void)
                                    BOARD_I2C_BOOT_MODE_SW_ADDR,
                                    CMD_OUTPUT_PORT1_REG_ACCESS,
                                    BOOTMODE_CFG_SET2_PIN_POS);
-    if(ret != 0)
+    if(0 != ret)
     {
         UART_printf("Reading the input PORT1 register of "
                     "I2C Boot mode buffer failed\n\r");
@@ -369,7 +369,7 @@ static int8_t BoardDiag_run_automation_header_test(void)
                                   BOARD_I2C_BOOT_MODE_SW_ADDR,
                                   CMD_INPUT_PORT0_REG_ACCESS,
                                   &port0RegData);
-    if(ret != 0)
+    if(0 != ret)
     {
         UART_printf("Reading the input PORT0 register of "
                     "I2C Boot mode buffer failed\n\r");
@@ -384,7 +384,7 @@ static int8_t BoardDiag_run_automation_header_test(void)
                                   BOARD_I2C_BOOT_MODE_SW_ADDR,
                                   CMD_INPUT_PORT1_REG_ACCESS,
                                   &port1RegData);
-    if(ret != 0)
+    if(0 != ret)
     {
         UART_printf("Reading the input PORT1 register of "
                     "I2C Boot mode buffer failed\n\r");
@@ -392,7 +392,7 @@ static int8_t BoardDiag_run_automation_header_test(void)
         I2C_close(handle);
         return -1;
     }
-    if ((port1RegData == BOOTMODE_CFG_SET2_PIN_POS) && (port0RegData == BOOTMODE_CFG_SET1_PIN_POS))
+    if ((BOOTMODE_CFG_SET2_PIN_POS == port1RegData) && (BOOTMODE_CFG_SET1_PIN_POS == port0RegData))
     {
         UART_printf ("Data matched with the written value\n");
 
@@ -501,7 +501,7 @@ int8_t BoardDiag_automationHeaderTest(void)
     enableI2C(CSL_I2C0_CFG_BASE);
 #endif
     ret = BoardDiag_run_automation_header_test();
-    if(ret != 0)
+    if(0 != ret)
     {
         UART_printf("Automation header test failed!\n");
     }

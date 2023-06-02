@@ -97,7 +97,7 @@ static int8_t BoardDiag_boot_eeprom_page_write(I2C_Handle handle,
 	BOARD_delay(10000);
 
 	ret = I2C_transfer(handle, &transaction);
-	if(ret != I2C_STS_SUCCESS)
+	if(I2C_STS_SUCCESS != ret)
     {
         UART_printf("\nI2C EEPROM page write failed\n");
         return -1;
@@ -148,7 +148,7 @@ static int8_t BoardDiag_boot_eeprom_page_read(I2C_Handle handle,
 	BOARD_delay(10000);
 
 	ret = I2C_transfer(handle, &transaction);
-	if(ret != I2C_STS_SUCCESS)
+	if(I2C_STS_SUCCESS != ret)
     {
         UART_printf("\nI2C EEPROM page read failed\n");
         return -1;
@@ -158,7 +158,7 @@ static int8_t BoardDiag_boot_eeprom_page_read(I2C_Handle handle,
     transaction.readCount    = pageRdByteCnt;
 
 	ret = I2C_transfer(handle, &transaction);
-	if(ret != I2C_STS_SUCCESS)
+	if(I2C_STS_SUCCESS != ret)
     {
         UART_printf("\nI2C EEPROM page read failed\n");
         return -1;
@@ -193,7 +193,7 @@ static int8_t BoardDiag_boot_eeprom_device_detect_test(I2C_Handle handle)
                                            BOARD_I2C_BOOT_EEPROM_ADDR,
                                            pageAddr, 
                                            BOOT_EEPROM_PAGE_SIZE);
-	if(ret != 0)
+	if(0 != ret)
     {
 		UART_printf("\nClearing EEPROM page first location failed\n");
 		return ret;
@@ -207,7 +207,7 @@ static int8_t BoardDiag_boot_eeprom_device_detect_test(I2C_Handle handle)
                                            BOARD_I2C_BOOT_EEPROM_ADDR,
                                            pageAddr,
                                            numOfWrBytes);
-	if(ret != 0)
+	if(0 != ret)
     {
 		UART_printf("\nWriting EEPROM page first location failed\n");
 		return ret;
@@ -221,7 +221,7 @@ static int8_t BoardDiag_boot_eeprom_device_detect_test(I2C_Handle handle)
                                           BOARD_I2C_BOOT_EEPROM_ADDR,
                                           pageAddr,
                                           numOfRdBytes);
-	if(ret != 0)
+	if(0 != re)
     {
 		UART_printf("\nReading EEPROM page first location failed\n");
 		return ret;
@@ -257,8 +257,8 @@ static int8_t BoardDiag_boot_eeprom_verify_page(I2C_Handle handle,
 {
     int8_t ret = 0;
     uint16_t pageAddr;
-    uint32_t failIndex = 0;
-    bool compareStatus = 1; 
+    uint32_t failIndex = 0U;
+    bool compareStatus = BTRUE; 
 
     pageAddr = pageOffset * (BOOT_EEPROM_PAGE_SIZE);    
     BoardDiag_genPattern(&pageWrBuff[0], (BOOT_EEPROM_PAGE_SIZE + 2), 
@@ -268,7 +268,7 @@ static int8_t BoardDiag_boot_eeprom_verify_page(I2C_Handle handle,
                                            slaveAddr,
                                            pageAddr,
                                            BOOT_EEPROM_PAGE_SIZE);
-	if(ret != 0)
+	if(0 != ret)
     {
 		UART_printf("\nClearing EEPROM page - %d failed\n", pageOffset);
 		return ret;
@@ -285,7 +285,7 @@ static int8_t BoardDiag_boot_eeprom_verify_page(I2C_Handle handle,
                                            slaveAddr,
                                            pageAddr,
                                            BOOT_EEPROM_PAGE_SIZE);
-	if(ret != 0)
+	if(0 != ret)
     {
 		UART_printf("\nWriting EEPROM page - %d failed\n", pageOffset);
 		return ret;
@@ -298,7 +298,7 @@ static int8_t BoardDiag_boot_eeprom_verify_page(I2C_Handle handle,
                                           slaveAddr,
                                           pageAddr,
                                           BOOT_EEPROM_PAGE_SIZE);
-	if(ret != 0)
+	if(0 != ret)
     {
 		UART_printf("\nReading EEPROM page - %d failed\n", pageOffset);
 		return ret;
@@ -342,7 +342,7 @@ static int8_t BoardDiag_boot_eeprom_boundary_verification_test(I2C_Handle handle
     ret = BoardDiag_boot_eeprom_verify_page(handle,
                                             BOARD_I2C_BOOT_EEPROM_ADDR,
                                             BOARD_EEPROM_FIRST_PAGE);
-    if(ret != 0)
+    if(0 != ret)
     {
         UART_printf("\nBoot EEPROM first page verification failed\n"); 
         return ret;
@@ -356,7 +356,7 @@ static int8_t BoardDiag_boot_eeprom_boundary_verification_test(I2C_Handle handle
                                            BOARD_I2C_BOOT_EEPROM_ADDR,
                                            pageAddr,
                                            BOOT_EEPROM_PAGE_SIZE);
-	if(ret != 0)
+	if(0 != ret)
     {
 		UART_printf("\nClearing EEPROM first page failed\n");
 		return ret;
@@ -367,7 +367,7 @@ static int8_t BoardDiag_boot_eeprom_boundary_verification_test(I2C_Handle handle
     ret = BoardDiag_boot_eeprom_verify_page(handle,
                                             BOARD_I2C_BOOT_EEPROM_ADDR,
                                             BOARD_EEPROM_LAST_PAGE);
-    if(ret != 0)
+    if(0 != ret)
     {
         UART_printf("\nBoot EEPROM last page verification failed\n"); 
         return ret;
@@ -381,7 +381,7 @@ static int8_t BoardDiag_boot_eeprom_boundary_verification_test(I2C_Handle handle
                                            BOARD_I2C_BOOT_EEPROM_ADDR,
                                            pageAddr,
                                            BOOT_EEPROM_PAGE_SIZE);
-	if(ret != 0)
+	if(0 != ret)
     {
 		UART_printf("\nClearing EEPROM last page failed\n");
 		return ret;
@@ -393,7 +393,7 @@ static int8_t BoardDiag_boot_eeprom_boundary_verification_test(I2C_Handle handle
     ret = BoardDiag_boot_eeprom_verify_page(handle,
                                             BOARD_I2C_BOOT_EEPROM_ADDR2,
                                             BOARD_EEPROM_BLOCK2_FIRST_PAGE);
-    if(ret != 0)
+    if(0 != ret)
     {
         UART_printf("\nBoot EEPROM first page verification failed\n");
         return ret;
@@ -407,7 +407,7 @@ static int8_t BoardDiag_boot_eeprom_boundary_verification_test(I2C_Handle handle
                                            BOARD_I2C_BOOT_EEPROM_ADDR2,
                                            pageAddr,
                                            BOOT_EEPROM_PAGE_SIZE);
-    if(ret != 0)
+    if(0 != ret)
     {
         UART_printf("\nClearing EEPROM first page failed\n");
         return ret;
@@ -418,7 +418,7 @@ static int8_t BoardDiag_boot_eeprom_boundary_verification_test(I2C_Handle handle
     ret = BoardDiag_boot_eeprom_verify_page(handle,
                                             BOARD_I2C_BOOT_EEPROM_ADDR2,
                                             BOARD_EEPROM_BLOCK2_LAST_PAGE);
-    if(ret != 0)
+    if(0 != ret)
     {
         UART_printf("\nBoot EEPROM last page verification failed\n");
         return ret;
@@ -432,7 +432,7 @@ static int8_t BoardDiag_boot_eeprom_boundary_verification_test(I2C_Handle handle
                                            BOARD_I2C_BOOT_EEPROM_ADDR2,
                                            pageAddr,
                                            BOOT_EEPROM_PAGE_SIZE);
-	if(ret != 0)
+	if(0 != ret)
     {
 		UART_printf("\nClearing EEPROM last page failed\n");
 		return ret;
@@ -463,10 +463,10 @@ static int8_t BoardDiag_run_boot_eeprom_test(void)
     /* Enabling MCU I2C */
     enableI2C(CSL_MCU_I2C0_CFG_BASE);
 #endif
-    for(index = 0; index < I2C_HWIP_MAX_CNT; index++)
+    for(index = 0U; index < I2C_HWIP_MAX_CNT; index++)
     {
         I2C_socGetInitCfg(index, &i2cConfig);
-        i2cConfig.enableIntr = false;
+        i2cConfig.enableIntr = BFALSE;
         I2C_socSetInitCfg(index, &i2cConfig);
     }
 
@@ -479,7 +479,7 @@ static int8_t BoardDiag_run_boot_eeprom_test(void)
 
     /* Configures the I2C instance with the passed parameters*/
     handle = I2C_open(BOARD_I2C_BOOT_EEPROM_INSTANCE, &i2cParams);
-	if(handle == NULL)
+	if(NULL == handle)
 	{
 		UART_printf("\nI2C Open failed!\n");
 		ret = -1;
@@ -500,14 +500,14 @@ static int8_t BoardDiag_run_boot_eeprom_test(void)
 
     /* Detects the boot EEPROM device */
     ret = BoardDiag_boot_eeprom_device_detect_test(handle);    
-    if(ret == 0)
+    if(0 == ret)
     {
         UART_printf("\nBoot EEPROM device detection successful\n"); 
 
         UART_printf("\nBoot EEPROM boundary verification test...\n"); 
         /* Verifies the boot EEPROM first page */
         ret = BoardDiag_boot_eeprom_boundary_verification_test(handle);
-        if(ret != 0)
+        if(0 != ret)
         {
             UART_printf("\nBoot EEPROM boundary verification test failed\n"); 
             return ret;
@@ -547,7 +547,7 @@ int8_t BoardDiag_boot_eeprom_test(void)
     UART_printf("\nRunning Boot EEPROM test\n");             
     
     ret = BoardDiag_run_boot_eeprom_test();
-    if(ret == 0)
+    if(0 == ret)
     {
         UART_printf("\nBoot EEPROM test Passed\n");             
     }
@@ -582,7 +582,7 @@ int main(void)
 #endif
 
     status = Board_init(boardCfg);
-    if(status != BOARD_SOK)
+    if(BOARD_SOK != status)
     {
         return -1;
     }

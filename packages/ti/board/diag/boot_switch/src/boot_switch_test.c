@@ -232,8 +232,8 @@ static void BoardDiag_wakeupPinMuxSetMode(uint32_t offset, uint32_t mode)
  */
 static uint32_t readSwPositions(uint8_t numOfSwPos, int8_t pinOffset)
 {
-    uint32_t rdSwPos = 0x0000;
-    uint8_t swPosIndex = 0;
+    uint32_t rdSwPos = 0x0000U;
+    uint8_t swPosIndex = 0U;
     uint8_t rdSignalLevel;
 
 #if !(defined(SOC_AM64X))
@@ -349,7 +349,7 @@ static int8_t BoardDiag_bootSwTest(void)
         status = Board_pinmuxSetReg(BOARD_SOC_DOMAIN_MAIN,
                                     pinMuxgpio[index],
                                     BOARD_GPIO_PIN_MUX_CFG);
-        if (status != BOARD_SOK)
+        if (BOARD_SOK != status)
         {
             return status;
         }
@@ -445,7 +445,7 @@ static int8_t BoardDiag_bootSwTest(void)
                     ret = -1;
                 }
 
-            }while(ret != 0);
+            }while(0 != ret);
         }
         verifyPattern++;
     }
@@ -462,7 +462,7 @@ void Board_enableMAINUART0(void)
 
     UART_socGetInitCfg(0, &uartCfg);
     uartCfg.baseAddr = CSL_UART0_BASE;
-    uartCfg.enableInterrupt = FALSE;
+    uartCfg.enableInterrupt = UFALSE;
     uartCfg.frequency = 48000000;
 
     UART_socSetInitCfg(0, &uartCfg);
@@ -504,7 +504,7 @@ int main(void)
 #endif
 
     status = Board_init(boardCfg);
-    if(status != BOARD_SOK)
+    if(BOARD_SOK != status)
     {
         return -1;
     }

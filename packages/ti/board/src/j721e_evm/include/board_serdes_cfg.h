@@ -118,7 +118,7 @@ Board_STATUS Board_serdesCfgXaui(void);
  *  \retval TRUE    SerDes1 is configured
  *  \retval FALSE   SerDes1 is not configured
  */
-int32_t Board_serdesCfgStatus(void);
+bool Board_serdesCfgStatus(void);
 
 #ifdef __cplusplus
 }

@@ -91,14 +91,14 @@ typedef struct Board_I2cObj_s
 
 /****************************************************************************/
 
-#define BOARD_KICK0_UNLOCK_VAL               (0x68EF3490U)
-#define BOARD_KICK1_UNLOCK_VAL               (0xD172BC5AU)
+#define BOARD_KICK0_UNLOCK_VAL                  (0x68EF3490U)
+#define BOARD_KICK1_UNLOCK_VAL                  (0xD172BC5AU)
 
-#define BOARD_KICK0_LOCK_VAL                 (0)
-#define BOARD_KICK1_LOCK_VAL                 (0)
+#define BOARD_KICK0_LOCK_VAL                    (0U)
+#define BOARD_KICK1_LOCK_VAL                    (0U)
 
-#define BOARD_MAC_COUNT_SHIFT                 (3U)
-#define BOARD_MAC_COUNT_MASK                  (0x00F8U)
+#define BOARD_MAC_COUNT_SHIFT                   (3U)
+#define BOARD_MAC_COUNT_MASK                    (0x00F8U)
 
 /* Ethenet board library MACROs */
 #define BOARD_ETHPHY_REGCR_REG_ADDR             (0xDU)
@@ -144,17 +144,17 @@ typedef struct Board_I2cObj_s
 #define BOARD_ETHPHY_STRAP_FLD_MASK             (0x0400U)
 #define BOARD_ETHPHY_STRAP_FLD_THS_CHECK_FLAG   (0x222U)
 
-#define BOARD_MMR_PARTITION_MAX              (8U)
-#define BOARD_MMR_PARTITION_SIZE             (0x4000U)
+#define BOARD_MMR_PARTITION_MAX                 (8U)
+#define BOARD_MMR_PARTITION_SIZE                (0x4000U)
 
-#define BOARD_MMR_PARTITION0                 (0x0U)
-#define BOARD_MMR_PARTITION1                 (0x1U)
-#define BOARD_MMR_PARTITION2                 (0x2U)
-#define BOARD_MMR_PARTITION3                 (0x3U)
-#define BOARD_MMR_PARTITION4                 (0x4U)
-#define BOARD_MMR_PARTITION5                 (0x5U)
-#define BOARD_MMR_PARTITION6                 (0x6U)
-#define BOARD_MMR_PARTITION7                 (0x7U)
+#define BOARD_MMR_PARTITION0                    (0x0U)
+#define BOARD_MMR_PARTITION1                    (0x1U)
+#define BOARD_MMR_PARTITION2                    (0x2U)
+#define BOARD_MMR_PARTITION3                    (0x3U)
+#define BOARD_MMR_PARTITION4                    (0x4U)
+#define BOARD_MMR_PARTITION5                    (0x5U)
+#define BOARD_MMR_PARTITION6                    (0x6U)
+#define BOARD_MMR_PARTITION7                    (0x7U)
 
 /*****************************************************************************
  * Function Prototypes                                                       *
@@ -415,10 +415,10 @@ Board_STATUS Board_getAllPLLConfigurations();
  * \n                      BOARD_ID_ENET(0x6) - Quad ENET expansion
  * \n                      BOARD_ID_DISPLAY(0x7) - Display adapter board 
  *
- * \return   TRUE if the given board is detected else 0.
+ * \return   BTRUE if the given board is detected else BFALSE.
  *           SoM board will be always connected to the base board.
- *           For SoM boardID return value TRUE indicates dual PMIC
- *           SoM and FALSE indicates alternate PMIC SoM
+ *           For SoM boardID return value BTRUE indicates dual PMIC
+ *           SoM and BFALSE indicates alternate PMIC SoM
  *
  */
 bool Board_detectBoard(uint32_t boardID);

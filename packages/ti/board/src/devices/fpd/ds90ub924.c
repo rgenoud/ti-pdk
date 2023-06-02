@@ -61,9 +61,9 @@ Board_STATUS Board_fpdUb924SelDesDigialRst1Mode(void *handle,
                                                 uint8_t operMode)
 {
     Board_STATUS ret = BOARD_SOK;
-    uint8_t regData = 0;
+    uint8_t regData = 0U;
 
-    if(handle == NULL)
+    if(NULL == handle)
     {
         return BOARD_INVALID_PARAM;
     }
@@ -74,7 +74,7 @@ Board_STATUS Board_fpdUb924SelDesDigialRst1Mode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -87,7 +87,7 @@ Board_STATUS Board_fpdUb924SelDesDigialRst1Mode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -116,9 +116,9 @@ Board_STATUS Board_fpdUb924SelDesDigialRst0Mode(void *handle,
                                                 uint8_t operMode)
 {
     Board_STATUS ret = BOARD_SOK;
-    uint8_t regData = 0;
+    uint8_t regData = 0U;
 
-    if(handle == NULL)
+    if(NULL == handle)
     {
         return BOARD_INVALID_PARAM;
     }
@@ -129,7 +129,7 @@ Board_STATUS Board_fpdUb924SelDesDigialRst0Mode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -142,7 +142,7 @@ Board_STATUS Board_fpdUb924SelDesDigialRst0Mode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -171,9 +171,9 @@ Board_STATUS Board_fpdUb924SelDesBCEnMode(void *handle,
                                           uint8_t cfgMode)
 {
     Board_STATUS ret = BOARD_SOK;
-    uint8_t regData = 0;
+    uint8_t regData = 0U;
 
-    if(handle == NULL)
+    if(NULL == handle)
     {
         return BOARD_INVALID_PARAM;
     }
@@ -184,7 +184,7 @@ Board_STATUS Board_fpdUb924SelDesBCEnMode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -197,7 +197,7 @@ Board_STATUS Board_fpdUb924SelDesBCEnMode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -226,9 +226,9 @@ Board_STATUS Board_fpdUb924SelDesFilterEnMode(void *handle,
                                               uint8_t cfgMode)
 {
     Board_STATUS ret = BOARD_SOK;
-    uint8_t regData = 0;
+    uint8_t regData = 0U;
 
-    if(handle == NULL)
+    if(NULL == handle)
     {
         return BOARD_INVALID_PARAM;
     }
@@ -239,7 +239,7 @@ Board_STATUS Board_fpdUb924SelDesFilterEnMode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -252,7 +252,7 @@ Board_STATUS Board_fpdUb924SelDesFilterEnMode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -281,9 +281,9 @@ Board_STATUS Board_fpdUb924SetI2CPassThrModeCfg(void *handle,
                                                 uint8_t cfgMode)
 {
     Board_STATUS ret = BOARD_SOK;
-    uint8_t regData = 0;
+    uint8_t regData = 0U;
 
-    if(handle == NULL)
+    if(NULL == handle)
     {
         return BOARD_INVALID_PARAM;
     }
@@ -294,7 +294,7 @@ Board_STATUS Board_fpdUb924SetI2CPassThrModeCfg(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -307,7 +307,7 @@ Board_STATUS Board_fpdUb924SetI2CPassThrModeCfg(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -336,9 +336,9 @@ Board_STATUS Board_fpdUb924SelDesAutoACKMode(void *handle,
                                              uint8_t cfgMode)
 {
     Board_STATUS ret = BOARD_SOK;
-    uint8_t regData = 0;
+    uint8_t regData = 0U;
 
-    if(handle == NULL)
+    if(NULL == handle)
     {
         return BOARD_INVALID_PARAM;
     }
@@ -349,7 +349,7 @@ Board_STATUS Board_fpdUb924SelDesAutoACKMode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -362,7 +362,7 @@ Board_STATUS Board_fpdUb924SelDesAutoACKMode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -391,9 +391,9 @@ Board_STATUS Board_fpdUb924SelDesDEGateMode(void *handle,
                                             uint8_t cfgMode)
 {
     Board_STATUS ret = BOARD_SOK;
-    uint8_t regData = 0;
+    uint8_t regData = 0U;
 
-    if(handle == NULL)
+    if(NULL == handle)
     {
         return BOARD_INVALID_PARAM;
     }
@@ -404,7 +404,7 @@ Board_STATUS Board_fpdUb924SelDesDEGateMode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -417,7 +417,7 @@ Board_STATUS Board_fpdUb924SelDesDEGateMode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -446,9 +446,9 @@ Board_STATUS Board_fpdUb924SelDesPassAllMode(void *handle,
                                              uint8_t cfgMode)
 {
     Board_STATUS ret = BOARD_SOK;
-    uint8_t regData = 0;
+    uint8_t regData = 0U;
 
-    if(handle == NULL)
+    if(NULL == handle)
     {
         return BOARD_INVALID_PARAM;
     }
@@ -459,7 +459,7 @@ Board_STATUS Board_fpdUb924SelDesPassAllMode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -472,7 +472,7 @@ Board_STATUS Board_fpdUb924SelDesPassAllMode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -500,7 +500,7 @@ Board_STATUS Board_fpdUb924GetDesI2CAddr(void *handle,
 {
     Board_STATUS ret = BOARD_SOK;
 
-    if(handle == NULL)
+    if(NULL == handle)
     {
         return BOARD_INVALID_PARAM;
     }
@@ -512,7 +512,7 @@ Board_STATUS Board_fpdUb924GetDesI2CAddr(void *handle,
                              rdBuff,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -542,9 +542,9 @@ Board_STATUS Board_fpdUb924SelDesAutoClkEnMode(void *handle,
                                                uint8_t modeSel)
 {
     Board_STATUS ret = BOARD_SOK;
-    uint8_t regData = 0;
+    uint8_t regData = 0U;
 
-    if(handle == NULL)
+    if(NULL == handle)
     {
         return BOARD_INVALID_PARAM;
     }
@@ -555,7 +555,7 @@ Board_STATUS Board_fpdUb924SelDesAutoClkEnMode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -568,7 +568,7 @@ Board_STATUS Board_fpdUb924SelDesAutoClkEnMode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -596,9 +596,9 @@ Board_STATUS Board_fpdUb924SelDesBKWDOvrMode(void *handle,
                                              uint8_t modeSel)
 {
     Board_STATUS ret = BOARD_SOK;
-    uint8_t regData = 0;
+    uint8_t regData = 0U;
 
-    if(handle == NULL)
+    if(NULL == handle)
     {
         return BOARD_INVALID_PARAM;
     }
@@ -609,7 +609,7 @@ Board_STATUS Board_fpdUb924SelDesBKWDOvrMode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -622,7 +622,7 @@ Board_STATUS Board_fpdUb924SelDesBKWDOvrMode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -651,9 +651,9 @@ Board_STATUS Board_fpdUb924SelDesBKWDMode(void *handle,
                                           uint8_t modeSel)
 {
     Board_STATUS ret = BOARD_SOK;
-    uint8_t regData = 0;
+    uint8_t regData = 0U;
 
-    if(handle == NULL)
+    if(NULL == handle)
     {
         return BOARD_INVALID_PARAM;
     }
@@ -664,7 +664,7 @@ Board_STATUS Board_fpdUb924SelDesBKWDMode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -677,7 +677,7 @@ Board_STATUS Board_fpdUb924SelDesBKWDMode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -704,9 +704,9 @@ Board_STATUS Board_fpdUb924SelDesLFMODEOvr(void *handle,
                                           uint8_t modeSel)
 {
     Board_STATUS ret = BOARD_SOK;
-    uint8_t regData = 0;
+    uint8_t regData = 0U;
 
-    if(handle == NULL)
+    if(NULL == handle)
     {
         return BOARD_INVALID_PARAM;
     }
@@ -717,7 +717,7 @@ Board_STATUS Board_fpdUb924SelDesLFMODEOvr(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -730,7 +730,7 @@ Board_STATUS Board_fpdUb924SelDesLFMODEOvr(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -756,9 +756,9 @@ Board_STATUS Board_fpdUb924SelDesLFMODE(void *handle,
                                         uint8_t modeSel)
 {
     Board_STATUS ret = BOARD_SOK;
-    uint8_t regData = 0;
+    uint8_t regData = 0U;
 
-    if(handle == NULL)
+    if(NULL == handle)
     {
         return BOARD_INVALID_PARAM;
     }
@@ -769,7 +769,7 @@ Board_STATUS Board_fpdUb924SelDesLFMODE(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -782,7 +782,7 @@ Board_STATUS Board_fpdUb924SelDesLFMODE(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -808,9 +808,9 @@ Board_STATUS Board_fpdUb924SelDesVidClrDepthMode(void *handle,
                                                  uint8_t modeSel)
 {
     Board_STATUS ret = BOARD_SOK;
-    uint8_t regData = 0;
+    uint8_t regData = 0U;
 
-    if(handle == NULL)
+    if(NULL == handle)
     {
         return BOARD_INVALID_PARAM;
     }
@@ -823,7 +823,7 @@ Board_STATUS Board_fpdUb924SelDesVidClrDepthMode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -834,7 +834,7 @@ Board_STATUS Board_fpdUb924SelDesVidClrDepthMode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -847,7 +847,7 @@ Board_STATUS Board_fpdUb924SelDesVidClrDepthMode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -873,9 +873,9 @@ Board_STATUS Board_fpdUb924SelDesDEPolarity(void *handle,
                                             uint8_t polSel)
 {
     Board_STATUS ret = BOARD_SOK;
-    uint8_t regData = 0;
+    uint8_t regData = 0U;
 
-    if(handle == NULL)
+    if(NULL == handle)
     {
         return BOARD_INVALID_PARAM;
     }
@@ -888,7 +888,7 @@ Board_STATUS Board_fpdUb924SelDesDEPolarity(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -899,7 +899,7 @@ Board_STATUS Board_fpdUb924SelDesDEPolarity(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -912,7 +912,7 @@ Board_STATUS Board_fpdUb924SelDesDEPolarity(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -942,7 +942,7 @@ Board_STATUS Board_fpdUb924SetDesI2cBusFreq(void *handle,
 {
     Board_STATUS ret = BOARD_SOK;
 
-    if(handle == NULL)
+    if(NULL == handle)
     {
         return BOARD_INVALID_PARAM;
     }
@@ -956,7 +956,7 @@ Board_STATUS Board_fpdUb924SetDesI2cBusFreq(void *handle,
                              &cfgBitRate,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -968,7 +968,7 @@ Board_STATUS Board_fpdUb924SetDesI2cBusFreq(void *handle,
                              &cfgBitRate,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -995,9 +995,9 @@ Board_STATUS Board_fpdUb924SelDesHSSyncPolarity(void *handle,
                                                 uint8_t polSel)
 {
     Board_STATUS ret = BOARD_SOK;
-    uint8_t regData = 0;
+    uint8_t regData = 0U;
 
-    if(handle == NULL)
+    if(NULL == handle)
     {
         return BOARD_INVALID_PARAM;
     }
@@ -1008,7 +1008,7 @@ Board_STATUS Board_fpdUb924SelDesHSSyncPolarity(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -1021,7 +1021,7 @@ Board_STATUS Board_fpdUb924SelDesHSSyncPolarity(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -1048,9 +1048,9 @@ Board_STATUS Board_fpdUb924SelDesVSSyncPolarity(void *handle,
                                                 uint8_t polSel)
 {
     Board_STATUS ret = BOARD_SOK;
-    uint8_t regData = 0;
+    uint8_t regData = 0U;
 
-    if(handle == NULL)
+    if(NULL == handle)
     {
         return BOARD_INVALID_PARAM;
     }
@@ -1061,7 +1061,7 @@ Board_STATUS Board_fpdUb924SelDesVSSyncPolarity(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -1074,7 +1074,7 @@ Board_STATUS Board_fpdUb924SelDesVSSyncPolarity(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -1101,9 +1101,9 @@ Board_STATUS Board_fpdUb924SelDesDESyncPolarity(void *handle,
                                                 uint8_t polSel)
 {
     Board_STATUS ret = BOARD_SOK;
-    uint8_t regData = 0;
+    uint8_t regData = 0U;
 
-    if(handle == NULL)
+    if(NULL == handle)
     {
         return BOARD_INVALID_PARAM;
     }
@@ -1114,7 +1114,7 @@ Board_STATUS Board_fpdUb924SelDesDESyncPolarity(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -1127,7 +1127,7 @@ Board_STATUS Board_fpdUb924SelDesDESyncPolarity(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -1154,9 +1154,9 @@ Board_STATUS Board_fpdUb924SelDesFRC2Mode(void *handle,
                                           uint8_t cfgMode)
 {
     Board_STATUS ret = BOARD_SOK;
-    uint8_t regData = 0;
+    uint8_t regData = 0U;
 
-    if(handle == NULL)
+    if(NULL == handle)
     {
         return BOARD_INVALID_PARAM;
     }
@@ -1167,7 +1167,7 @@ Board_STATUS Board_fpdUb924SelDesFRC2Mode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -1180,7 +1180,7 @@ Board_STATUS Board_fpdUb924SelDesFRC2Mode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -1207,9 +1207,9 @@ Board_STATUS Board_fpdUb924SelDesFRC1Mode(void *handle,
                                           uint8_t cfgMode)
 {
     Board_STATUS ret = BOARD_SOK;
-    uint8_t regData = 0;
+    uint8_t regData = 0U;
 
-    if(handle == NULL)
+    if(NULL == handle)
     {
         return BOARD_INVALID_PARAM;
     }
@@ -1220,7 +1220,7 @@ Board_STATUS Board_fpdUb924SelDesFRC1Mode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -1233,7 +1233,7 @@ Board_STATUS Board_fpdUb924SelDesFRC1Mode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -1260,9 +1260,9 @@ Board_STATUS Board_fpdUb924SelDesHiFRC2Mode(void *handle,
                                             uint8_t cfgMode)
 {
     Board_STATUS ret = BOARD_SOK;
-    uint8_t regData = 0;
+    uint8_t regData = 0U;
 
-    if(handle == NULL)
+    if(NULL == handle)
     {
         return BOARD_INVALID_PARAM;
     }
@@ -1273,7 +1273,7 @@ Board_STATUS Board_fpdUb924SelDesHiFRC2Mode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -1286,7 +1286,7 @@ Board_STATUS Board_fpdUb924SelDesHiFRC2Mode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -1313,9 +1313,9 @@ Board_STATUS Board_fpdUb924SelDesHiFRC1Mode(void *handle,
                                             uint8_t cfgMode)
 {
    Board_STATUS ret = BOARD_SOK;
-    uint8_t regData = 0;
+    uint8_t regData = 0U;
 
-    if(handle == NULL)
+    if(NULL == handle)
     {
         return BOARD_INVALID_PARAM;
     }
@@ -1326,7 +1326,7 @@ Board_STATUS Board_fpdUb924SelDesHiFRC1Mode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -1339,7 +1339,7 @@ Board_STATUS Board_fpdUb924SelDesHiFRC1Mode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -1366,9 +1366,9 @@ Board_STATUS Board_fpdUb924SetDesPGIntClkEn(void *handle,
                                             uint8_t clkSrc)
 {
     Board_STATUS ret = BOARD_SOK;
-    uint8_t regData = 0;
+    uint8_t regData = 0U;
 
-    if(handle == NULL)
+    if(NULL == handle)
     {
         return BOARD_INVALID_PARAM;
     }
@@ -1379,7 +1379,7 @@ Board_STATUS Board_fpdUb924SetDesPGIntClkEn(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -1392,7 +1392,7 @@ Board_STATUS Board_fpdUb924SetDesPGIntClkEn(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -1419,9 +1419,9 @@ Board_STATUS Board_fpdUb924DesLVDSDrvSetting(void *handle,
                                              uint8_t lvdsVod)
 {
     Board_STATUS ret = BOARD_SOK;
-    uint8_t regData = 0;
+    uint8_t regData = 0U;
 
-    if(handle == NULL)
+    if(NULL == handle)
     {
         return BOARD_INVALID_PARAM;
     }
@@ -1432,7 +1432,7 @@ Board_STATUS Board_fpdUb924DesLVDSDrvSetting(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -1445,7 +1445,7 @@ Board_STATUS Board_fpdUb924DesLVDSDrvSetting(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -1472,9 +1472,9 @@ Board_STATUS Board_fpdUb924CfgDesLoopThrDrv(void *handle,
                                             uint8_t cfgMode)
 {
     Board_STATUS ret = BOARD_SOK;
-    uint8_t regData = 0;
+    uint8_t regData = 0U;
 
-    if(handle == NULL)
+    if(NULL == handle)
     {
         return BOARD_INVALID_PARAM;
     }
@@ -1485,7 +1485,7 @@ Board_STATUS Board_fpdUb924CfgDesLoopThrDrv(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -1498,7 +1498,7 @@ Board_STATUS Board_fpdUb924CfgDesLoopThrDrv(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -1525,9 +1525,9 @@ Board_STATUS Board_fpdUb924SelDesClrBarPatMode(void *handle,
                                                uint8_t cfgMode)
 {
     Board_STATUS ret = BOARD_SOK;
-    uint8_t regData = 0;
+    uint8_t regData = 0U;
 
-    if(handle == NULL)
+    if(NULL == handle)
     {
         return BOARD_INVALID_PARAM;
     }
@@ -1538,7 +1538,7 @@ Board_STATUS Board_fpdUb924SelDesClrBarPatMode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -1551,7 +1551,7 @@ Board_STATUS Board_fpdUb924SelDesClrBarPatMode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -1578,9 +1578,9 @@ Board_STATUS Board_fpdUb924SelDesPGMode(void *handle,
                                         uint8_t cfgMode)
 {
     Board_STATUS ret = BOARD_SOK;
-    uint8_t regData = 0;
+    uint8_t regData = 0U;
 
-    if(handle == NULL)
+    if(NULL == handle)
     {
         return BOARD_INVALID_PARAM;
     }
@@ -1591,7 +1591,7 @@ Board_STATUS Board_fpdUb924SelDesPGMode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -1604,7 +1604,7 @@ Board_STATUS Board_fpdUb924SelDesPGMode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -1631,9 +1631,9 @@ Board_STATUS Board_fpdUb924SelDesPGBitMode(void *handle,
                                            uint8_t cfgMode)
 {
     Board_STATUS ret = BOARD_SOK;
-    uint8_t regData = 0;
+    uint8_t regData = 0U;
 
-    if(handle == NULL)
+    if(NULL == handle)
     {
         return BOARD_INVALID_PARAM;
     }
@@ -1644,7 +1644,7 @@ Board_STATUS Board_fpdUb924SelDesPGBitMode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -1657,7 +1657,7 @@ Board_STATUS Board_fpdUb924SelDesPGBitMode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -1684,9 +1684,9 @@ Board_STATUS Board_fpdUb924SelDesPGExtClk(void *handle,
                                           uint8_t clkSrc)
 {
     Board_STATUS ret = BOARD_SOK;
-    uint8_t regData = 0;
+    uint8_t regData = 0U;
 
-    if(handle == NULL)
+    if(NULL == handle)
     {
         return BOARD_INVALID_PARAM;
     }
@@ -1697,7 +1697,7 @@ Board_STATUS Board_fpdUb924SelDesPGExtClk(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -1710,7 +1710,7 @@ Board_STATUS Board_fpdUb924SelDesPGExtClk(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -1737,9 +1737,9 @@ Board_STATUS Board_fpdUb924SelDesPGTmngSel(void *handle,
                                            uint8_t vidTmng)
 {
     Board_STATUS ret = BOARD_SOK;
-    uint8_t regData = 0;
+    uint8_t regData = 0U;
 
-    if(handle == NULL)
+    if(NULL == handle)
     {
         return BOARD_INVALID_PARAM;
     }
@@ -1750,7 +1750,7 @@ Board_STATUS Board_fpdUb924SelDesPGTmngSel(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -1763,7 +1763,7 @@ Board_STATUS Board_fpdUb924SelDesPGTmngSel(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -1788,9 +1788,9 @@ Board_STATUS Board_fpdUb924SetRxCRCCheckerEn(void *handle,
                                              uint8_t cfgMode)
 {
     Board_STATUS ret = BOARD_SOK;
-    uint8_t regData = 0;
+    uint8_t regData = 0U;
 
-    if(handle == NULL)
+    if(NULL == handle)
     {
         return BOARD_INVALID_PARAM;
     }
@@ -1801,7 +1801,7 @@ Board_STATUS Board_fpdUb924SetRxCRCCheckerEn(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -1814,7 +1814,7 @@ Board_STATUS Board_fpdUb924SetRxCRCCheckerEn(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -1840,9 +1840,9 @@ Board_STATUS Board_fpdUb924SetAutoScrollPattEn(void *handle,
                                                uint8_t cfgMode)
 {
     Board_STATUS ret = BOARD_SOK;
-    uint8_t regData = 0;
+    uint8_t regData = 0U;
 
-    if(handle == NULL)
+    if(NULL == handle)
     {
         return BOARD_INVALID_PARAM;
     }
@@ -1853,7 +1853,7 @@ Board_STATUS Board_fpdUb924SetAutoScrollPattEn(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -1866,7 +1866,7 @@ Board_STATUS Board_fpdUb924SetAutoScrollPattEn(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -1903,9 +1903,9 @@ Board_STATUS Board_fpdUb924GpioOutputMode(void *handle,
                                           uint8_t outSel)
 {
     Board_STATUS ret = BOARD_SOK;
-    uint8_t regData = 0, regAddr = 0, mask = 0, cnt = 0;
+    uint8_t regData = 0U, regAddr = 0U, mask = 0U, cnt = 0U;
 
-    if(handle == NULL)
+    if(NULL == handle)
     {
         return BOARD_INVALID_PARAM;
     }
@@ -1958,7 +1958,7 @@ Board_STATUS Board_fpdUb924GpioOutputMode(void *handle,
              break;
     }
 
-    if(ret != BOARD_SOK)
+    if(BOARD_SOK != ret)
     {
         return ret;
     }
@@ -1969,7 +1969,7 @@ Board_STATUS Board_fpdUb924GpioOutputMode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -1982,7 +1982,7 @@ Board_STATUS Board_fpdUb924GpioOutputMode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -2019,9 +2019,9 @@ Board_STATUS Board_fpdUb924GpioRemoteMode(void *handle,
                                           uint8_t modeSel)
 {
     Board_STATUS ret = BOARD_SOK;
-    uint8_t regData = 0, regAddr = 0, mask = 0, cnt = 0;
+    uint8_t regData = 0U, regAddr = 0U, mask = 0U, cnt = 0U;
 
-    if(handle == NULL)
+    if(NULL == handle)
     {
         return BOARD_INVALID_PARAM;
     }
@@ -2062,7 +2062,7 @@ Board_STATUS Board_fpdUb924GpioRemoteMode(void *handle,
              break;
     }
 
-    if(ret != BOARD_SOK)
+    if(BOARD_SOK != ret)
     {
         return ret;
     }
@@ -2073,7 +2073,7 @@ Board_STATUS Board_fpdUb924GpioRemoteMode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -2086,7 +2086,7 @@ Board_STATUS Board_fpdUb924GpioRemoteMode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -2123,9 +2123,9 @@ Board_STATUS Board_fpdUb924GpioDirectionMode(void *handle,
                                              uint8_t modeSel)
 {
     Board_STATUS ret = BOARD_SOK;
-    uint8_t regData = 0, regAddr = 0, mask = 0, cnt = 0;
+    uint8_t regData = 0U, regAddr = 0U, mask = 0U, cnt = 0U;
 
-    if(handle == NULL)
+    if(NULL == handle)
     {
         return BOARD_INVALID_PARAM;
     }
@@ -2177,7 +2177,7 @@ Board_STATUS Board_fpdUb924GpioDirectionMode(void *handle,
              break;
     }
 
-    if(ret != BOARD_SOK)
+    if(BOARD_SOK != ret)
     {
         return ret;
     }
@@ -2188,7 +2188,7 @@ Board_STATUS Board_fpdUb924GpioDirectionMode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -2201,7 +2201,7 @@ Board_STATUS Board_fpdUb924GpioDirectionMode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -2238,9 +2238,9 @@ Board_STATUS Board_fpdUb924GpioEnMode(void *handle,
                                       uint8_t modeSel)
 {
     Board_STATUS ret = BOARD_SOK;
-    uint8_t regData = 0, regAddr = 0, mask = 0, cnt = 0;
+    uint8_t regData = 0U, regAddr = 0U, mask = 0U, cnt = 0U;
 
-    if(handle == NULL)
+    if(NULL == handle)
     {
         return BOARD_INVALID_PARAM;
     }
@@ -2293,7 +2293,7 @@ Board_STATUS Board_fpdUb924GpioEnMode(void *handle,
              break;
     }
 
-    if(ret != BOARD_SOK)
+    if(BOARD_SOK != ret)
     {
         return ret;
     }
@@ -2304,7 +2304,7 @@ Board_STATUS Board_fpdUb924GpioEnMode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }
@@ -2317,7 +2317,7 @@ Board_STATUS Board_fpdUb924GpioEnMode(void *handle,
                              &regData,
                              1U,
                              BOARD_I2C_TRANSACTION_TIMEOUT);
-    if(ret != 0)
+    if(BOARD_SOK != ret)
     {
         return BOARD_I2C_TRANSFER_FAIL;
     }

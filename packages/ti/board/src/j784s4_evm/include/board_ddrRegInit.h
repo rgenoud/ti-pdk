@@ -33,7 +33,7 @@
  * This file was modified by j7_lp4_opt_v1.pl!
  */
 
-#define DDRSS_PLL_FHS_CNT 5
+#define DDRSS_PLL_FHS_CNT 5U
 #define DDRSS_PLL_FREQUENCY_0 27500000
 #define DDRSS_PLL_FREQUENCY_1 1066500000
 #define DDRSS_PLL_FREQUENCY_2 1066500000

@@ -100,7 +100,7 @@ static TEST_STATUS spi_nor_chip_detect_test(PLATFORM_DEVICE_info *p_device,
     spiNorTestArgs_t *args = (spiNorTestArgs_t *)testArgs;
 
     p_device = platform_device_open(args->devId, 0);
-    if (p_device == NULL)
+    if (NULL == p_device)
     {
        UART_printf("SPI NOR Flash Test: Could Not Open NOR Device; errno = 0x%x \n", platform_errno);
        return (TEST_FAIL);
@@ -145,8 +145,8 @@ static TEST_STATUS spi_nor_memory_access_test(PLATFORM_DEVICE_info *p_device,
     norWrBuf = malloc(args->blockLen);
     norRdBuf = malloc(args->blockLen);
 
-    if((norWrBuf == NULL) ||
-       (norRdBuf == NULL))
+    if((NULL == norWrBuf) ||
+       (NULL == norRdBuf))
     {
        UART_printf("SPI NOR Flash Test: Buffer Allocation Failed!\n");
        return (TEST_FAIL);
@@ -154,7 +154,7 @@ static TEST_STATUS spi_nor_memory_access_test(PLATFORM_DEVICE_info *p_device,
 
 #ifdef ENABLE_MEMORY_BACKUP
     norBkpBuf = malloc(args->blockLen);
-    if(norBkpBuf == NULL)
+    if(NULL == norBkpBuf)
     {
         UART_printf("SPI NOR Flash Test: Buffer Allocation Failed!\n");
         free(norWrBuf);
@@ -172,7 +172,7 @@ static TEST_STATUS spi_nor_memory_access_test(PLATFORM_DEVICE_info *p_device,
 #ifdef ENABLE_MEMORY_BACKUP
     status = platform_device_read(p_device->handle, address,
                                   norBkpBuf, args->blockLen);
-    if(status != Platform_EOK)
+    if(Platform_EOK != status)
     {
         UART_printf("SPI NOR Flash Test: Read Failed  errno = 0x%x\n", platform_errno);
         goto free;
@@ -181,7 +181,7 @@ static TEST_STATUS spi_nor_memory_access_test(PLATFORM_DEVICE_info *p_device,
 
     status = platform_device_write(p_device->handle, address,
                                    norWrBuf, args->blockLen);
-    if(status != Platform_EOK)
+    if(Platform_EOK != status)
     {
         UART_printf("SPI NOR Flash Test: Write Test Data Failed  errno = 0x%x\n", platform_errno);
         goto free;
@@ -189,13 +189,13 @@ static TEST_STATUS spi_nor_memory_access_test(PLATFORM_DEVICE_info *p_device,
 
     status = platform_device_read(p_device->handle, address,
                                   norRdBuf, args->blockLen);
-    if(status != Platform_EOK)
+    if(Platform_EOK != status)
     {
         UART_printf("SPI NOR Flash Test: Read Test Data Failed  errno = 0x%x\n", platform_errno);
         goto free;
     }
 
-    if (memcmp(norWrBuf, norRdBuf, args->blockLen) != 0)
+    if (0 != memcmp(norWrBuf, norRdBuf, args->blockLen))
     {
         UART_printf("SPI NOR Flash Test: Data Verification Failed\n");
         testStatus = TEST_FAIL;
@@ -208,7 +208,7 @@ static TEST_STATUS spi_nor_memory_access_test(PLATFORM_DEVICE_info *p_device,
 
 #ifdef ENABLE_MEMORY_BACKUP
     status = platform_device_erase_block (p_device->handle, args->sectNum);
-    if(status != Platform_EOK)
+    if(Platform_EOK != status)
     {
         UART_printf("SPI NOR Flash Test: Erase Failed  errno = 0x%x\n",
                        platform_errno);
@@ -217,7 +217,7 @@ static TEST_STATUS spi_nor_memory_access_test(PLATFORM_DEVICE_info *p_device,
 
     status = platform_device_write(p_device->handle, address,
                                    norBkpBuf, args->blockLen);
-    if(status != Platform_EOK)
+    if(Platform_EOK != status)
     {
         UART_printf("SPI NOR Flash Test: Write Back Original Data Failed  errno = 0x%x\n",
                        platform_errno);
@@ -260,7 +260,7 @@ static TEST_STATUS spi_nor_erase_test(PLATFORM_DEVICE_info *p_device,
 #endif
 
     norRdBuf = malloc(SPI_NOR_SECTOR_SIZE);
-    if(norRdBuf == NULL)
+    if(NULL == norRdBuf)
     {
        UART_printf("SPI NOR Flash Test: Buffer Allocation Failed!\n");
        return (testStatus);
@@ -268,7 +268,7 @@ static TEST_STATUS spi_nor_erase_test(PLATFORM_DEVICE_info *p_device,
 
 #ifdef ENABLE_MEMORY_BACKUP
     norBkpBuf = malloc(SPI_NOR_SECTOR_SIZE);
-    if(norBkpBuf == NULL)
+    if(NULL == norBkpBuf)
     {
         UART_printf("SPI NOR Flash Test: Buffer Allocation Failed!\n");
         free(norRdBuf);
@@ -283,7 +283,7 @@ static TEST_STATUS spi_nor_erase_test(PLATFORM_DEVICE_info *p_device,
 #ifdef ENABLE_MEMORY_BACKUP
     status = platform_device_read(p_device->handle, address,
                                   norBkpBuf, SPI_NOR_SECTOR_SIZE);
-    if(status != Platform_EOK)
+    if(Platform_EOK != status)
     {
         UART_printf("SPI NOR Flash Test: Read Failed  errno = 0x%x\n", platform_errno);
         goto free;
@@ -291,7 +291,7 @@ static TEST_STATUS spi_nor_erase_test(PLATFORM_DEVICE_info *p_device,
 #endif
 
     status = platform_device_erase_block (p_device->handle, args->sectNum);
-    if(status != Platform_EOK)
+    if(Platform_EOK != status)
     {
         UART_printf("SPI NOR Flash Test: Erase Failed for Sector %d  errno = 0x%x\n",
                         args->sectNum, platform_errno);
@@ -300,15 +300,15 @@ static TEST_STATUS spi_nor_erase_test(PLATFORM_DEVICE_info *p_device,
 
     status = platform_device_read(p_device->handle, address,
                                   norRdBuf, SPI_NOR_SECTOR_SIZE);
-    if(status != Platform_EOK)
+    if(Platform_EOK != status)
     {
         UART_printf("SPI NOR Flash Test: Read Test Data Failed  errno = 0x%x\n", platform_errno);
         goto free;
     }
 
-    for (index = 0; index < SPI_NOR_SECTOR_SIZE; index++)
+    for (index = 0U; index < SPI_NOR_SECTOR_SIZE; index++)
     {
-        if(norRdBuf[index] != 0xFF)
+        if(0xFFU != norRdBuf[index])
         {
             UART_printf("SPI NOR Flash Test: Erase Data Verification Failed\n");
             testStatus = TEST_FAIL;
@@ -316,7 +316,7 @@ static TEST_STATUS spi_nor_erase_test(PLATFORM_DEVICE_info *p_device,
         }
     }
 
-    if(index == SPI_NOR_SECTOR_SIZE)
+    if(SPI_NOR_SECTOR_SIZE == index)
     {
         UART_printf("SPI NOR Flash Test: Erase Data Verification Passed\n");
         testStatus = TEST_PASS;
@@ -325,7 +325,7 @@ static TEST_STATUS spi_nor_erase_test(PLATFORM_DEVICE_info *p_device,
 #ifdef ENABLE_MEMORY_BACKUP
     status = platform_device_write(p_device->handle, address,
                                    norBkpBuf, SPI_NOR_SECTOR_SIZE);
-    if(status != Platform_EOK)
+    if(Platform_EOK != status)
     {
         UART_printf("SPI NOR Flash Test: Write Back Original Data Failed  errno = 0x%x\n",
                        platform_errno);
@@ -359,7 +359,7 @@ static TEST_STATUS run_spi_nor_test(void *testArgs)
 
     UART_printf("\nRunning SPI NOR Flash Chip Detect Test\n");
     testStatus = spi_nor_chip_detect_test(p_device, args);
-    if(testStatus != TEST_PASS)
+    if(TEST_PASS != testStatus)
     {
         UART_printf("\nSPI NOR Flash Chip Detect Test Failed\n");
         goto TEST_END;
@@ -370,7 +370,7 @@ static TEST_STATUS run_spi_nor_test(void *testArgs)
     }
 
     p_device = platform_device_open(args->devId, 0);
-    if (p_device == NULL)
+    if (NULL == p_device)
     {
        UART_printf("SPI NOR Flash Test: Could Not Open NOR Device; errno = 0x%x \n",
                        platform_errno);
@@ -379,7 +379,7 @@ static TEST_STATUS run_spi_nor_test(void *testArgs)
 
     UART_printf("\nRunning SPI NOR Flash Block Erase Test\n");
     testStatus = spi_nor_erase_test(p_device, args);
-    if(testStatus != TEST_PASS)
+    if(TEST_PASS != testStatus)
     {
         UART_printf("\nSPI NOR Flash Block Erase Test Failed\n");
         goto TEST_END;
@@ -392,7 +392,7 @@ static TEST_STATUS run_spi_nor_test(void *testArgs)
     UART_printf("\nRunning SPI NOR Flash Memory Access Test - Test Pattern 1\n");
     args->testPattern = NOR_FLASH_TEST_PATTERN1;
     testStatus = spi_nor_memory_access_test(p_device, args);
-    if(testStatus != TEST_PASS)
+    if(TEST_PASS != testStatus)
     {
         UART_printf("\nSPI NOR Flash Memory Access Test Failed\n");
         goto TEST_END;
@@ -405,7 +405,7 @@ static TEST_STATUS run_spi_nor_test(void *testArgs)
     UART_printf("\nRunning SPI NOR Flash Memory Access Test - Test Pattern 2\n");
     args->testPattern = NOR_FLASH_TEST_PATTERN2;
     testStatus = spi_nor_memory_access_test(p_device, args);
-    if(testStatus != TEST_PASS)
+    if(TEST_PASS != testStatus)
     {
         UART_printf("\nSPI NOR Flash Memory Access Test Failed\n");
         goto TEST_END;
@@ -441,14 +441,14 @@ TEST_STATUS spiNorTest(void *testArgs)
     UART_printf(  "       SPI NOR Flash Test       \n");
     UART_printf(  "********************************\n");
 
-    if(args == NULL)
+    if(NULL == args)
     {
         UART_printf("Invalid Test Arguments!\n");
         UART_printf("Aborting the Test!!\n");
         return (TEST_FAIL);
     }
 
-    if(args->autoRun == FALSE)
+    if(UFALSE == args->autoRun)
     {
         /* Read test inputs from user if needed */
     }
@@ -457,7 +457,7 @@ TEST_STATUS spiNorTest(void *testArgs)
     configFlashHold();
 
     testStatus = run_spi_nor_test(args);
-    if(testStatus != TEST_PASS)
+    if(TEST_PASS != testStatus)
     {
         UART_printf("\nSPI NOR Flash Test Failed!\n");
     }
@@ -502,7 +502,7 @@ int main(void)
 
     /* Invoke SPI NOR Test */
     testStatus = spiNorTest(&testArgs);
-    if(testStatus != TEST_PASS)
+    if(TEST_PASS != testStatus)
     {
     	return (-1);
     }

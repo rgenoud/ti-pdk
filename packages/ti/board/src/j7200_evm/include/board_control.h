@@ -60,15 +60,15 @@ extern "C" {
 #include <ti/board/src/j7200_evm/include/board_utils.h>
 #include <ti/board/src/j7200_evm/include/board_i2c_io_exp.h>
 
-#define BOARD_CTRL_CMD_SET_IO_EXP_PIN_OUT        (0)
-#define BOARD_CTRL_CMD_SET_GESI_CPSW_MDIO_MUX    (1U)
-#define BOARD_CTRL_CMD_SET_SOM_CAN_MUX           (2U)
-#define BOARD_CTRL_CMD_SET_SOM_AUDIO_MUX         (3U)
-#define BOARD_CTRL_CMD_SET_SOM_PROFIBUS_MUX      (4U)
-#define BOARD_CTRL_CMD_SET_SOM_LIN_MUX           (5U)
-#define BOARD_CTRL_CMD_SET_SOM_UART_MUX          (6U)
-#define BOARD_CTRL_CMD_LIN_ENABLE                (7U)
-#define BOARD_CTRL_CMD_LIN_DISABLE               (8U)
+#define BOARD_CTRL_CMD_SET_IO_EXP_PIN_OUT         (0)
+#define BOARD_CTRL_CMD_SET_GESI_CPSW_MDIO_MUX     (1U)
+#define BOARD_CTRL_CMD_SET_SOM_CAN_MUX            (2U)
+#define BOARD_CTRL_CMD_SET_SOM_AUDIO_MUX          (3U)
+#define BOARD_CTRL_CMD_SET_SOM_PROFIBUS_MUX       (4U)
+#define BOARD_CTRL_CMD_SET_SOM_LIN_MUX            (5U)
+#define BOARD_CTRL_CMD_SET_SOM_UART_MUX           (6U)
+#define BOARD_CTRL_CMD_LIN_ENABLE                 (7U)
+#define BOARD_CTRL_CMD_LIN_DISABLE                (8U)
 
 #define BOARD_CTRL_CMD_SOM_CAN_MUX_MASK           (0x2EU)
 #define BOARD_CTRL_CMD_SOM_CAN_MUX_ENABLE         (0xEU)

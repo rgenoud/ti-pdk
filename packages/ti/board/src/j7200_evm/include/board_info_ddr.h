@@ -57,24 +57,24 @@ extern "C" {
 #include <stdbool.h>
 
 /* Board ID DDR dump offset for CP Board */
-#define BOARD_ID_DUMP_CP              (0x0U)
+#define BOARD_ID_DUMP_CP                      (0x0U)
 /* Board ID DDR dump offset for GESI */
-#define BOARD_ID_DUMP_GESI            (0x1U)
+#define BOARD_ID_DUMP_GESI                    (0x1U)
 /* Board ID DDR dump offset for Ethernet expansion board */
-#define BOARD_ID_DUMP_ENET            (0x2U)
+#define BOARD_ID_DUMP_ENET                    (0x2U)
 
 /* Maximum number of supporting board ID DDR dump */
-#define BOARD_ID_DUMP_MAX_BOARDS      (0x3U)
+#define BOARD_ID_DUMP_MAX_BOARDS              (0x3U)
 
-#define BOARD_ID_DUMP_MAX_SIZE        (1024U)
+#define BOARD_ID_DUMP_MAX_SIZE                (1024U)
 
 #define BOARD_ID_TYPE_FULL                    (0x0U)
 #define BOARD_ID_TYPE_BASIC                   (0x1U)
 #define BOARD_ID_TYPE_MEM                     (0x2U)
 #define BOARD_ID_TYPE_ETH                     (0x3U)
 
-#define BOARD_ENABLE_ID_MEMORY_DUMP           (TRUE)
-#define BOARD_ID_MEMORY_DUMP_ERR_FALLBACK     (TRUE)
+#define BOARD_ENABLE_ID_MEMORY_DUMP           (BTRUE)
+#define BOARD_ID_MEMORY_DUMP_ERR_FALLBACK     (BTRUE)
 
 /**
  *  @brief This structure contains board specific information
@@ -190,7 +190,7 @@ Board_STATUS Board_setBoardIdDataAddr(uint8_t *boardIDRdAddr);
 /**
  * \brief Function to check the board info DDR dump status
  *
- * \return   TRUE if board ID dump is DDR is valid, else false
+ * \return   BTRUE if board ID dump is DDR is valid, else BFALSE
  *
  */
 bool Board_isBoardDDRIdDataValid(void);

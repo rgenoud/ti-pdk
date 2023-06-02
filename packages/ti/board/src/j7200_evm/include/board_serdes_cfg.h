@@ -69,7 +69,7 @@ extern "C" {
 #define BOARD_SERDES_USB_LANE_NUM                (3U)
 
 /* Select SERDES lane functionality. 0 value means CPSW SGMII/QSGMII. */
-#define SERDES_LANE_SELECT_CPSW     (0U)
+#define SERDES_LANE_SELECT_CPSW                  (0U)
 
 /**
  *  \brief serdes configurations for Sierra 1 in SGMII mode
@@ -109,7 +109,7 @@ Board_STATUS Board_serdesCfgUsxgmii(void);
  *  \retval TRUE    SerDes1 is configured
  *  \retval FALSE   SerDes1 is not configured
  */
-int32_t Board_serdesCfgStatus(void);
+bool Board_serdesCfgStatus(void);
 
 #ifdef __cplusplus
 }

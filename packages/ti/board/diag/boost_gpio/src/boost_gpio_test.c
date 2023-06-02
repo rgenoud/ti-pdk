@@ -132,12 +132,12 @@ static int8_t BoardDiag_boostGpioPinSetVerification(uint8_t index,
     GPIO_write(boostGpioPinDetails[index].offsetIndex, gpioSignalLevel);
     BOARD_delay(200);
 
-    if(boostGpioPinDetails[index].pinSetMode == TWO_PIN_SET)
+    if(TWO_PIN_SET == boostGpioPinDetails[index].pinSetMode)
     {
         rdSignalLevel = GPIO_read(boostGpioPinDetails[index].offsetIndex + 1U);
         if(rdSignalLevel != gpioSignalLevel)
         {
-            if(gpioSignalLevel == SIGNAL_LEVEL_HIGH)
+            if(SIGNAL_LEVEL_HIGH == gpioSignalLevel)
             {
                 UART_printf("Looping back the signal high failed\n\r");
             }
@@ -154,7 +154,7 @@ static int8_t BoardDiag_boostGpioPinSetVerification(uint8_t index,
         rdSignalLevel = GPIO_read(boostGpioPinDetails[index].offsetIndex + 1U);
         if(rdSignalLevel != gpioSignalLevel)
         {
-            if(gpioSignalLevel == SIGNAL_LEVEL_HIGH)
+            if(SIGNAL_LEVEL_HIGH == gpioSignalLevel)
             {
                 UART_printf("Looping back the signal high failed\n\r");
             }
@@ -169,7 +169,7 @@ static int8_t BoardDiag_boostGpioPinSetVerification(uint8_t index,
         rdSignalLevel = GPIO_read(boostGpioPinDetails[index].offsetIndex + 2U);
         if(rdSignalLevel != gpioSignalLevel)
         {
-            if(gpioSignalLevel == SIGNAL_LEVEL_HIGH)
+            if(SIGNAL_LEVEL_HIGH != gpioSignalLevel)
             {
                 UART_printf("Looping back the signal high failed\n\r");
             }
@@ -200,20 +200,7 @@ static int8_t BoardDiag_run_boost_gpio_loopback_test(void)
     uint8_t pinSetCnt = 0U;
     uint8_t pinIndex = 0U;
 
-    /* Intial pinmuxing was not done for the below in the evm board library.
-       So, the below is the extra configuration done to disable the deep sleep
-       mode of these pins*/
-#ifdef am65xx_evm
-	volatile uint32_t *addr;
-	for(index = START_OF_PWM_OUT_PINS; index < END_OF_PWM_OUT_PINS; index++)
-    {
-		addr = (uint32_t *)(MAIN_PMUX_CTRL + pinMuxgpio[index]);
-		*addr &= DEEP_SLEEP_MASK;
-	}
-
-#endif
-
-    for(index = 0; index < PADCONFIG_MAX_COUNT; index++)
+    for(index = 0U; index < PADCONFIG_MAX_COUNT; index++)
     {
 
         Board_pinMuxSetMode(pinMuxgpio[index], 
@@ -226,22 +213,22 @@ static int8_t BoardDiag_run_boost_gpio_loopback_test(void)
 
     UART_printf("\nRunning Boost GPIO loopback test...\n");
 
-    for(index = 0; index < NUM_PIN_SETS; index++)
+    for(index = 0U; index < NUM_PIN_SETS; index++)
     {
         UART_printf("Verifying a pin set of J%d header with the pins - ", boostGpioPinDetails[index].headerName);
         pinSetCnt = boostGpioPinDetails[index].pinSetMode;
-        pinIndex = 0;
-        while(pinSetCnt != 0U)
+        pinIndex = 0U;
+        while(0U != pinSetCnt)
         {
             UART_printf("PIN_%2d", boostGpioPinDetails[index].pinNum[pinIndex]);
             pinIndex++;
             pinSetCnt--;
 
-            if(pinIndex < PIN_NUM_MAX)
+            if(PIN_NUM_MAX > pinIndex)
             {
                 if(boostGpioPinDetails[index].pinNum[pinIndex] != '\0')
                 {
-                    if((boostGpioPinDetails[index].pinSetMode - pinIndex) == 1U)
+                    if(1U == (boostGpioPinDetails[index].pinSetMode - pinIndex))
                     {
                         UART_printf(" & ");
                     }
@@ -256,13 +243,13 @@ static int8_t BoardDiag_run_boost_gpio_loopback_test(void)
         UART_printf("\n\r");
         /* Verifying the looping back the signal high */
         ret = BoardDiag_boostGpioPinSetVerification(index, SIGNAL_LEVEL_HIGH);
-        if(ret != 0)
+        if(0 != ret)
         {
             return ret;
         }
         /* Verifying the looping back the signal low */
         ret = BoardDiag_boostGpioPinSetVerification(index, SIGNAL_LEVEL_LOW);
-        if(ret != 0)
+        if(0 != ret)
         {
             return ret;
         }
@@ -294,16 +281,16 @@ int8_t BoardDiag_boostGpioStressTest(void)
     int8_t ret = 0;
     char rdBuf = 'y';
     uint32_t iteration;
-    uint32_t passCount = 0;
-    uint32_t failCount = 0;
+    uint32_t passCount = 0U;
+    uint32_t failCount = 0U;
 
     UART_printf("\n\nRunning BOOST GPIO Loopback Test in Stress Mode for %d Number of Times...\n", DIAG_STRESS_TEST_ITERATIONS);
     UART_printf("Enter 'b' in Serial Console to Terminate the Test\n\n");
 
-    for(iteration = 1; iteration <= DIAG_STRESS_TEST_ITERATIONS; iteration++)
+    for(iteration = 1U; iteration <= DIAG_STRESS_TEST_ITERATIONS; iteration++)
     {
         ret = BoardDiag_boostGpioFunctionalTest();
-        if (ret == 0)
+        if (0 == ret)
         {
             UART_printf("\n\n\n\nIteration : %d BOOST GPIO Loopback Test Passed\n",iteration);
             passCount++;
@@ -316,7 +303,7 @@ int8_t BoardDiag_boostGpioStressTest(void)
 
         /* Check if there a input from console to break the test */
         rdBuf = (char)BoardDiag_getUserInput(BOARD_UART_INSTANCE);
-        if((rdBuf == 'b') || (rdBuf == 'B'))
+        if(('b' == rdBuf) || ('B' == rdBuf))
         {
             UART_printf("Received Test Termination... Exiting the Test\n");
             iteration++;
@@ -330,7 +317,7 @@ int8_t BoardDiag_boostGpioStressTest(void)
     UART_printf("Pass Count - %d\n", passCount);
     UART_printf("Fail Count - %d\n", failCount);
 
-    if((iteration != 0) && (failCount == 0))
+    if((0U != iteration) && (0U == failCount))
     {
         UART_printf("Overall Status - PASS\n\n\n" );
     }
@@ -357,11 +344,6 @@ int main(void)
     Board_STATUS status;
     Board_initCfg boardCfg;
     int8_t ret = 0;
-#ifdef SOC_AM65XX
-    Board_IDInfo_v2 boardInfo;
-    bool isBoardConnected = FALSE;
-#endif
-
 #ifdef PDK_RAW_BOOT
     boardCfg = BOARD_INIT_MODULE_CLOCK |
                BOARD_INIT_PINMUX_CONFIG |
@@ -371,36 +353,10 @@ int main(void)
 #endif
 
     status = Board_init(boardCfg);
-    if(status != BOARD_SOK)
+    if(BOARD_SOK != status)
     {
-        return -1;
+        return BOARD_INVALID_PARAM;
     }
-
-#ifdef SOC_AM65XX
-    BoardDiag_enableI2C(0, CSL_WKUP_I2C0_CFG_BASE);
-    /* Check if BoosterPack application card is detected */
-    /* Test exits if there is no application card connected.
-       However, no error is reported to the caller. */
-    if(Board_detectBoard(APP_CARD_DETECT))
-    {
-        /* Application card connected, confirm that it is a BoosterPack App card */
-        if(Board_getIDInfo_v2(&boardInfo, BOARD_APP_EEPROM_ADDR) == BOARD_SOK)
-        {
-            if(strcmp(boardInfo.boardInfo.boardName, "LAUNCHXL-AM6") == 0)
-            {
-                isBoardConnected = TRUE;
-            }
-        }
-    }
-    BoardDiag_enableI2C(0, CSL_I2C0_CFG_BASE);
-
-    if(isBoardConnected == FALSE)
-    {
-        UART_printf("\nApplication Card not Connected!!\n");
-        UART_printf("Exiting the Test...\n");
-        return 0;
-    }
-#endif
 
     UART_printf("\n***************************************\n");
     UART_printf(  "        BOOST GPIO Loopback Test       \n");
@@ -411,7 +367,7 @@ int main(void)
 #else
     ret = BoardDiag_boostGpioFunctionalTest();
 #endif
-    if(ret == 0)
+    if(0 == ret)
     {
         UART_printf("\nBOOST GPIO Loopback Test Passed\n");
     }

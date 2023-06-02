@@ -137,12 +137,12 @@ extern "C" {
 #define BOARD_I2C_BOOT_EEPROM_ADDR2                     (0x51U)
 
 /* I2C slave address of clock generator */
-#define BOARD_I2C_CLOCK_GENERATOR1                      (0x00)
-#define BOARD_I2C_CLOCK_GENERATOR2_ADDR1                (0x76)
-#define BOARD_I2C_CLOCK_GENERATOR2_ADDR2                (0x77)
-#define BOARD_I2C_QSGMII_CLOCK_GENERATOR_ADDR1          (0x76)
-#define BOARD_I2C_QSGMII_CLOCK_GENERATOR_ADDR2          (0x77)
-#define BOARD_I2C_PERI_CLOCK_GENERATOR                  (0x6D)
+#define BOARD_I2C_CLOCK_GENERATOR1                      (0x00U)
+#define BOARD_I2C_CLOCK_GENERATOR2_ADDR1                (0x76U)
+#define BOARD_I2C_CLOCK_GENERATOR2_ADDR2                (0x77U)
+#define BOARD_I2C_QSGMII_CLOCK_GENERATOR_ADDR1          (0x76U)
+#define BOARD_I2C_QSGMII_CLOCK_GENERATOR_ADDR2          (0x77U)
+#define BOARD_I2C_PERI_CLOCK_GENERATOR                  (0x6DU)
 
 /* I2C IO Expander Slave devices */
 #define BOARD_I2C_IOEXP_SOM_DEVICE1_ADDR                (0x21U)
@@ -192,7 +192,7 @@ extern "C" {
 /* Maximum number of SoC domains */
 #define BOARD_SOC_DOMAIN_MAX                            (3U)
 /* Value for indicating SoC main domain */
-#define BOARD_SOC_DOMAIN_MAIN                           (0)
+#define BOARD_SOC_DOMAIN_MAIN                           (0U)
 /* Value for indicating SoC wake-up domain */
 #define BOARD_SOC_DOMAIN_WKUP                           (1U)
 /* Value for indicating SoC MCU domain */
@@ -228,12 +228,12 @@ extern "C" {
 #define BOARD_EEPROM_HEADER_FIELD_SIZE                  (7U)
 #define BOARD_EEPROM_TYPE_SIZE                          (1U)
 #define BOARD_EEPROM_STRUCT_LENGTH_SIZE                 (2U)
-#define BOARD_EEPROM_MAGIC_NUMBER                       (0xEE3355AA)
+#define BOARD_EEPROM_MAGIC_NUMBER                       (0xEE3355AAU)
 
 #define BOARD_BOARD_FIELD_TYPE                          (0x10)
 #define BOARD_DDR_FIELD_TYPE                            (0x11)
 #define BOARD_MACINFO_FIELD_TYPE                        (0x13)
-#define BOARD_ENDLIST                                   (0xFE)
+#define BOARD_ENDLIST                                   (0xFEU)
 
 #define BOARD_EEPROM_HEADER_ADDR                        (0U)
 
@@ -268,7 +268,7 @@ extern "C" {
 /* CPSW max ports supported */
 #define BOARD_CPSW_PORT_MAX                             (4U)
 
-#define BOARD_GESI_CPSW_PHY_ADDR                        (0x0)
+#define BOARD_GESI_CPSW_PHY_ADDR                        (0x0U)
 
 #define BOARD_CPSW5G_EMAC_PORT_MAX                      (4U)
 
@@ -287,40 +287,40 @@ extern "C" {
 #define BOARD_USER_LED2                                 (7U)
 #define BOARD_USER_LED_IOEXP_PORT                       (2U)
 
-#define BOARD_COMMON_EEPROM_I2C_INST                    (0)
+#define BOARD_COMMON_EEPROM_I2C_INST                    (0U)
 
 /* Maximum number of supporting board ID */
 #define BOARD_ID_MAX_BOARDS                             (4U)
 
 /* GPIO port & pin numbers for  MMC reset */
-#define GPIO_MMC_SDCD_PORT_NUM                          (0)
-#define GPIO_MMC_SDCD_PIN_NUM                           (0)
+#define GPIO_MMC_SDCD_PORT_NUM                          (0U)
+#define GPIO_MMC_SDCD_PIN_NUM                           (0U)
 
-#define BOARD_GPIO_IOEXP_EMMC_RST_PORT_NUM              (0x00)
-#define BOARD_GPIO_IOEXP_EMMC_RST_PIN_NUM               (0x00)
+#define BOARD_GPIO_IOEXP_EMMC_RST_PORT_NUM              (0x00U)
+#define BOARD_GPIO_IOEXP_EMMC_RST_PIN_NUM               (0x00U)
 
 /* McSPI instance for master and slave test */
-#define BOARD_MCSPI_MASTER_INSTANCE                     (1)
-#define BOARD_MCSPI_SLAVE_INSTANCE                      (1)
+#define BOARD_MCSPI_MASTER_INSTANCE                     (1U)
+#define BOARD_MCSPI_SLAVE_INSTANCE                      (1U)
 
 /* LIN uart instance */
-#define BOARD_LIN1_UART_INSTANCE                         (5U)
-#define BOARD_LIN1_UART_BASE                             (CSL_UART5_BASE)
+#define BOARD_LIN1_UART_INSTANCE                        (5U)
+#define BOARD_LIN1_UART_BASE                            (CSL_UART5_BASE)
 
-#define BOARD_LIN2_UART_INSTANCE                         (6U)
-#define BOARD_LIN2_UART_BASE                             (CSL_UART6_BASE)
+#define BOARD_LIN2_UART_INSTANCE                        (6U)
+#define BOARD_LIN2_UART_BASE                            (CSL_UART6_BASE)
 
-#define BOARD_LIN3_UART_INSTANCE                         (9U)
-#define BOARD_LIN3_UART_BASE                             (CSL_UART9_BASE)
+#define BOARD_LIN3_UART_INSTANCE                        (9U)
+#define BOARD_LIN3_UART_BASE                            (CSL_UART9_BASE)
 
-#define BOARD_LIN4_UART_INSTANCE                         (3U)
-#define BOARD_LIN4_UART_BASE                             (CSL_UART3_BASE)
+#define BOARD_LIN4_UART_INSTANCE                        (3U)
+#define BOARD_LIN4_UART_BASE                            (CSL_UART3_BASE)
 
-#define BOARD_LIN5_UART_INSTANCE                         (7U)
-#define BOARD_LIN5_UART_BASE                             (CSL_UART7_BASE)
+#define BOARD_LIN5_UART_INSTANCE                        (7U)
+#define BOARD_LIN5_UART_BASE                            (CSL_UART7_BASE)
 
-#define BOARD_LIN6_UART_INSTANCE                         (1U)
-#define BOARD_LIN6_UART_BASE                             (CSL_UART1_BASE)
+#define BOARD_LIN6_UART_INSTANCE                        (1U)
+#define BOARD_LIN6_UART_BASE                            (CSL_UART1_BASE)
 
 
 /* Default pinmux configuration of UART Tx pin used by ROM/SBL */
