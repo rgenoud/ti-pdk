@@ -1,0 +1,55 @@
+# Compiling j722s:mcu1_0:release:osal_nonos:soc/j722s/TimerP_default.c
+# Compiling j722s:mcu1_0:release:osal_nonos:arch/core/r5/CacheP_nonos.c
+# Compiling j722s_zebu:j722s:mcu1_0:release:vhwa:src/csl/src/csl_vpacTop.c
+# Compiling j722s:mcu1_0:release:osal_nonos:arch/core/r5/Arch_util.c
+# Compiling j722s_zebu:j722s:mcu1_0:release:vhwa:src/csl/src/csl_glbce.c
+# Compiling j722s_zebu:j722s:mcu1_0:release:vhwa:src/csl/src/csl_h3a.c
+# Compiling j722s_zebu:j722s:mcu1_0:release:vhwa:src/csl/src/csl_ee.c
+# Compiling j722s_zebu:j722s:mcu1_0:release:vhwa:src/csl/src/csl_dmpacTop.c
+# Compiling j722s_zebu:j722s:mcu1_0:release:vhwa:src/csl/src/csl_dof.c
+# Compiling j722s_zebu:j722s:mcu1_0:release:vhwa:src/csl/src/csl_sde.c
+# Compiling j722s_zebu:j722s:mcu1_0:release:vhwa:src/drv/vhwa_utils.c
+/home/a0393878/workarea/j7aen/pdk/packages/ti/build/makerules/rules_ti_cgt_arm.mk:233: recipe for target '/home/a0393878/workarea/j7aen/pdk/packages/ti/binary/ti/osal/osal_nonos/obj/j722s/r5f/release/TimerP_default.oer5f' failed
+/home/a0393878/workarea/j7aen/pdk/packages/ti/build/makerules/rules_ti_cgt_arm.mk:233: recipe for target '/home/a0393878/workarea/j7aen/pdk/packages/ti/binary/ti/osal/osal_nonos/obj/j722s/r5f/release/CacheP_nonos.oer5f' failed
+# Compiling j722s_zebu:j722s:mcu1_0:release:vhwa:src/drv/vhwa_m2mMscApi.c
+# Compiling j722s_zebu:j722s:mcu1_0:release:vhwa:src/drv/vhwa_m2mMscUdma.c
+# Compiling j722s_zebu:j722s:mcu1_0:release:vhwa:src/drv/vhwa_m2mMscIntr.c
+# Compiling j722s_zebu:j722s:mcu1_0:release:vhwa:src/drv/vhwa_m2mLdcApi.c
+# Compiling j722s_zebu:j722s:mcu1_0:release:vhwa:src/drv/vhwa_m2mLdcUdma.c
+# Compiling j722s_zebu:j722s:mcu1_0:release:vhwa:src/drv/vhwa_m2mLdcIntr.c
+# Compiling j722s_zebu:j722s:mcu1_0:release:vhwa:src/drv/vhwa_m2mVissPriv.c
+/home/a0393878/workarea/j7aen/pdk/packages/ti/build/makerules/rules_ti_cgt_arm.mk:233: recipe for target '/home/a0393878/workarea/j7aen/pdk/packages/ti/binary/ti/osal/osal_nonos/obj/j722s/r5f/release/Arch_util.oer5f' failed
+# Compiling j722s_zebu:j722s:mcu1_0:release:vhwa:src/drv/vhwa_m2mVissCsl.c
+/home/a0393878/workarea/j7aen/pdk/packages/ti/build/makerules/common.mk:292: recipe for target 'osal_nonos' failed
+# Compiling j722s_zebu:j722s:mcu1_0:release:vhwa:src/drv/vhwa_m2mVissIntr.c
+# Compiling j722s_zebu:j722s:mcu1_0:release:vhwa:src/drv/vhwa_m2mVissUdma.c
+# Compiling j722s_zebu:j722s:mcu1_0:release:vhwa:src/drv/vhwa_m2mVissApi.c
+# Compiling j722s_zebu:j722s:mcu1_0:release:vhwa:src/drv/vhwa_m2mDofApi.c
+# Compiling j722s_zebu:j722s:mcu1_0:release:vhwa:src/drv/vhwa_m2mDofUdma.c
+# Compiling j722s_zebu:j722s:mcu1_0:release:vhwa:src/drv/vhwa_m2mDofIntr.c
+# Compiling j722s_zebu:j722s:mcu1_0:release:vhwa:src/drv/vhwa_m2mSdeApi.c
+# Compiling j722s_zebu:j722s:mcu1_0:release:vhwa:src/drv/vhwa_m2mSdeUdma.c
+# Compiling j722s_zebu:j722s:mcu1_0:release:vhwa:src/drv/vhwa_m2mSdeIntr.c
+# Compiling j722s_zebu:j722s:mcu1_0:release:vhwa:src/drv/udma_ch.c
+# Compiling j722s_zebu:j722s:mcu1_0:release:vhwa:src/drv/udma_rm.c
+# Compiling j722s_zebu:j722s:mcu1_0:release:vhwa:src/drv/udma.c
+# Compiling j722s_zebu:j722s:mcu1_0:release:vhwa:src/drv/udma_ring.c
+# Compiling j722s_zebu:j722s:mcu1_0:release:vhwa:src/drv/udma_event.c
+# Compiling j722s_zebu:j722s:mcu1_0:release:vhwa:src/drv/udma_osal.c
+# Compiling j722s_zebu:j722s:mcu1_0:release:vhwa:src/drv/udma_utils.c
+/home/a0393878/workarea/j7aen/pdk/packages/ti/build/makerules/rules_ti_cgt_arm.mk:233: recipe for target '/home/a0393878/workarea/j7aen/pdk/packages/ti/binary/ti/drv/vhwa/obj/j722s_zebu/mcu1_0/release/udma_ch.oer5f' failed
+# Compiling j722s_zebu:j722s:mcu1_0:release:vhwa:soc/V2/vhwa_vpac_soc.c
+/home/a0393878/workarea/j7aen/pdk/packages/ti/build/makerules/rules_ti_cgt_arm.mk:233: recipe for target '/home/a0393878/workarea/j7aen/pdk/packages/ti/binary/ti/drv/vhwa/obj/j722s_zebu/mcu1_0/release/udma_rm.oer5f' failed
+/home/a0393878/workarea/j7aen/pdk/packages/ti/build/makerules/rules_ti_cgt_arm.mk:233: recipe for target '/home/a0393878/workarea/j7aen/pdk/packages/ti/binary/ti/drv/vhwa/obj/j722s_zebu/mcu1_0/release/vhwa_m2mDofApi.oer5f' failed
+/home/a0393878/workarea/j7aen/pdk/packages/ti/build/makerules/rules_ti_cgt_arm.mk:233: recipe for target '/home/a0393878/workarea/j7aen/pdk/packages/ti/binary/ti/drv/vhwa/obj/j722s_zebu/mcu1_0/release/vhwa_m2mDofUdma.oer5f' failed
+/home/a0393878/workarea/j7aen/pdk/packages/ti/build/makerules/rules_ti_cgt_arm.mk:233: recipe for target '/home/a0393878/workarea/j7aen/pdk/packages/ti/binary/ti/drv/vhwa/obj/j722s_zebu/mcu1_0/release/udma_ring.oer5f' failed
+/home/a0393878/workarea/j7aen/pdk/packages/ti/build/makerules/rules_ti_cgt_arm.mk:233: recipe for target '/home/a0393878/workarea/j7aen/pdk/packages/ti/binary/ti/drv/vhwa/obj/j722s_zebu/mcu1_0/release/vhwa_m2mDofIntr.oer5f' failed
+/home/a0393878/workarea/j7aen/pdk/packages/ti/build/makerules/rules_ti_cgt_arm.mk:233: recipe for target '/home/a0393878/workarea/j7aen/pdk/packages/ti/binary/ti/drv/vhwa/obj/j722s_zebu/mcu1_0/release/vhwa_m2mSdeIntr.oer5f' failed
+/home/a0393878/workarea/j7aen/pdk/packages/ti/build/makerules/rules_ti_cgt_arm.mk:233: recipe for target '/home/a0393878/workarea/j7aen/pdk/packages/ti/binary/ti/drv/vhwa/obj/j722s_zebu/mcu1_0/release/vhwa_m2mSdeApi.oer5f' failed
+/home/a0393878/workarea/j7aen/pdk/packages/ti/build/makerules/rules_ti_cgt_arm.mk:233: recipe for target '/home/a0393878/workarea/j7aen/pdk/packages/ti/binary/ti/drv/vhwa/obj/j722s_zebu/mcu1_0/release/vhwa_m2mSdeUdma.oer5f' failed
+/home/a0393878/workarea/j7aen/pdk/packages/ti/build/makerules/rules_ti_cgt_arm.mk:233: recipe for target '/home/a0393878/workarea/j7aen/pdk/packages/ti/binary/ti/drv/vhwa/obj/j722s_zebu/mcu1_0/release/udma_event.oer5f' failed
+/home/a0393878/workarea/j7aen/pdk/packages/ti/build/makerules/rules_ti_cgt_arm.mk:233: recipe for target '/home/a0393878/workarea/j7aen/pdk/packages/ti/binary/ti/drv/vhwa/obj/j722s_zebu/mcu1_0/release/udma.oer5f' failed
+/home/a0393878/workarea/j7aen/pdk/packages/ti/build/makerules/rules_ti_cgt_arm.mk:233: recipe for target '/home/a0393878/workarea/j7aen/pdk/packages/ti/binary/ti/drv/vhwa/obj/j722s_zebu/mcu1_0/release/soc/V2/vhwa_vpac_soc.oer5f' failed
+/home/a0393878/workarea/j7aen/pdk/packages/ti/build/makerules/common.mk:292: recipe for target 'vhwa' failed
+/home/a0393878/workarea/j7aen/pdk/packages/ti/build/makerules/common.mk:410: recipe for target 'mcu1_0' failed
+makefile:371: recipe for target 'vhwa_dof_baremetal_testapp' failed

@@ -121,6 +121,7 @@ CFLAGS_GLOBAL_am62x_evm         = -DSOC_AM62X -Dam62x_evm=am62x_evm
 CFLAGS_GLOBAL_am62a_evm         = -DSOC_AM62A -Dam62a_evm=am62a_evm
 CFLAGS_GLOBAL_am62a_hostemu     = -DSOC_AM62A -DHOST_EMULATION
 CFLAGS_GLOBAL_am62a_loki        = -DSOC_AM62A -Dam62a_loki -DLOKI_BUILD
+CFLAGS_GLOBAL_j722s_zebu        = -DSOC_J722S -Dj722s_zebu=j722s_zebu
 CFLAGS_GLOBAL_tpr12_qt          = -DSOC_TPR12 -Dtpr12_qt=tpr12_qt
 CFLAGS_GLOBAL_tpr12_evm         = -DSOC_TPR12 -Dtpr12_evm=tpr12_evm
 CFLAGS_GLOBAL_awr294x_evm       = -DSOC_AWR294X -Dawr294x_evm=awr294x_evm
@@ -158,6 +159,7 @@ CFLAGS_GLOBAL_j784s4         = -DSOC_J784S4
 CFLAGS_GLOBAL_am64x          = -DSOC_AM64X
 CFLAGS_GLOBAL_am62x          = -DSOC_AM62X
 CFLAGS_GLOBAL_am62a          = -DSOC_AM62A
+CFLAGS_GLOBAL_j722s          = -DSOC_J722S
 CFLAGS_GLOBAL_tpr12          = -DSOC_TPR12
 CFLAGS_GLOBAL_awr294x        = -DSOC_AWR294X
 # The below flags are only defined for testing on VLAB or QT/Zebu and will need to be removed when testing on EVM

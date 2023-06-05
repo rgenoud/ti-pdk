@@ -68,9 +68,9 @@ ifeq ($(osal_component_make_include), )
 
 libosal_RTOS_LIST = $(DEFAULT_RTOS_LIST)
 
-libosal_BOARDLIST  = j721e_evm j7200_evm j721s2_evm j784s4_evm am62x_evm am62a_evm
+libosal_BOARDLIST  = j721e_evm j7200_evm j721s2_evm j784s4_evm am62x_evm am62a_evm j722s_zebu
 
-libosal_SOCLIST   =  j721e j7200 j721s2 j784s4 am62x am62a
+libosal_SOCLIST   =  j721e j7200 j721s2 j784s4 am62x am62a j722s
 
 libosal_freertos_BOARDLIST  = j721e_evm j7200_evm j721s2_evm j784s4_evm am62x_evm am62a_evm
 libosal_freertos_SOCLIST    = j721e j7200 j721s2 j784s4 am62x am62a
