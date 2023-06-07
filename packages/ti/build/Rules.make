@@ -35,7 +35,7 @@
 export OS ?= linux
 
 SDK_INSTALL_PATH ?= $(abspath ../../../../)
-TOOLS_INSTALL_PATH ?= $(SDK_INSTALL_PATH)
+TOOLS_INSTALL_PATH ?= $(HOME)/ti
 
 #Default BUILD_OS_TYPE (tirtos/baremetal/freertos)
 export BUILD_OS_TYPE ?= freertos
