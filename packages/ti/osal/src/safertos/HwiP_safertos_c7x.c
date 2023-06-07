@@ -113,7 +113,7 @@ HwiP_Handle HwiP_create(uint32_t interruptNum, HwiP_Fxn hwiFxn,
     /* Check if user has specified any memory block to be used, which gets
      * the precedence over the internal static memory block
      */
-    if ((uintptr_t)0U != gOsal_HwAttrs.extHwiPBlock.base)
+    if ((uintptr_t)(0U) != gOsal_HwAttrs.extHwiPBlock.base)
     {
         /* pick up the external memory block configured */
         hwiPool        = (HwiP_safeRtos *) gOsal_HwAttrs.extHwiPBlock.base;
@@ -137,9 +137,9 @@ HwiP_Handle HwiP_create(uint32_t interruptNum, HwiP_Fxn hwiFxn,
 
     for (i = 0U; i < maxHwi; i++)
     {
-        if ((bool)false == hwiPool[i].used)
+        if (BFALSE == hwiPool[i].used)
         {
-            hwiPool[i].used = (bool)true;
+            hwiPool[i].used = BTRUE;
             /* Update statistics */
             gOsalHwiAllocCnt++;
             if (gOsalHwiAllocCnt > gOsalHwiPeak)
@@ -181,13 +181,13 @@ HwiP_Handle HwiP_create(uint32_t interruptNum, HwiP_Fxn hwiFxn,
             }
 
             hwiParams.eventId        = params->evtId;
-            if (TRUE == params->enableIntr)
+            if (UTRUE == params->enableIntr)
             {
-                hwiParams.enableInt      = (bool)true;
+                hwiParams.enableInt      = BTRUE;
             }
             else
             {
-                hwiParams.enableInt      = (bool)false;
+                hwiParams.enableInt      = BFALSE;
             }
             hwiParams.maskSetting    = Hwi_MaskingOption_SELF;
             iStat = Hwi_construct(&handle->hwi, interruptNum, (Hwi_FuncPtr)hwiFxn,
@@ -196,7 +196,7 @@ HwiP_Handle HwiP_create(uint32_t interruptNum, HwiP_Fxn hwiFxn,
             if (0 != iStat)
             {
                 /* Free the allocated memory and return null */
-                handle->used = (bool)false;
+                handle->used = BFALSE;
                 handle = (HwiP_safeRtos *) NULL_PTR;
             }
         }
@@ -228,12 +228,12 @@ HwiP_Status HwiP_delete(HwiP_Handle handle)
     
     HwiP_safeRtos *hwi = (HwiP_safeRtos *)handle;
     
-    if((NULL_PTR != hwi) && ((bool)true == hwi->used)) {
+    if((NULL_PTR != hwi) && (BTRUE == hwi->used)) {
       Hwi_destruct(&hwi->hwi);
       key = HwiP_disable();
-      hwi->used = (bool)false;
+      hwi->used = BFALSE;
       /* Found the osal hwi object to delete */
-      if (gOsalHwiAllocCnt > 0U)
+      if (0U < gOsalHwiAllocCnt)
       {
         gOsalHwiAllocCnt--;
       }
@@ -291,8 +291,8 @@ void HwiP_Params_init(HwiP_Params *params)
     params->name = (char *) NULL_PTR;
     params->arg = 0U;
     params->priority = HWIP_USE_DEFAULT_PRIORITY;
-    params->evtId    = 0U;
-    params->enableIntr = TRUE;
+    params->evtId    = EventP_ID_NONE;
+    params->enableIntr = UTRUE;
 }
 
 /*

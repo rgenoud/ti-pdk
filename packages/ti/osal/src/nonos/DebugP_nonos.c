@@ -38,6 +38,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 
+#include <ti/osal/osal.h>
 #include <ti/osal/DebugP.h>
 
 #if DebugP_ASSERT_ENABLED
@@ -53,7 +54,7 @@ void Osal_DebugP_assert_fcn(bool expression, const char *file, int32_t line)
     (void)line;
 
     if (!expression) {
-        while ((bool)true == Osal_DebugP_Assert_Val) {};
+        while (BTRUE == Osal_DebugP_Assert_Val) {};
     }
 }
 #endif

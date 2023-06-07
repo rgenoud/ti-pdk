@@ -69,7 +69,7 @@ uint32_t  gOsalHeapAllocCnt  = 0U, gOsalHeapPeak  = 0U;
 #define OSAL_CPU_FREQ_KHZ_DEFAULT (400000U)
 #endif
 
-volatile bool Osal_DebugP_Assert_Val=(bool)true;
+volatile bool Osal_DebugP_Assert_Val = BTRUE;
 
 /* Global Osal_HwAttr structure */
 Osal_HwAttrs  gOsal_HwAttrs = {
@@ -114,7 +114,7 @@ void Osal_DebugP_assert(int32_t expression, const char *file, int32_t line)
     (void)line;
     
     if (0 != expression) {
-        while ((bool)true == Osal_DebugP_Assert_Val) {}
+        while (BTRUE == Osal_DebugP_Assert_Val) {}
     }
 }
 
@@ -126,7 +126,7 @@ Osal_ThreadType Osal_getThreadType(void)
         osalThreadType = Osal_ThreadType_Hwi;
     }
 #if defined (BUILD_MCU)    
-    else if (true == Osal_isInAbortContext())
+    else if (BTRUE == Osal_isInAbortContext())
     {
         osalThreadType = Osal_ThreadType_Abort;
     }
@@ -194,7 +194,7 @@ int32_t Osal_setHwAttrs(uint32_t ctrlBitMap, const Osal_HwAttrs *hwAttrs)
      }
 
      /* Set the extended memmory block for semaphore operations */
-     if (0U != (ctrlBitMap & OSAL_HWATTR_SET_SEMP_EXT_BASE) )
+     if ( 0U != (ctrlBitMap & OSAL_HWATTR_SET_SEMP_EXT_BASE) )
      {
          gOsal_HwAttrs.extSemaphorePBlock = hwAttrs->extSemaphorePBlock;
          /* Zero out the given memory block */
@@ -203,7 +203,7 @@ int32_t Osal_setHwAttrs(uint32_t ctrlBitMap, const Osal_HwAttrs *hwAttrs)
      }
 
      /* Set the extended memmory block for semaphore operations */
-     if (0U != (ctrlBitMap & OSAL_HWATTR_SET_HWIP_EXT_BASE) )
+     if ( 0U != (ctrlBitMap & OSAL_HWATTR_SET_HWIP_EXT_BASE) )
      {
          gOsal_HwAttrs.extHwiPBlock = hwAttrs->extHwiPBlock;
          /* Zero out the given memory block */
@@ -211,7 +211,7 @@ int32_t Osal_setHwAttrs(uint32_t ctrlBitMap, const Osal_HwAttrs *hwAttrs)
          ret = osal_OK;
      }
      /* Set the CPU frequency */
-     if (0U != (ctrlBitMap & OSAL_HWATTR_SET_CPU_FREQ) )
+     if ( 0U != (ctrlBitMap & OSAL_HWATTR_SET_CPU_FREQ) )
      {
          gOsal_HwAttrs.cpuFreqKHz = hwAttrs->cpuFreqKHz;
          ret = osal_OK;

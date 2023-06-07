@@ -91,7 +91,7 @@ OsalInterruptRetCode_e Osal_RegisterInterrupt(OsalRegisterIntrParams_t *interrup
 
     /* Program the corepac interrupt */
     if( (NULL == interruptRegParams->corepacConfig.isrRoutine) ||
-        (interruptRegParams->corepacConfig.corepacEventNum < 0)) {
+        (0 > interruptRegParams->corepacConfig.corepacEventNum) ) {
         ret = OSAL_INT_ERR_INVALID_PARAMS;
     }
 

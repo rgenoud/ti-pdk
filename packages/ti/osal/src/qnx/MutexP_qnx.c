@@ -84,7 +84,7 @@ MutexP_Status MutexP_delete(MutexP_Handle handle)
     int ret;
 
     ret = pthread_mutex_destroy((pthread_mutex_t *)handle);
-    if (ret < 0) {
+    if (0 > ret) {
         DebugP_log1("pthread_mutex_destroy for QNX Failed - errno-%d", errno);
         return MutexP_FAILURE;
     }
@@ -115,7 +115,7 @@ MutexP_Status MutexP_lock(MutexP_Handle handle, uint32_t timeout)
 
         ret = pthread_mutex_timedlock((pthread_mutex_t *)handle, &ts);
     }
-    if (ret < 0) {
+    if (0 > ret) {
         if (ETIMEDOUT == errno) {
             return (MutexP_TIMEOUT);
         } else {
@@ -136,7 +136,7 @@ MutexP_Status MutexP_unlock(MutexP_Handle handle)
     int ret;
 
     ret = pthread_mutex_unlock((pthread_mutex_t *)handle);
-    if (ret < 0) {
+    if (0 > ret) {
         return (MutexP_FAILURE);
     }
 

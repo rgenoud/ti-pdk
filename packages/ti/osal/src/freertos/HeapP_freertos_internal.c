@@ -83,7 +83,7 @@
 #define heapBITS_PER_BYTE         ( ( size_t ) 8 )
 
 /* minimum alignment for heap allocations */
-#define heapBYTE_ALIGNMENT_MASK   (heapBYTE_ALIGNMENT-1U)
+#define heapBYTE_ALIGNMENT_MASK   (heapBYTE_ALIGNMENT - 1U)
 
 /* The size of the structure placed at the beginning of each allocated memory
  * block must by correctly byte aligned. */
@@ -147,7 +147,7 @@ void * pvHeapMalloc( StaticHeap_t *heap, size_t xWantedSize )
                 }
             }
 
-            if( ( xMallocSize > ( size_t )0 ) && ( xMallocSize <= heap->xFreeBytesRemaining ) )
+            if( ( ( size_t )0 < xMallocSize ) && ( xMallocSize <= heap->xFreeBytesRemaining ) )
             {
                 /* Traverse the list from the start	(lowest address) block until
                  * one	of adequate size is found. */
