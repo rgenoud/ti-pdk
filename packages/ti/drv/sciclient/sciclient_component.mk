@@ -54,11 +54,16 @@ sciclient_LIB_LIST += sciserver_baremetal
 sciclient_LIB_LIST += sciclient_direct
 sciclient_LIB_LIST += sciclient_direct_hs
 endif
+ifeq ($(SOC),$(filter $(SOC), j722s))
+sciclient_LIB_LIST += rm_pm_hal
+sciclient_LIB_LIST += sciserver_baremetal
+sciclient_LIB_LIST += sciclient_direct
+endif
 ifeq ($(SOC),$(filter $(SOC), am62x))
 sciclient_LIB_LIST += dm_stub
 sciclient_LIB_LIST += self_reset
 endif
-ifeq ($(SOC),$(filter $(SOC), am62a))
+ifeq ($(SOC),$(filter $(SOC), am62a j722s))
 sciclient_LIB_LIST += self_reset
 endif
 endif
@@ -71,7 +76,7 @@ sciclient_LIB_LIST += sciclient_direct
 endif
 
 drvsciclient_BOARDLIST = am65xx_evm am65xx_idk j721e_sim j721e_evm j7200_evm j721s2_evm j784s4_evm am64x_evm am62x_evm am62a_evm
-drvsciclient_SOCLIST = am65xx j721e j7200 j721s2 j784s4 am64x am62x am62a
+drvsciclient_SOCLIST = am65xx j721e j7200 j721s2 j784s4 am64x am62x am62a j722s
 drvsciclient_am65xx_CORELIST = mcu1_0 mcu1_1 mpu1_0
 drvsciclient_j721e_CORELIST = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 c66xdsp_1 c66xdsp_2 c7x_1 c7x-hostemu
 drvsciclient_j7200_CORELIST = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1
@@ -80,6 +85,7 @@ drvsciclient_j784s4_CORELIST = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 
 drvsciclient_am64x_CORELIST = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 m4f_0
 drvsciclient_am62x_CORELIST = mcu1_0 m4f_0
 drvsciclient_am62a_CORELIST = mcu1_0 c7x_1
+drvsciclient_j722s_CORELIST = mcu1_0
 drvsciclient_DISABLE_PARALLEL_MAKE = yes
 ifeq ($(BUILD_OS_TYPE), qnx)
 drvsciclient_j721e_CORELIST += qnx_mpu1_0
@@ -108,7 +114,7 @@ export sciclient_LIBPATH = $(PDK_SCICLIENT_COMP_PATH)/lib
 export sciclient_MAKEFILE = -fsrc/sciclient_indirect_makefile BUILD_HS=no
 # Simulator versus Silicon has a different Firmware Image.
 export sciclient_BOARD_DEPENDENCY = no
-ifeq ($(BOARD),$(filter $(BOARD), j721e_ccqt j721e_loki j721e_hostemu j721s2_hostemu j784s4_hostemu))
+ifeq ($(BOARD),$(filter $(BOARD), j721e_ccqt j721e_loki j721e_hostemu j721s2_hostemu j784s4_hostemu j722s_zebu))
 export sciclient_BOARD_DEPENDENCY = yes
 endif
 export sciclient_CORE_DEPENDENCY = yes
@@ -127,7 +133,7 @@ export sciclient_hs_LIBPATH = $(PDK_SCICLIENT_COMP_PATH)/lib
 export sciclient_hs_MAKEFILE = -fsrc/sciclient_indirect_makefile BUILD_HS=yes
 # Simulator versus Silicon has a different Firmware Image.
 export sciclient_hs_BOARD_DEPENDENCY = no
-ifeq ($(BOARD),$(filter $(BOARD), j721e_ccqt j721e_loki j721e_hostemu j721s2_hostemu j784s4_hostemu))
+ifeq ($(BOARD),$(filter $(BOARD), j721e_ccqt j721e_loki j721e_hostemu j721s2_hostemu j784s4_hostemu j722s_zebu))
 export sciclient_hs_BOARD_DEPENDENCY = yes
 endif
 export sciclient_hs_BOARD_DEPENDENCY
@@ -149,8 +155,8 @@ export sciclient_direct_BOARD_DEPENDENCY = no
 export sciclient_direct_CORE_DEPENDENCY = yes
 export sciclient_direct_PKG_LIST = sciclient_direct
 export sciclient_direct_INCLUDE = $(sciclient_direct_PATH)
-export sciclient_direct_SOCLIST = j721e j7200 j721s2 j784s4 am62x am62a
-export sciclient_direct_BOARDLIST = j721e_evm j7200_evm j721s2_evm j784s4_evm am62x_evm am62a_evm
+export sciclient_direct_SOCLIST = j721e j7200 j721s2 j784s4 am62x am62a j722s
+export sciclient_direct_BOARDLIST = j721e_evm j7200_evm j721s2_evm j784s4_evm am62x_evm am62a_evm j722s_zebu
 export sciclient_direct_$(SOC)_CORELIST = mcu1_0
 
 export sciclient_direct_hs_COMP_LIST = sciclient_direct_hs
@@ -194,8 +200,8 @@ export sciserver_baremetal_BOARD_DEPENDENCY = no
 export sciserver_baremetal_CORE_DEPENDENCY = yes
 export sciserver_baremetal_PKG_LIST = sciserver_baremetal
 export sciserver_baremetal_INCLUDE = $(sciserver_PATH)
-export sciserver_baremetal_SOCLIST = j721e j7200 j721s2 j784s4
-export sciserver_baremetal_BOARDLIST = j721e_evm j7200_evm j721s2_evm j784s4_evm
+export sciserver_baremetal_SOCLIST = j721e j7200 j721s2 j784s4 j722s
+export sciserver_baremetal_BOARDLIST = j721e_evm j7200_evm j721s2_evm j784s4_evm j722s_zebu
 export sciserver_baremetal_$(SOC)_CORELIST = mcu1_0
 
 
@@ -233,8 +239,8 @@ export rm_pm_hal_BOARD_DEPENDENCY = no
 export rm_pm_hal_CORE_DEPENDENCY = yes
 export rm_pm_hal_PKG_LIST = rm_pm_hal
 export rm_pm_hal_INCLUDE = $(rm_pm_hal_PATH)
-export rm_pm_hal_SOCLIST = j721e j7200 j721s2 j784s4 am62x am62a
-export rm_pm_hal_BOARDLIST = j721e_evm j7200_evm j721s2_evm j784s4_evm am62x_evm am62a_evm
+export rm_pm_hal_SOCLIST = j721e j7200 j721s2 j784s4 am62x am62a j722s
+export rm_pm_hal_BOARDLIST = j721e_evm j7200_evm j721s2_evm j784s4_evm am62x_evm am62a_evm 
 export rm_pm_hal_$(SOC)_CORELIST = mcu1_0
 
 export dm_stub_COMP_LIST = dm_stub
@@ -264,7 +270,7 @@ export self_reset_BOARD_DEPENDENCY = no
 export self_reset_CORE_DEPENDENCY = yes
 export self_reset_PKG_LIST = self_reset
 export self_reset_INCLUDE = $(self_reset_PATH)
-export self_reset_SOCLIST = am62x am62a
+export self_reset_SOCLIST = am62x am62a j722s
 export self_reset_BOARDLIST = am62x_evm am62a_evm
 export self_reset_$(SOC)_CORELIST = mcu1_0
 

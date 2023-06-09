@@ -76,6 +76,17 @@
 #define UDMA_MCU_NAVSS0_IR_NUM_OUT_INTR (64U)
 #endif
 
+
+#define TISCI_DEV_MCU_NAVSS0_INTAGGR_0              233
+#define TISCI_DEV_MCU_NAVSS0_RINGACC0               235
+#define TISCI_DEV_MCU_NAVSS0_PROXY_0                234
+#define TISCI_DEV_MCU_NAVSS0_UDMAP0                 236
+#define TISCI_DEV_MCU_NAVSS0                        232
+#define TISCI_DEV_NAVSS0_RINGACC0                   211
+#define TISCI_DEV_NAVSS0_PROXY_0                    210
+#define TISCI_DEV_NAVSS0_UDMAP0                     212
+#define TISCI_DEV_NAVSS0                            199
+
 /** \brief UTC start thread ID for a SOC */
 #define UDMA_UTC_START_THREAD_ID        (CSL_PSILCFG_NAVSS_MAIN_MSMC0_PSILD_THREAD_OFFSET)
 
@@ -250,6 +261,7 @@ static SciUdmaRmObj gSciUdmaRmObjMcu =
 #else
 static SciUdmaRmObj gSciUdmaRmObjMain =
 {
+    #if 1
     .udmapRegs =
     {
         .pGenCfgRegs     = ((CSL_udmap_gcfgRegs *) CSL_NAVSS0_UDMASS_UDMAP0_CFG_BASE),
@@ -274,6 +286,7 @@ static SciUdmaRmObj gSciUdmaRmObjMain =
         .maxRings   = CSL_NAVSS_MAIN_RINGACC_RING_CNT
     },
     .psilCfgRegs         = (CSL_psilcfgRegs *) CSL_NAVSS0_UDMASS_PSILCFG0_CFG_PROXY_BASE,
+#endif
     .iaRegs =
     {
         .pCfgRegs       = (CSL_intaggr_cfgRegs *) CSL_NAVSS0_UDMASS_INTA0_CFG_BASE,
@@ -308,6 +321,7 @@ static SciUdmaRmObj gSciUdmaRmObjMain =
 
 static SciUdmaRmObj gSciUdmaRmObjMcu =
 {
+    #if 0
     .udmapRegs =
     {
         .pGenCfgRegs     = ((CSL_udmap_gcfgRegs *) CSL_MCU_NAVSS0_UDMASS_UDMAP0_CFG_GCFG_BASE),
@@ -332,6 +346,7 @@ static SciUdmaRmObj gSciUdmaRmObjMcu =
         .maxRings   = CSL_NAVSS_MCU_RINGACC_RING_CNT
     },
     .psilCfgRegs         = (CSL_psilcfgRegs *) CSL_MCU_NAVSS0_UDMASS_PSILSS_CFG0_PROXY_BASE,
+    #endif
     .iaRegs =
     {
         .pCfgRegs       = (CSL_intaggr_cfgRegs *) CSL_MCU_NAVSS0_UDMASS_INTA0_CFG_BASE,
@@ -367,7 +382,7 @@ static SciUdmaRmObj gSciUdmaRmObjMcu =
 /* ========================================================================== */
 /*                          Function Definitions                              */
 /* ========================================================================== */
-
+#if 0
 void Sciclient_rmInit(void)
 {
 /* UDMA not present in CC QT build. Only DRU is present */
@@ -694,7 +709,7 @@ int32_t Sciclient_rmIrqSet(const struct tisci_msg_rm_irq_set_req *req,
 
     return (retVal);
 }
-
+#endif 
 int32_t Sciclient_rmIrqRelease(const struct tisci_msg_rm_irq_release_req *req,
                                uint32_t timeout)
 {
@@ -704,7 +719,7 @@ int32_t Sciclient_rmIrqRelease(const struct tisci_msg_rm_irq_release_req *req,
     uint32_t            irOffset;       /* Within a IR - convert from cpu dest interrupt index to local IR offset within UDMAP */
     uint64_t            vintrBitNum;
     SciUdmaRmObj       *rmObj;
-
+#if 0
     /* Reset ring OES */
 #if defined (SOC_J7200) || defined (SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4)
     if((TISCI_DEV_NAVSS0_RINGACC_0 == req->src_id) ||
@@ -774,7 +789,7 @@ int32_t Sciclient_rmIrqRelease(const struct tisci_msg_rm_irq_release_req *req,
             }
         }
     }
-
+#endif
     /* Disable IA/VINT */
 #if defined (SOC_J721S2) || defined (SOC_J784S4)
     if((TISCI_DEV_NAVSS0_UDMASS_INTA_0 == req->ia_id) ||
@@ -981,7 +996,7 @@ int32_t Sciclient_rmRingCfg(const struct tisci_msg_rm_ring_cfg_req *req,
 
     return (retVal);
 }
-
+#if 0
 int32_t Sciclient_rmRingMonCfg(const struct tisci_msg_rm_ring_mon_cfg_req *req,
                                const struct tisci_msg_rm_ring_mon_cfg_resp *resp,
                                uint32_t timeout)
@@ -1178,7 +1193,7 @@ int32_t Sciclient_rmUdmapFlowSizeThreshCfg(
 
     return (retVal);
 }
-
+#endif
 int32_t Sciclient_rmPsilPair(const struct tisci_msg_rm_psil_pair_req *req,
                              uint32_t timeout)
 {
@@ -1218,7 +1233,7 @@ int32_t Sciclient_rmPsilPair(const struct tisci_msg_rm_psil_pair_req *req,
 
     return (retVal);
 }
-
+#if 0
 int32_t Sciclient_rmPsilUnpair(const struct tisci_msg_rm_psil_unpair_req *req,
                                uint32_t timeout)
 {
@@ -1287,7 +1302,7 @@ int32_t Sciclient_rmPsilRead(const struct tisci_msg_rm_psil_read_req *req,
 
     return (retVal);
 }
-
+#endif
 int32_t Sciclient_rmPsilWrite(const struct tisci_msg_rm_psil_write_req *req,
                               uint32_t timeout)
 {

@@ -43,14 +43,14 @@
 #include <ti/drv/sciclient/src/sciclient/sciclient_priv.h>
 #include <ti/csl/soc.h>
 #include <string.h> /*For memcpy*/
-#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined (SOC_J784S4)  || defined(SOC_AM62A)
+#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined (SOC_J784S4)  || defined(SOC_AM62A) || defined (SOC_J722S)
 #include <ti/csl/csl_clec.h>
 #endif
 #include <ti/csl/csl_rat.h>
 
 #include <ti/drv/sciclient/sciserver.h>
 #include <ti/osal/osal.h>
-#if defined(BUILD_MCU1_0) && (defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined (SOC_AM62X) || defined (SOC_AM62A))
+#if defined(BUILD_MCU1_0) && (defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined (SOC_AM62X)|| defined (SOC_AM62A) || defined (SOC_J722S))
 #include <lib/trace.h>
 #endif
 #ifdef QNX_OS
