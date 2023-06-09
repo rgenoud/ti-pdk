@@ -63,7 +63,7 @@ ifeq ($(SOC),$(filter $(SOC), am62x))
 sciclient_LIB_LIST += dm_stub
 sciclient_LIB_LIST += self_reset
 endif
-ifeq ($(SOC),$(filter $(SOC), am62a j722s))
+ifeq ($(SOC),$(filter $(SOC), am62a))
 sciclient_LIB_LIST += self_reset
 endif
 endif
@@ -75,7 +75,7 @@ sciclient_LIB_LIST += sciserver_baremetal
 sciclient_LIB_LIST += sciclient_direct
 endif
 
-drvsciclient_BOARDLIST = am65xx_evm am65xx_idk j721e_sim j721e_evm j7200_evm j721s2_evm j784s4_evm am64x_evm am62x_evm am62a_evm
+drvsciclient_BOARDLIST = am65xx_evm am65xx_idk j721e_sim j721e_evm j7200_evm j721s2_evm j784s4_evm am64x_evm am62x_evm am62a_evm j722s_zebu
 drvsciclient_SOCLIST = am65xx j721e j7200 j721s2 j784s4 am64x am62x am62a j722s
 drvsciclient_am65xx_CORELIST = mcu1_0 mcu1_1 mpu1_0
 drvsciclient_j721e_CORELIST = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 c66xdsp_1 c66xdsp_2 c7x_1 c7x-hostemu
@@ -240,7 +240,7 @@ export rm_pm_hal_CORE_DEPENDENCY = yes
 export rm_pm_hal_PKG_LIST = rm_pm_hal
 export rm_pm_hal_INCLUDE = $(rm_pm_hal_PATH)
 export rm_pm_hal_SOCLIST = j721e j7200 j721s2 j784s4 am62x am62a j722s
-export rm_pm_hal_BOARDLIST = j721e_evm j7200_evm j721s2_evm j784s4_evm am62x_evm am62a_evm 
+export rm_pm_hal_BOARDLIST = j721e_evm j7200_evm j721s2_evm j784s4_evm am62x_evm am62a_evm j722s_zebu
 export rm_pm_hal_$(SOC)_CORELIST = mcu1_0
 
 export dm_stub_COMP_LIST = dm_stub

@@ -13,7 +13,7 @@
 
 #include <ti/drv/sciclient/soc/sysfw/include/am62a/tisci_hosts.h>
 #include <ti/drv/sciclient/soc/sysfw/include/am62a/tisci_boardcfg_constraints.h>
-#include <ti/drv/sciclient/soc/V7/sciclient_defaultBoardcfg.h>
+#include <ti/drv/sciclient/soc/V8/sciclient_defaultBoardcfg.h>
 
 struct tisci_boardcfg_pm {
     struct tisci_boardcfg_abi_rev    rev;

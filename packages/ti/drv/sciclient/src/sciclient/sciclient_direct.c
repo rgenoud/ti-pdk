@@ -397,18 +397,18 @@ int32_t Sciclient_service (const Sciclient_ReqPrm_t *pReqPrm,
                 pRespPrm->flags = hdr->flags;
                 break;
 #endif
-            case TISCI_MSG_QUERY_FW_CAPS:
-                memcpy(message, pReqPrm->pReqPayload, pReqPrm->reqPayloadSize);
-                /* Processing enter sleep message locally */
-                ret = Sciclient_query_fw_caps_handler(pReqPrm->flags,message);
-                if (pRespPrm->pRespPayload != NULL)
-                {
-                    memcpy(pRespPrm->pRespPayload, message, pRespPrm->respPayloadSize);
-                }
-                hdr = (struct tisci_header *) &message;
-                pRespPrm->flags = hdr->flags;
+            // case TISCI_MSG_QUERY_FW_CAPS:
+            //     memcpy(message, pReqPrm->pReqPayload, pReqPrm->reqPayloadSize);
+            //     /* Processing enter sleep message locally */
+            //     ret = Sciclient_query_fw_caps_handler(pReqPrm->flags,message);
+            //     if (pRespPrm->pRespPayload != NULL)
+            //     {
+            //         memcpy(pRespPrm->pRespPayload, message, pRespPrm->respPayloadSize);
+            //     }
+            //     hdr = (struct tisci_header *) &message;
+            //     pRespPrm->flags = hdr->flags;
 
-                break;
+            //     break;
             /* RM messages processed by Secure RM within TIFS on M3 */
             case TISCI_MSG_RM_PSIL_PAIR:
             case TISCI_MSG_RM_PSIL_UNPAIR:
@@ -592,7 +592,7 @@ int32_t Sciclient_ProcessPmMessage(const uint32_t reqFlags, void *tx_msg)
                                 reqFlags,
                                 SCICLIENT_DEV_MCU_R5FSS0_CORE0_PROCID);
                     break;
-#if ! (defined(SOC_AM62X) || defined (SOC_AM62A))
+#if ! (defined(SOC_AM62X) || defined (SOC_AM62A) || defined (SOC_J722S))
                     case SCICLIENT_DEV_MCU_R5FSS0_CORE1:
                         ret = Sciclient_pmSetMsgProxy((uint32_t*)tx_msg,
                                 reqFlags,
@@ -617,7 +617,7 @@ int32_t Sciclient_ProcessPmMessage(const uint32_t reqFlags, void *tx_msg)
                         ret = Sciclient_pmSetCpuResetMsgProxy((uint32_t*)tx_msg,
                                 SCICLIENT_DEV_MCU_R5FSS0_CORE0_PROCID);
                     break;
-#if ! (defined(SOC_AM62X) || defined (SOC_AM62A))
+#if ! (defined(SOC_AM62X) || defined (SOC_AM62A) || defined (SOC_J722S))
                     case SCICLIENT_DEV_MCU_R5FSS0_CORE1:
                         ret = Sciclient_pmSetCpuResetMsgProxy((uint32_t*)tx_msg,
                                 SCICLIENT_DEV_MCU_R5FSS0_CORE1_PROCID);

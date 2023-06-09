@@ -40,7 +40,7 @@
 /* ========================================================================== */
 
 #include <ti/drv/sciclient/src/sciclient/sciclient_rm_priv.h>
-#include <ti/drv/sciclient/soc/V7/sciclient_irq_rm.h>
+#include <ti/drv/sciclient/soc/V8/sciclient_irq_rm.h>
 
 /* ========================================================================== */
 /*                            Global Variables                                */

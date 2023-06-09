@@ -46,7 +46,7 @@
 #include <ti/drv/sciclient/soc/sysfw/include/am62a/tisci_hosts.h>
 #include <ti/drv/sciclient/soc/sysfw/include/am62a/tisci_boardcfg_constraints.h>
 #include <ti/drv/sciclient/soc/sysfw/include/am62a/tisci_devices.h>
-#include <ti/drv/sciclient/soc/V7/sciclient_defaultBoardcfg.h>
+#include <ti/drv/sciclient/soc/V8/sciclient_defaultBoardcfg.h>
 
 /* ========================================================================== */
 /*                            Global Variables                                */

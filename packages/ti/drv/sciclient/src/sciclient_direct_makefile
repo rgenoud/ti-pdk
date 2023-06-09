@@ -55,7 +55,7 @@ INCDIR += soc/$(SCICLIENT_SOCVER)
 INCLUDE_EXTERNAL_INTERFACES = pdk osal
 
 # Common source files and CFLAGS across all platforms and cores
-ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200 j721s2 j784s4 am64x am62x am62a))
+ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200 j721s2 j784s4 am64x am62x am62a j722s))
 # Keep the sciclient.c the first file in this list. This is used to trigger
 # the generation of the header files from the firware binary file.
 SRCS_COMMON  = sciclient.c
@@ -88,9 +88,9 @@ ifeq ($(BOARD),$(filter $(BOARD), j721e_hostemu j721e_loki j721s2_hostemu j784s4
 endif
 
 #Use CSL implementation to bypass DMSC
-ifeq ($(SOC),$(filter $(SOC), j722s))
- SRCS_COMMON = sciclient_rm_csl.c sciclient_dummy.c
-endif
+# ifeq ($(SOC),$(filter $(SOC), j722s))
+#  SRCS_COMMON = sciclient_rm_csl.c sciclient_dummy.c
+# endif
 
 CFLAGS_LOCAL_COMMON = $(PDK_CFLAGS) $(SCICLIENT_CFLAGS)
 

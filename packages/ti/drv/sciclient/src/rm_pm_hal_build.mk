@@ -35,7 +35,7 @@ CONFIG_UDMAP_TX_CHANNEL_TEARDOWN_TYPE=y
 # CONFIG_UDMAP_UDMA is not set
 # CONFIG_UDMAP_BCDMA is not set
 # CONFIG_UDMAP_PKTDMA is not set
-ifneq ($(SOC),$(filter $(SOC), am62x am62a))
+ifneq ($(SOC),$(filter $(SOC), am62x am62a j722s))
   CONFIG_RM_PROXY=y
 endif
 # end of Resource Manager Feature Support
@@ -45,9 +45,9 @@ endif
 # This should be enabled only when debugging.
 # If you enable this there is an additional size and boot time increase
 #
-CONFIG_TRACE=y
-CONFIG_TRACE_BUFFER=y
-CONFIG_TRACE_UART=y
+# CONFIG_TRACE=y
+# CONFIG_TRACE_BUFFER=y
+# CONFIG_TRACE_UART=y
 
 ifeq ($(SOC),$(filter $(SOC), j721e))
 CONFIG_SOC_FOLDER_STRING="j721e"

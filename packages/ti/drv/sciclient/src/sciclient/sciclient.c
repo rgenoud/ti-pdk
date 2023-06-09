@@ -878,10 +878,10 @@ int32_t Sciclient_serviceSecureProxy(const Sciclient_ReqPrm_t *pReqPrm,
                               gSciclient_maxMsgSizeBytes);
 
         timeToWait = pReqPrm->timeout;
-        pLocalRespHdr = (struct tisci_header *)(CSL_secProxyGetDataAddr(
-            pSciclient_secProxyCfg, rxThread, 0U)
-            + ((uintptr_t) gSecHeaderSizeWords * (uintptr_t) 4U));
-        /* Verify thread status before reading/writing */
+        // pLocalRespHdr = (struct tisci_header *)(CSL_secProxyGetDataAddr(
+        //     pSciclient_secProxyCfg, rxThread, 0U)
+        //     + ((uintptr_t) gSecHeaderSizeWords * (uintptr_t) 4U));
+        // /* Verify thread status before reading/writing */
         status = Sciclient_verifyThread(rxThread);
     }
     /* Wait for response: Polling based waiting */

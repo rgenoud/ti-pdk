@@ -117,7 +117,7 @@ int32_t Sciclient_loadFirmware(const uint32_t *pSciclient_firmware)
 #elif defined (SOC_J7200) || defined (SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4)
     header.host = TISCI_HOST_ID_MCU_0_R5_1;;
 #else
-    header.host = TISCI_HOST_ID_R5_1;
+    header.host = 0;
 #endif
     /* ROM expects a sequence number of 0 */
     header.seq  = 0U;

@@ -1399,7 +1399,7 @@ ifeq ($(SOC),$(filter $(SOC), am62a))
   endif
 endif
 
-PDK_COMMON_BAREMETAL_COMP = $(PDK_COMMON_COMP) osal_nonos
+PDK_COMMON_BAREMETAL_COMP = $(PDK_COMMON_COMP) osal_nonos rm_pm_hal sciclient_direct
 ifeq ($(ARCH),c66x)
   PDK_COMMON_BAREMETAL_COMP += csl_intc
 else
