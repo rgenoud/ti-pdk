@@ -74,6 +74,136 @@ static int32_t Udma_mappedFlowCheckParams(Udma_DrvHandle drvHandle,
 /*                          Function Definitions                              */
 /* ========================================================================== */
 
+#ifdef QNX_OS
+#include <udma_resmgr.h>
+
+int32_t Udma_flowAlloc(Udma_DrvHandle drvHandle,
+                       Udma_FlowHandle flowHandle,
+                       uint32_t flowCnt)
+{
+    int32_t             retVal = UDMA_SOK;
+#if (UDMA_SOC_CFG_UDMAP_PRESENT == 1)
+    uint32_t            flowStart = UDMA_FLOW_INVALID;
+
+    /* Error check */
+    if((NULL_PTR == drvHandle) || (NULL_PTR == flowHandle) || (0U == flowCnt))
+    {
+        retVal = UDMA_EBADARGS;
+    }
+    if(UDMA_SOK == retVal)
+    {
+        if(drvHandle->drvInitDone != UDMA_INIT_DONE)
+        {
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        if (1 == drvHandle->initPrms.isQnxRMInstance)
+        {
+            flowStart = Udma_rmAllocflow(flowCnt, drvHandle);
+        }
+        else
+        {
+            flowStart = Udma_resmgr_rmAllocflow(flowCnt, drvHandle);
+        }
+        if (flowStart == UDMA_FLOW_INVALID)
+        {
+            retVal = UDMA_EFAIL;
+            Udma_printf(drvHandle, "[Error] RM Alloc Flow failed!!!\n");
+        }
+        else
+        {
+            /* Assign values to handle object */
+            flowHandle->drvHandle    = drvHandle;
+            flowHandle->flowStart    = flowStart;
+            flowHandle->flowCnt      = flowCnt;
+            flowHandle->flowInitDone = UDMA_INIT_DONE;
+            flowHandle->mappedFlowGrp= UDMA_MAPPED_GROUP_INVALID;
+            flowHandle->mappedChNum  = UDMA_DMA_CH_INVALID;
+        }
+    }
+#else
+    retVal = UDMA_EFAIL;
+#endif
+
+    return (retVal);
+}
+
+int32_t Udma_flowFree(Udma_FlowHandle flowHandle)
+{
+    int32_t             retVal = UDMA_SOK;
+    Udma_DrvHandle      drvHandle;
+
+    /* Error check */
+    if(NULL_PTR == flowHandle)
+    {
+        retVal = UDMA_EBADARGS;
+    }
+    if(UDMA_SOK == retVal)
+    {
+        if(flowHandle->flowInitDone != UDMA_INIT_DONE)
+        {
+            retVal = UDMA_EFAIL;
+        }
+    }
+    if(UDMA_SOK == retVal)
+    {
+        drvHandle = flowHandle->drvHandle;
+        if((NULL_PTR == drvHandle) || (drvHandle->drvInitDone != UDMA_INIT_DONE))
+        {
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        if(UDMA_MAPPED_GROUP_INVALID == flowHandle->mappedFlowGrp)
+        {
+            if(UDMA_INST_TYPE_NORMAL == drvHandle->instType)
+            {
+#if (UDMA_SOC_CFG_UDMAP_PRESENT == 1)
+                if (1 == drvHandle->initPrms.isQnxRMInstance)
+                {
+                    Udma_rmFreeflow(flowHandle->flowStart, flowHandle->flowCnt, drvHandle);
+                }
+                else
+                {
+                    Udma_resmgr_rmFreeflow(flowHandle->flowStart, flowHandle->flowCnt, drvHandle);
+                }
+#endif
+            }
+            else
+            {
+                retVal = UDMA_EFAIL;
+            }
+        }
+        else
+        {
+            /* Free Mapped Ring in devices like AM64x */
+#if((UDMA_NUM_MAPPED_TX_GROUP + UDMA_NUM_MAPPED_RX_GROUP) > 0)
+            Udma_assert(drvHandle, flowHandle->flowCnt == 1U);
+            /* Add RX Ring Number Offset */
+            Udma_rmFreeMappedRing(flowHandle->flowStart + drvHandle->rxChOffset, drvHandle, flowHandle->mappedFlowGrp, flowHandle->mappedChNum);
+#else
+            retVal = UDMA_EFAIL;
+#endif
+        }
+        flowHandle->drvHandle    = (Udma_DrvHandle) NULL_PTR;
+        flowHandle->flowStart    = UDMA_FLOW_INVALID;
+        flowHandle->flowCnt      = 0U;
+        flowHandle->flowInitDone = UDMA_DEINIT_DONE;
+        flowHandle->mappedFlowGrp= UDMA_MAPPED_GROUP_INVALID;
+        flowHandle->mappedChNum  = UDMA_DMA_CH_INVALID;
+    }
+
+    return (retVal);
+}
+
+//*********** QNX_OS end ***********
+#else
+
 int32_t Udma_flowAlloc(Udma_DrvHandle drvHandle,
                        Udma_FlowHandle flowHandle,
                        uint32_t flowCnt)
@@ -307,6 +437,7 @@ int32_t Udma_flowFree(Udma_FlowHandle flowHandle)
 
     return (retVal);
 }
+#endif
 
 int32_t Udma_flowAttach(Udma_DrvHandle drvHandle,
                         Udma_FlowHandle flowHandle,
