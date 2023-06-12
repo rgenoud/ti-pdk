@@ -42,6 +42,9 @@
 /* ========================================================================== */
 
 #include <ti/drv/udma/src/udma_priv.h>
+#ifdef QNX_OS
+#include <udma_resmgr.h>
+#endif
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
@@ -78,6 +81,13 @@ int32_t Udma_init(Udma_DrvHandle drvHandle, const Udma_InitPrms *initPrms)
     struct tisci_msg_rm_proxy_cfg_req   req;
 #endif
 
+#ifdef QNX_OS
+    /* We need to have IO PRIV to access UDMA Channel/Ring registers */
+    if (ThreadCtl(_NTO_TCTL_IO_PRIV, NULL) == -1) {
+        retVal = UDMA_EALLOC;
+    }
+#endif
+
     if((drvHandle == NULL_PTR) || (NULL_PTR == initPrms))
     {
         retVal = UDMA_EBADARGS;
@@ -90,11 +100,22 @@ int32_t Udma_init(Udma_DrvHandle drvHandle, const Udma_InitPrms *initPrms)
         Udma_initDrvHandle(drvHandle);
 
         Udma_assert(drvHandle, ((Udma_OsalMutexCreateFxn) NULL_PTR != drvHandle->initPrms.osalPrms.createMutex));
+#ifdef QNX_OS
+        if(1 == drvHandle->initPrms.isQnxRMInstance)
+        {
+            drvHandle->rmLock = drvHandle->initPrms.osalPrms.createMutex();
+            if(NULL_PTR == drvHandle->rmLock)
+            {
+                retVal = UDMA_EALLOC;
+            }
+        }
+#else
         drvHandle->rmLock = drvHandle->initPrms.osalPrms.createMutex();
         if(NULL_PTR == drvHandle->rmLock)
         {
             retVal = UDMA_EALLOC;
         }
+#endif
 
         if(UDMA_SOK == retVal)
         {
@@ -109,6 +130,23 @@ int32_t Udma_init(Udma_DrvHandle drvHandle, const Udma_InitPrms *initPrms)
             }
         }
 
+#ifdef QNX_OS
+        if((UDMA_SOK == retVal) && (1 == drvHandle->initPrms.isQnxRMInstance))
+        {
+            // QNX udma RM only
+            retVal = Udma_rmInit(drvHandle);
+            if(UDMA_SOK != retVal)
+            {
+                Udma_printf(drvHandle, "[Error] RM init failed!!!\n");
+            }
+        }
+        else if((UDMA_SOK == retVal) && (0 == drvHandle->initPrms.isQnxRMInstance))
+        {
+            // QNX udma clients only
+            Udma_printf(drvHandle, "Calling Udma_resmgr_open");
+            Udma_resmgr_open(drvHandle);
+        }
+#else
         if(UDMA_SOK == retVal)
         {
             retVal = Udma_rmInit(drvHandle);
@@ -117,9 +155,15 @@ int32_t Udma_init(Udma_DrvHandle drvHandle, const Udma_InitPrms *initPrms)
                 Udma_printf(drvHandle, "[Error] RM init failed!!!\n");
             }
         }
+#endif
 
 #if (UDMA_SOC_CFG_PROXY_PRESENT == 1)
+#ifdef QNX_OS
+        // QNX RM only
+        if((UDMA_INST_TYPE_NORMAL == drvHandle->instType) && (1 == drvHandle->initPrms.isQnxRMInstance))
+#else
         if(UDMA_INST_TYPE_NORMAL == drvHandle->instType)
+#endif
         {
             if(UDMA_SOK == retVal)
             {
@@ -165,7 +209,12 @@ int32_t Udma_init(Udma_DrvHandle drvHandle, const Udma_InitPrms *initPrms)
         {
             /* Free-up allocated resources */
             Udma_assert(drvHandle, ((Udma_OsalMutexDeleteFxn) NULL_PTR != drvHandle->initPrms.osalPrms.deleteMutex));
+#ifdef QNX_OS
+            // QNX RM only
+            if((NULL_PTR != drvHandle->rmLock) && (1 == drvHandle->initPrms.isQnxRMInstance))
+#else
             if(NULL_PTR != drvHandle->rmLock)
+#endif
             {
                 drvHandle->initPrms.osalPrms.deleteMutex(drvHandle->rmLock);
                 drvHandle->rmLock = NULL_PTR;
@@ -204,11 +253,29 @@ int32_t Udma_deinit(Udma_DrvHandle drvHandle)
             drvHandle->globalEventHandle = (Udma_EventHandle) NULL_PTR;
         }
 
+
+#ifdef QNX_OS
+        if(1 == drvHandle->initPrms.isQnxRMInstance)
+        {
+            retVal += Udma_rmDeinit(drvHandle);
+            if(UDMA_SOK != retVal)
+            {
+                Udma_printf(drvHandle, "[Error] RM deinit failed!!!\n");
+            }
+        }
+        else
+        {
+            // QNX clients only
+            Udma_printf(drvHandle, "Calling Udma_resmgr_close");
+            Udma_resmgr_close(drvHandle);
+        }
+#else
         retVal += Udma_rmDeinit(drvHandle);
         if(UDMA_SOK != retVal)
         {
             Udma_printf(drvHandle, "[Error] RM deinit failed!!!\n");
         }
+#endif
     }
 
     if(UDMA_SOK == retVal)
@@ -267,6 +334,9 @@ int32_t UdmaInitPrms_init(uint32_t instId, Udma_InitPrms *initPrms)
         initPrms->virtToPhyFxn          = &Udma_defaultVirtToPhyFxn;
         initPrms->phyToVirtFxn          = &Udma_defaultPhyToVirtFxn;
         initPrms->printFxn              = (Udma_PrintFxn) NULL_PTR;
+#ifdef QNX_OS
+        initPrms->isQnxRMInstance       = 0;
+#endif
     }
 
     return (retVal);

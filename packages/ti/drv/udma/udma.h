@@ -60,6 +60,14 @@
 /*                             Include Files                                  */
 /* ========================================================================== */
 
+#ifndef QNX_OS
+#define QNX_OS
+#endif
+
+#ifndef BUILD_MPU1_0
+#define BUILD_MPU1_0
+#endif
+
 #include <stdint.h>
 
 /* UDMA_SOC_CFG_* macros are defined udma_soc.h. 
@@ -263,6 +271,10 @@ typedef struct
 
     Udma_OsalPrms           osalPrms;
     /**< OSAL callback  parameters */
+
+#ifdef QNX_OS
+    uint32_t                isQnxRMInstance;
+#endif
 } Udma_InitPrms;
 
 /* ========================================================================== */

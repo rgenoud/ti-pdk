@@ -42,7 +42,9 @@
 /* ========================================================================== */
 
 #include <ti/drv/udma/src/udma_priv.h>
-
+#ifdef QNX_OS
+#include <udma_resmgr.h>
+#endif
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
@@ -306,7 +308,9 @@ int32_t Udma_chConfigTx(Udma_ChHandle chHandle, const Udma_ChTxPrms *txPrms)
 
         /* Copy params */
         rmUdmaTxReq.valid_params        = TISCI_MSG_VALUE_RM_UDMAP_CH_PAUSE_ON_ERR_VALID |
+#ifndef QNX_OS
                                           TISCI_MSG_VALUE_RM_UDMAP_CH_ATYPE_VALID |
+#endif
                                           TISCI_MSG_VALUE_RM_UDMAP_CH_CHAN_TYPE_VALID |
                                           TISCI_MSG_VALUE_RM_UDMAP_CH_FETCH_SIZE_VALID |
                                           TISCI_MSG_VALUE_RM_UDMAP_CH_CQ_QNUM_VALID |
@@ -325,7 +329,9 @@ int32_t Udma_chConfigTx(Udma_ChHandle chHandle, const Udma_ChTxPrms *txPrms)
         rmUdmaTxReq.tx_pause_on_err     = txPrms->pauseOnError;
         rmUdmaTxReq.tx_filt_einfo       = txPrms->filterEinfo;
         rmUdmaTxReq.tx_filt_pswords     = txPrms->filterPsWords;
+#ifndef QNX_OS
         rmUdmaTxReq.tx_atype            = txPrms->addrType;
+#endif
         rmUdmaTxReq.tx_chan_type        = txPrms->chanType;
         rmUdmaTxReq.tx_fetch_size       = txPrms->fetchWordSize;
         rmUdmaTxReq.tx_priority         = txPrms->busPriority;
@@ -335,6 +341,14 @@ int32_t Udma_chConfigTx(Udma_ChHandle chHandle, const Udma_ChTxPrms *txPrms)
         rmUdmaTxReq.tx_burst_size       = txPrms->burstSize;
         rmUdmaTxReq.tx_sched_priority   = txPrms->dmaPriority;
         rmUdmaTxReq.tx_credit_count     = txPrms->txCredit;
+#ifdef QNX_OS
+        if(UDMA_DEFAULT_CH_ATYPE_INVALID != txPrms->addrType)
+        {
+            rmUdmaTxReq.valid_params |= TISCI_MSG_VALUE_RM_UDMAP_CH_ATYPE_VALID;
+            rmUdmaTxReq.tx_atype      = txPrms->addrType;
+            Udma_printf(drvHandle, "%s: rmUdmaTxReq.tx_atype=txPrms->addrType=0x%x\n",__FUNCTION__, rmUdmaTxReq.tx_atype);
+        }
+#endif
 #if (UDMA_SOC_CFG_BCDMA_PRESENT == 1)
         if(UDMA_INST_TYPE_LCDMA_BCDMA == drvHandle->instType)
         {
@@ -423,7 +437,9 @@ int32_t Udma_chConfigRx(Udma_ChHandle chHandle, const Udma_ChRxPrms *rxPrms)
 
             /* Copy params */
             rmUdmaRxReq.valid_params        = TISCI_MSG_VALUE_RM_UDMAP_CH_PAUSE_ON_ERR_VALID |
+#ifndef QNX_OS
                                               TISCI_MSG_VALUE_RM_UDMAP_CH_ATYPE_VALID |
+#endif
                                               TISCI_MSG_VALUE_RM_UDMAP_CH_CHAN_TYPE_VALID |
                                               TISCI_MSG_VALUE_RM_UDMAP_CH_FETCH_SIZE_VALID |
                                               TISCI_MSG_VALUE_RM_UDMAP_CH_CQ_QNUM_VALID |
@@ -439,7 +455,9 @@ int32_t Udma_chConfigRx(Udma_ChHandle chHandle, const Udma_ChRxPrms *rxPrms)
             rmUdmaRxReq.nav_id              = drvHandle->devIdUdma;
             rmUdmaRxReq.index               = (uint16_t)chHandle->rxChNum;
             rmUdmaRxReq.rx_pause_on_err     = rxPrms->pauseOnError;
+#ifndef QNX_OS
             rmUdmaRxReq.rx_atype            = rxPrms->addrType;
+#endif
             rmUdmaRxReq.rx_chan_type        = rxPrms->chanType;
             rmUdmaRxReq.rx_fetch_size       = rxPrms->fetchWordSize;
             rmUdmaRxReq.rx_priority         = rxPrms->busPriority;
@@ -451,6 +469,14 @@ int32_t Udma_chConfigRx(Udma_ChHandle chHandle, const Udma_ChRxPrms *rxPrms)
             rmUdmaRxReq.rx_ignore_short     = rxPrms->ignoreShortPkts;
             rmUdmaRxReq.rx_ignore_long      = rxPrms->ignoreLongPkts;
             rmUdmaRxReq.rx_burst_size       = rxPrms->burstSize;
+#ifdef QNX_OS
+            if(UDMA_DEFAULT_CH_ATYPE_INVALID != rxPrms->addrType)
+            {
+                rmUdmaRxReq.valid_params |= TISCI_MSG_VALUE_RM_UDMAP_CH_ATYPE_VALID;
+                rmUdmaRxReq.rx_atype      = rxPrms->addrType;
+                Udma_printf(drvHandle, "%s: rmUdmaTxReq.tx_atype=txPrms->addrType=0x%x\n",__FUNCTION__, rmUdmaRxReq.rx_atype);
+            }
+#endif
             if(NULL_PTR != chHandle->tdCqRing)
             {
                 Udma_assert(drvHandle,
@@ -1761,7 +1787,11 @@ void UdmaChTxPrms_init(Udma_ChTxPrms *txPrms, uint32_t chType)
         txPrms->pauseOnError    = TISCI_MSG_VALUE_RM_UDMAP_CH_PAUSE_ON_ERROR_DISABLED;
         txPrms->filterEinfo     = TISCI_MSG_VALUE_RM_UDMAP_TX_CH_FILT_EINFO_DISABLED;
         txPrms->filterPsWords   = TISCI_MSG_VALUE_RM_UDMAP_TX_CH_FILT_PSWORDS_DISABLED;
+#ifdef QNX_OS
+        txPrms->addrType        = UDMA_DEFAULT_CH_ATYPE_INVALID;
+#else
         txPrms->addrType        = TISCI_MSG_VALUE_RM_UDMAP_CH_ATYPE_PHYS;
+#endif
         txPrms->chanType        = TISCI_MSG_VALUE_RM_UDMAP_CH_TYPE_PACKET;
         if(UDMA_CH_FLAG_BLK_COPY == (chType & UDMA_CH_FLAG_BLK_COPY))
         {
@@ -1799,7 +1829,11 @@ void UdmaChRxPrms_init(Udma_ChRxPrms *rxPrms, uint32_t chType)
     if(NULL_PTR != rxPrms)
     {
         rxPrms->pauseOnError        = TISCI_MSG_VALUE_RM_UDMAP_CH_PAUSE_ON_ERROR_DISABLED;
+#ifdef QNX_OS
+        rxPrms->addrType            = UDMA_DEFAULT_CH_ATYPE_INVALID;
+#else
         rxPrms->addrType            = TISCI_MSG_VALUE_RM_UDMAP_CH_ATYPE_PHYS;
+#endif
         rxPrms->chanType            = TISCI_MSG_VALUE_RM_UDMAP_CH_TYPE_PACKET;
         if(UDMA_CH_FLAG_BLK_COPY == (chType & UDMA_CH_FLAG_BLK_COPY))
         {
@@ -2115,18 +2149,33 @@ static int32_t Udma_chAllocResource(Udma_ChHandle chHandle)
     {
         if(UDMA_CH_FLAG_HC == (chHandle->chType & UDMA_CH_FLAG_HC))
         {
+#ifdef QNX_OS
+            chHandle->txChNum =
+                Udma_resmgr_rmAllocBlkCopyHcCh(chHandle->chPrms.chNum, drvHandle);
+#else
             chHandle->txChNum =
                 Udma_rmAllocBlkCopyHcCh(chHandle->chPrms.chNum, drvHandle);
+#endif
         }
         else if(UDMA_CH_FLAG_UHC == (chHandle->chType & UDMA_CH_FLAG_UHC))
         {
+#ifdef QNX_OS
+            chHandle->txChNum =
+                Udma_resmgr_rmAllocBlkCopyUhcCh(chHandle->chPrms.chNum, drvHandle);
+#else
             chHandle->txChNum =
                 Udma_rmAllocBlkCopyUhcCh(chHandle->chPrms.chNum, drvHandle);
+#endif
         }
         else
         {
+#ifdef QNX_OS
+            chHandle->txChNum =
+                Udma_resmgr_rmAllocBlkCopyCh(chHandle->chPrms.chNum, drvHandle);
+#else
             chHandle->txChNum =
                 Udma_rmAllocBlkCopyCh(chHandle->chPrms.chNum, drvHandle);
+#endif
         }
         if(UDMA_DMA_CH_INVALID == chHandle->txChNum)
         {
@@ -2161,10 +2210,17 @@ static int32_t Udma_chAllocResource(Udma_ChHandle chHandle)
         utcInfo = chHandle->utcInfo;
         Udma_assert(drvHandle, (NULL_PTR != utcInfo));
         /* Allocate external channel */
+#ifdef QNX_OS
+        chHandle->extChNum = Udma_resmgr_rmAllocExtCh(
+                                 chHandle->chPrms.chNum,
+                                 drvHandle,
+                                 utcInfo);
+#else
         chHandle->extChNum = Udma_rmAllocExtCh(
                                  chHandle->chPrms.chNum,
                                  drvHandle,
                                  utcInfo);
+#endif
         if(UDMA_DMA_CH_INVALID == chHandle->extChNum)
         {
             retVal = UDMA_EALLOC;
@@ -2191,8 +2247,13 @@ static int32_t Udma_chAllocResource(Udma_ChHandle chHandle)
         {
             if(UDMA_CH_FLAG_HC == (chHandle->chType & UDMA_CH_FLAG_HC))
             {
+#ifdef QNX_OS
+                chHandle->txChNum =
+                    Udma_resmgr_rmAllocTxHcCh(chHandle->chPrms.chNum, drvHandle);
+#else
                 chHandle->txChNum =
                     Udma_rmAllocTxHcCh(chHandle->chPrms.chNum, drvHandle);
+#endif
             }
 #if (UDMA_NUM_MAPPED_TX_GROUP > 0)
             else if(UDMA_CH_FLAG_MAPPED == (chHandle->chType & UDMA_CH_FLAG_MAPPED))
@@ -2203,13 +2264,23 @@ static int32_t Udma_chAllocResource(Udma_ChHandle chHandle)
 #endif
             else if(UDMA_CH_FLAG_UHC == (chHandle->chType & UDMA_CH_FLAG_UHC))
             {
+#ifdef QNX_OS
+                chHandle->txChNum =
+                    Udma_resmgr_rmAllocTxUhcCh(chHandle->chPrms.chNum, drvHandle);
+#else
                 chHandle->txChNum =
                     Udma_rmAllocTxUhcCh(chHandle->chPrms.chNum, drvHandle);
+#endif
             }
             else
             {
+#ifdef QNX_OS
+                chHandle->txChNum =
+                    Udma_resmgr_rmAllocTxCh(chHandle->chPrms.chNum, drvHandle);
+#else
                 chHandle->txChNum =
                     Udma_rmAllocTxCh(chHandle->chPrms.chNum, drvHandle);
+#endif
             }
             if(UDMA_DMA_CH_INVALID == chHandle->txChNum)
             {
@@ -2221,8 +2292,13 @@ static int32_t Udma_chAllocResource(Udma_ChHandle chHandle)
         {
             if(UDMA_CH_FLAG_HC == (chHandle->chType & UDMA_CH_FLAG_HC))
             {
+#ifdef QNX_OS
+                chHandle->rxChNum =
+                    Udma_resmgr_rmAllocRxHcCh(chHandle->chPrms.chNum, drvHandle);
+#else
                 chHandle->rxChNum =
                     Udma_rmAllocRxHcCh(chHandle->chPrms.chNum, drvHandle);
+#endif
             }
 #if (UDMA_NUM_MAPPED_RX_GROUP > 0)
             else if(UDMA_CH_FLAG_MAPPED == (chHandle->chType & UDMA_CH_FLAG_MAPPED))
@@ -2235,13 +2311,23 @@ static int32_t Udma_chAllocResource(Udma_ChHandle chHandle)
 #endif
             else if(UDMA_CH_FLAG_UHC == (chHandle->chType & UDMA_CH_FLAG_UHC))
             {
+#ifdef QNX_OS
+                chHandle->rxChNum =
+                    Udma_resmgr_rmAllocRxUhcCh(chHandle->chPrms.chNum, drvHandle);
+#else
                 chHandle->rxChNum =
                     Udma_rmAllocRxUhcCh(chHandle->chPrms.chNum, drvHandle);
+#endif
             }
             else
             {
+#ifdef QNX_OS
+                chHandle->rxChNum =
+                    Udma_resmgr_rmAllocRxCh(chHandle->chPrms.chNum, drvHandle);
+#else
                 chHandle->rxChNum =
                     Udma_rmAllocRxCh(chHandle->chPrms.chNum, drvHandle);
+#endif
             }
             if(UDMA_DMA_CH_INVALID == chHandle->rxChNum)
             {
@@ -2442,15 +2528,27 @@ static int32_t Udma_chFreeResource(Udma_ChHandle chHandle)
             /* TX channel free */
             if(UDMA_CH_FLAG_HC == (chHandle->chType & UDMA_CH_FLAG_HC))
             {
+#ifdef QNX_OS
+                Udma_resmgr_rmFreeBlkCopyHcCh(chHandle->txChNum, drvHandle);
+#else
                 Udma_rmFreeBlkCopyHcCh(chHandle->txChNum, drvHandle);
+#endif
             }
             else if(UDMA_CH_FLAG_UHC == (chHandle->chType & UDMA_CH_FLAG_UHC))
             {
+#ifdef QNX_OS
+                Udma_resmgr_rmFreeBlkCopyUhcCh(chHandle->txChNum, drvHandle);
+#else
                 Udma_rmFreeBlkCopyUhcCh(chHandle->txChNum, drvHandle);
+#endif
             }
             else
             {
+#ifdef QNX_OS
+                Udma_resmgr_rmFreeBlkCopyCh(chHandle->txChNum, drvHandle);
+#else
                 Udma_rmFreeBlkCopyCh(chHandle->txChNum, drvHandle);
+#endif
             }
             chHandle->txChNum = UDMA_DMA_CH_INVALID;
             chHandle->rxChNum = UDMA_DMA_CH_INVALID;
@@ -2463,7 +2561,11 @@ static int32_t Udma_chFreeResource(Udma_ChHandle chHandle)
             /* TX channel free */
             if(UDMA_CH_FLAG_HC == (chHandle->chType & UDMA_CH_FLAG_HC))
             {
+#ifdef QNX_OS
+                Udma_resmgr_rmFreeTxHcCh(chHandle->txChNum, drvHandle);
+#else
                 Udma_rmFreeTxHcCh(chHandle->txChNum, drvHandle);
+#endif
             }
 #if (UDMA_NUM_MAPPED_TX_GROUP > 0)
             else if(UDMA_CH_FLAG_MAPPED == (chHandle->chType & UDMA_CH_FLAG_MAPPED))
@@ -2473,11 +2575,19 @@ static int32_t Udma_chFreeResource(Udma_ChHandle chHandle)
 #endif
             else if(UDMA_CH_FLAG_UHC == (chHandle->chType & UDMA_CH_FLAG_UHC))
             {
+#ifdef QNX_OS
+                Udma_resmgr_rmFreeTxUhcCh(chHandle->txChNum, drvHandle);
+#else
                 Udma_rmFreeTxUhcCh(chHandle->txChNum, drvHandle);
+#endif
             }
             else
             {
+#ifdef QNX_OS
+                Udma_resmgr_rmFreeTxCh(chHandle->txChNum, drvHandle);
+#else
                 Udma_rmFreeTxCh(chHandle->txChNum, drvHandle);
+#endif
             }
             chHandle->txChNum = UDMA_DMA_CH_INVALID;
         }
@@ -2486,7 +2596,11 @@ static int32_t Udma_chFreeResource(Udma_ChHandle chHandle)
             /* RX channel free */
             if(UDMA_CH_FLAG_HC == (chHandle->chType & UDMA_CH_FLAG_HC))
             {
+#ifdef QNX_OS
+                Udma_resmgr_rmFreeRxHcCh(chHandle->rxChNum, drvHandle);
+#else
                 Udma_rmFreeRxHcCh(chHandle->rxChNum, drvHandle);
+#endif
             }
 #if (UDMA_NUM_MAPPED_RX_GROUP > 0)
             else if(UDMA_CH_FLAG_MAPPED == (chHandle->chType & UDMA_CH_FLAG_MAPPED))
@@ -2497,11 +2611,19 @@ static int32_t Udma_chFreeResource(Udma_ChHandle chHandle)
 #endif
             else if(UDMA_CH_FLAG_UHC == (chHandle->chType & UDMA_CH_FLAG_UHC))
             {
+#ifdef QNX_OS
+                Udma_resmgr_rmFreeRxUhcCh(chHandle->rxChNum, drvHandle);
+#else
                 Udma_rmFreeRxUhcCh(chHandle->rxChNum, drvHandle);
+#endif
             }
             else
             {
+#ifdef QNX_OS
+                Udma_resmgr_rmFreeRxCh(chHandle->rxChNum, drvHandle);
+#else
                 Udma_rmFreeRxCh(chHandle->rxChNum, drvHandle);
+#endif
             }
             chHandle->rxChNum = UDMA_DMA_CH_INVALID;
         }
@@ -2516,7 +2638,11 @@ static int32_t Udma_chFreeResource(Udma_ChHandle chHandle)
     if(UDMA_DMA_CH_INVALID != chHandle->extChNum)
     {
         /* External channel free */
+#ifdef QNX_OS
+        Udma_resmgr_rmFreeExtCh(chHandle->extChNum, drvHandle, chHandle->utcInfo);
+#else
         Udma_rmFreeExtCh(chHandle->extChNum, drvHandle, chHandle->utcInfo);
+#endif
         chHandle->extChNum = UDMA_DMA_CH_INVALID;
     }
 #endif

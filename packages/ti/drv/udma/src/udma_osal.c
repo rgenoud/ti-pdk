@@ -209,7 +209,9 @@ static void *Udma_osalRegisterIntr(Udma_OsalIsrFxn isrFxn,
     intrPrms.corepacConfig.corepacEventNum  = 0U;
     intrPrms.corepacConfig.intVecNum        = coreIntrNum;
 #endif
-
+#ifdef QNX_OS
+    intrPrms.corepacConfig.intAutoEnable  = 1;
+#endif
     /* Register interrupts */
     osalRetVal = Osal_RegisterInterrupt(&intrPrms, &hwiHandle);
     if(OSAL_INT_SUCCESS != osalRetVal)

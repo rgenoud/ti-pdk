@@ -47,6 +47,9 @@
 #include <stdarg.h>
 #endif
 #include <ti/drv/udma/src/udma_priv.h>
+#ifdef QNX_OS
+#include <udma_resmgr.h>
+#endif
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
@@ -150,6 +153,117 @@ uint32_t UdmaUtils_getTrSizeBytes(uint32_t trType)
     return (trSize);
 }
 
+#ifdef QNX_OS
+uint64_t Udma_virtToPhyFxn(const void *virtAddr,
+                           uint32_t virtAddrSize,
+                           Udma_DrvHandle drvHandle,
+                           Udma_ChHandle chHandle)
+{
+    uint32_t    chNum = UDMA_DMA_CH_INVALID;
+    void *      appData = &virtAddrSize;
+    uint64_t    phyAddr = 0;
+
+    if(NULL_PTR != chHandle)
+    {
+        chNum   = chHandle->chPrms.chNum;
+    }
+
+    //Udma_printf(drvHandle, "Udma_phyToVirtFxn - 0x%x- %d!\n", virtAddr, virtAddrSize);
+    if((Udma_VirtToPhyFxn) NULL_PTR != drvHandle->initPrms.virtToPhyFxn)
+    {
+        phyAddr = drvHandle->initPrms.virtToPhyFxn(virtAddr, chNum, appData);
+
+        if (phyAddr == 0) 
+        {
+            Udma_printf(drvHandle, "Error: virtToPhyFxn FAILED!\n");
+            Udma_assert(drvHandle, FALSE);
+        }
+    }
+    else
+    {
+        Udma_printf(drvHandle, "Error: virtToPhyFxn not set!\n");
+        Udma_assert(drvHandle, FALSE);
+    }
+
+    return (phyAddr);
+}
+
+void *Udma_phyToVirtFxn(uint64_t phyAddr,
+                        uint32_t phyAddrSize,
+                        Udma_DrvHandle drvHandle,
+                        Udma_ChHandle chHandle)
+{
+    uint32_t    chNum = UDMA_DMA_CH_INVALID;
+    void *      appData = &phyAddrSize;
+    void *      virtAddr = NULL;
+
+    if(NULL_PTR != chHandle)
+    {
+        chNum   = chHandle->chPrms.chNum;
+    }
+
+    //Udma_printf(drvHandle, "Udma_phyToVirtFxn - 0x%lx- %d!\n", phyAddr, phyAddrSize);
+    if((Udma_PhyToVirtFxn) NULL_PTR != drvHandle->initPrms.phyToVirtFxn)
+    {
+        virtAddr = drvHandle->initPrms.phyToVirtFxn(phyAddr, chNum, appData);
+
+        if (virtAddr == 0) 
+        {
+            Udma_printf(drvHandle, "Error: phyToVirtFxn FAILED!\n");
+            Udma_assert(drvHandle, FALSE);
+        }
+    }
+    else
+    {
+        Udma_printf(drvHandle, "Error: phyToVirtFxn not set!\n");
+        Udma_assert(drvHandle, FALSE);
+    }
+
+    return (virtAddr);
+}
+
+void Udma_printf(Udma_DrvHandle drvHandle, const char *format, ...)
+{
+#if defined (UDMA_CFG_PRINT_ENABLE)
+    va_list     vaArgPtr;
+    char       *buf;
+
+    if(drvHandle != NULL_PTR)
+    {
+        if((Udma_OsalMutexLockFxn)NULL_PTR != drvHandle->initPrms.osalPrms.lockMutex)
+        {
+            drvHandle->initPrms.osalPrms.lockMutex(drvHandle->printLock);
+        }
+
+        buf = &drvHandle->printBuf[0];
+        sprintf(buf, "[UDMA] ");
+        (void) va_start(vaArgPtr, format);
+        (void) vsnprintf(
+            buf + 7, UDMA_CFG_PRINT_BUF_LEN - 7, (const char *) format, vaArgPtr);
+        va_end(vaArgPtr);
+
+        if(1 == drvHandle->initPrms.isQnxRMInstance)
+        {
+        }
+        else
+        {
+            Udma_resmgr_print(buf);
+        }
+
+        /* This assumes that both lock/unlock will be both provided or not
+         * provided. Any other combo will result in invalid lock operation */
+        if((Udma_OsalMutexUnlockFxn) NULL_PTR != drvHandle->initPrms.osalPrms.unlockMutex)
+        {
+            drvHandle->initPrms.osalPrms.unlockMutex(drvHandle->printLock);
+        }
+    }
+#endif
+    return;
+}
+
+////////// end of QNX_OS
+#else
+
 uint64_t Udma_virtToPhyFxn(const void *virtAddr,
                            Udma_DrvHandle drvHandle,
                            Udma_ChHandle chHandle)
@@ -235,3 +349,5 @@ void Udma_printf(Udma_DrvHandle drvHandle, const char *format, ...)
 
     return;
 }
+
+#endif
