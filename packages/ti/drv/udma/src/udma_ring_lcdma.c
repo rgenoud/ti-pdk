@@ -89,8 +89,13 @@ void Udma_ringSetCfgLcdma(Udma_DrvHandle drvHandle,
     if(NULL_PTR != ringPrms)
     {
         lcdmaRingCfg->virtBase       = (void *) ringPrms->ringMem;
+#ifdef QNX_OS
+        lcdmaRingCfg->physBase       =
+            Udma_virtToPhyFxn(ringPrms->ringMem, ringPrms->ringMemSize, drvHandle, (Udma_ChHandle) NULL_PTR);
+#else
         lcdmaRingCfg->physBase       =
             Udma_virtToPhyFxn(ringPrms->ringMem, drvHandle, (Udma_ChHandle) NULL_PTR);
+#endif
         lcdmaRingCfg->mode           = ringPrms->mode;
         lcdmaRingCfg->elCnt          = ringPrms->elemCnt;
         /* CSL expects ring size in bytes */
@@ -105,7 +110,11 @@ void Udma_ringSetCfgLcdma(Udma_DrvHandle drvHandle,
         addrLo = CSL_REG32_FEXT(&ringHandle->pLcdmaCfgRegs->BA_LO, LCDMA_RINGACC_RING_CFG_RING_BA_LO_ADDR_LO);
         lcdmaRingCfg->physBase       = (uint64_t)((((uint64_t) addrHi) << 32UL) |
                                             ((uint64_t) addrLo));
+#ifdef QNX_OS
+        lcdmaRingCfg->virtBase       = Udma_phyToVirtFxn(lcdmaRingCfg->physBase, /*TODO*/4096, drvHandle, (Udma_ChHandle) NULL_PTR);
+#else
         lcdmaRingCfg->virtBase       = Udma_phyToVirtFxn(lcdmaRingCfg->physBase, drvHandle, (Udma_ChHandle) NULL_PTR);
+#endif
         lcdmaRingCfg->mode           = CSL_REG32_FEXT(&ringHandle->pLcdmaCfgRegs->SIZE, LCDMA_RINGACC_RING_CFG_RING_SIZE_QMODE);
         lcdmaRingCfg->elCnt          = CSL_REG32_FEXT(&ringHandle->pLcdmaCfgRegs->SIZE, LCDMA_RINGACC_RING_CFG_RING_SIZE_ELCNT);
         /* CSL expects ring size in bytes; ring_elsize for AM64x is hardcoded as 1=8bytes*/
