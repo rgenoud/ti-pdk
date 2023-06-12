@@ -53,9 +53,9 @@ void TimerP_Params_init(TimerP_Params *params)
 /*
  *  ======== TimerP_create ========
  */
-TimerP_Handle TimerP_create(int32_t id,
+TimerP_Handle TimerP_create(uint32_t id,
                             TimerP_Fxn tickFxn,
-                            TimerP_Params *params)
+                            const TimerP_Params *params)
 {
     /* Not supported by QNX OSAL */
     return NULL;
