@@ -133,7 +133,7 @@ void OTP_VppEn_EVM(void)
         }
     }
 
-    if ((pPmicCoreHandle != NULL) && (PMIC_ST_SUCCESS == status))
+    if ((NULL != pPmicCoreHandle) && (PMIC_ST_SUCCESS == status))
     {
         test_pmic_appDeInit(pPmicCoreHandle);
     }
@@ -167,27 +167,27 @@ void OTP_VppEn(void)
     Board_I2cInitCfg_t i2cCfg;
     Board_IDInfo_v2    info;
     Board_STATUS       status;
-    bool               skBoardDet = FALSE;
+    bool               skBoardDet = BFALSE;
 
     i2cCfg.i2cInst    = BOARD_I2C_EEPROM_INSTANCE;
     i2cCfg.socDomain  = BOARD_SOC_DOMAIN_WKUP;
-    i2cCfg.enableIntr = FALSE;
+    i2cCfg.enableIntr = BFALSE;
     Board_setI2cInitConfig(&i2cCfg);
 
     /* Check if the board is SK */
     status = Board_getIDInfo_v2(&info, KEYWRITER_SK_EEPROM_SLAVE_ADDR);
-    if(status == BOARD_SOK)
+    if(BOARD_SOK == status)
     {
         if(!(strncmp(info.boardInfo.boardName,
                      "AM68-SK-SOM",
                      BOARD_BOARD_NAME_LEN)))
         {
             UART_printf("AM68 SK Detected!!\n");
-            skBoardDet = TRUE;
+            skBoardDet = BTRUE;
         }
     }
 
-    if(skBoardDet == TRUE)
+    if(BTRUE == skBoardDet)
     {
         /* Enable VPP for AM68 SK board */
         OTP_VppEn_SK();

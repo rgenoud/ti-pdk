@@ -142,7 +142,7 @@ void OTP_VppEn(void)
         }
     }
 
-    if ((pPmicCoreHandle != NULL) && (PMIC_ST_SUCCESS == status))
+    if ((NULL != pPmicCoreHandle) && (PMIC_ST_SUCCESS == status))
     {
         test_pmic_appDeInit(pPmicCoreHandle);
     }

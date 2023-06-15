@@ -93,12 +93,12 @@
 
 #define BOARD_WKUP_PMUX_CTRL_ADDR       (CSL_WKUP_CTRL_MMR0_CFG0_BASE + \
                                              0x1C000)
-#define CTRLMMR_LOCK_KICK0_UNLOCK_VAL   (0x68ef3490)
-#define CTRLMMR_LOCK_KICK1_UNLOCK_VAL   (0xd172bc5a)
+#define CTRLMMR_LOCK_KICK0_UNLOCK_VAL   (0x68EF3490)
+#define CTRLMMR_LOCK_KICK1_UNLOCK_VAL   (0xD172BC5A)
 #define WKUP_CTRL_BASE                  (0x43000000)
 #define CTRL_MMR0_PARTITION_SIZE        (0x4000)
 #define CTRLMMR_LOCK_KICK0              (0x01008)
-#define CTRLMMR_LOCK_KICK1              (0x0100c)
+#define CTRLMMR_LOCK_KICK1              (0x0100C)
 
 #endif
 

@@ -77,7 +77,7 @@ void OTP_VppEn(void)
     Board_I2cInitCfg_t i2cCfg;
     Board_IDInfo_v2    info;
     Board_STATUS       status;
-    uint32_t           gpioIndex = 0;
+    uint32_t           gpioIndex = UFALSE;
 
     UART_printf("OTP_VppEn\n");
 
@@ -89,19 +89,19 @@ void OTP_VppEn(void)
 
     i2cCfg.i2cInst    = BOARD_I2C_EEPROM_INSTANCE;
     i2cCfg.socDomain  = BOARD_SOC_DOMAIN_WKUP;
-    i2cCfg.enableIntr = FALSE;
+    i2cCfg.enableIntr = BFALSE;
     Board_setI2cInitConfig(&i2cCfg);
 
     /* Check if the board is SK */
     status = Board_getIDInfo_v2(&info, KEYWRITER_SK_EEPROM_SLAVE_ADDR);
-    if(status == BOARD_SOK)
+    if(BOARD_SOK == status)
     {
         if(!(strncmp(info.boardInfo.boardName,
                      "AM69-SK",
                      BOARD_BOARD_NAME_LEN)))
         {
             UART_printf("AM69 SK Detected!!\n");
-            gpioIndex = 1;
+            gpioIndex = UTRUE;
         }
     }
 

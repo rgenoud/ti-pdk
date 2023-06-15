@@ -64,9 +64,9 @@ static void OTP_SciClientInit(void)
     Sciclient_ConfigPrms_t        config = {
         SCICLIENT_SERVICE_OPERATION_MODE_POLLED,
         NULL,
-        1,
-        0,
-        TRUE
+        UTRUE,
+        0U,
+        1U
     };
 
     /* Use snapshot of sciclient boardconfigs */
@@ -81,7 +81,7 @@ static void OTP_SciClientInit(void)
 
     status = Sciclient_loadFirmware((const uint32_t *)sysfw_ptr);
 
-    if (status != CSL_PASS)
+    if (CSL_PASS != status)
     {
         UART_printf("TIFS load...FAILED \n");
         KeywrErrLoop(__FILE__, __LINE__);
@@ -89,19 +89,19 @@ static void OTP_SciClientInit(void)
 
     status = Sciclient_init(&config);
 
-    if (status != CSL_PASS)
+    if (CSL_PASS != status)
     {
         UART_printf("Sciclient init ...FAILED \n");
         KeywrErrLoop(__FILE__, __LINE__);
     }
 
     sblBoardCfgPrms.boardConfigLow  = (uint32_t)boardCfgInfo.boardCfgLow;
-    sblBoardCfgPrms.boardConfigHigh = 0;
+    sblBoardCfgPrms.boardConfigHigh = 0U;
     sblBoardCfgPrms.boardConfigSize = boardCfgInfo.boardCfgLowSize;
     sblBoardCfgPrms.devGrp = DEVGRP_ALL;
     status = Sciclient_boardCfg(&sblBoardCfgPrms);
 
-    if (status != CSL_PASS)
+    if (CSL_PASS != status)
     {
         UART_printf("Sciclient board config ...FAILED \n");
         KeywrErrLoop(__FILE__, __LINE__);
@@ -110,12 +110,12 @@ static void OTP_SciClientInit(void)
     UART_stdioDeInit();
 
     sblBoardCfgPmPrms.boardConfigLow  = (uint32_t)boardCfgInfo.boardCfgLowPm;
-    sblBoardCfgPmPrms.boardConfigHigh = 0;
+    sblBoardCfgPmPrms.boardConfigHigh = 0U;
     sblBoardCfgPmPrms.boardConfigSize = boardCfgInfo.boardCfgLowPmSize;
     sblBoardCfgPmPrms.devGrp = DEVGRP_ALL;
     status = Sciclient_boardCfgPm(&sblBoardCfgPmPrms);
 
-    if (status != CSL_PASS)
+    if (CSL_PASS != status)
     {
         /* Sciclient board config pm..FAILS */
         KeywrErrLoop(__FILE__, __LINE__);
@@ -128,12 +128,12 @@ static void OTP_SciClientInit(void)
     UART_stdioInit(KEYWRITER_BOARD_UART_INSTANCE);
 
     sblBoardCfgSecPrms.boardConfigLow  = (uint32_t)boardCfgInfo.boardCfgLowSec;
-    sblBoardCfgSecPrms.boardConfigHigh = 0;
+    sblBoardCfgSecPrms.boardConfigHigh = 0U;
     sblBoardCfgSecPrms.boardConfigSize = boardCfgInfo.boardCfgLowSecSize;
     sblBoardCfgSecPrms.devGrp = DEVGRP_ALL;
     status = Sciclient_boardCfgSec(&sblBoardCfgSecPrms);
 
-    if (status != CSL_PASS)
+    if (CSL_PASS != status)
     {
         UART_printf("Sciclient board config sec...FAILED \n");
         KeywrErrLoop(__FILE__, __LINE__);
@@ -162,7 +162,7 @@ static void OTP_SciClientInit(void)
 
     if (CSL_PASS == status)
     {
-        if (respPrm.flags == (uint32_t)TISCI_MSG_FLAG_ACK)
+        if ((uint32_t)TISCI_MSG_FLAG_ACK == respPrm.flags)
         {
             UART_printf("\n OTP Keywriter ver: %s\n", (char *)response.str);
         }
@@ -186,8 +186,8 @@ static void mmr_unlock(uint32_t base, uint32_t partition)
 int main()
 {
     int32_t status = CSL_EFAIL;
-    uint32_t debug_response  = 0;
-    uint32_t *keywriter_cert = &keywr_end + 1;
+    uint32_t debug_response  = 0U;
+    uint32_t *keywriter_cert = &keywr_end + 1U;
     UART_HwAttrs uart_cfg;
 
     /* padconfig unlock */
@@ -199,7 +199,7 @@ int main()
 
     UART_socGetInitCfg(KEYWRITER_BOARD_UART_INSTANCE, &uart_cfg);
     uart_cfg.frequency       = SBL_ROM_UART_MODULE_INPUT_CLK;
-    uart_cfg.enableInterrupt = FALSE;
+    uart_cfg.enableInterrupt = UFALSE;
     UART_socSetInitCfg(KEYWRITER_BOARD_UART_INSTANCE, &uart_cfg);
     UART_stdioInit(KEYWRITER_BOARD_UART_INSTANCE);
 
@@ -215,7 +215,7 @@ int main()
                                         SCICLIENT_SERVICE_WAIT_FOREVER,
                                         &debug_response);
 
-    if (status != CSL_PASS)
+    if (CSL_PASS != status)
     {
         UART_printf("Sciclient_otpProcessKeyCfg returns: %d\n", status);
     }

@@ -313,7 +313,7 @@ static int32_t BOOT_PERF_TEST_sysfwInit(void)
     Sciclient_BoardCfgPrms_t sblPerfTestBoardCfgPmPrms =
     {
         .boardConfigLow = (uint32_t)NULL,
-        .boardConfigHigh = 0,
+        .boardConfigHigh = 0U,
         .boardConfigSize = 0,
         .devGrp = DEVGRP_01
     };
@@ -331,7 +331,7 @@ static int32_t BOOT_PERF_TEST_sysfwInit(void)
     }
 
     sblPerfTestBoardCfgPrms.boardConfigLow = (uint32_t)&sblPerfTestBoardCfg;
-    sblPerfTestBoardCfgPrms.boardConfigHigh = 0;
+    sblPerfTestBoardCfgPrms.boardConfigHigh = 0U;
     sblPerfTestBoardCfgPrms.boardConfigSize = boardCfgInfo.boardCfgLowSize;
     sblPerfTestBoardCfgPrms.devGrp = DEVGRP_01;
     memcpy((void *)&sblPerfTestBoardCfg,
@@ -362,7 +362,7 @@ static int32_t BOOT_PERF_TEST_sysfwInit(void)
     }
 
     sblPerfTestBoardCfgRmPrms.boardConfigLow = (uint32_t)&sblPerfTestBoardCfg_rm;
-    sblPerfTestBoardCfgRmPrms.boardConfigHigh = 0;
+    sblPerfTestBoardCfgRmPrms.boardConfigHigh = 0U;
     sblPerfTestBoardCfgRmPrms.boardConfigSize = boardCfgInfo.boardCfgLowRmSize;
     sblPerfTestBoardCfgRmPrms.devGrp = DEVGRP_01;
     memcpy((void *)&sblPerfTestBoardCfg_rm,
@@ -382,7 +382,7 @@ static int32_t BOOT_PERF_TEST_sysfwInit(void)
     }
 
     sblPerfTestBoardCfgSecPrms.boardConfigLow = (uint32_t)&sblPerfTestBoardCfg_sec;
-    sblPerfTestBoardCfgSecPrms.boardConfigHigh = 0;
+    sblPerfTestBoardCfgSecPrms.boardConfigHigh = 0U;
     sblPerfTestBoardCfgSecPrms.boardConfigSize = boardCfgInfo.boardCfgLowSecSize;
     sblPerfTestBoardCfgSecPrms.devGrp = DEVGRP_01;
     memcpy((void *)&sblPerfTestBoardCfg_sec,
