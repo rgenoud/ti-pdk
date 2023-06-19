@@ -279,7 +279,7 @@ mmcsdTestSDProfile_t SDProfiles_3p3V_DS_1bit = {
 	                                        /*** Test Config details ***/
 	                                        MMCSD_REGRESSION_DS_1BIT_TEST,  /* testID */
 	                                        " DS Mode 1-bit Test",  /* testDescription */
-	                                        FALSE, /* powerCycleRequired */
+	                                        BFALSE, /* powerCycleRequired */
 	                                        /*** Device config details ***/
 	                                       (MMCSD_SupportedSDModes_e)MMCSD_SUPPORT_SD_DS, /* mode */
 	                                       (MMCSD_BusVoltage_e)MMCSD_BUS_VOLTAGE_3_3V, /* bus Voltage */
@@ -293,7 +293,7 @@ mmcsdTestSDProfile_t SDProfiles_3p3V_DS = {
 	                                        /*** Test Config details ***/
 	                                        MMCSD_REGRESSION_DS_TEST,  /* testID */
 	                                        " DS Mode Test",  /* testDescription */
-	                                        FALSE, /* powerCycleRequired */
+	                                        BFALSE, /* powerCycleRequired */
 	                                        /*** Device config details ***/
 	                                       (MMCSD_SupportedSDModes_e)MMCSD_SUPPORT_SD_DS, /* mode */
 	                                       (MMCSD_BusVoltage_e)MMCSD_BUS_VOLTAGE_3_3V, /* bus Voltage */
@@ -307,7 +307,7 @@ mmcsdTestSDProfile_t SDProfiles_3p3V_HS = {
 	                                        /*** Test Config details ***/
 	                                        MMCSD_REGRESSION_HS_TEST,  /* testID */
 	                                        " HS Mode Test",  /* testDescription */
-	                                        FALSE, /* powerCycleRequired */
+	                                        BFALSE, /* powerCycleRequired */
 	                                        /*** Device config details ***/
 	                                       (MMCSD_SupportedSDModes_e)MMCSD_SUPPORT_SD_HS, /* mode */
 	                                       (MMCSD_BusVoltage_e)MMCSD_BUS_VOLTAGE_3_3V, /* bus Voltage */
@@ -321,7 +321,7 @@ mmcsdTestSDProfile_t SDProfiles_1p8V_SDR12 = {
 	                                        /*** Test Config details ***/
 	                                        MMCSD_REGRESSION_UHS_SDR12_TEST,  /* testID */
 	                                        " SDR12 Mode Test",  /* testDescription */
-	                                        TRUE, /* powerCycleRequired */
+	                                        BTRUE, /* powerCycleRequired */
 	                                        /*** Device config details ***/
 	                                       (MMCSD_SupportedSDModes_e)MMCSD_SUPPORT_SD_DS, /* mode. If 1.8 V this is SDR12 */
 	                                       (MMCSD_BusVoltage_e)(MMCSD_BUS_VOLTAGE_3_3V | MMCSD_BUS_VOLTAGE_1_8V), /* bus Voltage */
@@ -335,7 +335,7 @@ mmcsdTestSDProfile_t SDProfiles_1p8V_SDR25 = {
 	                                        /*** Test Config details ***/
 	                                        MMCSD_REGRESSION_UHS_SDR25_TEST,  /* testID */
 	                                        " SDR25 Mode Test",  /* testDescription */
-	                                        TRUE, /* powerCycleRequired */
+	                                        BTRUE, /* powerCycleRequired */
 	                                        /*** Device config details ***/
 	                                       (MMCSD_SupportedSDModes_e)MMCSD_SUPPORT_SD_HS, /* mode. If 1.8 V this is SDR12 */
 	                                       (MMCSD_BusVoltage_e)(MMCSD_BUS_VOLTAGE_3_3V | MMCSD_BUS_VOLTAGE_1_8V), /* bus Voltage */
@@ -350,7 +350,7 @@ mmcsdTestSDProfile_t SDProfiles_1p8V_SDR50 = {
 	                                        /*** Test Config details ***/
 	                                        MMCSD_REGRESSION_UHS_SDR50_TEST,  /* testID */
 	                                        " SDR50 Mode Test",  /* testDescription */
-	                                        TRUE, /* powerCycleRequired */
+	                                        BTRUE, /* powerCycleRequired */
 	                                        /*** Device config details ***/
 	                                       (MMCSD_SupportedSDModes_e)MMCSD_SUPPORT_SD_SDR50, /* mode. If 1.8 V this is SDR12 */
 	                                       (MMCSD_BusVoltage_e)(MMCSD_BUS_VOLTAGE_3_3V | MMCSD_BUS_VOLTAGE_1_8V), /* bus Voltage */
@@ -364,7 +364,7 @@ mmcsdTestSDProfile_t SDProfiles_1p8V_DDR50 = {
 	                                        /*** Test Config details ***/
 	                                        MMCSD_REGRESSION_UHS_DDR50_TEST,  /* testID */
 	                                        " DDR50 Mode Test",  /* testDescription */
-	                                        TRUE, /* powerCycleRequired */
+	                                        BTRUE, /* powerCycleRequired */
 	                                        /*** Device config details ***/
 	                                       (MMCSD_SupportedSDModes_e)MMCSD_SUPPORT_SD_DDR50, /* mode. If 1.8 V this is SDR12 */
 	                                       (MMCSD_BusVoltage_e)(MMCSD_BUS_VOLTAGE_3_3V | MMCSD_BUS_VOLTAGE_1_8V), /* bus Voltage */
@@ -378,7 +378,7 @@ mmcsdTestSDProfile_t SDProfiles_1p8V_SDR104 = {
 	                                        /*** Test Config details ***/
 	                                        MMCSD_REGRESSION_UHS_SDR104_TEST,  /* testID */
 	                                        " SDR104 Mode Test",  /* testDescription */
-	                                        TRUE, /* powerCycleRequired */
+	                                        BTRUE, /* powerCycleRequired */
 	                                        /*** Device config details ***/
 	                                       (MMCSD_SupportedSDModes_e)MMCSD_SUPPORT_SD_SDR104, /* mode. If 1.8 V this is SDR12 */
 	                                       (MMCSD_BusVoltage_e)(MMCSD_BUS_VOLTAGE_3_3V | MMCSD_BUS_VOLTAGE_1_8V), /* bus Voltage */
@@ -393,7 +393,7 @@ mmcsdTestSDProfile_t SDProfiles_Default = {
 	                                        /*** Test Config details ***/
 	                                        MMCSD_REGRESSION_DEFAULT_TEST,  /* testID */
 	                                        "Default Unit Test (Max speed)",  /* testDescription */
-	                                        TRUE, /* powerCycleRequired */
+	                                        BTRUE, /* powerCycleRequired */
 	                                        /*** Device config details ***/
 	                                       (MMCSD_SupportedSDModes_e)MMCSD_SUPPORT_SD_ALL, /* mode */
 	                                       (MMCSD_BusVoltage_e)(MMCSD_BUS_VOLTAGE_3_3V | MMCSD_BUS_VOLTAGE_3_0V | MMCSD_BUS_VOLTAGE_1_8V), /* bus Voltage */
@@ -406,7 +406,7 @@ mmcsdTestSDProfile_t SDProfiles_All_NonPowerCycleTests = {
 	                                        /*** Test Config details ***/
 	                                        MMCSD_REGRESSION_UHS_ALL_NON_POWERCYCLE_TESTS,  /* testID */
 	                                        " All non powercycle tests",  /* testDescription */
-	                                        FALSE, /* powerCycleRequired */
+	                                        BFALSE, /* powerCycleRequired */
 	                                        /*** Device config details ***/
 	                                       (MMCSD_SupportedSDModes_e)MMCSD_SUPPORT_SD_DS, /*  mode: Irrelevant. */
 	                                       (MMCSD_BusVoltage_e)MMCSD_BUS_VOLTAGE_3_3V, /* bus Voltage. Irrelevant. */
@@ -420,7 +420,7 @@ mmcsdTestSDProfile_t SDProfiles_Exit = {
 	                                        /*** Test Config details ***/
 	                                        MMCSD_REGRESSION_TEST_EXIT,  /* testID */
 	                                        " Exit the regression test",  /* testDescription */
-	                                        FALSE, /* powerCycleRequired */
+	                                        BFALSE, /* powerCycleRequired */
 	                                        /*** Device config details ***/
 	                                       (MMCSD_SupportedSDModes_e)MMCSD_SUPPORT_SD_DS, /* mode */
 	                                       (MMCSD_BusVoltage_e)MMCSD_BUS_VOLTAGE_3_3V, /* bus Voltage */
@@ -593,7 +593,7 @@ int32_t mmcsd_regression_seek_testID()
 {
    mmcsdTestSDProfile_t *testProfilePtr;
    uint32_t testprofile;
-   bool validInput=FALSE;
+   bool validInput = BFALSE;
    int32_t			selection;
 
 
@@ -616,7 +616,7 @@ int32_t mmcsd_regression_seek_testID()
         {  /* End of test profiles */
 	      break;
 	    }
-        MMCSD_log ("%5d         %20s           %4s \n",testProfilePtr->testID,testProfilePtr->testDescription,((testProfilePtr->powerCycleRequired==TRUE)?"Yes":"No"));
+        MMCSD_log ("%5d         %20s           %4s \n",testProfilePtr->testID,testProfilePtr->testDescription,((testProfilePtr->powerCycleRequired == BTRUE)?"Yes":"No"));
 	 }
 
     MMCSD_log ("\n\n");
@@ -630,18 +630,18 @@ int32_t mmcsd_regression_seek_testID()
 	 selection = atoi(Response);
 
       if(selection >= 0  && selection <MMCSD_REGRESSION_TEST_MAX) {
-		 validInput=TRUE;
+		 validInput = BTRUE;
 	  } else {
 
          if( !((selection == MMCSD_REGRESSION_UHS_ALL_NON_POWERCYCLE_TESTS) ||
              (selection == MMCSD_REGRESSION_TEST_EXIT)) ) {
              MMCSD_log ("Invalid selection: %d !! Please enter a valid test ID from the table!!!\n", selection);
          } else {
-		   validInput=TRUE;
+		   validInput = BTRUE;
 		 }
 	  }
 
-  } while(validInput==FALSE);
+  } while(validInput == BFALSE);
 
   return(selection);
 }
@@ -665,7 +665,7 @@ void mmcsd_test(void *arg0, void *arg1)
 {
     MMCSD_Error ret;
     int32_t fatfstest_ret;
-    bool test_fail=FALSE;
+    bool test_fail = BFALSE;
 	uint32_t num_tests_run=0,num_tests_passed=0,num_tests_failed=0;
 	uint32_t testprofile;
 	int32_t testID=0; /* Default */
@@ -715,7 +715,7 @@ void mmcsd_test(void *arg0, void *arg1)
 
      if(testID == MMCSD_REGRESSION_UHS_ALL_NON_POWERCYCLE_TESTS) {
   	     /* Run all the non powercycle tests */
-		 if(testProfilePtr->powerCycleRequired!= FALSE) {
+		 if(testProfilePtr->powerCycleRequired != BFALSE) {
 		   continue;
 		 }
 	  }
@@ -815,7 +815,7 @@ void mmcsd_test(void *arg0, void *arg1)
 #endif
 
      if((ret!=0) || (fatfstest_ret!=0)) {
- 	    test_fail=TRUE;
+ 	    test_fail = BTRUE;
  	    num_tests_failed++;
  	 } else {
       #ifdef MEASURE_TIME
@@ -828,9 +828,9 @@ void mmcsd_test(void *arg0, void *arg1)
 	    num_tests_passed++;
 	 }
 
-  	  if(test_fail==TRUE) {
+  	  if(test_fail == BTRUE) {
 		MMCSD_log("\nTest FAILED for this test configuration \n");
-		test_fail=FALSE; /* Reset the test for the next configuration */
+		test_fail = BFALSE; /* Reset the test for the next configuration */
 	  } else {
 		MMCSD_log("\nTest PASSED for this test configuration\n");
 	  }
@@ -1161,8 +1161,8 @@ int32_t HSMMCSDReadWriteTest_FATFS(mmcsdTestSDProfile_t *testProfilePtr)
 
   uint32_t bytesWrite = 0;
   uint32_t bytesRead = 0;
-  uint32_t flagWrite = FALSE;
-  uint32_t flagRead = FALSE;
+  uint32_t flagWrite = UFALSE;
+  uint32_t flagRead = UFALSE;
   int32_t fatfsTestRet=-1;
   uint32_t sizes;
 
@@ -1203,10 +1203,10 @@ int32_t HSMMCSDReadWriteTest_FATFS(mmcsdTestSDProfile_t *testProfilePtr)
        MMCSD_log("FATFS READ/WRITE: Fail to open file %s for write !!!!\n",MMCSD_FS_filepath);
        goto fatfs_test_exit;
      } else  {
-       flagWrite = TRUE;
+       flagWrite = UTRUE;
      }
 
-     if(TRUE == flagWrite) {
+     if(UTRUE == flagWrite) {
 
        MMCSD_log("\nFATFS READ/WRITE: Writing test pattern (%d KB) to file %s with \n",mmcsd_test_sizes[sizes]/1024,MMCSD_FS_filepath);
 
@@ -1232,7 +1232,7 @@ int32_t HSMMCSDReadWriteTest_FATFS(mmcsdTestSDProfile_t *testProfilePtr)
    	 /*
 	   * Close the Write file.
 	 */
-	  if(TRUE == flagWrite){
+	  if(UTRUE == flagWrite){
 		fresultClose = f_close(&MMCSD_FS_WriteFileObj);
 
 		if(fresultClose != FR_OK) {
@@ -1247,11 +1247,11 @@ int32_t HSMMCSDReadWriteTest_FATFS(mmcsdTestSDProfile_t *testProfilePtr)
        MMCSD_log("FATFS READ/WRITE: Fail to open file %s for reading with return code %d!!!!\n",MMCSD_FS_filepath,fresultRead);
        goto fatfs_test_exit;
     }  else  {
-       flagRead = TRUE;
+       flagRead = UTRUE;
     }
 
 
-    if(TRUE == flagRead) {
+    if(UTRUE == flagRead) {
 
      MMCSD_log("FATFS READ/WRITE: Reading test pattern (%d KB) from file %s with \n",mmcsd_test_sizes[sizes]/1024,MMCSD_FS_filepath);
 
@@ -1286,7 +1286,7 @@ int32_t HSMMCSDReadWriteTest_FATFS(mmcsdTestSDProfile_t *testProfilePtr)
   	  }
 
    	 /* Delete the read file */
-	  if(TRUE == fresultDelete){
+	  if(UTRUE == fresultDelete){
 		fresultDelete = f_unlink(MMCSD_FS_filepath);
 
 		if(fresultDelete != FR_OK) {

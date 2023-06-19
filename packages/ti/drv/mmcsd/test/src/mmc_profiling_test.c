@@ -66,7 +66,7 @@ static int32_t mmcApp_setGTCClk(uint32_t moduleId,
                                           clkId,
                                           &currClkFreqHz,
                                           SCICLIENT_SERVICE_WAIT_FOREVER);
-    if ((retVal == CSL_PASS) &&
+    if ((CSL_PASS == retVal) &&
         (currClkFreqHz != clkRateHz))
     {
 /* PDK-13708 : Unable to set GTC clock frequency to 200 MHz on J784S4 
@@ -74,12 +74,12 @@ static int32_t mmcApp_setGTCClk(uint32_t moduleId,
    to 200 MHz */
 #if defined(SOC_J784S4)
         retVal = Sciclient_pmGetModuleClkParent(moduleId, clkId, &origParent, SCICLIENT_SERVICE_WAIT_FOREVER);
-        if (retVal != CSL_PASS)
+        if (CSL_PASS != retVal)
         {
             MMCSD_log("Error : Failed to get parent number !! \n");
         }
         retVal = Sciclient_pmSetModuleClkParent(moduleId, clkId, origParent+1, SCICLIENT_SERVICE_WAIT_FOREVER);
-        if (retVal != CSL_PASS)
+        if (CSL_PASS != retVal)
         {
             MMCSD_log("Error : Failed to set parent number !! \n");
         }
@@ -89,7 +89,7 @@ static int32_t mmcApp_setGTCClk(uint32_t moduleId,
                                          clkRateHz,
                                          TISCI_MSG_FLAG_AOP,
                                          SCICLIENT_SERVICE_WAIT_FOREVER);
-        if (retVal != CSL_PASS)
+        if (CSL_PASS != retVal)
         {
             MMCSD_log("Error : Failed to set GTC clock frequency !! \n");
         }
@@ -145,7 +145,7 @@ void mmcApp_displayBenchmarks(mmcsdTestBenchmarks_t *pBenchmarks, uint32_t testI
    char strReadBandWidth[20];
    char strWriteBandWidth[20];
   
-   if(pBenchmarks==NULL)
+   if(NULL == pBenchmarks)
      return;
      
    MMCSD_log ("\n ----- RAW Read/Write Throughput measurements -------\n");
@@ -199,21 +199,21 @@ void mmcApp_displayBenchmarks(mmcsdTestBenchmarks_t *pBenchmarks, uint32_t testI
 }
 void mmcApp_resetBenchmarks(mmcsdTestBenchmarkElem_t *pBenchmarkElem)
 {
-   if(pBenchmarkElem==NULL)
+   if(NULL == pBenchmarkElem)
      return;
 
-    pBenchmarkElem->valid=FALSE; 
-    pBenchmarkElem->write.numBytesTransferred =0;
-    pBenchmarkElem->write.bandwidthMbytesPerSec=0;
-    pBenchmarkElem->read.numBytesTransferred =0;
-    pBenchmarkElem->read.bandwidthMbytesPerSec=0;
+    pBenchmarkElem->valid = BFALSE; 
+    pBenchmarkElem->write.numBytesTransferred = 0U;
+    pBenchmarkElem->write.bandwidthMbytesPerSec = 0;
+    pBenchmarkElem->read.numBytesTransferred = 0U;
+    pBenchmarkElem->read.bandwidthMbytesPerSec = 0;
 }
 
 void mmcApp_storeBenchmarks(mmcsdTestBenchmarkElem_t *pBenchmarkElem,uint32_t bytesTransferred)
 {   
     volatile float totalTimeInSec;
 	/* Store the benchmark information */
-    pBenchmarkElem->valid=TRUE;
+    pBenchmarkElem->valid = BTRUE;
 
     totalTimeInSec = (float) mmcApp_profileContext.profile_Points[MMC_APP_PROFILE_MMCSD_WRITE].totalTicks/(MMC_APP_PROFILE_GTC_CLK_FREQ);
     pBenchmarkElem->write.bandwidthMbytesPerSec = (float)(((float)bytesTransferred)/(1024*1024))/
