@@ -32,10 +32,13 @@
  */
 
 /**
- *  \file   V6/sciclient_fmwMsgParams.h
+ * \ingroup DRV_SCICLIENT_MODULE
+ * \defgroup DRV_SCICLIENT_MSG_PARAMS Sciclient Message Parameter IDs
+ * @{
+ * \file   pdk/packages/ti/drv/sciclient/soc/V6/sciclient_fmwMsgParams.h
  *
- *  \brief  This file contains the definition of all the parameter IDs for
- *          PM, RM, Security.
+ * \brief  This file contains the definition of all the parameter IDs for
+ *         PM, RM, Security.
  */
 
 #ifndef SCICLIENT_FMWMSGPARAMS_H_
@@ -422,3 +425,7 @@ extern "C" {
 #endif
 
 #endif /* #ifndef SCICLIENT_FMWMSGPARAMS_H_ */
+
+/**
+ * @}
+*/
