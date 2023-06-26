@@ -207,6 +207,16 @@ ifeq ($(BOARD),$(filter $(BOARD), am62a_evm am62a_hostemu am62a_loki ))
  SOC = am62a
 endif
 
+# J722S
+ifeq ($(BOARD),$(filter $(BOARD), j722s_zebu j722s_hostemu))
+ SOC = j722s
+ SBL_RUN_ADDRESS=0x43C00100
+ SYSFW_LOADADDR=0x40000
+ COMBINED_TIFS_BRDCFG_LOADADDR=0x67000
+ COMBINED_DM_BRDCFG_LOADADDR=0x43c3c800
+ SBL_DEV_ID=55
+endif
+
 # SBL related macro
 export SBL_CERT_KEY_HS=$(ROOTDIR)/ti/build/makerules/k3_dev_mpk.pem
 export SBL_CERT_KEY=$(ROOTDIR)/ti/build/makerules/rom_degenerateKey.pem
@@ -296,6 +306,11 @@ ifeq ($(CORE),$(filter $(CORE), mpu1_0 mpu1_1 mpu1_2 mpu1_3 mpu2_0 mpu2_1 mpu2_2
     ISA_EXT = a72
     ARCH = armv8a
   endif
+  ifeq ($(SOC),$(filter $(SOC), j722s))
+    ISA = a53
+    ISA_EXT = a53
+    ARCH = armv8a
+  endif
 endif
 
 ifeq ($(CORE),$(filter $(CORE), qnx_mpu1_0))
@@ -319,6 +334,10 @@ ifeq ($(CORE),$(filter $(CORE), c7x_1 c7x_2 c7x_3 c7x_4))
   ISA = c75x
   SI_VER = 7504
  endif
+ ifeq ($(SOC),$(filter $(SOC), j722s))
+  ISA = c75x
+  SI_VER = 7504
+ endif
 endif
 
 # C7x DSP
@@ -331,6 +350,9 @@ ifeq ($(CORE),$(filter $(CORE), c7x-hostemu))
  endif
  ifeq ($(SOC),$(filter $(SOC), j721s2 j784s4)) 
   SI_VER = 7120
+ endif
+ ifeq ($(SOC),$(filter $(SOC), j722s))
+  SI_VER = 7504
  endif
 endif
 
@@ -626,7 +648,7 @@ ifeq ($(ISA),c674)
   ASMEXT = s$(FORMAT_EXT)$(ISA_EXT)$(ENDIAN_EXT)
 endif
 
-ifeq ($(SOC),$(filter $(SOC), j7200 j721e j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j7200 j721e j721s2 j784s4 j722s))
   SBL_CORE_ID_mpu1_0 = 0
   SBL_CORE_ID_mpu1_1 = 1
   SBL_CORE_ID_mpu1_2 = 2

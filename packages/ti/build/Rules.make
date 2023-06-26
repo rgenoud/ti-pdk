@@ -81,7 +81,7 @@ endif
 ifeq ($(BOARD),$(filter $(BOARD), j721e_ccqt j721e_loki))
   CORE ?= c7x_1
 endif
-ifeq ($(BOARD),$(filter $(BOARD), j721e_hostemu j7200_hostemu j721s2_hostemu j784s4_hostemu am62a_hostemu))
+ifeq ($(BOARD),$(filter $(BOARD), j721e_hostemu j7200_hostemu j721s2_hostemu j784s4_hostemu j722s_hostemu am62a_hostemu))
   CORE = c7x-hostemu
 endif
 ifeq ($(BOARD),$(filter $(BOARD), tpr12_evm tpr12_qt awr294x_evm))
@@ -103,6 +103,7 @@ BOARD_LIST_J7_TDA = j721e_sim j721e_hostemu j721e_ccqt j721e_loki j721e_qt j721e
 BOARD_LIST_J7_TDA += j7200_sim j7200_hostemu j7200_evm
 BOARD_LIST_J7_TDA += j721s2_evm j721s2_hostemu
 BOARD_LIST_J7_TDA += j784s4_evm j784s4_hostemu
+BOARD_LIST_J7_TDA += j722s_zebu j722s_hostemu
 BOARD_LIST_J7_TDA += am65xx_sim am65xx_evm am65xx_idk
 export BOARD_LIST_J7_TDA
 

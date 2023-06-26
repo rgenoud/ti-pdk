@@ -66,9 +66,9 @@
 #
 ifeq ($(sbl_component_make_include), )
 
-sbl_BOARDLIST = am65xx_evm am65xx_idk j721e_evm j7200_evm j721s2_evm j784s4_evm am64x_evm tpr12_evm tpr12_qt awr294x_evm
+sbl_BOARDLIST = am65xx_evm am65xx_idk j721e_evm j7200_evm j721s2_evm j784s4_evm j722s_zebu am64x_evm tpr12_evm tpr12_qt awr294x_evm
 
-sbl_SOCLIST = am65xx j721e j7200 j721s2 j784s4 am64x tpr12 awr294x
+sbl_SOCLIST = am65xx j721e j7200 j721s2 j784s4 j722s am64x tpr12 awr294x
 
 am65xx_smp_CORELIST := mcu1_0 mpu1_0 mpu2_0
 sbl_am65xx_CORELIST := mcu1_0 mcu1_1 mpu1_0 mpu1_1 mpu2_0 mpu2_1
@@ -89,6 +89,10 @@ j721s2_LASTCORE := $(word $(words $(sbl_j721s2_CORELIST)), $(sbl_j721s2_CORELIST
 j784s4_smp_CORELIST := mcu1_0 mcu2_0 mcu3_0 mcu4_0 mpu1_0 mpu2_0
 sbl_j784s4_CORELIST := mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mcu4_0 mcu4_1 mpu1_0 mpu1_1 mpu1_2 mpu1_3 mpu2_0 mpu2_1 mpu2_2 mpu2_3
 j784s4_LASTCORE := $(word $(words $(sbl_j784s4_CORELIST)), $(sbl_j784s4_CORELIST))
+
+j722s_smp_CORELIST := mcu1_0 mcu2_0 mcu3_0 mpu1_0
+sbl_j722s_CORELIST := mcu1_0 mcu2_0 mcu3_0 c7x_1 c7x_2 mpu1_0 mpu1_1 mpu1_2 mpu1_3
+j722s_LASTCORE := $(word $(words $(sbl_j722s_CORELIST)), $(sbl_j722s_CORELIST))
 
 am64x_smp_CORELIST := mcu1_0 mcu2_0 mpu1_0
 sbl_am64x_CORELIST := mcu1_0 mcu1_1 mcu2_0 mcu2_1 mpu1_0 mpu1_1

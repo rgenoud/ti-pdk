@@ -62,7 +62,7 @@ ifeq ($(FORMAT),ELF)
 endif
 
 # Internal CFLAGS - normally doesn't change
-CFLAGS_INTERNAL = -Wimplicit -Wall -Wunused -Wunknown-pragmas -ffunction-sections -fdata-sections -c -mcpu=cortex-a53+fp+simd -g -mabi=lp64 -mcmodel=large -mstrict-align
+CFLAGS_INTERNAL = -Wimplicit -Wall -Wunused -Wunknown-pragmas -ffunction-sections -fdata-sections -c -mcpu=cortex-a53+fp+simd -g -mabi=lp64 -mcmodel=large -mstrict-align -std=gnu99 -fms-extensions
 CFLAGS_INTERNAL += -mfix-cortex-a53-835769 -mfix-cortex-a53-843419
 #uint32 addr to pointer cast in hw_types.h causes warning/error - suppress it
 CFLAGS_INTERNAL += -Wno-int-to-pointer-cast -Wno-pointer-to-int-cast
@@ -76,7 +76,7 @@ CFLAGS_DIROPTS =
 
 # CFLAGS based on profile selected
 ifeq ($(BUILD_PROFILE_$(CORE)), debug)
-  CFLAGS_INTERNAL += -D_DEBUG_=1
+  CFLAGS_INTERNAL += -D_DEBUG_=1 -ggdb -ggdb3 -gdwarf-2
   LNKFLAGS_INTERNAL_BUILD_PROFILE =
 endif
 ifeq ($(BUILD_PROFILE_$(CORE)), release)
@@ -85,7 +85,7 @@ ifeq ($(BUILD_PROFILE_$(CORE)), release)
 endif
 
 # XDC specific CFLAGS
-CFLAGS_XDCINTERNAL = -Dxdc_target_types__=gnu/targets/arm/std.h -Dxdc_target_name__=A53F -Dxdc_bld__profile_$(BUILD_PROFILE_$(CORE))
+CFLAGS_XDCINTERNAL = -Dxdc_target_types__=gnu/targets/arm/std.h -Dxdc_bld__profile_$(BUILD_PROFILE_$(CORE)) -mcpu=cortex-a53 -Dxdc_target_name__=A53F
 ifndef MODULE_NAME
   XDC_HFILE_NAME = $(basename $(notdir $(XDC_CFG_FILE_$(CORE))))
   CFLAGS_XDCINTERNAL += -Dxdc_cfg__header__='$(CONFIGURO_DIR)/package/cfg/$(XDC_HFILE_NAME)_pa53fg.h'
@@ -270,7 +270,7 @@ else
   XDC_BUILD_ROOT = $(DEST_ROOT)
 endif
 
-$(CFG_C_XDC) $(LNKCMD_FILE) : $(XDC_CFG_FILE_NAME) $(XDC_CFG_UPDATE)
+$(CFG_C_XDC) $(LNKCMD_FILE) : $(XDC_CFG_FILE) $(XDC_CFG_UPDATE)
 	$(ECHO) \# Invoking configuro...
 	$(MKDIR) -p $(XDC_BUILD_ROOT)
 	$(xdc_PATH)/xs xdc.tools.configuro --generationOnly -o $(CONFIGURO_DIR) -t $(TARGET_XDC) -p $(PLATFORM_XDC) \

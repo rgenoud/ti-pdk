@@ -34,7 +34,6 @@ LIMIT_CORES_am65xx-hs = $(CORE_LIST_am65xx)
 LIMIT_CORES_am64x     = $(CORE_LIST_am64x)
 LIMIT_CORES_am62x     = $(CORE_LIST_am62x)
 LIMIT_CORES_am62a     = $(CORE_LIST_am62a)
-LIMIT_CORES_j722s     = $(CORE_LIST_j722s)
 LIMIT_CORES_tpr12     = $(CORE_LIST_tpr12)
 LIMIT_CORES_awr294x   = $(CORE_LIST_awr294x)
 # Filter out c7x-hostemu as Processor SDK does not build use it
@@ -57,11 +56,10 @@ LIMIT_SOCS_am335x    = am335x
 LIMIT_SOCS_am65xx    = am65xx
 LIMIT_SOCS_am65xx-hs = am65xx
 LIMIT_SOCS_am64x     = am64x
-LIMIT_SOCS_j7        = j721e j7200 j721s2 j784s4 
+LIMIT_SOCS_j7        = j721e j7200 j721s2 j784s4 j722s
 LIMIT_SOCS_j7-hs     = j721e j7200 j721s2
 LIMIT_SOCS_am62x     = am62x
 LIMIT_SOCS_am62a     = am62a
-LIMIT_SOCS_j722s     = j722s
 LIMIT_SOCS_tpr12     = tpr12
 LIMIT_SOCS_awr294x   = awr294x
 LIMIT_SOCS_omapl137  = omapl137
@@ -75,7 +73,7 @@ else
 export BUILD_HS ?= no
 endif
 
-LIMIT_BOARDS_j7        = $(BOARD_LIST_j721e) $(BOARD_LIST_j7200) $(BOARD_LIST_j721s2) $(BOARD_LIST_j784s4) 
+LIMIT_BOARDS_j7        = $(BOARD_LIST_j721e) $(BOARD_LIST_j7200) $(BOARD_LIST_j721s2) $(BOARD_LIST_j784s4) $(BOARD_LIST_j722s)
 LIMIT_BOARDS_j7-hs     = $(BOARD_LIST_j721e) $(BOARD_LIST_j7200) $(BOARD_LIST_j721s2)
 LIMIT_BOARDS_am335x    = $(BOARD_LIST_am335x)
 LIMIT_BOARDS_omapl137  = $(BOARD_LIST_omapl137)
@@ -91,7 +89,6 @@ LIMIT_BOARDS_am65xx-hs = $(BOARD_LIST_am65xx)
 LIMIT_BOARDS_am64x     = $(BOARD_LIST_am64x)
 LIMIT_BOARDS_am62x     = $(BOARD_LIST_am62x)
 LIMIT_BOARDS_am62a     = $(BOARD_LIST_am62a)
-LIMIT_BOARDS_j722s     = $(BOARD_LIST_j722s)
 LIMIT_BOARDS_c665x     = $(BOARD_LIST_c6657)
 LIMIT_BOARDS_c667x     = $(BOARD_LIST_c6678)
 LIMIT_BOARDS_omapl138  = $(BOARD_LIST_omapl138)

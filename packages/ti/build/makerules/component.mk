@@ -87,6 +87,9 @@ endif
 ifeq ($(SOC),$(filter $(SOC), j784s4))
 DEFAULT_CORELIST_EXCLUDE_CORES += mpu1_1 mpu1_2 mpu1_3 mpu2_0 mpu2_1 mpu2_2 mpu2_3
 endif
+ifeq ($(SOC),$(filter $(SOC), j722s))
+DEFAULT_CORELIST_EXCLUDE_CORES += mpu1_1 mpu1_2 mpu1_3
+endif
 
 DEFAULT_$(SOC)_CORELIST = $(filter-out $(DEFAULT_CORELIST_EXCLUDE_CORES), $(CORE_LIST_$(SOC)))
 
@@ -95,12 +98,12 @@ DEFAULT_RTOS_LIST = freertos
 
 # The below defines the DEFAULT_SOCLIST_<rtos_type> for various RTOS types(freertos/safertos)
 DEFAULT_SOCLIST_tirtos   =
-DEFAULT_SOCLIST_freertos = j721e j7200 j721s2 j784s4 am62x am62a
+DEFAULT_SOCLIST_freertos = j721e j7200 j721s2 j784s4 j722s am62x am62a
 DEFAULT_SOCLIST_safertos = j721e
 
 # The below defines the DEFAULT_BOARDLIST_<rtos_type> for various RTOS types(freertos/safertos)
 DEFAULT_BOARDLIST_tirtos   =
-DEFAULT_BOARDLIST_freertos = j721e_evm j7200_evm j721s2_evm j784s4_evm am62x_evm am62a_evm
+DEFAULT_BOARDLIST_freertos = j721e_evm j7200_evm j721s2_evm j784s4_evm j722s_zebu am62x_evm am62a_evm
 DEFAULT_BOARDLIST_safertos = j721e_evm
 
 # The below defines the DEFAULT_$(SOC)_CORELIST_<rtos_type> for various RTOS types(tirtos/freertos/safertos)
@@ -108,7 +111,7 @@ DEFAULT_BOARDLIST_safertos = j721e_evm
 # DEFAULT_$(SOC)_CORELIST_<rtos_type> is a subset of all the cores and is used for building components for the particular 'rtos_type'.
 
 
-ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 am62x am62a))
+ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 j722s am62x am62a))
 # FreeRTOS is not supported on mpu core
 DEFAULT_CORELIST_EXCLUDE_CORES_freertos += mpu1_0
 
@@ -1381,6 +1384,15 @@ ifeq ($(SOC),$(filter $(SOC), j721s2 j784s4))
   endif
 endif
 
+ifeq ($(SOC),$(filter $(SOC), j722s))
+  PDK_COMMON_COMP = csl uart
+  ifeq ($(CORE),mcu1_0)
+    PDK_COMMON_COMP += sciclient_direct rm_pm_hal
+  else
+    PDK_COMMON_COMP += sciclient
+  endif
+endif
+
 ifeq ($(SOC),$(filter $(SOC), am62x))
   PDK_COMMON_COMP = csl board uart
   ifeq ($(CORE),mcu1_0)
@@ -1408,7 +1420,7 @@ else
   endif
 endif
 
-ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 am62x am62a))
+ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 j722s am62x am62a))
   PDK_COMMON_FREERTOS_COMP = $(PDK_COMMON_COMP) osal_freertos
   PDK_COMMON_FREERTOS_COMP += freertos
   PDK_COMMON_SAFERTOS_COMP = $(PDK_COMMON_COMP) osal_safertos

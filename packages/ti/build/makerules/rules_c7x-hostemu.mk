@@ -43,7 +43,7 @@ ifeq ($(SOC),$(filter $(SOC), j721e))
 CODEGEN_INCLUDE = $(C7X_GEN_INSTALL_PATH)/host_emulation/include/C7100
 else ifeq  ($(SOC),$(filter $(SOC), j721s2))
 CODEGEN_INCLUDE = $(C7X_GEN_INSTALL_PATH)/host_emulation/include/C7120
-else ifeq  ($(SOC),$(filter $(SOC), am62a))
+else ifeq  ($(SOC),$(filter $(SOC), j722s am62a))
 CODEGEN_INCLUDE = $(C7X_GEN_INSTALL_PATH)/host_emulation/include/C7504
 else
 CODEGEN_INCLUDE = $(C7X_GEN_INSTALL_PATH)/host_emulation/include/C7100
@@ -160,6 +160,9 @@ ifeq ($(SI_VER), 7100)
 endif
 ifeq ($(SI_VER), 7120)
   CFLAGS_INTERNAL += -D__C7120__
+endif
+ifeq ($(SI_VER), 7504)
+  CFLAGS_INTERNAL += -D__C7504__
 endif
 
 ########################################
