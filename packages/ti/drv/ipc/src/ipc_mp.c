@@ -69,7 +69,11 @@ typedef struct Ipc_MpConfig_s
 
 static Ipc_MpConfig   g_ipcMpConfig;
 
+#ifdef QNX_OS
+int32_t Ipc_mpSetConfig(uint32_t selfId, uint16_t numProc, uint32_t* procArry)
+#else
 int32_t Ipc_mpSetConfig(uint32_t selfId, uint16_t numProc, uint32_t procArry[IPC_MAX_PROCS])
+#endif
 {
     int32_t        retVal = IPC_SOK;
     Ipc_MpConfig  *pMpCfg = &g_ipcMpConfig;
