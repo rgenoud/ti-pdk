@@ -70,14 +70,14 @@ ifeq ($(uart_component_make_include), )
 drvuart_RTOS_LIST 		= $(DEFAULT_RTOS_LIST)
 
 drvuart_BOARDLIST       = am65xx_evm am65xx_idk j721e_sim j721e_evm j7200_evm am64x_evm
-drvuart_BOARDLIST      += tpr12_evm tpr12_qt awr294x_evm j721s2_evm j784s4_evm am62x_evm am62a_evm
+drvuart_BOARDLIST      += tpr12_evm tpr12_qt awr294x_evm j721s2_evm j784s4_evm j722s_zebu am62x_evm am62a_evm
 
 drv_dma_uart_BOARDLIST  = am65xx_evm am65xx_idk j721e_sim j721e_evm j7200_evm am64x_evm
 drv_dma_uart_BOARDLIST  += tpr12_evm tpr12_qt awr294x_evm j721s2_evm j784s4_evm
 
 drvuart_SOCLIST         = tda2xx tda2px tda2ex tda3xx dra78x am574x am572x am571x dra72x
 drvuart_SOCLIST        += dra75x k2h k2k k2l k2e k2g c6678 c6657 am437x am335x omapl137
-drvuart_SOCLIST        += omapl138 am65xx j721e j7200 am64x tpr12 awr294x j721s2 j784s4 am62x am62a
+drvuart_SOCLIST        += omapl138 am65xx j721e j7200 am64x tpr12 awr294x j721s2 j784s4 j722s am62x am62a
 
 drvuart_dma_SOCLIST     = am574x am572x am571x dra72x dra75x dra78x k2h k2k k2l k2e k2g
 drvuart_dma_SOCLIST    += c6678 c6657 omapl137 omapl138 am437x am65xx j721e j7200 am335x
@@ -111,6 +111,7 @@ drvuart_j7200_CORELIST  = $(DEFAULT_j7200_CORELIST)
 drvuart_am64x_CORELIST  = $(DEFAULT_am64x_CORELIST)
 drvuart_j721s2_CORELIST = $(DEFAULT_j721s2_CORELIST)
 drvuart_j784s4_CORELIST = $(DEFAULT_j784s4_CORELIST)
+drvuart_j722s_CORELIST  = $(DEFAULT_j722s_CORELIST)
 drvuart_tpr12_CORELIST   = mcu1_0 c66xdsp_1
 drvuart_awr294x_CORELIST = mcu1_0 c66xdsp_1
 drvuart_j721e_CORELISTARM  = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1
@@ -118,6 +119,7 @@ drvuart_j7200_CORELISTARM  = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1
 drvuart_am64x_CORELISTARM  = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1
 drvuart_j721s2_CORELISTARM = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1
 drvuart_j784s4_CORELISTARM = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mcu4_0 mcu4_1
+drvuart_j722s_CORELISTARM  = mpu1_0 mcu1_0 mcu2_0 mcu3_0
 drvuart_am62x_CORELIST = mcu1_0 m4f_0
 drvuart_am62a_CORELIST = mcu1_0 c7x_1
 
@@ -262,7 +264,7 @@ export uart_console_CORE_DEPENDENCY = no
 export uart_console_SOC_DEPENDENCY = yes
 uart_console_PKG_LIST = uart_console
 uart_console_INCLUDE = $(uart_console_PATH)
-export uart_console_SOCLIST = tda2xx tda2px tda2ex tda3xx am65xx j721e j7200 tpr12 awr294x j721s2 j784s4
+export uart_console_SOCLIST = tda2xx tda2px tda2ex tda3xx am65xx j721e j7200 tpr12 awr294x j721s2 j784s4 j722s
 export uart_console_$(SOC)_CORELIST = $(drvuart_$(SOC)_CORELIST)
 
 #
