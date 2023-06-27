@@ -66,7 +66,7 @@
 #
 ifeq ($(sbl_component_make_include), )
 
-sbl_BOARDLIST = am65xx_evm am65xx_idk j721e_evm j7200_evm j721s2_evm j784s4_evm j722s_zebu am64x_evm tpr12_evm tpr12_qt awr294x_evm
+sbl_BOARDLIST = am65xx_evm am65xx_idk j721e_evm j7200_evm j721s2_evm j784s4_evm j722s_evm am64x_evm tpr12_evm tpr12_qt awr294x_evm
 
 sbl_SOCLIST = am65xx j721e j7200 j721s2 j784s4 j722s am64x tpr12 awr294x
 

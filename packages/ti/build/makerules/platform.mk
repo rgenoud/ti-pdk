@@ -208,7 +208,7 @@ ifeq ($(BOARD),$(filter $(BOARD), am62a_evm am62a_hostemu am62a_loki ))
 endif
 
 # J722S
-ifeq ($(BOARD),$(filter $(BOARD), j722s_zebu j722s_hostemu))
+ifeq ($(BOARD),$(filter $(BOARD), j722s_evm j722s_hostemu))
  SOC = j722s
  SBL_RUN_ADDRESS=0x43C00100
  SYSFW_LOADADDR=0x40000

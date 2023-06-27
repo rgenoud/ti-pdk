@@ -3,7 +3,7 @@ BOARD_LIST_j721e = j721e_evm
 BOARD_LIST_j7200 = j7200_evm
 BOARD_LIST_j721s2 = j721s2_evm
 BOARD_LIST_j784s4 = j784s4_evm
-BOARD_LIST_j722s = j722s_zebu
+BOARD_LIST_j722s = j722s_evm
 BOARD_LIST_am62x = am62x_evm
 BOARD_LIST_am62a = am62a_evm
 

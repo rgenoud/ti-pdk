@@ -103,7 +103,7 @@ DEFAULT_SOCLIST_safertos = j721e
 
 # The below defines the DEFAULT_BOARDLIST_<rtos_type> for various RTOS types(freertos/safertos)
 DEFAULT_BOARDLIST_tirtos   =
-DEFAULT_BOARDLIST_freertos = j721e_evm j7200_evm j721s2_evm j784s4_evm j722s_zebu am62x_evm am62a_evm
+DEFAULT_BOARDLIST_freertos = j721e_evm j7200_evm j721s2_evm j784s4_evm j722s_evm am62x_evm am62a_evm
 DEFAULT_BOARDLIST_safertos = j721e_evm
 
 # The below defines the DEFAULT_$(SOC)_CORELIST_<rtos_type> for various RTOS types(tirtos/freertos/safertos)

@@ -70,7 +70,7 @@ ifeq ($(uart_component_make_include), )
 drvuart_RTOS_LIST 		= $(DEFAULT_RTOS_LIST)
 
 drvuart_BOARDLIST       = am65xx_evm am65xx_idk j721e_sim j721e_evm j7200_evm am64x_evm
-drvuart_BOARDLIST      += tpr12_evm tpr12_qt awr294x_evm j721s2_evm j784s4_evm j722s_zebu am62x_evm am62a_evm
+drvuart_BOARDLIST      += tpr12_evm tpr12_qt awr294x_evm j721s2_evm j784s4_evm j722s_evm am62x_evm am62a_evm
 
 drv_dma_uart_BOARDLIST  = am65xx_evm am65xx_idk j721e_sim j721e_evm j7200_evm am64x_evm
 drv_dma_uart_BOARDLIST  += tpr12_evm tpr12_qt awr294x_evm j721s2_evm j784s4_evm
