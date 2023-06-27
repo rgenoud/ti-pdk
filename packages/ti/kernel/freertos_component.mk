@@ -66,8 +66,8 @@
 #
 ifeq ($(freertos_component_make_include), )
 
-freertos_BOARDLIST       = tpr12_evm j721e_evm j7200_evm am65xx_evm am65xx_idk awr294x_evm j721s2_evm j784s4_evm am62x_evm am62a_evm
-freertos_SOCLIST         = tpr12 j721e j7200 am65xx awr294x j721s2 j784s4 am62x am62a
+freertos_BOARDLIST       = tpr12_evm j721e_evm j7200_evm am65xx_evm am65xx_idk awr294x_evm j721s2_evm j784s4_evm j722s_zebu am62x_evm am62a_evm
+freertos_SOCLIST         = tpr12 j721e j7200 am65xx awr294x j721s2 j784s4 j722s am62x am62a
 freertos_tpr12_CORELIST   = c66xdsp_1 mcu1_0 mcu1_1
 freertos_awr294x_CORELIST   = c66xdsp_1 mcu1_0 mcu1_1
 freertos_j721e_CORELIST   = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 c66xdsp_1 c66xdsp_2 c7x_1
@@ -75,6 +75,7 @@ freertos_j7200_CORELIST   = mcu1_0 mcu1_1 mcu2_0 mcu2_1
 freertos_am65xx_CORELIST   = mcu1_0 mcu1_1
 freertos_j721s2_CORELIST   = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 c7x_1 c7x_2
 freertos_j784s4_CORELIST   = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mcu4_0 mcu4_1 c7x_1 c7x_2 c7x_3 c7x_4
+freertos_j722s_CORELIST   = mcu1_0 mcu2_0 mcu3_0 c7x_1 c7x_2
 freertos_am62x_CORELIST   = mcu1_0
 freertos_am62a_CORELIST   = mcu1_0 c7x_1
 
