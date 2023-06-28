@@ -536,7 +536,7 @@ int32_t UdmaTestChCloseNeg(UdmaTestTaskObj *taskObj)
     if(retVal == UDMA_SOK)
     {
         chHandle->drvHandle->drvInitDone = UDMA_INIT_DONE;
-        chHandle->chOesAllocDone         = TRUE;
+        chHandle->chOesAllocDone         = UTRUE;
         retVal                           = Udma_chClose(chHandle);
         if(retVal == UDMA_SOK)
         {
@@ -1324,7 +1324,7 @@ int32_t UdmaTestChSetSwTriggerNeg(UdmaTestTaskObj *taskObj)
  * Test scenario 4: Check when chInitDone is not UDMA_INIT_DONE for chainedChHandle
  * Test scenario 5: NULL check for drvHandle 
  * Test scenario 6: Check when drvInitDone is not UDMA_INIT_DONE for triggerChHandle
- * Test scenario 7: check when chOesAllocDone is TRUE
+ * Test scenario 7: check when chOesAllocDone is UTRUE
  * Test scenario 8: check when drvInitDone is not UDMA_INIT_DONE for chainedChHandle
  * Test scenario 9: check when instType is UDMA_INST_TYPE_NORMAL and 
  *                   chType is UDMA_CH_TYPE_RX
@@ -1461,9 +1461,9 @@ int32_t UdmaTestChSetChainingNeg(UdmaTestTaskObj *taskObj)
     }
     taskObj->testObj->drvObj[instID] = backUpDrvObj;
 
-    /* Test scenario 7: check when chOesAllocDone is TRUE */
+    /* Test scenario 7: check when chOesAllocDone is UTRUE */
     triggerChHandle->drvHandle              = &taskObj->testObj->drvObj[instID];
-    triggerChHandle->chOesAllocDone         = TRUE;
+    triggerChHandle->chOesAllocDone         = UTRUE;
     if(retVal == UDMA_SOK)
     {
         retVal = Udma_chSetChaining(triggerChHandle, chainedChHandle, trigger);
@@ -1483,7 +1483,7 @@ int32_t UdmaTestChSetChainingNeg(UdmaTestTaskObj *taskObj)
     /* Test scenario 8: Check when drvInitDone is not UDMA_INIT_DONE for chainedChHandle */
     chainedChHandle->drvHandle              = &taskObj->testObj->drvObj[instID];
     chainedChHandle->drvHandle->drvInitDone = UDMA_DEINIT_DONE;
-    triggerChHandle->chOesAllocDone         = FALSE;
+    triggerChHandle->chOesAllocDone         = UFALSE;
     if(retVal == UDMA_SOK)
     {
         retVal = Udma_chSetChaining(triggerChHandle, chainedChHandle, trigger);
@@ -1578,7 +1578,7 @@ int32_t UdmaTestChSetChainingNeg(UdmaTestTaskObj *taskObj)
  * Test scenario 4: Check when chInitDone is not UDMA_INIT_DONE for chainedChHandle
  * Test scenario 5: NULL check for drvHandle of triggerChHandle
  * Test scenario 6: Check when drvInitDone is not UDMA_INIT_DONE for triggerChHandle
- * Test scenario 7: Check when chOesAllocDone is FALSE
+ * Test scenario 7: Check when chOesAllocDone is UFALSE
  * Test scenario 8: Check when drvInitDone is not UDMA_INIT_DONE for chainedChHandle
  * Test scenario 9: Check when instType is UDMA_INST_TYPE_NORMAL and 
  *                  chType is UDMA_CH_TYPE_RX
@@ -1714,9 +1714,9 @@ int32_t UdmaTestChBreakChainingNeg(UdmaTestTaskObj *taskObj)
     }
     taskObj->testObj->drvObj[instID] = backUpDrvObj;
 
-    /* Test scenario 7: Check when chOesAllocDone is FALSE */
+    /* Test scenario 7: Check when chOesAllocDone is UFALSE */
     triggerChHandle->drvHandle->drvInitDone = UDMA_INIT_DONE;
-    triggerChHandle->chOesAllocDone         = FALSE;
+    triggerChHandle->chOesAllocDone         = UFALSE;
     if(retVal == UDMA_SOK)
     {
         retVal = Udma_chBreakChaining(triggerChHandle, chainedChHandle);
@@ -1734,7 +1734,7 @@ int32_t UdmaTestChBreakChainingNeg(UdmaTestTaskObj *taskObj)
     }
 
     /* Test scenario 8: NULL Check for chainedChHandle->drvHandle */
-    triggerChHandle->chOesAllocDone = TRUE;
+    triggerChHandle->chOesAllocDone = UTRUE;
     chainedChHandle->drvHandle      = NULL;
     if(retVal == UDMA_SOK)
     {
