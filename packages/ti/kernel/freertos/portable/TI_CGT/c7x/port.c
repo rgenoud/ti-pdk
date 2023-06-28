@@ -101,21 +101,21 @@ volatile uint32_t ulCriticalNesting = 9999UL;
 
 /* Saved as part of the task context.  If ulPortTaskHasFPUContext is non-zero then
  * a floating point context must be saved and restored for the task. */
-uint32_t ulPortTaskHasFPUContext = pdFALSE;
+BaseType_t ulPortTaskHasFPUContext = pdFALSE;
 
 /* Set to 1 to pend a context switch from an ISR. */
-uint32_t ulPortYieldRequired = pdFALSE;
+BaseType_t ulPortYieldRequired = pdFALSE;
 
 /* Counts the interrupt nesting depth.  A context switch is only performed if
  * if the nesting depth is 0. */
-uint32_t ulPortInterruptNesting = 0UL;
+BaseType_t ulPortInterruptNesting = pdFALSE;
 
 /* set to true when schedular gets enabled in xPortStartScheduler */
-uint32_t ulPortSchedularRunning = pdFALSE;
+BaseType_t ulPortSchedularRunning = pdFALSE;
 
 
 /* Counts the incorrect yield, i.e, when doing switch to same task */
-uint32_t uxPortIncorrectYieldCount = 0UL;
+BaseType_t uxPortIncorrectYieldCount = 0UL;
 
 /* Store the Schedular start TSC counter timerstamp.
  * This is required to account for schedular start time in current run time
@@ -225,7 +225,7 @@ static void prvTaskExitError( void )
      *
      * Force an assert() to be triggered if configASSERT() is
      * defined, then stop here so application writers can catch the error. */
-    DebugP_assert((bool)false);
+    DebugP_assert(BFALSE);
 }
 
 
@@ -261,7 +261,7 @@ StackType_t *pxPortInitialiseStack(StackType_t * pxTopOfStack, StackType_t * pxE
 {
 #if ( portUSING_MPU_WRAPPERS != 1 )
     /* TODO this should be a parameter */
-    bool privileged = (bool)true;
+    bool privileged = BTRUE;
 #endif
     pxTopOfStack = (StackType_t *)TaskSupport_setupTaskStack(pxTopOfStack, pxEndOfStack, ti_sysbios_knl_Task_Func, Task_exit, Task_enter, pxCode, pvParameters, privileged);
 
@@ -309,8 +309,8 @@ static void prvPortInitTimerCLECCfg(uint32_t timerId, uint32_t timerIntNum)
     uint32_t corepackEvent = timerIntNum;
 
     /* Configure CLEC */
-    cfgClec.secureClaimEnable = FALSE;
-    cfgClec.evtSendEnable     = TRUE;
+    cfgClec.secureClaimEnable = UFALSE;
+    cfgClec.evtSendEnable     = UTRUE;
     cfgClec.rtMap             = portCOMPUTE_CLUSTER_CLEC_RTMAP;
     cfgClec.extEvtNum         = 0;
     cfgClec.c7xEvtNum         = corepackEvent;
@@ -335,7 +335,7 @@ static void prvPortInitTickTimer(void)
     pTickTimerHandle = TimerP_create(configTIMER_ID, &prvPorttimerTickIsr, &timerParams);
 
     /* don't expect the handle to be null */
-    DebugP_assert (pTickTimerHandle != NULL);
+    DebugP_assert (NULL != pTickTimerHandle);
 
 }
 
@@ -380,7 +380,7 @@ BaseType_t xPortStartScheduler(void)
 
 void vPortYeildFromISR( uint32_t xSwitchRequired )
 {
-    if( xSwitchRequired != pdFALSE )
+    if( UFALSE != xSwitchRequired )
     {
         ulPortYieldRequired = pdTRUE;
     }
@@ -388,10 +388,10 @@ void vPortYeildFromISR( uint32_t xSwitchRequired )
 
 void vPortTimerTickHandler()
 {
-    if( ulPortSchedularRunning == pdTRUE )
+    if( pdTRUE == ulPortSchedularRunning )
     {
         /* Increment the RTOS tick. */
-        if( xTaskIncrementTick() != pdFALSE )
+        if( pdFALSE != xTaskIncrementTick() )
         {
             ulPortYieldRequired = pdTRUE;
         }
@@ -457,7 +457,7 @@ void vApplicationStackOverflowHook( TaskHandle_t xTask,
                                     char * pcTaskName )
 {
     DebugP_log1("[FreeRTOS] Stack overflow detected for task [%s]", (uintptr_t)pcTaskName);
-    DebugP_assert((bool)false);
+    DebugP_assert(BFALSE);
 }
 
 /* configSUPPORT_STATIC_ALLOCATION is set to 1, so the application must provide an
@@ -549,7 +549,7 @@ void vPortYield( void )
         DebugP_log1("Doing switch to same task:%p",(uintptr_t)oldSP);
         uxPortIncorrectYieldCount++;
     }
-    if (pxCurrentTCB->uxCriticalNesting == 0)
+    if (0 == pxCurrentTCB->uxCriticalNesting)
     {
         /* Enable interrupts if task was preempted outside critical section */
         portENABLE_INTERRUPTS();
@@ -596,10 +596,10 @@ void vPortYieldAsyncFromISR( void )
  */
 BaseType_t xPortInIsrContext()
 {
-    BaseType_t inISR = false;
-    if (ulPortInterruptNesting != 0)
+    BaseType_t inISR = pdFALSE;
+    if (pdFALSE != ulPortInterruptNesting)
     {
-        inISR =  true;
+        inISR =  pdTRUE;
     }
     return inISR;
 }

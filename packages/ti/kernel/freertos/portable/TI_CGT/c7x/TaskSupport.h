@@ -68,6 +68,7 @@
 #include <FreeRTOS.h>
 #include <task.h>
 #include <c7x.h>
+#include <ti/csl/tistdtypes.h>
 
 #ifdef __cplusplus
 extern "C" {

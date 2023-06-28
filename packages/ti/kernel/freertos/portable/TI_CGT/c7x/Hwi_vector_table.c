@@ -41,17 +41,17 @@
 
 void Hwi_dispatchC(int32_t intNum)
 {
-    extern uint32_t ulPortInterruptNesting;
-    extern uint32_t ulPortYieldRequired;
+    extern BaseType_t ulPortInterruptNesting;
+    extern BaseType_t ulPortYieldRequired;
 
     ulPortInterruptNesting++;
 
     Hwi_switchAndDispatch(intNum);
 
     ulPortInterruptNesting--;
-    if (ulPortInterruptNesting == 0)
+    if (pdFALSE == ulPortInterruptNesting)
     {
-        if (ulPortYieldRequired != pdFALSE)
+        if (pdFALSE != ulPortYieldRequired)
         {
             ulPortYieldRequired = pdFALSE;
             vPortYieldAsyncFromISR();
