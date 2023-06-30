@@ -54,7 +54,7 @@ void Osal_DebugP_assert_fcn(bool expression, const char *file, int32_t line)
 {
     if ((bool)true == expression) 
     {
-        slogf(_SLOGC_PRIVATE_OSAL, _SLOG_DEBUG1,"Assert in the file %s at line %d...Calling Abort!", file, line);
+        slogf(_SLOGC_PRIVATE_OSAL, _SLOG_ERROR,"Assert in the file %s at line %d...Calling Abort!", file, line);
         abort();
     }
 }
@@ -66,7 +66,7 @@ void Osal_DebugP_assert_fcn(bool expression, const char *file, int32_t line)
  */
 void DebugP_log0(const char *format)
 {
-    slogf(_SLOGC_PRIVATE_OSAL, _SLOG_DEBUG1, format);
+    slogf(_SLOGC_PRIVATE_OSAL, _SLOG_ERROR, format);
 }
 
 /*
@@ -74,7 +74,7 @@ void DebugP_log0(const char *format)
  */
 void DebugP_log1(const char *format, uintptr_t p1)
 {
-     slogf(_SLOGC_PRIVATE_OSAL, _SLOG_DEBUG1, format, p1);
+     slogf(_SLOGC_PRIVATE_OSAL, _SLOG_ERROR, format, p1);
 }
 
 /*
@@ -82,21 +82,21 @@ void DebugP_log1(const char *format, uintptr_t p1)
  */
 void DebugP_log2(const char *format, uintptr_t p1, uintptr_t p2)
 {
-     slogf(_SLOGC_PRIVATE_OSAL, _SLOG_DEBUG1, format, p1, p2);
+     slogf(_SLOGC_PRIVATE_OSAL, _SLOG_ERROR, format, p1, p2);
 }
 /*
  *  ======== DebugP_log3 ========
  */
 void DebugP_log3(const char *format, uintptr_t p1, uintptr_t p2, uintptr_t p3)
 {
-     slogf(_SLOGC_PRIVATE_OSAL, _SLOG_DEBUG1, format, p1, p2, p3);
+     slogf(_SLOGC_PRIVATE_OSAL, _SLOG_ERROR, format, p1, p2, p3);
 }
 /*
  *  ======== DebugP_log4 ========
  */
 void DebugP_log4(const char *format, uintptr_t p1, uintptr_t p2, uintptr_t p3, uintptr_t p4)
 {
-    slogf(_SLOGC_PRIVATE_OSAL, _SLOG_DEBUG1, format, p1, p2, p3, p4);
+    slogf(_SLOGC_PRIVATE_OSAL, _SLOG_ERROR, format, p1, p2, p3, p4);
 }
 #endif
 
