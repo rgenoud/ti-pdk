@@ -39,6 +39,7 @@
 #include <unix.h>
 #include <sched.h>
 
+#include <ti/osal/osal.h>
 /*
  *  ======== TaskP_create ========
  */
@@ -63,6 +64,15 @@ TaskP_Handle TaskP_create(TaskP_Fxn taskfxn, const TaskP_Params *params)
             struct sched_param  param;
             param.sched_priority = params->priority;
             pthread_attr_setschedparam(&attr, &param);
+            if (params->priority < 10U)
+            {
+                DebugP_log1("Thread Priority set < 10, the value is %d!", params->priority);
+            }
+        }
+        else
+        {
+            DebugP_log0("Thread Priority passed is 0!");
+            OSAL_Assert(1);
         }
     }
 
@@ -98,8 +108,8 @@ void TaskP_Params_init(TaskP_Params *params)
 {
     params->name = (const char *) NULL;
     params->pErrBlk = (void *) NULL;
-    params->priority = 0;
-    params->stacksize = 0;
+    params->priority = 10U; /* Set default priority as 10 for QNX */
+    params->stacksize = 16U * 1024U; /* Set default stacksize as 16K for QNX  */
     params->arg0 = (void *) NULL;
     params->arg1 = (void *) NULL;
     params->stack = (void *) NULL;
