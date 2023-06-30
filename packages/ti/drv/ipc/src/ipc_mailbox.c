@@ -189,7 +189,11 @@ void StartmailboxPollingTask()
     TaskP_Params param;
 
     TaskP_Params_init(&param);
+#ifdef QNX_OS
+    param.priority = 21U;
+#else
     param.priority = 2;
+#endif
 #if defined(BUILD_C7X) && !defined(MAILBOX_INTERRUPT_MODE)
     param.stack = g_pollTaskStack;
 #endif
