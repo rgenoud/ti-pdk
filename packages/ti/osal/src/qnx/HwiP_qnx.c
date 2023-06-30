@@ -123,10 +123,17 @@ HwiP_Handle HwiP_create(uint32_t coreIntrNum, HwiP_Fxn hwiFxn,
     struct sched_param  param;
     qnx_osal_hwi_info  *hwi = NULL;
     char threadName[128];
-    uint32_t intrPriority = 21;
+    uint32_t intrPriority = 20U;
 
     if (0 != params->priority) {
         intrPriority = params->priority;
+        if (params->priority < 10U)  {
+            DebugP_log1("Thread Priority set < 10, the value is %d!", params->priority);
+        }
+    }
+    else {
+        DebugP_log0("Thread Priority passed is 0!");
+        OSAL_Assert(1);
     }
 
     if (QNX_OSAL_MAX_INTR_COUNT <= g_currIntrCount) {
