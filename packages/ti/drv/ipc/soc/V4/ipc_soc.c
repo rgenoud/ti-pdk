@@ -604,7 +604,11 @@ int32_t Ipc_getMailboxIntrRouterCfg(uint32_t selfId, uint32_t clusterId,
     mailboxIntrNum = Ipc_getNavss512MailboxInputIntr(clusterId, userId);
 
     cfg->inputIntrNum  = mailboxIntrNum;
+#ifdef QNX_OS
+    cfg->priority      = 10U;
+#else
     cfg->priority      = 1U;
+#endif
     retVal = Ipc_setCoreEventId(selfId, cfg, cnt);
 
     return retVal;
