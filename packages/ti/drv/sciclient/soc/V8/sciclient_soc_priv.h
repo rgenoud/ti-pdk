@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2021 Texas Instruments Incorporated
+ *  Copyright (C) 2023 Texas Instruments Incorporated
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -31,27 +31,48 @@
  *
  */
 /**
- *  \file V5/sciclient_soc_priv.h
+ *  \file V8/sciclient_soc_priv.h
  *
- *  \brief Private AM62A specific SOC file
+ *  \brief Private J722S specific SOC file
  */
 
 #ifndef SCICLIENT_SOC_PRIV_H_
 #define SCICLIENT_SOC_PRIV_H_
 
 #include <ti/drv/sciclient/soc/V8/sciclient_irq_rm.h>
+
 #include <ti/drv/sciclient/soc/V8/sciclient_defaultBoardcfg_hex.h>
 #include <ti/drv/sciclient/soc/V8/sciclient_defaultBoardcfg_rm_hex.h>
 #include <ti/drv/sciclient/soc/V8/sciclient_defaultBoardcfg_pm_hex.h>
 #include <ti/drv/sciclient/soc/V8/sciclient_defaultBoardcfg_security_hex.h>
 
 #if defined (BUILD_MCU1_0)
-#define SCICLIENT_CONTEXT_NONSEC    (SCICLIENT_CONTEXT_R5_NONSEC_0)
-#define SCICLIENT_CONTEXT_SEC       (SCICLIENT_CONTEXT_R5_SEC_0)
+#define SCICLIENT_CONTEXT_NONSEC    (SCICLIENT_CONTEXT_WKUP_R5_NONSEC_0)
+#define SCICLIENT_CONTEXT_SEC       (SCICLIENT_CONTEXT_WKUP_R5_SEC_0)
+#endif
+#if defined (BUILD_MCU2_0)
+#define SCICLIENT_CONTEXT_NONSEC    (SCICLIENT_CONTEXT_MCU_R5_0_NONSEC_0)
+#define SCICLIENT_CONTEXT_SEC       (SCICLIENT_CONTEXT_MCU_R5_0_NONSEC_0)
+#endif
+#if defined (BUILD_MCU3_0)
+#define SCICLIENT_CONTEXT_NONSEC    (SCICLIENT_CONTEXT_MAIN_R5_NONSEC_0)
+#define SCICLIENT_CONTEXT_SEC       (SCICLIENT_CONTEXT_MAIN_R5_SEC_0)
+#endif
+#if defined (BUILD_MPU1_0)
+#define SCICLIENT_CONTEXT_NONSEC    (SCICLIENT_CONTEXT_A53_NONSEC_0)
+#define SCICLIENT_CONTEXT_SEC       (SCICLIENT_CONTEXT_A53_SEC_0)
+#endif
+#if defined (BUILD_MPU1_1)
+#define SCICLIENT_CONTEXT_NONSEC    (SCICLIENT_CONTEXT_A53_NONSEC_1)
+#define SCICLIENT_CONTEXT_SEC       (SCICLIENT_CONTEXT_A53_SEC_1)
 #endif
 #if defined (BUILD_C7X_1)
 #define SCICLIENT_CONTEXT_NONSEC    (SCICLIENT_CONTEXT_C7X_NONSEC_0)
-#define SCICLIENT_CONTEXT_SEC       (SCICLIENT_CONTEXT_C7X_SEC_0)
+#define SCICLIENT_CONTEXT_SEC       (SCICLIENT_CONTEXT_C7X_NONSEC_0)
+#endif
+#if defined (BUILD_C7X_2)
+#define SCICLIENT_CONTEXT_NONSEC    (SCICLIENT_CONTEXT_C7X_NONSEC_1)
+#define SCICLIENT_CONTEXT_SEC       (SCICLIENT_CONTEXT_C7X_NONSEC_1)
 #endif
 
 #endif /* SCICLIENT_SOC_PRIV_H_ */

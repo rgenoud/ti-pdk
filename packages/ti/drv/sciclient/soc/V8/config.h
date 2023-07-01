@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Texas Instruments Incorporated
+ * Copyright (c) 2023, Texas Instruments Incorporated
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 /**
  *  \file config.h
  *
- *  \brief Configuration header for am62x
+ *  \brief Configuration header for j722s
  */
 
 #ifndef _CONFIG_H_
@@ -41,7 +41,7 @@
 
 #define CONFIG_KEYSTONE3 1
 
-#define CONFIG_AM62A 1
+#define CONFIG_J722S 1
 #define CONFIG_SOC_FOLDER_STRING "j722s"
 #define CONFIG_R5 1
 
@@ -55,17 +55,19 @@
 #define CONFIG_CLK_ADPLLM 1
 #define CONFIG_CLK_PLL_16FFT 1
 #define CONFIG_CLK_PLL_DESKEW 1
+#define CONFIG_CLK_PLL_16FFT_FRACF_CALIBRATION 1
 
 #define CONFIG_RM 1
 
 #define CONFIG_RM_IRQ 1
+#define CONFIG_INTERRUPT_AGGREGATOR_UNMAPPED_EVENTS 1
 #define CONFIG_RM_RA 1
-
 #define CONFIG_RM_RA_NAV_RING 1
+#define CONFIG_RM_RA_DMSS_RING 1
 #define CONFIG_RM_UDMAP 1
-#define CONFIG_UDMAP_CHANNEL_BURST_SIZE 1
 #define CONFIG_UDMAP_TX_CHANNEL_TEARDOWN_TYPE 1
-
+#define CONFIG_UDMAP_BCDMA 1
+#define CONFIG_UDMAP_PKTDMA 1
 
 #define CONFIG_TIFSFW_SPS_BASE 0x78000000
 #define CONFIG_TIFSFW_SPS_LEN 0x8000

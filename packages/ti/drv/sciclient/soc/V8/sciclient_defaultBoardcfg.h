@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018-2021, Texas Instruments Incorporated
+ * Copyright (c) 2023, Texas Instruments Incorporated
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,7 +30,7 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /**
- *  \file V7/sciclient_defaultBoardcfg.h
+ *  \file V8/sciclient_defaultBoardcfg.h
  *
  *  \brief File defining tisci_local_rm_boardcfg for boardCfg RM .
  *
@@ -45,7 +45,7 @@
 #include <ti/csl/csl_types.h>
 #include <ti/drv/sciclient/sciclient.h>
 #include <ti/drv/sciclient/soc/sysfw/include/tisci/tisci_boardcfg.h>
-#include <ti/drv/sciclient/soc/sysfw/include/am62ax/tisci_resasg_types.h>
+#include <ti/drv/sciclient/soc/sysfw/include/j722s/tisci_resasg_types.h>
 
 #ifdef __cplusplus
 extern "C" {

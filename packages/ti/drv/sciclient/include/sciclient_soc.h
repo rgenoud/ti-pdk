@@ -92,9 +92,9 @@
 #endif
 
 #if defined (SOC_J722S)
-#include <ti/drv/sciclient/soc/sysfw/include/am62ax/tisci_resasg_types.h>
+#include <ti/drv/sciclient/soc/sysfw/include/j722s/tisci_resasg_types.h>
 #include <ti/drv/sciclient/soc/V8/sciclient_fmwMsgParams.h>
-#include <ti/drv/sciclient/soc/V8/sciclient_firmware_V7.h>
+#include <ti/drv/sciclient/soc/V8/sciclient_firmware_V8-zebu.h>
 #endif
 
 #ifdef __cplusplus

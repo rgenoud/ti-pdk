@@ -49,6 +49,7 @@
 #         For J721S2            : ./firmwareHeaderGen.sh j721s2-zebu
 #         For AM62x             : ./firmwareHeaderGen.sh am62x
 #         For AM62ax            : ./firmwareHeaderGen.sh am62ax
+#         For J722S             : ./firmwareHeaderGen.sh j722s-zebu
 export RM=rm
 export MV=mv
 export MAKE=gcc
@@ -242,6 +243,16 @@ fi
 if [ "$FW_SOC" = "j784s4" ]; then
 export SCI_CLIENT_OUT_SOC_DIR=$SCI_CLIENT_DIR/soc/V6
 export SCICLIENT_FIRMWARE_HEADER=sciclient_firmware_V6$BIN_EXT.h
+export FIRMWARE_SILICON=$SCI_CLIENT_IN_SOC_DIR/ti-fs-firmware-$FW_SOC$FW_SOC_TYPE.bin
+export SYSFW_SE_INNER_CERT=$SCI_CLIENT_IN_SOC_DIR/ti-fs-firmware-$FW_SOC${FW_SOC_TYPE%-enc}-cert.bin
+export SYSFW_SE_SIGNED=$SCI_CLIENT_OUT_SOC_DIR/tifs$BIN_EXT.bin
+export SYSFW_SE_CUST_CERT=$SCI_CLIENT_OUT_SOC_DIR/tifs_cert.bin
+export SYSFW_LOAD_ADDR=0x40000
+fi
+
+if [ "$FW_SOC" = "j722s" ]; then
+export SCI_CLIENT_OUT_SOC_DIR=$SCI_CLIENT_DIR/soc/V8
+export SCICLIENT_FIRMWARE_HEADER=sciclient_firmware_V8$BIN_EXT.h
 export FIRMWARE_SILICON=$SCI_CLIENT_IN_SOC_DIR/ti-fs-firmware-$FW_SOC$FW_SOC_TYPE.bin
 export SYSFW_SE_INNER_CERT=$SCI_CLIENT_IN_SOC_DIR/ti-fs-firmware-$FW_SOC${FW_SOC_TYPE%-enc}-cert.bin
 export SYSFW_SE_SIGNED=$SCI_CLIENT_OUT_SOC_DIR/tifs$BIN_EXT.bin

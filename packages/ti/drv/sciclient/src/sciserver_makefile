@@ -26,6 +26,9 @@ endif
 ifeq ($(SOC),$(filter $(SOC), j784s4))
   SCISERVER_SOCVER = V6
 endif
+ifeq ($(SOC),$(filter $(SOC), j722s))
+  SCISERVER_SOCVER = V8
+endif
 ifeq ($(SOC),$(filter $(SOC), am62x))
   SCISERVER_SOCVER = V5
 endif
@@ -41,7 +44,7 @@ endif
 # Leave RMPMHAL_SCMVERSION blank if you want a script to generate it from git tag/commit
 RMPMHAL_SCMVERSION ?=
 
-SCISERVER_MAJOR_VERSION_NAME ?= "v2022.01"
+SCISERVER_MAJOR_VERSION_NAME ?= "v2023.07"
 SCISERVER_SUBVERSION ?= 01
 SCISERVER_PATCHVERSION ?= 00
 # Leave SCISERVER_SCMVERSION blank if you want a script to generate it from git tag/commit
@@ -71,7 +74,7 @@ INCDIR += src/rm_pm_hal/rm
 INCLUDE_EXTERNAL_INTERFACES = pdk osal
 
 # Common source files and CFLAGS across all platforms and cores
-ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 am62x am62a))
+ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 am62x am62a j722s))
     SRCS_COMMON  = sciserver.c
     SRCS_COMMON += sciserver_secproxyTransfer.c
     SRCS_COMMON += sciserver_secproxyRoutingDescription.c
@@ -91,8 +94,8 @@ ifeq ($(CONFIG_LPM_DM),y)
 CFLAGS_LOCAL_COMMON += -DCONFIG_LPM_DM
 endif
 
-# for am62x and am62a same thread will be used for giving respose and notification for sciclient request
-ifeq ($(SOC),$(filter $(SOC), am62x am62a))
+# for am62x, am62a, j722s same thread will be used for giving respose and notification for sciclient request
+ifeq ($(SOC),$(filter $(SOC), am62x am62a j722s))
 CFLAGS_LOCAL_COMMON += -DCONFIG_OSAL_MINIMAL_QUEUES
 endif
 

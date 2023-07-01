@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2021 Texas Instruments Incorporated
+ *  Copyright (C) 2023 Texas Instruments Incorporated
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -31,9 +31,9 @@
  *
  */
 /**
- *  \file V5/sciclient_irq_rm.h
+ *  \file V8/sciclient_irq_rm.h
  *
- *  \brief Private am62x Family specific RM interrupt data
+ *  \brief Private J722S Family specific RM interrupt data
  */
 
 #ifndef SCICLIENT_IRQ_RM_H_
@@ -49,11 +49,13 @@
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
+#if defined (SOC_J722S)
 #define SCICLIENT_RM_IA_NUM_INST 2
 
-#define SCICLIENT_RM_IR_NUM_INST 4
+#define SCICLIENT_RM_IR_NUM_INST 3
 
 #define SCICLIENT_IRQ_MAX_ROUTE_DEPTH 3
+#endif
 
 /* ========================================================================== */
 /*                         Structure Declarations                             */

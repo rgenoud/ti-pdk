@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2018 Texas Instruments Incorporated
+ *  Copyright (C) 2023 Texas Instruments Incorporated
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -32,7 +32,7 @@
  */
 
 /**
- *  \file   V7/sciclient_fmwMsgParams.h
+ *  \file   V8/sciclient_fmwMsgParams.h
  *
  *  \brief  This file contains the definition of all the parameter IDs for
  *          PM, RM, Security.
@@ -75,84 +75,94 @@ extern "C" {
 #define SCICLIENT_FIRMWARE_ABI_MINOR                     (5U)
 /* @} */
 
-/** C7X_1(Non Secure): C7x context 1 on Main island */
-#define SCICLIENT_CONTEXT_C7X_NONSEC_0 (10U)
-#define SCICLIENT_CONTEXT_C7X_SEC_0 (9U)
-
-#define SCICLIENT_C7X_NON_SECURE_INTERRUPT_NUM (9U)
-#define SCICLIENT_C7X_SECURE_INTERRUPT_NUM     (10U)
 /**
  *  \anchor Sciclient_ContextIds
  *  \name Sciclient Context Ids
  *  @{
  *  Context IDs for Sciclient_ConfigPrms_t .
  */
-/** r5(Secure): Cortex R5 Context 0 */
-#define SCICLIENT_CONTEXT_R5_SEC_0                      (0U)
-/** r5(Non Secure): Cortex R5 Context 1 */
-#define SCICLIENT_CONTEXT_R5_NONSEC_0                   (1U)
-/** r5(Secure): Cortex R5 Context 2 */
-#define SCICLIENT_CONTEXT_R5_SEC_1                      (2U)
-/** r5(Non Secure): Cortex R5 Context 3 */
-#define SCICLIENT_CONTEXT_R5_NONSEC_1                   (3U)
+/** r5(Secure): Cortex WKUP R5 Context 0 */
+#define SCICLIENT_CONTEXT_WKUP_R5_SEC_0                 (0U)
+/** r5(Non Secure): Cortex WKUP R5 Context 1 */
+#define SCICLIENT_CONTEXT_WKUP_R5_NONSEC_0              (1U)
+/** r5(Secure): Cortex MAIN R5 Context 0 */
+#define SCICLIENT_CONTEXT_MAIN_R5_SEC_0                 (2U)
+/** r5(Non Secure): Cortex MAIN R5 Context 1 */
+#define SCICLIENT_CONTEXT_MAIN_R5_NONSEC_0              (3U)
 /** a53(Secure): Cortex A53 context 0 */
 #define SCICLIENT_CONTEXT_A53_SEC_0                     (4U)
-/** a53(Non Secure): Cortex A53 context 1 */
+/** a53(Secure): Cortex A53 context 1 */
 #define SCICLIENT_CONTEXT_A53_SEC_1                     (5U)
 /** a53(Non Secure): Cortex A53 context 2 */
-#define SCICLIENT_CONTEXT_A53_NONSEC_1                  (6U)
+#define SCICLIENT_CONTEXT_A53_NONSEC_0                  (6U)
 /** a53(Non Secure): Cortex A53 context 3 */
-#define SCICLIENT_CONTEXT_A53_NONSEC_2                  (7U)
-/** R5 (Non Secure): Cortex R5 context 1 */
-#define SCICLIENT_CONTEXT_MCU_R5_0_NONSEC_0             (8U)
+#define SCICLIENT_CONTEXT_A53_NONSEC_1                  (7U)
 /** a53(Non Secure): Cortex A53 context 4 */
-#define SCICLIENT_CONTEXT_A53_NONSEC_3                  (9U)
-/** C7x(Non Secure): C7x core*/
-#define SCICLIENT_CONTEXT_C7_NONSEC_0                   (10U)
+#define SCICLIENT_CONTEXT_A53_NONSEC_2                  (8U)
+/** MCU R5 (Non Secure): Cortex MCU R5 context 0 */
+#define SCICLIENT_CONTEXT_MCU_R5_0_NONSEC_0             (9U)
+/** C7x(Non Secure): C7x_0 context 0*/
+#define SCICLIENT_CONTEXT_C7X_NONSEC_0                  (10U)
+/** C7x(Non Secure): C7x_1 context 0*/
+#define SCICLIENT_CONTEXT_C7X_NONSEC_1                  (11U)
+/** GPU_0(Non Secure): GPU context 0 */
+#define SCICLIENT_CONTEXT_GPU_NONSEC_0                  (12U)
+/** GPU_1(Non Secure): GPU context 1 */
+#define SCICLIENT_CONTEXT_GPU_NONSEC_1                  (13U)
 
 /** Total number of possible contexts for application. */
-#define SCICLIENT_CONTEXT_MAX_NUM                      (11U)
+#define SCICLIENT_CONTEXT_MAX_NUM                       (14U)
 /* @} */
 
 /**
- * AM62A_MAIN_SEC_MMR_MAIN_0: (Cluster 9 Processor 0)
+ * AM67_MAIN_SEC_MMR_MAIN_0: (Cluster 9 Processor 0)
  */
 #define SCICLIENT_PROC_ID_A53SS0_CORE_0 (0x20U)
 
 /**
- * AM62A_MAIN_SEC_MMR_MAIN_0: (Cluster 9 Processor 1)
+ * AM67_MAIN_SEC_MMR_MAIN_0: (Cluster 9 Processor 1)
  */
 #define SCICLIENT_PROC_ID_A53SS0_CORE_1 (0x21U)
 
 /**
- * AM62A_MAIN_SEC_MMR_MAIN_0: (Cluster 9 Processor 2)
+ * AM67_MAIN_SEC_MMR_MAIN_0: (Cluster 9 Processor 2)
  */
 #define SCICLIENT_PROC_ID_A53SS0_CORE_2 (0x22U)
 
 /**
- * AM62A_MAIN_SEC_MMR_MAIN_0: (Cluster 9 Processor 3)
+ * AM67_MAIN_SEC_MMR_MAIN_0: (Cluster 9 Processor 3)
  */
 #define SCICLIENT_PROC_ID_A53SS0_CORE_3 (0x23U)
 
 /**
- * AM62A_MAIN_SEC_MMR_MAIN_0: (Cluster 13 Processor 0)
+ * AM67_MAIN_SEC_MMR_MAIN_0: (Cluster 13 Processor 0)
  */
-#define SCICLIENT_PROC_ID_C7X256V0_C7XV_CORE_0 (0x04U)
+#define SCICLIENT_PROC_ID_C7X256V0_C7XV_CORE_0 (0x05U)
 
 /**
- * AM62A_MCU_SEC_MMR_MCU_0: (Cluster 0 Processor 0)
+ * AM67_MAIN_SEC_MMR_MAIN_0: (Cluster 14 Processor 0)
  */
-#define SCICLIENT_PROC_ID_MCU_R5FSS0_CORE0 (0x03U)
+#define SCICLIENT_PROC_ID_C7X256V1_C7XV_CORE_0 (0x0CU)
 
 /**
- * AM62A_WKUP_SEC_MMR_WKUP_0: (Cluster 28 Processor 0)
+ * AM67_MCU_SEC_MMR_MCU_0: (Cluster 0 Processor 0)
  */
-#define SCICLIENT_PROC_ID_R5FSS0_CORE0 (0x01U)
+#define SCICLIENT_PROC_ID_MCU_R5FSS0_CORE0 (0x04U)
 
 /**
- * Total Number of processors in AM62A
+ * AM67_MAIN_SEC_MMR_MAIN_0: (Cluster 0 Processor 0)
  */
-#define SOC_NUM_SCICLIENT_PROCESSORS (0x07U)
+#define SCICLIENT_PROC_ID_R5FSS0_CORE0 (0x03U)
+
+/**
+ * AM67_WKUP_SEC_MMR_WKUP_0: (Cluster 28 Processor 0)
+ */
+#define SCICLIENT_PROC_ID_WKUP_R5FSS0_CORE0 (0x01U)
+
+/**
+ * Total Number of processors in J722S
+ */
+#define SOC_NUM_SCICLIENT_PROCESSORS (0x09U)
 
 
 /** -------------------- Resource Management Parameters ---------------------*/
@@ -178,7 +188,7 @@ extern "C" {
  *  @{
  *  Power Management Module Device IDs
  */
-#include <ti/drv/sciclient/soc/sysfw/include/am62ax/tisci_devices.h>
+#include <ti/drv/sciclient/soc/sysfw/include/j722s/tisci_devices.h>
 /* @} */
 
 /**
@@ -187,18 +197,7 @@ extern "C" {
  *  @{
  *  Power Management Module Clock IDs for individual modules.
  */
-#include <ti/drv/sciclient/soc/sysfw/include/am62ax/tisci_clocks.h>
-/* @} */
-
-
-/**
- *  \anchor Sciclient_McuR5fIds
- *  \name MCU Pulsar IDs
- *  @{
- *  MCU Device CPU IDs.
- */
-#define SCICLIENT_DEV_MCU_R5FSS0_CORE0  (TISCI_DEV_WKUP_R5FSS0_CORE0)
-#define SCICLIENT_DEV_MCU_R5FSS0_CORE1  (TISCI_DEV_WKUP_R5FSS0_CORE0)
+#include <ti/drv/sciclient/soc/sysfw/include/j722s/tisci_clocks.h>
 /* @} */
 
 /**
@@ -213,26 +212,55 @@ extern "C" {
  *  @{
  *  Start offset of IRQ source index.
  */
-#define TISCI_RINGACC0_OES_IRQ_SRC_IDX_START        (0U)
-#define TISCI_RINGACC0_MON_IRQ_SRC_IDX_START        (1024U)
-#define TISCI_RINGACC0_EOES_IRQ_SRC_IDX_START       (2048U)
-#define TISCI_UDMAP0_TX_OES_IRQ_SRC_IDX_START       (0U)
-#define TISCI_UDMAP0_TX_EOES_IRQ_SRC_IDX_START      (512U)
-#define TISCI_UDMAP0_RX_OES_IRQ_SRC_IDX_START       (1024U)
-#define TISCI_UDMAP0_RX_EOES_IRQ_SRC_IDX_START      (1280U)
-#define TISCI_UDMAP0_RX_FLOW_EOES_IRQ_SRC_IDX_START (1536U)
+#define TISCI_PKTDMA0_TX_EOES_IRQ_SRC_IDX_START      (4096U)
+#define TISCI_PKTDMA0_TX_FLOW_OES_IRQ_SRC_IDX_START  (4608U)
+#define TISCI_PKTDMA0_RX_EOES_IRQ_SRC_IDX_START      (5120U)
+#define TISCI_PKTDMA0_RX_FLOW_OES_IRQ_SRC_IDX_START  (5632U)
+#define TISCI_PKTDMA0_RX_FLOW_SOES_IRQ_SRC_IDX_START (6144U)
+#define TISCI_PKTDMA0_RX_FLOW_FOES_IRQ_SRC_IDX_START (6656U)
+#define TISCI_BCDMA0_BC_EOES_IRQ_SRC_IDX_START       (8192U)
+#define TISCI_BCDMA0_BC_DC_OES_IRQ_SRC_IDX_START     (8704U)
+#define TISCI_BCDMA0_BC_RC_OES_IRQ_SRC_IDX_START     (9216U)
+#define TISCI_BCDMA0_TX_EOES_IRQ_SRC_IDX_START       (9728U)
+#define TISCI_BCDMA0_TX_DC_OES_IRQ_SRC_IDX_START     (10240U)
+#define TISCI_BCDMA0_TX_RC_OES_IRQ_SRC_IDX_START     (10752U)
+#define TISCI_BCDMA0_RX_EOES_IRQ_SRC_IDX_START       (11264U)
+#define TISCI_BCDMA0_RX_DC_OES_IRQ_SRC_IDX_START     (11776U)
+#define TISCI_BCDMA0_RX_RC_OES_IRQ_SRC_IDX_START     (12288U)
+#define TISCI_BCDMA1_TX_EOES_IRQ_SRC_IDX_START       (1536U)
+#define TISCI_BCDMA1_TX_DC_OES_IRQ_SRC_IDX_START     (2048U)
+#define TISCI_BCDMA1_TX_RC_OES_IRQ_SRC_IDX_START     (2560U)
+#define TISCI_BCDMA1_RX_EOES_IRQ_SRC_IDX_START       (3072U)
+#define TISCI_BCDMA1_RX_DC_OES_IRQ_SRC_IDX_START     (3584U)
+#define TISCI_BCDMA1_RX_RC_OES_IRQ_SRC_IDX_START     (4096U)
+
+/* @} */
+
+#define SCICLIENT_C7X_NON_SECURE_INTERRUPT_NUM (9U)
+#define SCICLIENT_C7X_SECURE_INTERRUPT_NUM     (10U)
+#define SCICLIENT_C7X_0_CLEC_EVENT_IN          (CSLR_C7X256V0_CLEC_SOC_EVENTS_IN_DMASS0_INTAGGR_0_INTAGGR_VINTR_PEND_84)
+#define SCICLIENT_C7X_1_CLEC_EVENT_IN          (CSLR_C7X256V1_CLEC_SOC_EVENTS_IN_DMASS0_INTAGGR_0_INTAGGR_VINTR_PEND_100)
+
+/**
+ *  \anchor Sciclient_McuR5fIds
+ *  \name Boot/DM R5 IDs
+ *  @{
+ *  Boot Device CPU IDs.
+ */
+#define SCICLIENT_DEV_MCU_R5FSS0_CORE0  (TISCI_DEV_WKUP_R5FSS0_CORE0)
+#define SCICLIENT_DEV_MCU_R5FSS0_CORE1  (TISCI_DEV_WKUP_R5FSS0_CORE0)
 /* @} */
 
 /**
  *  \anchor Sciclient_McuR5fProcIds
- *  \name MCU Pulsar Processor IDs
+ *  \name Boot/DM Pulsar Processor IDs
  *  @{
- *  MCU Device Processor IDs.
+ *  Boot Device Processor IDs.
  */
 #define SCICLIENT_DEV_MCU_R5FSS0_CORE0_PROCID  \
-    (SCICLIENT_PROC_ID_R5FSS0_CORE0)
+    (SCICLIENT_PROC_ID_WKUP_R5FSS0_CORE0)
 #define SCICLIENT_DEV_MCU_R5FSS0_CORE1_PROCID  \
-    (SCICLIENT_PROC_ID_R5FSS0_CORE0)
+    (SCICLIENT_PROC_ID_WKUP_R5FSS0_CORE0)
 /* @} */
 
 /** Board config Base start address */

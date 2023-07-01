@@ -56,6 +56,7 @@ sciclient_LIB_LIST += sciclient_direct_hs
 endif
 ifeq ($(SOC),$(filter $(SOC), j722s))
 sciclient_LIB_LIST += rm_pm_hal
+sciclient_LIB_LIST += sciserver_tirtos
 sciclient_LIB_LIST += sciserver_baremetal
 sciclient_LIB_LIST += sciclient_direct
 endif
@@ -63,7 +64,7 @@ ifeq ($(SOC),$(filter $(SOC), am62x))
 sciclient_LIB_LIST += dm_stub
 sciclient_LIB_LIST += self_reset
 endif
-ifeq ($(SOC),$(filter $(SOC), am62a))
+ifeq ($(SOC),$(filter $(SOC), am62a j722s))
 sciclient_LIB_LIST += self_reset
 endif
 endif
@@ -85,13 +86,14 @@ drvsciclient_j784s4_CORELIST = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 
 drvsciclient_am64x_CORELIST = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 m4f_0
 drvsciclient_am62x_CORELIST = mcu1_0 m4f_0
 drvsciclient_am62a_CORELIST = mcu1_0 c7x_1
-drvsciclient_j722s_CORELIST = mcu1_0
+drvsciclient_j722s_CORELIST = mpu1_0 mcu1_0 mcu2_0 mcu3_0 c7x_1 c7x_2
 drvsciclient_DISABLE_PARALLEL_MAKE = yes
 ifeq ($(BUILD_OS_TYPE), qnx)
 drvsciclient_j721e_CORELIST += qnx_mpu1_0
 drvsciclient_j7200_CORELIST += qnx_mpu1_0
 drvsciclient_j721s2_CORELIST += qnx_mpu1_0
 drvsciclient_j784s4_CORELIST += qnx_mpu1_0
+drvsciclient_j722s_CORELIST += qnx_mpu1_0
 drvsciclient_am62x_CORELIST += qnx_mpu1_0
 endif
 
@@ -185,8 +187,8 @@ export sciserver_tirtos_BOARD_DEPENDENCY = no
 export sciserver_tirtos_CORE_DEPENDENCY = yes
 export sciserver_tirtos_PKG_LIST = sciserver_tirtos
 export sciserver_tirtos_INCLUDE = $(sciserver_PATH)
-export sciserver_tirtos_SOCLIST = j721e j7200 j721s2 j784s4 am62x am62a
-export sciserver_tirtos_BOARDLIST = j721e_evm j7200_evm j721s2_evm j784s4_evm am62x_evm am62a_evm
+export sciserver_tirtos_SOCLIST = j721e j7200 j721s2 j784s4 am62x am62a j722s
+export sciserver_tirtos_BOARDLIST = j721e_evm j7200_evm j721s2_evm j784s4_evm am62x_evm am62a_evm j722s_evm
 export sciserver_tirtos_$(SOC)_CORELIST = mcu1_0
 
 export sciserver_baremetal_COMP_LIST = sciserver_baremetal
@@ -271,7 +273,7 @@ export self_reset_CORE_DEPENDENCY = yes
 export self_reset_PKG_LIST = self_reset
 export self_reset_INCLUDE = $(self_reset_PATH)
 export self_reset_SOCLIST = am62x am62a j722s
-export self_reset_BOARDLIST = am62x_evm am62a_evm
+export self_reset_BOARDLIST = am62x_evm am62a_evm j722s_evm
 export self_reset_$(SOC)_CORELIST = mcu1_0
 
 ############################
@@ -291,7 +293,7 @@ export sciclient_firmware_boot_TestApp_BOARD_DEPENDENCY = no
 export sciclient_firmware_boot_TestApp_CORE_DEPENDENCY = yes
 export sciclient_firmware_boot_TestApp_PKG_LIST = sciclient_firmware_boot_TestApp
 export sciclient_firmware_boot_TestApp_INCLUDE = $(sciclient_firmware_boot_TestApp_PATH)
-export sciclient_firmware_boot_TestApp_BOARDLIST = am65xx_evm am64x_evm j7200_evm j721e_evm j721s2_evm j784s4_evm
+export sciclient_firmware_boot_TestApp_BOARDLIST = am65xx_evm am64x_evm j7200_evm j721e_evm j721s2_evm j784s4_evm j722s_evm
 export sciclient_firmware_boot_TestApp_$(SOC)_CORELIST = mcu1_0
 export sciclient_firmware_boot_TestApp_SBL_APPIMAGEGEN = no
 ifeq ($(CORE),mcu1_0)
@@ -310,7 +312,7 @@ export sciclient_ccs_init_BOARD_DEPENDENCY = no
 export sciclient_ccs_init_CORE_DEPENDENCY = yes
 export sciclient_ccs_init_PKG_LIST = sciclient_ccs_init
 export sciclient_ccs_init_INCLUDE = $(sciclient_ccs_init_PATH)
-export sciclient_ccs_init_BOARDLIST = am65xx_evm j721e_sim j721e_evm am64x_evm j7200_evm j721s2_evm j784s4_evm
+export sciclient_ccs_init_BOARDLIST = am65xx_evm j721e_sim j721e_evm am64x_evm j7200_evm j721s2_evm j784s4_evm j722s_evm
 # This application is only for mcu1_0
 export sciclient_ccs_init_$(SOC)_CORELIST = mcu1_0
 export sciclient_ccs_init_SBL_APPIMAGEGEN = no
@@ -364,7 +366,7 @@ export sciclient_unit_testapp_$(1)_BOARD_DEPENDENCY = no
 export sciclient_unit_testapp_$(1)_CORE_DEPENDENCY = yes
 export sciclient_unit_testapp_$(1)_PKG_LIST = sciclient_unit_testapp_$(1)
 export sciclient_unit_testapp_$(1)_INCLUDE = $(sciclient_unit_testapp_$(1)_PATH)
-export sciclient_unit_testapp_$(1)_BOARDLIST = $(filter $(DEFAULT_BOARDLIST_$(1)), am65xx_evm j721e_sim j721e_evm am64x_evm j7200_evm j721s2_evm j784s4_evm am62a_evm)
+export sciclient_unit_testapp_$(1)_BOARDLIST = $(filter $(DEFAULT_BOARDLIST_$(1)), am65xx_evm j721e_sim j721e_evm am64x_evm j7200_evm j721s2_evm j784s4_evm am62a_evm j722s_evm)
 
 ifeq ($(SOC),am64x)
 # No M4F for the RTOS App
@@ -419,9 +421,9 @@ export sciserver_testapp_$(1)_BOARD_DEPENDENCY = no
 export sciserver_testapp_$(1)_CORE_DEPENDENCY = yes
 export sciserver_testapp_$(1)_PKG_LIST = sciserver_testapp_$(1)
 export sciserver_testapp_$(1)_INCLUDE = $(sciserver_testapp_$(1)_PATH)
-export sciserver_testapp_$(1)_BOARDLIST = $(filter $(DEFAULT_BOARDLIST_$(1)), j721e_evm j7200_evm j721s2_evm j784s4_evm am62x_evm am62a_evm)
+export sciserver_testapp_$(1)_BOARDLIST = $(filter $(DEFAULT_BOARDLIST_$(1)), j721e_evm j7200_evm j721s2_evm j784s4_evm am62x_evm am62a_evm j722s_evm)
 export sciserver_testapp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), mcu1_0)
-ifeq ($(SOC),$(filter $(SOC), am62x am62a))
+ifeq ($(SOC),$(filter $(SOC), am62x am62a j722s))
 export sciserver_testapp_$(1)_SBL_APPIMAGEGEN = no
 else
 export sciserver_testapp_$(1)_SBL_APPIMAGEGEN = yes
@@ -456,7 +458,7 @@ export sciclient_fw_testapp_$(1)_BOARD_DEPENDENCY = no
 export sciclient_fw_testapp_$(1)_CORE_DEPENDENCY = yes
 export sciclient_fw_testapp_$(1)_PKG_LIST = sciclient_fw_testapp_$(1)
 #Disable J7AHP till FW CSLR is fixed
-export sciclient_fw_testapp_$(1)_BOARDLIST = $(filter $(DEFAULT_BOARDLIST_$(1)), am65xx_evm j721e_evm j7200_evm j721s2_evm)
+export sciclient_fw_testapp_$(1)_BOARDLIST = $(filter $(DEFAULT_BOARDLIST_$(1)), am65xx_evm j721e_evm j7200_evm j721s2_evm j722s_evm)
 export sciclient_fw_testapp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), mcu1_0)
 export sciclient_fw_testapp_$(1)_SBL_APPIMAGEGEN = yes
 export sciclient_fw_testapp_$(1)_SBL_IMAGEGEN = no

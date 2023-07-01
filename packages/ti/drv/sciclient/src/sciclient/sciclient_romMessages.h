@@ -90,7 +90,7 @@ extern "C" {
  *  \name Sciclient load firmware ROM Thread Ids.
  *  @{
  */
-#if defined (SOC_AM64X)
+#if defined(SOC_AM64X) || defined(SOC_J722S)
 /** Thread ID's for each message type, R5 Out Bound Normal Priority    */
 #define SCICLIENT_ROM_R5_TX_NORMAL_THREAD                           (1U)
 /** Thread ID's for each message type, R5 In Bound Normal Priority    */

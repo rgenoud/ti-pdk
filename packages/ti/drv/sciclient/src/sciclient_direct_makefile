@@ -42,7 +42,6 @@ endif
 ifeq ($(SOC),$(filter $(SOC), am62a))
   SCICLIENT_SOCVER = V7
 endif
-
 ifeq ($(SOC),$(filter $(SOC), j722s))
   SCICLIENT_SOCVER = V8
 endif
@@ -78,19 +77,14 @@ endif
 
 
 #Use CSL implementation to bypass DMSC
-# ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4))
+# ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 j722s))
 # SRCS_COMMON = sciclient_rm_csl.c sciclient_dummy.c
 # endif
 
 #Bypass DMSC for host emulation and Loki build
-ifeq ($(BOARD),$(filter $(BOARD), j721e_hostemu j721e_loki j721s2_hostemu j784s4_hostemu))
+ifeq ($(BOARD),$(filter $(BOARD), j721e_hostemu j721e_loki j721s2_hostemu j784s4_hostemu j722s_hostemu))
  SRCS_COMMON = sciclient_rm_csl.c sciclient_dummy.c
 endif
-
-#Use CSL implementation to bypass DMSC
-# ifeq ($(SOC),$(filter $(SOC), j722s))
-#  SRCS_COMMON = sciclient_rm_csl.c sciclient_dummy.c
-# endif
 
 CFLAGS_LOCAL_COMMON = $(PDK_CFLAGS) $(SCICLIENT_CFLAGS)
 

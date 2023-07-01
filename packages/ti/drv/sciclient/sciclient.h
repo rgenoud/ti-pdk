@@ -278,8 +278,10 @@ typedef uint8_t devgrp_t;
 #define SCICLIENT_COMMON_X509_HEADER_ADDR (0x41cffb00)
 #elif defined(SOC_J721S2) || defined(SOC_J784S4)
 #define SCICLIENT_COMMON_X509_HEADER_ADDR (0x41cfdb00)
-#elif defined(SOC_AM62X) || defined(SOC_AM62A) || defined(SOC_J722S)
+#elif defined(SOC_AM62X) || defined(SOC_AM62A)
 #define SCICLIENT_COMMON_X509_HEADER_ADDR (0x43c3f1e0)
+#elif defined(SOC_J722S)
+#define SCICLIENT_COMMON_X509_HEADER_ADDR (0x43c7f1e0)
 #else
 #define SCICLIENT_COMMON_X509_HEADER_ADDR (0x41cffb00)
 #endif
@@ -367,12 +369,11 @@ typedef uint8_t devgrp_t;
 #include <ti/drv/sciclient/soc/sysfw/include/am62ax/tisci_boardcfg_constraints.h>
 #include <ti/drv/sciclient/soc/sysfw/include/tisci/lpm/tisci_lpm.h>
 #endif
-
 #if defined (SOC_J722S)
-#include <ti/drv/sciclient/soc/sysfw/include/am62ax/tisci_resasg_types.h>
-#include <ti/drv/sciclient/soc/sysfw/include/am62ax/tisci_hosts.h>
-#include <ti/drv/sciclient/soc/sysfw/include/am62ax/tisci_sec_proxy.h>
-#include <ti/drv/sciclient/soc/sysfw/include/am62ax/tisci_boardcfg_constraints.h>
+#include <ti/drv/sciclient/soc/sysfw/include/j722s/tisci_resasg_types.h>
+#include <ti/drv/sciclient/soc/sysfw/include/j722s/tisci_hosts.h>
+#include <ti/drv/sciclient/soc/sysfw/include/j722s/tisci_sec_proxy.h>
+#include <ti/drv/sciclient/soc/sysfw/include/j722s/tisci_boardcfg_constraints.h>
 #include <ti/drv/sciclient/soc/sysfw/include/tisci/lpm/tisci_lpm.h>
 #endif
 

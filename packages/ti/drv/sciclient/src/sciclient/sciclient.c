@@ -212,7 +212,7 @@ int32_t Sciclient_configPrmsInit(Sciclient_ConfigPrms_t *pCfgPrms)
 
     if(NULL != pCfgPrms)
     {
-#if defined(BUILD_MCU1_0) && (defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined (SOC_J784S4)  || defined (SOC_AM62X) || defined (SOC_AM62A))
+#if defined(BUILD_MCU1_0) && (defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined (SOC_J784S4)  || defined (SOC_AM62X) || defined (SOC_AM62A) || defined (SOC_J722S))
         Sciclient_DefaultBoardCfgInfo_t boardCfgInfo = {0};
 
         /* populate the default board configuration */
@@ -390,7 +390,7 @@ int32_t Sciclient_init(const Sciclient_ConfigPrms_t *pCfgPrms)
 
                     #if defined (SOC_J721S2) || defined (SOC_J784S4)
                     CSL_CLEC_EVTRegs * regs = (CSL_CLEC_EVTRegs *) CSL_COMPUTE_CLUSTER0_CLEC_BASE;
-                    #elif defined(SOC_AM62A)
+                    #elif defined(SOC_AM62A) || defined (SOC_J722S)
                     CSL_CLEC_EVTRegs   *regs = (CSL_CLEC_EVTRegs*) CSL_C7X256V0_CLEC_BASE;
                     #else
                     CSL_CLEC_EVTRegs * regs = (CSL_CLEC_EVTRegs *) CSL_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
@@ -403,7 +403,7 @@ int32_t Sciclient_init(const Sciclient_ConfigPrms_t *pCfgPrms)
                     evtCfg.c7xEvtNum = SCICLIENT_C7X_NON_SECURE_INTERRUPT_NUM;
                     #if defined(SOC_J721E)
                     CSL_clecConfigEvent(regs, evtNum, &evtCfg);
-                    #elif defined(SOC_AM62A)
+                    #elif defined(SOC_AM62A) || defined (SOC_J722S)
                     CSL_clecConfigEvent(regs,evtNum+ 256, &evtCfg);  //todo...
                     #endif
                     intrPrms.corepacConfig.priority = 1U;
@@ -466,7 +466,7 @@ int32_t Sciclient_init(const Sciclient_ConfigPrms_t *pCfgPrms)
 
                     #if defined (SOC_J721S2) || defined (SOC_J784S4)
                     CSL_CLEC_EVTRegs * regs = (CSL_CLEC_EVTRegs *) CSL_COMPUTE_CLUSTER0_CLEC_BASE;
-                    #elif defined(SOC_AM62A)
+                    #elif defined(SOC_AM62A) || defined (SOC_J722S)
                     CSL_CLEC_EVTRegs   *regs = (CSL_CLEC_EVTRegs*) CSL_C7X256V0_CLEC_BASE;
                     #else
                     CSL_CLEC_EVTRegs * regs = (CSL_CLEC_EVTRegs *) CSL_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
@@ -514,7 +514,7 @@ int32_t Sciclient_init(const Sciclient_ConfigPrms_t *pCfgPrms)
         {
             gSciclientHandle.isSecureMode = 0U;
         }
-#if defined(BUILD_MCU1_0) && (defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined (SOC_J784S4)  || defined (SOC_AM62X) || defined (SOC_AM62A)) 
+#if defined(BUILD_MCU1_0) && (defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined (SOC_J784S4)  || defined (SOC_AM62X) || defined (SOC_AM62A) || defined (SOC_J722S)) 
         if (pCfgPrms != NULL)
         {
             if (pCfgPrms->skipLocalBoardCfgProcess == FALSE)
@@ -595,7 +595,7 @@ int32_t Sciclient_serviceGetThreadIds (const Sciclient_ReqPrm_t *pReqPrm,
     }
     if(*contextId < SCICLIENT_CONTEXT_MAX_NUM)
     {
-#if defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)  || defined (SOC_AM62X) || defined (SOC_AM62A) 
+#if defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)  || defined (SOC_AM62X) || defined (SOC_AM62A) || defined (SOC_J722S) 
         /*
          * Derive the thread ID from the context. If the message is to be
          * forwarded, use the dedicated DM2DMSC queue. Otherwise, use the queue
@@ -607,7 +607,7 @@ int32_t Sciclient_serviceGetThreadIds (const Sciclient_ReqPrm_t *pReqPrm,
          */
         if (pReqPrm->forwardStatus == SCISERVER_FORWARD_MSG)
         {
-#if ! (defined(SOC_AM62X) || defined (SOC_AM62A))
+#if ! (defined(SOC_AM62X) || defined (SOC_AM62A) || defined (SOC_J722S))
             *txThread = TISCI_SEC_PROXY_DM2DMSC_WRITE_NOTIFY_RESP_THREAD_ID;
 #else
             *txThread = TISCI_SEC_PROXY_DM2TIFS_WRITE_LOW_PRIORITY_THREAD_ID;
@@ -631,13 +631,13 @@ int32_t Sciclient_serviceGetThreadIds (const Sciclient_ReqPrm_t *pReqPrm,
         else
         {
 #endif
-#if defined (SOC_AM64X) || defined (SOC_AM62X) || defined (SOC_AM62A)
+#if defined (SOC_AM64X) || defined (SOC_AM62X) || defined (SOC_AM62A) || defined (SOC_J722S)
             *txThread = gSciclientMap[*contextId].reqLowPrioThreadId;
 #else
             *txThread = gSciclientMap[*contextId].reqHighPrioThreadId;
 #endif
             *rxThread = gSciclientMap[*contextId].respThreadId;
-#if defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)  || defined (SOC_AM62X) || defined (SOC_AM62A) 
+#if defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)  || defined (SOC_AM62X) || defined (SOC_AM62A) || defined (SOC_J722S)
         }
 #endif
 
@@ -878,10 +878,10 @@ int32_t Sciclient_serviceSecureProxy(const Sciclient_ReqPrm_t *pReqPrm,
                               gSciclient_maxMsgSizeBytes);
 
         timeToWait = pReqPrm->timeout;
-        // pLocalRespHdr = (struct tisci_header *)(CSL_secProxyGetDataAddr(
-        //     pSciclient_secProxyCfg, rxThread, 0U)
-        //     + ((uintptr_t) gSecHeaderSizeWords * (uintptr_t) 4U));
-        // /* Verify thread status before reading/writing */
+        pLocalRespHdr = (struct tisci_header *)(CSL_secProxyGetDataAddr(
+            pSciclient_secProxyCfg, rxThread, 0U)
+            + ((uintptr_t) gSecHeaderSizeWords * (uintptr_t) 4U));
+        /* Verify thread status before reading/writing */
         status = Sciclient_verifyThread(rxThread);
     }
     /* Wait for response: Polling based waiting */
@@ -921,7 +921,7 @@ int32_t Sciclient_serviceSecureProxy(const Sciclient_ReqPrm_t *pReqPrm,
                         (HW_RD_REG32(Sciclient_threadStatusReg(rxThread)) &
                         CSL_SEC_PROXY_RT_THREAD_STATUS_CUR_CNT_MASK) -
                         initialCount;
-                if ((pLocalRespHdr->seq == (uint32_t) localSeqId))
+                if (pLocalRespHdr->seq == ((uint32_t) localSeqId))
                 {
                     status = CSL_PASS;
                     break;
@@ -1006,7 +1006,7 @@ int32_t Sciclient_serviceSecureProxy(const Sciclient_ReqPrm_t *pReqPrm,
         {
             #if defined (SOC_J721S2) || defined (SOC_J784S4)
             CSL_CLEC_EVTRegs * regs = (CSL_CLEC_EVTRegs *) CSL_COMPUTE_CLUSTER0_CLEC_BASE;
-            #elif defined(SOC_AM62A)
+            #elif defined(SOC_AM62A) || defined (SOC_J722S)
             CSL_CLEC_EVTRegs   *regs = (CSL_CLEC_EVTRegs*) CSL_C7X256V0_CLEC_BASE;
             #else
             CSL_CLEC_EVTRegs * regs = (CSL_CLEC_EVTRegs *) CSL_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
@@ -1038,7 +1038,7 @@ int32_t Sciclient_serviceSecureProxy(const Sciclient_ReqPrm_t *pReqPrm,
                 CSL_clecConfigEvent(regs, CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_NAVSS0_INTR_ROUTER_0_OUTL_INTR_191 + 992, &evtCfg);
                 #endif
             }
-            #elif defined(SOC_AM62A)
+            #elif defined(SOC_AM62A) || defined(SOC_J722S)
             if (SCICLIENT_NON_SECURE_CONTEXT == gSciclientMap[contextId].context)
             {
                 CSL_clecConfigEvent(regs, 256, &evtCfg);
@@ -1150,7 +1150,7 @@ int32_t Sciclient_abiCheck(void)
     return status;
 }
 
-#if defined(BUILD_MCU1_0) && (defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined (SOC_AM62X) || defined (SOC_AM62A))
+#if defined(BUILD_MCU1_0) && (defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined (SOC_AM62X) || defined (SOC_AM62A) || defined (SOC_J722S))
 int32_t Sciclient_setDebugConfig()
 {
     int32_t retVal = CSL_PASS;
@@ -1251,7 +1251,7 @@ static void Sciclient_ISR(uintptr_t arg)
             {
                 #if defined (SOC_J721S2) || defined (SOC_J784S4)
                 CSL_CLEC_EVTRegs * regs = (CSL_CLEC_EVTRegs *) CSL_COMPUTE_CLUSTER0_CLEC_BASE;
-                #elif defined(SOC_AM62A)
+                #elif defined(SOC_AM62A) || defined (SOC_J722S)
                 CSL_CLEC_EVTRegs   *regs = (CSL_CLEC_EVTRegs*) CSL_C7X256V0_CLEC_BASE;
                 #else
                 CSL_CLEC_EVTRegs * regs = (CSL_CLEC_EVTRegs *) CSL_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
@@ -1283,7 +1283,7 @@ static void Sciclient_ISR(uintptr_t arg)
                     CSL_clecConfigEvent(regs, CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_NAVSS0_INTR_ROUTER_0_OUTL_INTR_191 + 992, &evtCfg);
                     #endif
                 }
-                #elif defined(SOC_AM62A)
+                #elif defined(SOC_AM62A) || defined(SOC_J722S)
                 if (SCICLIENT_NON_SECURE_CONTEXT == gSciclientMap[contextId].context)
                 {
                     CSL_clecConfigEvent(regs, 256, &evtCfg);

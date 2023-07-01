@@ -22,7 +22,7 @@ uint32_t dm_r5_self_reset(){
             .type = TISCI_MSG_PROC_REQUEST,
 	        .seq = 0,
 	        .flags = TISCI_MSG_FLAG_AOP,
-            .host = TISCI_HOST_ID_MAIN_0_R5_0
+            .host = SELF_RESET_DM_R5_HOST_ID
         },
         .processor_id = SELF_RESET_PROCESSOR_ID
     };
@@ -43,7 +43,7 @@ uint32_t dm_r5_self_reset(){
             .type = TISCI_MSG_PROC_GET_STATUS,
 	        .seq = 0x0,
 	        .flags = TISCI_MSG_FLAG_AOP,
-            .host = TISCI_HOST_ID_MAIN_0_R5_0
+            .host = SELF_RESET_DM_R5_HOST_ID
         },
         .processor_id = SELF_RESET_PROCESSOR_ID
     };
@@ -62,7 +62,7 @@ uint32_t dm_r5_self_reset(){
             .type = TISCI_MSG_PROC_SET_CONFIG,
 	        .seq = 0x22,
 	        .flags = TISCI_MSG_FLAG_AOP,
-            .host = TISCI_HOST_ID_MAIN_0_R5_0
+            .host = SELF_RESET_DM_R5_HOST_ID
         },
         .processor_id = SELF_RESET_PROCESSOR_ID,
         .bootvector_lo = SELF_RESET_BOOT_ADDRESS_LOW, //boot_addr_lo
@@ -88,7 +88,7 @@ uint32_t dm_r5_self_reset(){
             .type = TISCI_MSG_PROC_WAIT_STATUS,
 	        .seq = 0x44,
 	        .flags = 0,
-            .host = TISCI_HOST_ID_MAIN_0_R5_0
+            .host = SELF_RESET_DM_R5_HOST_ID
         },
         .processor_id = SELF_RESET_PROCESSOR_ID,
         .num_wait_iterations = 255,
@@ -107,7 +107,7 @@ uint32_t dm_r5_self_reset(){
             .type = TISCI_MSG_PROC_SET_CONTROL,
 	        .seq = 0x55,
 	        .flags = 0,
-            .host = TISCI_HOST_ID_MAIN_0_R5_0
+            .host = SELF_RESET_DM_R5_HOST_ID
         },
         .processor_id = SELF_RESET_PROCESSOR_ID,
         .control_flags_1_set = TISCI_MSG_VAL_PROC_BOOT_CTRL_FLAG_R5_RESET
@@ -125,7 +125,7 @@ uint32_t dm_r5_self_reset(){
             .type = TISCI_MSG_PROC_SET_CONTROL,
 	        .seq = 0x66,
 	        .flags = 0,
-            .host = TISCI_HOST_ID_MAIN_0_R5_0
+            .host = SELF_RESET_DM_R5_HOST_ID
         },
         .processor_id = SELF_RESET_PROCESSOR_ID,
         .control_flags_1_clear = TISCI_MSG_VAL_PROC_BOOT_CTRL_FLAG_R5_RESET,
@@ -140,7 +140,7 @@ uint32_t dm_r5_self_reset(){
             .type = TISCI_MSG_PROC_RELEASE,
 	        .seq = 0,
 	        .flags = 0,
-            .host = TISCI_HOST_ID_MAIN_0_R5_0
+            .host = SELF_RESET_DM_R5_HOST_ID
         },
         .processor_id = SELF_RESET_PROCESSOR_ID
     };
