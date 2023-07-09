@@ -129,7 +129,7 @@ SPI_Params gSpiParams = {
     NULL,               /* transferCallbackFxn */
     SPI_MASTER,         /* mode */
     1000000,            /* bitRate */
-    8,                  /* dataSize */
+    8U,                 /* dataSize */
     SPI_POL0_PHA0,      /* frameFormat */
     NULL                /* custom */
 };

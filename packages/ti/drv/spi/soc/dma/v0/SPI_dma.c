@@ -138,12 +138,12 @@ void SPI_dmaFreeChannel(SPI_Handle handle);
 int32_t SPI_dmaConfig(SPI_Handle handle)
 {
     SPI_HWAttrs const   *hwAttrs;
-    uint32_t             tcc = 0;
-    static uint32_t      dummyParamSetAddr = 0;
+    uint32_t             tcc = 0U;
+    static uint32_t      dummyParamSetAddr = 0U;
     EDMA3_RM_EventQueue  queueNum = 0;
     int32_t              status;
     uint32_t             count;
-    uint32_t             edmaChanNum = 0;
+    uint32_t             edmaChanNum = 0U;
     uint32_t             reqTcc = EDMA3_DRV_TCC_ANY;
 
     /* Get the pointer to the object and hwAttrs */
@@ -162,7 +162,7 @@ int32_t SPI_dmaConfig(SPI_Handle handle)
                                       (void *)handle);
 
     /* Acquire the  PaRAM entries used for EDMA transfers linking */
-    for (count = 0; count < SPI_MAXLINKCNT; count++)
+    for (count = 0U; count < SPI_MAXLINKCNT; count++)
     {
         /* For requesting for a PaRam set */
         edmaChanNum = EDMA3_DRV_LINK_CHANNEL;
@@ -204,7 +204,7 @@ int32_t SPI_dmaConfig(SPI_Handle handle)
 
 
     /* Acquire the  PaRAM entries used for EDMA transfers linking */
-    for (count = 0; count < SPI_MAXLINKCNT; count++)
+    for (count = 0U; count < SPI_MAXLINKCNT; count++)
     {
         /* For requesting for a PaRam set */
         edmaChanNum = EDMA3_DRV_LINK_CHANNEL;
@@ -235,7 +235,7 @@ void SPI_dmaTransfer(SPI_Handle       handle,
     object  = (SPI_v0_Object*)handle->object;
     hwAttrs = (SPI_HWAttrs*)handle->hwAttrs;
 
-    object->edmaCbCheck = 0;
+    object->edmaCbCheck = 0U;
 
     /* receive parameter set */
     EDMA3_DRV_getPaRAM((EDMA3_DRV_Handle)hwAttrs->edmaHandle,
@@ -301,7 +301,7 @@ void SPI_dmaDisableChannel(SPI_Handle handle, bool txChan)
     SPI_HWAttrs const *hwAttrs = (SPI_HWAttrs*)handle->hwAttrs;
     uint32_t           dmaEvent;
 
-    if (txChan == true)
+    if (BTRUE == txChan)
     {
         dmaEvent = (uint32_t) hwAttrs->txDmaEventNumber;
     }
@@ -368,7 +368,7 @@ static void SPI_dmaRxIsrHandler(uint32_t tcc, EDMA3_RM_TccStatus status, void* a
 
     if (SPI_TX_EDMA_CALLBACK_OCCURED == object->edmaCbCheck)
     {
-        object->edmaCbCheck = 0x0;
+        object->edmaCbCheck = 0x0U;
 
         /* Call the completion function */
         SPI_dmaCallback(handle);
@@ -422,7 +422,7 @@ static void SPI_dmaTxIsrHandler(uint32_t tcc, EDMA3_RM_TccStatus status, void* a
 
     if (SPI_RX_EDMA_CALLBACK_OCCURED == object->edmaCbCheck)
     {
-        object->edmaCbCheck = 0x0;
+        object->edmaCbCheck = 0x0U;
 
         /* Call the completion function */
         SPI_dmaCallback(handle);
@@ -588,8 +588,8 @@ static void SPI_dmaCallback(SPI_Handle handle)
                               EDMA3_DRV_TRIG_MODE_EVENT);
 
     /* Call the transfer completion callback function */
-    if ((object->transaction->status != SPI_TRANSFER_FAILED) &&
-        (object->transferErr == SPI_XFER_ERR_NONE))
+    if ((SPI_TRANSFER_FAILED != object->transaction->status) &&
+        (SPI_XFER_ERR_NONE   == object->transferErr))
     {
         object->transaction->status = SPI_TRANSFER_COMPLETED;
     }

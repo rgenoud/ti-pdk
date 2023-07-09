@@ -102,7 +102,7 @@ static void QSPI_close_v0(SPI_Handle handle)
     QSPI_v0_HwAttrs const *hwAttrs = NULL;
 
     /* Input parameter validation */
-    if (handle != NULL)
+    if (NULL != handle)
     {
     /* Get the pointer to the object and hwAttrs */
     object = (QSPI_v0_Object*)handle->object;
@@ -127,7 +127,7 @@ static void QSPI_close_v0(SPI_Handle handle)
     }
 
     /* Open flag is set false */
-    object->isOpen = (bool)false;
+    object->isOpen = BFALSE;
     }
 
     return;
@@ -150,7 +150,7 @@ static void QSPI_hwiFxn_v0(uintptr_t arg)
     object = (QSPI_v0_Object*)(((SPI_Handle)arg)->object);
     hwAttrs = (const QSPI_v0_HwAttrs *)(((SPI_Handle)arg)->hwAttrs);
 
-    if (hwAttrs->intcMuxNum != INVALID_INTC_MUX_NUM)
+    if (INVALID_INTC_MUX_NUM != hwAttrs->intcMuxNum)
     {
         SPI_osalMuxIntcDisableHostInt(hwAttrs->intcMuxNum, hwAttrs->intcMuxOutEvent);
         SPI_osalMuxIntcClearSysInt(hwAttrs->intcMuxNum, hwAttrs->intcMuxInEvent);
@@ -184,10 +184,10 @@ static void QSPI_hwiFxn_v0(uintptr_t arg)
                 object->readBufIdx += rdBytes;
                 object->readCountIdx -= rdBytes;
 
-                if ((object->readCountIdx > 0) &&
-                    (object->readCountIdx < (QSPI_SRAM_WARERMARK_RD_LVL * QSPI_FIFO_WIDTH)))
+                if ((0U < object->readCountIdx) &&
+                    ((QSPI_SRAM_WARERMARK_RD_LVL * QSPI_FIFO_WIDTH) > object->readCountIdx))
                 {
-                    while(1)
+                    while(BTRUE)
                     {
                         sramLevel = QSPIGetSramLvl(hwAttrs->baseAddr, 1U);
                         rdBytes = sramLevel * QSPI_FIFO_WIDTH;
@@ -203,7 +203,7 @@ static void QSPI_hwiFxn_v0(uintptr_t arg)
                 }
             }
 
-            if((object->readCountIdx == 0U) || ((intrStatus & QSPI_INTR_MASK_IND_OP_DONE) != 0U))
+            if((0U == object->readCountIdx) || (0U != (intrStatus & QSPI_INTR_MASK_IND_OP_DONE)))
             {
                 /* Clear indirect read operation complete status */
 				QSPIClrIndReadComplete(hwAttrs->baseAddr);
@@ -233,7 +233,7 @@ static void QSPI_hwiFxn_v0(uintptr_t arg)
                 object->writeCountIdx -= wrBytes;
 
                 sramLevel = QSPI_SRAM_PARTITION_WR - QSPIGetSramLvl(hwAttrs->baseAddr, 1U);
-                if ((object->writeCountIdx > 0) &&
+                if ((0U < object->writeCountIdx) &&
                     (object->writeCountIdx <= (sramLevel * QSPI_FIFO_WIDTH)))
                 {
                     wrBytes = object->writeCountIdx;
@@ -257,7 +257,7 @@ static void QSPI_hwiFxn_v0(uintptr_t arg)
         }
     }
 
-    if (hwAttrs->intcMuxNum != INVALID_INTC_MUX_NUM)
+    if (INVALID_INTC_MUX_NUM != hwAttrs->intcMuxNum)
     {
         SPI_osalMuxIntcClearSysInt(hwAttrs->intcMuxNum, hwAttrs->intcMuxInEvent);
         SPI_osalHardwareIntrClear(hwAttrs->eventId,hwAttrs->intrNum);
@@ -271,10 +271,10 @@ static void QSPI_hwiFxn_v0(uintptr_t arg)
 static void QSPI_init_v0(SPI_Handle handle)
 {
     /* Input parameter validation */
-    if (handle != NULL)
+    if (NULL != handle)
     {
         /* Mark the object as available */
-        ((QSPI_v0_Object *)(handle->object))->isOpen = (bool)false;
+        ((QSPI_v0_Object *)(handle->object))->isOpen = BFALSE;
     }
 }
 
@@ -291,11 +291,11 @@ static SPI_Handle QSPI_open_v0(SPI_Handle handle, const SPI_Params *params)
     MuxIntcP_inParams      muxInParams;
     MuxIntcP_outParams     muxOutParams;
 	OsalRegisterIntrParams_t interruptRegParams;
-    int32_t                retFlag = 0;
+    uint32_t                retFlag = UFALSE;
     uint32_t               clkDiv;
 
     /* Input parameter validation */
-    if (handle != NULL)
+    if (NULL != handle)
     {
     /* Get the pointer to the object and hwAttrs */
     object = (QSPI_v0_Object*)handle->object;
@@ -304,18 +304,18 @@ static SPI_Handle QSPI_open_v0(SPI_Handle handle, const SPI_Params *params)
 
     /* Determine if the device index was already opened */
     key = SPI_osalHardwareIntDisable();
-    if(object->isOpen == (bool)true) {
+    if (BTRUE == object->isOpen) {
         SPI_osalHardwareIntRestore(key);
         handle = NULL;
     }
     else
     {
         /* Mark the handle as being used */
-        object->isOpen = (bool)true;
+        object->isOpen = BTRUE;
         SPI_osalHardwareIntRestore(key);
 
         /* Store the QSPI parameters */
-        if (params == NULL) {
+        if (NULL == params) {
             /* No params passed in, so use the defaults */
             SPI_Params_init(&(object->qspiParams));
         }
@@ -331,7 +331,7 @@ static SPI_Handle QSPI_open_v0(SPI_Handle handle, const SPI_Params *params)
         /* Extract QSPI operating mode based on hwAttrs and input parameters */
         if(SPI_MODE_BLOCKING == object->qspiParams.transferMode)
         {
-            if(true == hwAttrs->intrEnable)
+            if(BTRUE == hwAttrs->intrEnable)
             {
                 object->intrPollMode = SPI_OPER_MODE_BLOCKING;
             }
@@ -349,7 +349,7 @@ static SPI_Handle QSPI_open_v0(SPI_Handle handle, const SPI_Params *params)
         if(SPI_OPER_MODE_POLLING != object->intrPollMode)
         {
             Osal_RegisterInterrupt_initParams(&interruptRegParams);             
-            if (hwAttrs->intcMuxNum != INVALID_INTC_MUX_NUM)
+            if (INVALID_INTC_MUX_NUM != hwAttrs->intcMuxNum)
             {
                 /* Setup intc mux */
                 muxInParams.arg         = (uintptr_t)handle;
@@ -373,18 +373,18 @@ static SPI_Handle QSPI_open_v0(SPI_Handle handle, const SPI_Params *params)
 #else
             interruptRegParams.corepacConfig.corepacEventNum = hwAttrs->eventId;
 #endif
-            interruptRegParams.corepacConfig.name=NULL;
+            interruptRegParams.corepacConfig.name = NULL;
             interruptRegParams.corepacConfig.priority = 0x20;
             interruptRegParams.corepacConfig.intVecNum=hwAttrs->intrNum; /* Host Interrupt vector */
             SPI_osalRegisterInterrupt(&interruptRegParams,&(object->hwi));
-            if(object->hwi == NULL) {
+            if(NULL == object->hwi) {
                 QSPI_close_v0(handle);
                 handle = NULL;
-                retFlag = 1;
+                retFlag = UTRUE;
             }
         }
         
-        if(retFlag == 0)
+        if(UFALSE == retFlag)
         {
             /*
              * Construct thread safe handles for this QSPI peripheral
@@ -398,7 +398,7 @@ static SPI_Handle QSPI_open_v0(SPI_Handle handle, const SPI_Params *params)
              * Store a callback function that posts the transfer complete
              * semaphore for synchronous mode
              */
-            if (object->intrPollMode == SPI_OPER_MODE_BLOCKING) {
+            if (SPI_OPER_MODE_BLOCKING == object->intrPollMode) {
             /*
              * Semaphore to cause the waiting task to block for the QSPI
              * to finish
@@ -408,9 +408,9 @@ static SPI_Handle QSPI_open_v0(SPI_Handle handle, const SPI_Params *params)
                 /* Store internal callback function */
                 object->qspiParams.transferCallbackFxn = &QSPI_transferCallback_v0;
             }
-            if(object->intrPollMode == SPI_OPER_MODE_CALLBACK){
+            if(SPI_OPER_MODE_CALLBACK == object->intrPollMode){
                 /* Check to see if a callback function was defined for async mode */
-                OSAL_Assert(object->qspiParams.transferCallbackFxn == NULL);
+                OSAL_Assert(NULL == object->qspiParams.transferCallbackFxn);
             }
 
             /* Disable QSPI controller */
@@ -424,11 +424,11 @@ static SPI_Handle QSPI_open_v0(SPI_Handle handle, const SPI_Params *params)
             {
                 QSPI_close_v0(handle);
                 handle = NULL;
-                retFlag = 1;
+                retFlag = UTRUE;
             }
         }
 
-        if(retFlag == 0)
+        if(UFALSE == retFlag)
         {
             /* Set clock mode */
             QSPISetClkMode(hwAttrs->baseAddr, hwAttrs->frmFmt);
@@ -453,12 +453,12 @@ static SPI_Handle QSPI_open_v0(SPI_Handle handle, const SPI_Params *params)
                  */
                 clkDiv = hwAttrs->funcClk / object->qspiParams.bitRate;
             }
-            if (clkDiv > QSPI_MAX_BAUD_RATE_DIVISOR)
+            if (QSPI_MAX_BAUD_RATE_DIVISOR < clkDiv)
             {
                 clkDiv = QSPI_MAX_BAUD_RATE_DIVISOR;
             }
 
-            if (clkDiv < QSPI_MIN_BAUD_RATE_DIVISOR)
+            if (QSPI_MIN_BAUD_RATE_DIVISOR > clkDiv)
             {
                 clkDiv = QSPI_MIN_BAUD_RATE_DIVISOR;
             }
@@ -503,7 +503,7 @@ static int32_t QSPI_primeTransfer_v0(SPI_Handle handle,
 {
     QSPI_v0_Object        *object = NULL;
     QSPI_v0_HwAttrs const *hwAttrs = NULL;
-    int32_t                retVal = 0;
+    int32_t                retVal = SPI_STATUS_SUCCESS;
 
     /* Get the pointer to the object and hwAttrs */
     object = (QSPI_v0_Object*)handle->object;
@@ -521,7 +521,7 @@ static int32_t QSPI_primeTransfer_v0(SPI_Handle handle,
     QSPIIntrClear(hwAttrs->baseAddr, QSPI_INTR_MASK_ALL);
 
     /* Interrupt mode */
-    if(object->intrPollMode != SPI_OPER_MODE_POLLING)
+    if(SPI_OPER_MODE_POLLING != object->intrPollMode)
     {
         QSPIIntrEnable(hwAttrs->baseAddr, QSPI_INTR_MASK_ALL);
     }
@@ -537,8 +537,8 @@ static int32_t QSPI_primeTransfer_v0(SPI_Handle handle,
     }
     else
     {
-        transaction->status=SPI_TRANSFER_CANCELED;
-		retVal = (-((int32_t)1));
+        transaction->status = SPI_TRANSFER_CANCELED;
+        retVal = SPI_STATUS_ERROR;
     }
     return(retVal);
 }
@@ -548,7 +548,7 @@ static int32_t QSPIWaitReadSramLvl(uint32_t baseAddr, uint32_t *rdLevel)
 {
     uint32_t retry = QSPI_REG_RETRY;
     uint32_t sramLevel;
-    int32_t  retVal = 0;
+    int32_t  retVal = SPI_STATUS_SUCCESS;
     while(retry--)
     {
         sramLevel = QSPIGetSramLvl(baseAddr, 1U);
@@ -562,11 +562,11 @@ static int32_t QSPIWaitReadSramLvl(uint32_t baseAddr, uint32_t *rdLevel)
 
     if (retry)
     {
-        retVal = 0;
+        retVal = SPI_STATUS_SUCCESS;
     }
     else
     {
-        retVal = (-((int32_t)1));
+        retVal = SPI_STATUS_ERROR;
     }
     return(retVal);
 }
@@ -582,9 +582,9 @@ static int32_t QSPI_ind_xfer_mode_read_v0(SPI_Handle handle,
     uint32_t               count;        /* transaction length */
     uint32_t               offset;       /* QSPI flash offset address */
     uint32_t               remaining;
-    uint32_t               sramLevel = 0, rdBytes = 0;
-    uint32_t               retFlag = 0U;
-    int32_t                retVal = 0;
+    uint32_t               sramLevel = 0U, rdBytes = 0U;
+    uint32_t               retFlag = UFALSE;
+    int32_t                retVal = SPI_STATUS_SUCCESS;
 
     /* Copy flash transaction parameters to local variables */
     offset = (uint32_t)((uintptr_t)transaction->arg); /* NOR Flash offset address to read */
@@ -603,14 +603,14 @@ static int32_t QSPI_ind_xfer_mode_read_v0(SPI_Handle handle,
     if (SPI_OPER_MODE_POLLING == object->intrPollMode)
     {
 		remaining = count;
-        while(remaining > 0)
+        while(0 < remaining)
         {
             /* Wait indirect read SRAM fifo has data */
             if (QSPIWaitReadSramLvl(hwAttrs->baseAddr, &sramLevel))
             {
-                retFlag = 1U;
-                retVal = (-((int32_t)1));
-                transaction->status=SPI_TRANSFER_FAILED;
+                retFlag = UTRUE;
+                retVal = SPI_STATUS_ERROR;
+                transaction->status = SPI_TRANSFER_FAILED;
                 break;
             }
 
@@ -623,12 +623,12 @@ static int32_t QSPI_ind_xfer_mode_read_v0(SPI_Handle handle,
             pDst += rdBytes;
             remaining -= rdBytes;
         }
-        if(retFlag == 0U)
+        if(UFALSE == retFlag)
         {
             if (QSPIWaitIndReadComplete(hwAttrs->baseAddr))
             {
-                retFlag = 1U;
-                retVal = (-((int32_t)1));
+                retFlag = UTRUE;
+                retVal = SPI_STATUS_ERROR;
                 transaction->status=SPI_TRANSFER_FAILED;
             }
         }
@@ -657,7 +657,7 @@ static int32_t QSPI_cmd_mode_read_v0(SPI_Handle handle,
 static int32_t QSPI_read_v0(SPI_Handle handle, SPI_Transaction *transaction)
 {
     QSPI_v0_Object *object = NULL;
-    int32_t         retVal = 0;
+    int32_t         retVal = SPI_STATUS_SUCCESS;
 
     object = (QSPI_v0_Object*)handle->object;
 
@@ -671,8 +671,8 @@ static int32_t QSPI_read_v0(SPI_Handle handle, SPI_Transaction *transaction)
     }
     else
     {
-        transaction->status=SPI_TRANSFER_CANCELED;
-        retVal = (-((int32_t)1));
+        transaction->status = SPI_TRANSFER_CANCELED;
+        retVal = SPI_STATUS_ERROR;
     }
     return(retVal);
 }
@@ -682,12 +682,12 @@ static int32_t QSPIWaitWriteSramLvl(uint32_t baseAddr, uint32_t *sramLvl)
 {
     uint32_t retry = QSPI_REG_RETRY;
     uint32_t sramLevel;
-    int32_t  retVal = 0;
+    int32_t  retVal = SPI_STATUS_SUCCESS;
 
     while(retry--)
     {
         sramLevel = QSPIGetSramLvl(baseAddr, 0);
-        if (sramLevel <= QSPI_SRAM_WATERMARK_WR_LVL)
+        if (QSPI_SRAM_WATERMARK_WR_LVL >= sramLevel)
         {
 			*sramLvl = sramLevel;
             break;
@@ -696,11 +696,11 @@ static int32_t QSPIWaitWriteSramLvl(uint32_t baseAddr, uint32_t *sramLvl)
 
     if (retry)
     {
-        retVal = 0;
+        retVal = SPI_STATUS_SUCCESS;
     }
     else
     {
-        retVal = (-((int32_t)1));
+        retVal = SPI_STATUS_ERROR;
     }
     return(retVal);
 }
@@ -715,8 +715,8 @@ static int32_t QSPI_ind_xfer_mode_write_v0(SPI_Handle handle,
     uint32_t               offset;       /* QSPI flash offset address */
     uint32_t               remaining;
     uint32_t               sramLevel, wrBytes;
-    uint32_t               retFlag = 0;
-    int32_t                retVal = 0;
+    uint32_t               retFlag = UFALSE;
+    int32_t                retVal = SPI_STATUS_SUCCESS;
 
     object = (QSPI_v0_Object*)handle->object;
 
@@ -738,20 +738,20 @@ static int32_t QSPI_ind_xfer_mode_write_v0(SPI_Handle handle,
         /* Wait Indirect Write  SRAM fill level below the threshold */
         if (QSPIWaitWriteSramLvl(hwAttrs->baseAddr, &sramLevel))
         {
-            retFlag = 1U;
-            retVal = (-((int32_t)1));
-            transaction->status=SPI_TRANSFER_FAILED;
+            retFlag = UTRUE;
+            retVal = SPI_STATUS_ERROR;
+            transaction->status = SPI_TRANSFER_FAILED;
         }
         else
         {
 		    remaining = count;
-            while(remaining > 0)
+            while(0 < remaining)
             {
                 /* Wait indirect write SRAM fifo level below watermark */
                 if (QSPIWaitWriteSramLvl(hwAttrs->baseAddr, &sramLevel))
                 {
-                    retFlag = 1U;
-                    retVal = (-((int32_t)1));
+                    retFlag = UTRUE;
+                    retVal = SPI_STATUS_ERROR;
                     break;
                 }
 
@@ -765,21 +765,21 @@ static int32_t QSPI_ind_xfer_mode_write_v0(SPI_Handle handle,
                 remaining -= wrBytes;
             }
 
-            if(retFlag == 0)
+            if(UFALSE == retFlag)
             {
                 if (QSPIWaitIndWriteComplete(hwAttrs->baseAddr))
                 {
-                    retFlag = 1U;
-                    retVal = (-((int32_t)1));
+                    retFlag = UTRUE;
+                    retVal = SPI_STATUS_ERROR;
                 }
             }
         }
     }
 
-    if(retFlag == 1U)
+    if(UTRUE == retFlag)
     {
-        transaction->status=SPI_TRANSFER_FAILED;
-		QSPIIndWriteCancel(hwAttrs->baseAddr);
+        transaction->status = SPI_TRANSFER_FAILED;
+        QSPIIndWriteCancel(hwAttrs->baseAddr);
     }
     return (retVal);
 }
@@ -792,7 +792,7 @@ static int32_t QSPI_cmd_mode_write_v0(SPI_Handle handle,
     uint8_t               *txBuf;
     uint32_t               dataLen;
     uint32_t               cmdLen;
-    int32_t                retVal = 0;
+    int32_t                retVal = SPI_STATUS_SUCCESS;
 
     txBuf = (uint8_t *)transaction->txBuf;
     dataLen = (uint32_t)((uintptr_t)transaction->arg);
@@ -823,7 +823,7 @@ static int32_t QSPI_cmd_mode_write_v0(SPI_Handle handle,
 static int32_t QSPI_write_v0(SPI_Handle handle, SPI_Transaction *transaction)
 {
     QSPI_v0_Object  *object = NULL; /* QSPI object */
-    int32_t          retVal = 0;
+    int32_t          retVal = SPI_STATUS_SUCCESS;
 
     /* Get the pointer to the object and hwAttrs */
     object = (QSPI_v0_Object*)handle->object;
@@ -838,8 +838,8 @@ static int32_t QSPI_write_v0(SPI_Handle handle, SPI_Transaction *transaction)
     }
     else
     {
-        transaction->status=SPI_TRANSFER_CANCELED;
-        retVal = (-((int32_t)1));
+        transaction->status = SPI_TRANSFER_CANCELED;
+        retVal = SPI_STATUS_ERROR;
     }
     return (retVal);
 }
@@ -850,12 +850,12 @@ static int32_t QSPI_write_v0(SPI_Handle handle, SPI_Transaction *transaction)
  */
 static bool QSPI_transfer_v0(SPI_Handle handle, SPI_Transaction *transaction)
 {
-    bool                   ret = false; /* return value */
+    bool                  ret = BFALSE; /* return value */
     QSPI_v0_Object        *object;      /* QSPI object */
     QSPI_v0_HwAttrs const *hwAttrs;     /* QSPI hardware attributes */
 
     /* Input parameter validation */
-    if ((handle != NULL) && (transaction != NULL))
+    if ((NULL != handle) && (NULL != transaction))
     {
     /* Get the pointer to the object and hwAttrs */
     object = (QSPI_v0_Object*)handle->object;
@@ -883,11 +883,11 @@ static bool QSPI_transfer_v0(SPI_Handle handle, SPI_Transaction *transaction)
             SPI_osalHardwareIntrEnable(hwAttrs->intrNum,hwAttrs->eventId);
         }
 
-        if (QSPI_primeTransfer_v0(handle, transaction) == 0)
+        if (SPI_STATUS_SUCCESS == QSPI_primeTransfer_v0(handle, transaction))
         {
-            if (object->intrPollMode == SPI_OPER_MODE_BLOCKING)
+            if (SPI_OPER_MODE_BLOCKING == object->intrPollMode)
             {
-                if (object->qspiMode == QSPI_OPER_MODE_IND_XFER)
+                if (QSPI_OPER_MODE_IND_XFER == object->qspiMode)
                 {
                     /* Only in indirect transfer mode, wait for the lock
                        posted form the word completion interrupt */
@@ -895,18 +895,18 @@ static bool QSPI_transfer_v0(SPI_Handle handle, SPI_Transaction *transaction)
                 }
 
                 /* transfer is completed and semaphore is posted. */
-                ret = (bool)true;
+                ret = BTRUE;
             }
             else
             {
-                /* Always return true if in Asynchronous mode */
-                ret = (bool)true;
+                /* Always return BTRUE if in Asynchronous mode */
+                ret = BTRUE;
             }
             transaction->status = SPI_TRANSFER_COMPLETED; 
             /* Release the lock for this particular I2C handle */
             SPI_osalPostLock(object->mutex);
         } else {
-		    transaction->status=SPI_TRANSFER_FAILED;
+		    transaction->status = SPI_TRANSFER_FAILED;
 		}
     } else {
 	    transaction->status = SPI_TRANSFER_CANCELED;
@@ -940,7 +940,7 @@ static int32_t QSPI_control_v0(SPI_Handle handle, uint32_t cmd, const void *arg)
     int32_t           retVal = SPI_STATUS_ERROR;
 
     /* Input parameter validation */
-    if (handle != NULL)
+    if (NULL != handle)
     {
     /* Get the pointer to the object */
     object = (QSPI_v0_Object*)handle->object;

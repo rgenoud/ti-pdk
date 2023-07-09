@@ -169,12 +169,12 @@ int32_t MCSPI_dmaConfig(MCSPI_Handle mcHandle)
     SPI_Handle            handle;
     SPI_v1_Object        *object;
     SPI_v1_HWAttrs const *hwAttrs;
-    uint32_t              tcc = 0;
-    static uint32_t       dummyParamSetAddr = 0;
+    uint32_t              tcc = 0U;
+    static uint32_t       dummyParamSetAddr = 0U;
     EDMA3_RM_EventQueue   queueNum    = 0;
     int32_t               status;
     uint32_t              count;
-    uint32_t              edmaChanNum = 0;
+    uint32_t              edmaChanNum = 0U;
     uint32_t              reqTcc = EDMA3_DRV_TCC_ANY;
 
     /* Get the pointer to the object and hwAttrs */
@@ -195,7 +195,7 @@ int32_t MCSPI_dmaConfig(MCSPI_Handle mcHandle)
                                       (void *)mcHandle);
 
     /* Acquire the  PaRAM entries used for EDMA transfers linking */
-    for (count = 0; count < MCSPI_MAXLINKCNT; count++)
+    for (count = 0U; count < MCSPI_MAXLINKCNT; count++)
     {
         /* For requesting for a PaRam set */
         edmaChanNum = EDMA3_DRV_LINK_CHANNEL;
@@ -245,7 +245,7 @@ int32_t MCSPI_dmaConfig(MCSPI_Handle mcHandle)
 
 
     /* Acquire the  PaRAM entries used for EDMA transfers linking */
-    for (count = 0; count < MCSPI_MAXLINKCNT; count++)
+    for (count = 0U; count < MCSPI_MAXLINKCNT; count++)
     {
         /* For requesting for a PaRam set */
         edmaChanNum = EDMA3_DRV_LINK_CHANNEL;
@@ -290,7 +290,7 @@ void MCSPI_dmaTransfer(MCSPI_Handle     mcHandle,
     /* setup transfer mode and FIFO trigger levels */
     MCSPI_xferSetup_v1(mcHandle, transaction);
 
-    chObj->dmaCbCheck = 0;
+    chObj->dmaCbCheck = 0U;
 
     /* receive parameter set */
     EDMA3_DRV_getPaRAM((EDMA3_DRV_Handle)hwAttrs->edmaHandle,
@@ -358,8 +358,8 @@ void MCSPI_dmaTransfer(MCSPI_Handle     mcHandle,
     /* Enable the channel */
     McSPIChannelEnable((uint32_t)(hwAttrs->baseAddr), chNum);
 
-    if ((SPI_MASTER == chObj->spiParams.mode) &&
-        (hwAttrs->chMode == MCSPI_SINGLE_CH))
+    if ((SPI_MASTER      == chObj->spiParams.mode) &&
+        (MCSPI_SINGLE_CH == hwAttrs->chMode))
     {
         /* Assert chip select signal */
         McSPICSAssert((uint32_t)(hwAttrs->baseAddr), chNum);
@@ -440,10 +440,10 @@ static void MCSPI_dmaRxIsrHandler(uint32_t           tcc,
                              (uint32_t)tcc);
 
     if ((MCSPI_TX_EDMA_CALLBACK_OCCURED == chObj->dmaCbCheck) ||
-        (chnCfg->trMode == MCSPI_RX_ONLY_MODE))
+        (MCSPI_RX_ONLY_MODE             == chnCfg->trMode))
     {
         /* Now Both Tx and Rx EDMA Callbacks have happened */
-        chObj->dmaCbCheck = 0x0;
+        chObj->dmaCbCheck = 0x0U;
 
         intStatus = McSPIChannelStatusGet((uint32_t)hwAttrs->baseAddr,
                                           chNum);
@@ -516,9 +516,9 @@ static void MCSPI_dmaTxIsrHandler(uint32_t           tcc,
                              (uint32_t) tcc);
 
     if ((MCSPI_RX_EDMA_CALLBACK_OCCURED == chObj->dmaCbCheck) ||
-        (chnCfg->trMode == MCSPI_TX_ONLY_MODE))
+        (MCSPI_TX_ONLY_MODE             == chnCfg->trMode))
     {
-        chObj->dmaCbCheck = 0x0;
+        chObj->dmaCbCheck = 0x0U;
 
         intStatus = McSPIChannelStatusGet((uint32_t) hwAttrs->baseAddr,
                                           chNum);
@@ -571,7 +571,7 @@ static void MCSPI_dmaUpdateParams(MCSPI_Handle           mcHandle,
     /* destAddr is address of memory location named buffer.*/
     rxParamSet->destAddr = (uint32_t) transaction->rxBuf;
 
-    if (chObj->readCountIdx != 0)
+    if (0U != chObj->readCountIdx)
     {
         /* aCnt holds the number of bytes in an array.*/
         rxParamSet->aCnt = (uint16_t)(1 << chObj->wordLenShift);
@@ -651,7 +651,7 @@ static void MCSPI_dmaUpdateParams(MCSPI_Handle           mcHandle,
     txParamSet->destAddr = (uint32_t) hwAttrs->baseAddr +
                            MCSPI_CHTX(chNum);
 
-    if (chObj->writeCountIdx != 0)
+    if (0U != chObj->writeCountIdx)
     {
         /* aCnt holds the number of bytes in an array. */
         txParamSet->aCnt = (uint16_t)(1 << chObj->wordLenShift);
@@ -736,8 +736,8 @@ static void MCSPI_dmaCompleteIOCallback(MCSPI_Handle mcHandle)
      */
     MCSPI_clearIntStatus(mcHandle);
 
-    if ((SPI_MASTER == chObj->spiParams.mode) &&
-        (hwAttrs->chMode == MCSPI_SINGLE_CH))
+    if ((SPI_MASTER      == chObj->spiParams.mode) &&
+        (MCSPI_SINGLE_CH == hwAttrs->chMode))
     {
         /* Deassert chip select signal */
         McSPICSDeAssert(hwAttrs->baseAddr, chNum);
