@@ -55,6 +55,8 @@ extern "C" {
 #define TimerP_numTimerDevices        ((uint32_t) 4 )
 #elif defined (BUILD_MCU1_0)
 #define TimerP_numTimerDevices        ((uint32_t) 2 )
+#elif defined (BUILD_MCU2_0)
+#define TimerP_numTimerDevices        ((uint32_t) 2 )
 #endif
 #define TIMERP_ANY_MASK               ((uint32_t) 0x000F)
 #define TIMERP_AVAILABLE_MASK       ((uint32_t)(0x000F))

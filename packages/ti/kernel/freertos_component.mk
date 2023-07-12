@@ -169,7 +169,7 @@ freertos_test_task_switch_BOARDLIST = $(freertos_BOARDLIST)
 export freertos_test_task_switch_BOARDLIST
 freertos_test_task_switch_$(SOC)_CORELIST = $(freertos_$(SOC)_CORELIST)
 export freertos_test_task_switch_$(SOC)_CORELIST
-ifeq ($(SOC),$(filter $(SOC), am62x am62a))
+ifeq ($(SOC),$(filter $(SOC), am62x am62a j722s))
   export freertos_test_ut_SBL_APPIMAGEGEN = no
 else
   export freertos_test_ut_SBL_APPIMAGEGEN = yes
@@ -195,7 +195,7 @@ freertos_test_ut_BOARDLIST = $(freertos_BOARDLIST)
 export freertos_test_ut_BOARDLIST
 freertos_test_ut_$(SOC)_CORELIST = $(freertos_$(SOC)_CORELIST)
 export freertos_test_ut_$(SOC)_CORELIST
-ifeq ($(SOC),$(filter $(SOC), am62x am62a))
+ifeq ($(SOC),$(filter $(SOC), am62x am62a j722s))
   export freertos_test_ut_SBL_APPIMAGEGEN = no
 else
   export freertos_test_ut_SBL_APPIMAGEGEN = yes

@@ -61,6 +61,11 @@ TimerP_dmTimerDefault gDmTimerPInfoTbl[TimerP_numTimerDevices] = {
      CSLR_WKUP_R5FSS0_CORE0_INTR_WKUP_TIMER0_INTR_PEND_0,           /* Interrupt Number */
      TIMERP_EVENT_NOT_AVAILABLE               /* Event Id */
 #endif
+#if defined (BUILD_MCU2_0)
+     CSL_MCU_TIMER0_CFG_BASE,  /* base address */
+     CSLR_MCU_R5FSS0_CORE0_CPU0_INTR_MCU_TIMER0_INTR_PEND_0,        /* Interrupt Number */
+     TIMERP_EVENT_NOT_AVAILABLE               /* Event Id */
+#endif
   },  
   /* Timer ID 1 */
   {
@@ -74,6 +79,11 @@ TimerP_dmTimerDefault gDmTimerPInfoTbl[TimerP_numTimerDevices] = {
 #if defined (BUILD_MCU1_0)
      CSL_WKUP_TIMER1_CFG_BASE,  /* base address */
      CSLR_WKUP_R5FSS0_CORE0_INTR_WKUP_TIMER1_INTR_PEND_0,               /* Interrupt Number */
+     TIMERP_EVENT_NOT_AVAILABLE               /* Event Id */
+#endif
+#if defined (BUILD_MCU2_0)
+     CSL_MCU_TIMER1_CFG_BASE,  /* base address */
+     CSLR_MCU_R5FSS0_CORE0_CPU0_INTR_MCU_TIMER1_INTR_PEND_0,        /* Interrupt Number */
      TIMERP_EVENT_NOT_AVAILABLE               /* Event Id */
 #endif
   },
