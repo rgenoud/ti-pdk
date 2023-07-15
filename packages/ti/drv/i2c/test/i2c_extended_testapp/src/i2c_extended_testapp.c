@@ -112,31 +112,28 @@ static bool I2CApp_negativeTest(void *arg);
 /*                            Global Variables                                */
 /* ========================================================================== */
 
-volatile uint32_t gI2CAppCompleteCallbackFlag = 1U;
+volatile uint32_t gI2CAppCompleteCallbackFlag = UTRUE;
 
 uint8_t gI2CApp_EepromData[I2C_APP_EEPROM_TEST_LENGTH] = {85, 51, 238, 1, 11, 1, 16, 46, 0, 74};
 
 I2CApp_TestCfg gI2cApp_Tests[] =
 {
-    /*{testFunc,    testID,    dma,    intr,    cbMode,    timeout,    readcount,    writecount,    slaveaddress,    testDesc} */
-    {I2CApp_bitrateTest, I2C_APP_ID_BIT_RATE_POLLING_MODE, FALSE, FALSE, FALSE, SemaphoreP_WAIT_FOREVER, I2C_APP_EEPROM_TEST_LENGTH, I2C_APP_EEPROM_ADDR_SIZE, I2C_APP_EEPROM_ADDR, "\r\n I2C bit rate test in polling"},
-    {I2CApp_bitrateTestTxnInvdParams, I2C_APP_ID_BIT_RATE_POLLING_MODE, FALSE, FALSE, FALSE, SemaphoreP_WAIT_FOREVER, 0, I2C_APP_EEPROM_ADDR_SIZE, I2C_APP_EEPROM_ADDR, "\r\n I2C bit rate test in polling readCount=0"},
-    {I2CApp_bitrateTestTxnInvdParams, I2C_APP_ID_BIT_RATE_POLLING_MODE, FALSE, FALSE, FALSE, SemaphoreP_WAIT_FOREVER, I2C_APP_EEPROM_TEST_LENGTH, 0,I2C_APP_EEPROM_ADDR, "\r\n I2C bit rate test in polling writeCount=0"},
-    {I2CApp_bitrateTestTxnInvdParams, I2C_APP_ID_BIT_RATE_POLLING_MODE, FALSE, FALSE, FALSE, SemaphoreP_WAIT_FOREVER, I2C_APP_EEPROM_TEST_LENGTH, I2C_APP_EEPROM_ADDR_SIZE,0x60, "\r\n I2C bit rate test in polling invalid slave"},
-    {I2CApp_bitrateTestTxnInvdParams, I2C_APP_ID_BIT_RATE_POLLING_MODE, FALSE, FALSE, FALSE, SemaphoreP_WAIT_FOREVER, I2C_APP_EEPROM_TEST_LENGTH, 0, 0x60, "\r\n I2C bit rate test in polling invalid slave"},
+    /*{testFunc,                      testID,                           dma,    intr,   cbMode, timeout,                 readcount,                  writecount,               slaveaddress,        testDesc} */
+    {I2CApp_bitrateTest,              I2C_APP_ID_BIT_RATE_POLLING_MODE, BFALSE, BFALSE, BFALSE, SemaphoreP_WAIT_FOREVER, I2C_APP_EEPROM_TEST_LENGTH, I2C_APP_EEPROM_ADDR_SIZE, I2C_APP_EEPROM_ADDR, "\r\n I2C bit rate test in polling"},
+    {I2CApp_bitrateTestTxnInvdParams, I2C_APP_ID_BIT_RATE_POLLING_MODE, BFALSE, BFALSE, BFALSE, SemaphoreP_WAIT_FOREVER, 0, I2C_APP_EEPROM_ADDR_SIZE, I2C_APP_EEPROM_ADDR, "\r\n I2C bit rate test in polling readCount=0"},
+    {I2CApp_bitrateTestTxnInvdParams, I2C_APP_ID_BIT_RATE_POLLING_MODE, BFALSE, BFALSE, BFALSE, SemaphoreP_WAIT_FOREVER, I2C_APP_EEPROM_TEST_LENGTH, 0,I2C_APP_EEPROM_ADDR, "\r\n I2C bit rate test in polling writeCount=0"},
+    {I2CApp_bitrateTestTxnInvdParams, I2C_APP_ID_BIT_RATE_POLLING_MODE, BFALSE, BFALSE, BFALSE, SemaphoreP_WAIT_FOREVER, I2C_APP_EEPROM_TEST_LENGTH, I2C_APP_EEPROM_ADDR_SIZE,0x60, "\r\n I2C bit rate test in polling invalid slave"},
+    {I2CApp_bitrateTestTxnInvdParams, I2C_APP_ID_BIT_RATE_POLLING_MODE, BFALSE, BFALSE, BFALSE, SemaphoreP_WAIT_FOREVER, I2C_APP_EEPROM_TEST_LENGTH, 0, 0x60, "\r\n I2C bit rate test in polling invalid slave"},
 
-    {I2CApp_bitrateTest, I2C_APP_ID_BIT_RATE_INTERRUPT_MODE, FALSE, TRUE, FALSE, SemaphoreP_WAIT_FOREVER, I2C_APP_EEPROM_TEST_LENGTH, I2C_APP_EEPROM_ADDR_SIZE, I2C_APP_EEPROM_ADDR, "\r\n I2C bit rate test in interrupt mode"},
-    {I2CApp_bitrateTestTxnInvdParams, I2C_APP_ID_BIT_RATE_INTERRUPT_MODE, FALSE, TRUE, FALSE, 0, 0, I2C_APP_EEPROM_ADDR_SIZE, I2C_APP_EEPROM_ADDR, "\r\n I2C bit rate test in interrupt mode readCount=0, timeout=0"},
-    {I2CApp_bitrateTestTxnInvdParams, I2C_APP_ID_BIT_RATE_INTERRUPT_MODE, FALSE, TRUE, FALSE, SemaphoreP_WAIT_FOREVER, I2C_APP_EEPROM_TEST_LENGTH, 0, I2C_APP_EEPROM_ADDR, "\r\n I2C bit rate test in interrupt mode WriteCount=0"},
-    {I2CApp_bitrateTestTxnInvdParams, I2C_APP_ID_BIT_RATE_INTERRUPT_MODE, FALSE, TRUE, FALSE, SemaphoreP_WAIT_FOREVER, I2C_APP_EEPROM_TEST_LENGTH, I2C_APP_EEPROM_ADDR_SIZE, 0x60, "\r\n I2C bit rate test in interrupt mode invalid slave address"},
+    {I2CApp_bitrateTest,              I2C_APP_ID_BIT_RATE_INTERRUPT_MODE, BFALSE, BTRUE, BFALSE, SemaphoreP_WAIT_FOREVER, I2C_APP_EEPROM_TEST_LENGTH, I2C_APP_EEPROM_ADDR_SIZE, I2C_APP_EEPROM_ADDR, "\r\n I2C bit rate test in interrupt mode"},
+    {I2CApp_bitrateTestTxnInvdParams, I2C_APP_ID_BIT_RATE_INTERRUPT_MODE, BFALSE, BTRUE, BFALSE, 0U, 0, I2C_APP_EEPROM_ADDR_SIZE, I2C_APP_EEPROM_ADDR, "\r\n I2C bit rate test in interrupt mode readCount=0, timeout=0"},
+    {I2CApp_bitrateTestTxnInvdParams, I2C_APP_ID_BIT_RATE_INTERRUPT_MODE, BFALSE, BTRUE, BFALSE, SemaphoreP_WAIT_FOREVER, I2C_APP_EEPROM_TEST_LENGTH, 0, I2C_APP_EEPROM_ADDR, "\r\n I2C bit rate test in interrupt mode WriteCount=0"},
+    {I2CApp_bitrateTestTxnInvdParams, I2C_APP_ID_BIT_RATE_INTERRUPT_MODE, BFALSE, BTRUE, BFALSE, SemaphoreP_WAIT_FOREVER, I2C_APP_EEPROM_TEST_LENGTH, I2C_APP_EEPROM_ADDR_SIZE, 0x60, "\r\n I2C bit rate test in interrupt mode invalid slave address"},
 
-    {I2CApp_callBackTest, I2C_APP_ID_BIT_RATE_CALLBACK_MODE, FALSE, TRUE, FALSE, SemaphoreP_WAIT_FOREVER, I2C_APP_EEPROM_TEST_LENGTH, I2C_APP_EEPROM_ADDR_SIZE, I2C_APP_EEPROM_ADDR, "\r\n I2C bit rate test in callback mode"},
-
-    {I2CApp_probeBusFreqTest, I2C_APP_ID_PROBE_BUS_FREQ, FALSE, TRUE, FALSE, SemaphoreP_WAIT_FOREVER, I2C_APP_EEPROM_TEST_LENGTH, I2C_APP_EEPROM_ADDR_SIZE, I2C_APP_EEPROM_ADDR, "\r\n I2C probe bus frequency test in interrupt mode"},
-
-    {I2CApp_negativeTest, I2C_APP_ID_BIT_RATE_POLLING_MODE, FALSE, FALSE, FALSE, SemaphoreP_WAIT_FOREVER, I2C_APP_EEPROM_TEST_LENGTH, I2C_APP_EEPROM_ADDR_SIZE, I2C_APP_EEPROM_ADDR, "\r\n I2C bitrate NegativeTest"},
-
-    {I2CApp_nullTest, I2C_APP_ID_NULL_CHECK, FALSE, FALSE, FALSE, 1, I2C_APP_EEPROM_TEST_LENGTH, I2C_APP_EEPROM_ADDR_SIZE, I2C_APP_EEPROM_ADDR, "\r\n I2C null check test"},
+    {I2CApp_callBackTest,             I2C_APP_ID_BIT_RATE_CALLBACK_MODE,  BFALSE, BTRUE,  BFALSE, SemaphoreP_WAIT_FOREVER, I2C_APP_EEPROM_TEST_LENGTH, I2C_APP_EEPROM_ADDR_SIZE, I2C_APP_EEPROM_ADDR, "\r\n I2C bit rate test in callback mode"},
+    {I2CApp_probeBusFreqTest,         I2C_APP_ID_PROBE_BUS_FREQ,          BFALSE, BTRUE,  BFALSE, SemaphoreP_WAIT_FOREVER, I2C_APP_EEPROM_TEST_LENGTH, I2C_APP_EEPROM_ADDR_SIZE, I2C_APP_EEPROM_ADDR, "\r\n I2C probe bus frequency test in interrupt mode"},
+    {I2CApp_negativeTest,             I2C_APP_ID_BIT_RATE_POLLING_MODE,   BFALSE, BFALSE, BFALSE, SemaphoreP_WAIT_FOREVER, I2C_APP_EEPROM_TEST_LENGTH, I2C_APP_EEPROM_ADDR_SIZE, I2C_APP_EEPROM_ADDR, "\r\n I2C bitrate NegativeTest"},
+    {I2CApp_nullTest,                 I2C_APP_ID_NULL_CHECK,              BFALSE, BFALSE, BFALSE, 1, I2C_APP_EEPROM_TEST_LENGTH, I2C_APP_EEPROM_ADDR_SIZE, I2C_APP_EEPROM_ADDR, "\r\n I2C null check test"},
     {NULL, },
 };
 
@@ -158,35 +155,35 @@ void I2CApp_testPrintTestDesc(I2CApp_TestCfg *test)
 
 int I2C_test()
 {
-    bool       testResult = TRUE;
+    bool       testResult = BTRUE;
     uint32_t   testCount;
     I2CApp_TestCfg *test;
 
-    if(I2CApp_boardInitI2C() == FALSE)
+    if(BFALSE == I2CApp_boardInitI2C())
     {
         return(0);
     }
 
-    for(testCount= 0; ; testCount++)
+    for(testCount = 0u; ; testCount++)
     {
         test = &gI2cApp_Tests[testCount];
-        if(test->testFunc == NULL)
+        if(NULL == test->testFunc)
         {
             break;
         }
         I2CApp_testPrintTestDesc(test);
-        if(test->testFunc((void *)test) == TRUE)
+        if(BTRUE == test->testFunc((void *)test))
         {
             UART_printf("\r\n %s has passed\r\n", test->testDesc);
         }
         else
         {
             UART_printf("\r\n %s has failed\r\n", test->testDesc);
-            testResult = FALSE;
+            testResult = BFALSE;
             break;
         }
     }
-    if(testResult == TRUE)
+    if(BTRUE == testResult)
     {
         UART_printf("\n All tests have passed. \n");
     }
@@ -226,16 +223,16 @@ static bool I2CApp_boardInitI2C(void)
                BOARD_INIT_UART_STDIO;
 
     boardStatus = Board_init(boardCfg);
-    if(boardStatus != BOARD_SOK)
+    if(BOARD_SOK != boardStatus)
     {
-        status = FALSE;
+        status = BFALSE;
     }
     else
     {
-        status = TRUE;
+        status = BTRUE;
     }
     
-    if(status == TRUE)
+    if(BTRUE == status)
     {
         I2C_init();
         /* Get the default I2C init configurations */
@@ -250,7 +247,7 @@ static bool I2CApp_boardInitI2C(void)
 
     UART_printf("\n I2C Test: Using Instance %d", I2C_APP_EEPROM_INSTANCE);
 
-    return (TRUE);
+    return (BTRUE);
 }
 
 static void I2CApp_initConfig(uint32_t instance, I2CApp_TestCfg *test)
@@ -268,22 +265,22 @@ static void I2CApp_initConfig(uint32_t instance, I2CApp_TestCfg *test)
 static bool I2CApp_compareData(uint8_t *expData, uint8_t *rxData, uint32_t length)
 {
     uint32_t idx = 0U;
-    uint32_t match = 1U;
-    bool retVal = FALSE;
+    uint32_t match = UTRUE;
+    bool retVal = BFALSE;
 
-    for(idx = 0U; ((idx < length) && (0U != match)); idx++)
+    for(idx = 0U; ((idx < length) && (UFALSE != match)); idx++)
     {
         if(*expData != *rxData) 
         {
-            match = 0U;
+            match = UFALSE;
         }
         expData++;
         rxData++;
     }
 
-    if(1U == match)
+    if(UTRUE == match)
     {
-        retVal = TRUE;
+        retVal = BTRUE;
     }
 
     return retVal;
@@ -297,11 +294,11 @@ static bool I2CApp_bitrateTestFrequency(I2C_BitRate bitRate, I2CApp_TestCfg *tes
     uint8_t         txBuf[I2C_APP_EEPROM_TEST_LENGTH + I2C_APP_EEPROM_ADDR_SIZE] = {0x00, };
     uint8_t         rxBuf[I2C_APP_EEPROM_TEST_LENGTH];
     int16_t         status;
-    bool            testStatus = TRUE;
+    bool            testStatus = BTRUE;
 
     /* Set the I2C EEPROM write/read address */
-    txBuf[0] = (I2C_APP_EEPROM_TEST_ADDR >> 8) & 0xff; /* EEPROM memory high address byte */
-    txBuf[1] = I2C_APP_EEPROM_TEST_ADDR & 0xff;        /* EEPROM memory low address byte */
+    txBuf[0] = (I2C_APP_EEPROM_TEST_ADDR >> 8) & 0xFF; /* EEPROM memory high address byte */
+    txBuf[1] = I2C_APP_EEPROM_TEST_ADDR & 0xFF;        /* EEPROM memory low address byte */
 
     I2CApp_initConfig(I2C_APP_EEPROM_INSTANCE, test);
 
@@ -310,9 +307,9 @@ static bool I2CApp_bitrateTestFrequency(I2C_BitRate bitRate, I2CApp_TestCfg *tes
     /* Set bitRate */
     i2cParams.bitRate = bitRate;
     handle = I2C_open(I2C_APP_EEPROM_INSTANCE, &i2cParams);
-    if(handle == NULL)
+    if(NULL == handle)
     {
-        testStatus = FALSE;
+        testStatus = BFALSE;
     }
 
     memset(rxBuf, 0, I2C_APP_EEPROM_TEST_LENGTH);
@@ -328,12 +325,12 @@ static bool I2CApp_bitrateTestFrequency(I2C_BitRate bitRate, I2CApp_TestCfg *tes
     if(I2C_STS_SUCCESS != status)
     {
         UART_printf("I2C Test: Read Data Transfer failed. \n");
-        testStatus = FALSE;
+        testStatus = BFALSE;
     }
     else
     {
         testStatus = I2CApp_compareData(&gI2CApp_EepromData[0], &rxBuf[0], I2C_APP_EEPROM_TEST_LENGTH);
-        if(FALSE == testStatus)
+        if(BFALSE == testStatus)
         {
             UART_printf("I2C Test: Data Mismatch. \n");
         }
@@ -355,14 +352,14 @@ static bool I2CApp_bitrateTestTxnInvdParams(void *arg)
     uint8_t             txBuf[I2C_APP_EEPROM_TEST_LENGTH + I2C_APP_EEPROM_ADDR_SIZE] = {0x00, };
     uint8_t             rxBuf[I2C_APP_EEPROM_TEST_LENGTH];
     int16_t             status;
-    bool                testStatus = TRUE;
+    bool                testStatus = BTRUE;
     I2CApp_TestCfg        *test = (I2CApp_TestCfg *)arg;
     I2C_HwAttrs const   *hwAttrs = NULL;
     uint32_t            retVal;
 
     /* Set the I2C EEPROM write/read address */
-    txBuf[0] = (I2C_APP_EEPROM_TEST_ADDR >> 8) & 0xff; /* EEPROM memory high address byte */
-    txBuf[1] = I2C_APP_EEPROM_TEST_ADDR & 0xff;        /* EEPROM memory low address byte */
+    txBuf[0] = (I2C_APP_EEPROM_TEST_ADDR >> 8) & 0xFF; /* EEPROM memory high address byte */
+    txBuf[1] = I2C_APP_EEPROM_TEST_ADDR & 0xFF;        /* EEPROM memory low address byte */
 
     I2CApp_initConfig(I2C_APP_EEPROM_INSTANCE, test);
 
@@ -371,9 +368,9 @@ static bool I2CApp_bitrateTestTxnInvdParams(void *arg)
     /* Set bitRate */
     i2cParams.bitRate = I2C_100kHz;
     handle = I2C_open(I2C_APP_EEPROM_INSTANCE, &i2cParams);
-    if(handle == NULL)
+    if(NULL == handle)
     {
-        testStatus = FALSE;
+        testStatus = BFALSE;
     }
     /* EEPROM write disabled on K2, need copy data */
     memset(rxBuf, 0, I2C_APP_EEPROM_TEST_LENGTH);
@@ -391,7 +388,7 @@ static bool I2CApp_bitrateTestTxnInvdParams(void *arg)
     if(0U != retVal)
     {
         UART_printf(": MASTER BUS BUSY :%d \n",retVal);
-        testStatus = FALSE;
+        testStatus = BFALSE;
     }
 
     /* check for invalid salve if NACK bit SET */
@@ -406,7 +403,7 @@ static bool I2CApp_bitrateTestTxnInvdParams(void *arg)
     if(0U != retVal)
     {
         UART_printf("I2C Test: Arbitration LOST.\n");
-        testStatus = FALSE;
+        testStatus = BFALSE;
     }
 
     /* check the buffer status */
@@ -414,7 +411,7 @@ static bool I2CApp_bitrateTestTxnInvdParams(void *arg)
     if(0U != retVal)
     {
         UART_printf("I2C Test:RX buffer Status :%d \n", retVal);
-        testStatus = FALSE;
+        testStatus = BFALSE;
     }
 
     /* check the buffer by passing invalid FLag */
@@ -422,7 +419,7 @@ static bool I2CApp_bitrateTestTxnInvdParams(void *arg)
     if(0U != retVal)
     {
         UART_printf("I2C Test: Invalid case :%d \n", retVal);
-        testStatus = FALSE;
+        testStatus = BFALSE;
     }
 
     /* clear and check the interrupt status */
@@ -431,36 +428,36 @@ static bool I2CApp_bitrateTestTxnInvdParams(void *arg)
     if(0U != retVal)
     {
         UART_printf("I2C Test: Interrupt Not cleared :%d \n", retVal);
-        testStatus = FALSE;
+        testStatus = BFALSE;
     }
 
     if(I2C_STS_SUCCESS != status)
     {
         UART_printf("I2C Test: Read Data Transfer failed. \n");
-        testStatus = FALSE;
-        if(test->slaveAddress != I2C_APP_EEPROM_ADDR)
+        testStatus = BFALSE;
+        if(I2C_APP_EEPROM_ADDR != test->slaveAddress)
         {
             UART_printf("I2C Test: Invalid slave Test: PASS \n");
-            testStatus = TRUE;
+            testStatus = BTRUE;
         }
     }
     else
     {
-        if(test->readcount == 0)
+        if(0 == test->readcount)
         {
             for(int i=0; i < I2C_APP_EEPROM_TEST_LENGTH; i++)
             {
                 if(0U != rxBuf[i])
                 {
                     UART_printf("I2C Test: Data Mismatch \n");
-                    testStatus = FALSE;
+                    testStatus = BFALSE;
                 }
            }
         }
         else
         {
             testStatus = I2CApp_compareData(&gI2CApp_EepromData[0], &rxBuf[0], I2C_APP_EEPROM_TEST_LENGTH);
-            if(FALSE == testStatus)
+            if(BFALSE == testStatus)
             {
                 UART_printf("I2C Test: Data Mismatch \n");
             }
@@ -477,13 +474,13 @@ static bool I2CApp_bitrateTestTxnInvdParams(void *arg)
 
 static bool I2CApp_bitrateTest(void *arg)
 {
-    bool       testResult = TRUE;
+    bool       testResult = BTRUE;
     uint32_t   i;
 
     for(i = 0; i < I2C_APP_MAX_FREQ_COUNT; i++)
     {
         testResult = I2CApp_bitrateTestFrequency((I2C_BitRate)i, (I2CApp_TestCfg *)arg);
-        if(testResult == FALSE)
+        if(BFALSE == testResult)
         {
             break;
         }
@@ -494,7 +491,7 @@ static bool I2CApp_bitrateTest(void *arg)
 
 static void I2CApp_callBackFxn(I2C_Handle handle, I2C_Transaction * transaction, int16_t transferStatus)
 {
-    gI2CAppCompleteCallbackFlag = 0U;
+    gI2CAppCompleteCallbackFlag = UFALSE;
 }
 
 static bool I2CApp_callBackTest(void *arg)
@@ -505,12 +502,12 @@ static bool I2CApp_callBackTest(void *arg)
     uint8_t             txBuf[I2C_APP_EEPROM_TEST_LENGTH + I2C_APP_EEPROM_ADDR_SIZE] = {0x0, 0x00, 10, 20, 30};
     uint8_t             rxBuf[I2C_APP_EEPROM_TEST_LENGTH+I2C_APP_EEPROM_ADDR_SIZE];
     int16_t             status;
-    bool                testResult = TRUE;
+    bool                testResult = BTRUE;
     I2CApp_TestCfg      *test = (I2CApp_TestCfg *)arg;
 
     /* Set the I2C EEPROM write/read address */
-    txBuf[0] = (I2C_APP_EEPROM_TEST_ADDR >> 8) & 0xff; /* EEPROM memory high address byte */
-    txBuf[1] = I2C_APP_EEPROM_TEST_ADDR & 0xff;        /* EEPROM memory low address byte */
+    txBuf[0] = (I2C_APP_EEPROM_TEST_ADDR >> 8) & 0xFF; /* EEPROM memory high address byte */
+    txBuf[1] = I2C_APP_EEPROM_TEST_ADDR & 0xFF;        /* EEPROM memory low address byte */
 
     I2CApp_initConfig(I2C_APP_EEPROM_INSTANCE, test);
 
@@ -522,9 +519,9 @@ static bool I2CApp_callBackTest(void *arg)
     /* Set bitRate */
     i2cParams.bitRate = I2C_100kHz;
     handle = I2C_open(I2C_APP_EEPROM_INSTANCE, &i2cParams);
-    if(handle == NULL)
+    if(NULL == handle)
     {
-        testResult = FALSE;
+        testResult = BFALSE;
     }
 
     memset(rxBuf, 0, I2C_APP_EEPROM_TEST_LENGTH);
@@ -540,16 +537,16 @@ static bool I2CApp_callBackTest(void *arg)
     if(I2C_STS_SUCCESS != status)
     {
         UART_printf("I2C Test: Read Data Transfer failed. \n");
-        testResult = FALSE;
+        testResult = BFALSE;
     }
     else
     {
-        while(gI2CAppCompleteCallbackFlag == 1U)
+        while(UTRUE == gI2CAppCompleteCallbackFlag)
         {
             /* Wait for transaction to complete. */
         }
         testResult = I2CApp_compareData(&gI2CApp_EepromData[0], &rxBuf[0], I2C_APP_EEPROM_TEST_LENGTH);
-        if(FALSE == testResult)
+        if(BFALSE == testResult)
         {
             UART_printf("I2C Test: Data Mismatch \n");
         }
@@ -564,7 +561,7 @@ static bool I2CApp_callBackTest(void *arg)
 
 static bool I2CApp_nullTest(void *arg)
 {
-    bool    testResult = TRUE;
+    bool    testResult = BTRUE;
     I2C_Transaction i2cTransaction;
     uint32_t busFrequency = I2C_400kHz;
 
@@ -588,7 +585,7 @@ static bool I2CApp_probeBusFreqTest(void *arg)
     I2C_Transaction i2cTransaction;
     uint32_t        slaveAddress;
     int32_t         controlStatus;
-    bool            testStatus = TRUE;
+    bool            testStatus = BTRUE;
     uint8_t         txBuf[I2C_APP_EEPROM_TEST_LENGTH + I2C_APP_EEPROM_ADDR_SIZE] = {0x00, };
     uint8_t         rxBuf[I2C_APP_EEPROM_TEST_LENGTH];
     uint32_t        delayValue;
@@ -598,14 +595,14 @@ static bool I2CApp_probeBusFreqTest(void *arg)
 
     I2C_Params_init(&i2cParams);
     handle = I2C_open(I2C_APP_EEPROM_INSTANCE, &i2cParams);
-    if(handle == NULL)
+    if(NULL == handle)
     {
-        testStatus = FALSE;
+        testStatus = BFALSE;
     }
 
     /* Set the I2C EEPROM write/read address */
-    txBuf[0] = (I2C_APP_EEPROM_TEST_ADDR >> 8) & 0xff; /* EEPROM memory high address byte */
-    txBuf[1] = I2C_APP_EEPROM_TEST_ADDR & 0xff;        /* EEPROM memory low address byte */
+    txBuf[0] = (I2C_APP_EEPROM_TEST_ADDR >> 8) & 0xFF; /* EEPROM memory high address byte */
+    txBuf[1] = I2C_APP_EEPROM_TEST_ADDR & 0xFF;        /* EEPROM memory low address byte */
 
 
     /* Test Runtime Configuration of Bus Frequency */
@@ -627,14 +624,14 @@ static bool I2CApp_probeBusFreqTest(void *arg)
     if(I2C_STS_SUCCESS != transferStatus)
     {
         UART_printf("\n I2C Test: Dynamic configuration of bus Freq failed. \n");
-        testStatus = FALSE;
+        testStatus = BFALSE;
     }
     else
     {
         testStatus = I2CApp_compareData(&gI2CApp_EepromData[0], &rxBuf[0], I2C_APP_EEPROM_TEST_LENGTH);
     }
 
-    if(TRUE == testStatus)
+    if(BTRUE == testStatus)
     {
         /* Test runtime configuration of 100 kHz */
         busFrequency = I2C_100kHz;
@@ -646,7 +643,7 @@ static bool I2CApp_probeBusFreqTest(void *arg)
         if(I2C_STS_SUCCESS != transferStatus)
         {
             UART_printf("\n I2C Test: Dynamic configuration of bus Freq failed. \n");
-            testStatus = FALSE;
+            testStatus = BFALSE;
         }
         else 
         {
@@ -654,7 +651,7 @@ static bool I2CApp_probeBusFreqTest(void *arg)
         }
     }
 
-    if(TRUE == testStatus)
+    if(BTRUE == testStatus)
     {
         /* Test runtime configuration default value */
         busFrequency = I2C_1P0Mhz;
@@ -666,7 +663,7 @@ static bool I2CApp_probeBusFreqTest(void *arg)
         if(I2C_STS_SUCCESS != transferStatus)
         {
             UART_printf("\n I2C Test: Dynamic configuration of bus Freq failed. \n");
-            testStatus = FALSE;
+            testStatus = BFALSE;
         }
         else{
             testStatus = I2CApp_compareData(&gI2CApp_EepromData[0], &rxBuf[0], I2C_APP_EEPROM_TEST_LENGTH);
@@ -675,7 +672,7 @@ static bool I2CApp_probeBusFreqTest(void *arg)
 
     /* Test Probe functionality */
 
-    if(TRUE == testStatus)
+    if(BTRUE == testStatus)
     {
         /* Probe test with valid slave address */
         slaveAddress = I2C_APP_EEPROM_ADDR;
@@ -683,18 +680,18 @@ static bool I2CApp_probeBusFreqTest(void *arg)
 
         if(I2C_STATUS_SUCCESS == controlStatus)
         {
-            testStatus = TRUE;
+            testStatus = BTRUE;
         }
         else
         {
-            testStatus = FALSE;
+            testStatus = BFALSE;
             UART_printf("\n I2C Test: Probe test failed. \n");
         }
     }
 
     /* Test Invalid CMD */
 
-    if(TRUE == testStatus)
+    if(BTRUE == testStatus)
     {
         /* Probe test with valid slave address */
         slaveAddress = test->slaveAddress;
@@ -703,15 +700,15 @@ static bool I2CApp_probeBusFreqTest(void *arg)
         if(I2C_STATUS_SUCCESS == controlStatus)
         {
             UART_printf("\n I2C Test: VALID CMD... \n");
-            testStatus = FALSE;
+            testStatus = BFALSE;
         }
         else
         {
-            testStatus = TRUE;
+            testStatus = BTRUE;
         }
     }
 
-    if(TRUE == testStatus)
+    if(BTRUE == testStatus)
     {
         /* Probe test with invalid slave address */
         slaveAddress = 0x70U;
@@ -724,11 +721,11 @@ static bool I2CApp_probeBusFreqTest(void *arg)
         else
         {
             UART_printf("\n I2C Test: Probe test failed. \n");
-            testStatus = FALSE;
+            testStatus = BFALSE;
         }
     }
 
-    if(TRUE == testStatus)
+    if(BTRUE == testStatus)
     {
         /* Test bus recovery functionality */
         delayValue = 2000U;
@@ -742,7 +739,7 @@ static bool I2CApp_probeBusFreqTest(void *arg)
             if(I2C_STS_SUCCESS != transferStatus)
             {
                 UART_printf("\n I2C Test: Bus recovery test failed. \n");
-                testStatus = FALSE;
+                testStatus = BFALSE;
             }
             else
             {
@@ -751,11 +748,11 @@ static bool I2CApp_probeBusFreqTest(void *arg)
         }
         else
         {
-            testStatus = FALSE;
+            testStatus = BFALSE;
         }
     }
 
-    if(TRUE == testStatus)
+    if(BTRUE == testStatus)
     {
         /* Test bus recovery functionality with passing timeout valve to zero*/
         delayValue = 2000U;
@@ -776,7 +773,7 @@ static bool I2CApp_probeBusFreqTest(void *arg)
             if(I2C_STS_SUCCESS != transferStatus)
             {
                 UART_printf("\n I2C Test: Bus recovery test failed. \n");
-                testStatus = FALSE;
+                testStatus = BFALSE;
             }
             else
             {
@@ -785,7 +782,7 @@ static bool I2CApp_probeBusFreqTest(void *arg)
         }
         else
         {
-            testStatus = FALSE;
+            testStatus = BFALSE;
         }
     }
 
@@ -805,12 +802,12 @@ static bool I2CApp_negativeTest(void *arg)
     uint8_t             txBuf[I2C_APP_EEPROM_TEST_LENGTH + I2C_APP_EEPROM_ADDR_SIZE] = {0x00, };
     uint8_t             rxBuf[I2C_APP_EEPROM_TEST_LENGTH];
     int16_t             status;
-    bool                testStatus = TRUE;
+    bool                testStatus = BTRUE;
     I2CApp_TestCfg      *test = (I2CApp_TestCfg *)arg;
 
     /* Set the I2C EEPROM write/read address */
-    txBuf[0] = (I2C_APP_EEPROM_TEST_ADDR >> 8) & 0xff; /* EEPROM memory high address byte */
-    txBuf[1] = I2C_APP_EEPROM_TEST_ADDR & 0xff;        /* EEPROM memory low address byte */
+    txBuf[0] = (I2C_APP_EEPROM_TEST_ADDR >> 8) & 0xFF; /* EEPROM memory high address byte */
+    txBuf[1] = I2C_APP_EEPROM_TEST_ADDR & 0xFF;        /* EEPROM memory low address byte */
 
     I2CApp_initConfig(I2C_APP_EEPROM_INSTANCE, test);
 
@@ -819,16 +816,16 @@ static bool I2CApp_negativeTest(void *arg)
     /* Set bitRate */
     i2cParams.bitRate = I2C_100kHz;
     handle = I2C_open(I2C_APP_EEPROM_INSTANCE, &i2cParams);
-    if(handle == NULL)
+    if(NULL == handle)
     {
-        testStatus = FALSE;
+        testStatus = BFALSE;
     }
 
     /*Called I2C_open multiple times*/
     handleOpen = I2C_open(I2C_APP_EEPROM_INSTANCE, &i2cParams);
-    if(handleOpen != NULL)
+    if(NULL != handleOpen)
     {
-        testStatus = FALSE;
+        testStatus = BFALSE;
     }
 
     memset(rxBuf, 0, I2C_APP_EEPROM_TEST_LENGTH);
@@ -845,12 +842,12 @@ static bool I2CApp_negativeTest(void *arg)
     if(I2C_STS_SUCCESS != status)
     {
         UART_printf("I2C Test: Read Data Transfer failed. \n");
-        testStatus = FALSE;
+        testStatus = BFALSE;
     }
     else
     {
         testStatus = I2CApp_compareData(&gI2CApp_EepromData[0], &rxBuf[0], I2C_APP_EEPROM_TEST_LENGTH);
-        if(FALSE == testStatus)
+        if(BFALSE == testStatus)
         {
             UART_printf("I2C Test: Data Mismatch \n");
         }
@@ -858,13 +855,13 @@ static bool I2CApp_negativeTest(void *arg)
 
     /*10 bit Addressing*/
     i2cTransaction.validParams = I2C_TRANS_VALID_PARAM_MASTER_MODE | I2C_TRANS_VALID_PARAM_EXPAND_SA;
-    i2cTransaction.expandSA = true;
+    i2cTransaction.expandSA = BTRUE;
     status = I2C_transfer(handle, &i2cTransaction);
 
     if(I2C_STS_SUCCESS != status)
     {
         UART_printf("I2C Test: 10bit Address not supporting \n");
-        testStatus = TRUE;
+        testStatus = BTRUE;
     }
 
     if(handle)

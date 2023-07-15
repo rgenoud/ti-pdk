@@ -104,7 +104,7 @@ extern I2C_config_list I2C_config;
 /*
  *  ======== test function ========
  */
-int32_t i2c_feature_test(uint32_t i2cInst, I2C_BitRate dataRate, uint32_t slaveAddr, bool smbusEnable)
+bool i2c_feature_test(uint32_t i2cInst, I2C_BitRate dataRate, uint32_t slaveAddr, bool smbusEnable)
 {
     I2C_Params i2cParams;
     I2C_Handle handle = NULL;
@@ -114,13 +114,13 @@ int32_t i2c_feature_test(uint32_t i2cInst, I2C_BitRate dataRate, uint32_t slaveA
     bool copyStatus;
     int32_t status;
     int32_t controlStatus;
-    int32_t retVal = 0;
+    bool retVal = BTRUE;
     uint32_t slaveAddress, delayValue;
     I2C_TransactionCmd testCmd;
 
     /* Set the I2C EEPROM write/read address */
-    txBuf[0] = (I2C_EEPROM_TEST_ADDR >> 8) & 0xff; /* EEPROM memory high address byte */
-    txBuf[1] = I2C_EEPROM_TEST_ADDR & 0xff;        /* EEPROM memory low address byte */
+    txBuf[0] = (I2C_EEPROM_TEST_ADDR >> 8) & 0xFF; /* EEPROM memory high address byte */
+    txBuf[1] = I2C_EEPROM_TEST_ADDR & 0xFF;        /* EEPROM memory low address byte */
     memcpy(&txBuf[I2C_EEPROM_ADDR_SIZE], eepromTestData, I2C_EEPROM_TEST_LENGTH);
 
     ///I2C_log("\n size of I2C_config %d. \n", sizeof(I2C_config));
@@ -132,13 +132,13 @@ int32_t i2c_feature_test(uint32_t i2cInst, I2C_BitRate dataRate, uint32_t slaveA
     i2cParams.bitRate = dataRate;
 
     handle = I2C_open(i2cInst, &i2cParams);
-    if(handle == NULL)
+    if(NULL == handle)
     {
         I2C_log("\n Error: I2C open has failed. \n");
-        retVal = -1;
+        retVal = BFALSE;
     }
 
-    if((retVal == 0) && (false == smbusEnable))
+    if((BTRUE == retVal) && (BFALSE == smbusEnable))
     {
         /* Write to EEPROM */
         I2C_transactionInit(&i2cTransaction);
@@ -153,13 +153,13 @@ int32_t i2c_feature_test(uint32_t i2cInst, I2C_BitRate dataRate, uint32_t slaveA
         if(I2C_STS_SUCCESS != status)
         {
             I2C_log("\n Error: Standard Write Data Transfer failed. \n");
-            retVal = -1;
+            retVal = BFALSE;
         }
 
         Sleep(1000);
     }
 
-    if((retVal == 0) && (false == smbusEnable))
+    if((BTRUE == retVal) && (BFALSE == smbusEnable))
     {
         /* Read from EEPROM */
         memset(rxBuf, 0, I2C_EEPROM_TEST_LENGTH);
@@ -175,20 +175,20 @@ int32_t i2c_feature_test(uint32_t i2cInst, I2C_BitRate dataRate, uint32_t slaveA
         if(I2C_STS_SUCCESS != status)
         {
             I2C_log("\n Error: Standard Read Data Transfer failed. \n");
-            retVal = -1;
+            retVal = BFALSE;
         }
         else
         {
             copyStatus = CompareData(&eepromTestData[0], &rxBuf[0], I2C_EEPROM_TEST_LENGTH);
-            if(TRUE != copyStatus)
+            if(BTRUE != copyStatus)
             {
                 I2C_log("\n Error: Standard Data Mismatch \n");
-                retVal = -1;
+                retVal = BFALSE;
             }
         }
     }
 
-    if((retVal == 0) && (false == smbusEnable))
+    if((BTRUE == retVal) && (BFALSE == smbusEnable))
     {
         /* Set the command for Loopback mode */
         testCmd.transferCmd = STANDARD_LOOPBACK_CMD;
@@ -211,26 +211,26 @@ int32_t i2c_feature_test(uint32_t i2cInst, I2C_BitRate dataRate, uint32_t slaveA
             if(I2C_STS_SUCCESS != status)
             {
                 I2C_log("\n Error: Loopback Data Transfer failed. \n");
-                retVal = -1;
+                retVal = BFALSE;
             }
             else
             {
                 copyStatus = CompareData(&txBuf[0], &rxBuf[0], I2C_EEPROM_TEST_LENGTH + I2C_EEPROM_ADDR_SIZE);
-                if(TRUE != copyStatus)
+                if(BTRUE != copyStatus)
                 {
                     I2C_log("\n Error: Loopback Data Mismatch \n");
-                    retVal = -1;
+                    retVal = BFALSE;
                 }
             }
         }
         else
         {
             I2C_log("\n Error: Standard Loopback control command failed. \n");
-            retVal = -1;
+            retVal = BFALSE;
         }
     }
 
-    if((retVal == 0) && (true == smbusEnable))
+    if((BTRUE == retVal) && (BTRUE == smbusEnable))
     {
         /* Test bus recovery functionality */
         delayValue = 2000U;
@@ -252,17 +252,17 @@ int32_t i2c_feature_test(uint32_t i2cInst, I2C_BitRate dataRate, uint32_t slaveA
             if(I2C_STS_SUCCESS != status)
             {
                 I2C_log("\n Error: smbus quick Command failed. \n");
-                retVal = -1;
+                retVal = BFALSE;
             }
         }
         else
         {
             I2C_log("\n Error: quick command control setup failed. \n");
-            retVal = -1;
+            retVal = BFALSE;
         }
     }
 
-    if((retVal == 0) && (true == smbusEnable))
+    if((BTRUE == retVal) && (BTRUE == smbusEnable))
     {
         /* Set the command for send byte mode */
         testCmd.transferCmd = SMBUS_SEND_BYTE_CMD;
@@ -282,17 +282,17 @@ int32_t i2c_feature_test(uint32_t i2cInst, I2C_BitRate dataRate, uint32_t slaveA
             if(I2C_STS_SUCCESS != status)
             {
                 I2C_log("\n Error: smbus send byte Command failed. \n");
-                retVal = -1;
+                retVal = BFALSE;
             }
         }
         else
         {
             I2C_log("\n Error: send byte command control setup failed. \n");
-            retVal = -1;
+            retVal = BFALSE;
         }
     }
 
-    if((retVal == 0) && (true == smbusEnable))
+    if((BTRUE == retVal) && (BTRUE == smbusEnable))
     {
         /* Set the command for receive byte mode */
         testCmd.transferCmd = SMBUS_RECEIVE_BYTE_CMD;
@@ -312,17 +312,17 @@ int32_t i2c_feature_test(uint32_t i2cInst, I2C_BitRate dataRate, uint32_t slaveA
             if(I2C_STS_SUCCESS != status)
             {
                 I2C_log("\n Error: smbus recieve byte Command failed. \n");
-                retVal = -1;
+                retVal = BFALSE;
             }
         }
         else
         {
             I2C_log("\n Error: recieve byte command control setup failed. \n");
-            retVal = -1;
+            retVal = BFALSE;
         }
     }
 
-    if((retVal == 0) && (true == smbusEnable))
+    if((BTRUE == retVal) && (BTRUE == smbusEnable))
     {
         /* Set the command for write byte mode */
         testCmd.transferCmd = SMBUS_WRITE_BYTE_CMD;
@@ -342,17 +342,17 @@ int32_t i2c_feature_test(uint32_t i2cInst, I2C_BitRate dataRate, uint32_t slaveA
             if(I2C_STS_SUCCESS != status)
             {
                 I2C_log("\n Error: smbus write byte Command failed. \n");
-                retVal = -1;
+                retVal = BFALSE;
             }
         }
         else
         {
             I2C_log("\n Error: write byte command control setup failed. \n");
-            retVal = -1;
+            retVal = BFALSE;
         }
     }
 
-    if((retVal == 0) && (true == smbusEnable))
+    if((BTRUE == retVal) && (BTRUE == smbusEnable))
     {
         /* Set the command for read byte mode */
         testCmd.transferCmd = SMBUS_READ_BYTE_CMD;
@@ -372,17 +372,17 @@ int32_t i2c_feature_test(uint32_t i2cInst, I2C_BitRate dataRate, uint32_t slaveA
             if(I2C_STS_SUCCESS != status)
             {
                 I2C_log("\n Error: smbus read byte Command failed. \n");
-                retVal = -1;
+                retVal = BFALSE;
             }
         }
         else
         {
             I2C_log("\n Error: read byte command control setup failed. \n");
-            retVal = -1;
+            retVal = BFALSE;
         }
     }
 
-    if((retVal == 0) && (true == smbusEnable))
+    if((BTRUE == retVal) && (BTRUE == smbusEnable))
     {
         /* Set the command for write word mode */
         testCmd.transferCmd = SMBUS_WRITE_WORD_CMD;
@@ -402,17 +402,17 @@ int32_t i2c_feature_test(uint32_t i2cInst, I2C_BitRate dataRate, uint32_t slaveA
             if(I2C_STS_SUCCESS != status)
             {
                 I2C_log("\n Error: smbus write word Command failed. \n");
-                retVal = -1;
+                retVal = BFALSE;
             }
         }
         else
         {
             I2C_log("\n Error: write word command control setup failed. \n");
-            retVal = -1;
+            retVal = BFALSE;
         }
     }
 
-    if((retVal == 0) && (true == smbusEnable))
+    if((BTRUE == retVal) && (BTRUE == smbusEnable))
     {
         /* Set the command for read word mode */
         testCmd.transferCmd = SMBUS_READ_WORD_CMD;
@@ -432,17 +432,17 @@ int32_t i2c_feature_test(uint32_t i2cInst, I2C_BitRate dataRate, uint32_t slaveA
             if(I2C_STS_SUCCESS != status)
             {
                 I2C_log("\n Error: smbus read word Command failed. \n");
-                retVal = -1;
+                retVal = BFALSE;
             }
         }
         else
         {
             I2C_log("\n Error: read word command control setup failed. \n");
-            retVal = -1;
+            retVal = BFALSE;
         }
     }
 
-    if((retVal == 0) && (true == smbusEnable))
+    if((BTRUE == retVal) && (BTRUE == smbusEnable))
     {
         /* Set the command for block write mode */
         testCmd.transferCmd = SMBUS_BLOCK_WRITE_CMD;
@@ -463,17 +463,17 @@ int32_t i2c_feature_test(uint32_t i2cInst, I2C_BitRate dataRate, uint32_t slaveA
             if(I2C_STS_SUCCESS != status)
             {
                 I2C_log("\n Error: smbus block write Command failed. \n");
-                retVal = -1;
+                retVal = BFALSE;
             }
         }
         else
         {
             I2C_log("\n Error: block write command control setup failed. \n");
-            retVal = -1;
+            retVal = BFALSE;
         }
     }
 
-    if((retVal == 0) && (true == smbusEnable))
+    if((BTRUE == retVal) && (BTRUE == smbusEnable))
     {
         /* Set the command for block read mode */
         testCmd.transferCmd = SMBUS_BLOCK_READ_CMD;
@@ -494,18 +494,18 @@ int32_t i2c_feature_test(uint32_t i2cInst, I2C_BitRate dataRate, uint32_t slaveA
             if(I2C_STS_SUCCESS != status)
             {
                 I2C_log("\n Error: smbus block read Command failed. \n");
-                retVal = -1;
+                retVal = BFALSE;
             }
         }
         else
         {
             I2C_log("\n Error: block read command control setup failed. \n");
-            retVal = -1;
+            retVal = BFALSE;
         }
     }
 
     /* Test Probe functionality */
-    if((retVal == 0) && (false == smbusEnable))
+    if((BTRUE == retVal) && (BFALSE == smbusEnable))
     {
         /* Probe test with valid slave address */
         slaveAddress = slaveAddr;
@@ -514,13 +514,13 @@ int32_t i2c_feature_test(uint32_t i2cInst, I2C_BitRate dataRate, uint32_t slaveA
         if(I2C_STATUS_SUCCESS != controlStatus)
         {
             I2C_log("\n Error: Probe test failed for valid address. \n");
-            retVal = -1;
+            retVal = BFALSE;
         }
 
         Sleep(500);
     }
 
-    if((retVal == 0) && (false == smbusEnable))
+    if((BTRUE == retVal) && (BFALSE == smbusEnable))
     {
         /* Probe test with invalid slave address */
         slaveAddress = 0x70U;
@@ -529,13 +529,13 @@ int32_t i2c_feature_test(uint32_t i2cInst, I2C_BitRate dataRate, uint32_t slaveA
         if(I2C_STATUS_ERROR != controlStatus)
         {
             I2C_log("\n Error: Probe test failed for invalid address. \n");
-            retVal = -1;
+            retVal = BFALSE;
         }
 
         Sleep(500);
     }
 
-    if((retVal == 0) && (false == smbusEnable))
+    if((BTRUE == retVal) && (BFALSE == smbusEnable))
     {
         /* Write to EEPROM */
         I2C_transactionInit(&i2cTransaction);
@@ -550,13 +550,13 @@ int32_t i2c_feature_test(uint32_t i2cInst, I2C_BitRate dataRate, uint32_t slaveA
         if(I2C_STS_ERR_COMMAND_FAILURE != status)
         {
             I2C_log("\n Error: Buffer overflow error did not happened. \n");
-            retVal = -1;
+            retVal = BFALSE;
         }
 
         Sleep(1000);
     }
 
-    if((retVal == 0) && (false == smbusEnable))
+    if((BTRUE == retVal) && (BFALSE == smbusEnable))
     {
         /* Test bus recovery functionality */
         delayValue = 2000U;
@@ -577,26 +577,26 @@ int32_t i2c_feature_test(uint32_t i2cInst, I2C_BitRate dataRate, uint32_t slaveA
             if(I2C_STS_SUCCESS != status)
             {
                 I2C_log("\n Error: Bus recovery read failed. \n");
-                retVal = -1;                
+                retVal = BFALSE;                
             }
             else
             {
                 copyStatus = CompareData(&eepromTestData[0], &rxBuf[0], I2C_EEPROM_TEST_LENGTH);
-                if(TRUE != copyStatus)
+                if(BTRUE != copyStatus)
                 {
                     I2C_log("\n Error: Bus recovery Data Mismatch \n");
-                    retVal = -1;
+                    retVal = BFALSE;
                 }
             }
         }
         else
         {
             I2C_log("\n Error: Bus recovery failed. \n");
-            retVal = -1;
+            retVal = BFALSE;
         }
     }
 
-    if((retVal == 0) && (false == smbusEnable))
+    if((BTRUE == retVal) && (BFALSE == smbusEnable))
     {
         /* Read from EEPROM */
         memset(rxBuf, 0, I2C_EEPROM_TEST_LENGTH);
@@ -612,7 +612,7 @@ int32_t i2c_feature_test(uint32_t i2cInst, I2C_BitRate dataRate, uint32_t slaveA
         if(I2C_STS_ERR_TIMEOUT != status)
         {
             I2C_log("\n Error: Standard timeout test failed. \n");
-            retVal = -1;
+            retVal = BFALSE;
         }
     }
 
@@ -626,18 +626,18 @@ int32_t i2c_feature_test(uint32_t i2cInst, I2C_BitRate dataRate, uint32_t slaveA
  */
 bool CompareData(char *expData, char *rxData, unsigned int length)
 {
-    uint32_t idx = 0;
-    uint32_t match = 1;
-    bool retVal = false;
+    uint32_t idx = 0U;
+    uint32_t match = UTRUE;
+    bool retVal = BFALSE;
 
-    for(idx = 0; ((idx < length) && (match != 0)); idx++)
+    for(idx = 0U; ((idx < length) && (UFALSE != match)); idx++)
     {
-        if(*expData != *rxData) match = 0;
+        if(*expData != *rxData) match = UFALSE;
         expData++;
         rxData++;
     }
 
-    if(match == 1) retVal = true;
+    if(UTRUE == match) retVal = BTRUE;
 
     return retVal;
 }
@@ -650,7 +650,7 @@ void pruGpioMuxConfigI2cUnused(void)
     uint32_t regVal;
     
 #ifdef I2C_TEST_INSTANCE1    
-    for (idx = 0; idx < I2C_NUM_PRU_GPIO_PINS_UNUSED_PER_I2C; idx++)
+    for (idx = 0U; idx < I2C_NUM_PRU_GPIO_PINS_UNUSED_PER_I2C; idx++)
     {
         regVal = *(volatile uint32_t *)(i2cPruGpioPinsUnused[idx].baseRegAddr);        
         regVal &= I2C_PRU_GPI_SELECT_MASK;

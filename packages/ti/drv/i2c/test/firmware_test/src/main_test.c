@@ -69,16 +69,16 @@ bool Board_initI2C(void)
     boardCfg = BOARD_INIT_PLL| BOARD_INIT_MODULE_CLOCK |  BOARD_INIT_DDR | BOARD_INIT_ICSS_PINMUX | BOARD_INIT_UART_STDIO | BOARD_INIT_ICSS_ETH_PHY;
 #endif
     boardStatus = Board_init(boardCfg);
-    if (boardStatus != BOARD_SOK)
+    if (BOARD_SOK != boardStatus)
     {
-        return (false);
+        return (BFALSE);
     }
     
 #if defined(idkAM437x)
     pruGpioMuxConfigI2cUnused();
 #endif
 
-    return (true);
+    return (BTRUE);
 }
 
 /*
@@ -86,17 +86,17 @@ bool Board_initI2C(void)
  */
 void i2c_test(UArg arg0, UArg arg1)
 {
-    uint32_t testId = 0;
+    uint32_t testId = 0U;
     I2C_BitRate dataRate;
-    int32_t status = 0;
+    bool status = BTRUE;
 
 #if defined (I2C_TEST_INSTANCE1)
     /* testing instance at 100KHz board rate */
     dataRate = I2C_100kHz;
     testId++;
     printTestCase(testId, I2C_TEST_INSTANCE1, dataRate);
-    status = i2c_feature_test(I2C_TEST_INSTANCE1, dataRate, I2C_EEPROM_ADDR, false);
-    if(-1 == status)
+    status = i2c_feature_test(I2C_TEST_INSTANCE1, dataRate, I2C_EEPROM_ADDR, BFALSE);
+    if(BFALSE == status)
     {
         UART_printStatus("\n Some tests have failed. \n");
         while(1);
@@ -107,8 +107,8 @@ void i2c_test(UArg arg0, UArg arg1)
     }
 
 #ifndef AM437X_ICSS0 // remove SMBUS test for AM437x ICSS0
-    status = i2c_feature_test(I2C_TEST_INSTANCE1, dataRate, I2C_SMBUS_DEV_ADDR, true);
-    if(-1 == status)
+    status = i2c_feature_test(I2C_TEST_INSTANCE1, dataRate, I2C_SMBUS_DEV_ADDR, BTRUE);
+    if(BFALSE == status)
     {
         UART_printStatus("\n Some tests have failed. \n");
         while(1);
@@ -123,8 +123,8 @@ void i2c_test(UArg arg0, UArg arg1)
     dataRate = I2C_400kHz;
     testId++;
     printTestCase(testId, I2C_TEST_INSTANCE1, dataRate);
-    status = i2c_feature_test(I2C_TEST_INSTANCE1, dataRate, I2C_EEPROM_ADDR, false);
-    if(-1 == status)
+    status = i2c_feature_test(I2C_TEST_INSTANCE1, dataRate, I2C_EEPROM_ADDR, BFALSE);
+    if(BFALSE == status)
     {
         UART_printStatus("\n Some tests have failed. \n");
         while(1);
@@ -135,8 +135,8 @@ void i2c_test(UArg arg0, UArg arg1)
     }
 
 #ifndef AM437X_ICSS0 // remove SMBUS test for AM437x ICSS0
-    status = i2c_feature_test(I2C_TEST_INSTANCE1, dataRate, I2C_SMBUS_DEV_ADDR, true);
-    if(-1 == status)
+    status = i2c_feature_test(I2C_TEST_INSTANCE1, dataRate, I2C_SMBUS_DEV_ADDR, BTRUE);
+    if(BFALSE == status)
     {
         UART_printStatus("\n Some tests have failed. \n");
         while(1);
@@ -151,8 +151,8 @@ void i2c_test(UArg arg0, UArg arg1)
     dataRate = I2C_1P0Mhz;
     testId++;
     printTestCase(testId, I2C_TEST_INSTANCE1, dataRate);
-    status = i2c_feature_test(I2C_TEST_INSTANCE1, dataRate, I2C_EEPROM_ADDR, false);
-    if(-1 == status)
+    status = i2c_feature_test(I2C_TEST_INSTANCE1, dataRate, I2C_EEPROM_ADDR, BFALSE);
+    if(BFALSE == status)
     {
         UART_printStatus("\n Some tests have failed. \n");
         while(1);
@@ -169,8 +169,8 @@ void i2c_test(UArg arg0, UArg arg1)
     dataRate = I2C_100kHz;
     testId++;
     printTestCase(testId, I2C_TEST_INSTANCE2, dataRate);
-    status = i2c_feature_test(I2C_TEST_INSTANCE2, dataRate, I2C_EEPROM_ADDR, false);
-    if(-1 == status)
+    status = i2c_feature_test(I2C_TEST_INSTANCE2, dataRate, I2C_EEPROM_ADDR, BFALSE);
+    if(BFALSE == status)
     {
         UART_printStatus("\n Some tests have failed. \n");
         while(1);
@@ -181,8 +181,8 @@ void i2c_test(UArg arg0, UArg arg1)
     }
 
 #ifndef AM437X_ICSS0 // remove SMBUS test for AM437x ICSS0
-    status = i2c_feature_test(I2C_TEST_INSTANCE2, dataRate, I2C_SMBUS_DEV_ADDR, true);
-    if(-1 == status)
+    status = i2c_feature_test(I2C_TEST_INSTANCE2, dataRate, I2C_SMBUS_DEV_ADDR, BTRUE);
+    if(BFALSE == status)
     {
         UART_printStatus("\n Some tests have failed. \n");
         while(1);
@@ -209,7 +209,7 @@ int main(void)
 
     Error_init(&eb);
 
-    if (Board_initI2C() == false)
+    if (BFALSE == Board_initI2C())
     {
         return (0);
     }

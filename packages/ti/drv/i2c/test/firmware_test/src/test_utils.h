@@ -101,7 +101,7 @@ extern "C" {
 bool CompareData(char *expData, char *rxData, unsigned int length);
 
 /* function to test each features of i2c fw */
-int32_t i2c_feature_test(uint32_t i2cInst, I2C_BitRate dataRate, uint32_t slaveAddr, bool smbusEnable);
+bool i2c_feature_test(uint32_t i2cInst, I2C_BitRate dataRate, uint32_t slaveAddr, bool smbusEnable);
 void printTestCase(uint32_t testId, uint32_t i2cInst, I2C_BitRate dataRate);
 
 #if defined(idkAM437x)
