@@ -165,13 +165,13 @@ uint32_t autoRunEnable = (uint32_t) FALSE;
 /*                          Function Definitions                              */
 /* ========================================================================== */
 
-#if defined (SOC_J784S4)
-/* HACK: until UART driver is added for J784S4 */
+#if defined (SOC_J784S4) || defined (SOC_J722S)
+/* HACK: until UART driver is added for J784S4, J722S */
 void UART_printf_dummy(const char *pstr, ...)
 {
 }
 
-/* HACK: until Board library is added for J784S4 */
+/* HACK: until Board library is added for J784S4, J722S */
 Board_STATUS Board_init(Board_initCfg cfg)
 {
     return BOARD_SOK;

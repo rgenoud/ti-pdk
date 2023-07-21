@@ -15,7 +15,7 @@ INCDIR = .
 # List all the external components/interfaces, whose interface header files
 # need to be included for this component
 INCLUDE_EXTERNAL_INTERFACES = pdk osal_nonos board
-ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 j722s))
 INCLUDE_EXTERNAL_INTERFACES += sciclient_direct
 else
 INCLUDE_EXTERNAL_INTERFACES += sciclient
@@ -33,7 +33,12 @@ PACKAGE_SRCS_COMMON = . ../common
 ifeq ($(SOC),$(filter $(SOC), am64x))
 CONFIG_BLD_LNK_r5f = linker_r5_lite.lds
 else
+
+ifeq ($(SOC),$(filter $(SOC), j722s))
+CONFIG_BLD_LNK_r5f = linker_r5_tiny.lds
+else
 CONFIG_BLD_LNK_r5f = linker_r5.lds
+endif
 endif
 
 ifeq ($(CORE), mcu1_0)
