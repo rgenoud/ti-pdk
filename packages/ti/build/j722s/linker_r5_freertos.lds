@@ -34,11 +34,11 @@ __SVC_STACK_SIZE   = 0x0100;
 MEMORY
 {
      /*  Reset Vectors base address(RESET_VECTORS) should be 64 bytes aligned  */
-    MCU0_R5F_TCMA_VEC (X)                   : ORIGIN = 0x00000000 LENGTH = 0x00000040
+    MCU0_R5F_TCMA_VEC (X)         : ORIGIN = 0x00000000 LENGTH = 0x00000040
 
-    /* am62a TCM and DDR location */
-    MCU0_R5F_TCMA   (RWIX)                  : origin=0x00000040 length=0x3FE00
-    DDR       (RWIX)                        : origin=0x90000000 length=0xFFFFF
+    /* j722s TCM and DDR/RAM location */
+    MCU0_R5F_TCMA (RWIX)          : origin = 0x00000040 length = 0x3FE00
+    MCU_RAM (RWIX)                : origin = 0x70000040 length = 0x3F000
 }
 
 /*--------------------------------------------------------------*/
@@ -46,51 +46,51 @@ MEMORY
 /*--------------------------------------------------------------*/
 SECTIONS
 {
-    .freertosrstvectors      : {} palign(8)      > MCU0_R5F_TCMA_VEC
+    .freertosrstvectors : {} palign(8)   > MCU0_R5F_TCMA_VEC
     .bootCode        : {} palign(8)      > MCU0_R5F_TCMA
     .startupCode     : {} palign(8)      > MCU0_R5F_TCMA
-    .startupData     : {} palign(8)      > DDR, type = NOINIT
-    .text            : {} palign(8)      > DDR
+    .startupData     : {} palign(8)      > MCU_RAM, type = NOINIT
+    .text            : {} palign(8)      > MCU_RAM
     GROUP {
         .text.hwi    : palign(8)
         .text.cache  : palign(8)
         .text.mpu    : palign(8)
         .text.boot   : palign(8)
-    }                                    > DDR
-    .const           : {} palign(8)      > DDR
-    .rodata          : {} palign(8)      > DDR
-    .cinit           : {} palign(8)      > DDR
-    .bss             : {} align(4)       > DDR
-    .far             : {} align(4)       > DDR
-    .data            : {} palign(128)    > DDR
-    .sysmem          : {}                > DDR
-    .data_buffer     : {} palign(128)    > DDR
-    .bss.devgroup*   : {} align(4)       > DDR
-    .const.devgroup* : {} align(4)       > DDR
-    .boardcfg_data   : {} align(4)       > DDR
+    }                                    > MCU_RAM
+    .const           : {} palign(8)      > MCU_RAM
+    .rodata          : {} palign(8)      > MCU_RAM
+    .cinit           : {} palign(8)      > MCU_RAM
+    .bss             : {} align(4)       > MCU_RAM
+    .far             : {} align(4)       > MCU_RAM
+    .data            : {} palign(128)    > MCU_RAM
+    .sysmem          : {}                > MCU_RAM
+    .data_buffer     : {} palign(128)    > MCU_RAM
+    .bss.devgroup*   : {} align(4)       > MCU_RAM
+    .const.devgroup* : {} align(4)       > MCU_RAM
+    .boardcfg_data   : {} align(4)       > MCU_RAM
 
     /* USB or any other LLD buffer for benchmarking */
-    .benchmark_buffer (NOLOAD) {} ALIGN (8) > DDR
+    .benchmark_buffer (NOLOAD) {} ALIGN (8) > MCU_RAM
 
-    .stack      : {} align(4)                               > DDR  (HIGH)
+    .stack      : {} align(4)                               > MCU_RAM  (HIGH)
 
-    .irqStack   : {. = . + __IRQ_STACK_SIZE;} align(4)      > DDR  (HIGH)
+    .irqStack   : {. = . + __IRQ_STACK_SIZE;} align(4)      > MCU_RAM  (HIGH)
     RUN_START(__IRQ_STACK_START)
     RUN_END(__IRQ_STACK_END)
 
-    .fiqStack   : {. = . + __FIQ_STACK_SIZE;} align(4)      > DDR  (HIGH)
+    .fiqStack   : {. = . + __FIQ_STACK_SIZE;} align(4)      > MCU_RAM  (HIGH)
     RUN_START(__FIQ_STACK_START)
     RUN_END(__FIQ_STACK_END)
 
-    .abortStack : {. = . + __ABORT_STACK_SIZE;} align(4)    > DDR  (HIGH)
+    .abortStack : {. = . + __ABORT_STACK_SIZE;} align(4)    > MCU_RAM  (HIGH)
     RUN_START(__ABORT_STACK_START)
     RUN_END(__ABORT_STACK_END)
 
-    .undStack   : {. = . + __UND_STACK_SIZE;} align(4)      > DDR  (HIGH)
+    .undStack   : {. = . + __UND_STACK_SIZE;} align(4)      > MCU_RAM  (HIGH)
     RUN_START(__UND_STACK_START)
     RUN_END(__UND_STACK_END)
 
-    .svcStack   : {. = . + __SVC_STACK_SIZE;} align(4)      > DDR  (HIGH)
+    .svcStack   : {. = . + __SVC_STACK_SIZE;} align(4)      > MCU_RAM  (HIGH)
     RUN_START(__SVC_STACK_START)
     RUN_END(__SVC_STACK_END)
 }
