@@ -1,12 +1,20 @@
 {
     "TRACEDATA": {
         "architecture_identifier": [],
-        "architecture_traceability": [],
+        "architecture_traceability": [
+            {
+                "arch_id": "aid_section_name1",
+                "design_ids": [
+                    "did_section_name1",
+                    "did_section_name2"
+                ]
+            }
+        ],
         "design_identifier": [
             {
                 "design_file": "./docs/DOCUMENTATION_STYLE.rst",
                 "design_id": "did_component1_design_id",
-                "design_linenumber": 476,
+                "design_linenumber": 479,
                 "design_sectionname": "Example Design Document template"
             },
             {
@@ -30,7 +38,7 @@
             {
                 "design_file": "./docs/design/COMBINED_IMAGE.rst",
                 "design_id": "did_combined_image",
-                "design_linenumber": 155,
+                "design_linenumber": 157,
                 "design_sectionname": "Features Not Supported"
             },
             {
@@ -96,31 +104,31 @@
             {
                 "design_file": "./docs/design/BOARDCFG_RM.rst",
                 "design_id": "did_boardcfg_interrupts",
-                "design_linenumber": 688,
+                "design_linenumber": 687,
                 "design_sectionname": "Design details for interrupt management"
             },
             {
                 "design_file": "./docs/design/BOARDCFG_RM.rst",
                 "design_id": "did_boardcfg_rm_res_psil",
-                "design_linenumber": 729,
+                "design_linenumber": 728,
                 "design_sectionname": "Design details for PSIL Configuration"
             },
             {
                 "design_file": "./docs/design/BOARDCFG_RM.rst",
                 "design_id": "did_boardcfg_rm_res_udma",
-                "design_linenumber": 741,
+                "design_linenumber": 740,
                 "design_sectionname": "Design details for UDMA Configuration"
             },
             {
                 "design_file": "./docs/design/BOARDCFG_RM.rst",
                 "design_id": "did_boardcfg_rm_res_ringacc",
-                "design_linenumber": 757,
+                "design_linenumber": 756,
                 "design_sectionname": "Design details for RingAcc and RingAccRT Configuration"
             },
             {
                 "design_file": "./docs/design/BOARDCFG_RM.rst",
                 "design_id": "did_boardcfg_rm_res_insec_proxy",
-                "design_linenumber": 773,
+                "design_linenumber": 772,
                 "design_sectionname": "Design details for Proxy Configuration"
             },
             {
@@ -146,6 +154,24 @@
                 "design_id": "did_boardcfg_debug",
                 "design_linenumber": 424,
                 "design_sectionname": "Design details for DMSC Debug Console"
+            },
+            {
+                "design_file": "./docs/design/TIFS_LIB.rst",
+                "design_id": "did_tifs_library",
+                "design_linenumber": 566,
+                "design_sectionname": "Final Decision"
+            },
+            {
+                "design_file": "./docs/design/LPM_DESIGN.rst",
+                "design_id": "did_section_name1",
+                "design_linenumber": 1662,
+                "design_sectionname": "Final Decision"
+            },
+            {
+                "design_file": "./docs/design/LPM_DESIGN.rst",
+                "design_id": "did_section_name2",
+                "design_linenumber": 1662,
+                "design_sectionname": "Final Decision"
             },
             {
                 "design_file": "./docs/design/sec/FIREWALL_EXCEPTION.rst",
@@ -192,7 +218,7 @@
             {
                 "design_file": "./docs/design/pm/PM_CLOCK.rst",
                 "design_id": "did_pm_clock",
-                "design_linenumber": 860,
+                "design_linenumber": 924,
                 "design_sectionname": "Final Decision"
             },
             {
@@ -362,6 +388,30 @@
                     "did_boardcfg_debug"
                 ],
                 "req_id": "SYSFW-180",
+                "source_ids": []
+            },
+            {
+                "arch_ids": [],
+                "design_ids": [
+                    "did_tifs_library"
+                ],
+                "req_id": "SYSFW-4422",
+                "source_ids": []
+            },
+            {
+                "arch_ids": [],
+                "design_ids": [
+                    "did_section_name2"
+                ],
+                "req_id": "PRSDK-3140",
+                "source_ids": []
+            },
+            {
+                "arch_ids": [],
+                "design_ids": [
+                    "did_section_name2"
+                ],
+                "req_id": "PRSDK-3142",
                 "source_ids": []
             },
             {
