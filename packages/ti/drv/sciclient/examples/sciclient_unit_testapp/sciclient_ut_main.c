@@ -81,7 +81,9 @@
 /* ========================================================================== */
 void mainTask(void* arg0, void* arg1);
 static int32_t App_getRevisionTestPol(void);
+#if !defined(SOC_J722S)
 static int32_t App_getRevisionTestIntr(void);
+#endif
 static int32_t App_timeoutTest(void);
 static int32_t App_invalidReqPrmTest(void);
 #if defined (SOC_AM65XX) || defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)
@@ -92,7 +94,7 @@ static int32_t App_rmGetResourceRange(void);
 #elif defined(ENABLE_MSG_FWD)
 static int32_t App_tifs2dmMsgForwardingTest(void);
 #endif
-#if defined(SOC_AM62X)
+#if defined(SOC_AM62X) || defined(SOC_J722S)
 static int32_t App_pmGetFrequency(void);
 static int32_t App_pmSetFrequency(void);
 static int32_t App_rmGetResourceRangeWithSecHost(void);
@@ -176,9 +178,11 @@ int32_t App_sciclientTestMain(App_sciclientTestParams_t *testParams)
         case 1:
             testParams->testResult = App_getRevisionTestPol();
             break;
+#if !defined (SOC_J722S)
         case 2:
             testParams->testResult = App_getRevisionTestIntr();
             break;
+#endif
         case 3:
             testParams->testResult = App_invalidReqPrmTest();
             break;
@@ -199,7 +203,7 @@ int32_t App_sciclientTestMain(App_sciclientTestParams_t *testParams)
             testParams->testResult = App_tifs2dmMsgForwardingTest();
             break;
 #endif
-#if defined (SOC_AM62X)
+#if defined (SOC_AM62X) || defined (SOC_J722S)
         case 6:
             testParams->testResult = App_rmGetResourceRangeWithSecHost();
             break;
@@ -298,6 +302,7 @@ int32_t App_getRevisionTestPol(void)
     return status;
 }
 
+#if !defined(SOC_J722S)
 int32_t App_getRevisionTestIntr(void)
 {
     int32_t status = CSL_EFAIL;
@@ -368,6 +373,7 @@ int32_t App_getRevisionTestIntr(void)
     }
     return status;
 }
+#endif
 
 static int32_t App_invalidReqPrmTest(void)
 {
@@ -776,7 +782,7 @@ static int32_t App_tifs2dmMsgForwardingTest(void)
 }
 #endif
 
-#if defined (SOC_AM62X)
+#if defined(SOC_AM62X) || defined(SOC_J722S)
 struct appSciclientRmGetRangeTest
 {
     uint16_t           type;
@@ -786,8 +792,13 @@ struct appSciclientRmGetRangeTest
 };
 struct appSciclientRmGetRangeTest gAppSciclientTstParams [] =
 {
+#if defined(SOC_AM62X)
     {TISCI_DEV_DMASS0_INTAGGR_0, TISCI_RESASG_SUBTYPE_GLOBAL_EVENT_SEVT, CSL_PASS, TISCI_HOST_ID_MAIN_0_R5_1},
     {TISCI_DEV_MAIN_GPIOMUX_INTROUTER0, TISCI_RESASG_SUBTYPE_IR_OUTPUT, CSL_PASS, TISCI_HOST_ID_MAIN_0_R5_1},
+#else
+    {TISCI_DEV_DMASS0_INTAGGR_0, TISCI_RESASG_SUBTYPE_GLOBAL_EVENT_SEVT, CSL_PASS, TISCI_HOST_ID_WKUP_0_R5_1},
+    {TISCI_DEV_MAIN_GPIOMUX_INTROUTER0, TISCI_RESASG_SUBTYPE_IR_OUTPUT, CSL_PASS, TISCI_HOST_ID_WKUP_0_R5_1},
+#endif
     {TISCI_DEV_MAIN_GPIOMUX_INTROUTER0, 32, CSL_PASS, 0},
     {(TISCI_RESASG_TYPE_MASK >>TISCI_RESASG_TYPE_SHIFT) + 1, TISCI_RESASG_SUBTYPE_IR_OUTPUT, CSL_EFAIL, 0},
     {TISCI_DEV_DMASS0_INTAGGR_0, (TISCI_RESASG_SUBTYPE_MASK >>TISCI_RESASG_SUBTYPE_SHIFT) + 1, CSL_EFAIL, 0}
@@ -888,7 +899,7 @@ int32_t App_pmGetFrequency(void)
 
     if (status == CSL_PASS)
     {
-        uint32_t freqHz;
+        uint64_t freqHz;
         status = Sciclient_pmGetModuleClkFreq(TISCI_DEV_WKUP_GTC0, TISCI_DEV_WKUP_GTC0_GTC_CLK,
             (uint64_t *) &freqHz, SCICLIENT_SERVICE_WAIT_FOREVER);
         
@@ -896,7 +907,7 @@ int32_t App_pmGetFrequency(void)
         if (CSL_PASS == status)
         {
             status = CSL_PASS;
-            App_sciclientPrintf(" GTC Frequency  %d\n", freqHz);
+            App_sciclientPrintf(" GTC Frequency  %lld\n", freqHz);
         }
         else
         {
@@ -938,7 +949,7 @@ int32_t App_pmSetFrequency(void)
         if (CSL_PASS == status)
         {
             status = CSL_PASS;
-            App_sciclientPrintf(" Current Frequency %d\n", freqHz);
+            App_sciclientPrintf(" Current Frequency %lld\n", freqHz);
         }
         else
         {
@@ -952,7 +963,7 @@ int32_t App_pmSetFrequency(void)
         if (CSL_PASS == status)
         {
             status = CSL_PASS;
-            App_sciclientPrintf(" Query Response Frequency %d\n", freqHz);
+            App_sciclientPrintf(" Query Response Frequency %lld\n", freqHz);
         }
         else
         {
@@ -979,7 +990,7 @@ int32_t App_pmSetFrequency(void)
         if (CSL_PASS == status)
         {
             status = CSL_PASS;
-            App_sciclientPrintf(" New Frequency %d\n", freqHz);
+            App_sciclientPrintf(" New Frequency %lld\n", freqHz);
         }
         else
         {

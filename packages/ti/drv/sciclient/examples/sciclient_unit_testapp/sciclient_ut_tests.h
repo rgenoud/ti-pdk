@@ -96,7 +96,7 @@ App_sciclientTestParams_t gSciclientTestcaseParams[] =
         /** testType **/
         (APP_SCICLIENT_TEST_TYPE_SANITY)
     },
-#ifndef SOC_AM62X
+#if !defined(SOC_AM62X) && !defined(SOC_J722S)
     {
         /** enableTest **/
         TEST_ENABLE,
@@ -313,7 +313,7 @@ App_sciclientTestParams_t gSciclientTestcaseParams[] =
         (APP_SCICLIENT_TEST_TYPE_SANITY)
     }
 #endif
-#if defined(SOC_AM62X)
+#if defined(SOC_AM62X) || defined(SOC_J722S)
     {
         /** enableTest **/
         TEST_ENABLE,
