@@ -62,7 +62,7 @@ typedef struct
 
 static qnx_osal_hwi_info      g_hwi[QNX_OSAL_MAX_INTR_COUNT];
 static uint8_t                g_currIntrCount = 0;
-
+static  intrspin_t            g_spinlock;
 /*
  *  ======== isr_thread ========
  */
@@ -211,16 +211,8 @@ HwiP_Status HwiP_delete(HwiP_Handle handle)
  */
 uintptr_t HwiP_disable(void)
 {
-    intrspin_t *spinlock_ptr = NULL;
-
-    /* Create a spinLock and lock interrupts */
-    spinlock_ptr = malloc(sizeof(intrspin_t));
-    OSAL_Assert(NULL == spinlock_ptr);
-    memset( (void *) spinlock_ptr, 0, sizeof(intrspin_t) );
-
-    InterruptLock(spinlock_ptr);
-
-    return ((uintptr_t) spinlock_ptr);
+    InterruptLock(&g_spinlock);
+    return ((uintptr_t)&g_spinlock);
 }
 
 /*
@@ -229,10 +221,8 @@ uintptr_t HwiP_disable(void)
 void HwiP_restore(uintptr_t key)
 {
     /* Enable interrupts */
-
-    OSAL_Assert(NULL == (intrspin_t *) key);
-    InterruptUnlock((intrspin_t *) key);
-    free((void *) key);
+    OSAL_Assert(NULL == (intrspin_t *)key);
+    InterruptUnlock((intrspin_t *)key);
 }
 
 /*
