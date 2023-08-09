@@ -14,13 +14,9 @@
 	.global __stack
 	.global	__STACK_SIZE
 
-	.retain
-	.retainrefs
 
        .text
        .arm
-       .retain
-       .retainrefs
 
 
 

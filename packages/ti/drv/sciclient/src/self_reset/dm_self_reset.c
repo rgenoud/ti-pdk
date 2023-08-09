@@ -7,14 +7,19 @@ extern void _freertosresetvectors(void);
 
 extern  int32_t sproxy_receive_msg_r5_to_tifs_fw(void *msg, uint32_t len);
 extern  int32_t sproxy_send_msg_r5_to_tifs_fw(void *msg, uint32_t len);
+uint8_t boot_vector[0x40] __attribute__((location(SELF_RESET_TCM_ADDRESS_OFFSET)));
 
 
 
-static void abort(){
+static void abort_self_reset(void){
     while(1){}
 }
 
-uint32_t dm_r5_self_reset(){
+static void enter_wfi(void){
+    __asm__ __volatile__ ("wfi" "\n\t": : : "memory");
+}
+
+uint32_t dm_r5_self_reset(void){
 
     /* Request the processor core(s) */
     struct tisci_msg_proc_request_req proc_request_req = { 
@@ -31,7 +36,7 @@ uint32_t dm_r5_self_reset(){
     sproxy_send_msg_r5_to_tifs_fw(&proc_request_req , sizeof(proc_request_req));
     sproxy_receive_msg_r5_to_tifs_fw(&proc_request_resp, sizeof(proc_request_resp));
     if (proc_request_resp.hdr.type != TISCI_MSG_PROC_REQUEST || ((proc_request_resp.hdr.flags & TISCI_MSG_FLAG_ACK )!= TISCI_MSG_FLAG_ACK )) {
-		abort();
+		abort_self_reset();
 	}
 
     //TODO if r5 has dual core do the tisci_proc_boot_request_data for the second core also
@@ -52,7 +57,7 @@ uint32_t dm_r5_self_reset(){
     sproxy_send_msg_r5_to_tifs_fw(&proc_get_status_req , sizeof(proc_get_status_req));
     sproxy_receive_msg_r5_to_tifs_fw(&proc_get_status_resp, sizeof(proc_get_status_resp));
      if (proc_get_status_resp.hdr.type != TISCI_MSG_PROC_GET_STATUS || ((proc_get_status_resp.hdr.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK )) {
-		abort();
+		abort_self_reset();
 	}
 
     //TODO if r5 has dual core do the tisci_proc_boot_status_req_data for the second core also
@@ -74,13 +79,16 @@ uint32_t dm_r5_self_reset(){
     sproxy_send_msg_r5_to_tifs_fw(&proc_set_config_req , sizeof(proc_set_config_req));
     sproxy_receive_msg_r5_to_tifs_fw(&proc_set_config_resp , sizeof(proc_set_config_resp));
 	 if (proc_set_config_resp.hdr.type != TISCI_MSG_PROC_SET_CONFIG || ((proc_set_config_resp.hdr.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK )) {
-		abort();
+		abort_self_reset();
 	}
 
 	// TODO: do the same for second core is present   
 	
 	/* Copy reset vectors to TCM base */
-	memcpy((void *)0x41010000,(void *)((int32_t)_freertosresetvectors + SELF_RESET_TCM_ADDRESS_OFFSET), 0x40);
+
+    uint8_t *boot_vector_temp = boot_vector;
+    /* Must add in the SELF_RESET_TCM_ADDRESS_OFFSET (BTCM base addr) since the runtime addr of _freertosresetvectors is based off of 0x0 */
+    memcpy((void *)boot_vector_temp,(void *)((int32_t)_freertosresetvectors + SELF_RESET_TCM_ADDRESS_OFFSET), 0x40);
 
     /* 1. Send TISCI_MSG_PROC_WAIT_STATUS but DO NOT wait for a response */
     struct tisci_msg_proc_status_wait_req proc_status_wait_req = { 
@@ -148,7 +156,7 @@ uint32_t dm_r5_self_reset(){
     sproxy_send_msg_r5_to_tifs_fw(&proc_release_req , sizeof(proc_release_req));
 
 	/* 4. Call WFI */
-	 asm ( " WFI " );
+	enter_wfi();
 
     return 0;
 
