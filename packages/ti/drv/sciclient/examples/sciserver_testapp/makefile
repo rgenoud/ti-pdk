@@ -37,7 +37,7 @@ ifeq ($(SOC),$(filter $(SOC),am62x am62a))
   CONFIG_BLD_LNK_r5f = $(PDK_INSTALL_PATH)/ti/build/$(SOC)/linker_r5_freertos_btcm.lds
 else
   ifeq ($(SOC),$(filter $(SOC),j722s))
-  CONFIG_BLD_LNK_r5f = $(PDK_INSTALL_PATH)/ti/drv/sciclient/examples/sciserver_testapp/linker_r5_freertos_hsm.lds
+  CONFIG_BLD_LNK_r5f = $(PDK_INSTALL_PATH)/ti/drv/sciclient/examples/sciserver_testapp/linker_r5_freertos_dm.lds
   else
   CONFIG_BLD_LNK_r5f = $(PDK_INSTALL_PATH)/ti/drv/sciclient/examples/sciserver_testapp/linker_r5_freertos.lds
   endif

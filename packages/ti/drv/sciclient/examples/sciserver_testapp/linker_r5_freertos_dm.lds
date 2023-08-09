@@ -65,29 +65,30 @@ SECTIONS
         .text.boot      : palign(8)
     } load = R5F_TCMB, run = R5F_TCMA
 
-    .text               : {} palign(8)      > HSM_RAM
-    .const              : {} palign(8)      > HSM_RAM
-    .rodata             : {} palign(8)      > HSM_RAM
-    .cinit              : {} palign(8)      > HSM_RAM
-    .far                : {} align(4)       > HSM_RAM
-    .data               : {} palign(128)    > HSM_RAM
-    .sysmem             : {}                > HSM_RAM
-    .data_buffer        : {} palign(128)    > HSM_RAM
-    .const.devgroup     : { *(.const.devgroup*) } align(4) > HSM_RAM
-    .boardcfg_data      : {} align(4)       > HSM_RAM
+    /* .tracebuf           : {} align(1024)   > LINUX_IPC_TRACE_BUFFER */
+
+    .text               : {} palign(8)      > DDR
+    .const              : {} palign(8)      > DDR
+    .rodata             : {} palign(8)      > DDR
+    .cinit              : {} palign(8)      > DDR
+    .far                : {} align(4)       > DDR
+    .data               : {} palign(128)    > DDR
+    .sysmem             : {}                > DDR
+    .data_buffer        : {} palign(128)    > DDR
+    .const.devgroup     : { *(.const.devgroup*) } align(4) > DDR
+    .boardcfg_data      : {} align(4)       > DDR
 
     GROUP {
         .bss.devgroup   : { *(.bss.devgroup*) } align(4)
         RUN_START(__BSS_START)
         .bss:    {} palign4    /* This is where uninitialized globals go */
         RUN_END(__BSS_END)
-    } > HSM_RAM
+    } > DDR
 
     /* USB or any other LLD buffer for benchmarking */
-    .benchmark_buffer (NOLOAD) {} align(8) > HSM_RAM
+    .benchmark_buffer (NOLOAD) {} align(8) > DDR
 
-    /* .tracebuf           : {} align(1024)   > DDR_DM_R5F_IPC_TRACEBUF */
-    .stack              : {} align(4)      > HSM_RAM  (HIGH)
+    .stack              : {} align(4)      > DDR  (HIGH)
 
     GROUP {
         .irqStack   : {. = . + __IRQ_STACK_SIZE;} align(4)
@@ -105,12 +106,12 @@ SECTIONS
         .undStack   : {. = . + __UND_STACK_SIZE;} align(4)
         RUN_START(__UND_STACK_START)
         RUN_END(__UND_STACK_END)
-    } > HSM_RAM  (HIGH)
+    } > DDR  (HIGH)
 
     /* Sections needed for C++ projects */
     GROUP {
         .ARM.exidx:  {} palign(8)   /* Needed for C++ exception handling */
         .init_array: {} palign(8)   /* Contains function pointers called before main */
         .fini_array: {} palign(8)   /* Contains function pointers called after main */
-    } > HSM_RAM
+    } > DDR
 }

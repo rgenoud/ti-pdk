@@ -68,7 +68,7 @@
 
 /* PM Init may have been done before. It is harmless to do it again. */
 #define CONFIG_BOARDCFG_PM (1)
-#define CONFIG_BOARDCFG_RM (1)
+/* #define CONFIG_BOARDCFG_RM (1) */
 
 #if defined(SOC_J722S)
 #define SCICLIENT_CCS_DEVGRP0 (DEVGRP_ALL)
@@ -245,11 +245,19 @@ static void taskFxn(void* a0, void* a1)
             (uint8_t *) SCISERVER_COMMON_X509_HEADER_ADDR,
             &clientPrms.inPmPrms, &clientPrms.inRmPrms);
     }
+    else
+    {
+        App_sciclientPrintf("Problem with Sciclient_configPrmsInit()..... FAILED\n");
+    }
     
     /* Enable UART console print*/
     if (ret == CSL_PASS)
     {
         App_sciclientConsoleInit();
+    }
+    else
+    {
+        App_sciclientPrintf("SciServer X509 HEADER not found or not parsed..... FAILED\n");
     }
 
     if (ret == CSL_PASS)
@@ -263,7 +271,7 @@ static void taskFxn(void* a0, void* a1)
     }
     else
     {
-        App_sciclientPrintf("Sciclient_init Send Boardcfg with SCICLIENT_CCS_DEVGRP0..... FAILED\n");
+        App_sciclientPrintf("Sciclient_init() ..... FAILED\n");
     }
 #if defined(SCICLIENT_CCS_DEVGRP1)
     if (ret == CSL_STATUS)
@@ -298,14 +306,15 @@ static void taskFxn(void* a0, void* a1)
     }
 #endif
 
-    if (ret == CSL_PASS)
-    {
-        ret = Sciserver_tirtosInitPrms_Init(&appPrms);
-    }
+    ret = Sciserver_tirtosInitPrms_Init(&appPrms);
 
     if (ret == CSL_PASS)
     {
         ret = Sciserver_tirtosInit(&appPrms);
+    }
+    else
+    {
+        App_sciclientPrintf("Sciserver_tirtosInitPrms_Init()..... FAILED\n");
     }
 
     version_str = Sciserver_getVersionStr();
@@ -427,35 +436,32 @@ static int32_t Sciclient_init_send_boardcfg (uint8_t devgrp_curr)
      * MSMC configuration.
      */
 #if CONFIG_BOARDCFG
-    if (CSL_PASS == status)
+    App_sciclientPrintf("\n=================================================================\n");
+    App_sciclientPrintf(" DEVGRP = %d\n", devgrp_curr);
+    App_sciclientPrintf("=================================================================\n");
+    App_sciclientPrintf("SYSFW Common Board Configuration with Debug enabled... ");
+    Sciclient_BoardCfgPrms_t boardCfgPrms =
     {
-        App_sciclientPrintf("\n=================================================================\n");
-        App_sciclientPrintf(" DEVGRP = %d\n", devgrp_curr);
-        App_sciclientPrintf("=================================================================\n");
-        App_sciclientPrintf("SYSFW Common Board Configuration with Debug enabled... ");
-        Sciclient_BoardCfgPrms_t boardCfgPrms =
-        {
-            .boardConfigLow = (uint32_t) &gBoardConfigLow_debug,
-            .boardConfigHigh = 0,
-            .boardConfigSize = sizeof(gBoardConfigLow_debug),
-            .devGrp = devgrp_curr
-        };
-        status = Sciclient_boardCfg(&boardCfgPrms);
-        if (CSL_PASS == status)
-        {
-            App_sciclientPrintf("PASSED\n");
-        }
-        else
-        {
-            App_sciclientPrintf("FAILED\n");
-        }
+        .boardConfigLow = (uint32_t) &gBoardConfigLow_debug,
+        .boardConfigHigh = 0,
+        .boardConfigSize = sizeof(gBoardConfigLow_debug),
+        .devGrp = devgrp_curr
+    };
+    status = Sciclient_boardCfg(&boardCfgPrms);
+    if (status == CSL_PASS)
+    {
+        App_sciclientPrintf("PASSED\n");
+    }
+    else
+    {
+        App_sciclientPrintf("FAILED\n");
     }
 #endif
     /* PM board configuration to setup the PLLs and internal state of
      * the devices.
      */
 #if CONFIG_BOARDCFG_PM
-    if (CSL_PASS == status)
+    if (status == CSL_PASS)
     {
         uint32_t boardCfgLow[] = SCICLIENT_BOARDCFG_PM;
         Sciclient_BoardCfgPrms_t boardCfgPrms_pm =
@@ -470,7 +476,7 @@ static int32_t Sciclient_init_send_boardcfg (uint8_t devgrp_curr)
         if (CSL_PASS == status)
         {
             App_sciclientPrintf("PASSED\n");
-#if defined(SOC_J722S)
+#if 0
             /* TEMP HACK: trigger deferred PM init w/ dummy request */
             Sciclient_pmSetModuleRst(0xffffffffU, 0, SCICLIENT_SERVICE_WAIT_FOREVER);
             App_sciclientPrintf("!! Completed PM deferred init!!\n");
