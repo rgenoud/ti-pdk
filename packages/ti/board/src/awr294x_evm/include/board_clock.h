@@ -125,6 +125,8 @@ extern "C" {
 
 #define BOARD_TOTAL_MODULE_NUM    (19U) /*  Updated after removing the peripherals not used by 2944  */
 
+#define BOARD_TOTAL_DEVICES       (2U)  /* xWR294x, xWR254x supported */
+
 /**
  *
  * \brief Module core type
@@ -169,7 +171,7 @@ typedef struct Board_Clk_config_s
  *          BOARD_INIT_CLOCK_FAIL  - Clock initialization failed.
  *
  */
-Board_STATUS Board_moduleClockInit(void);
+Board_STATUS Board_moduleClockInit(Board_devId devId);
 
 #ifdef __cplusplus
 }

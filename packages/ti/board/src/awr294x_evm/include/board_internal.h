@@ -192,7 +192,7 @@ Board_STATUS Board_PLLInit(uint32_t modId, uint32_t clkId, uint64_t clkRate);
  * \return  BOARD_SOK in case of success or appropriate error code
  *
  */
-Board_STATUS Board_moduleClockInit(void);
+Board_STATUS Board_moduleClockInit(Board_devId devId);
 
 /**
  * \brief  Sets the Ethernet subsytem board specific configurations

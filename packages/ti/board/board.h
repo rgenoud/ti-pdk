@@ -304,6 +304,8 @@ typedef enum {
 } Board_DDRTempEventType;
 
 typedef uint32_t Board_initCfg;
+typedef uint8_t Board_devId;
+
 #define BOARD_INIT_ALL                  (0xFFFFFFFFU)
 #define BOARD_INIT_UNLOCK_MMR           (1 << 1U)
 #define BOARD_INIT_PLL                  (1 << 2U)
@@ -443,7 +445,7 @@ Board_STATUS Board_getSoCInfo(Board_SoCInfo *socInfo);
  *  @return Board_STATUS Returns status on API call
  *
  */
-Board_STATUS Board_init(Board_initCfg cfg);
+Board_STATUS Board_init(Board_initCfg cfg, Board_devId devId);
 
 /**
  * \brief  Board library initialization function with limited module initializations
@@ -459,7 +461,7 @@ Board_STATUS Board_init(Board_initCfg cfg);
  *
  * \return  BOARD_SOK in case of success or appropriate error code
  */
-Board_STATUS Board_initLite(Board_initCfg cfg);
+Board_STATUS Board_initLite(Board_initCfg cfg, Board_devId devId);
 
 /**
  * @brief  Board library deinitialization function

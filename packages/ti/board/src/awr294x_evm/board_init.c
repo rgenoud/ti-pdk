@@ -87,7 +87,7 @@
  *
  * \return  BOARD_SOK in case of success or appropriate error code
  */
-Board_STATUS Board_init(Board_initCfg cfg)
+Board_STATUS Board_init(Board_initCfg cfg, Board_devId devId)
 {
     Board_STATUS ret = BOARD_SOK;
 
@@ -97,7 +97,7 @@ Board_STATUS Board_init(Board_initCfg cfg)
         return ret;
 
     if (cfg & BOARD_INIT_MODULE_CLOCK)
-        ret = Board_moduleClockInit();
+        ret = Board_moduleClockInit(devId);
     if (ret != BOARD_SOK)
         return ret;
 
@@ -153,7 +153,7 @@ Board_STATUS Board_init(Board_initCfg cfg)
  *
  * \return  BOARD_SOK in case of success or appropriate error code
  */
-Board_STATUS Board_initLite(Board_initCfg cfg)
+Board_STATUS Board_initLite(Board_initCfg cfg, Board_devId devId)
 {
     Board_STATUS ret = BOARD_SOK;
 
@@ -163,7 +163,7 @@ Board_STATUS Board_initLite(Board_initCfg cfg)
         return ret;
 
     if (cfg & BOARD_INIT_MODULE_CLOCK)
-        ret = Board_moduleClockInit();
+        ret = Board_moduleClockInit(devId);
     if (ret != BOARD_SOK)
         return ret;
 
