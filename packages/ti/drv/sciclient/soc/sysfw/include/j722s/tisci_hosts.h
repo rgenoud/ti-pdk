@@ -49,7 +49,7 @@
  *
  * Host IDs for J722S device
  *
- * Data version: 230620_073314
+ * Data version: 230724_185448
  *
  */
 #ifndef TISCI_HOSTS_H

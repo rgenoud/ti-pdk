@@ -21,9 +21,9 @@ these are the valid PSI-L Proxy device IDs.
 +---------------------------+-------------------------+
 | PSI-L Proxy Device Name   |   PSI-L Proxy Device ID |
 +===========================+=========================+
-| J722S_DEV_DMASS0          |                      29 |
+| J722S_DEV_DMASS0          |                      25 |
 +---------------------------+-------------------------+
-| J722S_DEV_DMASS1          |                      37 |
+| J722S_DEV_DMASS1          |                     198 |
 +---------------------------+-------------------------+
 
 .. _pub_soc_j722s_psil_thread_ids:

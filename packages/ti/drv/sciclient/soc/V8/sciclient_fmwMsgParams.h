@@ -72,7 +72,7 @@ extern "C" {
 *       indicate backward compatibility is maintained,
 *       however, new messages OR extensions to existing
 *       messages might have been adde */
-#define SCICLIENT_FIRMWARE_ABI_MINOR                     (5U)
+#define SCICLIENT_FIRMWARE_ABI_MINOR                     (1U)
 /* @} */
 
 /**
@@ -137,7 +137,7 @@ extern "C" {
 /**
  * AM67_MAIN_SEC_MMR_MAIN_0: (Cluster 13 Processor 0)
  */
-#define SCICLIENT_PROC_ID_C7X256V0_C7XV_CORE_0 (0x05U)
+#define SCICLIENT_PROC_ID_C7X256V0_C7XV_CORE_0 (0x04U)
 
 /**
  * AM67_MAIN_SEC_MMR_MAIN_0: (Cluster 14 Processor 0)
@@ -147,12 +147,12 @@ extern "C" {
 /**
  * AM67_MCU_SEC_MMR_MCU_0: (Cluster 0 Processor 0)
  */
-#define SCICLIENT_PROC_ID_MCU_R5FSS0_CORE0 (0x04U)
+#define SCICLIENT_PROC_ID_MCU_R5FSS0_CORE0 (0x03U)
 
 /**
  * AM67_MAIN_SEC_MMR_MAIN_0: (Cluster 0 Processor 0)
  */
-#define SCICLIENT_PROC_ID_R5FSS0_CORE0 (0x03U)
+#define SCICLIENT_PROC_ID_R5FSS0_CORE0 (0x05U)
 
 /**
  * AM67_WKUP_SEC_MMR_WKUP_0: (Cluster 28 Processor 0)

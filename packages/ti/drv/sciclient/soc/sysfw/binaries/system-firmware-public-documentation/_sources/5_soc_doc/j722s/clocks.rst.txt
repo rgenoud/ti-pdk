@@ -54,7 +54,7 @@ The chapters corresponding to the devices are organized alphabetically per devic
 Clocks for A53SS0 Device
 ------------------------
 
-Device: :ref:`J722S_DEV_A53SS0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 154)
+Device: :ref:`J722S_DEV_A53SS0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 166)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -138,7 +138,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for A53_RS_BW_LIMITER0 Device
 ------------------------------------
 
-Device: :ref:`J722S_DEV_A53_RS_BW_LIMITER0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 162)
+Device: :ref:`J722S_DEV_A53_RS_BW_LIMITER0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 172)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -154,7 +154,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for A53_WS_BW_LIMITER1 Device
 ------------------------------------
 
-Device: :ref:`J722S_DEV_A53_WS_BW_LIMITER1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 163)
+Device: :ref:`J722S_DEV_A53_WS_BW_LIMITER1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 173)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -170,7 +170,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for ATL0 Device
 ----------------------
 
-Device: :ref:`J722S_DEV_ATL0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 5)
+Device: :ref:`J722S_DEV_ATL0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 243)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -741,79 +741,79 @@ Following is a mapping of Clocks IDs to function:
 +------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
 |        153 | DEV_BOARD0_OBSCLK0_IN_PARENT_GLUELOGIC_HFOSC0_CLKOUT                       | Parent input clock option to DEV_BOARD0_OBSCLK0_IN           |
 +------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
-|        184 | DEV_BOARD0_OBSCLK1_IN                                                      | Input muxed clock                                            |
+|        154 | DEV_BOARD0_OBSCLK1_IN                                                      | Input muxed clock                                            |
 +------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
-|        185 | DEV_BOARD0_OBSCLK1_IN_PARENT_MAIN_OBSCLK_DIV_OUT0                          | Parent input clock option to DEV_BOARD0_OBSCLK1_IN           |
+|        155 | DEV_BOARD0_OBSCLK1_IN_PARENT_MAIN_OBSCLK_DIV_OUT0                          | Parent input clock option to DEV_BOARD0_OBSCLK1_IN           |
 +------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
-|        186 | DEV_BOARD0_OBSCLK1_IN_PARENT_GLUELOGIC_HFOSC0_CLKOUT                       | Parent input clock option to DEV_BOARD0_OBSCLK1_IN           |
+|        156 | DEV_BOARD0_OBSCLK1_IN_PARENT_GLUELOGIC_HFOSC0_CLKOUT                       | Parent input clock option to DEV_BOARD0_OBSCLK1_IN           |
 +------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
-|        187 | DEV_BOARD0_OSPI0_CLK_IN                                                    | Input clock                                                  |
+|        157 | DEV_BOARD0_OSPI0_CLK_IN                                                    | Input clock                                                  |
 +------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
-|        188 | DEV_BOARD0_OSPI0_DQS_OUT                                                   | Output clock                                                 |
+|        158 | DEV_BOARD0_OSPI0_DQS_OUT                                                   | Output clock                                                 |
 +------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
-|        189 | DEV_BOARD0_OSPI0_LBCLKO_IN                                                 | Input clock                                                  |
+|        159 | DEV_BOARD0_OSPI0_LBCLKO_IN                                                 | Input clock                                                  |
 +------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
-|        190 | DEV_BOARD0_OSPI0_LBCLKO_OUT                                                | Output clock                                                 |
+|        160 | DEV_BOARD0_OSPI0_LBCLKO_OUT                                                | Output clock                                                 |
 +------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
-|        191 | DEV_BOARD0_RGMII1_RXC_OUT                                                  | Output clock                                                 |
+|        161 | DEV_BOARD0_RGMII1_RXC_OUT                                                  | Output clock                                                 |
 +------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
-|        193 | DEV_BOARD0_RGMII2_RXC_OUT                                                  | Output clock                                                 |
+|        163 | DEV_BOARD0_RGMII2_RXC_OUT                                                  | Output clock                                                 |
 +------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
-|        195 | DEV_BOARD0_RMII1_REF_CLK_OUT                                               | Output clock                                                 |
+|        165 | DEV_BOARD0_RMII1_REF_CLK_OUT                                               | Output clock                                                 |
 +------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
-|        196 | DEV_BOARD0_RMII2_REF_CLK_OUT                                               | Output clock                                                 |
+|        166 | DEV_BOARD0_RMII2_REF_CLK_OUT                                               | Output clock                                                 |
 +------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
-|        197 | DEV_BOARD0_SPI0_CLK_IN                                                     | Input clock                                                  |
+|        167 | DEV_BOARD0_SPI0_CLK_IN                                                     | Input clock                                                  |
 +------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
-|        198 | DEV_BOARD0_SPI0_CLK_OUT                                                    | Output clock                                                 |
+|        168 | DEV_BOARD0_SPI0_CLK_OUT                                                    | Output clock                                                 |
 +------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
-|        199 | DEV_BOARD0_SPI1_CLK_IN                                                     | Input clock                                                  |
+|        169 | DEV_BOARD0_SPI1_CLK_IN                                                     | Input clock                                                  |
 +------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
-|        200 | DEV_BOARD0_SPI1_CLK_OUT                                                    | Output clock                                                 |
+|        170 | DEV_BOARD0_SPI1_CLK_OUT                                                    | Output clock                                                 |
 +------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
-|        201 | DEV_BOARD0_SPI2_CLK_IN                                                     | Input clock                                                  |
+|        171 | DEV_BOARD0_SPI2_CLK_IN                                                     | Input clock                                                  |
 +------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
-|        202 | DEV_BOARD0_SPI2_CLK_OUT                                                    | Output clock                                                 |
+|        172 | DEV_BOARD0_SPI2_CLK_OUT                                                    | Output clock                                                 |
 +------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
-|        203 | DEV_BOARD0_SYSCLKOUT0_IN                                                   | Input clock                                                  |
+|        173 | DEV_BOARD0_SYSCLKOUT0_IN                                                   | Input clock                                                  |
 +------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
-|        204 | DEV_BOARD0_TCK_OUT                                                         | Output clock                                                 |
+|        174 | DEV_BOARD0_WKUP_CLKOUT0_IN                                                 | Input muxed clock                                            |
 +------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
-|        205 | DEV_BOARD0_TIMER_IO0_IN                                                    | Input clock                                                  |
+|        175 | DEV_BOARD0_WKUP_CLKOUT0_IN_PARENT_WKUP_CLKOUT_SEL_OUT0                     | Parent input clock option to DEV_BOARD0_WKUP_CLKOUT0_IN      |
 +------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
-|        206 | DEV_BOARD0_TIMER_IO1_IN                                                    | Input clock                                                  |
+|        176 | DEV_BOARD0_WKUP_CLKOUT0_IN_PARENT_GLUELOGIC_HFOSC0_CLKOUT                  | Parent input clock option to DEV_BOARD0_WKUP_CLKOUT0_IN      |
 +------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
-|        207 | DEV_BOARD0_TIMER_IO2_IN                                                    | Input clock                                                  |
+|        177 | DEV_BOARD0_TCK_OUT                                                         | Output clock                                                 |
 +------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
-|        208 | DEV_BOARD0_TIMER_IO3_IN                                                    | Input clock                                                  |
+|        178 | DEV_BOARD0_TIMER_IO0_IN                                                    | Input clock                                                  |
 +------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
-|        209 | DEV_BOARD0_TIMER_IO4_IN                                                    | Input clock                                                  |
+|        179 | DEV_BOARD0_TIMER_IO1_IN                                                    | Input clock                                                  |
 +------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
-|        210 | DEV_BOARD0_TIMER_IO5_IN                                                    | Input clock                                                  |
+|        180 | DEV_BOARD0_TIMER_IO2_IN                                                    | Input clock                                                  |
 +------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
-|        211 | DEV_BOARD0_TIMER_IO6_IN                                                    | Input clock                                                  |
+|        181 | DEV_BOARD0_TIMER_IO3_IN                                                    | Input clock                                                  |
 +------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
-|        212 | DEV_BOARD0_TIMER_IO7_IN                                                    | Input clock                                                  |
+|        182 | DEV_BOARD0_TIMER_IO4_IN                                                    | Input clock                                                  |
 +------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
-|        213 | DEV_BOARD0_TRC_CLK_IN                                                      | Input clock                                                  |
+|        183 | DEV_BOARD0_TIMER_IO5_IN                                                    | Input clock                                                  |
 +------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
-|        214 | DEV_BOARD0_VOUT0_EXTPCLKIN_OUT                                             | Output clock                                                 |
+|        184 | DEV_BOARD0_TIMER_IO6_IN                                                    | Input clock                                                  |
 +------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
-|        215 | DEV_BOARD0_VOUT0_PCLK_IN                                                   | Input muxed clock                                            |
+|        185 | DEV_BOARD0_TIMER_IO7_IN                                                    | Input clock                                                  |
 +------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
-|        217 | DEV_BOARD0_VOUT0_PCLK_IN_PARENT_K3_DSS_UL_MAIN_0_DPI_1_OUT_CLK             | Parent input clock option to DEV_BOARD0_VOUT0_PCLK_IN        |
+|        186 | DEV_BOARD0_TRC_CLK_IN                                                      | Input clock                                                  |
 +------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
-|        218 | DEV_BOARD0_VOUT0_PCLK_IN_PARENT_K3_DSS_UL_MAIN_1_DPI_0_OUT_CLK             | Parent input clock option to DEV_BOARD0_VOUT0_PCLK_IN        |
+|        187 | DEV_BOARD0_VOUT0_EXTPCLKIN_OUT                                             | Output clock                                                 |
 +------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
-|        219 | DEV_BOARD0_VOUT0_PCLK_IN_PARENT_K3_DSS_UL_MAIN_1_DPI_1_OUT_CLK             | Parent input clock option to DEV_BOARD0_VOUT0_PCLK_IN        |
+|        188 | DEV_BOARD0_VOUT0_PCLK_IN                                                   | Input muxed clock                                            |
 +------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
-|        220 | DEV_BOARD0_WKUP_CLKOUT0_IN                                                 | Input muxed clock                                            |
+|        190 | DEV_BOARD0_VOUT0_PCLK_IN_PARENT_K3_DSS_UL_MAIN_0_DPI_1_OUT_CLK             | Parent input clock option to DEV_BOARD0_VOUT0_PCLK_IN        |
 +------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
-|        221 | DEV_BOARD0_WKUP_CLKOUT0_IN_PARENT_WKUP_CLKOUT_SEL_OUT0                     | Parent input clock option to DEV_BOARD0_WKUP_CLKOUT0_IN      |
+|        191 | DEV_BOARD0_VOUT0_PCLK_IN_PARENT_K3_DSS_UL_MAIN_1_DPI_0_OUT_CLK             | Parent input clock option to DEV_BOARD0_VOUT0_PCLK_IN        |
 +------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
-|        222 | DEV_BOARD0_WKUP_CLKOUT0_IN_PARENT_GLUELOGIC_HFOSC0_CLKOUT                  | Parent input clock option to DEV_BOARD0_WKUP_CLKOUT0_IN      |
+|        192 | DEV_BOARD0_VOUT0_PCLK_IN_PARENT_K3_DSS_UL_MAIN_1_DPI_1_OUT_CLK             | Parent input clock option to DEV_BOARD0_VOUT0_PCLK_IN        |
 +------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
-|        224 | DEV_BOARD0_WKUP_I2C0_SCL_OUT                                               | Output clock                                                 |
+|        194 | DEV_BOARD0_WKUP_I2C0_SCL_OUT                                               | Output clock                                                 |
 +------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
 
 .. _soc_doc_j722s_public_clks_c7x256v0:
@@ -830,7 +830,7 @@ Clocks for C7X256V0 Device
 Clocks for C7X256V0_C7XV_CORE_0 Device
 --------------------------------------
 
-Device: :ref:`J722S_DEV_C7X256V0_C7XV_CORE_0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 168)
+Device: :ref:`J722S_DEV_C7X256V0_C7XV_CORE_0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 208)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -854,7 +854,7 @@ Clocks for C7X256V0_CLEC Device
 Clocks for C7X256V0_CLK Device
 ------------------------------
 
-Device: :ref:`J722S_DEV_C7X256V0_CLK <soc_doc_j722s_public_devices_desc_device_list>` (ID = 171)
+Device: :ref:`J722S_DEV_C7X256V0_CLK <soc_doc_j722s_public_devices_desc_device_list>` (ID = 211)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -884,7 +884,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for C7X256V0_CORE0 Device
 --------------------------------
 
-Device: :ref:`J722S_DEV_C7X256V0_CORE0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 169)
+Device: :ref:`J722S_DEV_C7X256V0_CORE0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 209)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -940,7 +940,7 @@ Clocks for C7X256V1 Device
 Clocks for C7X256V1_C7XV_CORE_0 Device
 --------------------------------------
 
-Device: :ref:`J722S_DEV_C7X256V1_C7XV_CORE_0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 175)
+Device: :ref:`J722S_DEV_C7X256V1_C7XV_CORE_0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 265)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -964,7 +964,7 @@ Clocks for C7X256V1_CLEC Device
 Clocks for C7X256V1_CLK Device
 ------------------------------
 
-Device: :ref:`J722S_DEV_C7X256V1_CLK <soc_doc_j722s_public_devices_desc_device_list>` (ID = 178)
+Device: :ref:`J722S_DEV_C7X256V1_CLK <soc_doc_j722s_public_devices_desc_device_list>` (ID = 268)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -994,7 +994,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for C7X256V1_CORE0 Device
 --------------------------------
 
-Device: :ref:`J722S_DEV_C7X256V1_CORE0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 176)
+Device: :ref:`J722S_DEV_C7X256V1_CORE0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 266)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -1042,7 +1042,7 @@ Clocks for C7X256V1_PBIST Device
 Clocks for C7XV_RSWS_BS_LIMITER11 Device
 ----------------------------------------
 
-Device: :ref:`J722S_DEV_C7XV_RSWS_BS_LIMITER11 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 165)
+Device: :ref:`J722S_DEV_C7XV_RSWS_BS_LIMITER11 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 263)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -1058,7 +1058,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for C7XV_RSWS_BS_LIMITER6 Device
 ---------------------------------------
 
-Device: :ref:`J722S_DEV_C7XV_RSWS_BS_LIMITER6 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 164)
+Device: :ref:`J722S_DEV_C7XV_RSWS_BS_LIMITER6 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 206)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -1074,7 +1074,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for CLK_32K_RC_SEL_DEV_VD Device
 ---------------------------------------
 
-Device: :ref:`J722S_DEV_CLK_32K_RC_SEL_DEV_VD <soc_doc_j722s_public_devices_desc_device_list>` (ID = 231)
+Device: :ref:`J722S_DEV_CLK_32K_RC_SEL_DEV_VD <soc_doc_j722s_public_devices_desc_device_list>` (ID = 193)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -1098,7 +1098,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for CODEC0 Device
 ------------------------
 
-Device: :ref:`J722S_DEV_CODEC0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 94)
+Device: :ref:`J722S_DEV_CODEC0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 204)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -1120,7 +1120,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for CODEC_RS_BW_LIMITER2 Device
 --------------------------------------
 
-Device: :ref:`J722S_DEV_CODEC_RS_BW_LIMITER2 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 211)
+Device: :ref:`J722S_DEV_CODEC_RS_BW_LIMITER2 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 221)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -1136,7 +1136,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for CODEC_WS_BW_LIMITER3 Device
 --------------------------------------
 
-Device: :ref:`J722S_DEV_CODEC_WS_BW_LIMITER3 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 212)
+Device: :ref:`J722S_DEV_CODEC_WS_BW_LIMITER3 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 222)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -1160,7 +1160,7 @@ Clocks for COMPUTE_CLUSTER0 Device
 Clocks for COMPUTE_CLUSTER0_CLKDIV_0 Device
 -------------------------------------------
 
-Device: :ref:`J722S_DEV_COMPUTE_CLUSTER0_CLKDIV_0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 155)
+Device: :ref:`J722S_DEV_COMPUTE_CLUSTER0_CLKDIV_0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 262)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -1180,7 +1180,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for COMPUTE_CLUSTER0_PBIST_0 Device
 ------------------------------------------
 
-Device: :ref:`J722S_DEV_COMPUTE_CLUSTER0_PBIST_0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 156)
+Device: :ref:`J722S_DEV_COMPUTE_CLUSTER0_PBIST_0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 167)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -1198,7 +1198,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for CPSW0 Device
 -----------------------
 
-Device: :ref:`J722S_DEV_CPSW0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 6)
+Device: :ref:`J722S_DEV_CPSW0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 13)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -1280,7 +1280,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for CPT2_AGGR0 Device
 ----------------------------
 
-Device: :ref:`J722S_DEV_CPT2_AGGR0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 8)
+Device: :ref:`J722S_DEV_CPT2_AGGR0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 195)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -1296,7 +1296,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for CPT2_AGGR1 Device
 ----------------------------
 
-Device: :ref:`J722S_DEV_CPT2_AGGR1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 7)
+Device: :ref:`J722S_DEV_CPT2_AGGR1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 194)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -1312,7 +1312,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for CSI_RX_IF0 Device
 ----------------------------
 
-Device: :ref:`J722S_DEV_CSI_RX_IF0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 10)
+Device: :ref:`J722S_DEV_CSI_RX_IF0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 182)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -1334,7 +1334,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for CSI_RX_IF1 Device
 ----------------------------
 
-Device: :ref:`J722S_DEV_CSI_RX_IF1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 11)
+Device: :ref:`J722S_DEV_CSI_RX_IF1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 244)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -1356,7 +1356,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for CSI_RX_IF2 Device
 ----------------------------
 
-Device: :ref:`J722S_DEV_CSI_RX_IF2 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 12)
+Device: :ref:`J722S_DEV_CSI_RX_IF2 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 245)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -1378,7 +1378,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for CSI_RX_IF3 Device
 ----------------------------
 
-Device: :ref:`J722S_DEV_CSI_RX_IF3 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 13)
+Device: :ref:`J722S_DEV_CSI_RX_IF3 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 246)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -1400,7 +1400,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for CSI_TX_IF0 Device
 ----------------------------
 
-Device: :ref:`J722S_DEV_CSI_TX_IF0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 14)
+Device: :ref:`J722S_DEV_CSI_TX_IF0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 247)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -1422,7 +1422,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for CTI0 Device
 ----------------------
 
-Device: :ref:`J722S_DEV_CTI0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 182)
+Device: :ref:`J722S_DEV_CTI0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 272)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -1438,7 +1438,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for CTI1 Device
 ----------------------
 
-Device: :ref:`J722S_DEV_CTI1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 183)
+Device: :ref:`J722S_DEV_CTI1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 273)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -1454,7 +1454,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for DBGSUSPENDROUTER0 Device
 -----------------------------------
 
-Device: :ref:`J722S_DEV_DBGSUSPENDROUTER0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 0)
+Device: :ref:`J722S_DEV_DBGSUSPENDROUTER0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 2)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -1710,7 +1710,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for DCC6 Device
 ----------------------
 
-Device: :ref:`J722S_DEV_DCC6 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 23)
+Device: :ref:`J722S_DEV_DCC6 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 183)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -1750,7 +1750,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for DCC7 Device
 ----------------------
 
-Device: :ref:`J722S_DEV_DCC7 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 24)
+Device: :ref:`J722S_DEV_DCC7 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 229)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -1790,7 +1790,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for DCC8 Device
 ----------------------
 
-Device: :ref:`J722S_DEV_DCC8 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 25)
+Device: :ref:`J722S_DEV_DCC8 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 230)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -1830,7 +1830,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for DDPA0 Device
 -----------------------
 
-Device: :ref:`J722S_DEV_DDPA0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 75)
+Device: :ref:`J722S_DEV_DDPA0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 85)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -1846,7 +1846,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for DDR32SS0 Device
 --------------------------
 
-Device: :ref:`J722S_DEV_DDR32SS0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 184)
+Device: :ref:`J722S_DEV_DDR32SS0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 170)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -1868,7 +1868,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for DEBUGSS0 Device
 --------------------------
 
-Device: :ref:`J722S_DEV_DEBUGSS0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 158)
+Device: :ref:`J722S_DEV_DEBUGSS0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 171)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -1888,7 +1888,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for DEBUGSS_WRAP0 Device
 -------------------------------
 
-Device: :ref:`J722S_DEV_DEBUGSS_WRAP0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 28)
+Device: :ref:`J722S_DEV_DEBUGSS_WRAP0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 24)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -1922,7 +1922,7 @@ Clocks for DMASS0 Device
 Clocks for DMASS0_BCDMA_0 Device
 --------------------------------
 
-Device: :ref:`J722S_DEV_DMASS0_BCDMA_0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 30)
+Device: :ref:`J722S_DEV_DMASS0_BCDMA_0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 26)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -1938,7 +1938,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for DMASS0_CBASS_0 Device
 --------------------------------
 
-Device: :ref:`J722S_DEV_DMASS0_CBASS_0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 31)
+Device: :ref:`J722S_DEV_DMASS0_CBASS_0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 27)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -1954,7 +1954,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for DMASS0_INTAGGR_0 Device
 ----------------------------------
 
-Device: :ref:`J722S_DEV_DMASS0_INTAGGR_0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 32)
+Device: :ref:`J722S_DEV_DMASS0_INTAGGR_0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 28)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -1970,7 +1970,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for DMASS0_IPCSS_0 Device
 --------------------------------
 
-Device: :ref:`J722S_DEV_DMASS0_IPCSS_0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 33)
+Device: :ref:`J722S_DEV_DMASS0_IPCSS_0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 29)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -1986,7 +1986,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for DMASS0_PKTDMA_0 Device
 ---------------------------------
 
-Device: :ref:`J722S_DEV_DMASS0_PKTDMA_0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 34)
+Device: :ref:`J722S_DEV_DMASS0_PKTDMA_0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 30)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2002,7 +2002,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for DMASS0_RINGACC_0 Device
 ----------------------------------
 
-Device: :ref:`J722S_DEV_DMASS0_RINGACC_0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 36)
+Device: :ref:`J722S_DEV_DMASS0_RINGACC_0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 33)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2026,7 +2026,7 @@ Clocks for DMASS1 Device
 Clocks for DMASS1_BCDMA_0 Device
 --------------------------------
 
-Device: :ref:`J722S_DEV_DMASS1_BCDMA_0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 38)
+Device: :ref:`J722S_DEV_DMASS1_BCDMA_0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 199)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2042,7 +2042,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for DMASS1_INTAGGR_0 Device
 ----------------------------------
 
-Device: :ref:`J722S_DEV_DMASS1_INTAGGR_0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 39)
+Device: :ref:`J722S_DEV_DMASS1_INTAGGR_0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 200)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2058,7 +2058,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for DPHY_RX0 Device
 --------------------------
 
-Device: :ref:`J722S_DEV_DPHY_RX0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 76)
+Device: :ref:`J722S_DEV_DPHY_RX0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 185)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2086,7 +2086,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for DPHY_RX1 Device
 --------------------------
 
-Device: :ref:`J722S_DEV_DPHY_RX1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 77)
+Device: :ref:`J722S_DEV_DPHY_RX1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 248)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2114,7 +2114,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for DPHY_RX2 Device
 --------------------------
 
-Device: :ref:`J722S_DEV_DPHY_RX2 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 78)
+Device: :ref:`J722S_DEV_DPHY_RX2 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 249)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2142,7 +2142,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for DPHY_RX3 Device
 --------------------------
 
-Device: :ref:`J722S_DEV_DPHY_RX3 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 79)
+Device: :ref:`J722S_DEV_DPHY_RX3 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 250)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2170,7 +2170,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for DPHY_TX0 Device
 --------------------------
 
-Device: :ref:`J722S_DEV_DPHY_TX0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 230)
+Device: :ref:`J722S_DEV_DPHY_TX0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 238)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2210,7 +2210,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for DSS0 Device
 ----------------------
 
-Device: :ref:`J722S_DEV_DSS0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 81)
+Device: :ref:`J722S_DEV_DSS0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 186)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2236,13 +2236,15 @@ Following is a mapping of Clocks IDs to function:
 Clocks for DSS1 Device
 ----------------------
 
-Device: :ref:`J722S_DEV_DSS1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 82)
+Device: :ref:`J722S_DEV_DSS1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 232)
 
 Following is a mapping of Clocks IDs to function:
 
 +------------+----------------------------------------------------------+----------------------------------------------------+
 |   Clock ID | Name                                                     | Function                                           |
 +============+==========================================================+====================================================+
+|          0 | DEV_DSS1_DPI_0_IN_CLK                                    | Input clock                                        |
++------------+----------------------------------------------------------+----------------------------------------------------+
 |          1 | DEV_DSS1_DPI_0_OUT_CLK                                   | Output clock                                       |
 +------------+----------------------------------------------------------+----------------------------------------------------+
 |          2 | DEV_DSS1_DPI_1_IN_CLK                                    | Input muxed clock                                  |
@@ -2262,7 +2264,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for DSS1_DPI0_PCLK_DEV_VD Device
 ---------------------------------------
 
-Device: :ref:`J722S_DEV_DSS1_DPI0_PCLK_DEV_VD <soc_doc_j722s_public_devices_desc_device_list>` (ID = 237)
+Device: :ref:`J722S_DEV_DSS1_DPI0_PCLK_DEV_VD <soc_doc_j722s_public_devices_desc_device_list>` (ID = 242)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2282,7 +2284,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for DSS1_DPI0_PLLSEL_DEV_VD Device
 -----------------------------------------
 
-Device: :ref:`J722S_DEV_DSS1_DPI0_PLLSEL_DEV_VD <soc_doc_j722s_public_devices_desc_device_list>` (ID = 236)
+Device: :ref:`J722S_DEV_DSS1_DPI0_PLLSEL_DEV_VD <soc_doc_j722s_public_devices_desc_device_list>` (ID = 241)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2302,7 +2304,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for DSS1_DPI1_PLLSEL_DEV_VD Device
 -----------------------------------------
 
-Device: :ref:`J722S_DEV_DSS1_DPI1_PLLSEL_DEV_VD <soc_doc_j722s_public_devices_desc_device_list>` (ID = 235)
+Device: :ref:`J722S_DEV_DSS1_DPI1_PLLSEL_DEV_VD <soc_doc_j722s_public_devices_desc_device_list>` (ID = 240)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2322,7 +2324,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for DSS_DSI0 Device
 --------------------------
 
-Device: :ref:`J722S_DEV_DSS_DSI0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 80)
+Device: :ref:`J722S_DEV_DSS_DSI0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 231)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2348,7 +2350,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for ECAP0 Device
 -----------------------
 
-Device: :ref:`J722S_DEV_ECAP0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 53)
+Device: :ref:`J722S_DEV_ECAP0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 51)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2364,7 +2366,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for ECAP1 Device
 -----------------------
 
-Device: :ref:`J722S_DEV_ECAP1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 54)
+Device: :ref:`J722S_DEV_ECAP1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 52)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2380,7 +2382,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for ECAP2 Device
 -----------------------
 
-Device: :ref:`J722S_DEV_ECAP2 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 55)
+Device: :ref:`J722S_DEV_ECAP2 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 53)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2396,7 +2398,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for ELM0 Device
 ----------------------
 
-Device: :ref:`J722S_DEV_ELM0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 57)
+Device: :ref:`J722S_DEV_ELM0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 54)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2412,7 +2414,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for EPWM0 Device
 -----------------------
 
-Device: :ref:`J722S_DEV_EPWM0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 83)
+Device: :ref:`J722S_DEV_EPWM0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 86)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2428,7 +2430,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for EPWM1 Device
 -----------------------
 
-Device: :ref:`J722S_DEV_EPWM1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 84)
+Device: :ref:`J722S_DEV_EPWM1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 87)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2444,7 +2446,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for EPWM2 Device
 -----------------------
 
-Device: :ref:`J722S_DEV_EPWM2 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 85)
+Device: :ref:`J722S_DEV_EPWM2 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 88)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2460,7 +2462,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for EQEP0 Device
 -----------------------
 
-Device: :ref:`J722S_DEV_EQEP0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 62)
+Device: :ref:`J722S_DEV_EQEP0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 59)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2476,7 +2478,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for EQEP1 Device
 -----------------------
 
-Device: :ref:`J722S_DEV_EQEP1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 63)
+Device: :ref:`J722S_DEV_EQEP1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 60)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2492,7 +2494,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for EQEP2 Device
 -----------------------
 
-Device: :ref:`J722S_DEV_EQEP2 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 64)
+Device: :ref:`J722S_DEV_EQEP2 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 62)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2508,7 +2510,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for ESM0 Device
 ----------------------
 
-Device: :ref:`J722S_DEV_ESM0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 66)
+Device: :ref:`J722S_DEV_ESM0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 63)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2532,7 +2534,7 @@ Clocks for FSS0 Device
 Clocks for FSS0_FSAS_0 Device
 -----------------------------
 
-Device: :ref:`J722S_DEV_FSS0_FSAS_0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 68)
+Device: :ref:`J722S_DEV_FSS0_FSAS_0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 74)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2548,25 +2550,33 @@ Following is a mapping of Clocks IDs to function:
 Clocks for FSS0_OSPI_0 Device
 -----------------------------
 
-Device: :ref:`J722S_DEV_FSS0_OSPI_0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 69)
+Device: :ref:`J722S_DEV_FSS0_OSPI_0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 75)
 
 Following is a mapping of Clocks IDs to function:
 
-+------------+-------------------------------+--------------+
-|   Clock ID | Name                          | Function     |
-+============+===============================+==============+
-|          0 | DEV_FSS0_OSPI_0_OSPI_DQS_CLK  | Input clock  |
-+------------+-------------------------------+--------------+
-|          1 | DEV_FSS0_OSPI_0_OSPI_HCLK_CLK | Input clock  |
-+------------+-------------------------------+--------------+
-|          2 | DEV_FSS0_OSPI_0_OSPI_ICLK_CLK | Input clock  |
-+------------+-------------------------------+--------------+
-|          3 | DEV_FSS0_OSPI_0_OSPI_OCLK_CLK | Output clock |
-+------------+-------------------------------+--------------+
-|          4 | DEV_FSS0_OSPI_0_OSPI_PCLK_CLK | Input clock  |
-+------------+-------------------------------+--------------+
-|          5 | DEV_FSS0_OSPI_0_OSPI_RCLK_CLK | Input clock  |
-+------------+-------------------------------+--------------+
++------------+--------------------------------------------------------------------------+------------------------------------------------------------+
+|   Clock ID | Name                                                                     | Function                                                   |
++============+==========================================================================+============================================================+
+|          0 | DEV_FSS0_OSPI_0_OSPI_DQS_CLK                                             | Input clock                                                |
++------------+--------------------------------------------------------------------------+------------------------------------------------------------+
+|          1 | DEV_FSS0_OSPI_0_OSPI_HCLK_CLK                                            | Input clock                                                |
++------------+--------------------------------------------------------------------------+------------------------------------------------------------+
+|          2 | DEV_FSS0_OSPI_0_OSPI_ICLK_CLK                                            | Input muxed clock                                          |
++------------+--------------------------------------------------------------------------+------------------------------------------------------------+
+|          3 | DEV_FSS0_OSPI_0_OSPI_ICLK_CLK_PARENT_BOARD_0_OSPI0_DQS_OUT               | Parent input clock option to DEV_FSS0_OSPI_0_OSPI_ICLK_CLK |
++------------+--------------------------------------------------------------------------+------------------------------------------------------------+
+|          4 | DEV_FSS0_OSPI_0_OSPI_ICLK_CLK_PARENT_BOARD_0_OSPI0_LBCLKO_OUT            | Parent input clock option to DEV_FSS0_OSPI_0_OSPI_ICLK_CLK |
++------------+--------------------------------------------------------------------------+------------------------------------------------------------+
+|          5 | DEV_FSS0_OSPI_0_OSPI_OCLK_CLK                                            | Output clock                                               |
++------------+--------------------------------------------------------------------------+------------------------------------------------------------+
+|          6 | DEV_FSS0_OSPI_0_OSPI_PCLK_CLK                                            | Input clock                                                |
++------------+--------------------------------------------------------------------------+------------------------------------------------------------+
+|          7 | DEV_FSS0_OSPI_0_OSPI_RCLK_CLK                                            | Input muxed clock                                          |
++------------+--------------------------------------------------------------------------+------------------------------------------------------------+
+|          8 | DEV_FSS0_OSPI_0_OSPI_RCLK_CLK_PARENT_HSDIV4_16FFT_MAIN_0_HSDIVOUT1_CLK   | Parent input clock option to DEV_FSS0_OSPI_0_OSPI_RCLK_CLK |
++------------+--------------------------------------------------------------------------+------------------------------------------------------------+
+|          9 | DEV_FSS0_OSPI_0_OSPI_RCLK_CLK_PARENT_POSTDIV1_16FFT_MAIN_1_HSDIVOUT5_CLK | Parent input clock option to DEV_FSS0_OSPI_0_OSPI_RCLK_CLK |
++------------+--------------------------------------------------------------------------+------------------------------------------------------------+
 
 .. _soc_doc_j722s_public_clks_gicss0:
 
@@ -2574,7 +2584,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for GICSS0 Device
 ------------------------
 
-Device: :ref:`J722S_DEV_GICSS0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 70)
+Device: :ref:`J722S_DEV_GICSS0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 76)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2590,7 +2600,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for GPIO0 Device
 -----------------------
 
-Device: :ref:`J722S_DEV_GPIO0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 71)
+Device: :ref:`J722S_DEV_GPIO0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 77)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2606,7 +2616,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for GPIO1 Device
 -----------------------
 
-Device: :ref:`J722S_DEV_GPIO1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 72)
+Device: :ref:`J722S_DEV_GPIO1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 78)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2622,7 +2632,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for GPMC0 Device
 -----------------------
 
-Device: :ref:`J722S_DEV_GPMC0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 74)
+Device: :ref:`J722S_DEV_GPMC0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 80)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2648,7 +2658,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for GPU0 Device
 ----------------------
 
-Device: :ref:`J722S_DEV_GPU0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 190)
+Device: :ref:`J722S_DEV_GPU0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 237)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2668,7 +2678,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for GPU_RS_BW_LIMITER9 Device
 ------------------------------------
 
-Device: :ref:`J722S_DEV_GPU_RS_BW_LIMITER9 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 191)
+Device: :ref:`J722S_DEV_GPU_RS_BW_LIMITER9 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 174)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2684,7 +2694,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for GPU_WS_BW_LIMITER10 Device
 -------------------------------------
 
-Device: :ref:`J722S_DEV_GPU_WS_BW_LIMITER10 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 192)
+Device: :ref:`J722S_DEV_GPU_WS_BW_LIMITER10 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 175)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2694,13 +2704,29 @@ Following is a mapping of Clocks IDs to function:
 |          0 | DEV_GPU_WS_BW_LIMITER10_CLK_CLK | Input clock |
 +------------+---------------------------------+-------------+
 
+.. _soc_doc_j722s_public_clks_hsm0:
+
+
+Clocks for HSM0 Device
+----------------------
+
+Device: :ref:`J722S_DEV_HSM0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 225)
+
+Following is a mapping of Clocks IDs to function:
+
++------------+------------------+-------------+
+|   Clock ID | Name             | Function    |
++============+==================+=============+
+|          0 | DEV_HSM0_DAP_CLK | Input clock |
++------------+------------------+-------------+
+
 .. _soc_doc_j722s_public_clks_i2c0:
 
 
 Clocks for I2C0 Device
 ----------------------
 
-Device: :ref:`J722S_DEV_I2C0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 113)
+Device: :ref:`J722S_DEV_I2C0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 102)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2722,7 +2748,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for I2C1 Device
 ----------------------
 
-Device: :ref:`J722S_DEV_I2C1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 114)
+Device: :ref:`J722S_DEV_I2C1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 103)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2744,7 +2770,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for I2C2 Device
 ----------------------
 
-Device: :ref:`J722S_DEV_I2C2 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 115)
+Device: :ref:`J722S_DEV_I2C2 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 104)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2766,7 +2792,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for I2C3 Device
 ----------------------
 
-Device: :ref:`J722S_DEV_I2C3 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 116)
+Device: :ref:`J722S_DEV_I2C3 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 105)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2788,7 +2814,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for I2C4 Device
 ----------------------
 
-Device: :ref:`J722S_DEV_I2C4 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 117)
+Device: :ref:`J722S_DEV_I2C4 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 254)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2810,7 +2836,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for JPGENC0 Device
 -------------------------
 
-Device: :ref:`J722S_DEV_JPGENC0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 86)
+Device: :ref:`J722S_DEV_JPGENC0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 201)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2826,7 +2852,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for JPGENC_RS_BW_LIMITER4 Device
 ---------------------------------------
 
-Device: :ref:`J722S_DEV_JPGENC_RS_BW_LIMITER4 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 188)
+Device: :ref:`J722S_DEV_JPGENC_RS_BW_LIMITER4 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 215)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2842,7 +2868,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for JPGENC_WS_BW_LIMITER5 Device
 ---------------------------------------
 
-Device: :ref:`J722S_DEV_JPGENC_WS_BW_LIMITER5 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 189)
+Device: :ref:`J722S_DEV_JPGENC_WS_BW_LIMITER5 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 216)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2858,7 +2884,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for LED0 Device
 ----------------------
 
-Device: :ref:`J722S_DEV_LED0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 87)
+Device: :ref:`J722S_DEV_LED0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 83)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2906,7 +2932,7 @@ Clocks for MAIN_EMIF_DATA_ISO_VD Device
 Clocks for MAIN_GPIOMUX_INTROUTER0 Device
 -----------------------------------------
 
-Device: :ref:`J722S_DEV_MAIN_GPIOMUX_INTROUTER0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 1)
+Device: :ref:`J722S_DEV_MAIN_GPIOMUX_INTROUTER0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 3)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2938,7 +2964,7 @@ Clocks for MAIN_USB2_ISO_VD Device
 Clocks for MCAN0 Device
 -----------------------
 
-Device: :ref:`J722S_DEV_MCAN0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 102)
+Device: :ref:`J722S_DEV_MCAN0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 98)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2964,7 +2990,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for MCAN1 Device
 -----------------------
 
-Device: :ref:`J722S_DEV_MCAN1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 103)
+Device: :ref:`J722S_DEV_MCAN1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 99)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2990,7 +3016,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for MCASP0 Device
 ------------------------
 
-Device: :ref:`J722S_DEV_MCASP0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 106)
+Device: :ref:`J722S_DEV_MCASP0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 190)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -3080,7 +3106,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for MCASP1 Device
 ------------------------
 
-Device: :ref:`J722S_DEV_MCASP1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 107)
+Device: :ref:`J722S_DEV_MCASP1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 191)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -3170,7 +3196,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for MCASP2 Device
 ------------------------
 
-Device: :ref:`J722S_DEV_MCASP2 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 108)
+Device: :ref:`J722S_DEV_MCASP2 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 192)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -3260,7 +3286,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for MCASP3 Device
 ------------------------
 
-Device: :ref:`J722S_DEV_MCASP3 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 109)
+Device: :ref:`J722S_DEV_MCASP3 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 252)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -3350,7 +3376,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for MCASP4 Device
 ------------------------
 
-Device: :ref:`J722S_DEV_MCASP4 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 110)
+Device: :ref:`J722S_DEV_MCASP4 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 253)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -3440,7 +3466,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for MCRC64_0 Device
 --------------------------
 
-Device: :ref:`J722S_DEV_MCRC64_0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 111)
+Device: :ref:`J722S_DEV_MCRC64_0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 116)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -3456,7 +3482,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for MCSPI0 Device
 ------------------------
 
-Device: :ref:`J722S_DEV_MCSPI0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 213)
+Device: :ref:`J722S_DEV_MCSPI0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 141)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -3482,7 +3508,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for MCSPI1 Device
 ------------------------
 
-Device: :ref:`J722S_DEV_MCSPI1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 214)
+Device: :ref:`J722S_DEV_MCSPI1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 142)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -3508,7 +3534,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for MCSPI2 Device
 ------------------------
 
-Device: :ref:`J722S_DEV_MCSPI2 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 215)
+Device: :ref:`J722S_DEV_MCSPI2 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 143)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -3534,7 +3560,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for MCU_CPT2_AGGR0 Device
 --------------------------------
 
-Device: :ref:`J722S_DEV_MCU_CPT2_AGGR0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 9)
+Device: :ref:`J722S_DEV_MCU_CPT2_AGGR0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 196)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -3550,7 +3576,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for MCU_DCC0 Device
 --------------------------
 
-Device: :ref:`J722S_DEV_MCU_DCC0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 26)
+Device: :ref:`J722S_DEV_MCU_DCC0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 23)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -3590,7 +3616,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for MCU_DCC1 Device
 --------------------------
 
-Device: :ref:`J722S_DEV_MCU_DCC1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 27)
+Device: :ref:`J722S_DEV_MCU_DCC1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 197)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -3624,7 +3650,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for MCU_GPIO0 Device
 ---------------------------
 
-Device: :ref:`J722S_DEV_MCU_GPIO0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 73)
+Device: :ref:`J722S_DEV_MCU_GPIO0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 79)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -3648,7 +3674,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for MCU_I2C0 Device
 --------------------------
 
-Device: :ref:`J722S_DEV_MCU_I2C0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 118)
+Device: :ref:`J722S_DEV_MCU_I2C0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 106)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -3670,7 +3696,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for MCU_MCAN0 Device
 ---------------------------
 
-Device: :ref:`J722S_DEV_MCU_MCAN0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 104)
+Device: :ref:`J722S_DEV_MCU_MCAN0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 188)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -3696,7 +3722,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for MCU_MCAN1 Device
 ---------------------------
 
-Device: :ref:`J722S_DEV_MCU_MCAN1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 105)
+Device: :ref:`J722S_DEV_MCU_MCAN1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 189)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -3722,7 +3748,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for MCU_MCRC64_0 Device
 ------------------------------
 
-Device: :ref:`J722S_DEV_MCU_MCRC64_0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 112)
+Device: :ref:`J722S_DEV_MCU_MCRC64_0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 100)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -3738,7 +3764,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for MCU_MCSPI0 Device
 ----------------------------
 
-Device: :ref:`J722S_DEV_MCU_MCSPI0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 216)
+Device: :ref:`J722S_DEV_MCU_MCSPI0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 147)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -3764,7 +3790,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for MCU_MCSPI1 Device
 ----------------------------
 
-Device: :ref:`J722S_DEV_MCU_MCSPI1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 217)
+Device: :ref:`J722S_DEV_MCU_MCSPI1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 148)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -3790,7 +3816,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for MCU_MCU_16FF0 Device
 -------------------------------
 
-Device: :ref:`J722S_DEV_MCU_MCU_16FF0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 160)
+Device: :ref:`J722S_DEV_MCU_MCU_16FF0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 180)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -3806,7 +3832,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for MCU_OBSCLK_MUX_SEL_DEV_VD Device
 -------------------------------------------
 
-Device: :ref:`J722S_DEV_MCU_OBSCLK_MUX_SEL_DEV_VD <soc_doc_j722s_public_devices_desc_device_list>` (ID = 233)
+Device: :ref:`J722S_DEV_MCU_OBSCLK_MUX_SEL_DEV_VD <soc_doc_j722s_public_devices_desc_device_list>` (ID = 227)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -3840,7 +3866,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for MCU_PBIST0 Device
 ----------------------------
 
-Device: :ref:`J722S_DEV_MCU_PBIST0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 93)
+Device: :ref:`J722S_DEV_MCU_PBIST0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 203)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -3864,7 +3890,7 @@ Clocks for MCU_R5FSS0 Device
 Clocks for MCU_R5FSS0_CORE0 Device
 ----------------------------------
 
-Device: :ref:`J722S_DEV_MCU_R5FSS0_CORE0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 139)
+Device: :ref:`J722S_DEV_MCU_R5FSS0_CORE0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 9)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -3876,21 +3902,13 @@ Following is a mapping of Clocks IDs to function:
 |          1 | DEV_MCU_R5FSS0_CORE0_INTERFACE0_CLK | Input clock |
 +------------+-------------------------------------+-------------+
 
-.. _soc_doc_j722s_public_clks_mcu_r5fss0_ss0:
-
-
-Clocks for MCU_R5FSS0_SS0 Device
---------------------------------
-
-**This device has no defined clocks.**
-
 .. _soc_doc_j722s_public_clks_mcu_rti0:
 
 
 Clocks for MCU_RTI0 Device
 --------------------------
 
-Device: :ref:`J722S_DEV_MCU_RTI0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 151)
+Device: :ref:`J722S_DEV_MCU_RTI0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 131)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -3970,6 +3988,38 @@ Following is a mapping of Clocks IDs to function:
 |          4 | DEV_MCU_TIMER1_TIMER_TCLK_CLK_PARENT_DMTIMER_DMC1MS_MCU_0_TIMER_PWM | Parent input clock option to DEV_MCU_TIMER1_TIMER_TCLK_CLK |
 +------------+---------------------------------------------------------------------+------------------------------------------------------------+
 
+.. _soc_doc_j722s_public_clks_mcu_timer1_vd:
+
+
+Clocks for MCU_TIMER1_VD Device
+-------------------------------
+
+Device: :ref:`J722S_DEV_MCU_TIMER1_VD <soc_doc_j722s_public_devices_desc_device_list>` (ID = 279)
+
+Following is a mapping of Clocks IDs to function:
+
++------------+---------------------------------------------------------------------------+----------------------------------------------------+
+|   Clock ID | Name                                                                      | Function                                           |
++============+===========================================================================+====================================================+
+|          0 | DEV_MCU_TIMER1_VD_CLK                                                     | Input muxed clock                                  |
++------------+---------------------------------------------------------------------------+----------------------------------------------------+
+|          1 | DEV_MCU_TIMER1_VD_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT                      | Parent input clock option to DEV_MCU_TIMER1_VD_CLK |
++------------+---------------------------------------------------------------------------+----------------------------------------------------+
+|          2 | DEV_MCU_TIMER1_VD_CLK_PARENT_SAM62_PLL_CTRL_WRAP_MCU_0_CHIP_DIV1_CLK_CLK4 | Parent input clock option to DEV_MCU_TIMER1_VD_CLK |
++------------+---------------------------------------------------------------------------+----------------------------------------------------+
+|          3 | DEV_MCU_TIMER1_VD_CLK_PARENT_GLUELOGIC_RCOSC_CLKOUT                       | Parent input clock option to DEV_MCU_TIMER1_VD_CLK |
++------------+---------------------------------------------------------------------------+----------------------------------------------------+
+|          4 | DEV_MCU_TIMER1_VD_CLK_PARENT_POSTDIV1_16FFT_MCU_0_HSDIVOUT5_CLK           | Parent input clock option to DEV_MCU_TIMER1_VD_CLK |
++------------+---------------------------------------------------------------------------+----------------------------------------------------+
+|          5 | DEV_MCU_TIMER1_VD_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT                  | Parent input clock option to DEV_MCU_TIMER1_VD_CLK |
++------------+---------------------------------------------------------------------------+----------------------------------------------------+
+|          6 | DEV_MCU_TIMER1_VD_CLK_PARENT_CLK_32K_RC_SEL_OUT0                          | Parent input clock option to DEV_MCU_TIMER1_VD_CLK |
++------------+---------------------------------------------------------------------------+----------------------------------------------------+
+|          7 | DEV_MCU_TIMER1_VD_CLK_PARENT_CPSW_3GUSS_AM67_MAIN_0_CPTS_GENF0            | Parent input clock option to DEV_MCU_TIMER1_VD_CLK |
++------------+---------------------------------------------------------------------------+----------------------------------------------------+
+|          8 | DEV_MCU_TIMER1_VD_CLK_PARENT_GLUELOGIC_RCOSC_CLK_1P0V_97P65K3             | Parent input clock option to DEV_MCU_TIMER1_VD_CLK |
++------------+---------------------------------------------------------------------------+----------------------------------------------------+
+
 .. _soc_doc_j722s_public_clks_mcu_timer2:
 
 
@@ -4030,6 +4080,38 @@ Following is a mapping of Clocks IDs to function:
 |          4 | DEV_MCU_TIMER3_TIMER_TCLK_CLK_PARENT_DMTIMER_DMC1MS_MCU_2_TIMER_PWM | Parent input clock option to DEV_MCU_TIMER3_TIMER_TCLK_CLK |
 +------------+---------------------------------------------------------------------+------------------------------------------------------------+
 
+.. _soc_doc_j722s_public_clks_mcu_timer3_vd:
+
+
+Clocks for MCU_TIMER3_VD Device
+-------------------------------
+
+Device: :ref:`J722S_DEV_MCU_TIMER3_VD <soc_doc_j722s_public_devices_desc_device_list>` (ID = 280)
+
+Following is a mapping of Clocks IDs to function:
+
++------------+---------------------------------------------------------------------------+----------------------------------------------------+
+|   Clock ID | Name                                                                      | Function                                           |
++============+===========================================================================+====================================================+
+|          0 | DEV_MCU_TIMER3_VD_CLK                                                     | Input muxed clock                                  |
++------------+---------------------------------------------------------------------------+----------------------------------------------------+
+|          1 | DEV_MCU_TIMER3_VD_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT                      | Parent input clock option to DEV_MCU_TIMER3_VD_CLK |
++------------+---------------------------------------------------------------------------+----------------------------------------------------+
+|          2 | DEV_MCU_TIMER3_VD_CLK_PARENT_SAM62_PLL_CTRL_WRAP_MCU_0_CHIP_DIV1_CLK_CLK4 | Parent input clock option to DEV_MCU_TIMER3_VD_CLK |
++------------+---------------------------------------------------------------------------+----------------------------------------------------+
+|          3 | DEV_MCU_TIMER3_VD_CLK_PARENT_GLUELOGIC_RCOSC_CLKOUT                       | Parent input clock option to DEV_MCU_TIMER3_VD_CLK |
++------------+---------------------------------------------------------------------------+----------------------------------------------------+
+|          4 | DEV_MCU_TIMER3_VD_CLK_PARENT_POSTDIV1_16FFT_MCU_0_HSDIVOUT5_CLK           | Parent input clock option to DEV_MCU_TIMER3_VD_CLK |
++------------+---------------------------------------------------------------------------+----------------------------------------------------+
+|          5 | DEV_MCU_TIMER3_VD_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT                  | Parent input clock option to DEV_MCU_TIMER3_VD_CLK |
++------------+---------------------------------------------------------------------------+----------------------------------------------------+
+|          6 | DEV_MCU_TIMER3_VD_CLK_PARENT_CLK_32K_RC_SEL_OUT0                          | Parent input clock option to DEV_MCU_TIMER3_VD_CLK |
++------------+---------------------------------------------------------------------------+----------------------------------------------------+
+|          7 | DEV_MCU_TIMER3_VD_CLK_PARENT_CPSW_3GUSS_AM67_MAIN_0_CPTS_GENF0            | Parent input clock option to DEV_MCU_TIMER3_VD_CLK |
++------------+---------------------------------------------------------------------------+----------------------------------------------------+
+|          8 | DEV_MCU_TIMER3_VD_CLK_PARENT_GLUELOGIC_RCOSC_CLK_1P0V_97P65K3             | Parent input clock option to DEV_MCU_TIMER3_VD_CLK |
++------------+---------------------------------------------------------------------------+----------------------------------------------------+
+
 .. _soc_doc_j722s_public_clks_mcu_uart0:
 
 
@@ -4054,7 +4136,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for MMCSD0 Device
 ------------------------
 
-Device: :ref:`J722S_DEV_MMCSD0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 58)
+Device: :ref:`J722S_DEV_MMCSD0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 57)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -4076,7 +4158,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for MMCSD1 Device
 ------------------------
 
-Device: :ref:`J722S_DEV_MMCSD1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 59)
+Device: :ref:`J722S_DEV_MMCSD1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 58)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -4106,7 +4188,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for MMCSD2 Device
 ------------------------
 
-Device: :ref:`J722S_DEV_MMCSD2 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 60)
+Device: :ref:`J722S_DEV_MMCSD2 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 184)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -4136,7 +4218,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for MSRAM8KX256E0 Device
 -------------------------------
 
-Device: :ref:`J722S_DEV_MSRAM8KX256E0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 120)
+Device: :ref:`J722S_DEV_MSRAM8KX256E0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 255)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -4154,7 +4236,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for OBSCLK0_MUX_SEL_DEV_VD Device
 ----------------------------------------
 
-Device: :ref:`J722S_DEV_OBSCLK0_MUX_SEL_DEV_VD <soc_doc_j722s_public_devices_desc_device_list>` (ID = 234)
+Device: :ref:`J722S_DEV_OBSCLK0_MUX_SEL_DEV_VD <soc_doc_j722s_public_devices_desc_device_list>` (ID = 228)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -4214,7 +4296,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for OLDI_TX_CORE0 Device
 -------------------------------
 
-Device: :ref:`J722S_DEV_OLDI_TX_CORE0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 121)
+Device: :ref:`J722S_DEV_OLDI_TX_CORE0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 234)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -4223,6 +4305,8 @@ Following is a mapping of Clocks IDs to function:
 +============+====================================+=============+
 |          0 | DEV_OLDI_TX_CORE0_OLDI_0_FWD_P_CLK | Input clock |
 +------------+------------------------------------+-------------+
+|          5 | DEV_OLDI_TX_CORE0_OLDI_PLL_CLK     | Input clock |
++------------+------------------------------------+-------------+
 
 .. _soc_doc_j722s_public_clks_oldi_tx_core1:
 
@@ -4230,7 +4314,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for OLDI_TX_CORE1 Device
 -------------------------------
 
-Device: :ref:`J722S_DEV_OLDI_TX_CORE1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 122)
+Device: :ref:`J722S_DEV_OLDI_TX_CORE1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 235)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -4241,7 +4325,11 @@ Following is a mapping of Clocks IDs to function:
 +------------+------------------------------------------------------------------------------+-----------------------------------------------------------------+
 |          1 | DEV_OLDI_TX_CORE1_OLDI_0_FWD_P_CLK_PARENT_HSDIV0_16FFT_MAIN_16_HSDIVOUT0_CLK | Parent input clock option to DEV_OLDI_TX_CORE1_OLDI_0_FWD_P_CLK |
 +------------+------------------------------------------------------------------------------+-----------------------------------------------------------------+
+|          2 | DEV_OLDI_TX_CORE1_OLDI_0_FWD_P_CLK_PARENT_MAIN_DSS1_DPI0_PCLK_OUT0           | Parent input clock option to DEV_OLDI_TX_CORE1_OLDI_0_FWD_P_CLK |
++------------+------------------------------------------------------------------------------+-----------------------------------------------------------------+
 |          7 | DEV_OLDI_TX_CORE1_OLDI_PLL_CLK                                               | Input muxed clock                                               |
++------------+------------------------------------------------------------------------------+-----------------------------------------------------------------+
+|          8 | DEV_OLDI_TX_CORE1_OLDI_PLL_CLK_PARENT_HSDIV0_16FFT_MAIN_16_HSDIVOUT0_CLK     | Parent input clock option to DEV_OLDI_TX_CORE1_OLDI_PLL_CLK     |
 +------------+------------------------------------------------------------------------------+-----------------------------------------------------------------+
 |          9 | DEV_OLDI_TX_CORE1_OLDI_PLL_CLK_PARENT_HSDIV0_16FFT_MAIN_18_HSDIVOUT0_CLK     | Parent input clock option to DEV_OLDI_TX_CORE1_OLDI_PLL_CLK     |
 +------------+------------------------------------------------------------------------------+-----------------------------------------------------------------+
@@ -4252,7 +4340,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for PBIST0 Device
 ------------------------
 
-Device: :ref:`J722S_DEV_PBIST0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 88)
+Device: :ref:`J722S_DEV_PBIST0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 163)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -4270,7 +4358,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for PBIST1 Device
 ------------------------
 
-Device: :ref:`J722S_DEV_PBIST1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 89)
+Device: :ref:`J722S_DEV_PBIST1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 233)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -4288,7 +4376,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for PBIST2 Device
 ------------------------
 
-Device: :ref:`J722S_DEV_PBIST2 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 92)
+Device: :ref:`J722S_DEV_PBIST2 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 251)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -4306,7 +4394,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for PBIST3 Device
 ------------------------
 
-Device: :ref:`J722S_DEV_PBIST3 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 210)
+Device: :ref:`J722S_DEV_PBIST3 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 220)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -4324,7 +4412,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for PCIE0 Device
 -----------------------
 
-Device: :ref:`J722S_DEV_PCIE0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 123)
+Device: :ref:`J722S_DEV_PCIE0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 256)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -4368,7 +4456,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for PSC0 Device
 ----------------------
 
-Device: :ref:`J722S_DEV_PSC0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 195)
+Device: :ref:`J722S_DEV_PSC0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 169)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -4386,7 +4474,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for PSC0_FW_0 Device
 ---------------------------
 
-Device: :ref:`J722S_DEV_PSC0_FW_0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 194)
+Device: :ref:`J722S_DEV_PSC0_FW_0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 168)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -4418,7 +4506,7 @@ Clocks for R5FSS0 Device
 Clocks for R5FSS0_CORE0 Device
 ------------------------------
 
-Device: :ref:`J722S_DEV_R5FSS0_CORE0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 127)
+Device: :ref:`J722S_DEV_R5FSS0_CORE0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 259)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -4444,7 +4532,7 @@ Clocks for R5FSS0_SS0 Device
 Clocks for RTI0 Device
 ----------------------
 
-Device: :ref:`J722S_DEV_RTI0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 141)
+Device: :ref:`J722S_DEV_RTI0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 125)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -4470,7 +4558,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for RTI1 Device
 ----------------------
 
-Device: :ref:`J722S_DEV_RTI1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 142)
+Device: :ref:`J722S_DEV_RTI1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 126)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -4496,7 +4584,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for RTI15 Device
 -----------------------
 
-Device: :ref:`J722S_DEV_RTI15 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 148)
+Device: :ref:`J722S_DEV_RTI15 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 130)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -4522,7 +4610,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for RTI2 Device
 ----------------------
 
-Device: :ref:`J722S_DEV_RTI2 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 143)
+Device: :ref:`J722S_DEV_RTI2 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 127)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -4548,7 +4636,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for RTI3 Device
 ----------------------
 
-Device: :ref:`J722S_DEV_RTI3 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 144)
+Device: :ref:`J722S_DEV_RTI3 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 128)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -4574,7 +4662,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for RTI4 Device
 ----------------------
 
-Device: :ref:`J722S_DEV_RTI4 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 145)
+Device: :ref:`J722S_DEV_RTI4 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 205)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -4600,7 +4688,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for RTI5 Device
 ----------------------
 
-Device: :ref:`J722S_DEV_RTI5 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 147)
+Device: :ref:`J722S_DEV_RTI5 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 260)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -4626,7 +4714,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for RTI8 Device
 ----------------------
 
-Device: :ref:`J722S_DEV_RTI8 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 150)
+Device: :ref:`J722S_DEV_RTI8 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 261)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -4646,29 +4734,13 @@ Following is a mapping of Clocks IDs to function:
 |          5 | DEV_RTI8_VBUSP_CLK                                       | Input clock                                   |
 +------------+----------------------------------------------------------+-----------------------------------------------+
 
-.. _soc_doc_j722s_public_clks_sam67_debug_funnel_2_32_0:
-
-
-Clocks for SAM67_DEBUG_FUNNEL_2_32_0 Device
--------------------------------------------
-
-**This device has no defined clocks.**
-
-.. _soc_doc_j722s_public_clks_sam67_debug_funnel_2_64_0:
-
-
-Clocks for SAM67_DEBUG_FUNNEL_2_64_0 Device
--------------------------------------------
-
-**This device has no defined clocks.**
-
 .. _soc_doc_j722s_public_clks_sam67_dmpac_wrap0:
 
 
 Clocks for SAM67_DMPAC_WRAP0 Device
 -----------------------------------
 
-Device: :ref:`J722S_DEV_SAM67_DMPAC_WRAP0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 187)
+Device: :ref:`J722S_DEV_SAM67_DMPAC_WRAP0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 274)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -4686,7 +4758,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for SERDES_10G0 Device
 -----------------------------
 
-Device: :ref:`J722S_DEV_SERDES_10G0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 228)
+Device: :ref:`J722S_DEV_SERDES_10G0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 276)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -4738,7 +4810,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for SERDES_10G1 Device
 -----------------------------
 
-Device: :ref:`J722S_DEV_SERDES_10G1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 229)
+Device: :ref:`J722S_DEV_SERDES_10G1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 277)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -4798,7 +4870,7 @@ Clocks for SMS0 Device
 Clocks for SPINLOCK0 Device
 ---------------------------
 
-Device: :ref:`J722S_DEV_SPINLOCK0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 218)
+Device: :ref:`J722S_DEV_SPINLOCK0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 150)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -4834,7 +4906,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for TIMER0 Device
 ------------------------
 
-Device: :ref:`J722S_DEV_TIMER0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 40)
+Device: :ref:`J722S_DEV_TIMER0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 36)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -4876,7 +4948,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for TIMER1 Device
 ------------------------
 
-Device: :ref:`J722S_DEV_TIMER1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 41)
+Device: :ref:`J722S_DEV_TIMER1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 37)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -4894,13 +4966,51 @@ Following is a mapping of Clocks IDs to function:
 |          4 | DEV_TIMER1_TIMER_TCLK_CLK_PARENT_DMTIMER_DMC1MS_MAIN_0_TIMER_PWM | Parent input clock option to DEV_TIMER1_TIMER_TCLK_CLK |
 +------------+------------------------------------------------------------------+--------------------------------------------------------+
 
+.. _soc_doc_j722s_public_clks_timer1_vd:
+
+
+Clocks for TIMER1_VD Device
+---------------------------
+
+Device: :ref:`J722S_DEV_TIMER1_VD <soc_doc_j722s_public_devices_desc_device_list>` (ID = 281)
+
+Following is a mapping of Clocks IDs to function:
+
++------------+-------------------------------------------------------------+------------------------------------------------+
+|   Clock ID | Name                                                        | Function                                       |
++============+=============================================================+================================================+
+|          0 | DEV_TIMER1_VD_CLK                                           | Input muxed clock                              |
++------------+-------------------------------------------------------------+------------------------------------------------+
+|          1 | DEV_TIMER1_VD_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT            | Parent input clock option to DEV_TIMER1_VD_CLK |
++------------+-------------------------------------------------------------+------------------------------------------------+
+|          2 | DEV_TIMER1_VD_CLK_PARENT_CLK_32K_RC_SEL_OUT0                | Parent input clock option to DEV_TIMER1_VD_CLK |
++------------+-------------------------------------------------------------+------------------------------------------------+
+|          3 | DEV_TIMER1_VD_CLK_PARENT_CPSW_3GUSS_AM67_MAIN_0_CPTS_GENF0  | Parent input clock option to DEV_TIMER1_VD_CLK |
++------------+-------------------------------------------------------------+------------------------------------------------+
+|          4 | DEV_TIMER1_VD_CLK_PARENT_CPSW_3GUSS_AM67_MAIN_0_CPTS_GENF1  | Parent input clock option to DEV_TIMER1_VD_CLK |
++------------+-------------------------------------------------------------+------------------------------------------------+
+|          5 | DEV_TIMER1_VD_CLK_PARENT_POSTDIV4_16FF_MAIN_0_HSDIVOUT7_CLK | Parent input clock option to DEV_TIMER1_VD_CLK |
++------------+-------------------------------------------------------------+------------------------------------------------+
+|          6 | DEV_TIMER1_VD_CLK_PARENT_GLUELOGIC_RCOSC_CLKOUT             | Parent input clock option to DEV_TIMER1_VD_CLK |
++------------+-------------------------------------------------------------+------------------------------------------------+
+|          7 | DEV_TIMER1_VD_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT        | Parent input clock option to DEV_TIMER1_VD_CLK |
++------------+-------------------------------------------------------------+------------------------------------------------+
+|          8 | DEV_TIMER1_VD_CLK_PARENT_BOARD_0_EXT_REFCLK1_OUT            | Parent input clock option to DEV_TIMER1_VD_CLK |
++------------+-------------------------------------------------------------+------------------------------------------------+
+|          9 | DEV_TIMER1_VD_CLK_PARENT_BOARD_0_CP_GEMAC_CPTS0_RFT_CLK_OUT | Parent input clock option to DEV_TIMER1_VD_CLK |
++------------+-------------------------------------------------------------+------------------------------------------------+
+|         10 | DEV_TIMER1_VD_CLK_PARENT_HSDIV4_16FFT_MAIN_1_HSDIVOUT3_CLK  | Parent input clock option to DEV_TIMER1_VD_CLK |
++------------+-------------------------------------------------------------+------------------------------------------------+
+|         11 | DEV_TIMER1_VD_CLK_PARENT_POSTDIV4_16FF_MAIN_2_HSDIVOUT6_CLK | Parent input clock option to DEV_TIMER1_VD_CLK |
++------------+-------------------------------------------------------------+------------------------------------------------+
+
 .. _soc_doc_j722s_public_clks_timer2:
 
 
 Clocks for TIMER2 Device
 ------------------------
 
-Device: :ref:`J722S_DEV_TIMER2 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 42)
+Device: :ref:`J722S_DEV_TIMER2 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 38)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -4942,7 +5052,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for TIMER3 Device
 ------------------------
 
-Device: :ref:`J722S_DEV_TIMER3 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 43)
+Device: :ref:`J722S_DEV_TIMER3 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 39)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -4960,13 +5070,51 @@ Following is a mapping of Clocks IDs to function:
 |          4 | DEV_TIMER3_TIMER_TCLK_CLK_PARENT_DMTIMER_DMC1MS_MAIN_2_TIMER_PWM | Parent input clock option to DEV_TIMER3_TIMER_TCLK_CLK |
 +------------+------------------------------------------------------------------+--------------------------------------------------------+
 
+.. _soc_doc_j722s_public_clks_timer3_vd:
+
+
+Clocks for TIMER3_VD Device
+---------------------------
+
+Device: :ref:`J722S_DEV_TIMER3_VD <soc_doc_j722s_public_devices_desc_device_list>` (ID = 282)
+
+Following is a mapping of Clocks IDs to function:
+
++------------+-------------------------------------------------------------+------------------------------------------------+
+|   Clock ID | Name                                                        | Function                                       |
++============+=============================================================+================================================+
+|          0 | DEV_TIMER3_VD_CLK                                           | Input muxed clock                              |
++------------+-------------------------------------------------------------+------------------------------------------------+
+|          1 | DEV_TIMER3_VD_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT            | Parent input clock option to DEV_TIMER3_VD_CLK |
++------------+-------------------------------------------------------------+------------------------------------------------+
+|          2 | DEV_TIMER3_VD_CLK_PARENT_CLK_32K_RC_SEL_OUT0                | Parent input clock option to DEV_TIMER3_VD_CLK |
++------------+-------------------------------------------------------------+------------------------------------------------+
+|          3 | DEV_TIMER3_VD_CLK_PARENT_CPSW_3GUSS_AM67_MAIN_0_CPTS_GENF0  | Parent input clock option to DEV_TIMER3_VD_CLK |
++------------+-------------------------------------------------------------+------------------------------------------------+
+|          4 | DEV_TIMER3_VD_CLK_PARENT_CPSW_3GUSS_AM67_MAIN_0_CPTS_GENF1  | Parent input clock option to DEV_TIMER3_VD_CLK |
++------------+-------------------------------------------------------------+------------------------------------------------+
+|          5 | DEV_TIMER3_VD_CLK_PARENT_POSTDIV4_16FF_MAIN_0_HSDIVOUT7_CLK | Parent input clock option to DEV_TIMER3_VD_CLK |
++------------+-------------------------------------------------------------+------------------------------------------------+
+|          6 | DEV_TIMER3_VD_CLK_PARENT_GLUELOGIC_RCOSC_CLKOUT             | Parent input clock option to DEV_TIMER3_VD_CLK |
++------------+-------------------------------------------------------------+------------------------------------------------+
+|          7 | DEV_TIMER3_VD_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT        | Parent input clock option to DEV_TIMER3_VD_CLK |
++------------+-------------------------------------------------------------+------------------------------------------------+
+|          8 | DEV_TIMER3_VD_CLK_PARENT_BOARD_0_EXT_REFCLK1_OUT            | Parent input clock option to DEV_TIMER3_VD_CLK |
++------------+-------------------------------------------------------------+------------------------------------------------+
+|          9 | DEV_TIMER3_VD_CLK_PARENT_BOARD_0_CP_GEMAC_CPTS0_RFT_CLK_OUT | Parent input clock option to DEV_TIMER3_VD_CLK |
++------------+-------------------------------------------------------------+------------------------------------------------+
+|         10 | DEV_TIMER3_VD_CLK_PARENT_HSDIV4_16FFT_MAIN_1_HSDIVOUT3_CLK  | Parent input clock option to DEV_TIMER3_VD_CLK |
++------------+-------------------------------------------------------------+------------------------------------------------+
+|         11 | DEV_TIMER3_VD_CLK_PARENT_POSTDIV4_16FF_MAIN_2_HSDIVOUT6_CLK | Parent input clock option to DEV_TIMER3_VD_CLK |
++------------+-------------------------------------------------------------+------------------------------------------------+
+
 .. _soc_doc_j722s_public_clks_timer4:
 
 
 Clocks for TIMER4 Device
 ------------------------
 
-Device: :ref:`J722S_DEV_TIMER4 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 44)
+Device: :ref:`J722S_DEV_TIMER4 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 40)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -5008,7 +5156,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for TIMER5 Device
 ------------------------
 
-Device: :ref:`J722S_DEV_TIMER5 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 45)
+Device: :ref:`J722S_DEV_TIMER5 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 41)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -5026,13 +5174,51 @@ Following is a mapping of Clocks IDs to function:
 |          4 | DEV_TIMER5_TIMER_TCLK_CLK_PARENT_DMTIMER_DMC1MS_MAIN_4_TIMER_PWM | Parent input clock option to DEV_TIMER5_TIMER_TCLK_CLK |
 +------------+------------------------------------------------------------------+--------------------------------------------------------+
 
+.. _soc_doc_j722s_public_clks_timer5_vd:
+
+
+Clocks for TIMER5_VD Device
+---------------------------
+
+Device: :ref:`J722S_DEV_TIMER5_VD <soc_doc_j722s_public_devices_desc_device_list>` (ID = 283)
+
+Following is a mapping of Clocks IDs to function:
+
++------------+-------------------------------------------------------------+------------------------------------------------+
+|   Clock ID | Name                                                        | Function                                       |
++============+=============================================================+================================================+
+|          0 | DEV_TIMER5_VD_CLK                                           | Input muxed clock                              |
++------------+-------------------------------------------------------------+------------------------------------------------+
+|          1 | DEV_TIMER5_VD_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT            | Parent input clock option to DEV_TIMER5_VD_CLK |
++------------+-------------------------------------------------------------+------------------------------------------------+
+|          2 | DEV_TIMER5_VD_CLK_PARENT_CLK_32K_RC_SEL_OUT0                | Parent input clock option to DEV_TIMER5_VD_CLK |
++------------+-------------------------------------------------------------+------------------------------------------------+
+|          3 | DEV_TIMER5_VD_CLK_PARENT_CPSW_3GUSS_AM67_MAIN_0_CPTS_GENF0  | Parent input clock option to DEV_TIMER5_VD_CLK |
++------------+-------------------------------------------------------------+------------------------------------------------+
+|          4 | DEV_TIMER5_VD_CLK_PARENT_CPSW_3GUSS_AM67_MAIN_0_CPTS_GENF1  | Parent input clock option to DEV_TIMER5_VD_CLK |
++------------+-------------------------------------------------------------+------------------------------------------------+
+|          5 | DEV_TIMER5_VD_CLK_PARENT_POSTDIV4_16FF_MAIN_0_HSDIVOUT7_CLK | Parent input clock option to DEV_TIMER5_VD_CLK |
++------------+-------------------------------------------------------------+------------------------------------------------+
+|          6 | DEV_TIMER5_VD_CLK_PARENT_GLUELOGIC_RCOSC_CLKOUT             | Parent input clock option to DEV_TIMER5_VD_CLK |
++------------+-------------------------------------------------------------+------------------------------------------------+
+|          7 | DEV_TIMER5_VD_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT        | Parent input clock option to DEV_TIMER5_VD_CLK |
++------------+-------------------------------------------------------------+------------------------------------------------+
+|          8 | DEV_TIMER5_VD_CLK_PARENT_BOARD_0_EXT_REFCLK1_OUT            | Parent input clock option to DEV_TIMER5_VD_CLK |
++------------+-------------------------------------------------------------+------------------------------------------------+
+|          9 | DEV_TIMER5_VD_CLK_PARENT_BOARD_0_CP_GEMAC_CPTS0_RFT_CLK_OUT | Parent input clock option to DEV_TIMER5_VD_CLK |
++------------+-------------------------------------------------------------+------------------------------------------------+
+|         10 | DEV_TIMER5_VD_CLK_PARENT_HSDIV4_16FFT_MAIN_1_HSDIVOUT3_CLK  | Parent input clock option to DEV_TIMER5_VD_CLK |
++------------+-------------------------------------------------------------+------------------------------------------------+
+|         11 | DEV_TIMER5_VD_CLK_PARENT_POSTDIV4_16FF_MAIN_2_HSDIVOUT6_CLK | Parent input clock option to DEV_TIMER5_VD_CLK |
++------------+-------------------------------------------------------------+------------------------------------------------+
+
 .. _soc_doc_j722s_public_clks_timer6:
 
 
 Clocks for TIMER6 Device
 ------------------------
 
-Device: :ref:`J722S_DEV_TIMER6 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 46)
+Device: :ref:`J722S_DEV_TIMER6 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 42)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -5074,7 +5260,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for TIMER7 Device
 ------------------------
 
-Device: :ref:`J722S_DEV_TIMER7 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 47)
+Device: :ref:`J722S_DEV_TIMER7 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 43)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -5092,13 +5278,51 @@ Following is a mapping of Clocks IDs to function:
 |          4 | DEV_TIMER7_TIMER_TCLK_CLK_PARENT_DMTIMER_DMC1MS_MAIN_6_TIMER_PWM | Parent input clock option to DEV_TIMER7_TIMER_TCLK_CLK |
 +------------+------------------------------------------------------------------+--------------------------------------------------------+
 
+.. _soc_doc_j722s_public_clks_timer7_vd:
+
+
+Clocks for TIMER7_VD Device
+---------------------------
+
+Device: :ref:`J722S_DEV_TIMER7_VD <soc_doc_j722s_public_devices_desc_device_list>` (ID = 284)
+
+Following is a mapping of Clocks IDs to function:
+
++------------+-------------------------------------------------------------+------------------------------------------------+
+|   Clock ID | Name                                                        | Function                                       |
++============+=============================================================+================================================+
+|          0 | DEV_TIMER7_VD_CLK                                           | Input muxed clock                              |
++------------+-------------------------------------------------------------+------------------------------------------------+
+|          1 | DEV_TIMER7_VD_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT            | Parent input clock option to DEV_TIMER7_VD_CLK |
++------------+-------------------------------------------------------------+------------------------------------------------+
+|          2 | DEV_TIMER7_VD_CLK_PARENT_CLK_32K_RC_SEL_OUT0                | Parent input clock option to DEV_TIMER7_VD_CLK |
++------------+-------------------------------------------------------------+------------------------------------------------+
+|          3 | DEV_TIMER7_VD_CLK_PARENT_CPSW_3GUSS_AM67_MAIN_0_CPTS_GENF0  | Parent input clock option to DEV_TIMER7_VD_CLK |
++------------+-------------------------------------------------------------+------------------------------------------------+
+|          4 | DEV_TIMER7_VD_CLK_PARENT_CPSW_3GUSS_AM67_MAIN_0_CPTS_GENF1  | Parent input clock option to DEV_TIMER7_VD_CLK |
++------------+-------------------------------------------------------------+------------------------------------------------+
+|          5 | DEV_TIMER7_VD_CLK_PARENT_POSTDIV4_16FF_MAIN_0_HSDIVOUT7_CLK | Parent input clock option to DEV_TIMER7_VD_CLK |
++------------+-------------------------------------------------------------+------------------------------------------------+
+|          6 | DEV_TIMER7_VD_CLK_PARENT_GLUELOGIC_RCOSC_CLKOUT             | Parent input clock option to DEV_TIMER7_VD_CLK |
++------------+-------------------------------------------------------------+------------------------------------------------+
+|          7 | DEV_TIMER7_VD_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT        | Parent input clock option to DEV_TIMER7_VD_CLK |
++------------+-------------------------------------------------------------+------------------------------------------------+
+|          8 | DEV_TIMER7_VD_CLK_PARENT_BOARD_0_EXT_REFCLK1_OUT            | Parent input clock option to DEV_TIMER7_VD_CLK |
++------------+-------------------------------------------------------------+------------------------------------------------+
+|          9 | DEV_TIMER7_VD_CLK_PARENT_BOARD_0_CP_GEMAC_CPTS0_RFT_CLK_OUT | Parent input clock option to DEV_TIMER7_VD_CLK |
++------------+-------------------------------------------------------------+------------------------------------------------+
+|         10 | DEV_TIMER7_VD_CLK_PARENT_HSDIV4_16FFT_MAIN_1_HSDIVOUT3_CLK  | Parent input clock option to DEV_TIMER7_VD_CLK |
++------------+-------------------------------------------------------------+------------------------------------------------+
+|         11 | DEV_TIMER7_VD_CLK_PARENT_POSTDIV4_16FF_MAIN_2_HSDIVOUT6_CLK | Parent input clock option to DEV_TIMER7_VD_CLK |
++------------+-------------------------------------------------------------+------------------------------------------------+
+
 .. _soc_doc_j722s_public_clks_timesync_event_introuter0:
 
 
 Clocks for TIMESYNC_EVENT_INTROUTER0 Device
 -------------------------------------------
 
-Device: :ref:`J722S_DEV_TIMESYNC_EVENT_INTROUTER0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 3)
+Device: :ref:`J722S_DEV_TIMESYNC_EVENT_INTROUTER0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 6)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -5136,7 +5360,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for UART1 Device
 -----------------------
 
-Device: :ref:`J722S_DEV_UART1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 219)
+Device: :ref:`J722S_DEV_UART1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 152)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -5158,7 +5382,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for UART2 Device
 -----------------------
 
-Device: :ref:`J722S_DEV_UART2 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 220)
+Device: :ref:`J722S_DEV_UART2 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 153)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -5180,7 +5404,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for UART3 Device
 -----------------------
 
-Device: :ref:`J722S_DEV_UART3 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 221)
+Device: :ref:`J722S_DEV_UART3 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 154)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -5202,7 +5426,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for UART4 Device
 -----------------------
 
-Device: :ref:`J722S_DEV_UART4 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 222)
+Device: :ref:`J722S_DEV_UART4 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 155)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -5224,7 +5448,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for UART5 Device
 -----------------------
 
-Device: :ref:`J722S_DEV_UART5 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 223)
+Device: :ref:`J722S_DEV_UART5 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 156)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -5246,7 +5470,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for UART6 Device
 -----------------------
 
-Device: :ref:`J722S_DEV_UART6 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 224)
+Device: :ref:`J722S_DEV_UART6 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 158)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -5268,7 +5492,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for USB0 Device
 ----------------------
 
-Device: :ref:`J722S_DEV_USB0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 226)
+Device: :ref:`J722S_DEV_USB0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 161)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -5296,7 +5520,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for USB1 Device
 ----------------------
 
-Device: :ref:`J722S_DEV_USB1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 227)
+Device: :ref:`J722S_DEV_USB1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 275)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -5309,25 +5533,25 @@ Following is a mapping of Clocks IDs to function:
 +------------+----------------------------------------------------------------------+---------------------------------------------------------+
 |          2 | DEV_USB1_PCLK_CLK                                                    | Input clock                                             |
 +------------+----------------------------------------------------------------------+---------------------------------------------------------+
-|          3 | DEV_USB1_PIPE_REFCLK                                                 | Input clock                                             |
+|          3 | DEV_USB1_USB2_REFCLOCK_CLK                                           | Input muxed clock                                       |
 +------------+----------------------------------------------------------------------+---------------------------------------------------------+
-|          4 | DEV_USB1_PIPE_RXCLK                                                  | Input clock                                             |
+|          4 | DEV_USB1_USB2_REFCLOCK_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT            | Parent input clock option to DEV_USB1_USB2_REFCLOCK_CLK |
 +------------+----------------------------------------------------------------------+---------------------------------------------------------+
-|          5 | DEV_USB1_PIPE_RXFCLK                                                 | Input clock                                             |
+|          5 | DEV_USB1_USB2_REFCLOCK_CLK_PARENT_POSTDIV4_16FF_MAIN_0_HSDIVOUT8_CLK | Parent input clock option to DEV_USB1_USB2_REFCLOCK_CLK |
 +------------+----------------------------------------------------------------------+---------------------------------------------------------+
-|          6 | DEV_USB1_PIPE_TXCLK                                                  | Output clock                                            |
+|          6 | DEV_USB1_PIPE_REFCLK                                                 | Input clock                                             |
 +------------+----------------------------------------------------------------------+---------------------------------------------------------+
-|          7 | DEV_USB1_PIPE_TXFCLK                                                 | Input clock                                             |
+|          7 | DEV_USB1_PIPE_RXCLK                                                  | Input clock                                             |
 +------------+----------------------------------------------------------------------+---------------------------------------------------------+
-|          8 | DEV_USB1_PIPE_TXMCLK                                                 | Input clock                                             |
+|          8 | DEV_USB1_PIPE_RXFCLK                                                 | Input clock                                             |
 +------------+----------------------------------------------------------------------+---------------------------------------------------------+
-|          9 | DEV_USB1_USB2_APB_PCLK_CLK                                           | Input clock                                             |
+|          9 | DEV_USB1_PIPE_TXCLK                                                  | Output clock                                            |
 +------------+----------------------------------------------------------------------+---------------------------------------------------------+
-|         10 | DEV_USB1_USB2_REFCLOCK_CLK                                           | Input muxed clock                                       |
+|         10 | DEV_USB1_PIPE_TXFCLK                                                 | Input clock                                             |
 +------------+----------------------------------------------------------------------+---------------------------------------------------------+
-|         11 | DEV_USB1_USB2_REFCLOCK_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT            | Parent input clock option to DEV_USB1_USB2_REFCLOCK_CLK |
+|         11 | DEV_USB1_PIPE_TXMCLK                                                 | Input clock                                             |
 +------------+----------------------------------------------------------------------+---------------------------------------------------------+
-|         12 | DEV_USB1_USB2_REFCLOCK_CLK_PARENT_POSTDIV4_16FF_MAIN_0_HSDIVOUT8_CLK | Parent input clock option to DEV_USB1_USB2_REFCLOCK_CLK |
+|         12 | DEV_USB1_USB2_APB_PCLK_CLK                                           | Input clock                                             |
 +------------+----------------------------------------------------------------------+---------------------------------------------------------+
 |         17 | DEV_USB1_USB2_TAP_TCK                                                | Input clock                                             |
 +------------+----------------------------------------------------------------------+---------------------------------------------------------+
@@ -5338,7 +5562,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for VPAC0 Device
 -----------------------
 
-Device: :ref:`J722S_DEV_VPAC0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 201)
+Device: :ref:`J722S_DEV_VPAC0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 219)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -5358,7 +5582,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for VPAC_RSWS_BW_LIMITER7 Device
 ---------------------------------------
 
-Device: :ref:`J722S_DEV_VPAC_RSWS_BW_LIMITER7 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 199)
+Device: :ref:`J722S_DEV_VPAC_RSWS_BW_LIMITER7 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 218)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -5374,7 +5598,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for VPAC_RSWS_BW_LIMITER8 Device
 ---------------------------------------
 
-Device: :ref:`J722S_DEV_VPAC_RSWS_BW_LIMITER8 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 197)
+Device: :ref:`J722S_DEV_VPAC_RSWS_BW_LIMITER8 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 217)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -5390,7 +5614,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for WKUP_CLKOUT_SEL_DEV_VD Device
 ----------------------------------------
 
-Device: :ref:`J722S_DEV_WKUP_CLKOUT_SEL_DEV_VD <soc_doc_j722s_public_devices_desc_device_list>` (ID = 232)
+Device: :ref:`J722S_DEV_WKUP_CLKOUT_SEL_DEV_VD <soc_doc_j722s_public_devices_desc_device_list>` (ID = 226)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -5420,7 +5644,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for WKUP_DEEPSLEEP_SOURCES0 Device
 -----------------------------------------
 
-Device: :ref:`J722S_DEV_WKUP_DEEPSLEEP_SOURCES0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 153)
+Device: :ref:`J722S_DEV_WKUP_DEEPSLEEP_SOURCES0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 176)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -5436,7 +5660,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for WKUP_ESM0 Device
 ---------------------------
 
-Device: :ref:`J722S_DEV_WKUP_ESM0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 65)
+Device: :ref:`J722S_DEV_WKUP_ESM0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 64)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -5488,7 +5712,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for WKUP_I2C0 Device
 ---------------------------
 
-Device: :ref:`J722S_DEV_WKUP_I2C0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 119)
+Device: :ref:`J722S_DEV_WKUP_I2C0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 107)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -5514,7 +5738,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for WKUP_MCU_GPIOMUX_INTROUTER0 Device
 ---------------------------------------------
 
-Device: :ref:`J722S_DEV_WKUP_MCU_GPIOMUX_INTROUTER0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 2)
+Device: :ref:`J722S_DEV_WKUP_MCU_GPIOMUX_INTROUTER0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 5)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -5530,7 +5754,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for WKUP_PBIST0 Device
 -----------------------------
 
-Device: :ref:`J722S_DEV_WKUP_PBIST0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 90)
+Device: :ref:`J722S_DEV_WKUP_PBIST0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 165)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -5554,7 +5778,7 @@ Clocks for WKUP_PBIST1 Device
 Clocks for WKUP_PSC0 Device
 ---------------------------
 
-Device: :ref:`J722S_DEV_WKUP_PSC0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 161)
+Device: :ref:`J722S_DEV_WKUP_PSC0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 140)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -5565,26 +5789,6 @@ Following is a mapping of Clocks IDs to function:
 +------------+------------------------+-------------+
 |          1 | DEV_WKUP_PSC0_SLOW_CLK | Input clock |
 +------------+------------------------+-------------+
-
-.. _soc_doc_j722s_public_clks_wkup_psramecc_8k0:
-
-
-Clocks for WKUP_PSRAMECC_8K0 Device
------------------------------------
-
-Device: :ref:`J722S_DEV_WKUP_PSRAMECC_8K0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 124)
-
-Following is a mapping of Clocks IDs to function:
-
-+------------+-------------------------------------------------------------------------+------------------------------------------------------------+
-|   Clock ID | Name                                                                    | Function                                                   |
-+============+=========================================================================+============================================================+
-|          0 | DEV_WKUP_PSRAMECC_8K0_CLK_CLK                                           | Input muxed clock                                          |
-+------------+-------------------------------------------------------------------------+------------------------------------------------------------+
-|          1 | DEV_WKUP_PSRAMECC_8K0_CLK_CLK_PARENT_HSDIV3_16FFT_MAIN_15_HSDIVOUT0_CLK | Parent input clock option to DEV_WKUP_PSRAMECC_8K0_CLK_CLK |
-+------------+-------------------------------------------------------------------------+------------------------------------------------------------+
-|          2 | DEV_WKUP_PSRAMECC_8K0_CLK_CLK_PARENT_HSDIV4_16FFT_MCU_0_HSDIVOUT0_CLK   | Parent input clock option to DEV_WKUP_PSRAMECC_8K0_CLK_CLK |
-+------------+-------------------------------------------------------------------------+------------------------------------------------------------+
 
 .. _soc_doc_j722s_public_clks_wkup_r5fss0:
 
@@ -5600,7 +5804,7 @@ Clocks for WKUP_R5FSS0 Device
 Clocks for WKUP_R5FSS0_CORE0 Device
 -----------------------------------
 
-Device: :ref:`J722S_DEV_WKUP_R5FSS0_CORE0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 131)
+Device: :ref:`J722S_DEV_WKUP_R5FSS0_CORE0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 121)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -5630,7 +5834,7 @@ Clocks for WKUP_R5FSS0_SS0 Device
 Clocks for WKUP_RTCSS0 Device
 -----------------------------
 
-Device: :ref:`J722S_DEV_WKUP_RTCSS0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 140)
+Device: :ref:`J722S_DEV_WKUP_RTCSS0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 117)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -5658,25 +5862,29 @@ Following is a mapping of Clocks IDs to function:
 Clocks for WKUP_RTI0 Device
 ---------------------------
 
-Device: :ref:`J722S_DEV_WKUP_RTI0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 152)
+Device: :ref:`J722S_DEV_WKUP_RTI0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 132)
 
 Following is a mapping of Clocks IDs to function:
 
-+------------+---------------------------------------------------------------+----------------------------------------------------+
-|   Clock ID | Name                                                          | Function                                           |
-+============+===============================================================+====================================================+
-|          0 | DEV_WKUP_RTI0_RTI_CLK                                         | Input muxed clock                                  |
-+------------+---------------------------------------------------------------+----------------------------------------------------+
-|          1 | DEV_WKUP_RTI0_RTI_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT          | Parent input clock option to DEV_WKUP_RTI0_RTI_CLK |
-+------------+---------------------------------------------------------------+----------------------------------------------------+
-|          2 | DEV_WKUP_RTI0_RTI_CLK_PARENT_CLK_32K_RC_SEL_OUT0              | Parent input clock option to DEV_WKUP_RTI0_RTI_CLK |
-+------------+---------------------------------------------------------------+----------------------------------------------------+
-|          3 | DEV_WKUP_RTI0_RTI_CLK_PARENT_GLUELOGIC_RCOSC_CLKOUT           | Parent input clock option to DEV_WKUP_RTI0_RTI_CLK |
-+------------+---------------------------------------------------------------+----------------------------------------------------+
-|          4 | DEV_WKUP_RTI0_RTI_CLK_PARENT_GLUELOGIC_RCOSC_CLK_1P0V_97P65K3 | Parent input clock option to DEV_WKUP_RTI0_RTI_CLK |
-+------------+---------------------------------------------------------------+----------------------------------------------------+
-|          5 | DEV_WKUP_RTI0_VBUSP_CLK                                       | Input clock                                        |
-+------------+---------------------------------------------------------------+----------------------------------------------------+
++------------+-------------------------------------------------------------------+------------------------------------------------------+
+|   Clock ID | Name                                                              | Function                                             |
++============+===================================================================+======================================================+
+|          0 | DEV_WKUP_RTI0_RTI_CLK                                             | Input muxed clock                                    |
++------------+-------------------------------------------------------------------+------------------------------------------------------+
+|          1 | DEV_WKUP_RTI0_RTI_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT              | Parent input clock option to DEV_WKUP_RTI0_RTI_CLK   |
++------------+-------------------------------------------------------------------+------------------------------------------------------+
+|          2 | DEV_WKUP_RTI0_RTI_CLK_PARENT_CLK_32K_RC_SEL_OUT0                  | Parent input clock option to DEV_WKUP_RTI0_RTI_CLK   |
++------------+-------------------------------------------------------------------+------------------------------------------------------+
+|          3 | DEV_WKUP_RTI0_RTI_CLK_PARENT_GLUELOGIC_RCOSC_CLKOUT               | Parent input clock option to DEV_WKUP_RTI0_RTI_CLK   |
++------------+-------------------------------------------------------------------+------------------------------------------------------+
+|          4 | DEV_WKUP_RTI0_RTI_CLK_PARENT_GLUELOGIC_RCOSC_CLK_1P0V_97P65K3     | Parent input clock option to DEV_WKUP_RTI0_RTI_CLK   |
++------------+-------------------------------------------------------------------+------------------------------------------------------+
+|          5 | DEV_WKUP_RTI0_VBUSP_CLK                                           | Input muxed clock                                    |
++------------+-------------------------------------------------------------------+------------------------------------------------------+
+|          6 | DEV_WKUP_RTI0_VBUSP_CLK_PARENT_HSDIV3_16FFT_MAIN_15_HSDIVOUT0_CLK | Parent input clock option to DEV_WKUP_RTI0_VBUSP_CLK |
++------------+-------------------------------------------------------------------+------------------------------------------------------+
+|          7 | DEV_WKUP_RTI0_VBUSP_CLK_PARENT_HSDIV4_16FFT_MCU_0_HSDIVOUT0_CLK   | Parent input clock option to DEV_WKUP_RTI0_VBUSP_CLK |
++------------+-------------------------------------------------------------------+------------------------------------------------------+
 
 .. _soc_doc_j722s_public_clks_wkup_timer0:
 
@@ -5684,7 +5892,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for WKUP_TIMER0 Device
 -----------------------------
 
-Device: :ref:`J722S_DEV_WKUP_TIMER0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 51)
+Device: :ref:`J722S_DEV_WKUP_TIMER0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 110)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -5724,7 +5932,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for WKUP_TIMER1 Device
 -----------------------------
 
-Device: :ref:`J722S_DEV_WKUP_TIMER1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 52)
+Device: :ref:`J722S_DEV_WKUP_TIMER1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 111)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -5744,13 +5952,45 @@ Following is a mapping of Clocks IDs to function:
 |          6 | DEV_WKUP_TIMER1_TIMER_TCLK_CLK_PARENT_DMTIMER_DMC1MS_WKUP_0_TIMER_PWM    | Parent input clock option to DEV_WKUP_TIMER1_TIMER_TCLK_CLK |
 +------------+--------------------------------------------------------------------------+-------------------------------------------------------------+
 
+.. _soc_doc_j722s_public_clks_wkup_timer1_vd:
+
+
+Clocks for WKUP_TIMER1_VD Device
+--------------------------------
+
+Device: :ref:`J722S_DEV_WKUP_TIMER1_VD <soc_doc_j722s_public_devices_desc_device_list>` (ID = 278)
+
+Following is a mapping of Clocks IDs to function:
+
++------------+------------------------------------------------------------------+-----------------------------------------------------+
+|   Clock ID | Name                                                             | Function                                            |
++============+==================================================================+=====================================================+
+|          0 | DEV_WKUP_TIMER1_VD_CLK                                           | Input muxed clock                                   |
++------------+------------------------------------------------------------------+-----------------------------------------------------+
+|          1 | DEV_WKUP_TIMER1_VD_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT            | Parent input clock option to DEV_WKUP_TIMER1_VD_CLK |
++------------+------------------------------------------------------------------+-----------------------------------------------------+
+|          2 | DEV_WKUP_TIMER1_VD_CLK_PARENT_WKUP_CLKSEL_OUT04                  | Parent input clock option to DEV_WKUP_TIMER1_VD_CLK |
++------------+------------------------------------------------------------------+-----------------------------------------------------+
+|          3 | DEV_WKUP_TIMER1_VD_CLK_PARENT_GLUELOGIC_RCOSC_CLKOUT             | Parent input clock option to DEV_WKUP_TIMER1_VD_CLK |
++------------+------------------------------------------------------------------+-----------------------------------------------------+
+|          4 | DEV_WKUP_TIMER1_VD_CLK_PARENT_POSTDIV1_16FFT_MCU_0_HSDIVOUT5_CLK | Parent input clock option to DEV_WKUP_TIMER1_VD_CLK |
++------------+------------------------------------------------------------------+-----------------------------------------------------+
+|          5 | DEV_WKUP_TIMER1_VD_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT        | Parent input clock option to DEV_WKUP_TIMER1_VD_CLK |
++------------+------------------------------------------------------------------+-----------------------------------------------------+
+|          6 | DEV_WKUP_TIMER1_VD_CLK_PARENT_CLK_32K_RC_SEL_OUT0                | Parent input clock option to DEV_WKUP_TIMER1_VD_CLK |
++------------+------------------------------------------------------------------+-----------------------------------------------------+
+|          7 | DEV_WKUP_TIMER1_VD_CLK_PARENT_CPSW_3GUSS_AM67_MAIN_0_CPTS_GENF0  | Parent input clock option to DEV_WKUP_TIMER1_VD_CLK |
++------------+------------------------------------------------------------------+-----------------------------------------------------+
+|          8 | DEV_WKUP_TIMER1_VD_CLK_PARENT_GLUELOGIC_RCOSC_CLK_1P0V_97P65K3   | Parent input clock option to DEV_WKUP_TIMER1_VD_CLK |
++------------+------------------------------------------------------------------+-----------------------------------------------------+
+
 .. _soc_doc_j722s_public_clks_wkup_uart0:
 
 
 Clocks for WKUP_UART0 Device
 ----------------------------
 
-Device: :ref:`J722S_DEV_WKUP_UART0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 225)
+Device: :ref:`J722S_DEV_WKUP_UART0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 114)
 
 Following is a mapping of Clocks IDs to function:
 

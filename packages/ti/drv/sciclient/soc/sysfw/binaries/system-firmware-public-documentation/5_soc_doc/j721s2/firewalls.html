@@ -79,7 +79,7 @@
             
             
               <div class="version">
-                08.06.04
+                09.00.06
               </div>
             
           
@@ -191,19 +191,29 @@
 <div class="section" id="introduction">
 <span id="soc-doc-j721s2-public-fwl-desc-intro"></span><h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
 <p>This chapter provides information on firewalls that system firmware configures
-by default at boot time. Guide to read the tables in this chapter is provided
-below. For more details on firewalls refer to “Interconnect Firewalls” section
-of TRM and <a class="reference internal" href="../../2_tisci_msgs/security/firewall_api.html#sec-ap-fwl-tisci-desc"><span class="std std-ref">Firewall TISCI Description</span></a>.</p>
+by default at boot time. The guide to read the tables in this chapter is
+provided below. For more details on firewalls, refer to the “Interconnect
+Firewalls” section of the TRM and <a class="reference internal" href="../../2_tisci_msgs/security/firewall_api.html#sec-ap-fwl-tisci-desc"><span class="std std-ref">Firewall TISCI Description</span></a>.</p>
+<div class="section" id="table-legend">
+<span id="soc-doc-j721s2-public-fwl-desc-table-legend"></span><h3>Table Legend<a class="headerlink" href="#table-legend" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li>Firewall ID: The firewall ID uniquely identifies each firewall</li>
-<li>Owner: <a class="reference internal" href="hosts.html#soc-doc-j721s2-public-host-desc-host-list"><span class="std std-ref">Host ID</span></a> that is owner of the firewall</li>
-<li>CBA_PERMISSION_x: Each firewall region/channel can have up to 3 slots for configuring permissions. Each permission slot takes the form of [user, permission], where user is a host and permission is a combination of r-read, w-write, c-cache, d-debug. The priv-id, secure/non-secure, user/privileged information are derived from the host id.</li>
+<li><code class="docutils literal"><span class="pre">Firewall</span> <span class="pre">ID</span></code>: The unique identifier for each firewall</li>
+<li><code class="docutils literal"><span class="pre">Owner</span></code>: The <a class="reference internal" href="hosts.html#soc-doc-j721s2-public-host-desc-host-list"><span class="std std-ref">host ID</span></a> that owns the firewall</li>
+<li><code class="docutils literal"><span class="pre">CBA_PERMISSION_x</span></code>: Each permission slot takes the form of [user, permission], where “user” is a host ID and “permission” is a combination of r-read, w-write, c-cache, d-debug. Additionally, each firewall region/channel can have up to 3 slots for configuring permissions.</li>
+</ul>
+</div>
+<div class="section" id="table-guide">
+<span id="soc-doc-j721s2-public-fwl-desc-table-guide"></span><h3>Table Guide<a class="headerlink" href="#table-guide" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>If a firewall is owned by <code class="docutils literal"><span class="pre">TIFS</span></code>/<code class="docutils literal"><span class="pre">DMSC</span></code>, it means that only TIFS/DMSC can configure it.</li>
+<li>If a firewall is owned by <code class="docutils literal"><span class="pre">none</span></code>, it means any host can configure it.</li>
+<li>If a firewall is owned by <code class="docutils literal"><span class="pre">rm</span></code>, it means that the corresponding resource is managed by the resource manager based on the RM boardcfg.</li>
+<li>If a firewall is not listed in the table below, it does not mean it doesn’t exist. It simply means it was not one of the firewalls configured at boot time by system firmware.</li>
 </ul>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p>In the below table, a firewall owned by RM implies that the corresponding resource is managed by the resource manager.
-Firewall configuration is internally handled by RM based on RM boardcfg.</p>
 <p class="last">For additional firewall information, checkout the <a class="reference internal" href="../../6_topic_user_guides/firewall_faq.html"><span class="doc">Firewall FAQ</span></a>.</p>
+</div>
 </div>
 </div>
 <div class="section" id="list-of-region-based-firewalls">
@@ -258,16 +268,7 @@ Firewall configuration is internally handled by RM based on RM boardcfg.</p>
 <td>pulsar_0,rwcd</td>
 <td>everyone,r</td>
 </tr>
-<tr class="row-odd"><td>107</td>
-<td>0</td>
-<td>tifs</td>
-<td>0x00A30000</td>
-<td>0x00A301FF</td>
-<td>tifs,rwcd</td>
-<td>pulsar_0,rwcd</td>
-<td>everyone,r</td>
-</tr>
-<tr class="row-even"><td>168</td>
+<tr class="row-odd"><td>168</td>
 <td>0</td>
 <td>tifs</td>
 <td>0x42200000</td>
@@ -276,7 +277,7 @@ Firewall configuration is internally handled by RM based on RM boardcfg.</p>
 <td>pulsar_0,rwcd</td>
 <td>everyone,r</td>
 </tr>
-<tr class="row-odd"><td>512</td>
+<tr class="row-even"><td>512</td>
 <td>1</td>
 <td>tifs</td>
 <td>0x00014000</td>
@@ -285,7 +286,7 @@ Firewall configuration is internally handled by RM based on RM boardcfg.</p>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>513</td>
+<tr class="row-odd"><td>513</td>
 <td>0</td>
 <td>tifs</td>
 <td>&#160;</td>
@@ -294,7 +295,7 @@ Firewall configuration is internally handled by RM based on RM boardcfg.</p>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>514</td>
+<tr class="row-even"><td>514</td>
 <td>0</td>
 <td>tifs</td>
 <td>&#160;</td>
@@ -303,7 +304,7 @@ Firewall configuration is internally handled by RM based on RM boardcfg.</p>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>582</td>
+<tr class="row-odd"><td>582</td>
 <td>0</td>
 <td>tifs</td>
 <td>0x44234000</td>
@@ -312,7 +313,7 @@ Firewall configuration is internally handled by RM based on RM boardcfg.</p>
 <td>everyone,r</td>
 <td>everyone,r</td>
 </tr>
-<tr class="row-odd"><td>582</td>
+<tr class="row-even"><td>582</td>
 <td>1</td>
 <td>tifs</td>
 <td>0x44235000</td>
@@ -321,7 +322,7 @@ Firewall configuration is internally handled by RM based on RM boardcfg.</p>
 <td>tifs,rwcd</td>
 <td>tifs,rwcd</td>
 </tr>
-<tr class="row-even"><td>602</td>
+<tr class="row-odd"><td>602</td>
 <td>0</td>
 <td>tifs</td>
 <td>0x4423C000</td>
@@ -330,7 +331,7 @@ Firewall configuration is internally handled by RM based on RM boardcfg.</p>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>602</td>
+<tr class="row-even"><td>602</td>
 <td>1</td>
 <td>hsm</td>
 <td>0x4423D000</td>
@@ -339,7 +340,7 @@ Firewall configuration is internally handled by RM based on RM boardcfg.</p>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>638</td>
+<tr class="row-odd"><td>638</td>
 <td>0</td>
 <td>tifs</td>
 <td>0x44800000</td>
@@ -348,7 +349,7 @@ Firewall configuration is internally handled by RM based on RM boardcfg.</p>
 <td>hsm,rwcd</td>
 <td>everyone,r</td>
 </tr>
-<tr class="row-odd"><td>638</td>
+<tr class="row-even"><td>638</td>
 <td>1</td>
 <td>tifs</td>
 <td>0x43702000</td>
@@ -357,7 +358,7 @@ Firewall configuration is internally handled by RM based on RM boardcfg.</p>
 <td>hsm,rwcd</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>638</td>
+<tr class="row-odd"><td>638</td>
 <td>2</td>
 <td>tifs</td>
 <td>0x44880000</td>
@@ -366,7 +367,7 @@ Firewall configuration is internally handled by RM based on RM boardcfg.</p>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>638</td>
+<tr class="row-even"><td>638</td>
 <td>3</td>
 <td>tifs</td>
 <td>0x44914000</td>
@@ -375,7 +376,7 @@ Firewall configuration is internally handled by RM based on RM boardcfg.</p>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>638</td>
+<tr class="row-odd"><td>638</td>
 <td>4</td>
 <td>tifs</td>
 <td>0x44918000</td>
@@ -384,7 +385,7 @@ Firewall configuration is internally handled by RM based on RM boardcfg.</p>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>638</td>
+<tr class="row-even"><td>638</td>
 <td>5</td>
 <td>tifs</td>
 <td>0x44940000</td>
@@ -393,7 +394,7 @@ Firewall configuration is internally handled by RM based on RM boardcfg.</p>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>638</td>
+<tr class="row-odd"><td>638</td>
 <td>6</td>
 <td>tifs</td>
 <td>0x44960000</td>
@@ -402,7 +403,7 @@ Firewall configuration is internally handled by RM based on RM boardcfg.</p>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>638</td>
+<tr class="row-even"><td>638</td>
 <td>7</td>
 <td>tifs</td>
 <td>0x44801000</td>
@@ -411,7 +412,7 @@ Firewall configuration is internally handled by RM based on RM boardcfg.</p>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>639</td>
+<tr class="row-odd"><td>639</td>
 <td>0</td>
 <td>tifs</td>
 <td>0x45000000</td>
@@ -420,7 +421,7 @@ Firewall configuration is internally handled by RM based on RM boardcfg.</p>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>639</td>
+<tr class="row-even"><td>639</td>
 <td>1</td>
 <td>tifs</td>
 <td>0x45D00000</td>
@@ -428,6 +429,15 @@ Firewall configuration is internally handled by RM based on RM boardcfg.</p>
 <td>tifs,rwd</td>
 <td>everyone,rwcd</td>
 <td>everyone,rwcd</td>
+</tr>
+<tr class="row-odd"><td>639</td>
+<td>2</td>
+<td>tifs</td>
+<td>0x45B00000</td>
+<td>0x45BFFFFF</td>
+<td>tifs,rwd</td>
+<td>everyone,r</td>
+<td>everyone,r</td>
 </tr>
 <tr class="row-even"><td>641</td>
 <td>0</td>
@@ -1232,6 +1242,10 @@ Firewall configuration is internally handled by RM based on RM boardcfg.</p>
 </tr>
 </tbody>
 </table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">For more details on firewalls, refer to the “Interconnect Firewalls” section of the TRM.</p>
+</div>
 </div>
 <div class="section" id="list-of-channelized-firewalls">
 <span id="soc-doc-j721s2-public-fwl-desc-channel-fwl-list"></span><h2>List of Channelized Firewalls<a class="headerlink" href="#list-of-channelized-firewalls" title="Permalink to this headline">¶</a></h2>
@@ -1944,7 +1958,7 @@ Firewall configuration is internally handled by RM based on RM boardcfg.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'08.06.04',
+            VERSION:'09.00.06',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

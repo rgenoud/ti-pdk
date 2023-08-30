@@ -79,7 +79,7 @@
             
             
               <div class="version">
-                08.06.04
+                09.00.06
               </div>
             
           
@@ -188,12 +188,16 @@
 <h1>AM62PX Host Descriptions<a class="headerlink" href="#am62px-host-descriptions" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="introduction">
 <span id="soc-doc-am62px-public-host-desc-intro"></span><h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
-<p>This chapter provides information of Host IDs that are permitted in
-the AM62PX SoC. These host IDs represent processing entities (or PEs)
-which is mandatory identification of a Host in a processor.</p>
-<p>Typically a host is a ‘compute entity’ which may be an actual
-processor or even a virtual machine. We just use host or processing
-entity to indicate the same thing.</p>
+<p>This chapter provides information on the set of HostIDs permitted
+in this AM62PX SoC. HostIDs uniquely identify each logically distinct high level
+software entity. A software entity identification number (HostID) can be
+assigned to an OS either native or virtualized, or a firmware/native
+application. The HostID is used to select the set of Secure Proxy channels for
+which this software entity should use to communicate with the System Firmware.</p>
+<p>System Firmware also checks that the used HostID comes from software running
+on the correct core (as implied by Host Name in the below table) and with the
+correct security level (Security Status column) to prevent HostID
+spoofing.</p>
 </div>
 <div class="section" id="enumeration-of-host-ids">
 <span id="soc-doc-am62px-public-host-desc-host-list"></span><h2>Enumeration of Host IDs<a class="headerlink" href="#enumeration-of-host-ids" title="Permalink to this headline">¶</a></h2>
@@ -220,52 +224,52 @@ entity to indicate the same thing.</p>
 <tr class="row-odd"><td>10</td>
 <td>A53_0</td>
 <td>Secure</td>
-<td>Cortex A53 context 0 on Main island</td>
+<td>Cortex A53 context 0 on MAIN domain</td>
 </tr>
 <tr class="row-even"><td>11</td>
 <td>A53_1</td>
 <td>Secure</td>
-<td>Cortex A53 context 1 on Main island</td>
+<td>Cortex A53 context 1 on MAIN domain</td>
 </tr>
 <tr class="row-odd"><td>12</td>
 <td>A53_2</td>
 <td>Non Secure</td>
-<td>Cortex A53 context 2 on Main island</td>
+<td>Cortex A53 context 2 on MAIN domain</td>
 </tr>
 <tr class="row-even"><td>13</td>
 <td>A53_3</td>
 <td>Non Secure</td>
-<td>Cortex A53 context 3 on Main island</td>
+<td>Cortex A53 context 3 on MAIN domain</td>
 </tr>
 <tr class="row-odd"><td>14</td>
 <td>A53_4</td>
 <td>Non Secure</td>
-<td>Cortex A53 context 4 on Main island</td>
+<td>Cortex A53 context 4 on MAIN domain</td>
 </tr>
 <tr class="row-even"><td>30</td>
 <td>MCU_0_R5_0</td>
 <td>Non Secure</td>
 <td>MCU R5</td>
 </tr>
+<tr class="row-odd"><td>31</td>
+<td>GPU_0</td>
+<td>Non Secure</td>
+<td>GPU context 0 on MAIN domain</td>
+</tr>
+<tr class="row-even"><td>32</td>
+<td>GPU_1</td>
+<td>Non Secure</td>
+<td>GPU context 1 on MAIN domain</td>
+</tr>
 <tr class="row-odd"><td>35</td>
-<td>MAIN_0_R5_0</td>
+<td>WKUP_0_R5_0</td>
 <td>Secure</td>
-<td>Cortex R5_0 context 0 on Main island(BOOT)</td>
+<td>Cortex R5_0 context 0 on WKUP domain (BOOT)</td>
 </tr>
 <tr class="row-even"><td>36</td>
-<td>MAIN_0_R5_1</td>
+<td>WKUP_0_R5_1</td>
 <td>Non Secure</td>
-<td>Cortex R5_0 context 1 on Main island</td>
-</tr>
-<tr class="row-odd"><td>37</td>
-<td>MAIN_0_R5_2</td>
-<td>Secure</td>
-<td>Cortex R5_0 context 2 on Main island</td>
-</tr>
-<tr class="row-even"><td>38</td>
-<td>MAIN_0_R5_3</td>
-<td>Non Secure</td>
-<td>Cortex R5_0 context 3 on Main island</td>
+<td>Cortex R5_0 context 1 on WKUP domain</td>
 </tr>
 <tr class="row-odd"><td>250</td>
 <td>DM2TIFS</td>
@@ -345,7 +349,7 @@ Host context</li>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'08.06.04',
+            VERSION:'09.00.06',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

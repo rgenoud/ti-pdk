@@ -21,11 +21,11 @@ valid DMA device IDs.
 +---------------------------+-----------------+
 | DMA Device Name           |   DMA Device ID |
 +===========================+=================+
-| J722S_DEV_DMASS0_BCDMA_0  |              30 |
+| J722S_DEV_DMASS0_BCDMA_0  |              26 |
 +---------------------------+-----------------+
-| J722S_DEV_DMASS0_PKTDMA_0 |              34 |
+| J722S_DEV_DMASS0_PKTDMA_0 |              30 |
 +---------------------------+-----------------+
-| J722S_DEV_DMASS1_BCDMA_0  |              38 |
+| J722S_DEV_DMASS1_BCDMA_0  |             199 |
 +---------------------------+-----------------+
 
 .. _pub_soc_j722s_dma_channels_and_flows:

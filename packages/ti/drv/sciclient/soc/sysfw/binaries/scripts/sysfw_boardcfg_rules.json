@@ -4373,457 +4373,457 @@
                 "values": [
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_MAIN_GPIOMUX_INTROUTER0, RESASG_SUBTYPE_IR_OUTPUT)",
-                        "type": 64,
+                        "type": 192,
                         "start_resource": 0,
                         "num_resource": 36
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_WKUP_MCU_GPIOMUX_INTROUTER0, RESASG_SUBTYPE_IR_OUTPUT)",
-                        "type": 128,
+                        "type": 320,
                         "start_resource": 0,
                         "num_resource": 16
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_TIMESYNC_EVENT_INTROUTER0, RESASG_SUBTYPE_IR_OUTPUT)",
-                        "type": 192,
+                        "type": 384,
                         "start_resource": 0,
                         "num_resource": 26
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_BCDMA_0, RESASG_SUBTYPE_RA_ERROR_OES)",
-                        "type": 1920,
+                        "type": 1664,
                         "start_resource": 0,
                         "num_resource": 1
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_BCDMA_0, RESASG_SUBTYPE_GLOBAL_EVENT_TRIGGER)",
-                        "type": 1922,
+                        "type": 1666,
                         "start_resource": 50176,
                         "num_resource": 164
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_BCDMA_0, RESASG_SUBTYPE_UDMAP_GLOBAL_CONFIG)",
-                        "type": 1923,
+                        "type": 1667,
                         "start_resource": 0,
                         "num_resource": 1
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_BCDMA_0, RESASG_SUBTYPE_BCDMA_RING_BLOCK_COPY_CHAN)",
-                        "type": 1933,
+                        "type": 1677,
                         "start_resource": 0,
                         "num_resource": 32
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_BCDMA_0, RESASG_SUBTYPE_BCDMA_RING_SPLIT_TR_RX_CHAN)",
-                        "type": 1934,
+                        "type": 1678,
                         "start_resource": 57,
                         "num_resource": 25
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_BCDMA_0, RESASG_SUBTYPE_BCDMA_RING_SPLIT_TR_TX_CHAN)",
-                        "type": 1935,
+                        "type": 1679,
                         "start_resource": 32,
                         "num_resource": 25
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_BCDMA_0, RESASG_SUBTYPE_BCDMA_BLOCK_COPY_CHAN)",
-                        "type": 1952,
+                        "type": 1696,
                         "start_resource": 0,
                         "num_resource": 32
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_BCDMA_0, RESASG_SUBTYPE_BCDMA_SPLIT_TR_RX_CHAN)",
-                        "type": 1953,
+                        "type": 1697,
                         "start_resource": 0,
                         "num_resource": 25
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_BCDMA_0, RESASG_SUBTYPE_BCDMA_SPLIT_TR_TX_CHAN)",
-                        "type": 1954,
+                        "type": 1698,
                         "start_resource": 0,
                         "num_resource": 25
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_INTAGGR_0, RESASG_SUBTYPE_IA_VINT)",
-                        "type": 2058,
+                        "type": 1802,
                         "start_resource": 7,
                         "num_resource": 33
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_INTAGGR_0, RESASG_SUBTYPE_IA_VINT)",
-                        "type": 2058,
+                        "type": 1802,
                         "start_resource": 44,
                         "num_resource": 92
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_INTAGGR_0, RESASG_SUBTYPE_IA_VINT)",
-                        "type": 2058,
+                        "type": 1802,
                         "start_resource": 140,
                         "num_resource": 12
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_INTAGGR_0, RESASG_SUBTYPE_IA_VINT)",
-                        "type": 2058,
+                        "type": 1802,
                         "start_resource": 154,
                         "num_resource": 30
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_INTAGGR_0, RESASG_SUBTYPE_GLOBAL_EVENT_SEVT)",
-                        "type": 2061,
+                        "type": 1805,
                         "start_resource": 17,
                         "num_resource": 1519
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_INTAGGR_0, RESASG_SUBTYPE_IA_PKTDMA_TX_CHAN_ERROR_OES)",
-                        "type": 2063,
+                        "type": 1807,
                         "start_resource": 4096,
                         "num_resource": 29
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_INTAGGR_0, RESASG_SUBTYPE_IA_PKTDMA_TX_FLOW_COMPLETION_OES)",
-                        "type": 2064,
+                        "type": 1808,
                         "start_resource": 4608,
                         "num_resource": 99
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_INTAGGR_0, RESASG_SUBTYPE_IA_PKTDMA_RX_CHAN_ERROR_OES)",
-                        "type": 2065,
+                        "type": 1809,
                         "start_resource": 5120,
                         "num_resource": 24
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_INTAGGR_0, RESASG_SUBTYPE_IA_PKTDMA_RX_FLOW_COMPLETION_OES)",
-                        "type": 2066,
+                        "type": 1810,
                         "start_resource": 5632,
                         "num_resource": 51
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_INTAGGR_0, RESASG_SUBTYPE_IA_PKTDMA_RX_FLOW_STARVATION_OES)",
-                        "type": 2067,
+                        "type": 1811,
                         "start_resource": 6144,
                         "num_resource": 51
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_INTAGGR_0, RESASG_SUBTYPE_IA_BCDMA_CHAN_ERROR_OES)",
-                        "type": 2068,
+                        "type": 1812,
                         "start_resource": 8192,
                         "num_resource": 32
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_INTAGGR_0, RESASG_SUBTYPE_IA_BCDMA_CHAN_DATA_COMPLETION_OES)",
-                        "type": 2069,
+                        "type": 1813,
                         "start_resource": 8704,
                         "num_resource": 32
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_INTAGGR_0, RESASG_SUBTYPE_IA_BCDMA_CHAN_RING_COMPLETION_OES)",
-                        "type": 2070,
+                        "type": 1814,
                         "start_resource": 9216,
                         "num_resource": 32
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_INTAGGR_0, RESASG_SUBTYPE_IA_BCDMA_TX_CHAN_ERROR_OES)",
-                        "type": 2071,
+                        "type": 1815,
                         "start_resource": 9728,
                         "num_resource": 25
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_INTAGGR_0, RESASG_SUBTYPE_IA_BCDMA_TX_CHAN_DATA_COMPLETION_OES)",
-                        "type": 2072,
+                        "type": 1816,
                         "start_resource": 10240,
                         "num_resource": 25
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_INTAGGR_0, RESASG_SUBTYPE_IA_BCDMA_TX_CHAN_RING_COMPLETION_OES)",
-                        "type": 2073,
+                        "type": 1817,
                         "start_resource": 10752,
                         "num_resource": 25
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_INTAGGR_0, RESASG_SUBTYPE_IA_BCDMA_RX_CHAN_ERROR_OES)",
-                        "type": 2074,
+                        "type": 1818,
                         "start_resource": 11264,
                         "num_resource": 25
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_INTAGGR_0, RESASG_SUBTYPE_IA_BCDMA_RX_CHAN_DATA_COMPLETION_OES)",
-                        "type": 2075,
+                        "type": 1819,
                         "start_resource": 11776,
                         "num_resource": 25
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_INTAGGR_0, RESASG_SUBTYPE_IA_BCDMA_RX_CHAN_RING_COMPLETION_OES)",
-                        "type": 2076,
+                        "type": 1820,
                         "start_resource": 12288,
                         "num_resource": 25
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_PKTDMA_0, RESASG_SUBTYPE_RA_ERROR_OES)",
-                        "type": 2176,
+                        "type": 1920,
                         "start_resource": 0,
                         "num_resource": 1
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_PKTDMA_0, RESASG_SUBTYPE_UDMAP_GLOBAL_CONFIG)",
-                        "type": 2179,
+                        "type": 1923,
                         "start_resource": 0,
                         "num_resource": 1
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_RING_UNMAPPED_TX_CHAN)",
-                        "type": 2192,
+                        "type": 1936,
                         "start_resource": 0,
                         "num_resource": 19
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_RING_CPSW_TX_CHAN)",
-                        "type": 2193,
+                        "type": 1937,
                         "start_resource": 19,
                         "num_resource": 64
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_RING_SAUL_TX_0_CHAN)",
-                        "type": 2194,
+                        "type": 1938,
                         "start_resource": 83,
                         "num_resource": 8
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_RING_SAUL_TX_1_CHAN)",
-                        "type": 2195,
+                        "type": 1939,
                         "start_resource": 91,
                         "num_resource": 8
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_RING_UNMAPPED_RX_CHAN)",
-                        "type": 2198,
+                        "type": 1942,
                         "start_resource": 99,
                         "num_resource": 19
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_RING_CPSW_RX_CHAN)",
-                        "type": 2199,
+                        "type": 1943,
                         "start_resource": 118,
                         "num_resource": 16
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_RING_SAUL_RX_0_CHAN)",
-                        "type": 2200,
+                        "type": 1944,
                         "start_resource": 134,
                         "num_resource": 8
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_RING_SAUL_RX_1_CHAN)",
-                        "type": 2201,
+                        "type": 1945,
                         "start_resource": 134,
                         "num_resource": 8
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_RING_SAUL_RX_2_CHAN)",
-                        "type": 2202,
+                        "type": 1946,
                         "start_resource": 142,
                         "num_resource": 8
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_RING_SAUL_RX_3_CHAN)",
-                        "type": 2203,
+                        "type": 1947,
                         "start_resource": 142,
                         "num_resource": 8
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_UNMAPPED_TX_CHAN)",
-                        "type": 2211,
+                        "type": 1955,
                         "start_resource": 0,
                         "num_resource": 19
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_CPSW_TX_CHAN)",
-                        "type": 2212,
+                        "type": 1956,
                         "start_resource": 19,
                         "num_resource": 8
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_SAUL_TX_0_CHAN)",
-                        "type": 2213,
+                        "type": 1957,
                         "start_resource": 27,
                         "num_resource": 1
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_SAUL_TX_1_CHAN)",
-                        "type": 2214,
+                        "type": 1958,
                         "start_resource": 28,
                         "num_resource": 1
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_UNMAPPED_RX_CHAN)",
-                        "type": 2217,
+                        "type": 1961,
                         "start_resource": 0,
                         "num_resource": 19
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_FLOW_UNMAPPED_RX_CHAN)",
-                        "type": 2218,
+                        "type": 1962,
                         "start_resource": 0,
                         "num_resource": 19
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_CPSW_RX_CHAN)",
-                        "type": 2219,
+                        "type": 1963,
                         "start_resource": 19,
                         "num_resource": 1
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_FLOW_CPSW_RX_CHAN)",
-                        "type": 2220,
+                        "type": 1964,
                         "start_resource": 19,
                         "num_resource": 16
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_SAUL_RX_0_CHAN)",
-                        "type": 2221,
+                        "type": 1965,
                         "start_resource": 20,
                         "num_resource": 1
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_FLOW_SAUL_RX_0_CHAN)",
-                        "type": 2222,
+                        "type": 1966,
                         "start_resource": 35,
                         "num_resource": 8
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_SAUL_RX_1_CHAN)",
-                        "type": 2223,
+                        "type": 1967,
                         "start_resource": 21,
                         "num_resource": 1
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_FLOW_SAUL_RX_1_CHAN)",
-                        "type": 2224,
+                        "type": 1968,
                         "start_resource": 35,
                         "num_resource": 8
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_SAUL_RX_2_CHAN)",
-                        "type": 2225,
+                        "type": 1969,
                         "start_resource": 22,
                         "num_resource": 1
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_FLOW_SAUL_RX_2_CHAN)",
-                        "type": 2226,
+                        "type": 1970,
                         "start_resource": 43,
                         "num_resource": 8
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_SAUL_RX_3_CHAN)",
-                        "type": 2227,
+                        "type": 1971,
                         "start_resource": 23,
                         "num_resource": 1
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_PKTDMA_0, RESASG_SUBTYPE_PKTDMA_FLOW_SAUL_RX_3_CHAN)",
-                        "type": 2228,
+                        "type": 1972,
                         "start_resource": 43,
                         "num_resource": 8
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_RINGACC_0, RESASG_SUBTYPE_RA_ERROR_OES)",
-                        "type": 2304,
+                        "type": 2112,
                         "start_resource": 0,
                         "num_resource": 1
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS0_RINGACC_0, RESASG_SUBTYPE_RA_VIRTID)",
-                        "type": 2314,
+                        "type": 2122,
                         "start_resource": 0,
                         "num_resource": 4096
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS1_BCDMA_0, RESASG_SUBTYPE_RA_ERROR_OES)",
-                        "type": 2432,
+                        "type": 12736,
                         "start_resource": 0,
                         "num_resource": 1
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS1_BCDMA_0, RESASG_SUBTYPE_GLOBAL_EVENT_TRIGGER)",
-                        "type": 2434,
+                        "type": 12738,
                         "start_resource": 51200,
                         "num_resource": 80
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS1_BCDMA_0, RESASG_SUBTYPE_UDMAP_GLOBAL_CONFIG)",
-                        "type": 2435,
+                        "type": 12739,
                         "start_resource": 0,
                         "num_resource": 1
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS1_BCDMA_0, RESASG_SUBTYPE_BCDMA_RING_SPLIT_TR_RX_CHAN)",
-                        "type": 2446,
+                        "type": 12750,
                         "start_resource": 8,
                         "num_resource": 32
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS1_BCDMA_0, RESASG_SUBTYPE_BCDMA_RING_SPLIT_TR_TX_CHAN)",
-                        "type": 2447,
+                        "type": 12751,
                         "start_resource": 0,
                         "num_resource": 8
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS1_BCDMA_0, RESASG_SUBTYPE_BCDMA_SPLIT_TR_RX_CHAN)",
-                        "type": 2465,
+                        "type": 12769,
                         "start_resource": 0,
                         "num_resource": 32
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS1_BCDMA_0, RESASG_SUBTYPE_BCDMA_SPLIT_TR_TX_CHAN)",
-                        "type": 2466,
+                        "type": 12770,
                         "start_resource": 0,
                         "num_resource": 8
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS1_INTAGGR_0, RESASG_SUBTYPE_IA_VINT)",
-                        "type": 2506,
+                        "type": 12810,
                         "start_resource": 0,
                         "num_resource": 40
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS1_INTAGGR_0, RESASG_SUBTYPE_GLOBAL_EVENT_SEVT)",
-                        "type": 2509,
+                        "type": 12813,
                         "start_resource": 12288,
                         "num_resource": 216
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS1_INTAGGR_0, RESASG_SUBTYPE_IA_BCDMA_TX_CHAN_ERROR_OES)",
-                        "type": 2519,
+                        "type": 12823,
                         "start_resource": 1536,
                         "num_resource": 8
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS1_INTAGGR_0, RESASG_SUBTYPE_IA_BCDMA_TX_CHAN_DATA_COMPLETION_OES)",
-                        "type": 2520,
+                        "type": 12824,
                         "start_resource": 2048,
                         "num_resource": 8
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS1_INTAGGR_0, RESASG_SUBTYPE_IA_BCDMA_TX_CHAN_RING_COMPLETION_OES)",
-                        "type": 2521,
+                        "type": 12825,
                         "start_resource": 2560,
                         "num_resource": 8
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS1_INTAGGR_0, RESASG_SUBTYPE_IA_BCDMA_RX_CHAN_ERROR_OES)",
-                        "type": 2522,
+                        "type": 12826,
                         "start_resource": 3072,
                         "num_resource": 32
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS1_INTAGGR_0, RESASG_SUBTYPE_IA_BCDMA_RX_CHAN_DATA_COMPLETION_OES)",
-                        "type": 2523,
+                        "type": 12827,
                         "start_resource": 3584,
                         "num_resource": 32
                     },
                     {
                         "name": "RESASG_UTYPE(J722S_DEV_DMASS1_INTAGGR_0, RESASG_SUBTYPE_IA_BCDMA_RX_CHAN_RING_COMPLETION_OES)",
-                        "type": 2524,
+                        "type": 12828,
                         "start_resource": 4096,
                         "num_resource": 32
                     }
