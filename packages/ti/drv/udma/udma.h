@@ -274,6 +274,10 @@ typedef struct
 
 #ifdef QNX_OS
     uint32_t                isQnxRMInstance;
+    /**< If 1 this is passed in from the Qnx resource manager */
+
+    uint32_t                intrPriority;
+    /**< Lets the app set a priority for the udma interrupt thread */
 #endif
 } Udma_InitPrms;
 
