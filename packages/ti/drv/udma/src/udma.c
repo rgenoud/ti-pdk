@@ -189,6 +189,12 @@ int32_t Udma_init(Udma_DrvHandle drvHandle, const Udma_InitPrms *initPrms)
                 Udma_EventPrms  eventPrms;
 
                 UdmaEventPrms_init(&eventPrms);
+#ifdef QNX_OS
+                if ((initPrms->intrPriority == 0U) || (initPrms->intrPriority > 255U))
+                    eventPrms.intrPriority = 20U; // set a reasonable priority if outside the range.
+                else
+                    eventPrms.intrPriority = initPrms->intrPriority;
+#endif
                 eventPrms.eventType = UDMA_EVENT_TYPE_MASTER;
                 eventPrms.eventMode = UDMA_EVENT_MODE_SHARED;
                 retVal = Udma_eventRegister(
