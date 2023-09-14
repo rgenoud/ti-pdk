@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) Texas Instruments Incorporated 2018
+ *  Copyright (c) Texas Instruments Incorporated 2018-2023
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -70,7 +70,7 @@
 #include <ti/drv/sciclient/sciclient.h>
 #include <ti/board/board.h>
 
-#if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_AM62A) || defined (SOC_AM62X)))
+#if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_AM62A) || defined (SOC_AM62X) || defined (SOC_AM62PX)))
 #include <ti/drv/sciclient/src/sciclient/sciclient_priv.h>
 #include <ti/drv/sciclient/sciserver_tirtos.h>
 #endif
@@ -86,7 +86,7 @@
 #define APP_TSK_STACK_MAIN              (32U * 1024U)
 /**< Test application stack size */
 
-#if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_AM62A) || defined (SOC_AM62X)))
+#if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_AM62A) || defined (SOC_AM62X) || defined (SOC_AM62PX)))
 /**< SCI Server Init Task stack size */
 #define APP_SCISERVER_INIT_TSK_STACK        (32U * 1024U)
 /* SCI Server Init Task Priority - must be higher than High priority Sciserver task */
@@ -114,7 +114,7 @@
 
 static void taskFxn(void* a0, void* a1);
 
-#if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_AM62A) || defined (SOC_AM62X)))
+#if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_AM62A) || defined (SOC_AM62X) || defined (SOC_AM62PX)))
 void Ipc_setupSciServer(void *arg0, void *arg1);
 /**< Initialize SCI Server, to process RM/PM Requests by other cores */
 #endif
@@ -136,7 +136,7 @@ __attribute__ ((aligned(8192)));
 /* Variable to check if ipc_boardInit has completed or not*/
 uint8_t  gBoardinit=0;
 
-#if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_AM62A) || defined (SOC_AM62X)))
+#if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_AM62A) || defined (SOC_AM62X) || defined (SOC_AM62PX)))
 /* Sciserver Init TAsk stack */
 #if defined(SAFERTOS)
 static uint8_t  gSciserverInitTskStack[APP_SCISERVER_INIT_TSK_STACK]
@@ -152,7 +152,7 @@ extern Sciclient_ServiceHandle_t gSciclientHandle;
 /*                          Function Definitions                              */
 /* ========================================================================== */
 
-#if (!defined(A72_LINUX_OS) || ((defined (SOC_AM62X) || defined (SOC_AM62A)) && defined (BUILD_MCU1_0)))
+#if (!defined(A72_LINUX_OS) || ((defined (SOC_AM62X) || defined (SOC_AM62A) || defined (SOC_AM62PX)) && defined (BUILD_MCU1_0)))
 void ipc_boardInit()
 {
     Board_initCfg           boardCfg;
@@ -176,7 +176,7 @@ void ipc_initSciclient()
         App_printf("Sciclient_configPrmsInit Failed\n");
     }
 
-#if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_AM62A) || defined (SOC_AM62X)))
+#if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_AM62A) || defined (SOC_AM62X) || defined (SOC_AM62PX)))
     if (ret == CSL_PASS)
     {
         ret = Sciclient_boardCfgParseHeader(
@@ -186,7 +186,7 @@ void ipc_initSciclient()
         {
             App_printf("Sciclient_boardCfgParseHeader Failed\n");
         }
-#if defined (SOC_AM62X) || defined (SOC_AM62A)
+#if defined (SOC_AM62X) || defined (SOC_AM62A) || defined (SOC_AM62PX)
 		ipc_boardInit();
 		gBoardinit=1;
 #endif
@@ -262,7 +262,7 @@ static void taskFxn(void* a0, void* a1)
     gBoardinit=1;
 #endif
 
-#if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_AM62A) || defined (SOC_AM62X)))
+#if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_AM62A) || defined (SOC_AM62X) || defined (SOC_AM62PX)))
     TaskP_Handle sciserverInitTask;
     TaskP_Params sciserverInitTaskParams;
 

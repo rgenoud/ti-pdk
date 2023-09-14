@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) Texas Instruments Incorporated 2018-2020
+ *  Copyright (c) Texas Instruments Incorporated 2018-2023
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -81,6 +81,8 @@
 #define CORE_IN_TEST            3
 #elif defined (SOC_AM62A)
 #define CORE_IN_TEST            4
+#elif defined (SOC_AM62PX)
+#define CORE_IN_TEST            3
 #elif defined (SOC_J721S2)
 #define CORE_IN_TEST            8
 #elif defined (SOC_J784S4)
@@ -145,6 +147,8 @@ uint32_t remoteProc[] =
     IPC_M4F_0, IPC_MCU1_0
 #elif defined (SOC_AM62A)
     IPC_MCU1_0, IPC_C7X_1, IPC_MCU2_0
+#elif defined (SOC_AM62PX)
+    IPC_MCU_R5F, IPC_WKUP_R5F
 #elif defined (SOC_J721S2)
     IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1, IPC_MCU3_0, IPC_MCU3_1, IPC_C7X_1, IPC_C7X_2
 #elif defined (SOC_J784S4)
@@ -169,6 +173,8 @@ uint32_t remoteProc[] =
     IPC_M4F_0, IPC_MPU1_0
 #elif defined (SOC_AM62A)
     IPC_MPU1_0, IPC_C7X_1
+#elif defined (SOC_AM62PX)
+    IPC_MPU1_0, IPC_MCU_R5F
 #elif defined (SOC_J721S2)
     IPC_MPU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1, IPC_MCU3_0, IPC_MCU3_1, IPC_C7X_1, IPC_C7X_2
 #elif defined (SOC_J784S4)

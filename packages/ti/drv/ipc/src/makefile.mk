@@ -18,6 +18,9 @@ endif
 ifeq ($(SOC),$(filter $(SOC), am62a))
   SRCDIR += soc/V6
 endif
+ifeq ($(SOC),$(filter $(SOC), am62px))
+  SRCDIR += soc/V7
+endif
 INCDIR =
 
 #$(ECHO) $(ISA)
@@ -36,7 +39,7 @@ SRCS_COMMON += ipc_osal_qnx.c
 else
 SRCS_COMMON += ipc_osal.c
 endif
-ifeq ($(SOC),$(filter $(SOC), am64x am62x am62a))
+ifeq ($(SOC),$(filter $(SOC), am64x am62x am62a am62px))
 SRCS_COMMON += ipc_mailbox_lld.c
 else
 SRCS_COMMON += ipc_mailbox.c

@@ -112,7 +112,7 @@ ifeq ($(BUILD_OS_TYPE), safertos)
   endif
 endif
 
-ifeq ($(SOC), am64x am62x am62a)
+ifeq ($(SOC), am64x am62x am62a am62px)
   COMP_LIST_COMMON += mailbox
 endif
 

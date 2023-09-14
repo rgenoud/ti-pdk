@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, Texas Instruments Incorporated
+ * Copyright (c) 2019-2023, Texas Instruments Incorporated
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -73,6 +73,8 @@ extern "C" {
 #define VRING_BASE_ADDRESS      0xA0000000U
 #elif defined (SOC_AM62A)
 #define VRING_BASE_ADDRESS      0xA0000000U
+#elif defined (SOC_AM62PX)
+#define VRING_BASE_ADDRESS      0x9B500000U
 #elif defined (SOC_J721S2)
 #define VRING_BASE_ADDRESS      0xA8000000U
 #elif defined (SOC_J784S4)

@@ -43,8 +43,8 @@ ipc_LIB_LIST = ipc
 
 drvipc_RTOS_LIST       = $(DEFAULT_RTOS_LIST)
 
-drvipc_SOCLIST         = j721e j7200 j721s2 j784s4 am62x am62a
-drvipc_BOARDLIST       = j721e_sim j721e_qt j721e_evm j7200_evm j721s2_evm j784s4_evm am62x_evm am62a_evm
+drvipc_SOCLIST         = j721e j7200 j721s2 j784s4 am62x am62a am62px
+drvipc_BOARDLIST       = j721e_sim j721e_qt j721e_evm j7200_evm j721s2_evm j784s4_evm am62x_evm am62a_evm am62px_evm
 drvipc_full_BOARDLIST       = j721e_sim j721e_qt j721e_evm j7200_evm j721s2_evm j784s4_evm
 drvipc_j721e_CORELIST  = mpu1_0 mcu1_0 mcu2_0 mcu3_0 mcu1_1 mcu2_1 mcu3_1 c66xdsp_1 c66xdsp_2 c7x_1
 drvipc_j721e_LASTCORE := $(word $(words $(drvipc_j721e_CORELIST)), $(drvipc_j721e_CORELIST))
@@ -68,6 +68,10 @@ drvipc_am62x_RTOS_CORELIST = $(drvipc_am62x_CORELIST)
 drvipc_am62a_CORELIST  = mpu1_0 mcu1_0 c7x_1
 drvipc_am62a_LASTCORE := $(word $(words $(drvipc_am62a_CORELIST)), $(drvipc_am62a_CORELIST))
 drvipc_am62a_RTOS_CORELIST = $(drvipc_am62a_CORELIST)
+drvipc_am62px_CORELIST = mpu1_0 mcu_r5f wkup_r5f
+drvipc_am62px_LASTCORE := $(word $(words $(drvipc_am62px_CORELIST)), $(drvipc_am62px_CORELIST))
+drvipc_am62px_RTOS_CORELIST = $(drvipc_am62px_CORELIST)
+
 drvipc_DISABLE_PARALLEL_MAKE = yes
 
 ifeq ($(BUILD_OS_TYPE), qnx)
@@ -77,6 +81,7 @@ drvipc_j721s2_CORELIST += qnx_mpu1_0
 drvipc_j784s4_CORELIST += qnx_mpu1_0
 drvipc_am62x_CORELIST += qnx_mpu1_0
 drvipc_am62a_CORELIST += qnx_mpu1_0
+drvipc_am62px_CORELIST += qnx_mpu1_0
 endif
 
 ############################
@@ -235,7 +240,7 @@ export ipc_rtos_echo_test_$(1)_XDC_CONFIGURO = $(if $(findstring tirtos, $(1)), 
 export ipc_rtos_echo_test_$(1)_MAKEFILE = -f makefile BUILD_OS_TYPE=$(1)
 ipc_rtos_echo_test_$(1)_PKG_LIST = ipc_rtos_echo_test_$(1)
 ipc_rtos_echo_test_$(1)_INCLUDE = $(ipc_rtos_echo_test_$(1)_PATH)
-export ipc_rtos_echo_test_$(1)_BOARDLIST = $(filter-out am62a_evm am62x_evm, $(DEFAULT_BOARDLIST_$(1)), $(drvipc_BOARDLIST))
+export ipc_rtos_echo_test_$(1)_BOARDLIST = $(filter-out am62a_evm am62x_evm am62px_evm, $(DEFAULT_BOARDLIST_$(1)), $(drvipc_BOARDLIST))
 export ipc_rtos_echo_test_$(1)_$(SOC)_CORELIST = $(filter-out c7x_1, $(DEFAULT_$(SOC)_CORELIST_$(1)), $(drvipc_$(SOC)_RTOS_CORELIST))
 export ipc_rtos_echo_test_$(1)_SBL_APPIMAGEGEN = yes
 ifneq ($(1),$(filter $(1), safertos))
@@ -260,7 +265,7 @@ export ipc_rtos_echo_testb_$(1)_XDC_CONFIGURO = $(if $(findstring tirtos, $(1)),
 export ipc_rtos_echo_testb_$(1)_MAKEFILE =  -fmakefile.btcm BUILD_OS_TYPE=$(1)
 ipc_rtos_echo_testb_$(1)_PKG_LIST = ipc_rtos_echo_testb_$(1)
 ipc_rtos_echo_testb_$(1)_INCLUDE = $(ipc_rtos_echo_testb_$(1)_PATH)
-export ipc_rtos_echo_testb_$(1)_BOARDLIST = $(filter-out am62a_evm am62x_evm, $(DEFAULT_BOARDLIST_$(1)), $(drvipc_BOARDLIST))
+export ipc_rtos_echo_testb_$(1)_BOARDLIST = $(filter-out am62a_evm am62x_evm am62px_evm, $(DEFAULT_BOARDLIST_$(1)), $(drvipc_BOARDLIST))
 export ipc_rtos_echo_testb_$(1)_$(SOC)_CORELIST = $(filter-out c7x_1, $(DEFAULT_$(SOC)_CORELIST_$(1)), $(drvipc_$(SOC)_RTOS_CORELIST))
 export ipc_rtos_echo_testb_$(1)_SBL_APPIMAGEGEN = yes
 ifneq ($(1),$(filter $(1), safertos))
@@ -305,7 +310,7 @@ export ipc_negative_test_$(1)_XDC_CONFIGURO = $(if $(findstring tirtos, $(1)), y
 export ipc_negative_test_$(1)_MAKEFILE = -f makefile BUILD_OS_TYPE=$(1)
 ipc_negative_test_$(1)_PKG_LIST = ipc_negative_test_$(1)
 ipc_negative_test_$(1)_INCLUDE = $(ipc_negative_test_$(1)_PATH)
-export ipc_negative_test_$(1)_BOARDLIST = $(filter-out am62a_evm am62x_evm, $(DEFAULT_BOARDLIST_$(1)), $(drvipc_BOARDLIST))
+export ipc_negative_test_$(1)_BOARDLIST = $(filter-out am62a_evm am62x_evm am62px_evm, $(DEFAULT_BOARDLIST_$(1)), $(drvipc_BOARDLIST))
 export ipc_negative_test_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), $(drvipc_$(SOC)_RTOS_CORELIST))
 export ipc_negative_test_$(1)_SBL_APPIMAGEGEN = yes
 ifneq ($(1),$(filter $(1), safertos))
@@ -330,7 +335,7 @@ export ipc_perf_test_$(1)_XDC_CONFIGURO = $(if $(findstring tirtos, $(1)), yes, 
 export ipc_perf_test_$(1)_MAKEFILE =  -fmakefile BUILD_OS_TYPE=$(1)
 ipc_perf_test_$(1)_PKG_LIST = ipc_perf_test_$(1)
 ipc_perf_test_$(1)_INCLUDE = $(ipc_perf_test_$(1)_PATH)
-export ipc_perf_test_$(1)_BOARDLIST = $(filter-out am62a_evm am62x_evm, $(DEFAULT_BOARDLIST_$(1)), $(drvipc_BOARDLIST))
+export ipc_perf_test_$(1)_BOARDLIST = $(filter-out am62a_evm am62x_evm am62px_evm, $(DEFAULT_BOARDLIST_$(1)), $(drvipc_BOARDLIST))
 export ipc_perf_test_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), $(drvipc_$(SOC)_RTOS_CORELIST))
 export ipc_perf_test_$(1)_SBL_APPIMAGEGEN = yes
 ifneq ($(1),$(filter $(1), safertos))
@@ -404,7 +409,7 @@ export ipc_rtos_multicore_echo_test_$(1)_MAKEFILE =  -f$(PDK_IPC_COMP_PATH)/exam
 export ipc_rtos_multicore_echo_test_$(1)_DEPENDS_ON=ipc_rtos_echo_test_$(1)
 ipc_rtos_multicore_echo_test_$(1)_PKG_LIST = ipc_rtos_multicore_echo_test_$(1)
 ipc_rtos_multicore_echo_test_$(1)_INCLUDE = $(ipc_rtos_multicore_echo_test_$(1)_PATH)
-export ipc_rtos_multicore_echo_test_$(1)_BOARDLIST = $(filter-out am62a_evm am62x_evm, $(DEFAULT_BOARDLIST_$(1)), $(drvipc_BOARDLIST))
+export ipc_rtos_multicore_echo_test_$(1)_BOARDLIST = $(filter-out am62a_evm am62x_evm am62px_evm, $(DEFAULT_BOARDLIST_$(1)), $(drvipc_BOARDLIST))
 export ipc_rtos_multicore_echo_test_$(1)_$(SOC)_CORELIST := $(drvipc_$(SOC)_LASTCORE)
 export ipc_rtos_multicore_echo_test_SBL_APPIMAGEGEN = no
 ifneq ($(1),$(filter $(1), safertos))
@@ -430,7 +435,7 @@ export ipc_baremetal_multicore_echo_test_MAKEFILE = -f$(PDK_IPC_COMP_PATH)/examp
 export ipc_baremetal_multicore_echo_test_DEPENDS_ON = ipc_baremetal_echo_test ipc_rtos_echo_test_freertos
 ipc_baremetal_multicore_echo_test_PKG_LIST = ipc_baremetal_multicore_echo_test
 ipc_baremetal_multicore_echo_test_INCLUDE = $(ipc_baremetal_multicore_echo_test_PATH)
-export ipc_baremetal_multicore_echo_test_BOARDLIST = $(filter-out am62a_evm am62x_evm, $(drvipc_BOARDLIST))
+export ipc_baremetal_multicore_echo_test_BOARDLIST = $(filter-out am62a_evm am62x_evm am62px_evm, $(drvipc_BOARDLIST))
 export ipc_baremetal_multicore_echo_test_$(SOC)_CORELIST:= $(drvipc_$(SOC)_LASTCORE)
 export ipc_baremetal_multicore_echo_test_SBL_APPIMAGEGEN = no
 ipc_DUP_EXAMPLE_LIST += ipc_baremetal_multicore_echo_test
@@ -448,7 +453,7 @@ export ipc_rtos_multicore_echo_testb_$(1)_MAKEFILE =  -f$(PDK_IPC_COMP_PATH)/exa
 export ipc_rtos_multicore_echo_testb_$(1)_DEPENDS_ON=ipc_rtos_echo_testb_$(1)
 ipc_rtos_multicore_echo_testb_$(1)_PKG_LIST = ipc_rtos_multicore_echo_testb_$(1)
 ipc_rtos_multicore_echo_testb_$(1)_INCLUDE = $(ipc_rtos_multicore_echo_testb_$(1)_PATH)
-export ipc_rtos_multicore_echo_testb_$(1)_BOARDLIST = $(filter-out am62a_evm am62x_evm, $(DEFAULT_BOARDLIST_$(1)), $(drvipc_BOARDLIST))
+export ipc_rtos_multicore_echo_testb_$(1)_BOARDLIST = $(filter-out am62a_evm am62x_evm am62px_evm, $(DEFAULT_BOARDLIST_$(1)), $(drvipc_BOARDLIST))
 export ipc_rtos_multicore_echo_testb_$(1)_$(SOC)_CORELIST := $(drvipc_$(SOC)_LASTCORE)
 export ipc_rtos_multicore_echo_testb_SBL_APPIMAGEGEN = no
 ifneq ($(1),$(filter $(1), safertos))
@@ -475,7 +480,7 @@ export ipc_multicore_perf_test_$(1)_MAKEFILE =  -f$(PDK_IPC_COMP_PATH)/examples/
 export ipc_multicore_perf_test_$(1)_DEPENDS_ON=ipc_perf_test_$(1)
 ipc_multicore_perf_test_$(1)_PKG_LIST = ipc_multicore_perf_test_$(1)
 ipc_multicore_perf_test_$(1)_INCLUDE = $(ipc_multicore_perf_test_$(1)_PATH)
-export ipc_multicore_perf_test_$(1)_BOARDLIST = $(filter-out am62a_evm am62x_evm, $(DEFAULT_BOARDLIST_$(1)), $(drvipc_BOARDLIST))
+export ipc_multicore_perf_test_$(1)_BOARDLIST = $(filter-out am62a_evm am62x_evm am62px_evm, $(DEFAULT_BOARDLIST_$(1)), $(drvipc_BOARDLIST))
 export ipc_multicore_perf_test_$(1)_$(SOC)_CORELIST := $(drvipc_$(SOC)_LASTCORE)
 export ipc_multicore_perf_test_SBL_APPIMAGEGEN = no
 ifneq ($(SOC),$(filter $(SOC), j721s2))
