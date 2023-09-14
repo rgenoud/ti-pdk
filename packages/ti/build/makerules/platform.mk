@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2013-2022, Texas Instruments Incorporated
+# Copyright (c) 2013-2023, Texas Instruments Incorporated
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -205,6 +205,11 @@ endif
 # AM62A
 ifeq ($(BOARD),$(filter $(BOARD), am62a_evm am62a_hostemu am62a_loki ))
  SOC = am62a
+endif
+
+# AM62PX
+ifeq ($(BOARD),$(filter $(BOARD), am62px_evm ))
+ SOC = am62px
 endif
 
 # SBL related macro

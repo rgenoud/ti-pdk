@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2013-2018, Texas Instruments Incorporated
+# Copyright (c) 2013-2023, Texas Instruments Incorporated
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -77,6 +77,9 @@ ifeq ($(BOARD),$(filter $(BOARD), evmAM572x idkAM572x idkAM571x idkAM574x))
 endif
 ifeq ($(BOARD),$(filter $(BOARD), am65xx_sim am65xx_evm am65xx_idk j721e_sim j721e_vhwazebu j721e_qt j721e_evm j7200_evm j7200_sim j721s2_evm am64x_evm am64x_svb am62x_evm am62a_evm j784s4_evm))
   CORE ?= mcu1_0
+endif
+ifeq ($(BOARD),$(filter $(BOARD), am62px_evm))
+  CORE ?= mcu_r5f wkup_r5f
 endif
 ifeq ($(BOARD),$(filter $(BOARD), j721e_ccqt j721e_loki))
   CORE ?= c7x_1
