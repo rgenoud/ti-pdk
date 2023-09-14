@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) 2018-2020, Texas Instruments Incorporated
+# Copyright (c) 2018-2023, Texas Instruments Incorporated
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -240,6 +240,16 @@ export SYSFW_SE_INNER_CERT=$SCI_CLIENT_IN_SOC_DIR/ti-fs-firmware-$FW_SOC${FW_SOC
 export SYSFW_SE_SIGNED=$SCI_CLIENT_OUT_SOC_DIR/tifs$BIN_EXT.bin
 export SYSFW_SE_CUST_CERT=$SCI_CLIENT_OUT_SOC_DIR/tifs_cert.bin
 export SYSFW_LOAD_ADDR=0x40000
+fi
+
+if [ "$FW_SOC" = "am62px" ]; then
+export SCI_CLIENT_OUT_SOC_DIR=$SCI_CLIENT_DIR/soc/V8
+SYSFW_SE_SIGNED=$SCI_CLIENT_OUT_SOC_DIR/tifs$BIN_EXT.bin
+export SCICLIENT_FIRMWARE_HEADER=sciclient_firmware_V8$BIN_EXT.h
+export FIRMWARE_SILICON=$SCI_CLIENT_IN_SOC_DIR/ti-fs-firmware-$FW_SOC$FW_SOC_TYPE.bin
+export SYSFW_SE_INNER_CERT=$SCI_CLIENT_IN_SOC_DIR/ti-fs-firmware-$FW_SOC${FW_SOC_TYPE%-enc}-cert.bin
+export SYSFW_SE_CUST_CERT=$SCI_CLIENT_OUT_SOC_DIR/tifs_cert.bin
+export SYSFW_LOAD_ADDR=0x44000
 fi
 
 if [ "$IS_PRIME" = "y" ]; then

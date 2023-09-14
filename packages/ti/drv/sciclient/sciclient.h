@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018-2020, Texas Instruments Incorporated
+ * Copyright (c) 2018-2023, Texas Instruments Incorporated
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -365,6 +365,13 @@ typedef uint8_t devgrp_t;
 #include <ti/drv/sciclient/soc/sysfw/include/am62ax/tisci_hosts.h>
 #include <ti/drv/sciclient/soc/sysfw/include/am62ax/tisci_sec_proxy.h>
 #include <ti/drv/sciclient/soc/sysfw/include/am62ax/tisci_boardcfg_constraints.h>
+#include <ti/drv/sciclient/soc/sysfw/include/tisci/lpm/tisci_lpm.h>
+#endif
+#if defined (SOC_AM62PX)
+#include <ti/drv/sciclient/soc/sysfw/include/am62px/tisci_resasg_types.h>
+#include <ti/drv/sciclient/soc/sysfw/include/am62px/tisci_hosts.h>
+#include <ti/drv/sciclient/soc/sysfw/include/am62px/tisci_sec_proxy.h>
+#include <ti/drv/sciclient/soc/sysfw/include/am62px/tisci_boardcfg_constraints.h>
 #include <ti/drv/sciclient/soc/sysfw/include/tisci/lpm/tisci_lpm.h>
 #endif
 

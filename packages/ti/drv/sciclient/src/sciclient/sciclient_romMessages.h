@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2017-2018 Texas Instruments Incorporated
+ *  Copyright (C) 2017-2023 Texas Instruments Incorporated
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -95,7 +95,7 @@ extern "C" {
 #define SCICLIENT_ROM_R5_TX_NORMAL_THREAD                           (1U)
 /** Thread ID's for each message type, R5 In Bound Normal Priority    */
 #define SCICLIENT_ROM_R5_RX_NORMAL_THREAD                           (0U)
-#else
+#elif !defined (SOC_AM62PX)
 /** Thread ID's for each message type, R5 Out Bound Normal Priority    */
 #define SCICLIENT_ROM_R5_TX_NORMAL_THREAD                           (4U)
 /** Thread ID's for each message type, R5 In Bound Normal Priority    */

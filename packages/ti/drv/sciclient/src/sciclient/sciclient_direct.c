@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Texas Instruments Incorporated
+ * Copyright (c) 2020-2023, Texas Instruments Incorporated
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -592,7 +592,7 @@ int32_t Sciclient_ProcessPmMessage(const uint32_t reqFlags, void *tx_msg)
                                 reqFlags,
                                 SCICLIENT_DEV_MCU_R5FSS0_CORE0_PROCID);
                     break;
-#if ! (defined(SOC_AM62X) || defined (SOC_AM62A))
+#if ! (defined(SOC_AM62X) || defined (SOC_AM62A) || defined (SOC_AM62PX))
                     case SCICLIENT_DEV_MCU_R5FSS0_CORE1:
                         ret = Sciclient_pmSetMsgProxy((uint32_t*)tx_msg,
                                 reqFlags,
@@ -617,7 +617,7 @@ int32_t Sciclient_ProcessPmMessage(const uint32_t reqFlags, void *tx_msg)
                         ret = Sciclient_pmSetCpuResetMsgProxy((uint32_t*)tx_msg,
                                 SCICLIENT_DEV_MCU_R5FSS0_CORE0_PROCID);
                     break;
-#if ! (defined(SOC_AM62X) || defined (SOC_AM62A))
+#if ! (defined(SOC_AM62X) || defined (SOC_AM62A) || defined (SOC_AM62PX))
                     case SCICLIENT_DEV_MCU_R5FSS0_CORE1:
                         ret = Sciclient_pmSetCpuResetMsgProxy((uint32_t*)tx_msg,
                                 SCICLIENT_DEV_MCU_R5FSS0_CORE1_PROCID);

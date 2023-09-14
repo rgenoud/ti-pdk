@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) 2018-2020, Texas Instruments Incorporated
+# Copyright (c) 2018-2023, Texas Instruments Incorporated
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -135,6 +135,7 @@ if [ "$SKIP_CHECKOUT" != "YES" ]; then
     $RM -fr binaries/am64x
     $RM -fr binaries/am62x
     $RM -fr binaries/am62ax
+    $RM -fr binaries/am62px
     $RM -fr binaries/j7200
     $RM -fr binaries/j721s2
     $RM -fr binaries/j784s4
@@ -237,6 +238,10 @@ if [ "$SKIP_GEN_BIN" != "YES" ];  then
                 ./firmwareHeaderGen.sh am62ax
                 shift
                 ;;
+            "am62px")
+                ./firmwareHeaderGen.sh am62px
+                shift
+                ;;
         esac
     done
 
@@ -292,6 +297,12 @@ if [ "$SKIP_COMMIT" != "YES" ]; then
                 git add $SCI_CLIENT_DIR/soc/sysfw/binaries/*am62ax*
                 git add $SCI_CLIENT_DIR/soc/sysfw/include/am62ax
                 git add $SCI_CLIENT_DIR/soc/V7
+                shift
+                ;;
+            "am62px")
+                git add $SCI_CLIENT_DIR/soc/sysfw/binaries/*am62px*
+                git add $SCI_CLIENT_DIR/soc/sysfw/include/am62px
+                git add $SCI_CLIENT_DIR/soc/V8
                 shift
                 ;;
         esac

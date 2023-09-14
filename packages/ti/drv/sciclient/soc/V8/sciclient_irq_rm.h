@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2019-2023 Texas Instruments Incorporated
+ *  Copyright (C) 2022 Texas Instruments Incorporated
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -31,63 +31,29 @@
  *
  */
 /**
- *  \file soc/sciclient_soc_priv.h
+ *  \file am62px/sciclient_irq_rm.h
  *
- *  \brief Private SOC file
+ *  \brief Private AM62Px specific RM interrupt data
  */
 
-#ifndef SCICLIENT_SOC_PRIV_TOP_H_
-#define SCICLIENT_SOC_PRIV_TOP_H_
+#ifndef SCICLIENT_IRQ_RM_H_
+#define SCICLIENT_IRQ_RM_H_
 
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
 
-#if defined (SOC_AM65XX)
-#include <ti/drv/sciclient/soc/V0/sciclient_soc_priv.h>
-#endif
-
-#if defined (SOC_J721E)
-#include <ti/drv/sciclient/soc/V1/sciclient_soc_priv.h>
-#endif
-
-#if defined (SOC_J7200)
-#include <ti/drv/sciclient/soc/V2/sciclient_soc_priv.h>
-#endif
-
-#if defined (SOC_AM64X)
-#include <ti/drv/sciclient/soc/V3/sciclient_soc_priv.h>
-#endif
-
-#if defined (SOC_J721S2)
-#include <ti/drv/sciclient/soc/V4/sciclient_soc_priv.h>
-#endif
-
-#if defined (SOC_J784S4)
-#include <ti/drv/sciclient/soc/V6/sciclient_soc_priv.h>
-#endif
-
-#if defined (SOC_AM62X)
-#include <ti/drv/sciclient/soc/V5/sciclient_soc_priv.h>
-#endif
-
-#if defined (SOC_AM62A)
-#include <ti/drv/sciclient/soc/V7/sciclient_soc_priv.h>
-#endif
-
-#if defined (SOC_AM62PX)
-#include <ti/drv/sciclient/soc/V8/sciclient_soc_priv.h>
-#endif
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include <stdint.h>
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-/* None */
+#define SCICLIENT_RM_IA_NUM_INST 2
+
+#define SCICLIENT_RM_IR_NUM_INST 3
+
+#define SCICLIENT_IRQ_MAX_ROUTE_DEPTH 3
 
 /* ========================================================================== */
 /*                         Structure Declarations                             */
@@ -96,19 +62,43 @@ extern "C" {
 /* None */
 
 /* ========================================================================== */
-/*                          Function Declarations                             */
+/*                            Global Variables                                */
 /* ========================================================================== */
 
 /* None */
 
-/* ========================================================================== */
-/*                       Static Function Definitions                          */
-/* ========================================================================== */
+enum RmIrqTree{
+	RM_IRQ_TREE_MAIN_GPIOMUX_INTROUTER0,
+	RM_IRQ_TREE_WKUP_MCU_GPIOMUX_INTROUTER0,
+	RM_IRQ_TREE_TIMESYNC_EVENT_INTROUTER0,
+	RM_IRQ_TREE_CPSW0,
+	RM_IRQ_TREE_DMASS0_INTAGGR_0,
+	RM_IRQ_TREE_MCU_TIMER0,
+	RM_IRQ_TREE_TIMER0,
+	RM_IRQ_TREE_TIMER1,
+	RM_IRQ_TREE_TIMER2,
+	RM_IRQ_TREE_TIMER3,
+	RM_IRQ_TREE_TIMER4,
+	RM_IRQ_TREE_TIMER5,
+	RM_IRQ_TREE_TIMER6,
+	RM_IRQ_TREE_TIMER7,
+	RM_IRQ_TREE_MCU_TIMER1,
+	RM_IRQ_TREE_MCU_TIMER2,
+	RM_IRQ_TREE_MCU_TIMER3,
+	RM_IRQ_TREE_WKUP_GTC0,
+	RM_IRQ_TREE_GPIO0,
+	RM_IRQ_TREE_GPIO1,
+	RM_IRQ_TREE_MCU_GPIO0,
+	RM_IRQ_TREE_GPMC0,
+	RM_IRQ_TREE_EPWM0,
+	RM_IRQ_TREE_WKUP_TIMER0,
+	RM_IRQ_TREE_WKUP_TIMER1,
+	RM_IRQ_TREE_MCRC64_0,
+	RM_IRQ_TREE_DEBUGSS0,
+	RM_IRQ_TREE_DSS0,
+	RM_IRQ_TREE_DMASS1_INTAGGR_0,
+	RM_IRQ_TREE_DSS1,
+    RM_IRQ_TREE_MAX,
+};
 
-/* None */
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* SCICLIENT_SOC_PRIV_TOP_H_ */
+#endif /* SCICLIENT_IRQ_RM_H_ */

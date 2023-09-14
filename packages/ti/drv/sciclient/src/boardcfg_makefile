@@ -32,6 +32,9 @@ endif
 ifeq ($(SOC),$(filter $(SOC), am62a))
   SCICLIENT_SOCVER = V7
 endif
+ifeq ($(SOC),$(filter $(SOC), am62px))
+  SCICLIENT_SOCVER = V8
+endif
 
 # Special case for Windows Build
 ifeq ($(OS),Windows_NT)

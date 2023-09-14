@@ -36,7 +36,9 @@ ifeq ($(SOC),$(filter $(SOC), am62a))
 else
   CONFIG_SOC_FOLDER_STRING=$(SOC)
 endif
-
+ifeq ($(SOC),$(filter $(SOC), am62px))
+  SCISERVER_SOCVER = V8
+endif
 
 # Leave RMPMHAL_SCMVERSION blank if you want a script to generate it from git tag/commit
 RMPMHAL_SCMVERSION ?=

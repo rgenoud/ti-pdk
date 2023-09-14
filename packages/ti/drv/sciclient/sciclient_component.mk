@@ -47,7 +47,7 @@ sciclient_LIB_LIST += sciclient_hs
 endif
 
 ifneq ($(BUILD_OS_TYPE), qnx)
-ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 am62x am62a))
+ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 am62x am62a am62px))
 sciclient_LIB_LIST += rm_pm_hal
 sciclient_LIB_LIST += sciserver_tirtos
 sciclient_LIB_LIST += sciserver_baremetal
@@ -70,8 +70,8 @@ sciclient_LIB_LIST += sciserver_baremetal
 sciclient_LIB_LIST += sciclient_direct
 endif
 
-drvsciclient_BOARDLIST = am65xx_evm am65xx_idk j721e_sim j721e_evm j7200_evm j721s2_evm j784s4_evm am64x_evm am62x_evm am62a_evm
-drvsciclient_SOCLIST = am65xx j721e j7200 j721s2 j784s4 am64x am62x am62a
+drvsciclient_BOARDLIST = am65xx_evm am65xx_idk j721e_sim j721e_evm j7200_evm j721s2_evm j784s4_evm am64x_evm am62x_evm am62a_evm am62px_evm
+drvsciclient_SOCLIST = am65xx j721e j7200 j721s2 j784s4 am64x am62x am62a am62px
 drvsciclient_am65xx_CORELIST = mcu1_0 mcu1_1 mpu1_0
 drvsciclient_j721e_CORELIST = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 c66xdsp_1 c66xdsp_2 c7x_1 c7x-hostemu
 drvsciclient_j7200_CORELIST = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1
@@ -80,6 +80,7 @@ drvsciclient_j784s4_CORELIST = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 
 drvsciclient_am64x_CORELIST = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 m4f_0
 drvsciclient_am62x_CORELIST = mcu1_0 m4f_0
 drvsciclient_am62a_CORELIST = mcu1_0 c7x_1
+drvsciclient_am62px_CORELIST = mcu_r5f wkup_r5f
 drvsciclient_DISABLE_PARALLEL_MAKE = yes
 ifeq ($(BUILD_OS_TYPE), qnx)
 drvsciclient_j721e_CORELIST += qnx_mpu1_0
@@ -88,6 +89,7 @@ drvsciclient_j721s2_CORELIST += qnx_mpu1_0
 drvsciclient_j784s4_CORELIST += qnx_mpu1_0
 drvsciclient_am62x_CORELIST += qnx_mpu1_0
 drvsciclient_am62a_CORELIST += qnx_mpu1_0
+drvsciclient_am62px_CORELIST += qnx_mpu1_0
 endif
 
 define DRV_SCICLIENT_RTOS_BOARDLIST_RULE
@@ -150,8 +152,8 @@ export sciclient_direct_BOARD_DEPENDENCY = no
 export sciclient_direct_CORE_DEPENDENCY = yes
 export sciclient_direct_PKG_LIST = sciclient_direct
 export sciclient_direct_INCLUDE = $(sciclient_direct_PATH)
-export sciclient_direct_SOCLIST = j721e j7200 j721s2 j784s4 am62x am62a
-export sciclient_direct_BOARDLIST = j721e_evm j7200_evm j721s2_evm j784s4_evm am62x_evm am62a_evm
+export sciclient_direct_SOCLIST = j721e j7200 j721s2 j784s4 am62x am62a am62px
+export sciclient_direct_BOARDLIST = j721e_evm j7200_evm j721s2_evm j784s4_evm am62x_evm am62a_evm am62px_evm
 export sciclient_direct_$(SOC)_CORELIST = mcu1_0
 
 export sciclient_direct_hs_COMP_LIST = sciclient_direct_hs
@@ -180,8 +182,8 @@ export sciserver_tirtos_BOARD_DEPENDENCY = no
 export sciserver_tirtos_CORE_DEPENDENCY = yes
 export sciserver_tirtos_PKG_LIST = sciserver_tirtos
 export sciserver_tirtos_INCLUDE = $(sciserver_PATH)
-export sciserver_tirtos_SOCLIST = j721e j7200 j721s2 j784s4 am62x am62a
-export sciserver_tirtos_BOARDLIST = j721e_evm j7200_evm j721s2_evm j784s4_evm am62x_evm am62a_evm
+export sciserver_tirtos_SOCLIST = j721e j7200 j721s2 j784s4 am62x am62a am62px
+export sciserver_tirtos_BOARDLIST = j721e_evm j7200_evm j721s2_evm j784s4_evm am62x_evm am62a_evm am62px_evm
 export sciserver_tirtos_$(SOC)_CORELIST = mcu1_0
 
 export sciserver_baremetal_COMP_LIST = sciserver_baremetal
@@ -234,8 +236,8 @@ export rm_pm_hal_BOARD_DEPENDENCY = no
 export rm_pm_hal_CORE_DEPENDENCY = yes
 export rm_pm_hal_PKG_LIST = rm_pm_hal
 export rm_pm_hal_INCLUDE = $(rm_pm_hal_PATH)
-export rm_pm_hal_SOCLIST = j721e j7200 j721s2 j784s4 am62x am62a
-export rm_pm_hal_BOARDLIST = j721e_evm j7200_evm j721s2_evm j784s4_evm am62x_evm am62a_evm
+export rm_pm_hal_SOCLIST = j721e j7200 j721s2 j784s4 am62x am62a am62px
+export rm_pm_hal_BOARDLIST = j721e_evm j7200_evm j721s2_evm j784s4_evm am62x_evm am62a_evm am62px_evm
 export rm_pm_hal_$(SOC)_CORELIST = mcu1_0
 
 export dm_stub_COMP_LIST = dm_stub
@@ -265,8 +267,8 @@ export self_reset_BOARD_DEPENDENCY = no
 export self_reset_CORE_DEPENDENCY = yes
 export self_reset_PKG_LIST = self_reset
 export self_reset_INCLUDE = $(self_reset_PATH)
-export self_reset_SOCLIST = am62x am62a
-export self_reset_BOARDLIST = am62x_evm am62a_evm
+export self_reset_SOCLIST = am62x am62a am62px
+export self_reset_BOARDLIST = am62x_evm am62a_evm am62px_evm
 export self_reset_$(SOC)_CORELIST = mcu1_0
 
 ############################
@@ -414,9 +416,9 @@ export sciserver_testapp_$(1)_BOARD_DEPENDENCY = no
 export sciserver_testapp_$(1)_CORE_DEPENDENCY = yes
 export sciserver_testapp_$(1)_PKG_LIST = sciserver_testapp_$(1)
 export sciserver_testapp_$(1)_INCLUDE = $(sciserver_testapp_$(1)_PATH)
-export sciserver_testapp_$(1)_BOARDLIST = $(filter $(DEFAULT_BOARDLIST_$(1)), j721e_evm j7200_evm j721s2_evm j784s4_evm am62x_evm am62a_evm)
+export sciserver_testapp_$(1)_BOARDLIST = $(filter $(DEFAULT_BOARDLIST_$(1)), j721e_evm j7200_evm j721s2_evm j784s4_evm am62x_evm am62a_evm am62px_evm)
 export sciserver_testapp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), mcu1_0)
-ifeq ($(SOC),$(filter $(SOC), am62x am62a))
+ifeq ($(SOC),$(filter $(SOC), am62x am62a am62px))
 export sciserver_testapp_$(1)_SBL_APPIMAGEGEN = no
 else
 export sciserver_testapp_$(1)_SBL_APPIMAGEGEN = yes

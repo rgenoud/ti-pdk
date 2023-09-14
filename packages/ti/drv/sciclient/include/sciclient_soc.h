@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) Texas Instruments Incorporated 2018-2020
+ *  Copyright (c) Texas Instruments Incorporated 2018-2023
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -89,6 +89,12 @@
 #include <ti/drv/sciclient/soc/sysfw/include/am62ax/tisci_resasg_types.h>
 #include <ti/drv/sciclient/soc/V7/sciclient_fmwMsgParams.h>
 #include <ti/drv/sciclient/soc/V7/sciclient_firmware_V7.h>
+#endif
+
+#if defined (SOC_AM62PX)
+#include <ti/drv/sciclient/soc/sysfw/include/am62px/tisci_resasg_types.h>
+#include <ti/drv/sciclient/soc/V8/sciclient_fmwMsgParams.h>
+//#include <ti/drv/sciclient/soc/V8/sciclient_firmware_V8.h>
 #endif
 
 #ifdef __cplusplus
