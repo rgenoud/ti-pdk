@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) Texas Instruments Incorporated 2020
+ *  Copyright (c) Texas Instruments Incorporated 2020-2023
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -265,11 +265,11 @@ typedef struct Mailbox_Driver_t
      */
     Mailbox_RemoteCfg     *remoteCfgPtr;
     /**
-     * @brief   Base Address of the Tx Mailbox for this instance (used for am65xx/am64x/j721e/j7200/am62x/am62a)
+     * @brief   Base Address of the Tx Mailbox for this instance (used for am65xx/am64x/j721e/j7200/am62x/am62a/am62px)
      */
     uintptr_t             baseAddrTx;
     /**
-     * @brief   Base Address of the Rx Mailbox for this instance (used for am65xx/am64x/j721e/j7200/am62x/am62a)
+     * @brief   Base Address of the Rx Mailbox for this instance (used for am65xx/am64x/j721e/j7200/am62x/am62a/am62px)
      */
     uintptr_t             baseAddrRx;
 }Mailbox_Driver;

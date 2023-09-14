@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) Texas Instruments Incorporated 2020
+ *  Copyright (c) Texas Instruments Incorporated 2020-2023
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -172,7 +172,7 @@ static void *Mbox_osalRegisterDirectIntr(Mbox_OsalDirectIsrFxn isrFxn,
                                          uint32_t coreIntrNum,
                                          uint32_t intrPriority)
 {
-#if (defined(SOC_AM64X) || defined(SOC_AM62X) || defined(SOC_AM62A)) && defined(BUILD_MCU)
+#if (defined(SOC_AM64X) || defined(SOC_AM62X) || defined(SOC_AM62PX) ||defined(SOC_AM62A)) && defined(BUILD_MCU)
     OsalRegisterIntrParams_t    intrPrms;
     OsalInterruptRetCode_e      osalRetVal;
     HwiP_Handle                 hwiHandle = NULL;
