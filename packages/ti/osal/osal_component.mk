@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016-2021, Texas Instruments Incorporated
+# Copyright (c) 2016-2023, Texas Instruments Incorporated
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -68,9 +68,9 @@ ifeq ($(osal_component_make_include), )
 
 libosal_RTOS_LIST = $(DEFAULT_RTOS_LIST)
 
-libosal_BOARDLIST  = j721e_evm j7200_evm j721s2_evm j784s4_evm am62x_evm am62a_evm
+libosal_BOARDLIST  = j721e_evm j7200_evm j721s2_evm j784s4_evm am62x_evm am62a_evm am62px_evm
 
-libosal_SOCLIST   =  j721e j7200 j721s2 j784s4 am62x am62a
+libosal_SOCLIST   =  j721e j7200 j721s2 j784s4 am62x am62a am62px
 
 libosal_freertos_BOARDLIST  = j721e_evm j7200_evm j721s2_evm j784s4_evm am62x_evm am62a_evm
 libosal_freertos_SOCLIST    = j721e j7200 j721s2 j784s4 am62x am62a
@@ -86,8 +86,10 @@ endif
 libosal_safertos_j721e_CORELIST   = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 c66xdsp_1 c66xdsp_2 c7x_1
 libosal_am62x_CORELIST = $(DEFAULT_am62x_CORELIST)
 libosal_am62a_CORELIST = $(DEFAULT_am62a_CORELIST)
+libosal_am62px_CORELIST = $(DEFAULT_am62px_CORELIST)
 libosal_freertos_am62x_CORELIST = mcu1_0
 libosal_freertos_am62a_CORELIST = mcu1_0 c7x_1
+libosal_freertos_am62px_CORELIST =
 
 ############################
 # osal package
@@ -205,7 +207,7 @@ export OSAL_Baremetal_TestApp_CORE_DEPENDENCY = no
 OSAL_Baremetal_TestApp_PKG_LIST = OSAL_Baremetal_TestApp
 OSAL_Baremetal_TestApp_INCLUDE = $(OSAL_Baremetal_TestApp_PATH)
 export OSAL_Baremetal_TestApp_BOARDLIST = $(libosal_BOARDLIST)
-ifeq ($(SOC),$(filter $(SOC), am62x am62a))
+ifeq ($(SOC),$(filter $(SOC), am62x am62a am62px))
 export OSAL_Baremetal_TestApp_SBL_APPIMAGEGEN = no
 else
 export OSAL_Baremetal_TestApp_SBL_APPIMAGEGEN = yes
@@ -231,7 +233,7 @@ ifneq ($(wildcard $(SAFERTOS_KERNEL_INSTALL_PATH)),)
 osal_EXAMPLE_LIST += OSAL_TestApp_$(1)
 endif
 endif
-ifeq ($(SOC),$(filter $(SOC), am62x am62a))
+ifeq ($(SOC),$(filter $(SOC), am62x am62a am62px))
 export OSAL_TestApp_$(1)_SBL_APPIMAGEGEN = no
 else
 export OSAL_TestApp_$(1)_SBL_APPIMAGEGEN = yes
@@ -272,6 +274,11 @@ endif
 ifeq ($(SOC),$(filter $(SOC), am62a))
  OSAL_Baremetal_TestApp_$(SOC)_CORELIST = mcu1_0
  OSAL_TestApp_freertos_$(SOC)_CORELIST = mcu1_0
+endif
+
+ifeq ($(SOC),$(filter $(SOC), am62px))
+ OSAL_Baremetal_TestApp_$(SOC)_CORELIST =
+ OSAL_TestApp_freertos_$(SOC)_CORELIST =
 endif
 
 export OSAL_Baremetal_TestApp_$(SOC)_CORELIST
