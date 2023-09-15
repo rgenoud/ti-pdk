@@ -39,8 +39,8 @@ ifeq ($(udma_component_make_include), )
 # This list will be used to generate RTOS app make rule for each rtos_type.
 drvudma_RTOS_LIST       = $(DEFAULT_RTOS_LIST)
 
-drvudma_SOCLIST         = am65xx j721e j7200 am64x j721s2 j784s4 am62x am62a
-drvudma_BOARDLIST       = am65xx_evm am65xx_idk j721e_sim j721e_evm j7200_evm am64x_evm j721s2_evm j784s4_evm am62x_evm am62a_evm
+drvudma_SOCLIST         = am65xx j721e j7200 am64x j721s2 j784s4 am62x am62a am62px
+drvudma_BOARDLIST       = am65xx_evm am65xx_idk j721e_sim j721e_evm j7200_evm am64x_evm j721s2_evm j784s4_evm am62x_evm am62a_evm am62px_evm
 drvudma_dru_BOARDLIST   = am65xx_evm am65xx_idk j721e_evm j721s2_evm j784s4_evm
 drvudma_am65xx_CORELIST = mpu1_0 mcu1_0 mcu1_1
 drvudma_j721e_CORELIST  = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 c66xdsp_1 c66xdsp_2 c7x_1 c7x-hostemu
@@ -50,6 +50,7 @@ drvudma_j721s2_CORELIST  = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 c7x_
 drvudma_j784s4_CORELIST  = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mcu4_0 mcu4_1 c7x_1 c7x_2 c7x_3 c7x_4 c7x-hostemu
 drvudma_am62x_CORELIST  = mpu1_0
 drvudma_am62a_CORELIST  = mpu1_0 c7x_1 c7x-hostemu
+drvudma_am62px_CORELIST = mpu1_0
 
 # Define the rule to generate UDMA Drivers BOARDLIST for each rtos_type
 # Default BOARDLIST for each rtos_type is defined in 'ti/build/makerules/component.mk'
@@ -69,13 +70,14 @@ DRV_UDMA_BOARDLIST_MACRO_LIST := $(foreach curos, $(drvudma_RTOS_LIST), $(call D
 # Evaluate the macro list to generate BOARDLIST for all rtos_types
 $(eval ${DRV_UDMA_BOARDLIST_MACRO_LIST})
 
-ifneq ($(SOC),$(filter $(SOC), am64x am65xx am62x am62a))
+ifneq ($(SOC),$(filter $(SOC), am64x am65xx am62x am62a am62px))
 drvudma_$(SOC)_example_CORELIST = $(drvudma_$(SOC)_CORELIST)
 else
 drvudma_am65xx_example_CORELIST = mpu1_0 mcu1_0
 drvudma_am64x_example_CORELIST  = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mpu1_0 #m4f for baremetal examples only
 drvudma_am62x_example_CORELIST  = mpu1_0 #m4f for baremetal examples only
 drvudma_am62a_example_CORELIST  = mpu1_0 #m4f for baremetal examples only
+drvudma_am62px_example_CORELIST = mpu1_0
 endif
 
 ifeq ($(BUILD_OS_TYPE), qnx)
@@ -83,6 +85,7 @@ drvudma_j721e_CORELIST += qnx_mpu1_0
 drvudma_j7200_CORELIST += qnx_mpu1_0
 drvudma_am62x_CORELIST += qnx_mpu1_0
 drvudma_am62a_CORELIST += qnx_mpu1_0
+drvudma_am62px_CORELIST += qnx_mpu1_0
 endif
 
 ############################
@@ -508,7 +511,7 @@ export udma_baremetal_ospi_flash_testapp_BOARD_DEPENDENCY = yes
 export udma_baremetal_ospi_flash_testapp_CORE_DEPENDENCY = yes
 udma_baremetal_ospi_flash_testapp_PKG_LIST = udma_baremetal_ospi_flash_testapp
 udma_baremetal_ospi_flash_testapp_INCLUDE = $(udma_baremetal_ospi_flash_testapp_PATH)
-export udma_baremetal_ospi_flash_testapp_BOARDLIST = $(filter-out am62x_evm am62a_evm, $(drvudma_BOARDLIST))
+export udma_baremetal_ospi_flash_testapp_BOARDLIST = $(filter-out am62x_evm am62a_evm am62px_evm, $(drvudma_BOARDLIST))
 export udma_baremetal_ospi_flash_testapp_$(SOC)_CORELIST = mcu1_0
 export udma_baremetal_ospi_flash_testapp_SBL_APPIMAGEGEN = yes
 udma_EXAMPLE_LIST += udma_baremetal_ospi_flash_testapp

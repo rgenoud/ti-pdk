@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) Texas Instruments Incorporated 2018
+ *  Copyright (c) Texas Instruments Incorporated 2018-2023
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -73,6 +73,10 @@
 
 #if defined (SOC_AM62A)
 #include <ti/drv/udma/soc/am62a/udma_soc.h>
+#endif
+
+#if defined (SOC_AM62PX)
+#include <ti/drv/udma/soc/am62px/udma_soc.h>
 #endif
 
 #ifdef __cplusplus
