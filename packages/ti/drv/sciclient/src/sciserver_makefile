@@ -44,8 +44,8 @@ endif
 # Leave RMPMHAL_SCMVERSION blank if you want a script to generate it from git tag/commit
 RMPMHAL_SCMVERSION ?=
 
-SCISERVER_MAJOR_VERSION_NAME ?= "v2023.08"
-SCISERVER_SUBVERSION ?= 02
+SCISERVER_MAJOR_VERSION_NAME ?= "v2023.09"
+SCISERVER_SUBVERSION ?= 01
 SCISERVER_PATCHVERSION ?= 00
 # Leave SCISERVER_SCMVERSION blank if you want a script to generate it from git tag/commit
 SCISERVER_SCMVERSION ?=
