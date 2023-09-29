@@ -130,5 +130,12 @@ const struct sproxy_host_tx_thread_data sproxy_route_data[J722S_CONFIG_MAX] = {
 		.sproxy_resp_conf_id = J722S_DMASS0_SEC_PROXY_0_TX_DM_NONSEC_TIFS2DM_RESPONSE_TX_THR058_CONF015,
 		.sproxy_ntfy_conf_id = J722S_DMASS0_SEC_PROXY_0_TX_DM_NONSEC_TIFS2DM_RESPONSE_TX_THR058_CONF015,
 	},
+	/*
+	 * Secure Host HSM[253]
+	 */
+	[HOST_ID_HSM] = {
+		.sproxy_resp_conf_id = J722S_SA3_SS0_SEC_PROXY_0_TX_TIFS_HSM_SEC_HSM_RESPONSE_TX_THR014_CONF032,
+		.sproxy_ntfy_conf_id = J722S_SA3_SS0_SEC_PROXY_0_TX_TIFS_HSM_SEC_HSM_RESPONSE_TX_THR014_CONF032,
+	},
 };
 

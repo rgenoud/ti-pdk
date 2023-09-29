@@ -170,7 +170,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for ATL0 Device
 ----------------------
 
-Device: :ref:`J722S_DEV_ATL0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 243)
+Device: :ref:`J722S_DEV_ATL0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 245)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -815,6 +815,22 @@ Following is a mapping of Clocks IDs to function:
 +------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
 |        194 | DEV_BOARD0_WKUP_I2C0_SCL_OUT                                               | Output clock                                                 |
 +------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
+|        195 | DEV_BOARD0_CSI0_RXCLKN_OUT                                                 | Output clock                                                 |
++------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
+|        196 | DEV_BOARD0_CSI0_RXCLKP_OUT                                                 | Output clock                                                 |
++------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
+|        197 | DEV_BOARD0_CSI1_RXCLKN_OUT                                                 | Output clock                                                 |
++------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
+|        198 | DEV_BOARD0_CSI1_RXCLKP_OUT                                                 | Output clock                                                 |
++------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
+|        199 | DEV_BOARD0_CSI2_RXCLKN_OUT                                                 | Output clock                                                 |
++------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
+|        200 | DEV_BOARD0_CSI2_RXCLKP_OUT                                                 | Output clock                                                 |
++------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
+|        201 | DEV_BOARD0_CSI3_RXCLKN_OUT                                                 | Output clock                                                 |
++------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
+|        202 | DEV_BOARD0_CSI3_RXCLKP_OUT                                                 | Output clock                                                 |
++------------+----------------------------------------------------------------------------+--------------------------------------------------------------+
 
 .. _soc_doc_j722s_public_clks_c7x256v0:
 
@@ -940,7 +956,7 @@ Clocks for C7X256V1 Device
 Clocks for C7X256V1_C7XV_CORE_0 Device
 --------------------------------------
 
-Device: :ref:`J722S_DEV_C7X256V1_C7XV_CORE_0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 265)
+Device: :ref:`J722S_DEV_C7X256V1_C7XV_CORE_0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 267)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -964,7 +980,7 @@ Clocks for C7X256V1_CLEC Device
 Clocks for C7X256V1_CLK Device
 ------------------------------
 
-Device: :ref:`J722S_DEV_C7X256V1_CLK <soc_doc_j722s_public_devices_desc_device_list>` (ID = 268)
+Device: :ref:`J722S_DEV_C7X256V1_CLK <soc_doc_j722s_public_devices_desc_device_list>` (ID = 270)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -994,7 +1010,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for C7X256V1_CORE0 Device
 --------------------------------
 
-Device: :ref:`J722S_DEV_C7X256V1_CORE0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 266)
+Device: :ref:`J722S_DEV_C7X256V1_CORE0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 268)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -1042,7 +1058,7 @@ Clocks for C7X256V1_PBIST Device
 Clocks for C7XV_RSWS_BS_LIMITER11 Device
 ----------------------------------------
 
-Device: :ref:`J722S_DEV_C7XV_RSWS_BS_LIMITER11 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 263)
+Device: :ref:`J722S_DEV_C7XV_RSWS_BS_LIMITER11 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 265)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -1160,7 +1176,7 @@ Clocks for COMPUTE_CLUSTER0 Device
 Clocks for COMPUTE_CLUSTER0_CLKDIV_0 Device
 -------------------------------------------
 
-Device: :ref:`J722S_DEV_COMPUTE_CLUSTER0_CLKDIV_0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 262)
+Device: :ref:`J722S_DEV_COMPUTE_CLUSTER0_CLKDIV_0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 264)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -1334,7 +1350,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for CSI_RX_IF1 Device
 ----------------------------
 
-Device: :ref:`J722S_DEV_CSI_RX_IF1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 244)
+Device: :ref:`J722S_DEV_CSI_RX_IF1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 246)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -1356,7 +1372,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for CSI_RX_IF2 Device
 ----------------------------
 
-Device: :ref:`J722S_DEV_CSI_RX_IF2 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 245)
+Device: :ref:`J722S_DEV_CSI_RX_IF2 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 247)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -1378,7 +1394,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for CSI_RX_IF3 Device
 ----------------------------
 
-Device: :ref:`J722S_DEV_CSI_RX_IF3 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 246)
+Device: :ref:`J722S_DEV_CSI_RX_IF3 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 248)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -1400,7 +1416,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for CSI_TX_IF0 Device
 ----------------------------
 
-Device: :ref:`J722S_DEV_CSI_TX_IF0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 247)
+Device: :ref:`J722S_DEV_CSI_TX_IF0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 249)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -1422,7 +1438,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for CTI0 Device
 ----------------------
 
-Device: :ref:`J722S_DEV_CTI0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 272)
+Device: :ref:`J722S_DEV_CTI0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 274)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -1438,7 +1454,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for CTI1 Device
 ----------------------
 
-Device: :ref:`J722S_DEV_CTI1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 273)
+Device: :ref:`J722S_DEV_CTI1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 275)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2052,6 +2068,24 @@ Following is a mapping of Clocks IDs to function:
 |          0 | DEV_DMASS1_INTAGGR_0_CLK | Input clock |
 +------------+--------------------------+-------------+
 
+.. _soc_doc_j722s_public_clks_dmpac0:
+
+
+Clocks for DMPAC0 Device
+------------------------
+
+Device: :ref:`J722S_DEV_DMPAC0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 276)
+
+Following is a mapping of Clocks IDs to function:
+
++------------+--------------------------+-------------+
+|   Clock ID | Name                     | Function    |
++============+==========================+=============+
+|          2 | DEV_DMPAC0_DMPAC_PLL_CLK | Input clock |
++------------+--------------------------+-------------+
+|          4 | DEV_DMPAC0_PLL_CTRL_CLK  | Input clock |
++------------+--------------------------+-------------+
+
 .. _soc_doc_j722s_public_clks_dphy_rx0:
 
 
@@ -2067,11 +2101,7 @@ Following is a mapping of Clocks IDs to function:
 +============+==============================+==============+
 |          2 | DEV_DPHY_RX0_IO_RX_CL_L_M    | Input clock  |
 +------------+------------------------------+--------------+
-|          2 | DEV_DPHY_RX0_IO_RX_CL_L_M    | Output clock |
-+------------+------------------------------+--------------+
 |          3 | DEV_DPHY_RX0_IO_RX_CL_L_P    | Input clock  |
-+------------+------------------------------+--------------+
-|          3 | DEV_DPHY_RX0_IO_RX_CL_L_P    | Output clock |
 +------------+------------------------------+--------------+
 |          4 | DEV_DPHY_RX0_JTAG_TCK        | Input clock  |
 +------------+------------------------------+--------------+
@@ -2086,7 +2116,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for DPHY_RX1 Device
 --------------------------
 
-Device: :ref:`J722S_DEV_DPHY_RX1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 248)
+Device: :ref:`J722S_DEV_DPHY_RX1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 250)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2095,11 +2125,7 @@ Following is a mapping of Clocks IDs to function:
 +============+==============================+==============+
 |          2 | DEV_DPHY_RX1_IO_RX_CL_L_M    | Input clock  |
 +------------+------------------------------+--------------+
-|          2 | DEV_DPHY_RX1_IO_RX_CL_L_M    | Output clock |
-+------------+------------------------------+--------------+
 |          3 | DEV_DPHY_RX1_IO_RX_CL_L_P    | Input clock  |
-+------------+------------------------------+--------------+
-|          3 | DEV_DPHY_RX1_IO_RX_CL_L_P    | Output clock |
 +------------+------------------------------+--------------+
 |          4 | DEV_DPHY_RX1_JTAG_TCK        | Input clock  |
 +------------+------------------------------+--------------+
@@ -2114,7 +2140,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for DPHY_RX2 Device
 --------------------------
 
-Device: :ref:`J722S_DEV_DPHY_RX2 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 249)
+Device: :ref:`J722S_DEV_DPHY_RX2 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 251)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2123,11 +2149,7 @@ Following is a mapping of Clocks IDs to function:
 +============+==============================+==============+
 |          2 | DEV_DPHY_RX2_IO_RX_CL_L_M    | Input clock  |
 +------------+------------------------------+--------------+
-|          2 | DEV_DPHY_RX2_IO_RX_CL_L_M    | Output clock |
-+------------+------------------------------+--------------+
 |          3 | DEV_DPHY_RX2_IO_RX_CL_L_P    | Input clock  |
-+------------+------------------------------+--------------+
-|          3 | DEV_DPHY_RX2_IO_RX_CL_L_P    | Output clock |
 +------------+------------------------------+--------------+
 |          4 | DEV_DPHY_RX2_JTAG_TCK        | Input clock  |
 +------------+------------------------------+--------------+
@@ -2142,7 +2164,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for DPHY_RX3 Device
 --------------------------
 
-Device: :ref:`J722S_DEV_DPHY_RX3 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 250)
+Device: :ref:`J722S_DEV_DPHY_RX3 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 252)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -2151,11 +2173,7 @@ Following is a mapping of Clocks IDs to function:
 +============+==============================+==============+
 |          2 | DEV_DPHY_RX3_IO_RX_CL_L_M    | Input clock  |
 +------------+------------------------------+--------------+
-|          2 | DEV_DPHY_RX3_IO_RX_CL_L_M    | Output clock |
-+------------+------------------------------+--------------+
 |          3 | DEV_DPHY_RX3_IO_RX_CL_L_P    | Input clock  |
-+------------+------------------------------+--------------+
-|          3 | DEV_DPHY_RX3_IO_RX_CL_L_P    | Output clock |
 +------------+------------------------------+--------------+
 |          4 | DEV_DPHY_RX3_JTAG_TCK        | Input clock  |
 +------------+------------------------------+--------------+
@@ -2243,40 +2261,24 @@ Following is a mapping of Clocks IDs to function:
 +------------+----------------------------------------------------------+----------------------------------------------------+
 |   Clock ID | Name                                                     | Function                                           |
 +============+==========================================================+====================================================+
-|          0 | DEV_DSS1_DPI_0_IN_CLK                                    | Input clock                                        |
+|          0 | DEV_DSS1_DPI_0_IN_CLK                                    | Input muxed clock                                  |
 +------------+----------------------------------------------------------+----------------------------------------------------+
-|          1 | DEV_DSS1_DPI_0_OUT_CLK                                   | Output clock                                       |
+|          1 | DEV_DSS1_DPI_0_IN_CLK_PARENT_MAIN_DSS1_DPI0__PLLSEL_OUT0 | Parent input clock option to DEV_DSS1_DPI_0_IN_CLK |
 +------------+----------------------------------------------------------+----------------------------------------------------+
-|          2 | DEV_DSS1_DPI_1_IN_CLK                                    | Input muxed clock                                  |
+|          2 | DEV_DSS1_DPI_0_IN_CLK_PARENT_BOARD_0_VOUT0_EXTPCLKIN_OUT | Parent input clock option to DEV_DSS1_DPI_0_IN_CLK |
 +------------+----------------------------------------------------------+----------------------------------------------------+
-|          3 | DEV_DSS1_DPI_1_IN_CLK_PARENT_MAIN_DSS1_DPI1__PLLSEL_OUT0 | Parent input clock option to DEV_DSS1_DPI_1_IN_CLK |
+|          3 | DEV_DSS1_DPI_0_OUT_CLK                                   | Output clock                                       |
 +------------+----------------------------------------------------------+----------------------------------------------------+
-|          4 | DEV_DSS1_DPI_1_IN_CLK_PARENT_BOARD_0_VOUT0_EXTPCLKIN_OUT | Parent input clock option to DEV_DSS1_DPI_1_IN_CLK |
+|          4 | DEV_DSS1_DPI_1_IN_CLK                                    | Input muxed clock                                  |
 +------------+----------------------------------------------------------+----------------------------------------------------+
-|          5 | DEV_DSS1_DPI_1_OUT_CLK                                   | Output clock                                       |
+|          5 | DEV_DSS1_DPI_1_IN_CLK_PARENT_MAIN_DSS1_DPI1__PLLSEL_OUT0 | Parent input clock option to DEV_DSS1_DPI_1_IN_CLK |
 +------------+----------------------------------------------------------+----------------------------------------------------+
-|          6 | DEV_DSS1_DSS_FUNC_CLK                                    | Input clock                                        |
+|          6 | DEV_DSS1_DPI_1_IN_CLK_PARENT_BOARD_0_VOUT0_EXTPCLKIN_OUT | Parent input clock option to DEV_DSS1_DPI_1_IN_CLK |
 +------------+----------------------------------------------------------+----------------------------------------------------+
-
-.. _soc_doc_j722s_public_clks_dss1_dpi0_pclk_dev_vd:
-
-
-Clocks for DSS1_DPI0_PCLK_DEV_VD Device
----------------------------------------
-
-Device: :ref:`J722S_DEV_DSS1_DPI0_PCLK_DEV_VD <soc_doc_j722s_public_devices_desc_device_list>` (ID = 242)
-
-Following is a mapping of Clocks IDs to function:
-
-+------------+------------------------------------------------------------------+------------------------------------------------------------+
-|   Clock ID | Name                                                             | Function                                                   |
-+============+==================================================================+============================================================+
-|          0 | DEV_DSS1_DPI0_PCLK_DEV_VD_CLK                                    | Input muxed clock                                          |
-+------------+------------------------------------------------------------------+------------------------------------------------------------+
-|          1 | DEV_DSS1_DPI0_PCLK_DEV_VD_CLK_PARENT_MAIN_DSS1_DPI0__PLLSEL_OUT0 | Parent input clock option to DEV_DSS1_DPI0_PCLK_DEV_VD_CLK |
-+------------+------------------------------------------------------------------+------------------------------------------------------------+
-|          2 | DEV_DSS1_DPI0_PCLK_DEV_VD_CLK_PARENT_BOARD_0_VOUT0_EXTPCLKIN_OUT | Parent input clock option to DEV_DSS1_DPI0_PCLK_DEV_VD_CLK |
-+------------+------------------------------------------------------------------+------------------------------------------------------------+
+|          7 | DEV_DSS1_DPI_1_OUT_CLK                                   | Output clock                                       |
++------------+----------------------------------------------------------+----------------------------------------------------+
+|          8 | DEV_DSS1_DSS_FUNC_CLK                                    | Input clock                                        |
++------------+----------------------------------------------------------+----------------------------------------------------+
 
 .. _soc_doc_j722s_public_clks_dss1_dpi0_pllsel_dev_vd:
 
@@ -2672,6 +2674,14 @@ Following is a mapping of Clocks IDs to function:
 |          4 | DEV_GPU0_PLL_CTRL_CLK | Input clock  |
 +------------+-----------------------+--------------+
 
+.. _soc_doc_j722s_public_clks_gpu0_core_vd:
+
+
+Clocks for GPU0_CORE_VD Device
+------------------------------
+
+**This device has no defined clocks.**
+
 .. _soc_doc_j722s_public_clks_gpu_rs_bw_limiter9:
 
 
@@ -2814,7 +2824,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for I2C4 Device
 ----------------------
 
-Device: :ref:`J722S_DEV_I2C4 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 254)
+Device: :ref:`J722S_DEV_I2C4 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 256)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -3286,7 +3296,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for MCASP3 Device
 ------------------------
 
-Device: :ref:`J722S_DEV_MCASP3 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 252)
+Device: :ref:`J722S_DEV_MCASP3 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 254)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -3376,7 +3386,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for MCASP4 Device
 ------------------------
 
-Device: :ref:`J722S_DEV_MCASP4 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 253)
+Device: :ref:`J722S_DEV_MCASP4 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 255)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -3988,37 +3998,37 @@ Following is a mapping of Clocks IDs to function:
 |          4 | DEV_MCU_TIMER1_TIMER_TCLK_CLK_PARENT_DMTIMER_DMC1MS_MCU_0_TIMER_PWM | Parent input clock option to DEV_MCU_TIMER1_TIMER_TCLK_CLK |
 +------------+---------------------------------------------------------------------+------------------------------------------------------------+
 
-.. _soc_doc_j722s_public_clks_mcu_timer1_vd:
+.. _soc_doc_j722s_public_clks_mcu_timer1_clksel_vd:
 
 
-Clocks for MCU_TIMER1_VD Device
--------------------------------
+Clocks for MCU_TIMER1_CLKSEL_VD Device
+--------------------------------------
 
-Device: :ref:`J722S_DEV_MCU_TIMER1_VD <soc_doc_j722s_public_devices_desc_device_list>` (ID = 279)
+Device: :ref:`J722S_DEV_MCU_TIMER1_CLKSEL_VD <soc_doc_j722s_public_devices_desc_device_list>` (ID = 281)
 
 Following is a mapping of Clocks IDs to function:
 
-+------------+---------------------------------------------------------------------------+----------------------------------------------------+
-|   Clock ID | Name                                                                      | Function                                           |
-+============+===========================================================================+====================================================+
-|          0 | DEV_MCU_TIMER1_VD_CLK                                                     | Input muxed clock                                  |
-+------------+---------------------------------------------------------------------------+----------------------------------------------------+
-|          1 | DEV_MCU_TIMER1_VD_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT                      | Parent input clock option to DEV_MCU_TIMER1_VD_CLK |
-+------------+---------------------------------------------------------------------------+----------------------------------------------------+
-|          2 | DEV_MCU_TIMER1_VD_CLK_PARENT_SAM62_PLL_CTRL_WRAP_MCU_0_CHIP_DIV1_CLK_CLK4 | Parent input clock option to DEV_MCU_TIMER1_VD_CLK |
-+------------+---------------------------------------------------------------------------+----------------------------------------------------+
-|          3 | DEV_MCU_TIMER1_VD_CLK_PARENT_GLUELOGIC_RCOSC_CLKOUT                       | Parent input clock option to DEV_MCU_TIMER1_VD_CLK |
-+------------+---------------------------------------------------------------------------+----------------------------------------------------+
-|          4 | DEV_MCU_TIMER1_VD_CLK_PARENT_POSTDIV1_16FFT_MCU_0_HSDIVOUT5_CLK           | Parent input clock option to DEV_MCU_TIMER1_VD_CLK |
-+------------+---------------------------------------------------------------------------+----------------------------------------------------+
-|          5 | DEV_MCU_TIMER1_VD_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT                  | Parent input clock option to DEV_MCU_TIMER1_VD_CLK |
-+------------+---------------------------------------------------------------------------+----------------------------------------------------+
-|          6 | DEV_MCU_TIMER1_VD_CLK_PARENT_CLK_32K_RC_SEL_OUT0                          | Parent input clock option to DEV_MCU_TIMER1_VD_CLK |
-+------------+---------------------------------------------------------------------------+----------------------------------------------------+
-|          7 | DEV_MCU_TIMER1_VD_CLK_PARENT_CPSW_3GUSS_AM67_MAIN_0_CPTS_GENF0            | Parent input clock option to DEV_MCU_TIMER1_VD_CLK |
-+------------+---------------------------------------------------------------------------+----------------------------------------------------+
-|          8 | DEV_MCU_TIMER1_VD_CLK_PARENT_GLUELOGIC_RCOSC_CLK_1P0V_97P65K3             | Parent input clock option to DEV_MCU_TIMER1_VD_CLK |
-+------------+---------------------------------------------------------------------------+----------------------------------------------------+
++------------+----------------------------------------------------------------------------------+-----------------------------------------------------------+
+|   Clock ID | Name                                                                             | Function                                                  |
++============+==================================================================================+===========================================================+
+|          0 | DEV_MCU_TIMER1_CLKSEL_VD_CLK                                                     | Input muxed clock                                         |
++------------+----------------------------------------------------------------------------------+-----------------------------------------------------------+
+|          1 | DEV_MCU_TIMER1_CLKSEL_VD_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT                      | Parent input clock option to DEV_MCU_TIMER1_CLKSEL_VD_CLK |
++------------+----------------------------------------------------------------------------------+-----------------------------------------------------------+
+|          2 | DEV_MCU_TIMER1_CLKSEL_VD_CLK_PARENT_SAM62_PLL_CTRL_WRAP_MCU_0_CHIP_DIV1_CLK_CLK4 | Parent input clock option to DEV_MCU_TIMER1_CLKSEL_VD_CLK |
++------------+----------------------------------------------------------------------------------+-----------------------------------------------------------+
+|          3 | DEV_MCU_TIMER1_CLKSEL_VD_CLK_PARENT_GLUELOGIC_RCOSC_CLKOUT                       | Parent input clock option to DEV_MCU_TIMER1_CLKSEL_VD_CLK |
++------------+----------------------------------------------------------------------------------+-----------------------------------------------------------+
+|          4 | DEV_MCU_TIMER1_CLKSEL_VD_CLK_PARENT_POSTDIV1_16FFT_MCU_0_HSDIVOUT5_CLK           | Parent input clock option to DEV_MCU_TIMER1_CLKSEL_VD_CLK |
++------------+----------------------------------------------------------------------------------+-----------------------------------------------------------+
+|          5 | DEV_MCU_TIMER1_CLKSEL_VD_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT                  | Parent input clock option to DEV_MCU_TIMER1_CLKSEL_VD_CLK |
++------------+----------------------------------------------------------------------------------+-----------------------------------------------------------+
+|          6 | DEV_MCU_TIMER1_CLKSEL_VD_CLK_PARENT_CLK_32K_RC_SEL_OUT0                          | Parent input clock option to DEV_MCU_TIMER1_CLKSEL_VD_CLK |
++------------+----------------------------------------------------------------------------------+-----------------------------------------------------------+
+|          7 | DEV_MCU_TIMER1_CLKSEL_VD_CLK_PARENT_CPSW_3GUSS_AM67_MAIN_0_CPTS_GENF0            | Parent input clock option to DEV_MCU_TIMER1_CLKSEL_VD_CLK |
++------------+----------------------------------------------------------------------------------+-----------------------------------------------------------+
+|          8 | DEV_MCU_TIMER1_CLKSEL_VD_CLK_PARENT_GLUELOGIC_RCOSC_CLK_1P0V_97P65K3             | Parent input clock option to DEV_MCU_TIMER1_CLKSEL_VD_CLK |
++------------+----------------------------------------------------------------------------------+-----------------------------------------------------------+
 
 .. _soc_doc_j722s_public_clks_mcu_timer2:
 
@@ -4080,37 +4090,37 @@ Following is a mapping of Clocks IDs to function:
 |          4 | DEV_MCU_TIMER3_TIMER_TCLK_CLK_PARENT_DMTIMER_DMC1MS_MCU_2_TIMER_PWM | Parent input clock option to DEV_MCU_TIMER3_TIMER_TCLK_CLK |
 +------------+---------------------------------------------------------------------+------------------------------------------------------------+
 
-.. _soc_doc_j722s_public_clks_mcu_timer3_vd:
+.. _soc_doc_j722s_public_clks_mcu_timer3_clksel_vd:
 
 
-Clocks for MCU_TIMER3_VD Device
--------------------------------
+Clocks for MCU_TIMER3_CLKSEL_VD Device
+--------------------------------------
 
-Device: :ref:`J722S_DEV_MCU_TIMER3_VD <soc_doc_j722s_public_devices_desc_device_list>` (ID = 280)
+Device: :ref:`J722S_DEV_MCU_TIMER3_CLKSEL_VD <soc_doc_j722s_public_devices_desc_device_list>` (ID = 282)
 
 Following is a mapping of Clocks IDs to function:
 
-+------------+---------------------------------------------------------------------------+----------------------------------------------------+
-|   Clock ID | Name                                                                      | Function                                           |
-+============+===========================================================================+====================================================+
-|          0 | DEV_MCU_TIMER3_VD_CLK                                                     | Input muxed clock                                  |
-+------------+---------------------------------------------------------------------------+----------------------------------------------------+
-|          1 | DEV_MCU_TIMER3_VD_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT                      | Parent input clock option to DEV_MCU_TIMER3_VD_CLK |
-+------------+---------------------------------------------------------------------------+----------------------------------------------------+
-|          2 | DEV_MCU_TIMER3_VD_CLK_PARENT_SAM62_PLL_CTRL_WRAP_MCU_0_CHIP_DIV1_CLK_CLK4 | Parent input clock option to DEV_MCU_TIMER3_VD_CLK |
-+------------+---------------------------------------------------------------------------+----------------------------------------------------+
-|          3 | DEV_MCU_TIMER3_VD_CLK_PARENT_GLUELOGIC_RCOSC_CLKOUT                       | Parent input clock option to DEV_MCU_TIMER3_VD_CLK |
-+------------+---------------------------------------------------------------------------+----------------------------------------------------+
-|          4 | DEV_MCU_TIMER3_VD_CLK_PARENT_POSTDIV1_16FFT_MCU_0_HSDIVOUT5_CLK           | Parent input clock option to DEV_MCU_TIMER3_VD_CLK |
-+------------+---------------------------------------------------------------------------+----------------------------------------------------+
-|          5 | DEV_MCU_TIMER3_VD_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT                  | Parent input clock option to DEV_MCU_TIMER3_VD_CLK |
-+------------+---------------------------------------------------------------------------+----------------------------------------------------+
-|          6 | DEV_MCU_TIMER3_VD_CLK_PARENT_CLK_32K_RC_SEL_OUT0                          | Parent input clock option to DEV_MCU_TIMER3_VD_CLK |
-+------------+---------------------------------------------------------------------------+----------------------------------------------------+
-|          7 | DEV_MCU_TIMER3_VD_CLK_PARENT_CPSW_3GUSS_AM67_MAIN_0_CPTS_GENF0            | Parent input clock option to DEV_MCU_TIMER3_VD_CLK |
-+------------+---------------------------------------------------------------------------+----------------------------------------------------+
-|          8 | DEV_MCU_TIMER3_VD_CLK_PARENT_GLUELOGIC_RCOSC_CLK_1P0V_97P65K3             | Parent input clock option to DEV_MCU_TIMER3_VD_CLK |
-+------------+---------------------------------------------------------------------------+----------------------------------------------------+
++------------+----------------------------------------------------------------------------------+-----------------------------------------------------------+
+|   Clock ID | Name                                                                             | Function                                                  |
++============+==================================================================================+===========================================================+
+|          0 | DEV_MCU_TIMER3_CLKSEL_VD_CLK                                                     | Input muxed clock                                         |
++------------+----------------------------------------------------------------------------------+-----------------------------------------------------------+
+|          1 | DEV_MCU_TIMER3_CLKSEL_VD_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT                      | Parent input clock option to DEV_MCU_TIMER3_CLKSEL_VD_CLK |
++------------+----------------------------------------------------------------------------------+-----------------------------------------------------------+
+|          2 | DEV_MCU_TIMER3_CLKSEL_VD_CLK_PARENT_SAM62_PLL_CTRL_WRAP_MCU_0_CHIP_DIV1_CLK_CLK4 | Parent input clock option to DEV_MCU_TIMER3_CLKSEL_VD_CLK |
++------------+----------------------------------------------------------------------------------+-----------------------------------------------------------+
+|          3 | DEV_MCU_TIMER3_CLKSEL_VD_CLK_PARENT_GLUELOGIC_RCOSC_CLKOUT                       | Parent input clock option to DEV_MCU_TIMER3_CLKSEL_VD_CLK |
++------------+----------------------------------------------------------------------------------+-----------------------------------------------------------+
+|          4 | DEV_MCU_TIMER3_CLKSEL_VD_CLK_PARENT_POSTDIV1_16FFT_MCU_0_HSDIVOUT5_CLK           | Parent input clock option to DEV_MCU_TIMER3_CLKSEL_VD_CLK |
++------------+----------------------------------------------------------------------------------+-----------------------------------------------------------+
+|          5 | DEV_MCU_TIMER3_CLKSEL_VD_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT                  | Parent input clock option to DEV_MCU_TIMER3_CLKSEL_VD_CLK |
++------------+----------------------------------------------------------------------------------+-----------------------------------------------------------+
+|          6 | DEV_MCU_TIMER3_CLKSEL_VD_CLK_PARENT_CLK_32K_RC_SEL_OUT0                          | Parent input clock option to DEV_MCU_TIMER3_CLKSEL_VD_CLK |
++------------+----------------------------------------------------------------------------------+-----------------------------------------------------------+
+|          7 | DEV_MCU_TIMER3_CLKSEL_VD_CLK_PARENT_CPSW_3GUSS_AM67_MAIN_0_CPTS_GENF0            | Parent input clock option to DEV_MCU_TIMER3_CLKSEL_VD_CLK |
++------------+----------------------------------------------------------------------------------+-----------------------------------------------------------+
+|          8 | DEV_MCU_TIMER3_CLKSEL_VD_CLK_PARENT_GLUELOGIC_RCOSC_CLK_1P0V_97P65K3             | Parent input clock option to DEV_MCU_TIMER3_CLKSEL_VD_CLK |
++------------+----------------------------------------------------------------------------------+-----------------------------------------------------------+
 
 .. _soc_doc_j722s_public_clks_mcu_uart0:
 
@@ -4218,7 +4228,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for MSRAM8KX256E0 Device
 -------------------------------
 
-Device: :ref:`J722S_DEV_MSRAM8KX256E0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 255)
+Device: :ref:`J722S_DEV_MSRAM8KX256E0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 257)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -4289,6 +4299,22 @@ Following is a mapping of Clocks IDs to function:
 +------------+----------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------+
 |         22 | DEV_OBSCLK0_MUX_SEL_DEV_VD_CLK_PARENT_GLUELOGIC_RCOSC_CLK_1P0V_97P65K3                                         | Parent input clock option to DEV_OBSCLK0_MUX_SEL_DEV_VD_CLK |
 +------------+----------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------+
+
+.. _soc_doc_j722s_public_clks_oldi0_vd:
+
+
+Clocks for OLDI0_VD Device
+--------------------------
+
+**This device has no defined clocks.**
+
+.. _soc_doc_j722s_public_clks_oldi1_vd:
+
+
+Clocks for OLDI1_VD Device
+--------------------------
+
+**This device has no defined clocks.**
 
 .. _soc_doc_j722s_public_clks_oldi_tx_core0:
 
@@ -4376,7 +4402,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for PBIST2 Device
 ------------------------
 
-Device: :ref:`J722S_DEV_PBIST2 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 251)
+Device: :ref:`J722S_DEV_PBIST2 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 253)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -4412,7 +4438,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for PCIE0 Device
 -----------------------
 
-Device: :ref:`J722S_DEV_PCIE0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 256)
+Device: :ref:`J722S_DEV_PCIE0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 258)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -4506,7 +4532,7 @@ Clocks for R5FSS0 Device
 Clocks for R5FSS0_CORE0 Device
 ------------------------------
 
-Device: :ref:`J722S_DEV_R5FSS0_CORE0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 259)
+Device: :ref:`J722S_DEV_R5FSS0_CORE0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 261)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -4688,7 +4714,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for RTI5 Device
 ----------------------
 
-Device: :ref:`J722S_DEV_RTI5 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 260)
+Device: :ref:`J722S_DEV_RTI5 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 262)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -4714,7 +4740,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for RTI8 Device
 ----------------------
 
-Device: :ref:`J722S_DEV_RTI8 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 261)
+Device: :ref:`J722S_DEV_RTI8 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 263)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -4734,31 +4760,13 @@ Following is a mapping of Clocks IDs to function:
 |          5 | DEV_RTI8_VBUSP_CLK                                       | Input clock                                   |
 +------------+----------------------------------------------------------+-----------------------------------------------+
 
-.. _soc_doc_j722s_public_clks_sam67_dmpac_wrap0:
-
-
-Clocks for SAM67_DMPAC_WRAP0 Device
------------------------------------
-
-Device: :ref:`J722S_DEV_SAM67_DMPAC_WRAP0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 274)
-
-Following is a mapping of Clocks IDs to function:
-
-+------------+-------------------------------------+-------------+
-|   Clock ID | Name                                | Function    |
-+============+=====================================+=============+
-|          2 | DEV_SAM67_DMPAC_WRAP0_DMPAC_PLL_CLK | Input clock |
-+------------+-------------------------------------+-------------+
-|          4 | DEV_SAM67_DMPAC_WRAP0_PLL_CTRL_CLK  | Input clock |
-+------------+-------------------------------------+-------------+
-
 .. _soc_doc_j722s_public_clks_serdes_10g0:
 
 
 Clocks for SERDES_10G0 Device
 -----------------------------
 
-Device: :ref:`J722S_DEV_SERDES_10G0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 276)
+Device: :ref:`J722S_DEV_SERDES_10G0 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 278)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -4810,7 +4818,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for SERDES_10G1 Device
 -----------------------------
 
-Device: :ref:`J722S_DEV_SERDES_10G1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 277)
+Device: :ref:`J722S_DEV_SERDES_10G1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 279)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -4966,43 +4974,43 @@ Following is a mapping of Clocks IDs to function:
 |          4 | DEV_TIMER1_TIMER_TCLK_CLK_PARENT_DMTIMER_DMC1MS_MAIN_0_TIMER_PWM | Parent input clock option to DEV_TIMER1_TIMER_TCLK_CLK |
 +------------+------------------------------------------------------------------+--------------------------------------------------------+
 
-.. _soc_doc_j722s_public_clks_timer1_vd:
+.. _soc_doc_j722s_public_clks_timer1_clksel_vd:
 
 
-Clocks for TIMER1_VD Device
----------------------------
+Clocks for TIMER1_CLKSEL_VD Device
+----------------------------------
 
-Device: :ref:`J722S_DEV_TIMER1_VD <soc_doc_j722s_public_devices_desc_device_list>` (ID = 281)
+Device: :ref:`J722S_DEV_TIMER1_CLKSEL_VD <soc_doc_j722s_public_devices_desc_device_list>` (ID = 283)
 
 Following is a mapping of Clocks IDs to function:
 
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|   Clock ID | Name                                                        | Function                                       |
-+============+=============================================================+================================================+
-|          0 | DEV_TIMER1_VD_CLK                                           | Input muxed clock                              |
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|          1 | DEV_TIMER1_VD_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT            | Parent input clock option to DEV_TIMER1_VD_CLK |
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|          2 | DEV_TIMER1_VD_CLK_PARENT_CLK_32K_RC_SEL_OUT0                | Parent input clock option to DEV_TIMER1_VD_CLK |
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|          3 | DEV_TIMER1_VD_CLK_PARENT_CPSW_3GUSS_AM67_MAIN_0_CPTS_GENF0  | Parent input clock option to DEV_TIMER1_VD_CLK |
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|          4 | DEV_TIMER1_VD_CLK_PARENT_CPSW_3GUSS_AM67_MAIN_0_CPTS_GENF1  | Parent input clock option to DEV_TIMER1_VD_CLK |
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|          5 | DEV_TIMER1_VD_CLK_PARENT_POSTDIV4_16FF_MAIN_0_HSDIVOUT7_CLK | Parent input clock option to DEV_TIMER1_VD_CLK |
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|          6 | DEV_TIMER1_VD_CLK_PARENT_GLUELOGIC_RCOSC_CLKOUT             | Parent input clock option to DEV_TIMER1_VD_CLK |
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|          7 | DEV_TIMER1_VD_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT        | Parent input clock option to DEV_TIMER1_VD_CLK |
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|          8 | DEV_TIMER1_VD_CLK_PARENT_BOARD_0_EXT_REFCLK1_OUT            | Parent input clock option to DEV_TIMER1_VD_CLK |
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|          9 | DEV_TIMER1_VD_CLK_PARENT_BOARD_0_CP_GEMAC_CPTS0_RFT_CLK_OUT | Parent input clock option to DEV_TIMER1_VD_CLK |
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|         10 | DEV_TIMER1_VD_CLK_PARENT_HSDIV4_16FFT_MAIN_1_HSDIVOUT3_CLK  | Parent input clock option to DEV_TIMER1_VD_CLK |
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|         11 | DEV_TIMER1_VD_CLK_PARENT_POSTDIV4_16FF_MAIN_2_HSDIVOUT6_CLK | Parent input clock option to DEV_TIMER1_VD_CLK |
-+------------+-------------------------------------------------------------+------------------------------------------------+
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|   Clock ID | Name                                                               | Function                                              |
++============+====================================================================+=======================================================+
+|          0 | DEV_TIMER1_CLKSEL_VD_CLK                                           | Input muxed clock                                     |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|          1 | DEV_TIMER1_CLKSEL_VD_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT            | Parent input clock option to DEV_TIMER1_CLKSEL_VD_CLK |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|          2 | DEV_TIMER1_CLKSEL_VD_CLK_PARENT_CLK_32K_RC_SEL_OUT0                | Parent input clock option to DEV_TIMER1_CLKSEL_VD_CLK |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|          3 | DEV_TIMER1_CLKSEL_VD_CLK_PARENT_CPSW_3GUSS_AM67_MAIN_0_CPTS_GENF0  | Parent input clock option to DEV_TIMER1_CLKSEL_VD_CLK |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|          4 | DEV_TIMER1_CLKSEL_VD_CLK_PARENT_CPSW_3GUSS_AM67_MAIN_0_CPTS_GENF1  | Parent input clock option to DEV_TIMER1_CLKSEL_VD_CLK |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|          5 | DEV_TIMER1_CLKSEL_VD_CLK_PARENT_POSTDIV4_16FF_MAIN_0_HSDIVOUT7_CLK | Parent input clock option to DEV_TIMER1_CLKSEL_VD_CLK |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|          6 | DEV_TIMER1_CLKSEL_VD_CLK_PARENT_GLUELOGIC_RCOSC_CLKOUT             | Parent input clock option to DEV_TIMER1_CLKSEL_VD_CLK |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|          7 | DEV_TIMER1_CLKSEL_VD_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT        | Parent input clock option to DEV_TIMER1_CLKSEL_VD_CLK |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|          8 | DEV_TIMER1_CLKSEL_VD_CLK_PARENT_BOARD_0_EXT_REFCLK1_OUT            | Parent input clock option to DEV_TIMER1_CLKSEL_VD_CLK |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|          9 | DEV_TIMER1_CLKSEL_VD_CLK_PARENT_BOARD_0_CP_GEMAC_CPTS0_RFT_CLK_OUT | Parent input clock option to DEV_TIMER1_CLKSEL_VD_CLK |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|         10 | DEV_TIMER1_CLKSEL_VD_CLK_PARENT_HSDIV4_16FFT_MAIN_1_HSDIVOUT3_CLK  | Parent input clock option to DEV_TIMER1_CLKSEL_VD_CLK |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|         11 | DEV_TIMER1_CLKSEL_VD_CLK_PARENT_POSTDIV4_16FF_MAIN_2_HSDIVOUT6_CLK | Parent input clock option to DEV_TIMER1_CLKSEL_VD_CLK |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
 
 .. _soc_doc_j722s_public_clks_timer2:
 
@@ -5070,43 +5078,43 @@ Following is a mapping of Clocks IDs to function:
 |          4 | DEV_TIMER3_TIMER_TCLK_CLK_PARENT_DMTIMER_DMC1MS_MAIN_2_TIMER_PWM | Parent input clock option to DEV_TIMER3_TIMER_TCLK_CLK |
 +------------+------------------------------------------------------------------+--------------------------------------------------------+
 
-.. _soc_doc_j722s_public_clks_timer3_vd:
+.. _soc_doc_j722s_public_clks_timer3_clksel_vd:
 
 
-Clocks for TIMER3_VD Device
----------------------------
+Clocks for TIMER3_CLKSEL_VD Device
+----------------------------------
 
-Device: :ref:`J722S_DEV_TIMER3_VD <soc_doc_j722s_public_devices_desc_device_list>` (ID = 282)
+Device: :ref:`J722S_DEV_TIMER3_CLKSEL_VD <soc_doc_j722s_public_devices_desc_device_list>` (ID = 284)
 
 Following is a mapping of Clocks IDs to function:
 
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|   Clock ID | Name                                                        | Function                                       |
-+============+=============================================================+================================================+
-|          0 | DEV_TIMER3_VD_CLK                                           | Input muxed clock                              |
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|          1 | DEV_TIMER3_VD_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT            | Parent input clock option to DEV_TIMER3_VD_CLK |
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|          2 | DEV_TIMER3_VD_CLK_PARENT_CLK_32K_RC_SEL_OUT0                | Parent input clock option to DEV_TIMER3_VD_CLK |
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|          3 | DEV_TIMER3_VD_CLK_PARENT_CPSW_3GUSS_AM67_MAIN_0_CPTS_GENF0  | Parent input clock option to DEV_TIMER3_VD_CLK |
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|          4 | DEV_TIMER3_VD_CLK_PARENT_CPSW_3GUSS_AM67_MAIN_0_CPTS_GENF1  | Parent input clock option to DEV_TIMER3_VD_CLK |
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|          5 | DEV_TIMER3_VD_CLK_PARENT_POSTDIV4_16FF_MAIN_0_HSDIVOUT7_CLK | Parent input clock option to DEV_TIMER3_VD_CLK |
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|          6 | DEV_TIMER3_VD_CLK_PARENT_GLUELOGIC_RCOSC_CLKOUT             | Parent input clock option to DEV_TIMER3_VD_CLK |
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|          7 | DEV_TIMER3_VD_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT        | Parent input clock option to DEV_TIMER3_VD_CLK |
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|          8 | DEV_TIMER3_VD_CLK_PARENT_BOARD_0_EXT_REFCLK1_OUT            | Parent input clock option to DEV_TIMER3_VD_CLK |
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|          9 | DEV_TIMER3_VD_CLK_PARENT_BOARD_0_CP_GEMAC_CPTS0_RFT_CLK_OUT | Parent input clock option to DEV_TIMER3_VD_CLK |
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|         10 | DEV_TIMER3_VD_CLK_PARENT_HSDIV4_16FFT_MAIN_1_HSDIVOUT3_CLK  | Parent input clock option to DEV_TIMER3_VD_CLK |
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|         11 | DEV_TIMER3_VD_CLK_PARENT_POSTDIV4_16FF_MAIN_2_HSDIVOUT6_CLK | Parent input clock option to DEV_TIMER3_VD_CLK |
-+------------+-------------------------------------------------------------+------------------------------------------------+
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|   Clock ID | Name                                                               | Function                                              |
++============+====================================================================+=======================================================+
+|          0 | DEV_TIMER3_CLKSEL_VD_CLK                                           | Input muxed clock                                     |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|          1 | DEV_TIMER3_CLKSEL_VD_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT            | Parent input clock option to DEV_TIMER3_CLKSEL_VD_CLK |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|          2 | DEV_TIMER3_CLKSEL_VD_CLK_PARENT_CLK_32K_RC_SEL_OUT0                | Parent input clock option to DEV_TIMER3_CLKSEL_VD_CLK |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|          3 | DEV_TIMER3_CLKSEL_VD_CLK_PARENT_CPSW_3GUSS_AM67_MAIN_0_CPTS_GENF0  | Parent input clock option to DEV_TIMER3_CLKSEL_VD_CLK |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|          4 | DEV_TIMER3_CLKSEL_VD_CLK_PARENT_CPSW_3GUSS_AM67_MAIN_0_CPTS_GENF1  | Parent input clock option to DEV_TIMER3_CLKSEL_VD_CLK |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|          5 | DEV_TIMER3_CLKSEL_VD_CLK_PARENT_POSTDIV4_16FF_MAIN_0_HSDIVOUT7_CLK | Parent input clock option to DEV_TIMER3_CLKSEL_VD_CLK |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|          6 | DEV_TIMER3_CLKSEL_VD_CLK_PARENT_GLUELOGIC_RCOSC_CLKOUT             | Parent input clock option to DEV_TIMER3_CLKSEL_VD_CLK |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|          7 | DEV_TIMER3_CLKSEL_VD_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT        | Parent input clock option to DEV_TIMER3_CLKSEL_VD_CLK |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|          8 | DEV_TIMER3_CLKSEL_VD_CLK_PARENT_BOARD_0_EXT_REFCLK1_OUT            | Parent input clock option to DEV_TIMER3_CLKSEL_VD_CLK |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|          9 | DEV_TIMER3_CLKSEL_VD_CLK_PARENT_BOARD_0_CP_GEMAC_CPTS0_RFT_CLK_OUT | Parent input clock option to DEV_TIMER3_CLKSEL_VD_CLK |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|         10 | DEV_TIMER3_CLKSEL_VD_CLK_PARENT_HSDIV4_16FFT_MAIN_1_HSDIVOUT3_CLK  | Parent input clock option to DEV_TIMER3_CLKSEL_VD_CLK |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|         11 | DEV_TIMER3_CLKSEL_VD_CLK_PARENT_POSTDIV4_16FF_MAIN_2_HSDIVOUT6_CLK | Parent input clock option to DEV_TIMER3_CLKSEL_VD_CLK |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
 
 .. _soc_doc_j722s_public_clks_timer4:
 
@@ -5174,43 +5182,43 @@ Following is a mapping of Clocks IDs to function:
 |          4 | DEV_TIMER5_TIMER_TCLK_CLK_PARENT_DMTIMER_DMC1MS_MAIN_4_TIMER_PWM | Parent input clock option to DEV_TIMER5_TIMER_TCLK_CLK |
 +------------+------------------------------------------------------------------+--------------------------------------------------------+
 
-.. _soc_doc_j722s_public_clks_timer5_vd:
+.. _soc_doc_j722s_public_clks_timer5_clksel_vd:
 
 
-Clocks for TIMER5_VD Device
----------------------------
+Clocks for TIMER5_CLKSEL_VD Device
+----------------------------------
 
-Device: :ref:`J722S_DEV_TIMER5_VD <soc_doc_j722s_public_devices_desc_device_list>` (ID = 283)
+Device: :ref:`J722S_DEV_TIMER5_CLKSEL_VD <soc_doc_j722s_public_devices_desc_device_list>` (ID = 285)
 
 Following is a mapping of Clocks IDs to function:
 
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|   Clock ID | Name                                                        | Function                                       |
-+============+=============================================================+================================================+
-|          0 | DEV_TIMER5_VD_CLK                                           | Input muxed clock                              |
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|          1 | DEV_TIMER5_VD_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT            | Parent input clock option to DEV_TIMER5_VD_CLK |
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|          2 | DEV_TIMER5_VD_CLK_PARENT_CLK_32K_RC_SEL_OUT0                | Parent input clock option to DEV_TIMER5_VD_CLK |
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|          3 | DEV_TIMER5_VD_CLK_PARENT_CPSW_3GUSS_AM67_MAIN_0_CPTS_GENF0  | Parent input clock option to DEV_TIMER5_VD_CLK |
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|          4 | DEV_TIMER5_VD_CLK_PARENT_CPSW_3GUSS_AM67_MAIN_0_CPTS_GENF1  | Parent input clock option to DEV_TIMER5_VD_CLK |
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|          5 | DEV_TIMER5_VD_CLK_PARENT_POSTDIV4_16FF_MAIN_0_HSDIVOUT7_CLK | Parent input clock option to DEV_TIMER5_VD_CLK |
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|          6 | DEV_TIMER5_VD_CLK_PARENT_GLUELOGIC_RCOSC_CLKOUT             | Parent input clock option to DEV_TIMER5_VD_CLK |
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|          7 | DEV_TIMER5_VD_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT        | Parent input clock option to DEV_TIMER5_VD_CLK |
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|          8 | DEV_TIMER5_VD_CLK_PARENT_BOARD_0_EXT_REFCLK1_OUT            | Parent input clock option to DEV_TIMER5_VD_CLK |
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|          9 | DEV_TIMER5_VD_CLK_PARENT_BOARD_0_CP_GEMAC_CPTS0_RFT_CLK_OUT | Parent input clock option to DEV_TIMER5_VD_CLK |
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|         10 | DEV_TIMER5_VD_CLK_PARENT_HSDIV4_16FFT_MAIN_1_HSDIVOUT3_CLK  | Parent input clock option to DEV_TIMER5_VD_CLK |
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|         11 | DEV_TIMER5_VD_CLK_PARENT_POSTDIV4_16FF_MAIN_2_HSDIVOUT6_CLK | Parent input clock option to DEV_TIMER5_VD_CLK |
-+------------+-------------------------------------------------------------+------------------------------------------------+
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|   Clock ID | Name                                                               | Function                                              |
++============+====================================================================+=======================================================+
+|          0 | DEV_TIMER5_CLKSEL_VD_CLK                                           | Input muxed clock                                     |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|          1 | DEV_TIMER5_CLKSEL_VD_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT            | Parent input clock option to DEV_TIMER5_CLKSEL_VD_CLK |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|          2 | DEV_TIMER5_CLKSEL_VD_CLK_PARENT_CLK_32K_RC_SEL_OUT0                | Parent input clock option to DEV_TIMER5_CLKSEL_VD_CLK |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|          3 | DEV_TIMER5_CLKSEL_VD_CLK_PARENT_CPSW_3GUSS_AM67_MAIN_0_CPTS_GENF0  | Parent input clock option to DEV_TIMER5_CLKSEL_VD_CLK |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|          4 | DEV_TIMER5_CLKSEL_VD_CLK_PARENT_CPSW_3GUSS_AM67_MAIN_0_CPTS_GENF1  | Parent input clock option to DEV_TIMER5_CLKSEL_VD_CLK |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|          5 | DEV_TIMER5_CLKSEL_VD_CLK_PARENT_POSTDIV4_16FF_MAIN_0_HSDIVOUT7_CLK | Parent input clock option to DEV_TIMER5_CLKSEL_VD_CLK |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|          6 | DEV_TIMER5_CLKSEL_VD_CLK_PARENT_GLUELOGIC_RCOSC_CLKOUT             | Parent input clock option to DEV_TIMER5_CLKSEL_VD_CLK |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|          7 | DEV_TIMER5_CLKSEL_VD_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT        | Parent input clock option to DEV_TIMER5_CLKSEL_VD_CLK |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|          8 | DEV_TIMER5_CLKSEL_VD_CLK_PARENT_BOARD_0_EXT_REFCLK1_OUT            | Parent input clock option to DEV_TIMER5_CLKSEL_VD_CLK |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|          9 | DEV_TIMER5_CLKSEL_VD_CLK_PARENT_BOARD_0_CP_GEMAC_CPTS0_RFT_CLK_OUT | Parent input clock option to DEV_TIMER5_CLKSEL_VD_CLK |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|         10 | DEV_TIMER5_CLKSEL_VD_CLK_PARENT_HSDIV4_16FFT_MAIN_1_HSDIVOUT3_CLK  | Parent input clock option to DEV_TIMER5_CLKSEL_VD_CLK |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|         11 | DEV_TIMER5_CLKSEL_VD_CLK_PARENT_POSTDIV4_16FF_MAIN_2_HSDIVOUT6_CLK | Parent input clock option to DEV_TIMER5_CLKSEL_VD_CLK |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
 
 .. _soc_doc_j722s_public_clks_timer6:
 
@@ -5278,43 +5286,43 @@ Following is a mapping of Clocks IDs to function:
 |          4 | DEV_TIMER7_TIMER_TCLK_CLK_PARENT_DMTIMER_DMC1MS_MAIN_6_TIMER_PWM | Parent input clock option to DEV_TIMER7_TIMER_TCLK_CLK |
 +------------+------------------------------------------------------------------+--------------------------------------------------------+
 
-.. _soc_doc_j722s_public_clks_timer7_vd:
+.. _soc_doc_j722s_public_clks_timer7_clksel_vd:
 
 
-Clocks for TIMER7_VD Device
----------------------------
+Clocks for TIMER7_CLKSEL_VD Device
+----------------------------------
 
-Device: :ref:`J722S_DEV_TIMER7_VD <soc_doc_j722s_public_devices_desc_device_list>` (ID = 284)
+Device: :ref:`J722S_DEV_TIMER7_CLKSEL_VD <soc_doc_j722s_public_devices_desc_device_list>` (ID = 286)
 
 Following is a mapping of Clocks IDs to function:
 
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|   Clock ID | Name                                                        | Function                                       |
-+============+=============================================================+================================================+
-|          0 | DEV_TIMER7_VD_CLK                                           | Input muxed clock                              |
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|          1 | DEV_TIMER7_VD_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT            | Parent input clock option to DEV_TIMER7_VD_CLK |
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|          2 | DEV_TIMER7_VD_CLK_PARENT_CLK_32K_RC_SEL_OUT0                | Parent input clock option to DEV_TIMER7_VD_CLK |
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|          3 | DEV_TIMER7_VD_CLK_PARENT_CPSW_3GUSS_AM67_MAIN_0_CPTS_GENF0  | Parent input clock option to DEV_TIMER7_VD_CLK |
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|          4 | DEV_TIMER7_VD_CLK_PARENT_CPSW_3GUSS_AM67_MAIN_0_CPTS_GENF1  | Parent input clock option to DEV_TIMER7_VD_CLK |
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|          5 | DEV_TIMER7_VD_CLK_PARENT_POSTDIV4_16FF_MAIN_0_HSDIVOUT7_CLK | Parent input clock option to DEV_TIMER7_VD_CLK |
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|          6 | DEV_TIMER7_VD_CLK_PARENT_GLUELOGIC_RCOSC_CLKOUT             | Parent input clock option to DEV_TIMER7_VD_CLK |
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|          7 | DEV_TIMER7_VD_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT        | Parent input clock option to DEV_TIMER7_VD_CLK |
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|          8 | DEV_TIMER7_VD_CLK_PARENT_BOARD_0_EXT_REFCLK1_OUT            | Parent input clock option to DEV_TIMER7_VD_CLK |
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|          9 | DEV_TIMER7_VD_CLK_PARENT_BOARD_0_CP_GEMAC_CPTS0_RFT_CLK_OUT | Parent input clock option to DEV_TIMER7_VD_CLK |
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|         10 | DEV_TIMER7_VD_CLK_PARENT_HSDIV4_16FFT_MAIN_1_HSDIVOUT3_CLK  | Parent input clock option to DEV_TIMER7_VD_CLK |
-+------------+-------------------------------------------------------------+------------------------------------------------+
-|         11 | DEV_TIMER7_VD_CLK_PARENT_POSTDIV4_16FF_MAIN_2_HSDIVOUT6_CLK | Parent input clock option to DEV_TIMER7_VD_CLK |
-+------------+-------------------------------------------------------------+------------------------------------------------+
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|   Clock ID | Name                                                               | Function                                              |
++============+====================================================================+=======================================================+
+|          0 | DEV_TIMER7_CLKSEL_VD_CLK                                           | Input muxed clock                                     |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|          1 | DEV_TIMER7_CLKSEL_VD_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT            | Parent input clock option to DEV_TIMER7_CLKSEL_VD_CLK |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|          2 | DEV_TIMER7_CLKSEL_VD_CLK_PARENT_CLK_32K_RC_SEL_OUT0                | Parent input clock option to DEV_TIMER7_CLKSEL_VD_CLK |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|          3 | DEV_TIMER7_CLKSEL_VD_CLK_PARENT_CPSW_3GUSS_AM67_MAIN_0_CPTS_GENF0  | Parent input clock option to DEV_TIMER7_CLKSEL_VD_CLK |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|          4 | DEV_TIMER7_CLKSEL_VD_CLK_PARENT_CPSW_3GUSS_AM67_MAIN_0_CPTS_GENF1  | Parent input clock option to DEV_TIMER7_CLKSEL_VD_CLK |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|          5 | DEV_TIMER7_CLKSEL_VD_CLK_PARENT_POSTDIV4_16FF_MAIN_0_HSDIVOUT7_CLK | Parent input clock option to DEV_TIMER7_CLKSEL_VD_CLK |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|          6 | DEV_TIMER7_CLKSEL_VD_CLK_PARENT_GLUELOGIC_RCOSC_CLKOUT             | Parent input clock option to DEV_TIMER7_CLKSEL_VD_CLK |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|          7 | DEV_TIMER7_CLKSEL_VD_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT        | Parent input clock option to DEV_TIMER7_CLKSEL_VD_CLK |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|          8 | DEV_TIMER7_CLKSEL_VD_CLK_PARENT_BOARD_0_EXT_REFCLK1_OUT            | Parent input clock option to DEV_TIMER7_CLKSEL_VD_CLK |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|          9 | DEV_TIMER7_CLKSEL_VD_CLK_PARENT_BOARD_0_CP_GEMAC_CPTS0_RFT_CLK_OUT | Parent input clock option to DEV_TIMER7_CLKSEL_VD_CLK |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|         10 | DEV_TIMER7_CLKSEL_VD_CLK_PARENT_HSDIV4_16FFT_MAIN_1_HSDIVOUT3_CLK  | Parent input clock option to DEV_TIMER7_CLKSEL_VD_CLK |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
+|         11 | DEV_TIMER7_CLKSEL_VD_CLK_PARENT_POSTDIV4_16FF_MAIN_2_HSDIVOUT6_CLK | Parent input clock option to DEV_TIMER7_CLKSEL_VD_CLK |
++------------+--------------------------------------------------------------------+-------------------------------------------------------+
 
 .. _soc_doc_j722s_public_clks_timesync_event_introuter0:
 
@@ -5520,7 +5528,7 @@ Following is a mapping of Clocks IDs to function:
 Clocks for USB1 Device
 ----------------------
 
-Device: :ref:`J722S_DEV_USB1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 275)
+Device: :ref:`J722S_DEV_USB1 <soc_doc_j722s_public_devices_desc_device_list>` (ID = 277)
 
 Following is a mapping of Clocks IDs to function:
 
@@ -5952,37 +5960,37 @@ Following is a mapping of Clocks IDs to function:
 |          6 | DEV_WKUP_TIMER1_TIMER_TCLK_CLK_PARENT_DMTIMER_DMC1MS_WKUP_0_TIMER_PWM    | Parent input clock option to DEV_WKUP_TIMER1_TIMER_TCLK_CLK |
 +------------+--------------------------------------------------------------------------+-------------------------------------------------------------+
 
-.. _soc_doc_j722s_public_clks_wkup_timer1_vd:
+.. _soc_doc_j722s_public_clks_wkup_timer1_clksel_vd:
 
 
-Clocks for WKUP_TIMER1_VD Device
---------------------------------
+Clocks for WKUP_TIMER1_CLKSEL_VD Device
+---------------------------------------
 
-Device: :ref:`J722S_DEV_WKUP_TIMER1_VD <soc_doc_j722s_public_devices_desc_device_list>` (ID = 278)
+Device: :ref:`J722S_DEV_WKUP_TIMER1_CLKSEL_VD <soc_doc_j722s_public_devices_desc_device_list>` (ID = 280)
 
 Following is a mapping of Clocks IDs to function:
 
-+------------+------------------------------------------------------------------+-----------------------------------------------------+
-|   Clock ID | Name                                                             | Function                                            |
-+============+==================================================================+=====================================================+
-|          0 | DEV_WKUP_TIMER1_VD_CLK                                           | Input muxed clock                                   |
-+------------+------------------------------------------------------------------+-----------------------------------------------------+
-|          1 | DEV_WKUP_TIMER1_VD_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT            | Parent input clock option to DEV_WKUP_TIMER1_VD_CLK |
-+------------+------------------------------------------------------------------+-----------------------------------------------------+
-|          2 | DEV_WKUP_TIMER1_VD_CLK_PARENT_WKUP_CLKSEL_OUT04                  | Parent input clock option to DEV_WKUP_TIMER1_VD_CLK |
-+------------+------------------------------------------------------------------+-----------------------------------------------------+
-|          3 | DEV_WKUP_TIMER1_VD_CLK_PARENT_GLUELOGIC_RCOSC_CLKOUT             | Parent input clock option to DEV_WKUP_TIMER1_VD_CLK |
-+------------+------------------------------------------------------------------+-----------------------------------------------------+
-|          4 | DEV_WKUP_TIMER1_VD_CLK_PARENT_POSTDIV1_16FFT_MCU_0_HSDIVOUT5_CLK | Parent input clock option to DEV_WKUP_TIMER1_VD_CLK |
-+------------+------------------------------------------------------------------+-----------------------------------------------------+
-|          5 | DEV_WKUP_TIMER1_VD_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT        | Parent input clock option to DEV_WKUP_TIMER1_VD_CLK |
-+------------+------------------------------------------------------------------+-----------------------------------------------------+
-|          6 | DEV_WKUP_TIMER1_VD_CLK_PARENT_CLK_32K_RC_SEL_OUT0                | Parent input clock option to DEV_WKUP_TIMER1_VD_CLK |
-+------------+------------------------------------------------------------------+-----------------------------------------------------+
-|          7 | DEV_WKUP_TIMER1_VD_CLK_PARENT_CPSW_3GUSS_AM67_MAIN_0_CPTS_GENF0  | Parent input clock option to DEV_WKUP_TIMER1_VD_CLK |
-+------------+------------------------------------------------------------------+-----------------------------------------------------+
-|          8 | DEV_WKUP_TIMER1_VD_CLK_PARENT_GLUELOGIC_RCOSC_CLK_1P0V_97P65K3   | Parent input clock option to DEV_WKUP_TIMER1_VD_CLK |
-+------------+------------------------------------------------------------------+-----------------------------------------------------+
++------------+-------------------------------------------------------------------------+------------------------------------------------------------+
+|   Clock ID | Name                                                                    | Function                                                   |
++============+=========================================================================+============================================================+
+|          0 | DEV_WKUP_TIMER1_CLKSEL_VD_CLK                                           | Input muxed clock                                          |
++------------+-------------------------------------------------------------------------+------------------------------------------------------------+
+|          1 | DEV_WKUP_TIMER1_CLKSEL_VD_CLK_PARENT_GLUELOGIC_HFOSC0_CLKOUT            | Parent input clock option to DEV_WKUP_TIMER1_CLKSEL_VD_CLK |
++------------+-------------------------------------------------------------------------+------------------------------------------------------------+
+|          2 | DEV_WKUP_TIMER1_CLKSEL_VD_CLK_PARENT_WKUP_CLKSEL_OUT04                  | Parent input clock option to DEV_WKUP_TIMER1_CLKSEL_VD_CLK |
++------------+-------------------------------------------------------------------------+------------------------------------------------------------+
+|          3 | DEV_WKUP_TIMER1_CLKSEL_VD_CLK_PARENT_GLUELOGIC_RCOSC_CLKOUT             | Parent input clock option to DEV_WKUP_TIMER1_CLKSEL_VD_CLK |
++------------+-------------------------------------------------------------------------+------------------------------------------------------------+
+|          4 | DEV_WKUP_TIMER1_CLKSEL_VD_CLK_PARENT_POSTDIV1_16FFT_MCU_0_HSDIVOUT5_CLK | Parent input clock option to DEV_WKUP_TIMER1_CLKSEL_VD_CLK |
++------------+-------------------------------------------------------------------------+------------------------------------------------------------+
+|          5 | DEV_WKUP_TIMER1_CLKSEL_VD_CLK_PARENT_BOARD_0_MCU_EXT_REFCLK0_OUT        | Parent input clock option to DEV_WKUP_TIMER1_CLKSEL_VD_CLK |
++------------+-------------------------------------------------------------------------+------------------------------------------------------------+
+|          6 | DEV_WKUP_TIMER1_CLKSEL_VD_CLK_PARENT_CLK_32K_RC_SEL_OUT0                | Parent input clock option to DEV_WKUP_TIMER1_CLKSEL_VD_CLK |
++------------+-------------------------------------------------------------------------+------------------------------------------------------------+
+|          7 | DEV_WKUP_TIMER1_CLKSEL_VD_CLK_PARENT_CPSW_3GUSS_AM67_MAIN_0_CPTS_GENF0  | Parent input clock option to DEV_WKUP_TIMER1_CLKSEL_VD_CLK |
++------------+-------------------------------------------------------------------------+------------------------------------------------------------+
+|          8 | DEV_WKUP_TIMER1_CLKSEL_VD_CLK_PARENT_GLUELOGIC_RCOSC_CLK_1P0V_97P65K3   | Parent input clock option to DEV_WKUP_TIMER1_CLKSEL_VD_CLK |
++------------+-------------------------------------------------------------------------+------------------------------------------------------------+
 
 .. _soc_doc_j722s_public_clks_wkup_uart0:
 

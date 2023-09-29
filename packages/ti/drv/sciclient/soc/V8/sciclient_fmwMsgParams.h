@@ -145,6 +145,11 @@ extern "C" {
 #define SCICLIENT_PROC_ID_C7X256V1_C7XV_CORE_0 (0x0CU)
 
 /**
+ * SMS_MAIN_0_SECCTRL_0: (Cluster 0 Processor 1)
+ */
+#define SCICLIENT_PROC_ID_HSM0 (0x80U)
+
+/**
  * AM67_MCU_SEC_MMR_MCU_0: (Cluster 0 Processor 0)
  */
 #define SCICLIENT_PROC_ID_MCU_R5FSS0_CORE0 (0x03U)
@@ -162,7 +167,7 @@ extern "C" {
 /**
  * Total Number of processors in J722S
  */
-#define SOC_NUM_SCICLIENT_PROCESSORS (0x09U)
+#define SCICLIENT_SOC_NUM_PROCESSORS (0x0AU)
 
 
 /** -------------------- Resource Management Parameters ---------------------*/

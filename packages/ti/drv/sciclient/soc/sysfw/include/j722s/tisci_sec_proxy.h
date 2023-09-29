@@ -49,7 +49,7 @@
  *
  * Secure Proxy indices for J722S device
  *
- * Data version: 230724_185448
+ * Data version: 230918_161753
  *
  */
 #ifndef J722S_TISCI_SEC_PROXY_H

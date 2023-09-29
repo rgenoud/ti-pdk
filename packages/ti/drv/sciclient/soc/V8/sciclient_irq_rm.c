@@ -1174,20 +1174,20 @@ static const struct Sciclient_rmIrqNode tisci_irq_PCIE0 = {
 	.p_if = &tisci_if_PCIE0[0],
 };
 
-/* Start of sam67_dmpac_wrap0 interface definition */
-const struct Sciclient_rmIrqIf sam67_dmpac_wrap0_dmpac_level_0_1_to_MAIN_GPIOMUX_INTROUTER0_in_196_197 = {
+/* Start of DMPAC0 interface definition */
+const struct Sciclient_rmIrqIf DMPAC0_dmpac_level_0_1_to_MAIN_GPIOMUX_INTROUTER0_in_196_197 = {
 	.lbase = 0,
 	.len = 2,
 	.rid = TISCI_DEV_MAIN_GPIOMUX_INTROUTER0,
 	.rbase = 196,
 };
-const struct Sciclient_rmIrqIf * const tisci_if_sam67_dmpac_wrap0[] = {
-	&sam67_dmpac_wrap0_dmpac_level_0_1_to_MAIN_GPIOMUX_INTROUTER0_in_196_197,
+const struct Sciclient_rmIrqIf * const tisci_if_DMPAC0[] = {
+	&DMPAC0_dmpac_level_0_1_to_MAIN_GPIOMUX_INTROUTER0_in_196_197,
 };
-static const struct Sciclient_rmIrqNode tisci_irq_sam67_dmpac_wrap0 = {
-	.id = TISCI_DEV_SAM67_DMPAC_WRAP0,
+static const struct Sciclient_rmIrqNode tisci_irq_DMPAC0 = {
+	.id = TISCI_DEV_DMPAC0,
 	.n_if = 1,
-	.p_if = &tisci_if_sam67_dmpac_wrap0[0],
+	.p_if = &tisci_if_DMPAC0[0],
 };
 
 
@@ -1226,7 +1226,7 @@ const struct Sciclient_rmIrqNode *const gRmIrqTree[] = {
 	&tisci_irq_MCASP4,
 	&tisci_irq_I2C4,
 	&tisci_irq_PCIE0,
-	&tisci_irq_sam67_dmpac_wrap0,
+	&tisci_irq_DMPAC0,
 };
 
 const uint32_t gRmIrqTreeCount = sizeof(gRmIrqTree)/sizeof(gRmIrqTree[0]);
