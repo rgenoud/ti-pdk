@@ -122,6 +122,10 @@
 #endif
 #include <ti/drv/udma/include/udma_utils.h>
 
+#ifdef QNX_OS
+#include <unistd.h>
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -647,6 +651,9 @@ struct Udma_DrvObj
     uint32_t                irIntrFlag[UDMA_RM_IR_INTR_ARR_SIZE];
     /**< IR interrupt allocation flag */
     uint32_t                proxyFlag[UDMA_RM_PROXY_ARR_SIZE];
+#ifdef QNX_OS
+    pid_t                   proxyPids[4];
+#endif
     /**< UDMA proxy allocation flag */
     uint32_t                ringMonFlag[UDMA_RM_RING_MON_ARR_SIZE];
     /**< UDMA ring monitor allocation flag */
