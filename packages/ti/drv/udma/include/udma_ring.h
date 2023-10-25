@@ -758,6 +758,16 @@ int32_t UdmaRingPrms_init(Udma_RingPrms *ringPrms);
  */
 int32_t UdmaRingMonPrms_init(Udma_RingMonPrms *monPrms);
 
+
+/* Proxy APIs. Moving this to be an extenal API since clients would use it
+   for proxy specific queueing */
+int32_t Udma_ringProxyQueueRaw(Udma_RingHandle ringHandle,
+                               Udma_DrvHandle drvHandle,
+                               uint64_t phyDescMem);
+int32_t Udma_ringProxyDequeueRaw(Udma_RingHandle ringHandle,
+                                 Udma_DrvHandle drvHandle,
+                                 uint64_t *phyDescMem);
+
 /* ========================================================================== */
 /*                       Static Function Definitions                          */
 /* ========================================================================== */
@@ -810,6 +820,10 @@ struct Udma_RingObj
      * runtime */
     uintptr_t                   proxyAddr;
     /**< Proxy address for push/pop ring operation through proxy */
+#ifdef QNX_OS
+    uint16_t                    proxyNum;
+    /**< Proxy number allocated for this ring. Used by the enqueue/dequeue APIs */
+#endif
 #endif
     
     uint32_t                    ringInitDone;
