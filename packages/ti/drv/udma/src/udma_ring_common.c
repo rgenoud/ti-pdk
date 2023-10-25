@@ -960,14 +960,26 @@ int32_t Udma_ringProxyDequeueRaw(Udma_RingHandle ringHandle,
         }
         else
         {
+            uint16_t proxyNum = drvHandle->initPrms.rmInitPrms.proxyThreadNum;
+
             threadCfg.mode      = CSL_PROXY_QUEUE_ACCESS_MODE_HEAD;
             threadCfg.elSz      = (uint32_t)sizeof(uint64_t);
             threadCfg.queueNum  = ringHandle->ringNum;
             threadCfg.errEvtNum = UDMA_EVENT_INVALID;
+#ifdef QNX_OS
+            /* For QNX we want to use a dedicated proxy per process which is stored in the
+             * the ringHandle. Use that instead of using the global proxyThreadNum (usually proxy 0).
+             */
+            if (ringHandle->proxyNum != drvHandle->initPrms.rmInitPrms.proxyThreadNum) {
+                if (ringHandle->proxyNum < drvHandle->initPrms.rmInitPrms.numProxy) {
+                    proxyNum = ringHandle->proxyNum;
+                }
+            }
+#endif
             retVal = CSL_proxyCfgThread(
                         &drvHandle->proxyCfg,
                         drvHandle->proxyTargetNumRing,
-                        drvHandle->initPrms.rmInitPrms.proxyThreadNum,
+                        proxyNum,
                         &threadCfg);
             if(UDMA_SOK == retVal)
             {

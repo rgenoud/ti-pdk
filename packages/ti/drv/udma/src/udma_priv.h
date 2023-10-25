@@ -264,13 +264,7 @@ void Udma_ringSetCfgLcdma(Udma_DrvHandle drvHandle,
                           Udma_RingHandle ringHandle,
                           const Udma_RingPrms *ringPrms);
 #endif
-/* Proxy APIs*/
-int32_t Udma_ringProxyQueueRaw(Udma_RingHandle ringHandle,
-                               Udma_DrvHandle drvHandle,
-                               uint64_t phyDescMem);
-int32_t Udma_ringProxyDequeueRaw(Udma_RingHandle ringHandle,
-                                 Udma_DrvHandle drvHandle,
-                                 uint64_t *phyDescMem);
+
 /*
  * RM APIs
  */

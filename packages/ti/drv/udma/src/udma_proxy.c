@@ -98,7 +98,11 @@ int32_t Udma_proxyAlloc(Udma_DrvHandle drvHandle,
     if(UDMA_SOK == retVal)
     {
 #ifdef QNX_OS
-        if(proxyNum >= drvHandle->maxProxy)
+        /* NOTE: There are only a limited number of proxies for each core (resource partitioned).
+         *  The max proxies depend on the SoC. the maxProxy is not a good indicator
+         *  of the limits set for the core.
+         **/
+        if((proxyNum >= drvHandle->maxProxy) && (UDMA_PROXY_ANY != proxyNum))
         {
             Udma_printf(drvHandle, "[Error] Out of range proxy index!!!\n");
             retVal = UDMA_EINVALID_PARAMS;
@@ -106,7 +110,7 @@ int32_t Udma_proxyAlloc(Udma_DrvHandle drvHandle,
         else
         {
             proxyHandle->proxyNum = Udma_resmgr_rmAllocProxy(proxyNum, drvHandle);
-            if(UDMA_PROXY_INVALID == proxyHandle->proxyNum)
+            if (UDMA_PROXY_INVALID == proxyHandle->proxyNum)
             {
                 retVal = UDMA_EALLOC;
             }
