@@ -375,8 +375,14 @@ void SystemP_printf(const char *format, ...)
             buf, IPC_PRINT_BUF_LEN, (const char *) format, vaArgPtr);
         va_end(vaArgPtr);
 
+        /* The QNX printFxn always appends a newline. Hence Do not pass the [IPC] tag
+         * With slogger, we can still identify ipc messages based on the pid. */
+#ifdef QNX_OS
+        pObj->initPrms.printFxn(buf);
+#else
         pObj->initPrms.printFxn("[IPC] ");
         pObj->initPrms.printFxn(buf);
+#endif
 
         /* This assumes that both lock/unlock will be both provided or not
          * provided. Any other combo will result in invalid lock operation */
