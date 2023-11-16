@@ -49,6 +49,9 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <semaphore.h>
+#include <sys/slog.h>
+#include <sys/slogcodes.h>
+#include <errno.h>
 
 #include <ti/drv/ipc/ipc.h>
 #include <ti/drv/ipc/src/ipc_priv.h>
@@ -61,6 +64,8 @@
 #define NVSS_INTRTR_SIZE    0x1000
 uintptr_t g_navssIntRtrBaseVirtAddr = 0;
 #endif
+
+#define IPC_OSAL_TAG    (_SLOGC_PRIVATE_START + 5)
 
 static int32_t Ipc_qnxIsrCreate(Ipc_OsalHIsrHandle *handle,
                                     Ipc_OsalHIsrFxn fxn, void *arg)
@@ -182,6 +187,7 @@ static int32_t Ipc_qnxSemWait(void *handle, uint32_t timeout)
     int32_t rtnVal = IPC_SOK;
     struct timespec ts;
     uint64_t timeout_ns = timeout*1000;
+    int errvalue;
 
     if(handle != NULL)
     {
@@ -195,16 +201,28 @@ static int32_t Ipc_qnxSemWait(void *handle, uint32_t timeout)
             ts.tv_sec += (timeout_ns)/1000000000;
             ts.tv_nsec += timeout_ns%1000000000;
 
+            /* Fixup ts in case the calculated nanosecond is more than a second */
+            if (ts.tv_nsec > 1000000000L) {
+                ts.tv_sec +=1;
+                ts.tv_nsec -= 1000000000L;
+            }
+
             ret = sem_timedwait((sem_t *)handle, &ts);
         }
+
+        /* Store the errno to be used later */
+        errvalue = errno;
+
         if (ret < 0) {
-            if (errno == ETIMEDOUT)
+            if (errvalue == ETIMEDOUT)
             {
                     rtnVal = IPC_ETIMEOUT;
             }
             else
             {
                     rtnVal = IPC_EFAIL;
+                    slogf(IPC_OSAL_TAG, _SLOG_ERROR, "%s: ret = %d errvalue = %d:%s",
+                            __func__, ret, errvalue, strerror(errvalue));
             }
         }
         else

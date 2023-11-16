@@ -1425,24 +1425,24 @@ int32_t RPMessage_recv(RPMessage_Handle handle, void* data, uint16_t *len,
         pOsalPrms->unLockHIsrGate(module.gateSwi, key);
 
         /*  Block until notified. */
-          semStatus = pOsalPrms->lockMutex(obj->semHandle, timeout);
+        semStatus = pOsalPrms->lockMutex(obj->semHandle, timeout);
 
-          if (TRUE == skiplist)
-          {
-              key = pOsalPrms->lockHIsrGate(module.gateSwi);
-              if (NULL == obj->recv_buffer)
-              {
-                  /* Incoming message filled. Clear any error flag that could be
-                   * set due to a race */
-                  semStatus = IPC_SOK;
-                  obj->unblocked = FALSE;
-              }
-              else
-              {
-                  obj->recv_buffer = NULL;
-              }
-              pOsalPrms->unLockHIsrGate(module.gateSwi, key);
-          }
+        if (TRUE == skiplist)
+        {
+            key = pOsalPrms->lockHIsrGate(module.gateSwi);
+            if (NULL == obj->recv_buffer)
+            {
+                /* Incoming message filled. Clear any error flag that could be
+                 * set due to a race */
+                semStatus = IPC_SOK;
+                obj->unblocked = FALSE;
+            }
+            else
+            {
+                obj->recv_buffer = NULL;
+            }
+            pOsalPrms->unLockHIsrGate(module.gateSwi, key);
+        }
 
         if (semStatus == IPC_ETIMEOUT)
         {
