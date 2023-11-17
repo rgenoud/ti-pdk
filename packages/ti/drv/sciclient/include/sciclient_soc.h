@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) Texas Instruments Incorporated 2018-2020
+ *  Copyright (c) Texas Instruments Incorporated 2018-2023
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -77,6 +77,12 @@
 #include <ti/drv/sciclient/soc/sysfw/include/j784s4/tisci_resasg_types.h>
 #include <ti/drv/sciclient/soc/V6/sciclient_fmwMsgParams.h>
 #include <ti/drv/sciclient/soc/V6/sciclient_firmware_V6.h>
+#endif
+
+#if defined (SOC_J722S)
+#include <ti/drv/sciclient/soc/sysfw/include/j722s/tisci_resasg_types.h>
+#include <ti/drv/sciclient/soc/V9/sciclient_fmwMsgParams.h>
+//#include <ti/drv/sciclient/soc/V9/sciclient_firmware_V9.h>
 #endif
 
 #ifdef __cplusplus

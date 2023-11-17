@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2020-2021 Texas Instruments Incorporated
+ *  Copyright (C) 2020-2023 Texas Instruments Incorporated
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -42,6 +42,8 @@
 /*                             Include Files                                  */
 /* ========================================================================== */
 
+#include <string.h>
+
 #include <ti/board/board.h>
 #include <ti/drv/sciclient/sciserver_tirtos.h>
 #include <ti/drv/sciclient/examples/common/sciclient_appCommon.h>
@@ -52,7 +54,9 @@
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-/* None */
+/**< Main application stack size */
+#define APP_TSK_STACK_MAIN             (32U * 1024U)
+#define APP_TSK_STACK_MAIN_PRI         (6)
 
 /* ========================================================================== */
 /*                         Structures and Enums                               */
@@ -64,13 +68,15 @@
 /*                 Internal Function Declarations                             */
 /* ========================================================================== */
 
-/* None */
+static void taskFxn(void* a0, void* a1);
 
 /* ========================================================================== */
 /*                            Global Variables                                */
 /* ========================================================================== */
 
-/* None */
+/* Main task application stack */
+static uint8_t  gAppTskStackMain[APP_TSK_STACK_MAIN]
+__attribute__ ((aligned(8192)));
 
 /* ========================================================================== */
 /*                          Function Definitions                              */
@@ -78,13 +84,40 @@
 
 int main(void)
 {
+    TaskP_Handle task;
+    TaskP_Params taskParams;
+
+#if defined (SOC_AM62X) || defined (SOC_AM62A) || defined (SOC_AM62PX)
+    void _freertosresetvectors (void);
+    memcpy((void *)0x0, (void *)_freertosresetvectors , 0x40);
+#endif
+    OS_init();
+
+        /* Initialize the task params */
+    TaskP_Params_init(&taskParams);
+    /* Set the task priority higher than the default priority (1) */
+    taskParams.priority     = APP_TSK_STACK_MAIN_PRI;
+    taskParams.stack        = gAppTskStackMain;
+    taskParams.stacksize    = sizeof (gAppTskStackMain);
+
+    task = TaskP_create(taskFxn, &taskParams);
+    if(NULL == task)
+    {
+        OS_stop();
+    }
+    OS_start();    /* does not return */
+
+    return(0);
+}
+
+
+static void taskFxn(void* a0, void* a1)
+{
     int32_t ret = CSL_PASS;
     Sciclient_ConfigPrms_t clientPrms;
     Sciserver_TirtosCfgPrms_t appPrms;
     char *version_str = NULL;
     char *rmpmhal_version_str = NULL;
-
-    OS_init();
 
     /* Sciclient needs to be initialized before Sciserver. Sciserver depends on
      * Sciclient API to execute message forwarding */
@@ -97,6 +130,12 @@ int main(void)
             &clientPrms.inPmPrms, &clientPrms.inRmPrms);
     }
     
+    /* Enable UART console print*/
+    if (ret == CSL_PASS)
+    {
+        App_sciclientConsoleInit();
+    }
+
     if (ret == CSL_PASS)
     {
         ret = Sciclient_init(&clientPrms);
@@ -112,12 +151,6 @@ int main(void)
         ret = Sciserver_tirtosInit(&appPrms);
     }
 
-    /* Enable UART console print*/
-    if (ret == CSL_PASS)
-    {
-        App_sciclientConsoleInit();
-    }
-
     version_str = Sciserver_getVersionStr();
     rmpmhal_version_str = Sciserver_getRmPmHalVersionStr();
 
@@ -126,14 +159,24 @@ int main(void)
     App_sciclientPrintf("RM_PM_HAL Version: %s\n", rmpmhal_version_str);
     if (ret == CSL_PASS)
     {
-        App_sciclientPrintf("Starting Sciserver..... PASSED\n");
-        OS_start();
+       App_sciclientPrintf("Starting Sciserver..... PASSED\n");
+
+        uint32_t freqHz;
+#if defined (SOC_AM62X) || defined (SOC_AM62A) || defined (SOC_AM62PX) || defined (SOC_J722S)
+        Sciclient_pmGetModuleClkFreq(TISCI_DEV_WKUP_GTC0, TISCI_DEV_WKUP_GTC0_GTC_CLK,
+            (uint64_t *) &freqHz, SCICLIENT_SERVICE_WAIT_FOREVER);
+#else
+        Sciclient_pmGetModuleClkFreq(TISCI_DEV_GTC0, TISCI_DEV_GTC0_GTC_CLK,
+            (uint64_t *) &freqHz, SCICLIENT_SERVICE_WAIT_FOREVER);
+#endif
+       App_sciclientPrintf("GTC freq: %d\n", freqHz);
+
     }
     else
     {
         App_sciclientPrintf("Starting Sciserver..... FAILED\n");
     }
-    return ret;
+    return;
 }
 
 /* ========================================================================== */
@@ -141,4 +184,3 @@ int main(void)
 /* ========================================================================== */
 
 /* None */
-
