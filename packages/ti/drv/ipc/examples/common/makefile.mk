@@ -100,6 +100,10 @@ ifeq ($(BUILD_OS_TYPE), safertos)
   endif
 endif
 
+ifeq ($(SOC), j722s)
+  COMP_LIST_COMMON += mailbox
+endif
+
 CFLAGS_LOCAL_COMMON += $(PDK_CFLAGS)
 
 # Core/SoC/platform specific source files and CFLAGS

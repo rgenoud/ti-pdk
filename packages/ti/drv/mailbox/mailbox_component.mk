@@ -35,13 +35,14 @@
 ifeq ($(mailbox_component_make_include), )
 
 drvmailbox_RTOS_LIST = $(DEFAULT_RTOS_LIST)
-drvmailbox_SOCLIST          = tpr12 am64x awr294x
+drvmailbox_SOCLIST          = tpr12 am64x awr294x j722s
 drvmailbox_tpr12_CORELIST   = mcu1_0 mcu1_1 c66xdsp_1
 drvmailbox_awr294x_CORELIST = mcu1_0 mcu1_1 c66xdsp_1
 drvmailbox_am64x_CORELIST   = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 m4f_0
 drvmailbox_am64x_rtos_CORELIST = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1
 drvmailbox_am64x_LASTCORE := $(word $(words $(drvmailbox_am64x_CORELIST)), $(drvmailbox_am64x_CORELIST))
 drvmailbox_am64x_rtos_LASTCORE := $(word $(words $(drvmailbox_am64x_rtos_CORELIST)), $(drvmailbox_am64x_rtos_CORELIST))
+drvmailbox_j722s_CORELIST   = mpu1_0 mcu1_0 c7x_1 c7x_2 wkup_r5f
 
 drvmailbox_BOARDLIST        = tpr12_evm tpr12_qt am64x_evm awr294x_evm
 drvmailbox_k3_BOARDLIST     = am64x_evm

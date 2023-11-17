@@ -12,6 +12,9 @@ endif
 ifeq ($(SOC),$(filter $(SOC), j784s4))
   SRCDIR += soc/V4
 endif
+ifeq ($(SOC),$(filter $(SOC), j722s))
+  SRCDIR += soc/V8
+endif
 INCDIR =
 
 #$(ECHO) $(ISA)
@@ -21,8 +24,17 @@ INCDIR =
 INCLUDE_EXTERNAL_INTERFACES = pdk
 
 # Common source files and CFLAGS across all platforms and cores
-SRCS_COMMON += ipc_api.c ipc_mp.c ipc_soc.c ipc_virtio.c ipc_utils.c ipc_mailbox.c
+SRCS_COMMON += ipc_api.c ipc_mp.c ipc_soc.c ipc_virtio.c ipc_utils.c
+# ifeq ($(BUILD_OS_TYPE), qnx)
+# SRCS_COMMON += ipc_osal_qnx.c
+# else
 SRCS_COMMON += ipc_osal.c
+# endif
+ifeq ($(SOC),$(filter $(SOC), am64x am62x am62a am62px j722s))
+SRCS_COMMON += ipc_mailbox_lld.c
+else
+SRCS_COMMON += ipc_mailbox.c
+endif
 
 PACKAGE_SRCS_COMMON = ipc.h ipc_component.mk makefile .gitignore include $(SRCDIR)
 PACKAGE_SRCS_COMMON += soc/ipc_soc.h
