@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) Texas Instruments Incorporated 2018
+ *  Copyright (c) Texas Instruments Incorporated 2023
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -33,95 +33,78 @@
 
 /**
  *  \ingroup DRV_IPC_MODULE
- *  \defgroup DRV_TOP_LEVEL_IPC_SOC_MODULE Top Level IPC SoC Config
+ *  \defgroup DRV_IPC_SOC_MODULE IPC SoC Config
+ *            This is IPC documentation specific to J722S SoC
  *
  *  @{
  */
 
 /**
- *  \file soc/ipc_soc.h
+ *  \file ipc_soc.h
  *
- *  \brief IPC Low Level Driver SOC specific file.
+ *  \brief IPC Low Level Driver J722S SOC specific file.
  */
+#ifndef IPC_SOC_V8_H_
+#define IPC_SOC_V8_H_
 
-#ifndef IPC_SOC_TOP_H_
-#define IPC_SOC_TOP_H_
+#include <ti/drv/ipc/include/ipc_config.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define    IPC_INVALID_PROCID (0XFFU)   /**< Invalid Proc ID */
+/**
+ * \brief VRing Buffer Size required for all core
+ * combinations.
+ */
+#define IPC_VRING_BUFFER_SIZE   (0x800000U)
+
+/** \brief Core definitions */
+#define    IPC_WKUP_R5F     (0U)    /*< ARM WKUP R5F >*/
+#define    IPC_MCU1_0       (1U)    /*< ARM MCU R5F >*/
+#define    IPC_MPU1_0       (2U)    /*< ARM MAIN A53 >*/
+#define    IPC_C7X_1        (3U)    /*< C7x 1 >*/
+#define    IPC_C7X_2        (4U)    /*< C7x 2 >*/
+#define    IPC_MAX_PROCS    (5U)    /*< Maximum Processors >*/
 
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
 
+/* None */
 
-/*
- * These functions and structure is for internal use use and
- * are not expected to be called from app
- */
+
+/* ========================================================================== */
+/*                           Macros & Typedefs                                */
+/* ========================================================================== */
+
+
+
+/* @} */
 
 /* ========================================================================== */
 /*                         Structure Declarations                             */
 /* ========================================================================== */
 
+/* None */
+
 /* ========================================================================== */
 /*                          Function Declarations                             */
 /* ========================================================================== */
-int32_t Ipc_getMailboxInfoTx(uint32_t selfId, uint32_t remoteId,
-                 uint32_t *clusterId, uint32_t *userId, uint32_t *queueId);
-int32_t Ipc_getMailboxInfoRx(uint32_t selfId, uint32_t remoteId,
-                 uint32_t *clusterId, uint32_t *userId, uint32_t *queueId);
-int32_t Ipc_getMailboxIntrRouterCfg(uint32_t selfId, uint32_t clusterId,
-                 uint32_t userId, Ipc_MbConfig* cfg, uint32_t cnt);
-uintptr_t Ipc_getMailboxBaseAddr(uint32_t clusterId);
 
-/**
- * \brief Returns the core name for get core id
- *
- * \param procId [IN] Id of desired core.
- *
- * \return name of the given core id
- * */
-const char* Ipc_getCoreName(uint32_t procId);
+uint32_t Ipc_rprocIdToMboxId(uint32_t id);
+uint32_t Ipc_mboxIdToRprocId(uint32_t id);
 
-/**
- * \brief Returns Core ID based on core build flag
- *
- * \return Code ID of the current core
- **/
-uint32_t Ipc_getCoreId(void);
+/* ========================================================================== */
+/*                       Static Function Definitions                          */
+/* ========================================================================== */
 
-/**
- *  \brief Returns TRUE if the memory is cache coherent
- *
- *  \return TRUE/FALSE
- */
-uint32_t Ipc_isCacheCoherent(void);
-
-/* For J7ES device */
-#if defined (SOC_J721E) || defined (SOC_J7200)
-#include <ti/drv/ipc/soc/V1/ipc_soc.h>
-#endif
-
-#if defined (SOC_J721S2)
-#include <ti/drv/ipc/soc/V3/ipc_soc.h>
-#endif
-
-#if defined (SOC_J784S4)
-#include <ti/drv/ipc/soc/V4/ipc_soc.h>
-#endif
-
-#if defined (SOC_J722S)
-#include <ti/drv/ipc/soc/V8/ipc_soc.h>
-#endif
+/* None */
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* #ifndef IPC_SOC_TOP_H_ */
+#endif /* #ifndef IPC_SOC_V8_H_ */
 
 /* @} */

@@ -81,6 +81,8 @@
 #define CORE_IN_TEST            8
 #elif defined (SOC_J784S4)
 #define CORE_IN_TEST            12
+#elif defined (SOC_J722S)
+#define CORE_IN_TEST            4
 #else
 #error "Invalid SOC"
 #endif
@@ -141,6 +143,8 @@ uint32_t remoteProc[] =
     IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1, IPC_MCU3_0, IPC_MCU3_1, IPC_C7X_1, IPC_C7X_2
 #elif defined (SOC_J784S4)
     IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1, IPC_MCU3_0, IPC_MCU3_1, IPC_MCU4_0, IPC_MCU4_1, IPC_C7X_1, IPC_C7X_2, IPC_C7X_3, IPC_C7X_4
+#elif defined (SOC_J722S)
+    IPC_WKUP_R5F, IPC_MCU1_0, IPC_C7X_1, IPC_C7X_2
 #endif
 };
 #endif
@@ -161,6 +165,8 @@ uint32_t remoteProc[] =
     IPC_MPU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1, IPC_MCU3_0, IPC_MCU3_1, IPC_C7X_1, IPC_C7X_2
 #elif defined (SOC_J784S4)
     IPC_MPU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1, IPC_MCU3_0, IPC_MCU3_1, IPC_MCU4_0, IPC_MCU4_1, IPC_C7X_1, IPC_C7X_2, IPC_C7X_3, IPC_C7X_4
+#elif defined (SOC_J722S)
+    IPC_WKUP_R5F, IPC_MPU1_0, IPC_C7X_1, IPC_C7X_2
 #endif
 };
 #endif
@@ -299,6 +305,8 @@ uint32_t remoteProc[] =
     IPC_MPU1_0, IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1, IPC_MCU3_0, IPC_MCU3_1, IPC_C7X_2
 #elif defined (SOC_J784S4)
     IPC_MPU1_0, IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1, IPC_MCU3_0, IPC_MCU3_1, IPC_MCU4_0, IPC_MCU4_1, IPC_C7X_2, IPC_C7X_3, IPC_C7X_4
+#elif defined (SOC_J722S)
+    IPC_WKUP_R5F, IPC_MCU1_0, IPC_MPU1_0, IPC_C7X_2
 #endif
 };
 #endif
@@ -311,6 +319,8 @@ uint32_t remoteProc[] =
     IPC_MPU1_0, IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1, IPC_MCU3_0, IPC_MCU3_1, IPC_C7X_1
 #elif defined (SOC_J784S4)
     IPC_MPU1_0, IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1, IPC_MCU3_0, IPC_MCU3_1, IPC_MCU4_0, IPC_MCU4_1, IPC_C7X_1, IPC_C7X_3, IPC_C7X_4
+#elif defined (SOC_J722S)
+    IPC_WKUP_R5F, IPC_MCU1_0, IPC_MPU1_0, IPC_C7X_1
 #endif
 };
 #endif

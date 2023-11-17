@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) Texas Instruments Incorporated 2020-2023
+ *  Copyright (c) Texas Instruments Incorporated 2023
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -33,31 +33,23 @@
 /**
  *  \file mailbox_soc.h
  *
- *  \brief MAILBOX Low Level Driver SOC specific file.
+ *  \brief MAILBOX Driver SOC specific file.
  */
 
-#ifndef MAILBOX_SOC_TOP_H_
-#define MAILBOX_SOC_TOP_H_
+#ifndef MAILBOX_SOC_H_
+#define MAILBOX_SOC_H_
 
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
 
-#if defined (SOC_TPR12)
-#include <ti/drv/mailbox/soc/tpr12/mailbox_soc.h>
-#endif
-
-#if defined (SOC_AWR294X)
-#include <ti/drv/mailbox/soc/awr294x/mailbox_soc.h>
-#endif
-
-#if defined (SOC_AM64X)
-#include <ti/drv/mailbox/soc/am64x/mailbox_soc.h>
-#endif
-
-#if defined (SOC_J722S)
-#include <ti/drv/mailbox/soc/j722s/mailbox_soc.h>
-#endif
+#include <ti/csl/csl_types.h>
+#include <ti/csl/csl_mailbox.h>
+#include <ti/csl/soc.h>
+#include <ti/csl/arch/csl_arch.h>
+#include <ti/csl/src/ip/mailbox/V0/mailbox.h>
+//#include <ti/drv/mailbox/mailbox.h>
+//#include <ti/drv/mailbox/src/mailbox_internal.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -66,14 +58,55 @@ extern "C" {
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
+/*! @brief Mailbox Instance Number */
+typedef uint32_t Mailbox_Instance;
 
-/* None */
+/** @defgroup MAILBOX_INSTANCE Instance IDs
+\ingroup DRV_MAILBOX_MODULE
+ *
+ @{ */
+
+/*! \brief MCU R5F Mailbox INST */
+#define MAILBOX_INST_MCU_R5F         (0U)
+/*! \brief WKUP R5F Mailbox INST */
+#define MAILBOX_INST_WKUP_R5F        (1U)
+/*! \brief MPU1_0 Mailbox INST */
+#define MAILBOX_INST_MPU1_0          (2U)
+/*! \brief MCU R5F Mailbox INST */
+#define MAILBOX_INST_MAIN_R5F        (3U)
+/*! \brief WKUP R5F Mailbox INST */
+#define MAILBOX_INST_C7X_0           (4U)
+/*! \brief MPU1_0 Mailbox INST */
+#define MAILBOX_INST_C7X_1           (5U)
+/*! \brief Last Mailbox INST */
+#define MAILBOX_INST_LAST            (MAILBOX_INST_C7X_1)
+/*! \brief Invalid Mailbox INST */
+#define MAILBOX_INST_INVALID         (0xFFU)
+
+/** @}*/ /* end defgroup MAILBOX_INSTANCE */
+
+/*! \brief */
+#define MAILBOX_MAX_INST           (MAILBOX_INST_LAST + 1U)
+
+#define  MAILBOX_CLUSTER_INVALID   (0xFFU)
+#define  MAILBOX_USER_INVALID      (0xFFU)
+
+#define TEST_VIM_BASE_ADDR (CSL_MAIN_DOMAIN_VIM_BASE_ADDR)
 
 /* ========================================================================== */
 /*                         Structure Declarations                             */
 /* ========================================================================== */
 
-/* None */
+/**
+ * \brief Mailbox interrupt router configuration
+ */
+typedef struct Mailbox_MbConfig_s
+{
+    uint32_t   priority;
+    uint32_t   eventId;
+    uint32_t   inputIntrNum;
+    uint32_t   outputIntrNum;
+}Mailbox_MbConfig;
 
 /* ========================================================================== */
 /*                          Function Declarations                             */
@@ -91,4 +124,4 @@ extern "C" {
 }
 #endif
 
-#endif /* #ifndef MAILBOX_SOC_TOP_H_ */
+#endif /* #ifndef MAILBOX_SOC_H_ */
