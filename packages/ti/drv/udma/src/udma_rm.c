@@ -2200,6 +2200,7 @@ uint32_t Udma_rmTranslateCoreIntrInput(Udma_DrvHandle drvHandle, uint32_t coreIn
 
 #ifdef QNX_OS
 
+#if (UDMA_SOC_CFG_UDMAP_PRESENT == 1)
 uint32_t Udma_rmAllocflow(uint32_t  flowCnt, Udma_DrvHandle drvHandle)
 {
     uint32_t            flowStart = UDMA_FLOW_INVALID;
@@ -2289,6 +2290,7 @@ void Udma_rmFreeflow(uint32_t  flowStart, uint32_t  flowCnt, Udma_DrvHandle drvH
 
     return;
 }
+#endif // UDMA_SOC_CFG_UDMAP_PRESENT
 
 //*********** QNX_OS end ***********
 #endif
@@ -2316,7 +2318,7 @@ int32_t UdmaRmInitPrms_init(uint32_t instId, Udma_RmInitPrms *rmInitPrms)
             memset(rmDefBoardCfgResp, 0, sizeof(rmDefBoardCfgResp));
             memset(rmInitPrms, 0, sizeof(*rmInitPrms));
 
-        #if (UDMA_SOC_CFG_UDMAP_PRESENT == 1)
+#if (UDMA_SOC_CFG_UDMAP_PRESENT == 1)
 
             uint32_t numtTxCh = 0U;
             uint32_t numRxCh  = 0U;

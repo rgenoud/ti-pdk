@@ -63,6 +63,10 @@
 #include <ti/drv/udma/soc/j7200/udma_soc.h>
 #endif
 
+#if defined (SOC_J722S)
+#include <ti/drv/udma/soc/j722s/udma_soc.h>
+#endif
+
 #if defined (SOC_AM64X)
 #include <ti/drv/udma/soc/am64x/udma_soc.h>
 #endif
