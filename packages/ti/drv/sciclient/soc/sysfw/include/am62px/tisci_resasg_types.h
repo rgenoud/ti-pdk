@@ -49,11 +49,17 @@
  *
  * Resource Assignment Subtype definitions
  *
- * Data version: 230724_185448
+ * Data version: 231011_130515
  *
  */
 #ifndef TISCI_RESASG_TYPES_H
 #define TISCI_RESASG_TYPES_H
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 
 /**
  * Resource assignment type shift
@@ -165,6 +171,11 @@
  * Total number of resource entries allowed for SoC
  */
 #define TISCI_RESASG_ENTRIES_MAX (TISCI_RESASG_UTYPE_CNT * 5U)
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* TISCI_RESASG_TYPES_H */
 

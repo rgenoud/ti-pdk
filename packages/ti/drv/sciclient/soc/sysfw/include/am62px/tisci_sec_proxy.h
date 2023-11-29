@@ -49,11 +49,17 @@
  *
  * Secure Proxy indices for AM62PX device
  *
- * Data version: 230724_185448
+ * Data version: 231011_130515
  *
  */
 #ifndef AM62PX_TISCI_SEC_PROXY_H
 #define AM62PX_TISCI_SEC_PROXY_H
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 
 /*
  * Secure Proxy configurations for WKUP_0_R5_0 host
@@ -237,6 +243,11 @@
 /** Num messages macro for HSM low_priority */
 #define TISCI_SEC_PROXY_HSM_WRITE_LOW_PRIORITY_NUM_MESSAGES (8U)
 
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* AM62PX_TISCI_SEC_PROXY_H */
 

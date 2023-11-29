@@ -49,11 +49,17 @@
  *
  * Host IDs for AM62PX device
  *
- * Data version: 230724_185448
+ * Data version: 231011_130515
  *
  */
 #ifndef TISCI_HOSTS_H
 #define TISCI_HOSTS_H
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 
 /** TIFS(Secure): TI Foundational Security */
 #define TISCI_HOST_ID_TIFS (0U)
@@ -94,6 +100,11 @@
 
 /** Number of unique hosts on the SoC */
 #define TISCI_HOST_ID_CNT (15U)
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* TISCI_HOSTS_H */
 
