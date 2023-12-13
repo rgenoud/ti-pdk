@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) Texas Instruments Incorporated 2018-2022
+ *  Copyright (c) Texas Instruments Incorporated 2018-2024
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -693,6 +693,8 @@ int32_t udmaTestChPktdmaParamCheckTc(UdmaTestTaskObj *taskObj);
 int32_t udmaTestChPktdmaChApiTc(UdmaTestTaskObj *taskObj);
 int32_t udmaTestBcdmaParamCheckTc(UdmaTestTaskObj *taskObj);
 int32_t udmaTestBcdmaChApiTc(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestChPause(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestChGetDefaultFlowHandle(UdmaTestTaskObj *taskObj);
 
 /*
  * UDMA Driver Negative test functions
@@ -783,6 +785,33 @@ int32_t AppUtils_getNum(void);
 
 uint32_t AppUtils_getCurTimeInMsec(void);
 uint32_t AppUtils_getElapsedTimeInMsec(uint32_t startTime);
+
+/*
+ * UDMA Channel Negative test functions
+ */
+int32_t UdmaTestChPauseNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestChOpenNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestChCloseNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestChConfigTxNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestChGetDefaultFlowHandleNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestChGetTdCqRingHandleNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestChGetFqRingNumNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestChGetCqRingNumNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestChGetTriggerEventNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestChSetSwTriggerNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestChSetChainingNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestChBreakChainingNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestChGetNumNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestChConfigUtcTestNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestChSetSwTriggerChTypeNeg(UdmaTestTaskObj *taskObj);
+
+/*
+ * UDMA utc test functions
+ */
+int32_t UdmaTestChDisableDruNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestChPauseDruNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestChConfigUtcDruTestNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestChSetSwTriggerDruNeg(UdmaTestTaskObj *taskObj);
 
 /* ========================================================================== */
 /*      Internal Function Declarations (Needed for other static inlines)      */

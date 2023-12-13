@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) Texas Instruments Incorporated 2019-2022
+ *  Copyright (c) Texas Instruments Incorporated 2019-2024
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -618,3 +618,161 @@ static int32_t udmaTestBcdmaChApiTestLoop(UdmaTestTaskObj *taskObj)
 
     return(retVal);
 }
+
+/*
+ * Test Case Description: Verifies the function Udma_chPause 
+ * Test scenario 1: Check when instType is UDMA_INST_TYPE_LCDMA_BCDMA 
+ *                  and chType is UDMA_CH_TYPE_TX
+ * Test scenario 2: Check when chType is UDMA_CH_TYPE_RX
+ */
+int32_t UdmaTestChPause(UdmaTestTaskObj *taskObj)
+{
+    int32_t            retVal = UDMA_SOK;
+    #if (UDMA_SOC_CFG_BCDMA_PRESENT == 1)
+    struct Udma_ChObj  chObj;
+    Udma_ChHandle      chHandle;
+    struct Udma_DrvObj backUpDrvObj;
+    Udma_DrvHandle     drvHandle;
+    Udma_ChPrms        chPrms;
+    uint32_t           chType;
+    uint32_t           timeout;
+    uint32_t           instID; 
+
+    GT_1trace(taskObj->traceMask, GT_INFO1,
+              " |TEST INFO|:: Task:%d: UDMA ChPause positive Testcase ::\r\n",
+              taskObj->taskId);
+
+    /* Test scenario 1: Check when instType is UDMA_INST_TYPE_LCDMA_BCDMA 
+    *                   and chType is UDMA_CH_TYPE_TX 
+    */
+    chHandle         = &chObj;
+    timeout          = 0U;
+    instID           = UDMA_TEST_INST_ID_BCDMA_0;
+    chType           = UDMA_CH_TYPE_TX;
+    backUpDrvObj     = taskObj->testObj->drvObj[instID];
+    drvHandle        = &taskObj->testObj->drvObj[instID];
+    UdmaChPrms_init(&chPrms, chType);
+    chPrms.peerChNum = UDMA_PSIL_CH_MAIN_CSI_TX;
+    retVal           = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
+    Udma_ChTxPrms txChPrms;
+    UdmaChTxPrms_init(&txChPrms, chType);
+    if(retVal == UDMA_SOK)
+    {
+        retVal = Udma_chConfigTx(chHandle, &txChPrms);
+        if(retVal == UDMA_SOK)
+        {
+            retVal = Udma_chEnable(chHandle);
+            if(retVal == UDMA_SOK)
+            {
+                retVal = Udma_chPause(chHandle);
+                if(retVal != UDMA_SOK)
+                {
+                    GT_0trace(taskObj->traceMask, GT_ERR,
+                              " |TEST INFO|:: FAIL:: UDMA:: Udma_chPauseTxLocal:: "
+                              " Pos:: Check when instType is UDMA_INST_TYPE_LCDMA_BCDMA "
+                              " and chType is UDMA_CH_TYPE_TX!!\n");
+                    retVal = UDMA_EFAIL;
+                }
+                else
+                {
+                    retVal = UDMA_SOK;
+                    Udma_chDisable(chHandle, timeout);
+                    Udma_chClose(chHandle);
+                }
+            }
+        }
+    }
+    taskObj->testObj->drvObj[instID] = backUpDrvObj;
+
+
+    /* Test scenario 2: Check when chType is UDMA_CH_TYPE_RX */
+    if(retVal == UDMA_SOK)
+    {
+        chType           = UDMA_CH_TYPE_RX;
+        backUpDrvObj     = taskObj->testObj->drvObj[instID];
+        drvHandle        = &taskObj->testObj->drvObj[instID];
+        UdmaChPrms_init(&chPrms, chType);
+        chPrms.peerChNum = UDMA_PSIL_CH_MCU_CPSW0_RX;
+        retVal           = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
+        Udma_ChRxPrms rxPrms;
+        UdmaChRxPrms_init(&rxPrms, chType);
+        if(retVal == UDMA_SOK)
+        {
+            retVal = Udma_chConfigRx(chHandle, &rxPrms);
+            if(retVal == UDMA_SOK)
+            {
+                retVal = Udma_chEnable(chHandle);
+                if(retVal == UDMA_SOK)
+                {
+                    retVal = Udma_chPause(chHandle);
+                    if(retVal != UDMA_SOK)
+                    {
+                        GT_0trace(taskObj->traceMask, GT_ERR,
+                                  " |TEST INFO|:: FAIL:: UDMA:: Udma_chPauseRxLocal:: "
+                                  " Pos:: Check when chType is UDMA_CH_TYPE_RX!!\n");
+                        retVal = UDMA_EFAIL;
+                    }
+                    else
+                    {
+                        retVal = UDMA_SOK;
+                        Udma_chDisable(chHandle, timeout);
+                        Udma_chClose(chHandle);
+                    }
+                }
+            }
+        }
+    }
+    taskObj->testObj->drvObj[instID] = backUpDrvObj;
+    #endif
+
+    return retVal;
+}
+
+/* 
+ * Test Case Description: Verifies the function Udma_chGetDefaultFlowHandle
+ * Test scenario 1: Check for Valid args 
+ */
+int32_t UdmaTestChGetDefaultFlowHandle(UdmaTestTaskObj *taskObj)
+{
+    int32_t            retVal = UDMA_SOK;
+    struct Udma_ChObj  chObj;
+    struct Udma_DrvObj backUpDrvObj;
+    Udma_ChHandle      chHandle;
+    Udma_ChPrms        chPrms;
+    Udma_DrvHandle     drvHandle;
+    uint32_t           chType;
+    uint32_t           instID;
+
+    GT_1trace(taskObj->traceMask, GT_INFO1,
+              " |TEST INFO|:: Task:%d: UDMA ChGetDefaultFlowHandle positive Testcase ::\r\n",
+              taskObj->taskId);
+
+    /* Test scenario 1: Check for Valid args */
+    chHandle         = &chObj;
+    instID           = UDMA_TEST_INST_ID_BCDMA_0;
+    chType           = UDMA_CH_TYPE_RX;
+    UdmaChPrms_init(&chPrms, chType);
+    backUpDrvObj     = taskObj->testObj->drvObj[instID];
+    drvHandle        = &taskObj->testObj->drvObj[instID];
+    chPrms.peerChNum = UDMA_PSIL_CH_MCU_CPSW0_RX;
+    retVal           = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
+    if(retVal == UDMA_SOK)
+    {
+        if(Udma_chGetDefaultFlowHandle(chHandle) == NULL_PTR)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: chGetDefaultFlowHandle:: "
+                      " Pos:: Check for Valid args!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        else
+        {
+            retVal = UDMA_SOK;
+            Udma_chClose(chHandle);
+        }
+    }
+    taskObj->testObj->drvObj[instID] = backUpDrvObj;
+    
+    return retVal;
+}
+
