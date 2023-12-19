@@ -188,7 +188,7 @@ HwiP_Handle HwiP_create(uint32_t coreIntrNum, HwiP_Fxn hwiFxn,
        OSAL_Assert(1);
     }
     else {
-        //printf("%s: InterruptAttachEvent succeed irq/%d\n",__FUNCTION__, coreIntrNum);
+        printf("%s: InterruptAttachEvent succeed irq/%d\n",__FUNCTION__, coreIntrNum);
     }
 
     return ((HwiP_Handle)hwi);

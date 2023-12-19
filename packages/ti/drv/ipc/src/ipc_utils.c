@@ -51,6 +51,8 @@
 #include <ti/drv/ipc/soc/ipc_soc.h>
 #include <ti/drv/ipc/include/ipc_types.h>
 
+#include <stdio.h>
+
 #if defined (IPC_CFG_PRINT_ENABLE)
 /* This is needed for vsnprintf */
 #include <stdio.h>
@@ -337,13 +339,14 @@ void IpcUtils_HeapFree(IpcUtils_HeapHandle *pHndl, void* block, uint32_t size)
 
 uintptr_t IpcUtils_getMemoryAddress(uint32_t daAddr, uint32_t size)
 {
+   SystemP_printf("%s:%d: Translating PHYS to Virtual MemAddress\n", __FUNCTION__, __LINE__);
 #if defined(BUILD_MPU1_0) && defined(QNX_OS)
 #include <sys/mman.h>
     void* p = mmap_device_memory(NULL, size, PROT_READ|PROT_WRITE|PROT_NOCACHE,
             0, daAddr);
     if( p == MAP_FAILED)
     {
-        //SystemP_printf("IpcUtils_getMemoryAddress : failed to map..\n");
+        SystemP_printf("IpcUtils_getMemoryAddress : failed to map..\n");
     }
     return (uintptr_t)p;
 #else
@@ -351,7 +354,7 @@ uintptr_t IpcUtils_getMemoryAddress(uint32_t daAddr, uint32_t size)
 #endif
 }
 
-void SystemP_printf(const char *format, ...)
+ void SystemP_printf(const char *format, ...)
 {
 #if defined (IPC_CFG_PRINT_ENABLE)
     va_list     vaArgPtr;
@@ -372,7 +375,7 @@ void SystemP_printf(const char *format, ...)
         buf = &pObj->printBuf[0];
         (void) va_start(vaArgPtr, format);
         (void) vsnprintf(
-            buf, IPC_PRINT_BUF_LEN, (const char *) format, vaArgPtr);
+                buf, IPC_PRINT_BUF_LEN, (const char *) format, vaArgPtr);
         va_end(vaArgPtr);
 
         /* The QNX printFxn always appends a newline. Hence Do not pass the [IPC] tag

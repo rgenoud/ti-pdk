@@ -57,15 +57,30 @@ extern "C" {
  * \brief VRing Buffer Size required for all core
  * combinations.
  */
-#define IPC_VRING_BUFFER_SIZE   (0x800000U)
+#define IPC_VRING_BUFFER_SIZE   (0x1C00000U)
 
 /** \brief Core definitions */
-#define    IPC_WKUP_R5F     (0U)    /*< ARM WKUP R5F >*/
-#define    IPC_MCU1_0       (1U)    /*< ARM MCU R5F >*/
-#define    IPC_MPU1_0       (2U)    /*< ARM MAIN A53 >*/
-#define    IPC_C7X_1        (3U)    /*< C7x 1 >*/
-#define    IPC_C7X_2        (4U)    /*< C7x 2 >*/
-#define    IPC_MAX_PROCS    (5U)    /*< Maximum Processors >*/
+#define    IPC_MCU1_0       (0x0U)    /*< ARM MCU R5F >*/
+#define    IPC_WKUP_R5F     (0x1U)    /*< ARM WKUP R5F >*/
+#define    IPC_MAIN_R5F     (0x2U)    /*< ARM MAIN R5F >*/
+#define    IPC_C7X_1        (0x3U)    /*< C7x 1 >*/
+#define    IPC_C7X_2        (0x4U)    /*< C7x 2 >*/
+#define    IPC_A53SS0_0     (0x5U)    /*< ARM MAIN A53 0 >*/
+#define    IPC_A53SS0_1     (0x6U)    /*< ARM MAIN A53 1 >*/
+#define    IPC_A53SS1_0     (0x7U)    /*< ARM MAIN A53 2 >*/
+#define    IPC_A53SS1_1     (0x8U)    /*< ARM MAIN A53 3 >*/
+#define    IPC_HSM_R5FSS0_0 (0x9U)    /*< MAIN HSM >*/
+#define    IPC_MAX_PROCS    (0xAU)    /*< Maximum Processors >*/
+
+//TODO:: This ID is set to 0 in previous generations, but for AEN, it is set to 0x5U
+#define    IPC_MPU1_0       IPC_A53SS0_0 /*< ARM MAIN A53 0 - Used by Virtio. >*/
+
+#define    IPC_MAILBOX_CLUSTER_CNT           (8U)
+#define    IPC_MAILBOX_USER_CNT              (4U)
+// #define    MAIN_NAVSS_MAILBOX_INPUTINTR_MAX  (440U) /* Not found for J722S */
+// #define    MAIN_NAVSS_MAILBOX_OUTPUTINTR_MAX (512U) /* Not found for J722S */
+
+/* Also not found is the NAVSS INPUT_MAILBOX_OFFSET and VIM_OFFSET */
 
 /* ========================================================================== */
 /*                             Include Files                                  */
@@ -92,8 +107,17 @@ extern "C" {
 /*                          Function Declarations                             */
 /* ========================================================================== */
 
-uint32_t Ipc_rprocIdToMboxId(uint32_t id);
-uint32_t Ipc_mboxIdToRprocId(uint32_t id);
+// uint32_t Ipc_rprocIdToMboxId(uint32_t id);
+// uint32_t Ipc_mboxIdToRprocId(uint32_t id);
+
+#ifdef IPC_SUPPORT_SCICLIENT
+int32_t Ipc_sciclientIrqRelease(uint16_t remoteId, uint32_t clusterId,
+        uint32_t userId, uint32_t intNumber);
+int32_t Ipc_sciclientIrqSet(uint16_t remoteId, uint32_t clusterId,
+        uint32_t userId, uint32_t intNumber);
+int32_t Ipc_getIntNumRange(uint32_t coreIndex, uint16_t *rangeStartP,
+        uint16_t *rangeNumP);
+#endif
 
 /* ========================================================================== */
 /*                       Static Function Definitions                          */

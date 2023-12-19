@@ -952,6 +952,10 @@ static void Ipc_updateVirtioInfo(uint32_t numProc, const void *baseAddr, uint32_
     cnt += (b - a - 1U);
     cnt *= 4U;
 
+#if defined DEBUG_PRINT
+    SystemP_printf("Virtio: cnt %d, a 0x%x, b 0x%x, \n", cnt, a, b);
+#endif
+
     if(info->remoteId > info->selfId)
     {
         info->daTx       = (uint32_t)((uint32_t)(uintptr_t)baseAddr + (cnt * vrBufSize));
@@ -980,6 +984,7 @@ static void Ipc_updateVirtioInfo(uint32_t numProc, const void *baseAddr, uint32_
      */
     if(TRUE == Virtio_isRemoteLinux((uint16_t)(info->remoteId)))
     {
+        SystemP_printf("Virtio: Virtio_isRemoteLinux() is set!!!");
         Ipc_ResourceTable *rsc = (Ipc_ResourceTable*)rscTable;
         info->daTx      = rsc->rpmsg_vring0.da;
         info->daRx      = rsc->rpmsg_vring1.da;
@@ -1038,10 +1043,12 @@ int32_t VirtioIPC_init(Ipc_VirtIoParams *vqParams)
         retVal = VirtioIPC_createVirtioCorePair(&vqInfo, vqParams->timeoutCnt);
         if(retVal != IPC_SOK)
         {
-            SystemP_printf("VirtioIPC_init: Failed to create VirtIO for procId..\n",
+            SystemP_printf("VirtioIPC_init: Failed to create VirtIO for procId=%u..\n",
                  procId);
             break;
         }
+        SystemP_printf("VirtioIPC_init: Created VirtIO for procId=%u..\n",
+                procId);
     }
     return retVal;
 }
@@ -1080,7 +1087,7 @@ int32_t Ipc_lateVirtioCreate(uint16_t procId)
             retVal = VirtioIPC_createVirtioCorePair(&vqInfo, 100);
             if(retVal != IPC_SOK)
             {
-                SystemP_printf("Ipc_lateVirtioCreate: Failed to create VirtIO for procId..\n",
+                SystemP_printf("Ipc_lateVirtioCreate: Failed to create VirtIO for procId=%u..\n",
                     procId);
             }
         }

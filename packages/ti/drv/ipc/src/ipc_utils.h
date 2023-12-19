@@ -55,6 +55,7 @@ extern "C" {
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
+
 /** \brief Queue Element type */
 typedef struct IpcUtils_QElem_s
 {

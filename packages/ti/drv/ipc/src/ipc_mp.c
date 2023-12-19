@@ -82,6 +82,7 @@ int32_t Ipc_mpSetConfig(uint32_t selfId, uint16_t numProc, uint32_t procArry[IPC
 
     if( (selfId >= IPC_MAX_PROCS) || (numProc > IPC_MAX_PROCS) )
     {
+        printf("%s:%d: selfId=%u, numProc=%u\n", __FUNCTION__, __LINE__, selfId, numProc);
         retVal = IPC_EINVALID_PARAMS;
     }
     else
