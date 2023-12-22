@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) Texas Instruments Incorporated 2023
+ *  Copyright (c) Texas Instruments Incorporated 2023-2024
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -33,7 +33,7 @@
 /**
  *  \file udma_test_flow_neg.c
  *
- *  \brief UDMA negative test cases for udma_flow.c test case file.
+ *  \brief File containing negative test cases for UDMA flow APIs.
  *
  */
 
@@ -73,145 +73,889 @@
 
 /*
  * Test Case Description: Verifies the function Udma_flowGetNum when
- * 1)flowHandle is NULL.
- * 2)flowInitDone = UDMA_DEINIT_DONE.
+ * 1)Test scenario 1: Check when flowHandle is NULL.
+ * 2)Test scenario 2: Check when flowInitDone is not UDMA_INIT_DONE.
  */
-int32_t UdmaTest_flowGetNum(UdmaTestTaskObj *taskObj)
+int32_t UdmaTestFlowGetNumNeg(UdmaTestTaskObj *taskObj)
 {
-    int32_t     retVal = UDMA_SOK;
-    uint32_t    flowNum = UDMA_FLOW_INVALID;
-
+    int32_t             retVal  = UDMA_SOK;
+    uint32_t            flowNum = UDMA_FLOW_INVALID;
     struct Udma_FlowObj flowObj;
-    Udma_FlowHandle flowHandle;
-    GT_1trace(taskObj->traceMask, GT_INFO1,
-                " |TEST INFO|:: Task:%d: UDMA Flow get Num negative Testcase ::\r\n", taskObj->taskId);
+    Udma_FlowHandle     flowHandle;
 
-    /* flowHandle is NULL */
-    flowHandle = NULL_PTR;
-    flowNum = Udma_flowGetNum(flowHandle);
+    GT_1trace(taskObj->traceMask, GT_INFO1,
+              " |TEST INFO|:: Task:%d: UDMA Flow get Num negative Testcase ::\r\n",
+              taskObj->taskId);
+
+    /* Test scenario 1: Check when flowHandle is NULL */
+    flowHandle = (Udma_FlowHandle) NULL_PTR;
+    flowNum    = Udma_flowGetNum(flowHandle);
     if(UDMA_FLOW_INVALID == flowNum)
     {
         retVal = UDMA_SOK;
     }
     else
     {
-       GT_0trace(taskObj->traceMask, GT_ERR," |TEST INFO|::UDMA Flow get Num negative Testcase!!\n");
-    }
-
-     /* flowInitDone = UDMA_DEINIT_DONE */
-     flowHandle               = &flowObj;
-     flowHandle->flowInitDone = UDMA_DEINIT_DONE;
-     flowNum = Udma_flowGetNum(flowHandle);
-     if(UDMA_FLOW_INVALID == flowNum)
-     {
-         retVal = UDMA_SOK;
-     }
-     else
-     {
-         GT_0trace(taskObj->traceMask, GT_ERR,
-                 " |TEST INFO|:: Test:: UDMA Flow get Num negative Testcase Failed!!\n");
-     }
-     return retVal;
-}
-
-/*
- * Test Case Description: Verifies the function Udma_flowGetCount when
- * 1)flowHandle is NULL.
- * 2)flowInitDone = UDMA_DEINIT_DONE.
- */
-int32_t UdmaTest_flowGetCount(UdmaTestTaskObj *taskObj)
-{
-    int32_t     retVal = UDMA_SOK;
-    uint32_t    flowCnt = UDMA_FLOW_INVALID;
-    struct Udma_FlowObj flowObj;
-    Udma_FlowHandle flowHandle;
-
-    GT_1trace(taskObj->traceMask, GT_INFO1,
-            " |TEST INFO|:: Task:%d: UDMA Flow get count negative Testcase ::\r\n", taskObj->taskId);
-
-    /* flowHandle is NULL */
-    flowHandle =  NULL_PTR;
-    flowCnt = Udma_flowGetCount(flowHandle);
-    if(UDMA_FLOW_INVALID == flowCnt)
-    {
-        retVal = UDMA_SOK;
-    }
-    else
-    {
         GT_0trace(taskObj->traceMask, GT_ERR,
-                " |TEST INFO|:: Test:: UDMA Flow get count negative Testcase Failed!!\n");
+                  " |TEST INFO|:: FAIL:: UDMA:: flowGetNum:: Neg:: "
+                  " Check when flowHandle is NULL!!\n");
+        retVal = UDMA_EFAIL;
     }
 
-    /* flowInitDone = UDMA_DEINIT_DONE */
-    flowHandle               = &flowObj;
-    flowHandle->flowInitDone = UDMA_DEINIT_DONE;
-    flowCnt = Udma_flowGetCount(flowHandle);
-    if(UDMA_FLOW_INVALID == flowCnt)
+    if(UDMA_SOK == retVal)
     {
-        retVal = UDMA_SOK;
-    }
-    else
-    {
-        GT_0trace(taskObj->traceMask, GT_ERR,
-                " |TEST INFO|:: Test:: UDMA Flow get count negative Testcase Failed!!\n");
+        /* Test scenario 2: Check when flowInitDone is not UDMA_INIT_DONE */
+        flowHandle               = &flowObj;
+        flowHandle->flowInitDone = UDMA_DEINIT_DONE;
+        flowNum                  = Udma_flowGetNum(flowHandle);
+        if(UDMA_FLOW_INVALID == flowNum)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: flowGetNum:: Neg:: "
+                      " Check when flowInitDone is not UDMA_INIT_DONE!!\n");
+            retVal = UDMA_EFAIL;
+        }
     }
 
     return retVal;
 }
 
 /*
-  * Test Case Description: Verifies the function Udma_flowFree when
-  * flowHandle is NULL.
-  */
- int32_t UdmaTest_flowFree(UdmaTestTaskObj *taskObj)
- {
-     int32_t   retVal = UDMA_SOK;
-     Udma_FlowHandle flowHandle;
+ * Test Case Description: Verifies the function Udma_flowGetCount when
+ * 1)Test scenario 1: Check when flowHandle is NULL.
+ * 2)Test scenario 2: Check when flowInitDone is not UDMA_INIT_DONE.
+ */
+int32_t UdmaTestFlowGetCountNeg(UdmaTestTaskObj *taskObj)
+{
+    int32_t             retVal  = UDMA_SOK;
+    uint32_t            flowCnt = UDMA_FLOW_INVALID;
+    struct Udma_FlowObj flowObj;
+    Udma_FlowHandle     flowHandle;
 
-     GT_1trace(taskObj->traceMask, GT_INFO1,
-               " |TEST INFO|:: Task:%d: UDMA Flow free negative Testcase ::\r\n", taskObj->taskId);
+    GT_1trace(taskObj->traceMask, GT_INFO1,
+              " |TEST INFO|:: Task:%d: UDMA Flow get count negative Testcase ::\r\n",
+              taskObj->taskId);
 
-     /* flowHandle is NULL */
-     flowHandle = (Udma_FlowHandle)NULL_PTR;
-     retVal = Udma_flowFree(flowHandle);
-     if(UDMA_SOK != retVal)
-     {
-         retVal = UDMA_SOK;
-     }
-     else
-     {
-         GT_0trace(taskObj->traceMask, GT_ERR,
-                " |TEST INFO|:: Test:: UDMA Flow free negative Testcase failed\n");
-     }
+    /* Test scenario 1: Check when flowHandle is NULL */
+    flowHandle = (Udma_FlowHandle) NULL_PTR;
+    flowCnt    = Udma_flowGetCount(flowHandle);
+    if(UDMA_FLOW_INVALID == flowCnt)
+    {
+        retVal = UDMA_SOK;
+    }
+    else
+    {
+        GT_0trace(taskObj->traceMask, GT_ERR,
+                  " |TEST INFO|:: FAIL:: UDMA:: flowGetCount:: Neg:: "
+                  " Check when flowHandle is NULL!!\n");
+        retVal = UDMA_EFAIL;
+    }
 
-     return retVal;
- }
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 2: Check when flowInitDone is not UDMA_INIT_DONE */
+        flowHandle               = &flowObj;
+        flowHandle->flowInitDone = UDMA_DEINIT_DONE;
+        flowCnt                  = Udma_flowGetCount(flowHandle);
+        if(UDMA_FLOW_INVALID == flowCnt)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: flowGetCount:: Neg:: "
+                      " Check when flowInitDone is not UDMA_INIT_DONE!!\n");
+            retVal = UDMA_EFAIL;
+        }
+    }
 
- /*
-  * Test Case Description: Verifies the function UdmaFlowPrms_init when
-  * flowPrms is NULL.
-  */
- int32_t UdmaTest_FlowPrms_init(UdmaTestTaskObj *taskObj)
- {
-     int32_t  retVal = UDMA_SOK;
-     uint32_t chType = UDMA_CH_TYPE_RX;
-     GT_1trace(taskObj->traceMask, GT_INFO1,
-                " |TEST INFO|:: Task:%d: UDMA Flow prms init negative Testcase ::\r\n", taskObj->taskId);
+    return retVal;
+}
 
-     /* flowPrms is NULL */
-     Udma_FlowPrms *flowPrms = (Udma_FlowPrms*) NULL_PTR;
+/*
+ * Test Case Description: Verifies the function Udma_flowFree when
+ * 1)Test scenario 1: Check when flowHandle is NULL.
+ * 2)Test scenario 2: Check when flowInitDone is not UDMA_INIT_DONE.
+ * 3)Test scenario 3: Check when driver handle is NULL.
+ * 4)Test scenario 4: Check when drvInitDone is not UDMA_INIT_DONE.
+ * 5)Test scenario 5: Check when instType is not UDMA_INST_TYPE_NORMAL.
+ * 6)Test scenario 6: Check when mappedFlowGrp is not UDMA_MAPPED_GROUP_INVALID.
+ */
+int32_t UdmaTestFlowFreeNeg(UdmaTestTaskObj *taskObj)
+{
+    int32_t             retVal  = UDMA_SOK;
+    Udma_FlowHandle     flowHandle;
+    struct Udma_FlowObj flowObj;
+    uint32_t            backUpDrvInitDone;
 
-     retVal = UdmaFlowPrms_init(flowPrms, chType);
-     if(UDMA_SOK != retVal)
-     {
-         retVal = UDMA_SOK;
-     }
-     else
-     {
-         GT_0trace(taskObj->traceMask, GT_ERR,
-                " |TEST INFO|:: Test:: UDMA Flow free negative Testcase failed\n");
-     }
+    GT_1trace(taskObj->traceMask, GT_INFO1,
+              " |TEST INFO|:: Task:%d: UDMA Flow free negative Testcase ::\r\n",
+              taskObj->taskId);
 
-     return retVal;
+    /* Test scenario 1: Check when flowHandle is NULL */
+    flowHandle = (Udma_FlowHandle) NULL_PTR;
+    retVal     = Udma_flowFree(flowHandle);
+    if(UDMA_SOK != retVal)
+    {
+        retVal = UDMA_SOK;
+    }
+    else
+    {
+        GT_0trace(taskObj->traceMask, GT_ERR,
+                  " |TEST INFO|:: FAIL:: UDMA:: flowFree:: Neg:: "
+                  " Check when flowHandle is NULL!!\n");
+        retVal = UDMA_EFAIL;
+    }
 
- }
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 2: Check when flowInitDone is not UDMA_INIT_DONE */
+        flowHandle               = &flowObj;
+        flowHandle->flowInitDone = UDMA_DEINIT_DONE;
+        retVal                   = Udma_flowFree(flowHandle);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: flowFree:: Neg:: "
+                      " Check when flowInitDone is not UDMA_INIT_DONE!!\n");
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 3: Check when driver handle is NULL */
+        flowHandle               = &flowObj;
+        flowHandle->flowInitDone = UDMA_INIT_DONE;
+        flowHandle->drvHandle    = NULL_PTR;
+        retVal                   = Udma_flowFree(flowHandle);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: flowFree:: Neg:: "
+                      " Check when driver handle is NULL!!\n");
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 4: Check when drvInitDone is not UDMA_INIT_DONE */
+        flowHandle->drvHandle              = &taskObj->testObj->drvObj[UDMA_INST_ID_MAIN_0];
+        backUpDrvInitDone                  = flowHandle->drvHandle->drvInitDone;
+        flowHandle->drvHandle->drvInitDone = UDMA_DEINIT_DONE;
+        retVal                             = Udma_flowFree(flowHandle);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: flowFree:: Neg:: "
+                      " Check when drvInitDone is not UDMA_INIT_DONE!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        flowHandle->drvHandle->drvInitDone = backUpDrvInitDone;
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 5: Check when instType is not UDMA_INST_TYPE_NORMAL */
+        flowHandle->mappedFlowGrp = UDMA_MAPPED_GROUP_INVALID;
+        flowHandle->drvHandle     = &taskObj->testObj->drvObj[UDMA_TEST_INST_ID_BCDMA_0];
+        retVal                    = Udma_flowFree(flowHandle);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: flowFree:: Neg:: "
+                      " Check when mappedFlowGrp is not UDMA_INST_TYPE_NORMAL!!\n");
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 6: Check when mappedFlowGrp is not UDMA_MAPPED_GROUP_INVALID */
+        flowHandle                = &flowObj;
+        flowHandle->flowInitDone  = UDMA_INIT_DONE;
+        flowHandle->drvHandle     = &taskObj->testObj->drvObj[UDMA_INST_ID_MAIN_0];
+        flowHandle->mappedFlowGrp = UDMA_UTC_ID_INVALID;
+        retVal                    = Udma_flowFree(flowHandle);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: flowFree :: Neg:: "
+                      " Check when mappedFlowGrp is not "
+                      " UDMA_MAPPED_GROUP_INVALID!!\n");
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    return retVal;
+}
+
+/*
+ * Test Case Description: Verifies the function UdmaFlowPrms_init when
+ * 1)Test scenario 1: Check when flowPrms is NULL.
+ */
+int32_t UdmaTestFlowPrmsInitNeg(UdmaTestTaskObj *taskObj)
+{
+    int32_t  retVal = UDMA_SOK;
+    uint32_t chType = UDMA_CH_TYPE_RX;
+
+    GT_1trace(taskObj->traceMask, GT_INFO1,
+              " |TEST INFO|:: Task:%d: UDMA Flow prms init negative Testcase ::\r\n",
+              taskObj->taskId);
+
+    /* Test scenario 1: Check when flowPrms is NULL */
+    Udma_FlowPrms *flowPrms = (Udma_FlowPrms*) NULL_PTR;
+    retVal                  = UdmaFlowPrms_init(flowPrms, chType);
+    if(UDMA_SOK != retVal)
+    {
+        retVal = UDMA_SOK;
+    }
+    else
+    {
+        GT_0trace(taskObj->traceMask, GT_ERR,
+                  " |TEST INFO|:: FAIL:: UDMA::FlowPrms_init:: Neg:: "
+                  " Check when flowPrms is NULL!!\n");
+        retVal = UDMA_EFAIL;
+    }
+
+    return retVal;
+}
+
+/*
+ * Test Case Description: Verifies the function Udma_flowDetach when
+ * 1)Test scenario 1: Check when flowHandle is NULL.
+ * 2)Test scenario 2: Check when flowInitDone is not UDMA_INIT_DONE.
+ */
+int32_t UdmaTestFlowDetachNeg(UdmaTestTaskObj *taskObj)
+{
+    int32_t             retVal = UDMA_SOK;
+    Udma_FlowHandle     flowHandle;
+    struct Udma_FlowObj flowObj;
+
+    GT_1trace(taskObj->traceMask, GT_INFO1,
+              " |TEST INFO|:: Task:%d: UDMA Flow detach negative Testcase ::\r\n",
+              taskObj->taskId);
+
+    /* Test scenario 1: Check when flowHandle is NULL */
+    flowHandle = (Udma_FlowHandle) NULL_PTR;
+    retVal     = Udma_flowDetach(flowHandle);
+    if(UDMA_SOK != retVal)
+    {
+        retVal = UDMA_SOK;
+    }
+    else
+    {
+        GT_0trace(taskObj->traceMask, GT_ERR,
+                  " |TEST INFO|:: FAIL:: UDMA:: Flow detach:: Neg:: "
+                  " Check when flowHandle is NULL!!\n");
+        retVal = UDMA_EFAIL;
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 2: Check when flowInitDone is not UDMA_INIT_DONE */
+        flowHandle               = &flowObj;
+        flowHandle->flowInitDone = UDMA_DEINIT_DONE;
+        retVal                   = Udma_flowDetach(flowHandle);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Flow detach:: Neg:: "
+                      " Check when flowInitDone is not UDMA_INIT_DONE!!\n");
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    return retVal;
+}
+
+/*
+ * Test Case Description: Verifies the function Udma_flowAttach when
+ * 1)Test scenario 1: Check when drvHandle and flowHandle are NULL, flowCnt
+ *                    is zero.
+ * 2)Test scenario 2: Check when drvHandle and flowHandle are NULL.
+ * 3)Test scenario 3: Check when driver handle is NULL and flowCnt is zero.
+ * 4)Test scenario 4: Check when driver handle is NULL.
+ * 5)Test scenario 5: Check when flowHandle is NULL and flowCnt is zero.
+ * 6)Test scenario 6: Check when flowHandle is NULL.
+ * 7)Test scenario 7: Check when flowCnt is zero.
+ * 8)Test scenario 8: Check when drvInitDone is not UDMA_INIT_DONE.
+ */
+int32_t UdmaTestFlowAttachNeg(UdmaTestTaskObj *taskObj)
+{
+    int32_t             retVal    = UDMA_SOK;
+    uint32_t            flowStart = 0U;
+    uint32_t            flowCnt;
+    Udma_DrvHandle      drvHandle;
+    struct Udma_FlowObj flowObj;
+    Udma_FlowHandle     flowHandle;
+    uint32_t            backUpDrvInitDone;
+
+    GT_1trace(taskObj->traceMask, GT_INFO1,
+              " |TEST INFO|:: Task:%d: UDMA Flow attach negative Testcase ::\r\n",
+              taskObj->taskId);
+
+    /* Test scenario 1: Check when drvHandle and flowHandle are NULL, flowCnt
+     *                  is zero
+     */
+    drvHandle  = (Udma_DrvHandle) NULL_PTR;
+    flowHandle = (Udma_FlowHandle) NULL_PTR;
+    flowCnt    = 0U;
+    retVal     = Udma_flowAttach(drvHandle, flowHandle, flowStart, flowCnt);
+    if(UDMA_SOK != retVal)
+    {
+        retVal = UDMA_SOK;
+    }
+    else
+    {
+        GT_0trace(taskObj->traceMask, GT_ERR,
+                  " |TEST INFO|:: FAIL:: UDMA:: Flow Attach:: Neg:: "
+                  " Check when drvHandle and flowHandle are NULL,flowCnt "
+                  " is zero!!\n");
+        retVal = UDMA_EFAIL;
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 2: Check when drvHandle and flowHandle are NULL */
+        drvHandle  = (Udma_DrvHandle) NULL_PTR;
+        flowHandle = (Udma_FlowHandle) NULL_PTR;
+        flowCnt    = 1U;
+        retVal     = Udma_flowAttach(drvHandle, flowHandle, flowStart, flowCnt);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Flow Attach:: Neg:: "
+                      " Check when drvHandle and flowHandle are NULL!!\n");
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 3: Check when driver handle is NULL and flowCnt is zero */
+        drvHandle  = (Udma_DrvHandle) NULL_PTR;
+        flowHandle = &flowObj;
+        flowCnt    = 0U;
+        retVal     = Udma_flowAttach(drvHandle, flowHandle, flowStart, flowCnt);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Flow Attach:: Neg:: "
+                      " Check when driver handle is NULL and flowCnt is zero!!\n");
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 4: Check when driver handle is NULL */
+        drvHandle  = (Udma_DrvHandle) NULL_PTR;
+        flowHandle = &flowObj;
+        flowCnt    = 1U;
+        retVal     = Udma_flowAttach(drvHandle, flowHandle, flowStart, flowCnt);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Flow Attach:: Neg:: "
+                      " Check when driver handle is NULL!!\n");
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 5: Check when flowHandle is NULL and flowCnt is zero */
+        drvHandle  = &taskObj->testObj->drvObj[UDMA_INST_ID_MAIN_0];
+        flowHandle = (Udma_FlowHandle) NULL_PTR;
+        flowCnt    = 0U;
+        retVal     = Udma_flowAttach(drvHandle, flowHandle, flowStart, flowCnt);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Flow Attach:: Neg:: "
+                      " Check when flowHandle is NULL and flowCnt is zero!!\n");
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 6: Check when flowHandle is NULL */
+        drvHandle  = &taskObj->testObj->drvObj[UDMA_INST_ID_MAIN_0];
+        flowHandle = (Udma_FlowHandle) NULL_PTR;
+        flowCnt    = 1U;
+        retVal     = Udma_flowAttach(drvHandle, flowHandle, flowStart, flowCnt);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Flow Attach:: Neg:: "
+                      " Check when flowHandle is NULL!!\n");
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 7: Check when flowCnt is zero */
+        drvHandle  = &taskObj->testObj->drvObj[UDMA_INST_ID_MAIN_0];
+        flowHandle = &flowObj;
+        flowCnt    = 0U;
+        retVal     = Udma_flowAttach(drvHandle, flowHandle, flowStart, flowCnt);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Flow Attach:: Neg:: "
+                      " Check when flowCnt is zero!!\n");
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 8: Check when drvInitDone is not UDMA_INIT_DONE */
+        flowHandle             = &flowObj;
+        flowCnt                = 1U;
+        backUpDrvInitDone      = drvHandle->drvInitDone;
+        drvHandle->drvInitDone = UDMA_DEINIT_DONE;
+        retVal                 = Udma_flowAttach(drvHandle, flowHandle, flowStart,
+                                                 flowCnt);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Flow Attach:: Neg:: Test:: "
+                      " Check when drvInitDone is not UDMA_INIT_DONE!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        drvHandle->drvInitDone = backUpDrvInitDone;
+    }
+
+    return retVal;
+}
+
+/*
+ * Test Case Description: Verifies the function Udma_flowAlloc when
+ * 1)Test scenario 1: Check when drvHandle and flowHandle are NULL,
+ *                    flowCnt is zero.
+ * 2)Test scenario 2: Check when driver Handle and flowHandle are NULL.
+ * 3)Test scenario 3: Check when driver handle is NULL and flowCnt is zero.
+ * 4)Test scenario 4: Check when driver handle is NULL.
+ * 5)Test scenario 5: Check when flowHandle is NULL and flowCnt is zero.
+ * 6)Test scenario 6: Check when flowHandle is NULL.
+ * 7)Test scenario 7: Check when flowCnt is zero.
+ * 8)Test scenario 8: Check when drvInitDone is not UDMA_INIT_DONE.
+ */
+int32_t UdmaTestFlowAllocNeg(UdmaTestTaskObj *taskObj)
+{
+    int32_t             retVal = UDMA_SOK;
+    uint32_t            flowCnt;
+    Udma_DrvHandle      drvHandle;
+    struct Udma_FlowObj flowObj;
+    Udma_FlowHandle     flowHandle;
+    uint32_t            backUpDrvInitDone;
+
+    GT_1trace(taskObj->traceMask, GT_INFO1,
+              " |TEST INFO|:: Task:%d: UDMA Flow alloc negative Testcase ::\r\n",
+              taskObj->taskId);
+
+    /*
+     * Test scenario 1: Check when driver Handle and flowHandle are NULL,
+     *                  flowCnt is zero
+     */
+    drvHandle  = (Udma_DrvHandle) NULL_PTR;
+    flowHandle = (Udma_FlowHandle) NULL_PTR;
+    flowCnt    = 0U;
+    retVal     = Udma_flowAlloc(drvHandle, flowHandle, flowCnt);
+    if(UDMA_SOK != retVal)
+    {
+        retVal = UDMA_SOK;
+    }
+    else
+    {
+        GT_0trace(taskObj->traceMask, GT_ERR,
+                  " |TEST INFO|:: FAIL:: UDMA:: Flow alloc:: Neg:: "
+                  " Check when driver Handle and flowHandle are NULL,flowCnt is "
+                  " zero!!\n");
+        retVal = UDMA_EFAIL;
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 2: Check when driver Handle and flowHandle are NULL */
+        drvHandle  = (Udma_DrvHandle) NULL_PTR;
+        flowHandle = (Udma_FlowHandle) NULL_PTR;
+        flowCnt    = 1U;
+        retVal     = Udma_flowAlloc(drvHandle, flowHandle, flowCnt);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Flow alloc:: Neg:: "
+                      " Check when driver Handle and flowHandle are NULL!!\n");
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 3: Check when driver handle is NULL and flowCnt is zero */
+        drvHandle  = (Udma_DrvHandle) NULL_PTR;
+        flowHandle = &flowObj;
+        flowCnt    = 0U;
+        retVal     = Udma_flowAlloc(drvHandle, flowHandle, flowCnt);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Flow alloc:: Neg:: "
+                      " Check when driver handle is NULL and flowCnt is zero!!\n");
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 4: Check when driver handle is NULL */
+        drvHandle = (Udma_DrvHandle) NULL_PTR;
+        flowCnt   = 1U;
+        retVal    = Udma_flowAlloc(drvHandle, flowHandle, flowCnt);
+        if(UDMA_SOK != retVal)
+        {
+           retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Flow alloc:: Neg:: "
+                      " Check when driver handle is NULL!!\n");
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 5: Check when flowHandle is NULL and flowCnt is zero */
+        drvHandle  = &taskObj->testObj->drvObj[UDMA_INST_ID_MAIN_0];
+        flowHandle = (Udma_FlowHandle) NULL_PTR;
+        flowCnt    = 0U;
+        retVal     = Udma_flowAlloc(drvHandle, flowHandle, flowCnt);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Flow alloc:: Neg:: "
+                      " Check when flowHandle is NULL and flowCnt is zero!!\n");
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 6: Check when flowHandle is NULL */
+        flowHandle = (Udma_FlowHandle) NULL_PTR;
+        flowCnt    = 1U;
+        retVal     = Udma_flowAlloc(drvHandle, flowHandle, flowCnt);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Flow alloc:: Neg:: "
+                      " Check when flowHandle is NULL!!\n");
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 7: Check when flowCnt is zero */
+        drvHandle  = &taskObj->testObj->drvObj[UDMA_INST_ID_MAIN_0];
+        flowHandle = &flowObj;
+        flowCnt    = 0U;
+        retVal     = Udma_flowAlloc(drvHandle, flowHandle, flowCnt);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Flow alloc:: Neg:: "
+                      " Check when flowCnt is zero!!\n");
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 8: Check when drvInitDone is not UDMA_INIT_DONE */
+        flowHandle             = &flowObj;
+        flowCnt                = 1U;
+        backUpDrvInitDone      = drvHandle->drvInitDone;
+        drvHandle->drvInitDone = UDMA_DEINIT_DONE;
+        retVal                 = Udma_flowAlloc(drvHandle, flowHandle, flowCnt);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Flow alloc:: Neg:: "
+                      " Check when drvInitDone is not UDMA_INIT_DONE \n");
+            retVal = UDMA_EFAIL;
+        }
+        drvHandle->drvInitDone = backUpDrvInitDone;
+    }
+
+    return retVal;
+}
+
+/*
+ * Test Case Description: Verifies the function UdmaTest_flowConfig when
+ * 1)Test scenario 1: Check when flowHandle is NULL and flow params.
+ * 2)Test scenario 2: Check when flowHandle is NULL.
+ * 3)Test scenario 3: Check when flowInitDone is it not UDMA_INIT_DONE and
+ *                    flowPrms is NULL.
+ * 4)Test scenario 4: Check when flowInitDone is it not UDMA_INIT_DONE.
+ * 5)Test scenario 5: Check when flowPrms is NULL.
+ * 6)Test scenario 6: Check when driver handle is NULL.
+ * 7)Test scenario 7: Check when drvInitDone is not UDMA_INIT_DONE.
+ * 8)Test scenario 8: To get error print message as [Error] Invalid flow index.
+ */
+int32_t UdmaTestFlowConfigNeg(UdmaTestTaskObj *taskObj)
+{
+    int32_t             retVal  = UDMA_SOK;
+    uint32_t            flowIdx = 1U;
+    Udma_FlowHandle     flowHandle;
+    Udma_FlowPrms       flowPrms;
+    struct Udma_FlowObj flowObj;
+    uint32_t            backUpDrvInitDone;
+
+    GT_1trace(taskObj->traceMask, GT_INFO1,
+              " |TEST INFO|:: Task:%d: UDMA Flow Config negative Testcase ::\r\n",
+              taskObj->taskId);
+
+    /* Test scenario 1: Check when flowHandle is NULL and flow params */
+    flowHandle = (Udma_FlowHandle) NULL_PTR;
+    retVal     = Udma_flowConfig(flowHandle, flowIdx, NULL);
+    if(UDMA_SOK != retVal)
+    {
+        retVal = UDMA_SOK;
+    }
+    else
+    {
+        GT_0trace(taskObj->traceMask, GT_ERR,
+                  " |TEST INFO|:: FAIL:: UDMA:: Flow Config:: Neg:: "
+                  " Check when flowHandle is NULL and flow params!!\n");
+        retVal = UDMA_EFAIL;
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 2: Check when flowHandle is NULL */
+        flowHandle = (Udma_FlowHandle) NULL_PTR;
+        retVal     = Udma_flowConfig(flowHandle, flowIdx, &flowPrms);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Flow Config:: Neg:: "
+                      " Check when flowHandle is NULL!! \n");
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /*
+         * Test scenario 3: Check when flowInitDone is it not UDMA_INIT_DONE and
+         *                  flowPrms is NULL
+         */
+        flowHandle               = &flowObj;
+        flowHandle->flowInitDone = UDMA_DEINIT_DONE;
+        retVal                   = Udma_flowConfig(flowHandle, flowIdx, NULL);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Flow Config:: Neg:: "
+                      " Check when flowInitDone is it not UDMA_INIT_DONE "
+                      " and flowPrms is NULL!!\n");
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 4: Check when flowInitDone is it not UDMA_INIT_DONE */
+        flowHandle               = &flowObj;
+        flowHandle->flowInitDone = UDMA_DEINIT_DONE;
+        retVal                   = Udma_flowConfig(flowHandle, flowIdx, &flowPrms);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Flow Config:: Neg:: "
+                      " Check when flowInitDone is it not UDMA_INIT_DONE!!\n");
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 5: Check when flowPrms is NULL */
+        flowHandle               = &flowObj;
+        flowHandle->flowInitDone = UDMA_INIT_DONE;
+        retVal                   = Udma_flowConfig(flowHandle, flowIdx, NULL);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Flow Config:: Neg:: "
+                      " Check when flowPrms is NULL!!\n");
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 6: Check when driver handle is NULL */
+        UdmaFlowPrms_init(&flowPrms, UDMA_CH_TYPE_RX);
+        flowHandle->drvHandle = NULL_PTR;
+        retVal                = Udma_flowConfig(flowHandle, flowIdx, &flowPrms);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Flow Config:: Neg:: "
+                      " Check when driver handle is NULL!!\n");
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 7: Check when drvInitDone is not UDMA_INIT_DONE */
+        flowHandle->drvHandle              = &taskObj->testObj->drvObj[UDMA_INST_ID_MAIN_0];
+        backUpDrvInitDone                  = flowHandle->drvHandle->drvInitDone;
+        flowHandle->drvHandle->drvInitDone = UDMA_DEINIT_DONE;
+        retVal                             = Udma_flowConfig(flowHandle, flowIdx,
+                                                             &flowPrms);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Flow Config:: Neg:: "
+                      " Check when drvInitDone is not UDMA_INIT_DONE!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        flowHandle->drvHandle->drvInitDone = backUpDrvInitDone;
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 8: To get error print message as [Error] Invalid flow index */
+        retVal = Udma_flowConfig(flowHandle, flowIdx, &flowPrms);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Flow Config:: Neg:: "
+                      " To get error print message as [Error] Invalid flow index!!\n");
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    return retVal;
+}

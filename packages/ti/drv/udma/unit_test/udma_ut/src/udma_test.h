@@ -735,10 +735,14 @@ int32_t UdmaTestRingFlushRaw(UdmaTestTaskObj *taskObj);
 /*
  *UDMA Flow Negative test case functions
  */
-int32_t UdmaTest_flowGetNum(UdmaTestTaskObj *taskObj);
-int32_t UdmaTest_flowFree(UdmaTestTaskObj *taskObj);
-int32_t UdmaTest_flowGetCount(UdmaTestTaskObj *taskObj);
-int32_t UdmaTest_FlowPrms_init(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestFlowGetNumNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestFlowFreeNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestFlowGetCountNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestFlowPrmsInitNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestFlowAttachNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestFlowDetachNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestFlowAllocNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestFlowConfigNeg(UdmaTestTaskObj *taskObj);
 
 /*
  *UDMA Proxy Negative test case functions
