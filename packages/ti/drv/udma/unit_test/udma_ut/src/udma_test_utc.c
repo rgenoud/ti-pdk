@@ -308,3 +308,430 @@ int32_t UdmaTestChSetSwTriggerDruNeg(UdmaTestTaskObj *taskObj)
     return retVal;
 }
 
+/* Test Case Description: Verifies the function Udma_druGetNumQueue when
+ * 1)Test scenario 1: Check when driver handle is NULL.
+ * 2)Test scenario 2: Check when drvInitDone is UDMA_DEINIT_DONE.
+ * 3)Test scenario 3: Check to get error print message as Invalid UTC ID.
+ */
+int32_t UdmaTestDruGetNumQueueNeg(UdmaTestTaskObj *taskObj)
+{
+    int32_t        retVal = UDMA_SOK;
+    uint32_t       utcId  = 0U;
+    Udma_DrvHandle drvHandle;
+    uint32_t       numQueue;
+    uint32_t       BackupdrvInitDone;
+
+    GT_1trace(taskObj->traceMask, GT_INFO1,
+              " |TEST INFO|:: Task:%d: UDMA DRU get Num negative Testcase ::\r\n",
+              taskObj->taskId);
+
+    /* Test scenario 1: Check when driver handle is NULL */
+    drvHandle = (Udma_DrvHandle) NULL_PTR;
+    numQueue  = Udma_druGetNumQueue(drvHandle, utcId);
+    if(0U == numQueue)
+    {
+        retVal = UDMA_SOK;
+    }
+    else
+    {
+        GT_0trace(taskObj->traceMask, GT_ERR,
+                  " |TEST INFO|:: FAIL:: UDMA:: druGetNumQueue :: Neg::"
+                  " Check when driver handle is NULL!!\n");
+        retVal = UDMA_EFAIL;
+    }
+
+    if(retVal == UDMA_SOK)
+    {
+        /* Test scenario 2: Check when drvInitDone is UDMA_DEINIT_DONE */
+        drvHandle              = &taskObj->testObj->drvObj[UDMA_INST_ID_MAIN_0];
+        BackupdrvInitDone      = drvHandle->drvInitDone;
+        drvHandle->drvInitDone = UDMA_DEINIT_DONE;
+        numQueue               = Udma_druGetNumQueue(drvHandle, utcId);
+        if(0U == numQueue)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: druGetNumQueue :: Neg::"
+                      " Check when drvInitDone is UDMA_DEINIT_DONE\n");
+            retVal = UDMA_EFAIL;
+        }
+        drvHandle->drvInitDone = BackupdrvInitDone;
+    }
+
+    if(retVal == UDMA_SOK)
+    {
+        /* Test scenario 3: Check to get error print message as Invalid UTC ID */
+        utcId    = UDMA_NUM_UTC_INSTANCE + 1U;
+        numQueue = Udma_druGetNumQueue(drvHandle, utcId);
+        if(0U == numQueue)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: druGetNumQueue :: Neg::"
+                      " Check to get error print message as Invalid UTC ID!!\n");
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    return retVal;
+}
+
+/*
+ * Test Case Description: Verifies the function Udma_druQueueConfig when
+ * 1)Test scenario 1: Check when driver handle and queueCfg are NULL.
+ * 2)Test scenario 2: Check when driver handle is NULL.
+ * 3)Test scenario 3: Check when drvInitDone is UDMA_DEINIT_DONE and
+ *                    queueCfg is NULL.
+ * 4)Test scenario 4: Check when drvInitDone is UDMA_DEINIT_DONE.
+ * 5)Test scenario 5: Check when queueCfg is NULL.
+ * 6)Test scenario 6: Check to get error print message as Invalid UTC ID.
+ * 7)Test scenario 7: Check to get error print message DRU queue config failed.
+ */
+int32_t UdmaTestDruQueueConfigNeg(UdmaTestTaskObj *taskObj)
+{
+    int32_t            retVal   = UDMA_SOK;
+    uint32_t           utcId    = 0U;
+    uint32_t           queId    = 1U;
+    uint32_t           DruUtcId = 0U;
+    Udma_DrvHandle     drvHandle;
+    uint32_t           BackupdrvInitDone;
+    CSL_DruQueueConfig DruqueueCfg;
+
+    GT_1trace(taskObj->traceMask, GT_INFO1,
+              " |TEST INFO|:: Task:%d: UDMA DRU Queue Config negative Testcase ::\r\n"
+              , taskObj->taskId);
+
+    /* Test scenario 1: Check when driver handle and queueCfg are NULL */
+    drvHandle = (Udma_DrvHandle) NULL_PTR;
+    retVal    = Udma_druQueueConfig(drvHandle, utcId, queId, NULL);
+    if(UDMA_SOK != retVal)
+    {
+        retVal = UDMA_SOK;
+    }
+    else
+    {
+        GT_0trace(taskObj->traceMask, GT_ERR,
+                  " |TEST INFO|:: FAIL:: UDMA:: druQueueConfig :: Neg:: "
+                  " Check when driver handle and queueCfg are NULL!!\n");
+        retVal = UDMA_EFAIL;
+    }
+
+    if(retVal == UDMA_SOK)
+    {
+        /* Test scenario 2: Check when driver handle is NULL */
+        drvHandle = (Udma_DrvHandle) NULL_PTR;
+        retVal    = Udma_druQueueConfig(drvHandle, utcId, queId, &DruqueueCfg);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|::FAIL:: UDMA:: druQueueConfig :: Neg:: "
+                      " Check when driver handle is NULL!!\n");
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    if(retVal == UDMA_SOK)
+    {
+        /* Test scenario 3: Check when drvInitDone is UDMA_DEINIT_DONE and
+         *                  queueCfg is NULL
+         */
+        drvHandle              = &taskObj->testObj->drvObj[UDMA_INST_ID_MAIN_0];
+        BackupdrvInitDone      = drvHandle->drvInitDone;
+        drvHandle->drvInitDone = UDMA_DEINIT_DONE;
+        retVal                 = Udma_druQueueConfig(drvHandle, utcId, queId, NULL);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|::FAIL:: UDMA:: druQueueConfig :: Neg::"
+                      " Check for drvInitDone is UDMA_DEINIT_DONE and "
+                      " queueCfg is NULL!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        drvHandle->drvInitDone = BackupdrvInitDone;
+    }
+
+    if(retVal == UDMA_SOK)
+    {
+        /* Test scenario 4: Check for drvInitDone is UDMA_DEINIT_DONE */
+        drvHandle              = &taskObj->testObj->drvObj[UDMA_INST_ID_MAIN_0];
+        BackupdrvInitDone      = drvHandle->drvInitDone;
+        drvHandle->drvInitDone = UDMA_DEINIT_DONE;
+        retVal                 = Udma_druQueueConfig(drvHandle, utcId, queId, &DruqueueCfg);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|::FAIL:: UDMA:: druQueueConfig :: Neg::"
+                      " Check for drvInitDone is UDMA_DEINIT_DONE!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        drvHandle->drvInitDone = BackupdrvInitDone;
+    }
+
+    if(retVal == UDMA_SOK)
+    {
+        /* Test scenario 5: Check when queueCfg is NULL */
+        retVal = Udma_druQueueConfig(drvHandle, utcId, queId, NULL);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|::FAIL:: UDMA:: druQueueConfig :: Neg::"
+                      " Check when queueCfg is NULL!!\n");
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    if(retVal == UDMA_SOK)
+    {
+        /* Test scenario 6: Check to get error print message as Invalid UTC ID */
+        UdmaDruQueueConfig_init(&DruqueueCfg);
+        utcId  = UDMA_NUM_UTC_INSTANCE + 1U;
+        retVal = Udma_druQueueConfig(drvHandle, utcId, queId, &DruqueueCfg);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|::FAIL:: UDMA:: druQueueConfig :: Neg::"
+                      " Check to get error print message as Invalid UTC ID !!\n");
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    if(retVal == UDMA_SOK)
+    {
+        /* Test scenario 7: Check to get error print message DRU queue config failed */
+        queId  = CSL_DRU_NUM_QUEUE + 1U;
+        retVal = Udma_druQueueConfig(drvHandle, DruUtcId, queId, &DruqueueCfg);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|::FAIL:: UDMA:: druQueueConfig :: Neg::"
+                      " Check to get error print message DRU queue config failed!!\n");
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    return retVal;
+}
+
+/*
+ * Test Case Description: Verifies the function Udma_druGetTriggerRegAddr when
+ * 1)Test scenario 1: Check when Channel handle is NULL.
+ * 2)Test scenario 2: Check when chInitDone is not UDMA_DEINIT_DONE
+ *                    and chType is not UDMA_CH_FLAG_UTC.
+ * 3)Test scenario 3: Check when chInitDone is UDMA_DEINIT_DONE.
+ * 4)Test scenario 4: Check when chType is not UDMA_CH_FLAG_UTC.
+ * 5)Test scenario 5: Check when driver handle is NULL.
+ * 6)Test scenario 6: Check when drvInitDone is UDMA_DEINIT_DONE.
+ */
+int32_t UdmaTestDruGetTriggerRegAddrNeg(UdmaTestTaskObj *taskObj)
+{
+    int32_t            retVal     = UDMA_SOK;
+    volatile uint64_t *pSwTrigReg = (volatile uint64_t *) NULL_PTR;
+    struct Udma_ChObj  chObj;
+    Udma_ChHandle      channelHandle;
+    uint32_t           BackupdrvInitDone;
+
+    GT_1trace(taskObj->traceMask, GT_INFO1,
+              " |TEST INFO|:: Task:%d: UDMA DRU Get Trigger Reg Addr negative Testcase ::\r\n",
+              taskObj->taskId);
+
+    /* Test scenario 1: Check when Channel handle is NULL */
+    channelHandle = (Udma_ChHandle) NULL_PTR;
+    pSwTrigReg    = Udma_druGetTriggerRegAddr(channelHandle);
+    if(NULL_PTR == pSwTrigReg)
+    {
+        retVal = UDMA_SOK;
+    }
+    else
+    {
+        GT_0trace(taskObj->traceMask, GT_ERR,
+                  " |TEST INFO|::FAIL:: UDMA:: druGetTriggerRegAddr :: Neg:: "
+                  " Check when Channel handle is NULL!!\n");
+        retVal = UDMA_EFAIL;
+    }
+
+    if(retVal == UDMA_SOK)
+    {
+        /* Test scenario 2: Check when chInitDone is not UDMA_DEINIT_DONE
+         *                  and chType is not UDMA_CH_FLAG_UTC
+         */
+        channelHandle             = &chObj;
+        channelHandle->chInitDone = UDMA_DEINIT_DONE;
+        channelHandle->chType     = UDMA_CH_FLAG_BLK_COPY;
+        pSwTrigReg                = Udma_druGetTriggerRegAddr(channelHandle);
+        if(NULL_PTR == pSwTrigReg)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|::FAIL:: UDMA:: druGetTriggerRegAddr :: Neg:: "
+                      " Check when chInitDone is not UDMA_DEINIT_DONE and "
+                      " chType is not UDMA_CH_FLAG_UTC!!\n");
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    if(retVal == UDMA_SOK)
+    {
+        /* Test scenario 3: Check when chInitDone is UDMA_DEINIT_DONE */
+        channelHandle->chInitDone = UDMA_DEINIT_DONE;
+        channelHandle->chType     = UDMA_CH_FLAG_UTC;
+        pSwTrigReg                = Udma_druGetTriggerRegAddr(channelHandle);
+        if(NULL_PTR == pSwTrigReg)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|::FAIL:: UDMA:: druGetTriggerRegAddr :: Neg:: "
+                      " Check when chInitDone is UDMA_DEINIT_DONE!!\n");
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    if(retVal == UDMA_SOK)
+    {
+        /* Test scenario 4: Check when chType is not UDMA_CH_FLAG_UTC */
+        channelHandle->chInitDone = UDMA_INIT_DONE;
+        channelHandle->chType     = UDMA_CH_FLAG_BLK_COPY;
+        pSwTrigReg                = Udma_druGetTriggerRegAddr(channelHandle);
+        if(NULL_PTR == pSwTrigReg)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|::FAIL:: UDMA:: druGetTriggerRegAddr :: Neg:: "
+                      " Check for chType when it is not equal to UDMA_CH_FLAG_UTC!!\n");
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    if(retVal == UDMA_SOK)
+    {
+        /* Test scenario 5: Check when driver handle is NULL */
+        channelHandle->chType    = UDMA_CH_TYPE_UTC;
+        channelHandle->drvHandle = NULL_PTR;
+        pSwTrigReg               = Udma_druGetTriggerRegAddr(channelHandle);
+        if(NULL_PTR == pSwTrigReg)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|::FAIL:: UDMA:: druGetTriggerRegAddr :: Neg:: "
+                      " Check when driver handle is NULL!!\n");
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    if(retVal == UDMA_SOK)
+    {
+        /* Test scenario 6: Check when drvInitDone is UDMA_DEINIT_DONE */
+        channelHandle->drvHandle              = &taskObj->testObj->drvObj[UDMA_INST_ID_MAIN_0];
+        BackupdrvInitDone                     = channelHandle->drvHandle->drvInitDone;
+        channelHandle->drvHandle->drvInitDone = UDMA_DEINIT_DONE;
+        pSwTrigReg                            = Udma_druGetTriggerRegAddr(channelHandle);
+        if(NULL_PTR == pSwTrigReg)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|::FAIL:: UDMA:: druGetTriggerRegAddr :: Neg:: "
+                      " Check when drvInitDone is UDMA_DEINIT_DONE!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        channelHandle->drvHandle->drvInitDone = BackupdrvInitDone;
+    }
+
+    return retVal;
+}
+
+/*
+ * Test Case Description: Verifies the function Udma_druGetTriggerRegAddr when
+ * 1)Test scenario 1: Check when utcType is UDMA_UTC_TYPE_DRU
+ */
+int32_t UdmaTestDruGetTriggerRegAddr(UdmaTestTaskObj *taskObj)
+{
+    int32_t            retVal     = UDMA_SOK;
+    volatile uint64_t *pSwTrigReg = (volatile uint64_t *) NULL_PTR;
+    struct Udma_ChObj  chObj;
+    Udma_ChHandle      channelHandle;
+    uint32_t           chType;
+    Udma_ChPrms        chPrms;
+    Udma_DrvHandle     drvHandle;
+
+    GT_1trace(taskObj->traceMask, GT_INFO1,
+              " |TEST INFO|:: Task:%d: UDMA DRU Get Trigger Reg Addr positive Testcase ::\r\n",
+              taskObj->taskId);
+
+    /* Test scenario 1: Check when utcType is UDMA_UTC_TYPE_DRU */
+    channelHandle = &chObj;
+    chType        = UDMA_CH_TYPE_UTC;
+    UdmaChPrms_init(&chPrms, chType);
+    drvHandle     = &taskObj->testObj->drvObj[UDMA_INST_ID_MAIN_0];
+    chPrms.utcId  = UDMA_UTC_ID_MSMC_DRU0;
+    retVal        = Udma_chOpen(drvHandle, channelHandle, chType, &chPrms);
+    if(UDMA_SOK != retVal)
+    {
+        GT_0trace(taskObj->traceMask, GT_ERR,
+                  " |TEST INFO|::FAIL:: UDMA:: druGetTriggerRegAddr :: "
+                  " Channel open failed!!\n");
+        retVal = UDMA_EFAIL;
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        pSwTrigReg = Udma_druGetTriggerRegAddr(channelHandle);
+        if(NULL_PTR != pSwTrigReg)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|::FAIL:: UDMA:: druGetTriggerRegAddr :: "
+                      " Check for utcType is UDMA_UTC_TYPE_DRU!!\n");
+            retVal = UDMA_EFAIL;
+        }
+    }
+    Udma_chClose(channelHandle);
+
+    return retVal;
+}

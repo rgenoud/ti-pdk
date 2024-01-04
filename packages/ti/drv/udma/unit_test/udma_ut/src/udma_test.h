@@ -812,6 +812,10 @@ int32_t UdmaTestChDisableDruNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestChPauseDruNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestChConfigUtcDruTestNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestChSetSwTriggerDruNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestDruGetNumQueueNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestDruQueueConfigNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestDruGetTriggerRegAddrNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestDruGetTriggerRegAddr(UdmaTestTaskObj *taskObj);
 
 /* ========================================================================== */
 /*      Internal Function Declarations (Needed for other static inlines)      */
