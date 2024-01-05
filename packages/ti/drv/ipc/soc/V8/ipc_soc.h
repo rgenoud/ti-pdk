@@ -66,11 +66,11 @@ extern "C" {
 #define    IPC_C7X_1        (0x3U)    /*< C7x 1 >*/
 #define    IPC_C7X_2        (0x4U)    /*< C7x 2 >*/
 #define    IPC_A53SS0_0     (0x5U)    /*< ARM MAIN A53 0 >*/
-#define    IPC_A53SS0_1     (0x6U)    /*< ARM MAIN A53 1 >*/
-#define    IPC_A53SS1_0     (0x7U)    /*< ARM MAIN A53 2 >*/
-#define    IPC_A53SS1_1     (0x8U)    /*< ARM MAIN A53 3 >*/
-#define    IPC_HSM_R5FSS0_0 (0x9U)    /*< MAIN HSM >*/
-#define    IPC_MAX_PROCS    (0xAU)    /*< Maximum Processors >*/
+// #define    IPC_A53SS0_1     (0x6U)    /*< ARM MAIN A53 1 >*/
+// #define    IPC_A53SS1_0     (0x7U)    /*< ARM MAIN A53 2 >*/
+// #define    IPC_A53SS1_1     (0x8U)    /*< ARM MAIN A53 3 >*/
+// #define    IPC_HSM_R5FSS0_0 (0x9U)    /*< MAIN HSM >*/
+#define    IPC_MAX_PROCS    (0x6U)    /*< Maximum Processors >*/
 
 //TODO:: This ID is set to 0 in previous generations, but for AEN, it is set to 0x5U
 #define    IPC_MPU1_0       IPC_A53SS0_0 /*< ARM MAIN A53 0 - Used by Virtio. >*/
