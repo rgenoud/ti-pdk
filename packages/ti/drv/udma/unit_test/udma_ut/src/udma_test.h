@@ -659,6 +659,7 @@ int32_t udmaTestRingPrimeLcdmaTc(UdmaTestTaskObj *taskObj);
 int32_t udmaTestRingMonPushPopTc(UdmaTestTaskObj *taskObj);
 int32_t udmaTestRingMonLowThresholdTc(UdmaTestTaskObj *taskObj);
 int32_t udmaTestRingMonHighThresholdTc(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestRingMonGetNum(UdmaTestTaskObj *taskObj);
 /*
  * UDMA proxy test functions
  */
@@ -724,16 +725,27 @@ int32_t udmaTestRingGetElementCntNormal(UdmaTestTaskObj *taskObj);
 int32_t udmaTestRingGetRingOccNormal(UdmaTestTaskObj *taskObj);
 int32_t udmaTestRingGetWrIdxNormal(UdmaTestTaskObj *taskObj);
 int32_t udmaTestRingGetRdIdxNormal(UdmaTestTaskObj *taskObj);
-int32_t UdmaTestRingAttach(UdmaTestTaskObj *taskObj);
-int32_t UdmaTestRingDetach(UdmaTestTaskObj *taskObj);
-int32_t UdmaTestRingGetNum(UdmaTestTaskObj *taskObj);
-int32_t UdmaTestRingDequeueRaw(UdmaTestTaskObj *taskObj);
-int32_t UdmaTestRingQueueRaw(UdmaTestTaskObj *taskObj);
-int32_t udmaTestRingFree(UdmaTestTaskObj *taskObj);
-int32_t UdmaTest_RingPrms_init(UdmaTestTaskObj *taskObj);
-int32_t UdmaTest_RingMonPrms_init(UdmaTestTaskObj *taskObj);
-int32_t udmaTestRingAlloc(UdmaTestTaskObj *taskObj);
-int32_t UdmaTestRingFlushRaw(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestRingAttachNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestRingDetachNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestRingGetNumNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestRingDequeueRawNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestRingQueueRawNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestRingFreeNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestRingPrmsInitNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestRingMonPrmsInitNeg(UdmaTestTaskObj *taskObj);
+int32_t udmaTestRingAllocNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestRingProxyQueueRawNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestRingProxyDequeueRawNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestRingFlushRawNeg(UdmaTestTaskObj *taskObj);
+
+/*
+ * UDMA Ring Monitor Negative test case functions
+ */
+int32_t UdmaTestRingMonFreeNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestRingMonAllocNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestRingMonConfigNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestRingMonGetDataNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestRingMonGetNumNeg(UdmaTestTaskObj *taskObj);
 
 /*
  *UDMA Flow Negative test case functions

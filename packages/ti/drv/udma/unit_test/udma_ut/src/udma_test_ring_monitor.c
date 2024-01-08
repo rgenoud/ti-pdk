@@ -817,3 +817,38 @@ static void udmaTestRingMonEventCb(Udma_EventHandle eventHandle,
 
     return;
 }
+
+/*
+ * Test Case Description: Verifies the function Udma_ringMonGetNum
+ * 1) Test scenario 1: Check when ringMonInitDone is UDMA_INIT_DONE.
+ */
+int32_t UdmaTestRingMonGetNum(UdmaTestTaskObj *taskObj)
+{
+    int32_t                retVal     = UDMA_SOK;
+    uint32_t               ringMonNum = UDMA_RING_MON_INVALID;
+    struct Udma_RingMonObj ringMonObj;
+    Udma_RingMonHandle     monHandle;
+
+    GT_1trace(taskObj->traceMask, GT_INFO1,
+              " |TEST INFO|:: Task:%d: UDMA ringMonGetNum Testcase ::\r\n",
+              taskObj->taskId);
+
+    /* Test scenario 1: Check when ringMonInitDone is UDMA_INIT_DONE */
+    monHandle                  = &ringMonObj;
+    monHandle->ringMonInitDone = UDMA_INIT_DONE;
+    ringMonNum                 = Udma_ringMonGetNum(monHandle);
+    if(UDMA_RING_MON_INVALID != ringMonNum)
+    {
+        retVal = UDMA_SOK;
+    }
+    else
+    {
+        GT_0trace(taskObj->traceMask, GT_ERR,
+                  " |TEST INFO|:: FAIL:: UDMA:: ringMonGetNum:: "
+                  " Check when ringMonInitDone is UDMA_INIT_DONE!!\n");
+        retVal = UDMA_EFAIL;
+    }
+
+    return retVal;
+}
+

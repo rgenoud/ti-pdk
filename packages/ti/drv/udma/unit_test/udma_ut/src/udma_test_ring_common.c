@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) Texas Instruments Incorporated 2023
+ *  Copyright (c) Texas Instruments Incorporated 2023-2024
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -33,7 +33,7 @@
 /**
  *  \file udma_test_ring_common.c
  *
- *  \brief UDMA negative test cases for udma_ring_common.c file.
+ *  \brief UDMA negative test cases for Udma Ring Common API's.
  *
  */
 
@@ -73,44 +73,48 @@
 
 /*
  * Test Case Description: Verifies the function Udma_ringAttach when
- * 1)ringHandle is NULL and driverHandle is NULL.
- * 2)driverHandle is NULL.
- * 3)ringHandle is NULL.
- * 4)drvInitDone = UDMA_DEINIT_DONE.
- * 5)ringNum >= maxRings
+ * 1)Test scenario 1: Check when ringHandle and driverHandle are NULL.
+ * 2)Test scenario 2: Check when driverHandle is NULL.
+ * 3)Test scenario 3: Check when ringHandle is NULL.
+ * 4)Test scenario 4: Check when drvInitDone is UDMA_DEINIT_DONE.
+ * 5)Test scenario 5: Check when ringNum greater than maxRings.
  */
-int32_t UdmaTestRingAttach(UdmaTestTaskObj *taskObj)
+int32_t UdmaTestRingAttachNeg(UdmaTestTaskObj *taskObj)
 {
     int32_t             retVal  = UDMA_SOK;
-    uint32_t            instID  = 0U;
     uint16_t            ringNum = UDMA_RING_ANY;
     struct Udma_RingObj ringObj;
     Udma_RingHandle     ringHandle;
     Udma_DrvHandle      drvHandle;
+    uint32_t            backUpDrvInitDone;
+    uint32_t            instId;
 
     GT_1trace(taskObj->traceMask, GT_INFO1,
-               " |TEST INFO|:: Task:%d: Udma ring attach negative Testcase ::\r\n", taskObj->taskId);
+              " |TEST INFO|:: Task:%d: Udma ringAttach negative Testcase ::\r\n",
+              taskObj->taskId);
 
-    for(instID = UDMA_INST_ID_UDMAP_START; instID <= UDMA_INST_ID_UDMAP_MAX ; instID++)
+    /* Test scenario 1: Check when ringHandle and driverHandle are NULL */
+    drvHandle  = (Udma_DrvHandle) NULL_PTR;
+    ringHandle = (Udma_RingHandle) NULL_PTR;
+    retVal     = Udma_ringAttach(drvHandle, ringHandle, ringNum);
+    if(UDMA_SOK != retVal)
     {
-        /*drvHandle is NULL and ringHandle is NULL*/
-        drvHandle  = (Udma_DrvHandle)NULL_PTR;
-        ringHandle = (Udma_RingHandle)NULL_PTR;
-        retVal = Udma_ringAttach(drvHandle, ringHandle, ringNum);
-        if(UDMA_SOK != retVal)
-        {
-            retVal = UDMA_SOK;
-        }
-        else
-        {
-            GT_0trace(taskObj->traceMask, GT_ERR,
-                " |TEST INFO|:: Test::Udma ring ring attach negative Testcase Failed!!\n");
-        }
+        retVal = UDMA_SOK;
+    }
+    else
+    {
+        GT_0trace(taskObj->traceMask, GT_ERR,
+                  " |TEST INFO|:: FAIL:: UDMA:: ringAttach :: Neg::"
+                  " Check when ringHandle and driverHandle are NULL!!\n");
+        retVal = UDMA_EFAIL;
+    }
 
-        /*when drvHandle is null*/
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 2: Check when driverHandle is NULL */
         ringHandle = &ringObj;
-        drvHandle  = (Udma_DrvHandle)NULL_PTR;
-        retVal = Udma_ringAttach(drvHandle, ringHandle, ringNum);
+        drvHandle  = (Udma_DrvHandle) NULL_PTR;
+        retVal     = Udma_ringAttach(drvHandle, ringHandle, ringNum);
         if(UDMA_SOK != retVal)
         {
             retVal = UDMA_SOK;
@@ -118,49 +122,69 @@ int32_t UdmaTestRingAttach(UdmaTestTaskObj *taskObj)
         else
         {
             GT_0trace(taskObj->traceMask, GT_ERR,
-                " |TEST INFO|:: Test::Udma ring attach negative Testcase Failed!!\n");
+                      " |TEST INFO|:: FAIL:: UDMA:: ringAttach :: Neg::"
+                      " Check when driverHandle is NULL!!\n");
+            retVal = UDMA_EFAIL;
         }
+    }
 
-        /* ringHandle is NULL */
-        ringHandle = (Udma_RingHandle)NULL_PTR;
-        drvHandle  = &taskObj->testObj->drvObj[instID];
-        retVal = Udma_ringAttach(drvHandle, ringHandle, ringNum);
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 3: Check when ringHandle is NULL */
+        ringHandle = (Udma_RingHandle) NULL_PTR;
+        instId     = UDMA_TEST_INST_ID_MAIN_0;
+        drvHandle  = &taskObj->testObj->drvObj[instId];
+        retVal     = Udma_ringAttach(drvHandle, ringHandle, ringNum);
         if(UDMA_SOK != retVal)
         {
-           retVal = UDMA_SOK;
+            retVal = UDMA_SOK;
         }
         else
         {
             GT_0trace(taskObj->traceMask, GT_ERR,
-                " |TEST INFO|:: Test::ring attach negative Testcase Failed!!\n");
+                      " |TEST INFO|:: FAIL:: UDMA:: ringAttach :: Neg::"
+                      " Check when ringHandle is NULL!!\n");
+            retVal = UDMA_EFAIL;
         }
+    }
 
-        /* drvInitDone = UDMA_DEINIT_DONE */
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 4: Check when drvInitDone is UDMA_DEINIT_DONE */
         ringHandle             = &ringObj;
-        drvHandle              = &taskObj->testObj->drvObj[instID];
+        drvHandle              = &taskObj->testObj->drvObj[instId];
+        backUpDrvInitDone      = drvHandle->drvInitDone;
         drvHandle->drvInitDone = UDMA_DEINIT_DONE;
-        retVal = Udma_ringAttach(drvHandle, ringHandle, ringNum);
+        retVal                 = Udma_ringAttach(drvHandle, ringHandle, ringNum);
         if(UDMA_SOK != retVal)
         {
             retVal = UDMA_SOK;
         }
         else
         {
-             GT_0trace(taskObj->traceMask, GT_ERR,
-                 " |TEST INFO|:: Test::Udma ring attach negative testcase for UDMA_DEINIT_DONE Failed!!\n");
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: ringAttach :: Neg::"
+                      " Check when drvInitDone is UDMA_DEINIT_DONE!!\n");
+            retVal = UDMA_EFAIL;
         }
+        drvHandle->drvInitDone = backUpDrvInitDone;
+    }
 
-        /* ringNum >= maxRings */
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 5: Check when ringNum greater than maxRings */
         drvHandle->drvInitDone = UDMA_INIT_DONE;
-        retVal = Udma_ringAttach(drvHandle, ringHandle, ringNum);
+        retVal                 = Udma_ringAttach(drvHandle, ringHandle, ringNum);
         if(UDMA_SOK != retVal)
         {
             retVal = UDMA_SOK;
         }
         else
         {
-             GT_0trace(taskObj->traceMask, GT_ERR,
-                 " |TEST INFO|:: Test::Udma ring attach negative Testcase when ringNum greater than maxring Failed!!\n");
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: ringAttach :: Neg::"
+                      " Check when ringNum greater than maxRings!!\n");
+            retVal = UDMA_EFAIL;
         }
     }
 
@@ -169,24 +193,25 @@ int32_t UdmaTestRingAttach(UdmaTestTaskObj *taskObj)
 
 /*
  * Test Case Description: Verifies the function Udma_ringDetach when
- * 1)ringHandle is NULL.
- * 2)ringInitDone = UDMA_DEINIT_DONE.
- * 3)ringHandle->driverHandle is NULL.
- * 4)ringHandle->drvHandle->drvInitDone = UDMA_DEINIT_DONE.
+ * 1)Test scenario 1: Check when ringHandle is NULL.
+ * 2)Test scenario 2: Check when ringInitDone is UDMA_DEINIT_DONE.
+ * 3)Test scenario 3: Check when driverHandle is NULL.
+ * 4)Test scenario 4: Check when drvInitDone is UDMA_DEINIT_DONE.
  */
-int32_t UdmaTestRingDetach(UdmaTestTaskObj *taskObj)
+int32_t UdmaTestRingDetachNeg(UdmaTestTaskObj *taskObj)
 {
     int32_t             retVal = UDMA_SOK;
-    uint32_t            instID = 0U;
     struct Udma_RingObj ringObj;
     Udma_RingHandle     ringHandle;
+    uint32_t            instId;
 
     GT_1trace(taskObj->traceMask, GT_INFO1,
-              " |TEST INFO|:: Task:%d: Udma ring detach negative Testcase ::\r\n", taskObj->taskId);
+              " |TEST INFO|:: Task:%d: Udma ringDetach negative Testcase ::\r\n",
+              taskObj->taskId);
 
-    /* ringHandle is NULL */
-    ringHandle = (Udma_RingHandle)NULL_PTR;
-    retVal = Udma_ringDetach(ringHandle);
+    /* Test scenario 1: Check when ringHandle is NULL */
+    ringHandle = (Udma_RingHandle) NULL_PTR;
+    retVal     = Udma_ringDetach(ringHandle);
     if(UDMA_SOK != retVal)
     {
         retVal = UDMA_SOK;
@@ -194,30 +219,17 @@ int32_t UdmaTestRingDetach(UdmaTestTaskObj *taskObj)
     else
     {
         GT_0trace(taskObj->traceMask, GT_ERR,
-            " |TEST INFO|:: Test::Udma ring detach negative Testcase Failed!!\n");
+                  " |TEST INFO|:: FAIL:: UDMA:: ringDetach :: Neg::"
+                  " Check when ringHandle is NULL!!\n");
+        retVal = UDMA_EFAIL;
     }
 
-    /*when ringInitDone = UDMA_DEINIT_DONE*/
-    ringHandle               = &ringObj;
-    ringHandle->ringInitDone = UDMA_DEINIT_DONE;
-    retVal = Udma_ringDetach(ringHandle);
-    if(UDMA_SOK != retVal)
+    if(UDMA_SOK == retVal)
     {
-        retVal = UDMA_SOK;
-    }
-    else
-    {
-        GT_0trace(taskObj->traceMask, GT_ERR,
-            " |TEST INFO|:: Test::Udma ring detach negative Testcase Failed!!\n");
-    }
-
-    for(instID = UDMA_INST_ID_UDMAP_START; instID <= UDMA_INST_ID_UDMAP_MAX ; instID++)
-    {
-        /* drvHandle is NULL */
-        ringHandle                 = &ringObj;
-        ringHandle->ringInitDone   = UDMA_INIT_DONE;
-        ringHandle->drvHandle      = (Udma_DrvHandle)NULL_PTR;
-        retVal = Udma_ringDetach(ringHandle);
+        /* Test scenario 2: Check when ringInitDone is UDMA_DEINIT_DONE */
+        ringHandle               = &ringObj;
+        ringHandle->ringInitDone = UDMA_DEINIT_DONE;
+        retVal                   = Udma_ringDetach(ringHandle);
         if(UDMA_SOK != retVal)
         {
             retVal = UDMA_SOK;
@@ -225,21 +237,49 @@ int32_t UdmaTestRingDetach(UdmaTestTaskObj *taskObj)
         else
         {
             GT_0trace(taskObj->traceMask, GT_ERR,
-                " |TEST INFO|:: Test::Udma ring detach negative Testcase Failed!!\n");
+                      " |TEST INFO|:: FAIL:: UDMA:: ringDetach :: Neg::"
+                      " Check when ringInitDone is UDMA_DEINIT_DONE!!\n");
+            retVal = UDMA_EFAIL;
         }
+    }
 
-        /* ringHandle->drvHandle->drvInitDone = UDMA_DEINIT_DONE */
-        ringHandle->drvHandle              = &taskObj->testObj->drvObj[instID];
-        ringHandle->drvHandle->drvInitDone = UDMA_DEINIT_DONE;
-        retVal = Udma_ringDetach(ringHandle);
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 3: Check when driverHandle is NULL */
+        ringHandle               = &ringObj;
+        ringHandle->ringInitDone = UDMA_INIT_DONE;
+        ringHandle->drvHandle    = (Udma_DrvHandle) NULL_PTR;
+        retVal                   = Udma_ringDetach(ringHandle);
         if(UDMA_SOK != retVal)
         {
-    	retVal = UDMA_SOK;
+            retVal = UDMA_SOK;
         }
         else
         {
             GT_0trace(taskObj->traceMask, GT_ERR,
-                " |TEST INFO|:: Test::Udma ring detach negative Testcase Failed!!\n");
+                      " |TEST INFO|:: FAIL:: UDMA:: ringDetach :: Neg::"
+                      " Check when driverHandle is NULL!!\n");
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 4: Check when drvInitDone is UDMA_DEINIT_DONE */
+        instId                             = UDMA_TEST_INST_ID_MAIN_0;
+        ringHandle->drvHandle              = &taskObj->testObj->drvObj[instId];
+        ringHandle->drvHandle->drvInitDone = UDMA_DEINIT_DONE;
+        retVal                             = Udma_ringDetach(ringHandle);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: ringDetach :: Neg::"
+                      " Check when drvInitDone is UDMA_DEINIT_DONE!!\n");
+            retVal = UDMA_EFAIL;
         }
         ringHandle->drvHandle->drvInitDone = UDMA_INIT_DONE;
     }
@@ -249,22 +289,23 @@ int32_t UdmaTestRingDetach(UdmaTestTaskObj *taskObj)
 
 /*
  * Test Case Description: Verifies the function Udma_ringGetNum when
- * 1)ringHandle is NULL.
- * 2)ringInitDone = UDMA_DEINIT_DONE.
+ * 1)Test scenario 1: NULL Check when ringHandle is NULL.
+ * 2)Test scenario 2: Check when ringInitDone is UDMA_DEINIT_DONE.
  */
-int32_t UdmaTestRingGetNum(UdmaTestTaskObj *taskObj)
+int32_t UdmaTestRingGetNumNeg(UdmaTestTaskObj *taskObj)
 {
     int32_t             retVal = UDMA_SOK;
+    uint16_t            ringNum;
     struct Udma_RingObj ringObj;
     Udma_RingHandle     ringHandle;
-    uint16_t            ringNum = UDMA_RING_INVALID;
 
     GT_1trace(taskObj->traceMask, GT_INFO1,
-              " |TEST INFO|:: Task:%d: Udma ring get num negative Testcase ::\r\n", taskObj->taskId);
+              " |TEST INFO|:: Task:%d: Udma ringGetNum negative Testcase ::\r\n",
+              taskObj->taskId);
 
-    /* ringHandle is NULL */
-    ringHandle = (Udma_RingHandle)NULL_PTR;
-    ringNum = Udma_ringGetNum(ringHandle);
+    /* Test scenario 1: NULL Check when ringHandle is NULL */
+    ringHandle = (Udma_RingHandle) NULL_PTR;
+    ringNum    = Udma_ringGetNum(ringHandle);
     if(UDMA_RING_INVALID == ringNum)
     {
         retVal = UDMA_SOK;
@@ -272,21 +313,28 @@ int32_t UdmaTestRingGetNum(UdmaTestTaskObj *taskObj)
     else
     {
         GT_0trace(taskObj->traceMask, GT_ERR,
-            " |TEST INFO|:: Test::Udma ring get num negative Testcase Failed!!\n");
+                  " |TEST INFO|:: FAIL:: UDMA:: ringGetNum :: Neg::"
+                  " NULL Check when ringHandle is NULL!!\n");
+        retVal = UDMA_EFAIL;
     }
 
-    /*when ringInitDone = UDMA_DEINIT_DONE*/
-    ringHandle               = &ringObj;
-    ringHandle->ringInitDone = UDMA_DEINIT_DONE;
-    ringNum = Udma_ringGetNum(ringHandle);
-    if(UDMA_RING_INVALID == ringNum)
+    if(UDMA_SOK == retVal)
     {
-        retVal = UDMA_SOK;
-    }
-    else
-    {
-        GT_0trace(taskObj->traceMask, GT_ERR,
-            " |TEST INFO|:: Test::Udma ring get num negative Testcase Failed!!\n");
+        /* Test scenario 2: Check when ringInitDone is UDMA_DEINIT_DONE */
+        ringHandle               = &ringObj;
+        ringHandle->ringInitDone = UDMA_DEINIT_DONE;
+        ringNum                  = Udma_ringGetNum(ringHandle);
+        if(UDMA_RING_INVALID == ringNum)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: ringGetNum :: Neg::"
+                      " Check when ringInitDone is UDMA_DEINIT_DONE!!\n");
+            retVal = UDMA_EFAIL;
+        }
     }
 
     return retVal;
@@ -294,26 +342,27 @@ int32_t UdmaTestRingGetNum(UdmaTestTaskObj *taskObj)
 
 /*
  * Test Case Description: Verifies the function Udma_ringDequeueRaw when
- * 1)ringHandle is NULL.
- * 2)ringInitDone = UDMA_DEINIT_DONE.
- * 3)ringNum = UDMA_RING_INVALID.
- * 4)ringHandle->drvHandle is Null.
- * 5)ringHandle->drvHandle->drvInitDone = UDMA_DEINIT_DONE.
+ * 1)Test scenario 1: Check when ringHandle is NULL.
+ * 2)Test scenario 2: Check when ringInitDone is UDMA_DEINIT_DONE.
+ * 3)Test scenario 3: Check when ringNum is UDMA_RING_INVALID.
+ * 4)Test scenario 4: Check when driverHandle is NULL.
+ * 5)Test scenario 5: Check when drvInitDone is UDMA_DEINIT_DONE.
  */
-int32_t UdmaTestRingDequeueRaw(UdmaTestTaskObj *taskObj)
+int32_t UdmaTestRingDequeueRawNeg(UdmaTestTaskObj *taskObj)
 {
     int32_t             retVal     = UDMA_SOK;
     uint64_t            phyDescMem = 0UL;
     struct Udma_RingObj ringObj;
     Udma_RingHandle     ringHandle;
-    uint32_t            instID;
+    uint32_t            instId;
 
     GT_1trace(taskObj->traceMask, GT_INFO1,
-              " |TEST INFO|:: Task:%d: Udma ring dequeue negative Testcase ::\r\n", taskObj->taskId);
+              " |TEST INFO|:: Task:%d: Udma ringDequeue negative Testcase ::\r\n",
+              taskObj->taskId);
 
-    /* ringHandle is NULL */
-    ringHandle = (Udma_RingHandle)NULL_PTR;
-    retVal = Udma_ringDequeueRaw(ringHandle, &phyDescMem);
+    /* Test scenario 1: Check when ringHandle is NULL */
+    ringHandle = (Udma_RingHandle) NULL_PTR;
+    retVal     = Udma_ringDequeueRaw(ringHandle, &phyDescMem);
     if(UDMA_SOK != retVal)
     {
         retVal = UDMA_SOK;
@@ -321,45 +370,18 @@ int32_t UdmaTestRingDequeueRaw(UdmaTestTaskObj *taskObj)
     else
     {
         GT_0trace(taskObj->traceMask, GT_ERR,
-            " |TEST INFO|:: Test::Udma ring dequeue negative Testcase Failed!!\n");
+                  " |TEST INFO|:: FAIL:: UDMA:: ringDequeue :: Neg::"
+                  " Check when ringHandle is NULL!!\n");
+        retVal = UDMA_EFAIL;
     }
 
-    /*when ringInitDone = UDMA_DEINIT_DONE*/
-    ringHandle               = &ringObj;
-    ringHandle->ringInitDone = UDMA_DEINIT_DONE;
-    ringHandle->ringNum      = UDMA_RING_ANY;
-    retVal = Udma_ringDequeueRaw(ringHandle, &phyDescMem);
-    if(UDMA_SOK != retVal)
+    if(UDMA_SOK == retVal)
     {
-        retVal = UDMA_SOK;
-    }
-    else
-    {
-        GT_0trace(taskObj->traceMask, GT_ERR,
-            " |TEST INFO|:: Test::Udma ring dequeue negative Testcase Failed!!\n");
-    }
-
-    /*when ringNum != UDMA_RING_INVALID*/
-    ringHandle               = &ringObj;
-    ringHandle->ringInitDone = UDMA_INIT_DONE;
-    ringHandle->ringNum      = UDMA_RING_INVALID;
-    retVal = Udma_ringDequeueRaw(ringHandle, &phyDescMem);
-    if(UDMA_SOK != retVal)
-    {
-        retVal = UDMA_SOK;
-    }
-    else
-    {
-        GT_0trace(taskObj->traceMask, GT_ERR,
-            " |TEST INFO|:: Test::Udma ring dequeue negative Testcase Failed!!\n");
-    }
-
-    ringHandle->ringNum = UDMA_RING_ANY;
-    for(instID = UDMA_INST_ID_UDMAP_START; instID <= UDMA_INST_ID_UDMAP_MAX ; instID++)
-    {
-        /* ringHandle->drvHandle is Null */
-        ringHandle->drvHandle = (Udma_DrvHandle)NULL_PTR;
-        retVal = Udma_ringDequeueRaw(ringHandle, &phyDescMem);
+        /* Test scenario 2: Check when ringInitDone is UDMA_DEINIT_DONE */
+        ringHandle               = &ringObj;
+        ringHandle->ringInitDone = UDMA_DEINIT_DONE;
+        ringHandle->ringNum      = UDMA_RING_ANY;
+        retVal                   = Udma_ringDequeueRaw(ringHandle, &phyDescMem);
         if(UDMA_SOK != retVal)
         {
             retVal = UDMA_SOK;
@@ -367,13 +389,58 @@ int32_t UdmaTestRingDequeueRaw(UdmaTestTaskObj *taskObj)
         else
         {
             GT_0trace(taskObj->traceMask, GT_ERR,
-                " |TEST INFO|:: Test::Udma ring dequeue negative Failed!!\n");
+                      " |TEST INFO|:: FAIL:: UDMA:: ringDequeue :: Neg::"
+                      " Check when ringInitDone is UDMA_DEINIT_DONE!!\n");
+            retVal = UDMA_EFAIL;
         }
+    }
 
-        /* ringHandle->drvHandle->drvInitDone = UDMA_DEINIT_DONE */
-        ringHandle->drvHandle              = &taskObj->testObj->drvObj[instID];
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 3: Check when ringNum is UDMA_RING_INVALID */
+        ringHandle               = &ringObj;
+        ringHandle->ringInitDone = UDMA_INIT_DONE;
+        ringHandle->ringNum      = UDMA_RING_INVALID;
+        retVal                   = Udma_ringDequeueRaw(ringHandle, &phyDescMem);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: ringDequeue :: Neg::"
+                      " Check when ringNum is UDMA_RING_INVALID!!\n");
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 4: Check when driverHandle is NULL */
+        ringHandle->ringNum   = UDMA_RING_ANY;
+        ringHandle->drvHandle = (Udma_DrvHandle) NULL_PTR;
+        retVal                = Udma_ringDequeueRaw(ringHandle, &phyDescMem);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: ringDequeue :: Neg::"
+                      " Check when driverHandle is NULL!!\n");
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 5: Check when drvInitDone is UDMA_DEINIT_DONE */
+        instId                             = UDMA_TEST_INST_ID_MAIN_0;
+        ringHandle->drvHandle              = &taskObj->testObj->drvObj[instId];
         ringHandle->drvHandle->drvInitDone = UDMA_DEINIT_DONE;
-        retVal = Udma_ringDequeueRaw(ringHandle, &phyDescMem);
+        retVal                             = Udma_ringDequeueRaw(ringHandle, &phyDescMem);
         if(UDMA_SOK != retVal)
         {
             retVal = UDMA_SOK;
@@ -381,7 +448,9 @@ int32_t UdmaTestRingDequeueRaw(UdmaTestTaskObj *taskObj)
         else
         {
             GT_0trace(taskObj->traceMask, GT_ERR,
-                " |TEST INFO|:: Test::Udma ring dequeue negative  Failed!!\n");
+                      " |TEST INFO|:: FAIL:: UDMA:: ringDequeue :: Neg::"
+                      " Check when drvInitDone is UDMA_DEINIT_DONE!!\n");
+            retVal = UDMA_EFAIL;
         }
         ringHandle->drvHandle->drvInitDone = UDMA_INIT_DONE;
     }
@@ -391,26 +460,27 @@ int32_t UdmaTestRingDequeueRaw(UdmaTestTaskObj *taskObj)
 
 /*
  * Test Case Description: Verifies the function Udma_ringQueueRaw when
- * 1)ringHandle is NULL.
- * 2)ringInitDone = UDMA_DEINIT_DONE.
- * 3)ringNum = UDMA_RING_INVALID.
- * 4)ringHandle->drvHandle is Null.
- * 5)ringHandle->drvHandle->drvInitDone = UDMA_DEINIT_DONE.
+ * 1)Test scenario 1: Check when ringHandle is NULL.
+ * 2)Test scenario 2: Check when ringInitDone is UDMA_DEINIT_DONE.
+ * 3)Test scenario 3: Check when ringNum is UDMA_RING_INVALID.
+ * 4)Test scenario 4: Check when driverHandle is NULL.
+ * 5)Test scenario 5: Check when drvInitDone is UDMA_DEINIT_DONE.
  */
-int32_t UdmaTestRingQueueRaw(UdmaTestTaskObj *taskObj)
+int32_t UdmaTestRingQueueRawNeg(UdmaTestTaskObj *taskObj)
 {
     int32_t             retVal     = UDMA_SOK;
     uint64_t            phyDescMem = 0UL;
-    uint32_t            instID     = 0U;
     struct Udma_RingObj ringObj;
     Udma_RingHandle     ringHandle;
+    uint32_t            instId;
 
     GT_1trace(taskObj->traceMask, GT_INFO1,
-              " |TEST INFO|:: Task:%d: Udma ring Queue negative Testcase ::\r\n", taskObj->taskId);
+              " |TEST INFO|:: Task:%d: Udma ringQueueRaw negative Testcase ::\r\n",
+              taskObj->taskId);
 
-    /* ringHandle is NULL */
-    ringHandle =(Udma_RingHandle)NULL_PTR;
-    retVal = Udma_ringQueueRaw(ringHandle, phyDescMem);
+    /* Test scenario 1: Check when ringHandle is NULL */
+    ringHandle = (Udma_RingHandle) NULL_PTR;
+    retVal     = Udma_ringQueueRaw(ringHandle, phyDescMem);
     if(UDMA_SOK != retVal)
     {
         retVal = UDMA_SOK;
@@ -418,45 +488,18 @@ int32_t UdmaTestRingQueueRaw(UdmaTestTaskObj *taskObj)
     else
     {
         GT_0trace(taskObj->traceMask, GT_ERR,
-            " |TEST INFO|:: Test::Udma ring Queue negative Testcase Failed!!\n");
+                  " |TEST INFO|:: FAIL:: UDMA:: ringQueueRaw :: Neg::"
+                  " Check when ringHandle is NULL!!\n");
+        retVal = UDMA_EFAIL;
     }
 
-    /*when ringInitDone = UDMA_DEINIT_DONE*/
-    ringHandle               = &ringObj;
-    ringHandle->ringInitDone = UDMA_DEINIT_DONE;
-    ringHandle->ringNum      = UDMA_RING_ANY;
-    retVal = Udma_ringQueueRaw(ringHandle, phyDescMem);
-    if(UDMA_SOK != retVal)
+    if(UDMA_SOK == retVal)
     {
-        retVal = UDMA_SOK;
-    }
-    else
-    {
-        GT_0trace(taskObj->traceMask, GT_ERR,
-            " |TEST INFO|:: Test::Udma ring Queue negative Testcase Failed!!\n");
-    }
-
-    /*when ringNum = UDMA_RING_INVALID*/
-    ringHandle               = &ringObj;
-    ringHandle->ringInitDone = UDMA_INIT_DONE;
-    ringHandle->ringNum      = UDMA_RING_INVALID;
-    retVal = Udma_ringQueueRaw(ringHandle, phyDescMem);
-    if(UDMA_SOK != retVal)
-    {
-        retVal = UDMA_SOK;
-    }
-    else
-    {
-        GT_0trace(taskObj->traceMask, GT_ERR,
-            " |TEST INFO|:: Test::Udma ring Queue negative Testcase Failed!!\n");
-    }
-
-    ringHandle->ringNum = UDMA_RING_ANY;
-    for(instID = UDMA_INST_ID_UDMAP_START; instID <= UDMA_INST_ID_UDMAP_MAX ; instID++)
-    {
-        /* ringHandle->drvHandle is Null */
-        ringHandle->drvHandle = (Udma_DrvHandle)NULL_PTR;
-        retVal = Udma_ringQueueRaw(ringHandle, phyDescMem);
+        /* Test scenario 2: Check when ringInitDone is UDMA_DEINIT_DONE */
+        ringHandle               = &ringObj;
+        ringHandle->ringInitDone = UDMA_DEINIT_DONE;
+        ringHandle->ringNum      = UDMA_RING_ANY;
+        retVal                   = Udma_ringQueueRaw(ringHandle, phyDescMem);
         if(UDMA_SOK != retVal)
         {
             retVal = UDMA_SOK;
@@ -464,13 +507,58 @@ int32_t UdmaTestRingQueueRaw(UdmaTestTaskObj *taskObj)
         else
         {
             GT_0trace(taskObj->traceMask, GT_ERR,
-                " |TEST INFO|:: Test::Udma ring Queue negative Testcase Failed!!\n");
+                      " |TEST INFO|:: FAIL:: UDMA:: ringQueueRaw :: Neg::"
+                      " Check when ringInitDone is UDMA_DEINIT_DONE!!\n");
+            retVal = UDMA_EFAIL;
         }
+    }
 
-        /* ringHandle->drvHandle->drvInitDone = UDMA_DEINIT_DONE */
-        ringHandle->drvHandle              = &taskObj->testObj->drvObj[instID];
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 3: Check when ringNum is UDMA_RING_INVALID */
+        ringHandle               = &ringObj;
+        ringHandle->ringInitDone = UDMA_INIT_DONE;
+        ringHandle->ringNum      = UDMA_RING_INVALID;
+        retVal                   = Udma_ringQueueRaw(ringHandle, phyDescMem);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: ringQueueRaw :: Neg::"
+                      " Check when ringNum is UDMA_RING_INVALID!!\n");
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 4: Check when driverHandle is NULL */
+        ringHandle->ringNum   = UDMA_RING_ANY;
+        ringHandle->drvHandle = (Udma_DrvHandle) NULL_PTR;
+        retVal                = Udma_ringQueueRaw(ringHandle, phyDescMem);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      "|TEST INFO|:: FAIL:: UDMA:: ringQueueRaw :: Neg::"
+                      " Check when driverHandle is NULL!!\n");
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 5: Check when drvInitDone is UDMA_DEINIT_DONE */
+        instId                             = UDMA_TEST_INST_ID_MAIN_0;
+        ringHandle->drvHandle              = &taskObj->testObj->drvObj[instId];
         ringHandle->drvHandle->drvInitDone = UDMA_DEINIT_DONE;
-        retVal = Udma_ringQueueRaw(ringHandle, phyDescMem);
+        retVal                             = Udma_ringQueueRaw(ringHandle, phyDescMem);
         if(UDMA_SOK != retVal)
         {
             retVal = UDMA_SOK;
@@ -478,32 +566,36 @@ int32_t UdmaTestRingQueueRaw(UdmaTestTaskObj *taskObj)
         else
         {
             GT_0trace(taskObj->traceMask, GT_ERR,
-                " |TEST INFO|:: Test::Udma ring Queue negative Testcase Failed!!\n");
+                      " |TEST INFO|:: FAIL:: UDMA:: ringQueueRaw :: Neg::"
+                      " Check when drvInitDone is UDMA_DEINIT_DONE!!\n");
+            retVal = UDMA_EFAIL;
         }
         ringHandle->drvHandle->drvInitDone = UDMA_INIT_DONE;
     }
 
     return retVal;
 }
+
 /*
- * Test Case Description: Verifies the function udmaTestRingFree when
- * 1)ringHandle is NULL
- * 2)ringInitDone = UDMA_DEINIT_DONE
- * 3)ringHandle->drvHandle is Null
- * 4)ringHandle->drvHandle->drvInitDone = UDMA_DEINIT_DONE
-s */
-int32_t udmaTestRingFree(UdmaTestTaskObj *taskObj)
+ * Test Case Description: Verifies the function Udma_ringFree when
+ * 1)Test scenario 1: Check when ringHandle is NULL.
+ * 2)Test scenario 2: Check when ringInitDone is UDMA_DEINIT_DONE.
+ * 3)Test scenario 3: Check when driverHandle is NULL.
+ * 4)Test scenario 4: Check when drvInitDone is UDMA_DEINIT_DONE.
+ */
+int32_t UdmaTestRingFreeNeg(UdmaTestTaskObj *taskObj)
 {
     int32_t             retVal = UDMA_SOK;
-    uint32_t            instID;
     struct Udma_RingObj ringObj;
     Udma_RingHandle     ringHandle;
+    uint32_t            instId;
 
     GT_1trace(taskObj->traceMask, GT_INFO1,
-            " |TEST INFO|:: Task:%d: Udma ring free Testcase ::\r\n", taskObj->taskId);
+              " |TEST INFO|:: Task:%d: Udma ringFree Testcase ::\r\n",
+              taskObj->taskId);
 
-    /* ringHandle is NULL */
-    ringHandle = (Udma_RingHandle)NULL_PTR;
+    /* Test scenario 1: Check when ringHandle is NULL */
+    ringHandle = (Udma_RingHandle) NULL_PTR;
     retVal     = Udma_ringFree(ringHandle);
     if(UDMA_SOK != retVal)
     {
@@ -512,13 +604,110 @@ int32_t udmaTestRingFree(UdmaTestTaskObj *taskObj)
     else
     {
         GT_0trace(taskObj->traceMask, GT_ERR,
-               " |TEST INFO|:: Test::Udma ring free Testcase Failed!!\n");
+                  " |TEST INFO|:: FAIL:: UDMA:: ringFree :: Neg::"
+                  " Check when ringHandle is NULL!!\n");
+        retVal = UDMA_EFAIL;
     }
 
-    /* ringInitDone = UDMA_DEINIT_DONE */
-    ringHandle                 = &ringObj;
-    ringHandle->ringInitDone   = UDMA_DEINIT_DONE;
-    retVal = Udma_ringFree(ringHandle);
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 2: Check when ringInitDone is UDMA_DEINIT_DONE */
+        ringHandle               = &ringObj;
+        ringHandle->ringInitDone = UDMA_DEINIT_DONE;
+        retVal                   = Udma_ringFree(ringHandle);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: ringFree :: Neg::"
+                      " Check when ringInitDone is UDMA_DEINIT_DONE!!\n");
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 3: Check when driverHandle is NULL */
+        ringHandle->ringInitDone = UDMA_INIT_DONE;
+        ringHandle->drvHandle    = (Udma_DrvHandle) NULL_PTR;
+        retVal                   = Udma_ringFree(ringHandle);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: ringFree :: Neg::"
+                      " Check when driverHandle is NULL!!\n");
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 4: Check when drvInitDone is UDMA_DEINIT_DONE */
+        instId                             = UDMA_TEST_INST_ID_MAIN_0;
+        ringHandle->drvHandle              = &taskObj->testObj->drvObj[instId];
+        ringHandle->drvHandle->drvInitDone = UDMA_DEINIT_DONE;
+        retVal                             = Udma_ringFree(ringHandle);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: ringFree :: Neg::"
+                      " Check when drvInitDone is UDMA_DEINIT_DONE!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        ringHandle->drvHandle->drvInitDone = UDMA_INIT_DONE;
+    }
+
+    return retVal;
+}
+
+/*
+ * Test Case Description: Verifies the function Udma_ringAlloc when
+ * 1)Test scenario 1: Check when ringHandle,driverHandle and ringPrms are NULL.
+ * 2)Test scenario 2: Check when ringHandle and driverHandle are NULL.
+ * 3)Test scenario 3: Check when ringHandle and ringPrms are NULL.
+ * 4)Test scenario 4: Check when ringHandle is NULL.
+ * 5)Test scenario 5: Check when ringPrms and driverHandle are NULL.
+ * 6)Test scenario 6: Check when driverHandle is NULL.
+ * 7)Test scenario 7: Check when ringPrms is NULL.
+ * 8)Test scenario 8: Check when drvInitDone is UDMA_DEINIT_DONE.
+ * 9)Test scenario 9: Check to get ringNum as UDMA_RING_INVALID from Udma_rmAllocFreeRing.
+ * 10)Test scenario 10: To get error print message [Error] Out of range
+ *                      ring index.
+ */
+int32_t udmaTestRingAllocNeg(UdmaTestTaskObj *taskObj)
+{
+    int32_t             retVal  = UDMA_SOK;
+    uint16_t            ringNum = UDMA_RING_ANY;
+    uint32_t            elemCnt = 50U;
+    void               *ringMem = NULL;
+    struct Udma_RingObj ringObj;
+    Udma_RingHandle     ringHandle;
+    Udma_RingPrms       ringPrms;
+    Udma_RingPrms       ringPrmsinit;
+    Udma_DrvHandle      drvHandle;
+    uint32_t            backUpDrvInitDone;
+    uint32_t            ringMemSize;
+    uint32_t            instId;
+
+    GT_1trace(taskObj->traceMask, GT_INFO1,
+              " |TEST INFO|:: Task:%d: Udma ringAlloc Testcase ::\r\n",
+              taskObj->taskId);
+
+    /* Test scenario 1: Check when ringHandle,driverHandle and ringPrms are NULL */
+    drvHandle  = (Udma_DrvHandle) NULL_PTR;
+    ringHandle = (Udma_RingHandle) NULL_PTR;
+    retVal     = Udma_ringAlloc(drvHandle, ringHandle, ringNum, NULL);
     if(UDMA_SOK != retVal)
     {
         retVal = UDMA_SOK;
@@ -526,15 +715,18 @@ int32_t udmaTestRingFree(UdmaTestTaskObj *taskObj)
     else
     {
         GT_0trace(taskObj->traceMask, GT_ERR,
-               " |TEST INFO|:: Test::Udma ring free Testcase  Failed!!\n");
+                  " |TEST INFO|:: FAIL:: UDMA:: ringAlloc :: Neg:: "
+                  " Check when ringHandle,driverHandle and ringPrms "
+                  " are NULL!!\n");
+        retVal = UDMA_EFAIL;
     }
 
-    ringHandle->ringInitDone = UDMA_INIT_DONE;
-    for(instID = UDMA_INST_ID_UDMAP_START; instID <= UDMA_INST_ID_UDMAP_MAX ; instID++)
+    if(UDMA_SOK == retVal)
     {
-	/* ringHandle->drvHandle is Null */
-	ringHandle->drvHandle = (Udma_DrvHandle)NULL_PTR;
-        retVal = Udma_ringFree(ringHandle);
+        /* Test scenario 2: Check when ringHandle and driverHandle are NULL */
+        ringHandle = (Udma_RingHandle) NULL_PTR;
+        drvHandle  = (Udma_DrvHandle) NULL_PTR;
+        retVal     = Udma_ringAlloc(drvHandle, ringHandle, ringNum, &ringPrms);
         if(UDMA_SOK != retVal)
         {
             retVal = UDMA_SOK;
@@ -542,57 +734,19 @@ int32_t udmaTestRingFree(UdmaTestTaskObj *taskObj)
         else
         {
             GT_0trace(taskObj->traceMask, GT_ERR,
-                " |TEST INFO|:: Test::Udma ring free Testcase when driver handle is null Failed!!\n");
+                      " |TEST INFO|:: FAIL:: UDMA:: ringAlloc :: Neg::"
+                      " Check when ringHandle and driverHandle are NULL!!\n");
+            retVal = UDMA_EFAIL;
         }
-
-        /* ringHandle->drvHandle->drvInitDone = UDMA_DEINIT_DONE */
-        ringHandle->drvHandle              = &taskObj->testObj->drvObj[instID];
-        ringHandle->drvHandle->drvInitDone = UDMA_DEINIT_DONE;
-        retVal = Udma_ringFree(ringHandle);
-        if(UDMA_SOK != retVal)
-        {
-            retVal = UDMA_SOK;
-        }
-        else
-        {
-            GT_0trace(taskObj->traceMask, GT_ERR,
-                " |TEST INFO|:: Test::Udma ring free Testcase when driver is UDMA_DEINIT_DONE Failed!!\n");
-         }
-         ringHandle->drvHandle->drvInitDone = UDMA_INIT_DONE;
     }
 
-    return retVal;
-}
-
-/*
- * Test Case Description: Verifies the function udmaTestRingAlloc when
- * 1)ringHandle,driverHandle and ringPrms are NULL
- * 2)ringHandle and driverHandle are NULL
- * 3)ringHandle and ringPrms are NULL
- * 4)ringHandle is NULL
- * 5)ringPrms and driverHandle are NULL
- * 6)ringHandle and ringPrms are NULL
- * 7)drvHandle is NULL
- * 8)ringPrms is NULL
- */
-int32_t udmaTestRingAlloc(UdmaTestTaskObj *taskObj)
-{
-    int32_t             retVal = UDMA_SOK;
-    struct Udma_RingObj ringObj;
-    Udma_RingHandle     ringHandle;
-    Udma_RingPrms       *ringPrms;
-    Udma_DrvHandle      drvHandle;
-    uint16_t            ringNum = UDMA_RING_ANY;
-    uint32_t            instID  = 0U;
-
-
-    for(instID = UDMA_INST_ID_UDMAP_START; instID <= UDMA_INST_ID_UDMAP_MAX ; instID++)
+    if(UDMA_SOK == retVal)
     {
-	/* ringHandle,driverHandle and ringPrms are NULL */
-        drvHandle  = (Udma_DrvHandle)NULL_PTR;
-        ringHandle = (Udma_RingHandle)NULL_PTR;
-        ringPrms   = (Udma_RingPrms*)NULL_PTR;
-        retVal = Udma_ringAlloc(drvHandle, ringHandle, ringNum, ringPrms);
+        /* Test scenario 3: Check when ringHandle and ringPrms are NULL */
+        ringHandle = (Udma_RingHandle) NULL_PTR;
+        instId     = UDMA_TEST_INST_ID_MAIN_0;
+        drvHandle  = &taskObj->testObj->drvObj[instId];
+        retVal     = Udma_ringAlloc(drvHandle, ringHandle, ringNum, NULL);
         if(UDMA_SOK != retVal)
         {
             retVal = UDMA_SOK;
@@ -600,13 +754,18 @@ int32_t udmaTestRingAlloc(UdmaTestTaskObj *taskObj)
         else
         {
             GT_0trace(taskObj->traceMask, GT_ERR,
-                   " |TEST INFO|:: Test::Udma ring alloc Testcase when ringhandle,driverhandle and ringprms are null Failed!!\n");
+                      " |TEST INFO|:: FAIL:: UDMA:: ringAlloc :: Neg::"
+                      " Check when ringHandle and ringPrms are NULL!!\n");
+            retVal = UDMA_EFAIL;
         }
+    }
 
-        /* ringHandle and driverHandle are NULL */
-        ringHandle = (Udma_RingHandle)NULL_PTR;
-        drvHandle  = (Udma_DrvHandle)NULL_PTR;
-        retVal = Udma_ringAlloc(drvHandle, ringHandle, ringNum, ringPrms);
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 4: Check when ringHandle is NULL */
+        ringHandle = (Udma_RingHandle) NULL_PTR;
+        drvHandle  = &taskObj->testObj->drvObj[instId];
+        retVal     = Udma_ringAlloc(drvHandle, ringHandle, ringNum, &ringPrms);
         if(UDMA_SOK != retVal)
         {
             retVal = UDMA_SOK;
@@ -614,43 +773,18 @@ int32_t udmaTestRingAlloc(UdmaTestTaskObj *taskObj)
         else
         {
             GT_0trace(taskObj->traceMask, GT_ERR,
-                   " |TEST INFO|:: Test::Udma ring alloc Testcase when ringhandle and driverhandle are null Failed!!\n");
+                      " |TEST INFO|:: FAIL:: UDMA:: ring alloc :: Neg::"
+                      " Check when ringHandle is NULL!\n");
+            retVal = UDMA_EFAIL;
         }
+    }
 
-        /* ringHandle and ringPrms are NULL */
-        ringHandle = (Udma_RingHandle)NULL_PTR;
-        drvHandle  = &taskObj->testObj->drvObj[instID];
-        ringPrms   = (Udma_RingPrms*)NULL_PTR;
-        retVal = Udma_ringAlloc(drvHandle, ringHandle, ringNum, ringPrms);
-        if(UDMA_SOK != retVal)
-        {
-            retVal = UDMA_SOK;
-        }
-        else
-        {
-            GT_0trace(taskObj->traceMask, GT_ERR,
-                " |TEST INFO|:: Test::Udma ring alloc Testcase when ringhandle and ringPrms are null Failed!!\n");
-        }
-
-        /* ringHandle is NULL */
-        ringHandle = (Udma_RingHandle)NULL_PTR;;
-        drvHandle  = &taskObj->testObj->drvObj[instID];
-        retVal = Udma_ringAlloc(drvHandle, ringHandle, ringNum, ringPrms);
-        if(UDMA_SOK != retVal)
-        {
-            retVal = UDMA_SOK;
-        }
-        else
-        {
-            GT_0trace(taskObj->traceMask, GT_ERR,
-                " |TEST INFO|:: Test::Udma ring alloc Testcase when ringhandle is null Failed!!\n");
-        }
-
-        /* ringPrms and driverHandle are NULL */
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 5: Check when ringPrms and driverHandle are NULL */
         ringHandle = &ringObj;
-        drvHandle  = (Udma_DrvHandle)NULL_PTR;;
-        ringPrms   = (Udma_RingPrms*)NULL_PTR;
-        retVal = Udma_ringAlloc(drvHandle, ringHandle, ringNum, ringPrms);
+        drvHandle  = (Udma_DrvHandle) NULL_PTR;
+        retVal     = Udma_ringAlloc(drvHandle, ringHandle, ringNum, NULL);
         if(UDMA_SOK != retVal)
         {
             retVal = UDMA_SOK;
@@ -658,13 +792,18 @@ int32_t udmaTestRingAlloc(UdmaTestTaskObj *taskObj)
         else
         {
             GT_0trace(taskObj->traceMask, GT_ERR,
-                " |TEST INFO|:: Test::Udma ring alloc Testcase when driverhandle and ringPrms are null Failed!!\n");
+                      " |TEST INFO|:: FAIL:: UDMA:: ringAlloc :: Neg::"
+                      " Check when ringPrms and driverHandle are NULL!!\n");
+            retVal = UDMA_EFAIL;
         }
+    }
 
-        /* drvHandle is NULL */
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 6: Check when driverHandle is NULL */
         ringHandle = &ringObj;
-        drvHandle  = (Udma_DrvHandle)NULL_PTR;
-        retVal = Udma_ringAlloc(drvHandle, ringHandle, ringNum, ringPrms);
+        drvHandle  = (Udma_DrvHandle) NULL_PTR;
+        retVal     = Udma_ringAlloc(drvHandle, ringHandle, ringNum, &ringPrms);
         if(UDMA_SOK != retVal)
         {
             retVal = UDMA_SOK;
@@ -672,14 +811,18 @@ int32_t udmaTestRingAlloc(UdmaTestTaskObj *taskObj)
         else
         {
             GT_0trace(taskObj->traceMask, GT_ERR,
-                " |TEST INFO|:: Test::Udma ring alloc Testcase when driverhandle is null Failed!!\n");
+                      " |TEST INFO|:: FAIL:: UDMA:: ringAlloc :: Neg::"
+                      " Check when driverHandle is NULL!\n");
+            retVal = UDMA_EFAIL;
         }
+    }
 
-        /* ringPrms is NULL */
-        ringHandle =  &ringObj;
-        drvHandle  = &taskObj->testObj->drvObj[instID];
-        ringPrms   = (Udma_RingPrms*)NULL_PTR;
-        retVal = Udma_ringAlloc(drvHandle, ringHandle, ringNum, ringPrms);
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 7: Check when ringPrms is NULL */
+        ringHandle = &ringObj;
+        drvHandle  = &taskObj->testObj->drvObj[instId];
+        retVal     = Udma_ringAlloc(drvHandle, ringHandle, ringNum, NULL);
         if(UDMA_SOK != retVal)
         {
             retVal = UDMA_SOK;
@@ -687,9 +830,84 @@ int32_t udmaTestRingAlloc(UdmaTestTaskObj *taskObj)
         else
         {
             GT_0trace(taskObj->traceMask, GT_ERR,
-                " |TEST INFO|:: Test::Udma ring alloc Testcase when ringprms is null Failed!!\n");
+                      " |TEST INFO|:: FAIL:: UDMA:: ringAlloc :: Neg::"
+                      " Check when ringPrms is NULL!!\n");
+            retVal = UDMA_EFAIL;
         }
-        drvHandle->drvInitDone = UDMA_INIT_DONE;
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 8: Check when drvInitDone is UDMA_DEINIT_DONE */
+        UdmaRingPrms_init(&ringPrmsinit);
+        backUpDrvInitDone      = drvHandle->drvInitDone;
+        drvHandle->drvInitDone = UDMA_DEINIT_DONE;
+        retVal                 = Udma_ringAlloc(drvHandle, ringHandle, ringNum,
+                                                &ringPrmsinit);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: ringAlloc :: Neg::"
+                      " Check when drvInitDone is UDMA_DEINIT_DONE!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        drvHandle->drvInitDone = backUpDrvInitDone;
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 9: Check to get ringNum as UDMA_RING_INVALID from Udma_rmAllocFreeRing */
+        ringMemSize                = elemCnt * sizeof (uint64_t);
+        ringMem                    = Utils_memAlloc(UTILS_MEM_HEAP_ID_MSMC, ringMemSize,
+                                                    UDMA_CACHELINE_ALIGNMENT);
+        UdmaRingPrms_init(&ringPrmsinit);
+        ringPrmsinit.ringMem       = ringMem;
+        ringPrmsinit.ringMemSize   = ringMemSize;
+        ringPrmsinit.mode          = UDMA_TEST_RING_MODE_DEFAULT_START;
+        ringPrmsinit.elemCnt       = elemCnt;
+        ringNum                    = UDMA_RING_ANY;
+        ringPrmsinit.mappedRingGrp = UDMA_MAPPED_GROUP_INVALID;
+        drvHandle                  = &taskObj->testObj->drvObj[UDMA_TEST_INST_ID_BCDMA_0];
+        retVal                     = Udma_ringAlloc(drvHandle, ringHandle, ringNum,
+                                                    &ringPrmsinit);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: ringAlloc:: Neg::"
+                      " Check to get ringNum as UDMA_RING_INVALID from "
+                      " Udma_rmAllocFreeRing !!\n");
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 10: To get error print message [Error] Out of
+         *                   range ring index
+         */
+        instId    = UDMA_TEST_INST_ID_MAIN_0;
+        drvHandle = &taskObj->testObj->drvObj[instId];
+        ringNum   = UDMA_RING_INVALID;
+        retVal    = Udma_ringAlloc(drvHandle, ringHandle, ringNum, &ringPrmsinit);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: ringAlloc :: Neg::"
+                      " To get error print message [Error] Out of range ring index!!\n");
+            retVal = UDMA_EFAIL;
+        }
     }
 
     return retVal;
@@ -697,26 +915,27 @@ int32_t udmaTestRingAlloc(UdmaTestTaskObj *taskObj)
 
 /*
  * Test Case Description: Verifies the function Udma_ringFlushRaw when
- * 1)ringHandle is NULL.
- * 2)ringInitDone = UDMA_DEINIT_DONE.
- * 3)ringNum = UDMA_RING_INVALID.
- * 4)ringHandle->drvHandle is Null.
- * 5)ringHandle->drvHandle->drvInitDone = UDMA_DEINIT_DONE.
+ * 1)Test scenario 1: Check when ringHandle is NULL.
+ * 2)Test scenario 2: Check when ringInitDone is UDMA_DEINIT_DONE.
+ * 3)Test scenario 3: Check when ringNum is UDMA_RING_INVALID.
+ * 4)Test scenario 4: Check when drvHandle is NULL.
+ * 5)Test scenario 5: Check when drvInitDone is UDMA_DEINIT_DONE.
  */
-int32_t UdmaTestRingFlushRaw(UdmaTestTaskObj *taskObj)
+int32_t UdmaTestRingFlushRawNeg(UdmaTestTaskObj *taskObj)
 {
     int32_t             retVal     = UDMA_SOK;
     uint64_t            phyDescMem = 0UL;
     struct Udma_RingObj ringObj;
     Udma_RingHandle     ringHandle;
-    uint32_t            instID;
+    uint32_t            instId;
 
     GT_1trace(taskObj->traceMask, GT_INFO1,
-              " |TEST INFO|:: Task:%d: Udma ring flush raw negative Testcase ::\r\n", taskObj->taskId);
+              " |TEST INFO|:: Task:%d: Udma ringflushraw negative Testcase ::\r\n",
+              taskObj->taskId);
 
-    /* ringHandle is NULL */
-    ringHandle = (Udma_RingHandle)NULL_PTR;
-    retVal = Udma_ringFlushRaw(ringHandle, &phyDescMem);
+    /* Test scenario 1: Check when ringHandle is NULL */
+    ringHandle = (Udma_RingHandle) NULL_PTR;
+    retVal     = Udma_ringFlushRaw(ringHandle, &phyDescMem);
     if(UDMA_SOK != retVal)
     {
         retVal = UDMA_SOK;
@@ -724,45 +943,18 @@ int32_t UdmaTestRingFlushRaw(UdmaTestTaskObj *taskObj)
     else
     {
         GT_0trace(taskObj->traceMask, GT_ERR,
-            " |TEST INFO|:: Test::Udma ring flush raw negative Testcase Failed!!\n");
+                  " |TEST INFO|:: FAIL:: UDMA:: ringflushraw :: Neg::"
+                  " Check when ringHandle is NULL!!\n");
+        retVal = UDMA_EFAIL;
     }
 
-    /*when ringInitDone = UDMA_DEINIT_DONE*/
-    ringHandle               = &ringObj;
-    ringHandle->ringInitDone = UDMA_DEINIT_DONE;
-    ringHandle->ringNum      = UDMA_RING_ANY;
-    retVal = Udma_ringFlushRaw(ringHandle, &phyDescMem);
-    if(UDMA_SOK != retVal)
+    if(UDMA_SOK == retVal)
     {
-        retVal = UDMA_SOK;
-    }
-    else
-    {
-        GT_0trace(taskObj->traceMask, GT_ERR,
-            " |TEST INFO|:: Test::Udma ring flush raw negative Testcase Failed!!\n");
-    }
-
-    /*when ringNum != UDMA_RING_INVALID*/
-    ringHandle               = &ringObj;
-    ringHandle->ringInitDone = UDMA_INIT_DONE;
-    ringHandle->ringNum      = UDMA_RING_INVALID;
-    retVal = Udma_ringFlushRaw(ringHandle, &phyDescMem);
-    if(UDMA_SOK != retVal)
-    {
-        retVal = UDMA_SOK;
-    }
-    else
-    {
-        GT_0trace(taskObj->traceMask, GT_ERR,
-            " |TEST INFO|:: Test::Udma ring flush raw negative Testcase Failed!!\n");
-    }
-
-    ringHandle->ringNum = UDMA_RING_ANY;
-    for(instID = UDMA_INST_ID_UDMAP_START; instID <= UDMA_INST_ID_UDMAP_MAX ; instID++)
-    {
-        /* ringHandle->drvHandle is Null */
-        ringHandle->drvHandle = (Udma_DrvHandle)NULL_PTR;
-        retVal = Udma_ringFlushRaw(ringHandle, &phyDescMem);
+        /* Test scenario 2: Check when ringInitDone is UDMA_DEINIT_DONE */
+        ringHandle               = &ringObj;
+        ringHandle->ringInitDone = UDMA_DEINIT_DONE;
+        ringHandle->ringNum      = UDMA_RING_ANY;
+        retVal                   = Udma_ringFlushRaw(ringHandle, &phyDescMem);
         if(UDMA_SOK != retVal)
         {
             retVal = UDMA_SOK;
@@ -770,13 +962,58 @@ int32_t UdmaTestRingFlushRaw(UdmaTestTaskObj *taskObj)
         else
         {
             GT_0trace(taskObj->traceMask, GT_ERR,
-                " |TEST INFO|:: Test::Udma ring flush raw testcase when drvHandle is null Failed!!\n");
+                      " |TEST INFO|:: FAIL:: UDMA:: ringflushraw :: Neg::"
+                      " Check when ringInitDone is UDMA_DEINIT_DONE!!\n");
+            retVal = UDMA_EFAIL;
         }
+    }
 
-        /* ringHandle->drvHandle->drvInitDone = UDMA_DEINIT_DONE */
-        ringHandle->drvHandle              = &taskObj->testObj->drvObj[instID];
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 3: Check when ringNum is UDMA_RING_INVALID */
+        ringHandle               = &ringObj;
+        ringHandle->ringInitDone = UDMA_INIT_DONE;
+        ringHandle->ringNum      = UDMA_RING_INVALID;
+        retVal                   = Udma_ringFlushRaw(ringHandle, &phyDescMem);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: ringflushraw :: Neg::"
+                      " Check when ringNum is UDMA_RING_INVALI!!\n");
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 4: Check when drvHandle is NULL */
+        ringHandle->ringNum   = UDMA_RING_ANY;
+        ringHandle->drvHandle = (Udma_DrvHandle) NULL_PTR;
+        retVal                = Udma_ringFlushRaw(ringHandle, &phyDescMem);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: ringflushraw :: Neg::"
+                      " Check when drvHandle is NULL!!\n");
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 5: Check when drvInitDone is UDMA_DEINIT_DONE */
+        instId                             = UDMA_TEST_INST_ID_MAIN_0;
+        ringHandle->drvHandle              = &taskObj->testObj->drvObj[instId];
         ringHandle->drvHandle->drvInitDone = UDMA_DEINIT_DONE;
-        retVal = Udma_ringFlushRaw(ringHandle, &phyDescMem);
+        retVal                             = Udma_ringFlushRaw(ringHandle, &phyDescMem);
         if(UDMA_SOK != retVal)
         {
             retVal = UDMA_SOK;
@@ -784,7 +1021,9 @@ int32_t UdmaTestRingFlushRaw(UdmaTestTaskObj *taskObj)
         else
         {
             GT_0trace(taskObj->traceMask, GT_ERR,
-                " |TEST INFO|:: Test::Udma ring flush raw testcase when drvInitDone = UDMA_DEINIT_DONE Failed!!\n");
+                      " |TEST INFO|:: FAIL:: UDMA:: ringflushraw :: Neg::"
+                      " Check when drvInitDone is UDMA_DEINIT_DONE!!\n");
+            retVal = UDMA_EFAIL;
         }
         ringHandle->drvHandle->drvInitDone = UDMA_INIT_DONE;
     }
@@ -794,18 +1033,20 @@ int32_t UdmaTestRingFlushRaw(UdmaTestTaskObj *taskObj)
 
 /*
  * Test Case Description: Verifies the function UdmaRingPrms_init when
- * ringPrms is NULL.
+ * Test scenario 1: Check when ringPrms is NULL.
  */
-int32_t UdmaTest_RingPrms_init(UdmaTestTaskObj *taskObj)
+int32_t UdmaTestRingPrmsInitNeg(UdmaTestTaskObj *taskObj)
 {
-    int32_t  retVal = UDMA_SOK;
+    int32_t        retVal = UDMA_SOK;
+    Udma_RingPrms *ringPrms;
+
     GT_1trace(taskObj->traceMask, GT_INFO1,
-               " |TEST INFO|:: Task:%d: UDMA ring prms init negative Testcase ::\r\n", taskObj->taskId);
+              " |TEST INFO|:: Task:%d: UDMA RingPrmsinit negative Testcase ::\r\n",
+              taskObj->taskId);
 
-    /* flowPrms is NULL */
-    Udma_RingPrms *ringPrms = (Udma_RingPrms*) NULL_PTR;
-
-    retVal = UdmaRingPrms_init(ringPrms);
+    /* Test scenario 1: Check when ringPrms is NULL */
+    ringPrms = (Udma_RingPrms*) NULL_PTR;
+    retVal   = UdmaRingPrms_init(ringPrms);
     if(UDMA_SOK != retVal)
     {
         retVal = UDMA_SOK;
@@ -813,7 +1054,9 @@ int32_t UdmaTest_RingPrms_init(UdmaTestTaskObj *taskObj)
     else
     {
         GT_0trace(taskObj->traceMask, GT_ERR,
-               " |TEST INFO|:: Test:: UDMA ring prms init negative Testcase failed\n");
+                  " |TEST INFO|:: FAIL:: UDMA:: RingPrmsinit :: Neg::"
+                  " Check when ringPrms is NUL!!\n");
+        retVal = UDMA_EFAIL;
     }
 
     return retVal;
@@ -821,19 +1064,25 @@ int32_t UdmaTest_RingPrms_init(UdmaTestTaskObj *taskObj)
 }
 
 /*
- * Test Case Description: Verifies the function UdmaRingMonPrms_init when
- * monPrms is NULL.
+ * Test Case Description: Verifies the function Udma_ringProxyQueueRaw when
+ * 1) Test scenario 1: Check when instType is not UDMA_INST_TYPE_NORMAL.
  */
-int32_t UdmaTest_RingMonPrms_init(UdmaTestTaskObj *taskObj)
+int32_t UdmaTestRingProxyQueueRawNeg(UdmaTestTaskObj *taskObj)
 {
-    int32_t  retVal = UDMA_SOK;
+    int32_t             retVal     = UDMA_SOK;
+    uint64_t            phyDescMem = 0UL;
+    struct Udma_RingObj ringObj;
+    Udma_RingHandle     ringHandle;
+    Udma_DrvHandle      drvHandle;
+
     GT_1trace(taskObj->traceMask, GT_INFO1,
-               " |TEST INFO|:: Task:%d: UDMA ring prms init negative Testcase ::\r\n", taskObj->taskId);
+              " |TEST INFO|:: Task:%d: UDMA ringProxyQueueRaw negative Testcase ::\r\n",
+              taskObj->taskId);
 
-    /* flowPrms is NULL */
-    Udma_RingMonPrms *monPrms = (Udma_RingMonPrms*) NULL_PTR;
-
-    retVal = UdmaRingMonPrms_init(monPrms);
+    /* Test scenario 1: Check when instType is not UDMA_INST_TYPE_NORMAL */
+    ringHandle = &ringObj;
+    drvHandle  = &taskObj->testObj->drvObj[UDMA_TEST_INST_ID_BCDMA_0];
+    retVal     = Udma_ringProxyQueueRaw(ringHandle, drvHandle, phyDescMem);
     if(UDMA_SOK != retVal)
     {
         retVal = UDMA_SOK;
@@ -841,9 +1090,46 @@ int32_t UdmaTest_RingMonPrms_init(UdmaTestTaskObj *taskObj)
     else
     {
         GT_0trace(taskObj->traceMask, GT_ERR,
-               " |TEST INFO|:: Test:: UDMA ring Mon prms init negative Testcase failed\n");
+                  " |TEST INFO|:: FAIL:: UDMA:: ringProxyQueueRaw:: Neg::"
+                  " Check when instType is not UDMA_INST_TYPE_NORMAL!!\n");
+        retVal = UDMA_EFAIL;
     }
 
     return retVal;
-
 }
+
+/*
+ * Test Case Description: Verifies the function Udma_ringProxyDequeueRaw when
+ * 1) Test scenario 1: Check when instType is not UDMA_INST_TYPE_NORMAL.
+ */
+int32_t UdmaTestRingProxyDequeueRawNeg(UdmaTestTaskObj *taskObj)
+{
+    int32_t             retVal     = UDMA_SOK;
+    uint64_t            phyDescMem = 0UL;
+    struct Udma_RingObj ringObj;
+    Udma_RingHandle     ringHandle;
+    Udma_DrvHandle      drvHandle;
+
+    GT_1trace(taskObj->traceMask, GT_INFO1,
+              " |TEST INFO|:: Task:%d: UDMA ringProxyDequeueRaw negative Testcase ::\r\n",
+              taskObj->taskId);
+
+    /* Test scenario 1: Check when instType is not UDMA_INST_TYPE_NORMAL */
+    ringHandle = &ringObj;
+    drvHandle  = &taskObj->testObj->drvObj[UDMA_TEST_INST_ID_BCDMA_0];
+    retVal     = Udma_ringProxyDequeueRaw(ringHandle, drvHandle, &phyDescMem);
+    if(UDMA_SOK != retVal)
+    {
+        retVal = UDMA_SOK;
+    }
+    else
+    {
+        GT_0trace(taskObj->traceMask, GT_ERR,
+                  " |TEST INFO|:: FAIL:: UDMA:: ringProxyDequeueRaw:: Neg::"
+                  " Check when instType is not UDMA_INST_TYPE_NORMAL!!\n");
+        retVal = UDMA_EFAIL;
+    }
+
+    return retVal;
+}
+
