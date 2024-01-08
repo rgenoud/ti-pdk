@@ -952,10 +952,6 @@ static void Ipc_updateVirtioInfo(uint32_t numProc, const void *baseAddr, uint32_
     cnt += (b - a - 1U);
     cnt *= 4U;
 
-#if defined DEBUG_PRINT
-    SystemP_printf("Virtio: cnt %d, a 0x%x, b 0x%x, \n", cnt, a, b);
-#endif
-
     if(info->remoteId > info->selfId)
     {
         info->daTx       = (uint32_t)((uint32_t)(uintptr_t)baseAddr + (cnt * vrBufSize));
@@ -984,7 +980,6 @@ static void Ipc_updateVirtioInfo(uint32_t numProc, const void *baseAddr, uint32_
      */
     if(TRUE == Virtio_isRemoteLinux((uint16_t)(info->remoteId)))
     {
-        SystemP_printf("Virtio: Virtio_isRemoteLinux() is set!!!");
         Ipc_ResourceTable *rsc = (Ipc_ResourceTable*)rscTable;
         info->daTx      = rsc->rpmsg_vring0.da;
         info->daRx      = rsc->rpmsg_vring1.da;
@@ -1047,8 +1042,6 @@ int32_t VirtioIPC_init(Ipc_VirtIoParams *vqParams)
                  procId);
             break;
         }
-        SystemP_printf("VirtioIPC_init: Created VirtIO for procId=%u..\n",
-                procId);
     }
     return retVal;
 }

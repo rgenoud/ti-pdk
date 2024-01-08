@@ -67,8 +67,6 @@ uintptr_t g_navssIntRtrBaseVirtAddr = 0;
 #endif
 #endif
 
-#define DEBUG_PRINT
-
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
@@ -234,7 +232,6 @@ int32_t Ipc_mailboxModuleStartup (void)
  */
 static void Ipc_mailboxEnable(uintptr_t baseAddr, uint32_t userId, uint32_t queueId)
 {
-    printf("%s:%d: Enabling mailbox interrupt baseAddr=0x%lX, userId=%u, queueId=%u\n", __FUNCTION__, __LINE__, baseAddr, userId, queueId);
     MailboxEnableNewMsgInt(baseAddr, userId, queueId);
 }
 
@@ -311,14 +308,13 @@ int32_t Ipc_mailboxSend(uint32_t selfId, uint32_t remoteProcId, uint32_t val,
 
         if(MESSAGE_INVALID == retVal)
         {
-            slogf(_SLOGC_PRIVATE_START+320, _SLOG_ERROR, "Ipc_mailboxSend : BaseAddr 0x%x queue %d value %d failed\n", baseAddr,  queueId, val);
 #ifdef DEBUG_PRINT
             SystemP_printf("Ipc_mailboxSend : BaseAddr 0x%x queue %d value %d failed\n",
                 baseAddr,  queueId, val);
 #endif
             status = IPC_EFAIL;
         }
-            slogf(_SLOGC_PRIVATE_START+320, _SLOG_ERROR, "Ipc_mailboxSend : BaseAddr 0x%x queue %d value %d\n", baseAddr,  queueId, val);
+
 #if defined DEBUG_PRINT
         SystemP_printf("Ipc_mailboxSend : BaseAddr 0x%x queue %d value %d\n",
             baseAddr,  queueId, val);
@@ -352,12 +348,8 @@ int32_t Ipc_mailboxRegister(uint16_t selfId, uint16_t remoteProcId,
     pObj = getIpcObjInst(0U);
     pOsal = &pObj->initPrms.osalPrms;
 
-    printf("%s:%d: Ipc_getMailboxInfoRx, selfId=%u, remoteProcId=%u\n", __FUNCTION__, __LINE__, selfId, remoteProcId);
-
     Ipc_getMailboxInfoRx(selfId, remoteProcId,
         &clusterId, &userId, &queueId);
-
-    printf("%s:%d: Ipc_getMailboxInfoRx returned clusterId=%u, userId=%u, queueId=%u\n", __FUNCTION__, __LINE__, clusterId, userId, queueId);
 
     if( (clusterId != MAILBOX_CLUSTER_INVALID) && (IPC_MAX_PROCS > remoteProcId))
     {
@@ -401,29 +393,12 @@ int32_t Ipc_mailboxRegister(uint16_t selfId, uint16_t remoteProcId,
 
 #ifdef IPC_SUPPORT_SCICLIENT
                     /* Get the Interrupt Configuration */
-                    retVal = Ipc_getMailboxIntrRouterCfg(selfId, clusterId, userId, &cfg, g_ipc_mBoxCnt);
-                    if(retVal != 0)
-                    {
-                        SystemP_printf("Failed retrieve mailbox intr router config...%d\n", retVal);
-                    }
-                    else
-                    {
-                        SystemP_printf("Successfully retrieved mailbox intr router config...%d\n", retVal);
-                    }
+                    Ipc_getMailboxIntrRouterCfg(selfId, clusterId, userId, &cfg, g_ipc_mBoxCnt);
 
                     {
                         /* Release the resource first */
                         SystemP_printf("Attempting to release irq through sciclient...selfId=%d, clusterId=%d, userId=%d, eventId=%d\n", selfId, clusterId, userId, cfg.eventId);
-                        retVal = Ipc_sciclientIrqRelease(selfId, clusterId, userId, cfg.eventId);
-                        if(retVal != 0)
-                        {
-                            SystemP_printf("Failed to release irq through sciclient...%d\n", retVal);
-                        }
-                        else
-                        {
-                            SystemP_printf("Successfully released irq through sciclient...%d\n", retVal);
-                        }
-
+                        Ipc_sciclientIrqRelease(selfId, clusterId, userId, cfg.eventId);
 
                         uint32_t timeout_cnt = 10;
                         do
@@ -432,10 +407,6 @@ int32_t Ipc_mailboxRegister(uint16_t selfId, uint16_t remoteProcId,
                             if(retVal != 0)
                             {
                                 SystemP_printf("Failed to register irq through sciclient...%d\n", retVal);
-                            }
-                            else
-                            {
-                                SystemP_printf("Successfully registered irq through sciclient...%d\n", retVal);
                             }
                             timeout_cnt--;
                         }while((retVal != 0) && (timeout_cnt > 0U));
@@ -451,7 +422,6 @@ int32_t Ipc_mailboxRegister(uint16_t selfId, uint16_t remoteProcId,
                     /* Register Mailbox interrupt now... */
                     if (retVal == IPC_SOK)
                     {
-                        SystemP_printf("Registering interrupt...cfg->eventId=%u\n", cfg.eventId);
                         /* disable the mailbox interrupt (from previous runs) */
                         Ipc_mailboxDisable(baseAddr, userId, queueId);
                         pObj->interruptHandle = pOsal->registerIntr(
@@ -525,7 +495,6 @@ static void Ipc_mailboxInternalCallback(uintptr_t arg)
     Ipc_MailboxFifo      *fifo;
 
     mbox = (Ipc_MailboxData *)arg;
-    SystemP_printf("%s: called, mbox(arg)=%p\n", mbox);
     if(mbox != NULL)
     {
         mbox->intCnt++;
@@ -600,7 +569,6 @@ void Ipc_mailboxDisableNewMsgInt(uint16_t selfId, uint16_t remoteProcId)
 
 void *Mailbox_plugInterrupt(Ipc_MbConfig *cfg, Ipc_OsalIsrFxn func, uintptr_t arg)
 {
-    SystemP_printf("Started. cfg=0x%p, cfg->eventId=%d, Ipc_OsalIsrFxn=%p, arg=%p\n", cfg, cfg->eventId, func, arg);
     OsalRegisterIntrParams_t    intrPrms;
     OsalInterruptRetCode_e      osalRetVal;
     HwiP_Handle                 hwiHandle = NULL;
@@ -666,7 +634,6 @@ void *Mailbox_plugInterrupt(Ipc_MbConfig *cfg, Ipc_OsalIsrFxn func, uintptr_t ar
 #else
     coreIntrNum = cfg->eventId;
 #endif
-
 
 #ifdef QNX_OS
 #if 1 //def DEBUG_PRINT

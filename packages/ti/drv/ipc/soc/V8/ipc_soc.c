@@ -281,7 +281,6 @@ int32_t Ipc_getMailboxInfoRx(uint32_t selfId, uint32_t remoteId,
 uintptr_t Ipc_getMailboxBaseAddr(uint32_t clusterId)
 {
     uintptr_t baseAddr = 0x00000000U;
-    printf("%s:%d: Getting mailbox base addr clusterId=%u\n", __FUNCTION__, __LINE__, clusterId);
 
     if( clusterId < IPC_MAILBOX_CLUSTER_CNT)
     {
@@ -299,21 +298,6 @@ uintptr_t Ipc_getMailboxBaseAddr(uint32_t clusterId)
 
     return baseAddr;
 }
-
-// THIS IS WRONG, I think. No NAVSS
-// uint32_t Ipc_getNavss512MailboxInputIntr(uint32_t clusterId, uint32_t userId)
-// {
-//     uint32_t   mailboxIntrNum = 0U;
-
-//     if( (clusterId != MAILBOX_CLUSTER_INVALID) &&
-//         (clusterId < IPC_MAILBOX_CLUSTER_CNT)  &&
-//         (userId != MAILBOX_USER_INVALID)       &&
-//         (userId < IPC_MAILBOX_USER_CNT))
-//     {
-//         mailboxIntrNum = g_Navss512MbInput[clusterId] + userId;
-//     }
-//     return mailboxIntrNum;
-// }
 
 uint32_t Ipc_getMailboxInputIntr(uint32_t clusterId, uint32_t userId)
 {
@@ -431,7 +415,6 @@ int32_t Ipc_setCoreEventId(uint32_t selfId, Ipc_MbConfig* cfg, uint32_t intrCnt)
     cfg->eventId = cfg->inputIntrNum;
 #endif
     cfg->outputIntrNum = outIntrNum;
-    //cfg->eventId       = vimEventNum;
     cfg->eventIdBase   = vimEventBaseNum;
 
     return retVal;
@@ -497,18 +480,6 @@ static const uint16_t map_src_id[] =
 /* Indexed list of req type */
 static const uint16_t req_type[] =
 {
-#if 0
-    /* NOTE: This list should match the Core index */
-    TISCI_DEV_GICSS0, //TISCI_DEV_MAIN_GPIOMUX_INTROUTER0, //TISCI_DEV_GICSS0
-    TISCI_DEV_GICSS0, //TISCI_DEV_MAIN_GPIOMUX_INTROUTER0,
-    TISCI_DEV_GICSS0, //TISCI_DEV_MAIN_GPIOMUX_INTROUTER0,
-    TISCI_DEV_GICSS0, //TISCI_DEV_MAIN_GPIOMUX_INTROUTER0,
-    TISCI_DEV_GICSS0, //TISCI_DEV_MAIN_GPIOMUX_INTROUTER0,
-    TISCI_DEV_GICSS0, //TISCI_DEV_MAIN_GPIOMUX_INTROUTER0,
-    TISCI_DEV_GICSS0, //TISCI_DEV_MAIN_GPIOMUX_INTROUTER0,
-    TISCI_DEV_GICSS0, //TISCI_DEV_MAIN_GPIOMUX_INTROUTER0,
-    TISCI_DEV_GICSS0  //TISCI_DEV_MAIN_GPIOMUX_INTROUTER0
-#else
     TISCI_DEV_MAIN_GPIOMUX_INTROUTER0,
     TISCI_DEV_MAIN_GPIOMUX_INTROUTER0,
     TISCI_DEV_MAIN_GPIOMUX_INTROUTER0,
@@ -518,7 +489,6 @@ static const uint16_t req_type[] =
     TISCI_DEV_MAIN_GPIOMUX_INTROUTER0,
     TISCI_DEV_MAIN_GPIOMUX_INTROUTER0,
     TISCI_DEV_MAIN_GPIOMUX_INTROUTER0
-#endif
 };
 
 /* Indexed list of req subtype */
