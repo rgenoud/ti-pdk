@@ -43,6 +43,19 @@
 
 #include <ti/drv/sciclient/sciserver_tirtos.h>
 #include "boot_app_priv.h"
+
+#if defined(SAFETY_CHECKER_LOOP_ENABLED)
+#if defined(SOC_J721E)
+#include <soc/j721e/safety_checkers_regcfg.h>
+#elif defined(SOC_J7200)
+#include <soc/j7200/safety_checkers_regcfg.h>
+#elif defined(SOC_J721S2)
+#include <soc/j721s2/safety_checkers_regcfg.h>
+#elif defined(SOC_J784S4)
+#include <soc/j784s4/safety_checkers_regcfg.h>
+#endif
+#endif
+
 #if defined(BOOT_MMCSD)
 #include "boot_app_mmcsd.h"
 #elif defined(BOOT_OSPI)
@@ -90,6 +103,10 @@ TaskP_Handle gBootAppCanTask;
 static uint8_t gBootAppTaskStack[BOOT_APP_TASK_STACK] __attribute__((aligned(32)));
 TaskP_Handle gBootAppTask;
 static uint64_t gBootAppTimeStart, gBootAppTimeFinish;
+
+#if defined(SAFETY_CHECKER_LOOP_ENABLED)
+volatile uint32_t gBootAppTimerIsrCount = 0;
+#endif
 
 /* ========================================================================== */
 /*                  Internal/Private Function Declarations                    */
@@ -166,6 +183,17 @@ static int32_t BootApp_releaseCores(uint8_t stageNum);
  * \return None
  */
 static void BootApp_bootTaskFxn(void* a0, void* a1);
+
+#if defined(SAFETY_CHECKER_LOOP_ENABLED)
+/**
+ * \brief  Safety loop execution for PM, RM, and TIFS safety checker libraries
+ *
+ * \param  None
+ *
+ * \return CSL_PASS for success, CSL_EFAIL for failure
+ */
+static int32_t BootApp_safetyCheckerLoop(void);
+#endif
 
 #if defined(CAN_RESP_TASK_ENABLED)
 /**
@@ -460,6 +488,184 @@ static void BootApp_bootTaskFxn(void* a0, void* a1)
     return;
 }
 
+#if defined(SAFETY_CHECKER_LOOP_ENABLED)
+void BootApp_timerIsr(void *arg)
+{
+    gBootAppTimerIsrCount = 1;
+}
+
+static int32_t BootApp_safetyCheckerLoop()
+{
+    int32_t      retVal = CSL_PASS;
+
+#if defined(SC_REGDUMP_ENABLE)
+    uint32_t pscCnt = 0;
+    uint32_t pllCnt = 0;
+    uint32_t rmCnt = 0;
+    uint32_t tifsCnt = 0, regCnt = 0;
+
+    /* Delay print out of boot log to avoid prints by other tasks */
+    TaskP_sleep(15000);
+
+    /* Get the PSC register dump */
+    retVal = SafetyCheckers_pmGetPscRegCfg(pm_pscRegCfg, SAFETY_CHECKERS_PM_PSC_REGDUMP_SIZE);
+
+    if(retVal == CSL_PASS)
+    {
+        UART_printf("static uintptr_t  pm_pscRegCfg[] = {\n");
+        for(pscCnt = 0; pscCnt < SAFETY_CHECKERS_PM_PSC_REGDUMP_SIZE; pscCnt++)
+        {
+            UART_printf("0x%08x,\n",(uint32_t)pm_pscRegCfg[pscCnt]);
+        }
+        UART_printf("};\n\n");
+    }
+
+    /* Get the PLL register dump */
+    retVal = SafetyCheckers_pmGetPllRegCfg(pm_pllRegCfg, SAFETY_CHECKERS_PM_PLL_REGDUMP_SIZE);
+
+    if(retVal == CSL_PASS)
+    {
+        UART_printf("static uintptr_t  pm_pllRegCfg[] = {\n");
+        for(pllCnt = 0; pllCnt < SAFETY_CHECKERS_PM_PLL_REGDUMP_SIZE; pllCnt++)
+        {
+            UART_printf("0x%08x,\n",(uint32_t)pm_pllRegCfg[pllCnt]);
+        }
+        UART_printf("};\n\n");
+    }
+
+    /* Get the RM register dump */
+    retVal = SafetyCheckers_rmGetRegCfg(rm_regCfg, SAFETY_CHECKERS_RM_REGDUMP_SIZE);
+
+    if(retVal == CSL_PASS)
+    {
+        UART_printf("static uintptr_t rm_regCfg[] __attribute__((section(\".data_buffer\")));\n");
+        UART_printf("static uintptr_t rm_regCfg[] __attribute__((aligned (4096)));\n");
+        UART_printf("static uintptr_t rm_regCfg[] = {\n");
+        for(rmCnt = 0; rmCnt < SAFETY_CHECKERS_RM_REGDUMP_SIZE; rmCnt++)
+        {
+            UART_printf("0x%08x,\n",(uint32_t)rm_regCfg[rmCnt]);
+        }
+        UART_printf("};\n\n");
+    }
+
+    retVal = SafetyCheckers_tifsReqFwlOpen();
+
+    if(retVal == CSL_PASS)
+    {
+        /* Get the TIFS register dump */
+        retVal = SafetyCheckers_tifsGetFwlCfg(tifs_fwlConfig, TIFS_CHECKER_FWL_MAX_NUM);
+    }
+
+    if(retVal == CSL_PASS)
+    {
+        UART_printf("SafetyCheckers_TifsFwlConfig tifs_fwlConfig[TIFS_CHECKER_FWL_MAX_NUM] = {\n");
+        for(tifsCnt = 0; tifsCnt < TIFS_CHECKER_FWL_MAX_NUM; tifsCnt++)
+        {
+            UART_printf("{\n");
+            UART_printf("   %dU,    /* fwlId */\n",(uint32_t)tifs_fwlConfig[tifsCnt].fwlId);
+            UART_printf("   %dU,    /* numRegions */\n",(uint32_t)tifs_fwlConfig[tifsCnt].numRegions);
+            UART_printf("   %dU,    /* maxNumRegions */\n",(uint32_t)tifs_fwlConfig[tifsCnt].maxNumRegions);
+            UART_printf("   {      /* Firewall registers for a given region : {controlReg, privId0, privId1, privId2, startAddrLow, startAddrHigh, endAddrLow, endAddrHigh} */\n");
+
+            for (regCnt =0; regCnt< (tifs_fwlConfig[tifsCnt].maxNumRegions); regCnt++)
+            {
+                UART_printf("       {");
+                UART_printf("0x%xU, ",(uint32_t)tifs_fwlConfig[tifsCnt].fwlCfgPerRegion[regCnt].controlReg);
+                UART_printf("0x%xU, ",(uint32_t)tifs_fwlConfig[tifsCnt].fwlCfgPerRegion[regCnt].privId0);
+                UART_printf("0x%xU, ",(uint32_t)tifs_fwlConfig[tifsCnt].fwlCfgPerRegion[regCnt].privId1);
+                UART_printf("0x%xU, ",(uint32_t)tifs_fwlConfig[tifsCnt].fwlCfgPerRegion[regCnt].privId2);
+                UART_printf("0x%xU, ",(uint32_t)tifs_fwlConfig[tifsCnt].fwlCfgPerRegion[regCnt].startAddrLow);
+                UART_printf("0x%xU, ",(uint32_t)tifs_fwlConfig[tifsCnt].fwlCfgPerRegion[regCnt].startAddrHigh);
+                UART_printf("0x%xU, ",(uint32_t)tifs_fwlConfig[tifsCnt].fwlCfgPerRegion[regCnt].endAddrLow);
+                UART_printf("0x%xU",(uint32_t)tifs_fwlConfig[tifsCnt].fwlCfgPerRegion[regCnt].endAddrHigh);
+                UART_printf("},\n");
+            }
+            UART_printf("   },\n");
+            UART_printf("},\n");
+        }
+        UART_printf("};\n\n");
+    }
+
+    if(retVal != CSL_PASS)
+    {
+        UART_printf("Get register configuration dump failed !!!\r\n");
+    }
+
+#else
+    uint32_t      numInt = BOOT_APP_SAFETY_CHECKERS_TIMER_MAX_INTERRUPTS;
+    TimerP_Params timerParams;
+    TimerP_Handle handle;
+
+    TimerP_Params_init(&timerParams);
+    timerParams.runMode    = TimerP_RunMode_CONTINUOUS;
+    timerParams.startMode  = TimerP_StartMode_USER;
+    timerParams.periodType = TimerP_PeriodType_MICROSECS;
+    timerParams.period     = BOOT_APP_SAFETY_CHECKERS_TIMER_PERIOD;
+
+    handle = TimerP_create(BOOT_APP_SAFETY_CHECKERS_TIMER_ID, (TimerP_Fxn)&BootApp_timerIsr, &timerParams);
+
+    TimerP_start(handle);
+
+    while (numInt > 0)
+    {
+        if (gBootAppTimerIsrCount == 1)
+        {
+            gBootAppTimerIsrCount = 0U;
+
+            /* validate PSC register config with current value */
+            retVal = SafetyCheckers_pmVerifyPscRegCfg(pm_pscRegCfg, SAFETY_CHECKERS_PM_PSC_REGDUMP_SIZE);
+
+            if(retVal == CSL_PASS)
+            {
+                /* validate PLL register config with current value */
+                retVal = SafetyCheckers_pmVerifyPllRegCfg(pm_pllRegCfg, SAFETY_CHECKERS_PM_PLL_REGDUMP_SIZE);
+            }
+
+            if(retVal == CSL_PASS)
+            {
+                /* validate RM register config with current value */
+                retVal = SafetyCheckers_rmVerifyRegCfg(rm_regCfg, SAFETY_CHECKERS_RM_REGDUMP_SIZE);
+            }
+
+            if(retVal == CSL_PASS)
+            {
+                retVal = SafetyCheckers_tifsReqFwlOpen();
+                /* validate TIFS FW register config with current value */
+                retVal = SafetyCheckers_tifsVerifyFwlCfg(tifs_fwlConfig, TIFS_CHECKER_FWL_MAX_NUM);
+            }
+
+            if(retVal == CSL_PASS)
+            {
+                retVal = SafetyCheckers_pmRegisterLock();
+            }
+
+            if(retVal != CSL_PASS)
+            {
+                TimerP_stop(handle);
+                break;
+            }
+
+            numInt--;
+        }
+    }
+
+    if(retVal == CSL_PASS)
+    {
+        UART_printf("Safety loop execution passed\r\n");
+    }
+    else
+    {
+        UART_printf("Safety loop execution failed !!!\r\n");
+    }
+
+    TimerP_delete(handle);
+
+#endif
+
+    return (retVal);
+}
+#endif
+
 static uint32_t BootApp_loadImg(void)
 {
     uint32_t       retVal;
@@ -590,6 +796,10 @@ static uint32_t BootApp_loadImg(void)
     {
         UART_printf("Boot App: Failure occurred in boot sequence\r\n");
     }
+
+#if defined(SAFETY_CHECKER_LOOP_ENABLED)
+    retVal = BootApp_safetyCheckerLoop();
+#endif
 
     return (retVal);
 }

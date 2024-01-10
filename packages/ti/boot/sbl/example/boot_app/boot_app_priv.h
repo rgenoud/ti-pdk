@@ -95,7 +95,14 @@ extern "C" {
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
-/* None */
+#if defined(SAFETY_CHECKER_LOOP_ENABLED)
+/* Safety checkers timer ID */
+#define BOOT_APP_SAFETY_CHECKERS_TIMER_ID                    (2U)
+/* Safety checkers verification time period, timer ISR execution takes 118us */
+#define BOOT_APP_SAFETY_CHECKERS_TIMER_PERIOD                (1000U)
+/* Number of timer interrupts for the safety checkers execution*/
+#define BOOT_APP_SAFETY_CHECKERS_TIMER_MAX_INTERRUPTS        (10U)
+#endif
 
 /* ========================================================================== */
 /*                            Global Variables                                */

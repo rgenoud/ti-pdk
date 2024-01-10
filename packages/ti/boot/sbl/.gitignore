@@ -1,2 +1,3 @@
 lib/
 binary/
+example/boot_app/soc/*/*.txt

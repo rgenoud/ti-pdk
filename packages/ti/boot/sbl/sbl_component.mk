@@ -1875,6 +1875,32 @@ sbl_EXAMPLE_LIST += boot_app_mmcsd
 boot_app_mmcsd_SBL_APPIMAGEGEN = yes
 export boot_app_mmcsd_SBL_APPIMAGEGEN
 
+# Boot App MMCSD with safety loop enabled
+boot_app_mmcsd_safety_COMP_LIST = boot_app_mmcsd_safety
+boot_app_mmcsd_safety_RELPATH = ti/boot/sbl/example/boot_app
+boot_app_mmcsd_safety_CUSTOM_BINPATH = $(PDK_SBL_COMP_PATH)/example/boot_app/binary/$(BOARD)/mmcsd
+boot_app_mmcsd_safety_PATH = $(PDK_SBL_COMP_PATH)/example/boot_app
+boot_app_mmcsd_safety_MAKEFILE = -f$(PDK_SBL_COMP_PATH)/build/boot_app.mk BOOTMODE=mmcsd SAFETY_LOOP=yes
+export boot_app_mmcsd_safety_MAKEFILE
+boot_app_mmcsd_safety_BOARD_DEPENDENCY = yes
+boot_app_mmcsd_safety_SOC_DEPENDENCY = yes
+boot_app_mmcsd_safety_CORE_DEPENDENCY = yes
+export boot_app_mmcsd_safety_COMP_LIST
+export boot_app_mmcsd_safety_BOARD_DEPENDENCY
+export boot_app_mmcsd_safety_SOC_DEPENDENCY
+export boot_app_mmcsd_safety_CORE_DEPENDENCY
+boot_app_mmcsd_safety_PKG_LIST = boot_app_mmcsd_safety
+boot_app_mmcsd_safety_INCLUDE = $(boot_app_mmcsd_safety_PATH)
+boot_app_mmcsd_safety_SOCLIST = $(sbl_SOCLIST)
+boot_app_mmcsd_safety_BOARDLIST = $(sbl_BOARDLIST)
+export boot_app_mmcsd_safety_SOCLIST
+export boot_app_mmcsd_safety_BOARDLIST
+boot_app_mmcsd_safety_$(SOC)_CORELIST = mcu1_0
+export boot_app_mmcsd_safety_$(SOC)_CORELIST
+sbl_EXAMPLE_LIST += boot_app_mmcsd_safety
+boot_app_mmcsd_safety_SBL_APPIMAGEGEN = yes
+export boot_app_mmcsd_safety_SBL_APPIMAGEGEN
+
 # Boot App MMCSD to boot qnx
 boot_app_mmcsd_qnx_COMP_LIST = boot_app_mmcsd_qnx
 boot_app_mmcsd_qnx_RELPATH = ti/boot/sbl/example/boot_app
