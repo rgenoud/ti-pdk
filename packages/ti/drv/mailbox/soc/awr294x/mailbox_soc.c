@@ -157,6 +157,16 @@ CSL_mboxRegAddr gMboxReg =
     .mboxReadDoneAck = (uintptr_t)(CSL_MSS_CTRL_U_BASE + CSL_MSS_CTRL_MSS_CR5A_B_MBOX_READ_DONE_ACK)
 };
 
+CSL_mboxRegAddr gMboxReg_29P = 
+{
+    .memInit        = (uintptr_t)(CSL_MSS_CTRL_U_BASE + CSL_MSS_CTRL_MSS_MAILBOX_MEM_INIT),
+    .memInitDone    = (uintptr_t)(CSL_MSS_CTRL_U_BASE + CSL_MSS_CTRL_MSS_MAILBOX_MEM_INIT_DONE),
+    .memInitStatus  = (uintptr_t)(CSL_MSS_CTRL_U_BASE + CSL_MSS_CTRL_MSS_MAILBOX_MEM_INIT_STATUS),
+    .mboxWriteDone  = (uintptr_t)(CSL_MSS_CTRL_U_BASE + xWR29XXP_CSL_MSS_CTRL_MSS_CR5A_MBOX_WRITE_DONE),
+    .mboxReadReq    = (uintptr_t)(CSL_MSS_CTRL_U_BASE + xWR29XXP_CSL_MSS_CTRL_MSS_CR5A_MBOX_READ_REQ),
+    .mboxReadDone   = (uintptr_t)(CSL_MSS_CTRL_U_BASE + xWR29XXP_CSL_MSS_CTRL_MSS_CR5A_MBOX_READ_DONE),
+    .mboxReadDoneAck = (uintptr_t)(CSL_MSS_CTRL_U_BASE + CSL_MSS_CTRL_MSS_CR5A_B_MBOX_READ_DONE_ACK)
+};
 
 /**
  * @brief   This is SOC specific configuration and should *NOT* be modified by the customer.
@@ -234,9 +244,48 @@ Mailbox_HwCfg   gMailboxDssRcssHwCfg =
 /*                          Function Definitions                              */
 /* ========================================================================== */
 
+uint8_t csl_getPlatformId()
+{
+    uint8_t platformId;
+
+    /* Read the platform ID from TOP_CTRL::EFUSE1_ROW10 */
+    platformId = (*(volatile uint32_t *)0x030E0420);
+
+    if((0U) == platformId)
+    {
+        /* If it is a blind device,
+         * mmWaveStudio is expected to write platform ID to this register always.
+         * In case of ATE bench, ATE sequence should write platform ID to this register before unhalting. */
+        platformId = (*(volatile uint32_t *)0xA3F7F164);
+
+        if(0 == platformId)
+        {
+            /* Existing TDL sequence on ATE does not program platform ID
+             * in BSS_GPCFG::SPARE9. Hence, use this override to use the
+             * RFEVAL for 2944 on ATE bench. */
+            platformId = CSL_EFUSE_PLATFORM_ID_AWR2944;
+        }
+    }
+
+    return platformId;
+}
+
 int32_t Mailbox_validateLocalEndPoint(Mailbox_Instance localEndpoint)
 {
     int32_t retVal = MAILBOX_SOK;
+    
+    /* This is the 1st entry point to this file
+    *  So adding device based address switch here*/
+    uint8_t platform =  csl_getPlatformId();
+#if defined (__TI_ARM_V7R4__)
+    if (platform == CSL_EFUSE_PLATFORM_ID_AWR2944P)
+    {
+        gMboxReg.mboxWriteDone = gMboxReg_29P.mboxWriteDone;
+        gMboxReg.mboxReadReq   = gMboxReg_29P.mboxReadReq;
+        gMboxReg.mboxReadDone  = gMboxReg_29P.mboxReadDone;
+    }
+#endif
+
     /* Validate local End point based on the Core. */
 #if defined (BUILD_MCU1_0)
     if (localEndpoint != MAILBOX_INST_MSS_CR5A)
