@@ -198,9 +198,9 @@ void SciApp_parser(void)
                         }
                     }
                 }
-                SciApp_printf("\nSCICLIENT: Total Testcases run:%u/%u\n", totalTCRun, SciApp_getNumTests());
-                SciApp_printf("SCICLIENT: Number of Testcases Passed:%u\n", numTCPass);
-                SciApp_printf("SCICLIENT: Number of Testcases Failed:%u\n", numTCFail);
+                SciApp_printf("\nSCI: Total Testcases run:%u/%u\n", totalTCRun, SciApp_getNumTests());
+                SciApp_printf("SCI: Number of Testcases Passed:%u\n", numTCPass);
+                SciApp_printf("SCI: Number of Testcases Failed:%u\n", numTCFail);
                 break;
             case SCI_APP_RUN_TESTS_SANITY:
                 for (testcaseId = 0U; testcaseId < SciApp_getNumTests(); testcaseId++)
@@ -226,9 +226,9 @@ void SciApp_parser(void)
                         }
                     }
                 }
-                SciApp_printf("\nSCICLIENT: Total Testcases run:%u/%u\n", totalTCRun, SciApp_getNumTests());
-                SciApp_printf("SCICLIENT: Number of Testcases Passed:%u\n", numTCPass);
-                SciApp_printf("SCICLIENT: Number of Testcases Failed:%u\n", numTCFail);
+                SciApp_printf("\nSCI: Total Testcases run:%u/%u\n", totalTCRun, SciApp_getNumTests());
+                SciApp_printf("SCI: Number of Testcases Passed:%u\n", numTCPass);
+                SciApp_printf("SCI: Number of Testcases Failed:%u\n", numTCFail);
                 SciApp_printResults();
                 break;
             case SCI_APP_RUN_TESTS_ALL:
@@ -249,9 +249,9 @@ void SciApp_parser(void)
                         }
                     }
                 }
-                SciApp_printf("\nSCICLIENT: Total Testcases run:%u/%u\n", totalTCRun, SciApp_getNumTests());
-                SciApp_printf("SCICLIENT: Number of Testcases Passed:%u\n", numTCPass);
-                SciApp_printf("SCICLIENT: Number of Testcases Failed:%u\n", numTCFail);
+                SciApp_printf("\nSCI: Total Testcases run:%u/%u\n", totalTCRun, SciApp_getNumTests());
+                SciApp_printf("SCI: Number of Testcases Passed:%u\n", numTCPass);
+                SciApp_printf("SCI: Number of Testcases Failed:%u\n", numTCFail);
                 SciApp_printResults();
                 done = 1U;
                 break;
@@ -275,7 +275,7 @@ void SciApp_parser(void)
                 SciApp_printResults();
                 break;
             case SCI_APP_PARSER_QUIT:
-                SciApp_printf("Exiting Sciclient Test application.\n");
+                SciApp_printf("Exiting SCI Test application.\n");
                 done = 1U;
                 break;
             default: 
@@ -365,9 +365,9 @@ static void SciApp_run(SciApp_TestParams_t *testParams)
 static void SciApp_showMainMenu(void)
 {
     SciApp_printf("\n=====================\n");
-    SciApp_printf("SCICLIENT UT Select\n");
+    SciApp_printf("SCI UT Select\n");
     SciApp_printf("=======================\n");
-    SciApp_printf("\nSCICLIENT UT main menu:\n");
+    SciApp_printf("\nSCI UT main menu:\n");
     SciApp_printf("1: Manual testing (select specific test case to run)\n");
     SciApp_printf("2. Sanity testing.\n");
     SciApp_printf("d: Display test cases.\n");
@@ -381,7 +381,7 @@ static void SciApp_printTestName(void)
     uint32_t loopCnt;
     const SciApp_TestParams_t *testParams;
 
-    SciApp_printf( "SCICLIENT Testcase:\n");
+    SciApp_printf( "SCI Testcase:\n");
     SciApp_printf("--------------------------------------------------------------\n");
     SciApp_printf( "TC Id\tTC name\n");
     SciApp_printf("--------------------------------------------------------------\n");

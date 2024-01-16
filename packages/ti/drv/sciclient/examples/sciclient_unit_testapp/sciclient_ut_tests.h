@@ -32,9 +32,9 @@
  */
 
 /**
- *  \file sciclient_ut_tests.h
+ *  \file   sciclient_ut_tests.h
  *
- *  \brief This file defines the test cases for SCICLIENT UT.
+ *  \brief  This file defines the test cases for Sciclient Unit test.
  */
 
 #ifndef SCICLIENT_TEST_CASES_H_
@@ -281,7 +281,7 @@ SciApp_TestParams_t gSciApp_TestcaseParams[] =
         the firewall exception logging register value.",
 
         /** cpuID **/
-        SCI_APP_CORE_TYPE_R,
+        SCI_APP_CORE_TYPE_R5F,
 
         /** printEnable **/
         SCI_APP_PRINT_ENABLE,
@@ -392,142 +392,39 @@ SciApp_TestParams_t gSciApp_TestcaseParams[] =
 
         /** testType **/
         (SCI_APP_TEST_TYPE_SANITY)
-    },
-#endif
-
-#if ((defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)) && (BUILD_MCU1_0))
-{
-    /** enableTest **/
-    SCI_APP_TEST_ENABLE,
-
-    /** testCaseId **/
-    11U,
-
-    /** *reqId **/
-    "None",
-
-    /** *testCaseName **/
-    "Sciclient PM Related Functions Testcase",
-
-    /** *userInfo **/
-    "None",
-
-    /** *disableReason **/
-    "None",
-
-    /** *passFailCriteria **/
-    "Testcase to cover PM related functions ",
-
-    /** cpuID **/
-    SCI_APP_CORE_TYPE_R5F,
-
-    /** printEnable **/
-    SCI_APP_PRINT_ENABLE,
-
-    /** testType **/
-    (SCI_APP_TEST_TYPE_NEGATIVE)
-  },
-#endif
-#if defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)
-    {
-        /** enableTest **/
-        SCI_APP_TEST_ENABLE,
-
-        /** testCaseId **/
-        12U,
-
-        /** *reqId **/
-        "None",
-
-        /** *testCaseName **/
-        "SCICLIENT MSMC Query Negative Testcase",
-
-        /** *userInfo **/
-        "None",
-
-        /** *disableReason **/
-        "None",
-
-        /** *passFailCriteria **/
-        "Sciclient_msmcQuery should fail when \
-         the request parameter is set to NULL ",
-
-        /** cpuID **/
-        SCI_APP_CORE_TYPE_R5F,
-
-        /** printEnable **/
-        SCI_APP_PRINT_ENABLE,
-
-        /** testType **/
-        (SCI_APP_TEST_TYPE_NEGATIVE)
-    },
-#endif
-#if defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)
-    {
-        /** enableTest **/
-        SCI_APP_TEST_ENABLE,
-
-        /** testCaseId **/
-        13U,
-
-        /** *reqId **/
-        "None",
-
-        /** *testCaseName **/
-        "Sciclient keywriter Negative Testcase",
-
-        /** *userInfo **/
-        "None",
-
-        /** *disableReason **/
-        "None",
-
-        /** *passFailCriteria **/
-        "Testcase to cover sciclient keywriter function",
-
-        /** cpuID **/
-        SCI_APP_CORE_TYPE_R5F,
-
-        /** printEnable **/
-        SCI_APP_PRINT_ENABLE,
-
-        /** testType **/
-        (SCI_APP_TEST_TYPE_NEGATIVE)
-    },
-#endif
-#if defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)
-    {
-        /** enableTest **/
-        SCI_APP_TEST_ENABLE,
-
-        /** testCaseId **/
-        14U,
-
-        /** *reqId **/
-        "None",
-
-        /** *testCaseName **/
-        "Sciclient dkek Negative Testcase",
-
-        /** *userInfo **/
-        "None",
-
-        /** *disableReason **/
-        "None",
-
-        /** *passFailCriteria **/
-        "Testcase to cover sciclient dkek functions",
-
-        /** cpuID **/
-        SCI_APP_CORE_TYPE_R5F,
-
-        /** printEnable **/
-        SCI_APP_PRINT_ENABLE,
-
-        /** testType **/
-        (SCI_APP_TEST_TYPE_NEGATIVE)
     }
 #endif
 };
 
+/* ========================================================================== */
+/*                         Structure Declarations                             */
+/* ========================================================================== */
+
+/* None */
+
+/* ========================================================================== */
+/*                         Function Declarations                              */
+/* ========================================================================== */
+
+/* None */
+
+/* ========================================================================== */
+/*                        Internal Function Declarations                      */
+/* ========================================================================== */
+
+/* None */
+
+/* ========================================================================== */
+/*                          Function Definitions                              */
+/* ========================================================================== */
+
+/* None */
+
+/* ========================================================================== */
+/*                          Internal Function Definitions                     */
+/* ========================================================================== */
+
+/* None */
+
 #endif /* #ifndef SCICLIENT_TEST_CASES_H_ */
+
