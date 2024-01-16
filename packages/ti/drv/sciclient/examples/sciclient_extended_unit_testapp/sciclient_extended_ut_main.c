@@ -91,6 +91,8 @@ static uint8_t  gSciclientAppTskStackMain[32*1024] __attribute__((aligned(8192))
 static void mainTask(void* arg0, void* arg1);
 #if defined (BUILD_MCU1_0)
 static int32_t SciclientApp_pmMessageTest(void);
+static int32_t SciclientApp_directNegTest(void);
+static int32_t SciclientApp_pmMessageNegTest(void);
 #endif
 static int32_t SciclientApp_msmcQueryNegTest(void);
 static int32_t SciclientApp_otpProcessKeyCfgNegTest(void);
@@ -106,6 +108,8 @@ static int32_t SciclientApp_rmRingCfgNegTest(void);
 static int32_t SciclientApp_rmRingMonCfgNegTest(void);
 static int32_t SciclientApp_rmUdmapNegTest(void);
 static int32_t SciclientApp_rmSetProxyNegTest(void);
+static int32_t SciclientApp_procbootNegTest(void);
+static int32_t SciclientApp_rmNegTest(void);
 
 /* ========================================================================== */
 /*                          Function Definitions                              */
@@ -135,19 +139,6 @@ int main(void)
     OS_start();
 
     return retVal;
-}
-
-static void mainTask(void* arg0, void* arg1)
-{
-    /*To suppress unused variable warning*/
-    (void)arg0;
-    (void)arg1;
-
-    volatile uint32_t loopForever = 1U;
-
-    SciApp_parser();
-
-    while(loopForever);
 }
 
 uint32_t SciApp_getNumTests(void)
@@ -202,6 +193,20 @@ int32_t SciApp_testMain(SciApp_TestParams_t *testParams)
         case 13:
             testParams->testResult = SciclientApp_rmSetProxyNegTest();
             break;
+#if defined (BUILD_MCU1_0)
+        case 14:
+            testParams->testResult = SciclientApp_directNegTest();
+            break;
+        case 15:
+            testParams->testResult = SciclientApp_pmMessageNegTest();
+            break;
+#endif
+        case 16:
+            testParams->testResult = SciclientApp_procbootNegTest();
+            break;
+        case 17:
+            testParams->testResult = SciclientApp_rmNegTest();
+            break;     
         default:
             break;
     }
@@ -212,6 +217,19 @@ int32_t SciApp_testMain(SciApp_TestParams_t *testParams)
 /* ========================================================================== */
 /*                          Internal Function Definitions                     */
 /* ========================================================================== */
+
+static void mainTask(void* arg0, void* arg1)
+{
+    /*To suppress unused variable warning*/
+    (void)arg0;
+    (void)arg1;
+
+    volatile uint32_t loopForever = 1U;
+
+    SciApp_parser();
+
+    while(loopForever);
+}
 
 #if defined (BUILD_MCU1_0)
 static int32_t SciclientApp_pmMessageTest(void)
@@ -327,8 +345,8 @@ static int32_t SciclientApp_pmMessageTest(void)
             SciApp_printf("Sciclient_pmGetModuleClkParent Test Failed.\n");
         }
 
-        status = Sciclient_pmGetModuleClkNumParent(TISCI_DEV_MCSPI1_IO_CLKSPII_CLK,
-                                                  TISCI_DEV_MCSPI1_IO_CLKSPII_CLK_PARENT_BOARD_0_SPI1_CLK_OUT,
+        status = Sciclient_pmGetModuleClkNumParent(TISCI_DEV_MCSPI1,
+                                                  TISCI_DEV_MCSPI1_IO_CLKSPII_CLK,
                                                   &numParents,
                                                   SCICLIENT_SERVICE_WAIT_FOREVER);
         if (status == CSL_PASS)
@@ -1391,6 +1409,846 @@ static int32_t SciclientApp_rmSetProxyNegTest(void)
     }
 
      return rmSetProxyTestStatus;
+}
+
+#if defined(BUILD_MCU1_0)
+static int32_t SciclientApp_directNegTest(void)
+{
+    int32_t status                = CSL_PASS;
+    int32_t sciclientInitStatus   = CSL_PASS;
+    int32_t directTestStatus      = CSL_PASS;
+    Sciclient_ConfigPrms_t config =
+    {
+       SCICLIENT_SERVICE_OPERATION_MODE_INTERRUPT,
+       NULL,
+       0 /* isSecure = 0 un secured for all cores */
+    };
+    const uint32_t reqFlags       = 0U;
+    struct tisci_header *negHdr;
+
+     while (gSciclientHandle.initCount != 0)
+     {
+         status = Sciclient_deinit();
+     }
+     status = Sciclient_init(&config);
+     sciclientInitStatus = status;
+
+     if(status == CSL_PASS)
+     {
+          SciApp_printf ("Sciclient_init PASSED.\n");
+          status = Sciclient_boardCfgPrepHeader(NULL, NULL, NULL, NULL);
+          if (status == CSL_EBADARGS)
+          {
+              directTestStatus += CSL_PASS;
+              SciApp_printf ("Sciclient_boardCfgPrepHeader: Negative Arg Test Passed.\n");
+          }
+          else
+          {
+             directTestStatus += CSL_EFAIL;
+             SciApp_printf ("Sciclient_boardCfgPrepHeader: Negative Arg Test Failed.\n");
+          }
+
+          status = Sciclient_boardCfgParseHeader(NULL, NULL, NULL);
+          if (status == CSL_EBADARGS)
+          {
+              directTestStatus += CSL_PASS;
+              SciApp_printf ("Sciclient_boardCfgParseHeader: Negative Arg Test Passed.\n");
+          }
+          else
+          {
+             directTestStatus += CSL_EFAIL;
+             SciApp_printf ("Sciclient_boardCfgParseHeader: Negative Arg Test Failed.\n");
+          }
+
+          status = Sciclient_ProcessPmMessage(reqFlags, &negHdr);
+          if (status == CSL_EFAIL)
+          {
+              directTestStatus += CSL_PASS;
+              SciApp_printf ("Sciclient_ProcessPmMessage: Negative Arg Test Passed.\n");
+          }
+          else
+          {
+             directTestStatus += CSL_EFAIL;
+             SciApp_printf ("Sciclient_ProcessPmMessage: Negative Arg Test Failed.\n");
+          }
+    }
+    else
+    {
+        directTestStatus += CSL_EFAIL;
+        SciApp_printf ("Sciclient_init FAILED.\n");
+    }
+
+    if(sciclientInitStatus == CSL_PASS)
+    {
+        status = Sciclient_deinit();
+        if(status == CSL_PASS)
+        {
+            directTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_deinit PASSED.\n");
+        }
+        else
+        {
+            directTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_deinit FAILED.\n");
+        }
+    }
+
+    return directTestStatus;
+}
+
+static int32_t SciclientApp_pmMessageNegTest(void)
+{
+    int32_t  status                 = CSL_PASS;
+    int32_t  sciclientInitStatus    = CSL_PASS;
+    int32_t  pmMessageNegTestStatus = CSL_PASS;
+    uint64_t reqFreq                = 164UL;
+    uint64_t respFreq               = 0UL;
+    uint32_t clockStatus            = 1U;
+#if defined(SOC_J721S2) || defined(SOC_J784S4)
+    uint32_t parentStatus           = 0U;
+    uint32_t numParents             = 0U;
+#endif
+    uint64_t freq                   = 0UL;
+    uint32_t moduleState            = 0U;
+    uint32_t resetState             = 0U;
+    uint32_t contextLossState       = 0U;
+    uint32_t invalidModuleId        = 440U;
+    Sciclient_ConfigPrms_t config   =
+    {
+        SCICLIENT_SERVICE_OPERATION_MODE_POLLED,
+        NULL,
+        1U,
+        0U,
+        UTRUE
+    };
+  
+    while (gSciclientHandle.initCount != 0)
+    {
+        status = Sciclient_deinit();
+    }
+    status = Sciclient_init(&config);
+    sciclientInitStatus = status;
+
+    if (status == CSL_PASS)
+    {
+        SciApp_printf ("Sciclient_Init Passed.\n");
+        status = Sciclient_pmSetModuleState(SCICLIENT_DEV_MCU_R5FSS0_CORE0,
+                                            TISCI_MSG_VALUE_DEVICE_SW_STATE_ON,
+                                            1U,
+                                            SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            pmMessageNegTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_pmSetModuleState Negative Test Passed.\n");
+        }
+        else
+        {
+            pmMessageNegTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_pmSetModuleState Negative Test Failed.\n");
+        }
+
+        status = Sciclient_pmGetModuleState(invalidModuleId,
+                                            &moduleState,
+                                            &resetState,
+                                            &contextLossState,
+                                            SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            pmMessageNegTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_pmGetModuleState Negative Test Passed.\n");
+        }
+        else
+        {
+            pmMessageNegTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_pmGetModuleState Negative Test Failed.\n");
+        }
+
+        status = Sciclient_pmSetModuleRst(invalidModuleId,
+                                          1U,
+                                          SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            pmMessageNegTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_pmSetModuleRst Negative Test Passed.\n");
+        }
+        else
+        {
+            pmMessageNegTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_pmSetModuleRst Negative Test Failed.\n");
+        }
+
+        status = Sciclient_pmSetModuleRst_flags(invalidModuleId, 0U, 0U, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            pmMessageNegTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_pmSetModuleRst_flags Negative Test Passed.\n");
+        }
+        else
+        {
+            pmMessageNegTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_pmSetModuleRst_flags Negative Test Failed.\n");
+        }
+
+        status = Sciclient_pmModuleClkRequest(invalidModuleId,
+                                              256U,
+                                              TISCI_MSG_VALUE_CLOCK_HW_STATE_READY,
+                                              0U,
+                                              SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            pmMessageNegTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_pmModuleClkRequest Negative Test Passed.\n");
+        }
+        else
+        {
+            pmMessageNegTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_pmModuleClkRequest Negative Test Failed.\n");
+        }
+
+        status = Sciclient_pmModuleGetClkStatus(invalidModuleId,
+                                                256U,
+                                                &clockStatus,
+                                                SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            pmMessageNegTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_pmModuleGetClkStatus Negative Test Passed.\n");
+        }
+        else
+        {
+            pmMessageNegTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_pmModuleGetClkStatus Negative Test Failed.\n");
+        }
+
+    #if defined(SOC_J721S2) || defined(SOC_J784S4)
+       status = Sciclient_pmSetModuleClkParent(invalidModuleId,
+                                                256U,
+                                                256U,
+                                                SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            pmMessageNegTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_pmSetModuleClkParent Negative Test Passed.\n");
+        }
+        else
+        {
+            pmMessageNegTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_pmSetModuleClkParent Negative Test Failed.\n");
+        }
+
+        status = Sciclient_pmGetModuleClkParent(invalidModuleId,
+                                                256U,
+                                                &parentStatus,
+                                                SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            pmMessageNegTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_pmGetModuleClkParent Negative Test Passed.\n");
+        }
+        else
+        {
+            pmMessageNegTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_pmGetModuleClkParent Negative Test Failed.\n");
+        }
+
+        status = Sciclient_pmGetModuleClkNumParent(invalidModuleId,
+                                                  256U,
+                                                  &numParents,
+                                                  SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            pmMessageNegTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_pmGetModuleClkNumParent Negative Test Passed.\n");
+        }
+        else
+        {
+            pmMessageNegTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_pmGetModuleClkNumParent Negative Test Failed.\n");
+        }
+    #endif
+
+        status = Sciclient_pmQueryModuleClkFreq(invalidModuleId,
+                                                256U,
+                                                reqFreq,
+                                                &respFreq,
+                                                SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            pmMessageNegTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_pmQueryModuleClkFreq Negative Test Passed.\n");
+        }
+        else
+        {
+            pmMessageNegTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_pmQueryModuleClkFreq Negative Test Failed.\n");
+        }
+
+        status = Sciclient_pmSetModuleClkFreq(invalidModuleId,
+                                              256U,
+                                              reqFreq,
+                                              TISCI_MSG_FLAG_CLOCK_ALLOW_FREQ_CHANGE,
+                                              SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            pmMessageNegTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_pmSetModuleClkFreq Negative Test Passed.\n");
+        }
+        else
+        {
+            pmMessageNegTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_pmSetModuleClkFreq Negative Test Failed.\n");
+        }
+
+        status = Sciclient_pmGetModuleClkFreq(invalidModuleId,
+                                              256U,
+                                              &freq,
+                                              SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            pmMessageNegTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_pmGetModuleClkFreq Negative Test Passed.\n");
+        }
+        else
+        {
+            pmMessageNegTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_pmGetModuleClkFreq Negative Test Failed.\n");
+        }
+
+#if defined(SOC_J784S4)
+        status = Sciclient_pmEnableWdt(SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            pmMessageNegTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_pmEnableWdt Test Passed.\n");
+        }
+        else
+        {
+            pmMessageNegTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_pmEnableWdt Test Failed.\n");
+        }
+
+        status = Sciclient_pmDisableWakeup(SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            pmMessageNegTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_pmDisableWakeup Test Passed.\n");
+        }
+        else
+        {
+            pmMessageNegTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_pmDisableWakeup Test Failed.\n");
+        }
+
+        status = Sciclient_pmPrepareSleep(SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            pmMessageNegTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_pmPrepareSleep Test Passed.\n");
+        }
+        else
+        {
+            pmMessageNegTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_pmPrepareSleep Test Failed.\n");
+        }
+
+        status = Sciclient_pmEnterSleep(SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            pmMessageNegTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_pmEnterSleep Test Passed.\n");
+        }
+        else
+        {
+            pmMessageNegTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_pmEnterSleep Test Failed.\n");
+        }
+#endif
+    }
+    else
+    {
+        pmMessageNegTestStatus += CSL_EFAIL;
+        SciApp_printf ("Sciclient_Init Failed.\n");
+    }
+
+    if (sciclientInitStatus == CSL_PASS)
+    {
+        status = Sciclient_deinit();
+        if(status == CSL_PASS)
+        {
+            pmMessageNegTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_deinit Passed.\n");
+        }
+        else
+        {
+            pmMessageNegTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_deinit Failed.\n");
+        }
+    }
+
+    return pmMessageNegTestStatus;
+}
+#endif
+
+static int32_t SciclientApp_procbootNegTest(void)
+{
+    int32_t  status               = CSL_PASS;
+    int32_t  sciclientInitStatus  = CSL_PASS;
+    int32_t  procbootTestStatus   = CSL_PASS;
+    uint8_t  invalidProcID        = 0x81U;
+    uint32_t ctrlFlagSet          = 1U;
+    uint32_t ctrlFlagClr          = 2U;
+    uint8_t  numMatchIterations   = 1U;
+    uint8_t  delayPerIterationus  = 10U;
+    uint32_t statusFlagSetAllWait = 1U;
+    uint32_t statusFlagSetAnyWait = 2U;
+    uint32_t statusFlagClrAllWait = 1U;
+    uint32_t statusFlagClrAnyWait = 2U;
+    Sciclient_ConfigPrms_t config =
+    {
+       SCICLIENT_SERVICE_OPERATION_MODE_INTERRUPT,
+       NULL,
+       0 /* isSecure = 0 un secured for all cores */
+    };
+
+     while (gSciclientHandle.initCount != 0)
+     {
+         status = Sciclient_deinit();
+     }
+     status = Sciclient_init(&config);
+     sciclientInitStatus = status;
+
+     if(status == CSL_PASS)
+     {
+          SciApp_printf ("Sciclient_init PASSED.\n");
+          status = Sciclient_procBootRequestProcessor(invalidProcID, SCICLIENT_SERVICE_WAIT_FOREVER);
+          if(status == CSL_EFAIL)
+          {
+              procbootTestStatus += CSL_PASS;
+              SciApp_printf ("Sciclient_procBootRequestProcessor: Negative Arg Test PASSED \n");
+          }
+          else
+          {
+              procbootTestStatus += CSL_EFAIL;
+              SciApp_printf ("Sciclient_procBootRequestProcessor: Negative Arg Test FAILED \n");
+          }
+
+          status = Sciclient_procBootReleaseProcessor(invalidProcID, TISCI_MSG_FLAG_AOP, 
+                                                      SCICLIENT_SERVICE_WAIT_FOREVER);
+          if(status == CSL_EFAIL)
+          {
+              procbootTestStatus += CSL_PASS;
+              SciApp_printf ("Sciclient_procBootReleaseProcessor: TISCI_MSG_FLAG_AOP Negative Arg Test PASSED \n");
+          }
+          else
+          {
+              procbootTestStatus += CSL_EFAIL;
+              SciApp_printf ("Sciclient_procBootReleaseProcessor: TISCI_MSG_FLAG_AOP Negative Arg Test FAILED \n");
+          }
+
+          status = Sciclient_procBootReleaseProcessor(invalidProcID, TISCI_MSG_FLAG_RESERVED0, 
+                                                      SCICLIENT_SERVICE_WAIT_FOREVER);
+          if(status == CSL_EFAIL)
+          {
+              procbootTestStatus += CSL_PASS;
+              SciApp_printf ("Sciclient_procBootReleaseProcessor: TISCI_MSG_FLAG_RESERVED0 Negative Arg Test PASSED \n");
+          }
+          else
+          {
+              procbootTestStatus += CSL_EFAIL;
+              SciApp_printf ("Sciclient_procBootReleaseProcessor: TISCI_MSG_FLAG_RESERVED0 Negative Arg Test FAILED \n");
+          }
+
+          status = Sciclient_procBootHandoverProcessor(invalidProcID, TISCI_HOST_ID_MCU_0_R5_1, 
+                                                       SCICLIENT_SERVICE_WAIT_FOREVER);
+          if(status == CSL_EFAIL)
+          {
+              procbootTestStatus += CSL_PASS;
+              SciApp_printf ("Sciclient_procBootHandoverProcessor: Negative Arg Test PASSED \n");
+          }
+          else
+          {
+              procbootTestStatus += CSL_EFAIL;
+              SciApp_printf ("Sciclient_procBootHandoverProcessor: Negative Arg Test FAILED \n");
+          }
+
+          status = Sciclient_procBootSetSequenceCtrl(invalidProcID, ctrlFlagSet, 
+                                                     ctrlFlagClr, TISCI_MSG_FLAG_AOP, 
+                                                     SCICLIENT_SERVICE_WAIT_FOREVER);
+          if(status == CSL_EFAIL)
+          {
+              procbootTestStatus += CSL_PASS;
+              SciApp_printf ("Sciclient_procBootSetSequenceCtrl: TISCI_MSG_FLAG_AOP Negative Arg Test PASSED \n");
+          }
+          else
+          {
+              procbootTestStatus += CSL_EFAIL;
+              SciApp_printf ("Sciclient_procBootSetSequenceCtrl: TISCI_MSG_FLAG_AOP Negative Arg Test FAILED \n");
+          }
+
+          status = Sciclient_procBootSetSequenceCtrl(invalidProcID, ctrlFlagSet, 
+                                                     ctrlFlagClr, TISCI_MSG_FLAG_RESERVED0, 
+                                                     SCICLIENT_SERVICE_WAIT_FOREVER);
+          if(status == CSL_EFAIL)
+          {
+              procbootTestStatus += CSL_PASS;
+              SciApp_printf ("Sciclient_procBootSetSequenceCtrl: TISCI_MSG_FLAG_RESERVED0 Negative Arg Test PASSED \n");
+          }
+          else
+          {
+              procbootTestStatus += CSL_EFAIL;
+              SciApp_printf ("Sciclient_procBootSetSequenceCtrl: TISCI_MSG_FLAG_RESERVED0 Negative Arg Test FAILED \n");
+          }
+
+          status = Sciclient_procBootSetProcessorCfg(NULL, SCICLIENT_SERVICE_WAIT_FOREVER);
+          if(status == CSL_EFAIL)
+          {
+              procbootTestStatus += CSL_PASS;
+              SciApp_printf ("Sciclient_procBootSetProcessorCfg: Negative Arg Test PASSED \n");
+          }
+          else
+          {
+              procbootTestStatus += CSL_EFAIL;
+              SciApp_printf ("Sciclient_procBootSetProcessorCfg: Negative Arg Test FAILED \n");
+          }
+
+          status = Sciclient_procBootAuthAndStart(NULL, SCICLIENT_SERVICE_WAIT_FOREVER);
+          if(status == CSL_EFAIL)
+          {
+              procbootTestStatus += CSL_PASS;
+              SciApp_printf ("Sciclient_procBootAuthAndStart: Negative Arg Test PASSED \n");
+          }
+          else
+          {
+              procbootTestStatus += CSL_EFAIL;
+              SciApp_printf ("Sciclient_procBootAuthAndStart: Negative Arg Test FAILED \n");
+          }
+
+          status = Sciclient_procBootGetProcessorState(invalidProcID, NULL, 
+                                                       SCICLIENT_SERVICE_WAIT_FOREVER);
+          if(status == CSL_EFAIL)
+          {
+              procbootTestStatus += CSL_PASS;
+              SciApp_printf ("Sciclient_procBootGetProcessorState: Negative Arg Test PASSED \n");
+          }
+          else
+          {
+              procbootTestStatus += CSL_EFAIL;
+              SciApp_printf ("Sciclient_procBootGetProcessorState: Negative Arg Test FAILED \n");
+          }
+
+          status = Sciclient_procBootWaitProcessorState(invalidProcID, numMatchIterations, 
+                                                        delayPerIterationus,statusFlagSetAllWait, 
+                                                        statusFlagSetAnyWait, statusFlagClrAllWait,
+                                                        statusFlagClrAnyWait, TISCI_MSG_FLAG_AOP, 
+                                                        SCICLIENT_SERVICE_WAIT_FOREVER);
+          if(status == CSL_EFAIL)
+          {
+              procbootTestStatus += CSL_PASS;
+              SciApp_printf ("Sciclient_procBootWaitProcessorState: TISCI_MSG_FLAG_AOP Negative Arg Test PASSED \n");
+          }
+          else
+          {
+              procbootTestStatus += CSL_EFAIL;
+              SciApp_printf ("Sciclient_procBootWaitProcessorState: TISCI_MSG_FLAG_AOP Negative Arg Test FAILED \n");
+          }
+
+          status = Sciclient_procBootWaitProcessorState(invalidProcID, numMatchIterations, 
+                                                        delayPerIterationus, statusFlagSetAllWait, 
+                                                        statusFlagSetAnyWait, statusFlagClrAllWait,
+                                                        statusFlagClrAnyWait, TISCI_MSG_FLAG_RESERVED0, 
+                                                        SCICLIENT_SERVICE_WAIT_FOREVER);
+          if(status == CSL_EFAIL)
+          {
+              procbootTestStatus += CSL_PASS;
+              SciApp_printf ("Sciclient_procBootWaitProcessorState: TISCI_MSG_FLAG_RESERVED0 Negative Arg Test PASSED \n");
+          }
+          else
+          {
+              procbootTestStatus += CSL_EFAIL;
+              SciApp_printf ("Sciclient_procBootWaitProcessorState: TISCI_MSG_FLAG_RESERVED0 Negative Arg Test FAILED \n");
+          }
+     }
+     else
+     {
+         procbootTestStatus += CSL_EFAIL;
+         SciApp_printf ("Sciclient_init FAILED.\n");
+     }
+
+     if(sciclientInitStatus == CSL_PASS)
+     {
+         status = Sciclient_deinit();
+         if(status == CSL_PASS)
+         {
+             procbootTestStatus += CSL_PASS;
+             SciApp_printf ("Sciclient_deinit PASSED.\n");
+         }
+         else
+         {
+             procbootTestStatus += CSL_EFAIL;
+             SciApp_printf ("Sciclient_deinit FAILED.\n");
+         }
+     }
+
+   return procbootTestStatus;
+}
+
+static int32_t SciclientApp_rmNegTest(void)
+{
+      int32_t  status               = CSL_PASS;
+      int32_t  sciclientInitStatus  = CSL_PASS;
+      int32_t  rmTestStatus         = CSL_PASS;
+      uint16_t intNum               = 0U;
+      uint16_t invalidDevId         = 450U;
+      uint16_t iaOutput             = 0U;
+      uint16_t dstInput             = 0U;
+      Sciclient_ConfigPrms_t config =
+      {
+         SCICLIENT_SERVICE_OPERATION_MODE_INTERRUPT,
+         NULL,
+         0 /* isSecure = 0 un secured for all cores */
+      };
+      struct tisci_msg_rm_get_resource_range_req  negReq;
+      struct tisci_msg_rm_get_resource_range_resp resp;
+
+      while (gSciclientHandle.initCount != 0)
+     {
+         status = Sciclient_deinit();
+     }
+     status = Sciclient_init(&config);
+     sciclientInitStatus = status;
+
+     if(status == CSL_PASS)
+     {
+        SciApp_printf ("Sciclient_init PASSED.\n");
+        negReq.type = 2000U;
+        negReq.secondary_host = TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST;
+        status = Sciclient_rmGetResourceRange(&negReq, &resp, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            rmTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_rmGetResourceRange: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+           rmTestStatus += CSL_EFAIL;
+           SciApp_printf ("Sciclient_rmGetResourceRange: Negative Arg Test Failed.\n");
+        }
+
+        status = Sciclient_rmIrqSetRaw(NULL, NULL, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            rmTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_rmIrqSetRaw: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+           rmTestStatus += CSL_EFAIL;
+           SciApp_printf ("Sciclient_rmIrqSetRaw: Negative Arg Test Failed.\n");
+        }
+
+        status = Sciclient_rmIrqReleaseRaw(NULL, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            rmTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_rmIrqReleaseRaw: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+           rmTestStatus += CSL_EFAIL;
+           SciApp_printf ("Sciclient_rmIrqReleaseRaw: Negative Arg Test Failed.\n");
+        }
+
+        status = Sciclient_rmIrqTranslateIaOutput(invalidDevId, iaOutput, 
+                                                  TISCI_DEV_R5FSS0_CORE0, &intNum);
+        if (status == CSL_EBADARGS)
+        {
+            rmTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_rmIrqTranslateIaOutput: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+           rmTestStatus += CSL_EFAIL;
+           SciApp_printf ("Sciclient_rmIrqTranslateIaOutput: Negative Arg Test Failed.\n");
+        }
+
+        status = Sciclient_rmIrqTranslateIrqInput(invalidDevId, dstInput, 
+                                                  TISCI_DEV_R5FSS0_CORE0, &intNum);
+        if (status == CSL_EBADARGS)
+        {
+            rmTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_rmIrqTranslateIrqInput: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+           rmTestStatus += CSL_EFAIL;
+           SciApp_printf ("Sciclient_rmIrqTranslateIrqInput: Negative Arg Test Failed.\n");
+        }
+
+        status = Sciclient_rmPsilPair(NULL, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            rmTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_rmPsilPair: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+           rmTestStatus += CSL_EFAIL;
+           SciApp_printf ("Sciclient_rmPsilPair: Negative Arg Test Failed.\n");
+        }
+
+        status = Sciclient_rmPsilUnpair(NULL, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            rmTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_rmPsilUnpair: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+           rmTestStatus += CSL_EFAIL;
+           SciApp_printf ("Sciclient_rmPsilUnpair: Negative Arg Test Failed.\n");
+        }
+
+        status = Sciclient_rmPsilRead(NULL, NULL, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            rmTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_rmPsilRead: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+           rmTestStatus += CSL_EFAIL;
+           SciApp_printf ("Sciclient_rmPsilRead: Negative Arg Test Failed.\n");
+        }
+
+        status = Sciclient_rmPsilWrite(NULL, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            rmTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_rmPsilWrite: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+           rmTestStatus += CSL_EFAIL;
+           SciApp_printf ("Sciclient_rmPsilWrite: Negative Arg Test Failed.\n");
+        }
+
+        status = Sciclient_rmRingCfg(NULL, NULL, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            rmTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_rmRingCfg: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+           rmTestStatus += CSL_EFAIL;
+           SciApp_printf ("Sciclient_rmRingCfg: Negative Arg Test Failed.\n");
+        }
+
+        status = Sciclient_rmRingMonCfg(NULL, NULL, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            rmTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_rmRingMonCfg: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+           rmTestStatus += CSL_EFAIL;
+           SciApp_printf ("Sciclient_rmRingMonCfg: Negative Arg Test Failed.\n");
+        }
+
+        status = Sciclient_rmUdmapTxChCfg(NULL, NULL, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            rmTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_rmUdmapTxChCfg: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+           rmTestStatus += CSL_EFAIL;
+           SciApp_printf ("Sciclient_rmUdmapTxChCfg: Negative Arg Test Failed.\n");
+        }
+
+        status = Sciclient_rmUdmapRxChCfg(NULL, NULL, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            rmTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_rmUdmapRxChCfg: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+           rmTestStatus += CSL_EFAIL;
+           SciApp_printf ("Sciclient_rmUdmapRxChCfg: Negative Arg Test Failed.\n");
+        }
+
+        status = Sciclient_rmUdmapFlowCfg(NULL, NULL, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            rmTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_rmUdmapFlowCfg: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+           rmTestStatus += CSL_EFAIL;
+           SciApp_printf ("Sciclient_rmUdmapFlowCfg: Negative Arg Test Failed.\n");
+        }
+
+        status = Sciclient_rmUdmapFlowSizeThreshCfg(NULL, NULL, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            rmTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_rmUdmapFlowSizeThreshCfg: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+           rmTestStatus += CSL_EFAIL;
+           SciApp_printf ("Sciclient_rmUdmapFlowSizeThreshCfg: Negative Arg Test Failed.\n");
+        }
+
+        status = Sciclient_rmUdmapGcfgCfg(NULL, NULL, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            rmTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_rmUdmapGcfgCfg: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+           rmTestStatus += CSL_EFAIL;
+           SciApp_printf ("Sciclient_rmUdmapGcfgCfg: Negative Arg Test Failed.\n");
+        }
+
+        status = Sciclient_rmSetProxyCfg(NULL, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            rmTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_rmSetProxyCfg: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+           rmTestStatus += CSL_EFAIL;
+           SciApp_printf ("Sciclient_rmSetProxyCfg: Negative Arg Test Failed.\n");
+        }
+     }
+    else
+    {
+          rmTestStatus += CSL_EFAIL;
+          SciApp_printf ("Sciclient_init FAILED.\n");
+    }
+    if(sciclientInitStatus == CSL_PASS)
+    {
+        status = Sciclient_deinit();
+        if(status == CSL_PASS)
+        {
+            rmTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_deinit PASSED.\n");
+        }
+        else
+        {
+            rmTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_deinit FAILED.\n");
+        }
+    }
+
+    return rmTestStatus;
 }
 
 #if defined(BUILD_MPU) || defined (BUILD_C7X)

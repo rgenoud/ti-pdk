@@ -68,7 +68,7 @@ SciApp_TestParams_t gSciApp_TestcaseParams[] =
         1U,
 
         /** *reqId **/
-        "None",
+        "PDK-14050",
 
         /** *testCaseName **/
         "Sciserver Negative Testcase",
@@ -90,7 +90,7 @@ SciApp_TestParams_t gSciApp_TestcaseParams[] =
         SCI_APP_PRINT_ENABLE,
 
         /** testType **/
-        (SCI_APP_TEST_TYPE_NEGATIVE)
+        (SCI_APP_TEST_TYPE_SANITY)
     },
     {
         /** enableTest **/
@@ -100,7 +100,7 @@ SciApp_TestParams_t gSciApp_TestcaseParams[] =
         2U,
 
         /** *reqId **/
-        "None",
+        "PDK-14051",
 
         /** *testCaseName **/
         "Sciserver secProxyTransfer Negative Testcase",
@@ -122,7 +122,7 @@ SciApp_TestParams_t gSciApp_TestcaseParams[] =
         SCI_APP_PRINT_ENABLE,
 
         /** testType **/
-        (SCI_APP_TEST_TYPE_NEGATIVE)
+        (SCI_APP_TEST_TYPE_SANITY)
     },
     {
         /** enableTest **/
@@ -132,7 +132,7 @@ SciApp_TestParams_t gSciApp_TestcaseParams[] =
         3U,
 
         /** *reqId **/
-        "None",
+        "PDK-14052",
 
         /** *testCaseName **/
         "Sciserver secproxyRoutingDescription Negative Testcase",
@@ -154,7 +154,7 @@ SciApp_TestParams_t gSciApp_TestcaseParams[] =
         SCI_APP_PRINT_ENABLE,
 
         /** testType **/
-        (SCI_APP_TEST_TYPE_NEGATIVE)
+        (SCI_APP_TEST_TYPE_SANITY)
     }
 };
 
