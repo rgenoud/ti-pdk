@@ -375,6 +375,36 @@ SCISERVER_TESTAPP_MACRO_LIST := $(foreach curos, $(drvsciclient_RTOS_LIST) safer
 
 $(eval ${SCISERVER_TESTAPP_MACRO_LIST})
 
+# SCISERVER_UNIT TEST
+define SCISERVER_UNIT_TESTAPP_RULE
+
+export sciserver_unit_testapp_$(1)_COMP_LIST = sciserver_unit_testapp_$(1)
+export sciserver_unit_testapp_$(1)_RELPATH = ti/drv/sciclient/examples/sciserver_unit_testapp
+export sciserver_unit_testapp_$(1)_PATH = $(PDK_SCICLIENT_COMP_PATH)/examples/sciserver_unit_testapp
+export sciserver_unit_testapp_$(1)_BOARD_DEPENDENCY = yes
+export sciserver_unit_testapp_$(1)_CORE_DEPENDENCY = yes
+export sciserver_unit_testapp_$(1)_PKG_LIST = sciserver_unit_testapp_$(1)
+export sciserver_unit_testapp_$(1)_INCLUDE = $(sciserver_unit_testapp_$(1)_PATH)
+export sciserver_unit_testapp_$(1)_BOARDLIST = $(filter $(DEFAULT_BOARDLIST_$(1)), j721e_evm j7200_evm j721s2_evm j784s4_evm)
+export sciserver_unit_testapp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), mcu1_0)
+export sciserver_unit_testapp_$(1)_SBL_APPIMAGEGEN = no
+ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4))
+export sciserver_unit_testapp_$(1)_SBL_APPIMAGEGEN = yes
+endif
+export sciserver_unit_testapp_$(1)_SBL_IMAGEGEN = no
+export sciserver_unit_testapp_$(1)_MAKEFILE = -f makefile BUILD_OS_TYPE=$(1)
+ifneq ($(1),$(filter $(1), safertos))
+sciclient_EXAMPLE_LIST += sciserver_unit_testapp_$(1)
+else
+ifneq ($(wildcard $(SAFERTOS_KERNEL_INSTALL_PATH)),)
+sciclient_EXAMPLE_LIST += sciserver_unit_testapp_$(1)
+endif
+endif
+endef
+
+SCISERVER_UNIT_TESTAPP_MACRO_LIST := $(foreach curos, $(drvsciclient_RTOS_LIST) safertos, $(call SCISERVER_UNIT_TESTAPP_RULE,$(curos)))
+
+$(eval ${SCISERVER_UNIT_TESTAPP_MACRO_LIST})
 
 # SCICLIENT RTOS Firewall Unit tests
 define SCICLIENT_FW_TESTAPP_RULE
