@@ -383,7 +383,7 @@ void SBL_SciClientInit(uint32_t devGroup)
     config.c66xRatRegion            =   0;
     config.skipLocalBoardCfgProcess =   1;
 #endif
-
+    /* Profile point before reading sysfw */
     SBL_ADD_PROFILE_POINT;
 
     void *sysfw_ptr = gSciclient_firmware;
@@ -397,6 +397,7 @@ void SBL_SciClientInit(uint32_t devGroup)
 #endif
         SblErrLoop(__FILE__, __LINE__);
     }
+    /* Profile point after reading sysfw and before loading sysfw */
     SBL_ADD_PROFILE_POINT;
 
 #ifndef SBL_SKIP_SYSFW_INIT
@@ -411,7 +412,7 @@ void SBL_SciClientInit(uint32_t devGroup)
 #endif
         SblErrLoop(__FILE__, __LINE__);
     }
-
+    /* Profile point after loading sysfw and before sciclient init */
     SBL_ADD_PROFILE_POINT;
 
     status = Sciclient_getDefaultBoardCfgInfo(&boardCfgInfo);
@@ -428,16 +429,19 @@ void SBL_SciClientInit(uint32_t devGroup)
         SBL_log(SBL_LOG_ERR,"Sciclient init ...FAILED \n");
         SblErrLoop(__FILE__, __LINE__);
     }
+    /* Profile point after sciclient init and before Board Cfg */
     SBL_ADD_PROFILE_POINT;
 
 #ifndef SBL_SKIP_BRD_CFG_BOARD
     SBL_SciclientBoardCfg(devGroup, &boardCfgInfo);
 #endif
+    /* Profile point after Board Cfg and before PM Board Cfg */
     SBL_ADD_PROFILE_POINT;
 
 #ifndef SBL_SKIP_BRD_CFG_PM
     SBL_SciclientBoardCfgPm(devGroup, &boardCfgInfo);
 #endif
+    /* Profile point after PM Board Cfg and before Security Board Cfg */
     SBL_ADD_PROFILE_POINT;
 
 #ifndef SBL_SKIP_BRD_CFG_SEC
@@ -445,6 +449,7 @@ void SBL_SciClientInit(uint32_t devGroup)
 #endif
 
     SBL_OpenFirewalls();
+    /* Profile point after Security Board Cfg and before RM Board Cfg */
     SBL_ADD_PROFILE_POINT;
 
 #ifndef SBL_SKIP_BRD_CFG_RM
@@ -497,7 +502,7 @@ void SBL_SciClientCombinedBootInit(uint32_t devGroup)
 #endif
 
 #ifndef SBL_SKIP_SYSFW_INIT
-
+    /* Profile point before boot notification */
     SBL_ADD_PROFILE_POINT;
     status = Sciclient_bootNotification();
     if (status != CSL_PASS)
@@ -505,7 +510,7 @@ void SBL_SciClientCombinedBootInit(uint32_t devGroup)
         SBL_log(SBL_LOG_ERR,"Sciclient_bootNotification ...FAILED \n");
         SblErrLoop(__FILE__, __LINE__);
     }
-
+    /* Profile point after boot notification and before sciclient init */
     SBL_ADD_PROFILE_POINT;
 
     status = Sciclient_getDefaultBoardCfgInfo(&boardCfgInfo);
@@ -522,17 +527,19 @@ void SBL_SciClientCombinedBootInit(uint32_t devGroup)
         SBL_log(SBL_LOG_ERR,"Sciclient init ...FAILED \n");
         SblErrLoop(__FILE__, __LINE__);
     }
-
+    /* Profile point after sciclient init and before Board Cfg */
     SBL_ADD_PROFILE_POINT;
 
 #ifndef SBL_SKIP_BRD_CFG_BOARD
     SBL_SciclientBoardCfg(devGroup, &boardCfgInfo);
 #endif
+    /* Profile point after Board Cfg and before PM Board Cfg */
     SBL_ADD_PROFILE_POINT;
 
 #ifndef SBL_SKIP_BRD_CFG_PM
     SBL_SciclientBoardCfgPm(devGroup, &boardCfgInfo);
 #endif
+    /* Profile point after PM Board Cfg and before Security Board Cfg */
     SBL_ADD_PROFILE_POINT;
 
 #ifndef SBL_SKIP_BRD_CFG_SEC
@@ -540,6 +547,7 @@ void SBL_SciClientCombinedBootInit(uint32_t devGroup)
 #endif
 
     SBL_OpenFirewalls();
+    /* Profile point after Security Board Cfg and before RM Board Cfg */
     SBL_ADD_PROFILE_POINT;
 
 #ifndef SBL_SKIP_BRD_CFG_RM

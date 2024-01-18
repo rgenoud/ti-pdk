@@ -192,7 +192,7 @@ static int32_t Ospi_udma_deinit(void)
 int32_t SBL_ReadSysfwImage(void **pBuffer, uint32_t num_bytes)
 {
 #if !defined(SBL_BYPASS_OSPI_DRIVER) && !defined(SBL_BYPASS_OSPI_DRIVER_FOR_SYSFW_DOWNLOAD)
-    Board_flashHandle h;
+    Board_flashHandle flashHandle;
 
     /* Init SPI driver */
     OSPI_init();
@@ -201,12 +201,6 @@ int32_t SBL_ReadSysfwImage(void **pBuffer, uint32_t num_bytes)
     OSPI_socGetInitCfg(BOARD_OSPI_DOMAIN, BOARD_OSPI_NOR_INSTANCE, &ospi_cfg);
 
     ospi_cfg.funcClk = OSPI_MODULE_CLK_200M;
-
-    /* false: unstable, cpu read @ 120Mbytes per sec          */
-    /*        can work with direct ROM load once it is stable */
-    /* true:  stable, CPU read @60Mbytes per sec, will not    */
-    /*        work with ROM, as ROM needs byte accesses       */
-    ospi_cfg.dtrEnable = BTRUE;
 
     /* OSPI clock is set to 200MHz by RBL on J7200, J721S2 & J784S4 platforms.
      * PHY mode cannot be used until sysfw is loaded and OSPI clock is
@@ -220,27 +214,29 @@ int32_t SBL_ReadSysfwImage(void **pBuffer, uint32_t num_bytes)
     /* Set the default SPI init configurations */
     if (gIsNandBootEnable == BTRUE)
     {
-        ospi_cfg.cacheEnable = BTRUE;
+        ospi_cfg.cacheEnable = 1;
+        ospi_cfg.dtrEnable = false;
+        ospi_cfg.baudRateDiv = 4;
     }
     OSPI_socSetInitCfg(BOARD_OSPI_DOMAIN, BOARD_OSPI_NOR_INSTANCE, &ospi_cfg);
 
 #if defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4)
     if (gIsNandBootEnable == BTRUE)
     {
-        h = Board_flashOpen(BOARD_FLASH_ID_W35N01JWTBAG,
+        flashHandle = Board_flashOpen(BOARD_FLASH_ID_W35N01JWTBAG,
                             BOARD_OSPI_NOR_INSTANCE, NULL);
     }
     else
     {
-        h = Board_flashOpen(BOARD_FLASH_ID_S28HS512T,
+        flashHandle = Board_flashOpen(BOARD_FLASH_ID_S28HS512T,
                             BOARD_OSPI_NOR_INSTANCE, NULL);
     }
 #else
-    h = Board_flashOpen(BOARD_FLASH_ID_MT35XU512ABA1G12,
+    flashHandle = Board_flashOpen(BOARD_FLASH_ID_MT35XU512ABA1G12,
                         BOARD_OSPI_NOR_INSTANCE, NULL);
 #endif
 
-    if (h)
+    if (flashHandle)
     {
 
         /* Disable PHY pipeline mode */
@@ -253,7 +249,7 @@ int32_t SBL_ReadSysfwImage(void **pBuffer, uint32_t num_bytes)
         {
             if (gIsNandBootEnable == BTRUE)
             {
-                if (Board_flashRead(h, SBL_OSPI_OFFSET_SYSFW, (uint8_t *) *pBuffer, SBL_SYSFW_MAX_SIZE, NULL))
+                if (Board_flashRead(flashHandle, SBL_OSPI_OFFSET_SYSFW, (uint8_t *) *pBuffer, SBL_SYSFW_MAX_SIZE, NULL))
                 {
                     SBL_log(SBL_LOG_ERR, "Board_flashRead failed in SBL_ReadSysfwImage \n");
                     SblErrLoop(__FILE__, __LINE__);
@@ -271,7 +267,7 @@ int32_t SBL_ReadSysfwImage(void **pBuffer, uint32_t num_bytes)
 #endif
 
         /* Update handle for later use*/
-        boardHandle = (void *)h;
+        boardHandle = (void *)flashHandle;
     }
     else
     {
@@ -296,7 +292,6 @@ int32_t SBL_ReadSysfwImage(void **pBuffer, uint32_t num_bytes)
 
 }
 
-#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4)
 void OSPI_configClk(uint32_t freq)
 {
     OSPI_v0_HwAttrs ospi_cfg;
@@ -377,7 +372,6 @@ void OSPI_configClk(uint32_t freq)
     SBL_log(SBL_LOG_MAX, "OSPI RCLK running at %d MHz. \n", (uint32_t)ospi_rclk_freq);
 
 }
-#endif
 
 int32_t SBL_ospiInit(void *handle)
 {
@@ -386,12 +380,12 @@ int32_t SBL_ospiInit(void *handle)
      /* .. bypass option is requested. REMOVE WHEN SIMULATION IS IRRELEVANT. */ \
      && !(defined(SBL_BYPASS_OSPI_DRIVER_FOR_SYSFW_DOWNLOAD) && defined(SIM_BUILD)))
 
-    Board_flashHandle h = *(Board_flashHandle *) handle;
+    Board_flashHandle flashHandle = *(Board_flashHandle *) handle;
     static uint32_t enableTuning = UTRUE;
 
-    if (h)
+    if (flashHandle)
     {
-        Board_flashClose(h);
+        Board_flashClose(flashHandle);
 
     }
 
@@ -420,71 +414,29 @@ int32_t SBL_ospiInit(void *handle)
         {
             #if defined(SOC_J721E) || defined(SOC_J721S2) || defined(SOC_J784S4)
                     ospiFunClk = (uint64_t)(OSPI_MODULE_CLK_166M);
-                    ospi_cfg.devDelays[3] = OSPI_DEV_DELAY_CSDA_3;
             #else
                     ospiFunClk = (uint64_t)(OSPI_MODULE_CLK_133M);
             #endif
         }
-        ospi_cfg.devDelays[0] = OSPI_DEV_DELAY_CSDA_A;
-        ospi_cfg.devDelays[1] = OSPI_DEV_DELAY_CSDA_A;
-        ospi_cfg.devDelays[2] = OSPI_DEV_DELAY_CSDA_A;
-        ospi_cfg.devDelays[3] = OSPI_DEV_DELAY_CSDA_A;
         ospi_cfg.funcClk = ospiFunClk;
         ospi_cfg.baudRateDiv = 8;
-
-#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4)
         OSPI_configClk(ospiFunClk);
-#else
-        struct ospiClkParams
-        {
-            uint32_t moduleId;
-            uint32_t clockId;
-        };
-        struct ospiClkParams ospiClkInfo[] = {
-                                                {SBL_DEV_ID_OSPI0, SBL_CLK_ID_OSPI0},
-#ifdef SBL_DEV_ID_OSPI1
-                                                {SBL_DEV_ID_OSPI1, SBL_CLK_ID_OSPI1},
-#endif
-                                            };
-        Sciclient_pmSetModuleClkFreq(ospiClkInfo[BOARD_OSPI_NOR_INSTANCE].moduleId, ospiClkInfo[BOARD_OSPI_NOR_INSTANCE].clockId, ospiFunClk, TISCI_MSG_FLAG_AOP, SCICLIENT_SERVICE_WAIT_FOREVER);
-        ospi_cfg.funcClk = (uint32_t)ospiFunClk;
-        SBL_log(SBL_LOG_MAX, "ospiFunClk = %d Hz \n", ospi_cfg.funcClk);
-#endif
+        ospi_cfg.phyEnable = true;
+        ospi_cfg.cacheEnable = true;
     }
 #endif
-
-    ospi_cfg.dtrEnable = BTRUE;
 
 #if SBL_USE_DMA
     ospi_cfg.dmaEnable = BTRUE;
     Ospi_udma_init(&ospi_cfg);
-
-    #if defined(SOC_J721E)
     SBL_udmaInit(gDrvHandle);
-    #endif
 #endif
 
-#if SBL_USE_DMA
-    /* J721E: PHY mode was already previously enabled, so we keep it enabled */
-    /* J7200/J721S2/J784S4: Enable the PHY mode which was disabled in SBL_ReadSysfwImage */
-    ospi_cfg.phyEnable = BTRUE;
-#else
-#if defined(SOC_J721E)
-    ospi_cfg.phyEnable = BTRUE;
-    ospi_cfg.cacheEnable = BTRUE;
-#else
-    ospi_cfg.phyEnable = BFALSE;
-#endif
-if(isXIPEnable == BTRUE)
-{
-    ospi_cfg.phyEnable = BTRUE;
-    ospi_cfg.cacheEnable = BTRUE;
-}
-#endif
     /* Set the default SPI init configurations */
     if (gIsNandBootEnable == BTRUE)
     {
-        ospi_cfg.cacheEnable = BTRUE;
+        ospi_cfg.blkSize = 16;
+        ospi_cfg.dtrEnable = false;
     }
     OSPI_socSetInitCfg(BOARD_OSPI_DOMAIN, BOARD_OSPI_NOR_INSTANCE, &ospi_cfg);
 
@@ -501,30 +453,23 @@ if(isXIPEnable == BTRUE)
 #if defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4)
     if (gIsNandBootEnable == BTRUE)
     {
-        h = Board_flashOpen(BOARD_FLASH_ID_W35N01JWTBAG,
+        flashHandle = Board_flashOpen(BOARD_FLASH_ID_W35N01JWTBAG,
                             BOARD_OSPI_NOR_INSTANCE, (void *)(enableTuning));
     }
     else
     {
-        h = Board_flashOpen(BOARD_FLASH_ID_S28HS512T,
+        flashHandle = Board_flashOpen(BOARD_FLASH_ID_S28HS512T,
                             BOARD_OSPI_NOR_INSTANCE, (void *)(enableTuning));
     }
 #else
-    h = Board_flashOpen(BOARD_FLASH_ID_MT35XU512ABA1G12,
+    flashHandle = Board_flashOpen(BOARD_FLASH_ID_MT35XU512ABA1G12,
                             BOARD_OSPI_NOR_INSTANCE, (void *)(enableTuning));
 #endif
-    if (h)
+    if (flashHandle)
     {
-        *(Board_flashHandle *) handle = h;
+        *(Board_flashHandle *) handle = flashHandle;
         /* Update the static handle as well, for later use */
-        boardHandle = (void *)h;
-#if !(SBL_USE_DMA) && !defined(SOC_J721E)
-        if(isXIPEnable == BFALSE)
-        {
-            /* Disable PHY pipeline mode if not using DMA */
-            CSL_ospiPipelinePhyEnable((const CSL_ospi_flash_cfgRegs *)(ospi_cfg.baseAddr), UFALSE);
-        }
-#endif
+        boardHandle = (void *)flashHandle;
     }
     else
     {
@@ -582,24 +527,14 @@ int32_t SBL_ospiFlashRead(const void *handle, uint8_t *dst, uint32_t length,
     }
 
 #else
-
-    if((isXIPEnable == BTRUE) || (gIsNandBootEnable == BTRUE))
+    Board_flashHandle h = *(const Board_flashHandle *) handle;
+    uint32_t ioMode = OSPI_FLASH_OCTAL_READ;
+    SBL_DCacheClean((void *)dst, length);
+    int32_t status = CSL_PASS;
+    status = Board_flashRead(h, offset, dst, length, (void *)(&ioMode));
+    if (status != CSL_PASS)
     {
-        Board_flashHandle h = *(const Board_flashHandle *) handle;
-        uint32_t ioMode = OSPI_FLASH_OCTAL_READ;
-        SBL_DCacheClean((void *)dst, length);
-        Board_flashRead(h, offset, dst, length, (void *)(&ioMode));
-    }
-    else
-    {
-        #if defined(SOC_J721E)
-            Board_flashHandle h = *(const Board_flashHandle *) handle;
-            uint32_t ioMode = OSPI_FLASH_OCTAL_READ;
-            SBL_DCacheClean((void *)dst, length);
-            Board_flashRead(h, offset, dst, length, (void *)(&ioMode));
-        #else
-            memcpy((void *)dst, (void *)(ospi_cfg.dataAddr + offset), length);
-        #endif
+        SBL_log(SBL_LOG_ERR, "Board flash Read failed !! ");
     }
 
 #endif /* #if SBL_USE_DMA */
@@ -627,9 +562,7 @@ int32_t SBL_ospiClose(const void *handle)
     SBL_log(SBL_LOG_MAX, "SBL_ospiClose called\n");
     Board_flashClose(h);
 #if SBL_USE_DMA
-    #if defined(SOC_J721E)
     SBL_udmaDeInit();
-    #endif
     Ospi_udma_deinit();
 #endif
 #else
@@ -700,7 +633,7 @@ int32_t SBL_OSPIBootImage(sblEntryPoint_t *pEntry)
 {
     int32_t retVal;
     uint32_t offset = SBL_OSPI_OFFSET_SI;
-
+    /* Profile point after Board init Clocks and before OSPI init */
     SBL_ADD_PROFILE_POINT;
     /* Initialization of the driver. */
     SBL_OSPI_Initialize();
@@ -708,6 +641,7 @@ int32_t SBL_OSPIBootImage(sblEntryPoint_t *pEntry)
 #if defined(SBL_ENABLE_HLOS_BOOT) && (defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4))
     retVal =  SBL_MulticoreImageParse((void *) &offset, SBL_OSPI_OFFSET_SI, pEntry, SBL_SKIP_BOOT_AFTER_COPY);
 #else
+    /* Profile point after OSPI init and before phy tuning */
     SBL_ADD_PROFILE_POINT;
     retVal =  SBL_MulticoreImageParse((void *) &offset, SBL_OSPI_OFFSET_SI, pEntry, SBL_BOOT_AFTER_COPY);
 #endif

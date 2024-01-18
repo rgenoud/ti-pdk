@@ -816,7 +816,7 @@ sbl_ospi_nand_img_COMP_LIST = sbl_ospi_nand_img
 sbl_ospi_nand_img_RELPATH = ti/boot/sbl/board/k3
 sbl_ospi_nand_img_CUSTOM_BINPATH = $(PDK_SBL_COMP_PATH)/binary/$(BOARD)/ospi_nand/bin
 sbl_ospi_nand_img_PATH = $(PDK_SBL_COMP_PATH)/board/k3
-sbl_ospi_nand_img_MAKEFILE = -f$(PDK_SBL_COMP_PATH)/build/sbl_img.mk BOOTMODE=ospi OSPI_NAND=yes SBL_USE_DMA=no BUILD_HS=no
+sbl_ospi_nand_img_MAKEFILE = -f$(PDK_SBL_COMP_PATH)/build/sbl_img.mk BOOTMODE=ospi OSPI_NAND=yes SBL_USE_DMA=yes BUILD_HS=no
 export sbl_ospi_nand_img_MAKEFILE
 export sbl_ospi_nand_img_SBL_CERT_KEY=$(SBL_CERT_KEY)
 sbl_ospi_nand_img_BOARD_DEPENDENCY = yes
@@ -1458,7 +1458,7 @@ sbl_lib_cust_LIBNAME = sbl_lib_cust
 sbl_lib_cust_PATH = $(PDK_SBL_COMP_PATH)
 sbl_lib_cust_LIBNAME = sbl_lib_cust
 sbl_lib_cust_LIBPATH = $(PDK_SBL_COMP_PATH)/lib/cust
-sbl_lib_cust_MAKEFILE = -f$(PDK_SBL_COMP_PATH)/build/sbl_lib.mk BOOTMODE=cust SBL_USE_DMA=no CUST_SBL_FLAGS=$(CUST_SBL_TEST_FLAGS)
+sbl_lib_cust_MAKEFILE = -f$(PDK_SBL_COMP_PATH)/build/sbl_lib.mk BOOTMODE=cust SBL_USE_DMA=yes CUST_SBL_FLAGS=$(CUST_SBL_TEST_FLAGS)
 export sbl_lib_cust_MAKEFILE
 export sbl_lib_cust_LIBNAME
 export sbl_lib_cust_LIBPATH
@@ -1558,7 +1558,7 @@ sbl_cust_img_COMP_LIST = sbl_cust_img
 sbl_cust_img_RELPATH = ti/boot/sbl/board/k3
 sbl_cust_img_CUSTOM_BINPATH = $(PDK_SBL_COMP_PATH)/binary/$(BOARD)/cust/bin
 sbl_cust_img_PATH = $(PDK_SBL_COMP_PATH)/board/k3
-sbl_cust_img_MAKEFILE = -f$(PDK_SBL_COMP_PATH)/build/sbl_img.mk BOOTMODE=cust SBL_USE_DMA=no BUILD_HS=no CUST_SBL_FLAGS=$(CUST_SBL_TEST_FLAGS)
+sbl_cust_img_MAKEFILE = -f$(PDK_SBL_COMP_PATH)/build/sbl_img.mk BOOTMODE=cust SBL_USE_DMA=yes BUILD_HS=no CUST_SBL_FLAGS=$(CUST_SBL_TEST_FLAGS)
 export sbl_cust_img_MAKEFILE
 export sbl_cust_img_SBL_CERT_KEY=$(SBL_CERT_KEY)
 sbl_cust_img_BOARD_DEPENDENCY = yes
@@ -1614,7 +1614,7 @@ sbl_boot_perf_cust_img_COMP_LIST = sbl_boot_perf_cust_img
 sbl_boot_perf_cust_img_RELPATH = ti/boot/sbl/board/k3
 sbl_boot_perf_cust_img_CUSTOM_BINPATH = $(PDK_SBL_COMP_PATH)/binary/$(BOARD)/cust/bin
 sbl_boot_perf_cust_img_PATH = $(PDK_SBL_COMP_PATH)/board/k3
-sbl_boot_perf_cust_img_MAKEFILE = -f$(PDK_SBL_COMP_PATH)/build/sbl_img.mk BOOTMODE=cust SBL_USE_DMA=no BUILD_HS=no CUST_SBL_FLAGS=$(CUST_SBL_BOOT_PERF_TEST_FLAGS) BOOT_PERF=yes
+sbl_boot_perf_cust_img_MAKEFILE = -f$(PDK_SBL_COMP_PATH)/build/sbl_img.mk BOOTMODE=cust SBL_USE_DMA=yes BUILD_HS=no CUST_SBL_FLAGS=$(CUST_SBL_BOOT_PERF_TEST_FLAGS) BOOT_PERF=yes
 export sbl_boot_perf_cust_img_MAKEFILE
 export sbl_boot_perf_cust_img_SBL_CERT_KEY=$(SBL_CERT_KEY)
 sbl_boot_perf_cust_img_BOARD_DEPENDENCY = yes

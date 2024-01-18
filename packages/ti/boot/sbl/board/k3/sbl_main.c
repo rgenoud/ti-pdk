@@ -259,7 +259,6 @@ int main()
     cpu_core_id_t core_id;
 #endif
     uint32_t atcm_size;
-
     SBL_ADD_PROFILE_POINT;
 
     uint32_t devGroup;
@@ -344,6 +343,7 @@ int main()
 
 #if !defined(SBL_SKIP_PINMUX_ENABLE)
     /* Board pinmux. */
+    /* Profile point after RM Board Cfg and before Board init pinmux */
     SBL_ADD_PROFILE_POINT;
     if (CSL_PASS != Board_init(BOARD_INIT_PINMUX_CONFIG))
     {
@@ -358,6 +358,7 @@ int main()
 #endif
 
 #if defined(SBL_ENABLE_PLL) && !defined(SBL_SKIP_SYSFW_INIT)
+    /* Profile point after Board init pinmux and before Board init PLL */
     SBL_ADD_PROFILE_POINT;
     SBL_log(SBL_LOG_MAX, "Initlialzing PLLs ...");
     if (CSL_PASS != Board_init(SBL_PLL_INIT))
@@ -383,6 +384,7 @@ int main()
     Board_setInitParams(&initParams);
 #endif
 #endif
+    /* Profile Point after Board init PLL and before Board init Clocks */
     SBL_ADD_PROFILE_POINT;
     if (CSL_PASS != Board_init(SBL_CLOCK_INIT))
     {
@@ -472,6 +474,7 @@ int main()
 
     /* Boot all non-SBL cores in multi-core app image */
     SBL_BootImage(&k3xx_evmEntry);
+    /* Profile point after app copy */
     SBL_ADD_PROFILE_POINT;
 
     /* Export SBL logs */

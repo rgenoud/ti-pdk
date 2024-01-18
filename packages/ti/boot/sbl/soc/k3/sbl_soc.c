@@ -340,6 +340,8 @@ int32_t SBL_VerifyMulticoreImage(void **img_handle,
         /* Read first 4 bytes of image to */
         /* determine if it is a x509 img  */
         fp_readData(x509Header, *img_handle, 4);
+        /* Profile point after phy tuning before app copy */
+        SBL_ADD_PROFILE_POINT;
         fp_seek(*img_handle, *ImageOffsetPtr);
         cert_len = SBL_GetCertLen(x509Header);
     }
@@ -407,7 +409,7 @@ int32_t SBL_VerifyMulticoreImage(void **img_handle,
             /* Image is loaded. RPRC parsing no longer */
             /* neeeds to access the boot media. Update */
             /* caller with image load address          */
-            #if defined(SOC_J721E) && SBL_USE_DMA
+            #if SBL_USE_DMA
             if(SBL_isUdmaInitDone())
             {
                 SBL_udmaSeekMem(NULL, 0);
