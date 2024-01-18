@@ -56,8 +56,8 @@ ifeq ($(BOOT_PERF), yes)
     APP_NAME = sbl_boot_perf_$(BOOTMODE)_img_combined
     LOCAL_APP_NAME = sbl_boot_perf_$(BOOTMODE)_img_combined_$(CORE)
   else
-    APP_NAME = sbl_boot_perf_$(BOOTMODE)_img
-    LOCAL_APP_NAME = sbl_boot_perf_$(BOOTMODE)_img_$(CORE)
+    APP_NAME = sbl_boot_perf_$(BOOTMODE)$(OSPI_NAND_SUFFIX)_img
+    LOCAL_APP_NAME = sbl_boot_perf_$(BOOTMODE)$(OSPI_NAND_SUFFIX)_img_$(CORE)
   endif
 else ifeq ($(BOOTMODE), xip)
   ifeq ($(OSPI_FREQ), 133)
@@ -101,6 +101,9 @@ ifeq ($(BOOTMODE), cust)
   COMP_LIST_COMMON += sbl_lib_$(BOOTMODE)$(HS_SUFFIX)
   ifeq ($(RAT), 1)
     SBL_CFLAGS += -DSBL_OCM_MAIN_DOMAIN_RAT
+  endif
+  ifeq ($(OSPI_NAND), yes)
+    SBL_CFLAGS += -DOSPI_NAND_BOOT
   endif
 else ifeq ($(BOOTMODE), xip)
   SBL_CFLAGS = $(CUST_SBL_FLAGS)

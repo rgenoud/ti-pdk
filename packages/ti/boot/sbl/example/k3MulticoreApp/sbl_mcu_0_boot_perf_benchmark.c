@@ -48,13 +48,13 @@ struct tisci_boardcfg_sec sblPerfTestBoardCfg_sec __attribute((section(".sysfw_d
 /* For j721e SBL doesn't able to profile RBL boot time since it doesn't have mcu timer9 
         So SBL profile info for j721e is one index ahead of others */
 #if !defined(SOC_J721E)
-    #define ARRAY_LENGTH 17
-    #define SKIP_INDX 7
+    #define SBL_BOOT_PERF_ARRAY_LENGTH 18
+    #define SBL_BOOT_PERF_ARRAY_SKIP_INDX 7
     /* This time includes RBL execution time */
     float expCanRespTime = 40;
 #else
-    #define ARRAY_LENGTH 16
-    #define SKIP_INDX 6
+    #define SBL_BOOT_PERF_ARRAY_LENGTH 17
+    #define SBL_BOOT_PERF_ARRAY_SKIP_INDX 6
     /* This time does not include RBL execution time */
     float expCanRespTime = 39.5;
 #endif
@@ -138,7 +138,7 @@ static void BOOT_PERF_TEST_printSblProfileLog(sblProfileInfo_t *sblProfileLog, u
 
 static void sblBootPerfPrint(sblProfileInfo_t *sblBootPerfLog)
 {
-    char majorApis[13][100] = {"SBL : SBL_SciClientInit: ReadSysfwImage                 :", \
+    char majorApis[14][100] = {"SBL : SBL_SciClientInit: ReadSysfwImage                 :", \
                                 "Load/Start SYSFW                                        :", \
                                 "Sciclient_init                                          :", \
                                 "Board Config                                            :", \
@@ -149,6 +149,7 @@ static void sblBootPerfPrint(sblProfileInfo_t *sblBootPerfLog)
                                 "SBL: Board_init (PLL)                                   :", \
                                 "SBL: Board_init (CLOCKS)                                :", \
                                 "SBL: OSPI init                                          :", \
+                                "OSPI PHY tuning time                                    :", \
                                 "SBL: Parsing appimage and copy to MCU SRAM & Jump to App:", \
                                 "Misc                                                    :"};
     uint64_t mcu_clk_freq = SBL_MCU1_CPU0_FREQ_HZ;
@@ -179,10 +180,10 @@ static void sblBootPerfPrint(sblProfileInfo_t *sblBootPerfLog)
         totalTime += rblExecutionTime/convertToMilli;
     #endif
 
-    while(indx < ARRAY_LENGTH)
+    while(indx < SBL_BOOT_PERF_ARRAY_LENGTH)
     {
         /* Skipping this index as timer is being reset at this particular index */ 
-        if(indx == SKIP_INDX){
+        if(indx == SBL_BOOT_PERF_ARRAY_SKIP_INDX){
             indx++;
             continue;
         }
@@ -195,7 +196,7 @@ static void sblBootPerfPrint(sblProfileInfo_t *sblBootPerfLog)
         timeTaken = (currentCycleCount-previousCycleCount)/convertMicroToMilli;
         /* For Misc - add the time after copying appimage to MCU SRAM till core 
         boots and from start of SBL main to before reading sysfw */
-        if(indx == (ARRAY_LENGTH-1))
+        if(indx == (SBL_BOOT_PERF_ARRAY_LENGTH-1))
         {
             #if !defined(SOC_J721E)
                 timeTaken += (sblBootPerfLog[2].cycle_cnt/cycles_per_usec - sblBootPerfLog[1].cycle_cnt/cycles_per_usec)/convertMicroToMilli;
@@ -227,7 +228,7 @@ static void sblBootPerfPrint(sblProfileInfo_t *sblBootPerfLog)
 
 static void sblCombinedBootPerfPrint(sblProfileInfo_t *sblBootPerfLog)
 {
-    char majorApis[13][100] = {"Sciclient Boot Notification                             :", \
+    char majorApis[14][100] = {"Sciclient Boot Notification                             :", \
                                 "Sciclient_init                                          :", \
                                 "Board Config                                            :", \
                                 "PM Config                                               :", \
@@ -237,6 +238,7 @@ static void sblCombinedBootPerfPrint(sblProfileInfo_t *sblBootPerfLog)
                                 "SBL: Board_init (PLL)                                   :", \
                                 "SBL: Board_init (CLOCKS)                                :", \
                                 "SBL: OSPI init                                          :", \
+                                "OSPI PHY tuning time                                    :", \
                                 "SBL: Parsing appimage and copy to MCU SRAM & Jump to App:", \
                                 "Misc                                                    :"};
     uint64_t mcuClkFreq = SBL_MCU1_CPU0_FREQ_HZ;

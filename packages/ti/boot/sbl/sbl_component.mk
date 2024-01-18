@@ -1636,6 +1636,33 @@ sbl_EXAMPLE_LIST += sbl_boot_perf_cust_img
 sbl_boot_perf_cust_img_SBL_IMAGEGEN = yes
 export sbl_boot_perf_cust_img_SBL_IMAGEGEN
 
+# SBL OSPI NAND performance custom image 
+sbl_boot_perf_cust_nand_img_COMP_LIST = sbl_boot_perf_cust_nand_img
+sbl_boot_perf_cust_nand_img_RELPATH = ti/boot/sbl/board/k3
+sbl_boot_perf_cust_nand_img_CUSTOM_BINPATH = $(PDK_SBL_COMP_PATH)/binary/$(BOARD)/cust_nand/bin
+sbl_boot_perf_cust_nand_img_PATH = $(PDK_SBL_COMP_PATH)/board/k3
+sbl_boot_perf_cust_nand_img_MAKEFILE = -f$(PDK_SBL_COMP_PATH)/build/sbl_img.mk BOOTMODE=cust SBL_USE_DMA=yes BUILD_HS=no CUST_SBL_FLAGS=$(CUST_SBL_BOOT_PERF_TEST_FLAGS) BOOT_PERF=yes OSPI_NAND=yes
+export sbl_boot_perf_cust_nand_img_MAKEFILE
+export sbl_boot_perf_cust_nand_img_SBL_CERT_KEY=$(SBL_CERT_KEY)
+sbl_boot_perf_cust_nand_img_BOARD_DEPENDENCY = yes
+sbl_boot_perf_cust_nand_img_SOC_DEPENDENCY = yes
+sbl_boot_perf_cust_nand_img_CORE_DEPENDENCY = no
+export sbl_boot_perf_cust_nand_img_COMP_LIST
+export sbl_boot_perf_cust_nand_img_BOARD_DEPENDENCY
+export sbl_boot_perf_cust_nand_img_SOC_DEPENDENCY
+export sbl_boot_perf_cust_nand_img_CORE_DEPENDENCY
+sbl_boot_perf_cust_nand_img_PKG_LIST = sbl
+sbl_boot_perf_cust_nand_img_INCLUDE = $(sbl_boot_perf_cust_nand_img_PATH)
+sbl_boot_perf_cust_nand_img_SOCLIST = j721s2
+sbl_boot_perf_cust_nand_img_BOARDLIST = j721s2_evm
+export sbl_boot_perf_cust_nand_img_SOCLIST
+export sbl_boot_perf_cust_nand_img_BOARDLIST
+sbl_boot_perf_cust_nand_img_$(SOC)_CORELIST = mcu1_0
+export sbl_boot_perf_cust_nand_img_$(SOC)_CORELIST
+sbl_EXAMPLE_LIST += sbl_boot_perf_cust_nand_img
+sbl_boot_perf_cust_nand_img_SBL_IMAGEGEN = yes
+export sbl_boot_perf_cust_nand_img_SBL_IMAGEGEN
+
 # SBL XIP image
 # Used to boot an application directly from OSPI flash at 133 MHz
 # Used to validate xip memory benchmarking apps at 133 MHz frequency
