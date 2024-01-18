@@ -7,7 +7,7 @@ else
 include $(RULES_MAKE)
 endif
 
-APP_NAME = sciclient_firmware_boot_TestApp
+APP_NAME = sciclient_firmware_boot_testapp
 BUILD_OS_TYPE=baremetal
 
 SRCDIR = . ../common
@@ -22,27 +22,16 @@ COMP_LIST_COMMON = $(PDK_COMMON_BAREMETAL_COMP)
 
 # Common source files and CFLAGS across all platforms and cores
 SRCS_COMMON = sciclient_firmware_boot_main.c \
-              sciclient_appCommon.c
+              sci_app_common.c
 
 ifeq ($(CORE), mcu1_0)
-ifeq ($(SOC),$(filter $(SOC), am65xx))
-	COMP_LIST_COMMON += mmcsd fatfs_indp
-endif
 	SRCS_ASM_COMMON += boot_init.asm
 endif
 
 CFLAGS_LOCAL_COMMON = $(PDK_CFLAGS) -DBARE_METAL
 PACKAGE_SRCS_COMMON = . ../common
 
-ifeq ($(SOC),$(filter $(SOC), am64x))
-CONFIG_BLD_LNK_r5f = $(PDK_INSTALL_PATH)/ti/drv/sciclient/examples/$(APP_NAME)/linker_r5_am64x.lds
-else
-    ifeq ($(SOC),$(filter $(SOC), am65xx))
-    CONFIG_BLD_LNK_r5f = $(PDK_INSTALL_PATH)/ti/drv/sciclient/examples/$(APP_NAME)/linker_r5_am65x.lds
-    else
-    CONFIG_BLD_LNK_r5f = $(PDK_INSTALL_PATH)/ti/drv/sciclient/examples/$(APP_NAME)/linker_r5.lds
-    endif
-endif
+CONFIG_BLD_LNK_r5f = $(PDK_INSTALL_PATH)/ti/drv/sciclient/examples/$(APP_NAME)/linker_r5.lds
 
 ifeq ($(CORE),mpu1_0)
     LNKFLAGS_LOCAL_mpu1_0 += --entry Entry

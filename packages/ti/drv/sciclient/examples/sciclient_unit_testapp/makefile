@@ -12,15 +12,6 @@ APP_NAME = sciclient_unit_testapp_$(BUILD_OS_TYPE)
 SRCDIR = . $(PDK_INSTALL_PATH)/ti/drv/sciclient/examples/common
 INCDIR = . $(PDK_INSTALL_PATH)/ti/drv/sciclient/examples/common
 
-ifeq ($(BUILD_OS_TYPE),tirtos)
-CFLAGS_OS_DEFINES = -DUSE_BIOS
-EXTERNAL_INTERFACES = bios xdc
-# List all the components required by the application
-COMP_LIST_COMMON  = $(PDK_COMMON_TIRTOS_COMP)
-# Enable XDC build for application by providing XDC CFG File per core
-XDC_CFG_FILE_$(CORE) = $(PDK_INSTALL_PATH)/ti/build/$(SOC)/sysbios_$(ISA).cfg
-endif
-
 ifeq ($(BUILD_OS_TYPE),freertos)
 CFLAGS_OS_DEFINES = -DFREERTOS
 # List all the components required by the application
@@ -48,7 +39,7 @@ INCLUDE_EXTERNAL_INTERFACES = pdk sciclient board uart $(EXTERNAL_INTERFACES)
 
 # Common source files and CFLAGS across all platforms and cores
 SRCS_COMMON = sciclient_ut_main.c \
-              sciclient_appCommon.c uart_utils.c
+              sci_app_common.c uart_utils.c
 
 # SoCs which use firewall exception notification tests (mcu1_0 UT only)
 ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4))

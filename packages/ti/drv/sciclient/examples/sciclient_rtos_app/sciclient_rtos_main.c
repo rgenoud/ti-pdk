@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2017-2018 Texas Instruments Incorporated
+ *  Copyright (C) 2017-2024 Texas Instruments Incorporated
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -44,18 +44,18 @@
 
 #include <stdint.h>
 #include <string.h>
-#include <ti/csl/tistdtypes.h>
 #include <ti/csl/soc.h>
 #include <ti/csl/arch/csl_arch.h>
 #include <ti/csl/hw_types.h>
-#include <sciclient_appCommon.h>
-
 #include <ti/osal/osal.h>
 #include <ti/osal/TaskP.h>
+#include <ti/drv/sciclient/sciclient.h>
+#include <ti/drv/sciclient/examples/common/sci_app_common.h>
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
+
 /* Test application stack size */
 #if defined (BUILD_C7X)
 /* Temp workaround to avoid assertion failure: A_stackSizeTooSmall : Task stack size must be >= 32KB.
@@ -64,22 +64,6 @@
 #else
 #define APP_TSK_STACK_MAIN              (8U * 1024U)
 #endif
-
-/* ========================================================================== */
-/*                         Structures and Enums                               */
-/* ========================================================================== */
-
-/* None */
-
-/* ========================================================================== */
-/*                 Internal Function Declarations                             */
-/* ========================================================================== */
-
-void mainTsk(void* arg0, void* arg1);
-void GetRevisionTest1(void* arg0, void *arg1);
-void GetRevisionTest2(void* arg0, void *arg1);
-
-void appReset(void);
 
 /* ========================================================================== */
 /*                            Global Variables                                */
@@ -107,12 +91,28 @@ SemaphoreP_Handle semTest1;
 SemaphoreP_Handle semTest2;
 
 /* ========================================================================== */
-/*                          Function Definitions                              */
+/*                         Structures Declarations                            */
 /* ========================================================================== */
 
-void appReset(void)
-{
-}
+/* None */
+
+/* ========================================================================== */
+/*                         Function Declarations                              */
+/* ========================================================================== */
+
+void appReset(void);
+
+/* ========================================================================== */
+/*                         Internal Function Declarations                     */
+/* ========================================================================== */
+
+void mainTsk(void* arg0, void* arg1);
+static void SciclientApp_getRevisionTest1(void* arg0, void *arg1);
+static void SciclientApp_getRevisionTest2(void* arg0, void *arg1);
+
+/* ========================================================================== */
+/*                          Function Definitions                              */
+/* ========================================================================== */
 
 int main(void)
 {
@@ -130,7 +130,7 @@ int main(void)
     taskHdl = TaskP_create(&mainTsk, &taskParams);
     if (taskHdl == NULL)
     {
-        App_sciclientPrintf("Task_create() mainTsk failed!\n");
+        SciApp_printf("Task_create() mainTsk failed!\n");
         OS_stop();
     }
 
@@ -139,6 +139,15 @@ int main(void)
 
     return retVal;
 }
+
+void appReset(void)
+{
+  
+}
+
+/* ========================================================================== */
+/*                          Internal Function Definitions                     */
+/* ========================================================================== */
 
 void mainTsk(void* arg0, void* arg1)
 {
@@ -151,7 +160,7 @@ void mainTsk(void* arg0, void* arg1)
     semTest1 = SemaphoreP_create(0U, &params);
     if (NULL == semTest1)
     {
-        App_sciclientPrintf ("SemaphoreP_create() semTest1 Failed \n");
+        SciApp_printf ("SemaphoreP_create() semTest1 Failed \n");
     }
 
     SemaphoreP_Params_init(&params);
@@ -159,7 +168,7 @@ void mainTsk(void* arg0, void* arg1)
     semTest2 = SemaphoreP_create(0U, &params);
     if (NULL == semTest2)
     {
-        App_sciclientPrintf ("SemaphoreP_create() semTest2 Failed \n");
+        SciApp_printf ("SemaphoreP_create() semTest2 Failed \n");
     }
 
     TaskP_Params_init(&taskParams1);
@@ -172,18 +181,18 @@ void mainTsk(void* arg0, void* arg1)
     taskParams2.stacksize = sizeof (gAppTskStackRevTest2);
     taskParams2.priority = 15;
 
-    App_sciclientConsoleInit();
- 
-    task1 = TaskP_create(&GetRevisionTest1, &taskParams1);
+    SciApp_consoleInit();
+
+    task1 = TaskP_create(&SciclientApp_getRevisionTest1, &taskParams1);
     if (task1 == NULL)
     {
-        App_sciclientPrintf("Task_create() GetRevisionTest1 failed!\n");
+        SciApp_printf("Task_create() SciclientApp_getRevisionTest1 failed!\n");
     }
 
-    task2 = TaskP_create(&GetRevisionTest2, &taskParams2);
+    task2 = TaskP_create(&SciclientApp_getRevisionTest2, &taskParams2);
     if (task2 == NULL)
     {
-        App_sciclientPrintf("Task_create() GetRevisionTest2 failed!\n");
+        SciApp_printf("Task_create() SciclientApp_getRevisionTest2 failed!\n");
     }
 
     SemaphoreP_pend(semTest1, SemaphoreP_WAIT_FOREVER);
@@ -191,16 +200,16 @@ void mainTsk(void* arg0, void* arg1)
 
     if ((tsk1Pass == CSL_PASS) && (tsk2Pass == CSL_PASS))
     {
-        App_sciclientPrintf("All tests have passed \n");
+        SciApp_printf("All tests have passed \n");
     }
     else
     {
-        App_sciclientPrintf("Some Tests have failed \n");
+        SciApp_printf("Some Tests have failed \n");
     }
 
 }
 
-void GetRevisionTest1(void* arg0, void* arg1)
+static void SciclientApp_getRevisionTest1(void* arg0, void* arg1)
 {
     int32_t status = CSL_PASS;
     Sciclient_ConfigPrms_t        config =
@@ -227,7 +236,7 @@ void GetRevisionTest1(void* arg0, void* arg1)
     };
 
 
-    App_sciclientPrintf("SCIClient RTOS Test App1\n\n");
+    SciApp_printf("SCIClient RTOS Test App1\n\n");
 
     status = Sciclient_init(&config);
     if (status == CSL_PASS)
@@ -238,25 +247,20 @@ void GetRevisionTest1(void* arg0, void* arg1)
             if (respPrm.flags == TISCI_MSG_FLAG_ACK)
             {
                 status = CSL_PASS;
-                App_sciclientPrintf(
-                                  " DMSC Firmware Version 1 %s\n",
+                SciApp_printf(" DMSC Firmware Version 1 %s\n",
                                   (char *) response.str);
-                App_sciclientPrintf(
-                                  " Firmware revision 0x%x\n", response.version);
-                App_sciclientPrintf(
-                                  " ABI revision %d.%d\n", response.abi_major,
+                SciApp_printf(" Firmware revision 0x%x\n", response.version);
+                SciApp_printf(" ABI revision %d.%d\n", response.abi_major,
                                   response.abi_minor);
             }
             else
             {
-                App_sciclientPrintf(
-                                  " DMSC Firmware Get Version failed \n");
+                SciApp_printf(" DMSC Firmware Get Version failed \n");
             }
         }
         else
         {
-            App_sciclientPrintf(
-                              " DMSC Firmware Get Version failed \n");
+            SciApp_printf(" DMSC Firmware Get Version failed \n");
         }
     }
     if (status == CSL_PASS)
@@ -275,7 +279,7 @@ void GetRevisionTest1(void* arg0, void* arg1)
     SemaphoreP_post(semTest1);
 }
 
-void GetRevisionTest2(void* arg0, void*  arg1)
+static void SciclientApp_getRevisionTest2(void* arg0, void*  arg1)
 {
     int32_t status = CSL_PASS;
     Sciclient_ConfigPrms_t        config =
@@ -301,7 +305,7 @@ void GetRevisionTest2(void* arg0, void*  arg1)
         sizeof (response)
     };
 
-    App_sciclientPrintf("SCIClient RTOS Test App2\n\n");
+    SciApp_printf("SCIClient RTOS Test App2\n\n");
 
     status = Sciclient_init(&config);
     if (status == CSL_PASS)
@@ -312,26 +316,21 @@ void GetRevisionTest2(void* arg0, void*  arg1)
             if (respPrm.flags == TISCI_MSG_FLAG_ACK)
             {
                 status = CSL_PASS;
-                App_sciclientPrintf(
-                                  " DMSC Firmware Version 2 %s\n",
+                SciApp_printf(" DMSC Firmware Version 2 %s\n",
                                   (char *) response.str);
-                App_sciclientPrintf(
-                                  " Firmware revision 0x%x\n", response.version);
-                App_sciclientPrintf(
-                                  " ABI revision %d.%d\n", response.abi_major,
+                SciApp_printf(" Firmware revision 0x%x\n", response.version);
+                SciApp_printf(" ABI revision %d.%d\n", response.abi_major,
                                   response.abi_minor);
                 TaskP_sleep(100);
             }
             else
             {
-                App_sciclientPrintf(
-                                  " DMSC Firmware Get Version failed \n");
+                SciApp_printf(" DMSC Firmware Get Version failed \n");
             }
         }
         else
         {
-            App_sciclientPrintf(
-                              " DMSC Firmware Get Version failed \n");
+            SciApp_printf(" DMSC Firmware Get Version failed \n");
         }
     }
 

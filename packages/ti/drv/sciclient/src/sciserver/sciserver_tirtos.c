@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2020-2021 Texas Instruments Incorporated
+ *  Copyright (C) 2020-2024 Texas Instruments Incorporated
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -35,7 +35,7 @@
  *  \file sciserver_tirtos.c
  *
  *  \brief Example Library functions for an application including Sciserver
- *         This file is only for TIRTOS based applications.
+ *         This file is only for RTOS based applications.
  *
  */
 
@@ -43,23 +43,18 @@
 /*                             Include Files                                  */
 /* ========================================================================== */
 
-/* BIOS Header files */
+#include <stdint.h>
+#include <string.h>
+#include <lib/strncpy.h>
+#include <ti/csl/csl_types.h>
 #include <ti/osal/osal.h>
 #include <ti/osal/SemaphoreP.h>
 #include <ti/osal/TaskP.h>
 #include <ti/osal/RegisterIntr.h>
-
-#include <stdint.h>
-#include <string.h>
-#include <ti/csl/csl_types.h>
 #include <ti/drv/sciclient/sciserver.h>
 #include <ti/drv/sciclient/sciserver_tirtos.h>
-
-#include <lib/strncpy.h>
-
 #include <sciserver_hwiData.h>
 #include "sciserver_secproxyTransfer.h"
-#include <ti/drv/sciclient/examples/common/sciclient_appCommon.h>
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
@@ -68,12 +63,28 @@
 /** \brief Macro to determine the size of an array */
 #define SCISERVER_ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
 
-/* ========================================================================== */
-/*                         Structures and Enums                               */
-/* ========================================================================== */
 
 /* ========================================================================== */
-/*                 Internal Function Declarations                             */
+/*                            Global Variables                                */
+/* ========================================================================== */
+
+HwiP_Handle gSciserverHwiHandles[SCISERVER_HWI_NUM];
+SemaphoreP_Params gSciserverUserSemParams[SCISERVER_SEMAPHORE_MAX_CNT];
+SemaphoreP_Handle gSciserverUserSemHandles[SCISERVER_SEMAPHORE_MAX_CNT];
+SemaphoreP_Params gSciserverSyncParam;
+SemaphoreP_Handle gSciserverSyncHandle;
+TaskP_Handle gSciserverUserTaskHandles[SCISERVER_TASK_MAX_CNT];
+TaskP_Params gSciserverUserTaskParams[SCISERVER_TASK_MAX_CNT];
+uint8_t hwiMasked = 1U;
+
+/* ========================================================================== */
+/*                         Structure Declarations                             */
+/* ========================================================================== */
+
+/* None */
+
+/* ========================================================================== */
+/*                        Function Declarations                               */
 /* ========================================================================== */
 
 void Sciserver_tirtosUserMsgHwiFxn(uintptr_t arg);
@@ -81,25 +92,13 @@ void Sciserver_tirtosUnRegisterIntr(void);
 void Sciserver_tirtosDeinit(void);
 void Sciserver_tirtosUserMsgTask(void* arg0, void* arg1);
 
+/* ========================================================================== */
+/*                        Internal Function Declarations                      */
+/* ========================================================================== */
+
 static int32_t Sciserver_tirtosInitHwis(void);
 static int32_t Sciserver_tirtosInitSemaphores(void);
 static int32_t Sciserver_tirtosInitUserTasks(Sciserver_TirtosCfgPrms_t *pPrms);
-
-/* ========================================================================== */
-/*                            Global Variables                                */
-/* ========================================================================== */
-
-HwiP_Handle gSciserverHwiHandles[SCISERVER_HWI_NUM];
-
-SemaphoreP_Params gSciserverUserSemParams[SCISERVER_SEMAPHORE_MAX_CNT];
-SemaphoreP_Handle gSciserverUserSemHandles[SCISERVER_SEMAPHORE_MAX_CNT];
-SemaphoreP_Params gSciserverSyncParam;
-SemaphoreP_Handle gSciserverSyncHandle;
-
-TaskP_Handle gSciserverUserTaskHandles[SCISERVER_TASK_MAX_CNT];
-TaskP_Params gSciserverUserTaskParams[SCISERVER_TASK_MAX_CNT];
-
-uint8_t hwiMasked = 1U;
 
 /* ========================================================================== */
 /*                          Function Definitions                              */
@@ -312,7 +311,7 @@ static int32_t Sciserver_tirtosInitHwis(void)
         intrPrms.corepacConfig.isrRoutine = &Sciserver_tirtosUserMsgHwiFxn;
         intrPrms.corepacConfig.enableIntr = FALSE;
         intrPrms.corepacConfig.corepacEventNum  = 0;
-        intrPrms.corepacConfig.intVecNum = 
+        intrPrms.corepacConfig.intVecNum =
             sciserver_hwi_list[i].irq_num;
         /* Register interrupts */
         ret = Osal_RegisterInterrupt(&intrPrms,

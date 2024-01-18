@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2020-2021 Texas Instruments Incorporated
+ *  Copyright (C) 2020-2024 Texas Instruments Incorporated
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -42,26 +42,14 @@
 /*                             Include Files                                  */
 /* ========================================================================== */
 
-#include <ti/board/board.h>
-#include <ti/drv/sciclient/sciserver_tirtos.h>
-#include <ti/drv/sciclient/examples/common/sciclient_appCommon.h>
 #include <ti/osal/osal.h>
 #include <ti/osal/TaskP.h>
+#include <ti/board/board.h>
+#include <ti/drv/sciclient/sciserver_tirtos.h>
+#include <ti/drv/sciclient/examples/common/sci_app_common.h>
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
-/* ========================================================================== */
-
-/* None */
-
-/* ========================================================================== */
-/*                         Structures and Enums                               */
-/* ========================================================================== */
-
-/* None */
-
-/* ========================================================================== */
-/*                 Internal Function Declarations                             */
 /* ========================================================================== */
 
 /* None */
@@ -73,7 +61,26 @@
 /* None */
 
 /* ========================================================================== */
-/*                          Function Definitions                              */
+/*                            Structure Declarations                          */
+/* ========================================================================== */
+
+/* None */
+
+/* ========================================================================== */
+/*                            Function Declarations                           */
+/* ========================================================================== */
+
+/* None */
+
+/* ========================================================================== */
+/*                            Internal Function Declarations                  */
+/* ========================================================================== */
+
+/* None */
+
+
+/* ========================================================================== */
+/*                            Function Definitions                            */
 /* ========================================================================== */
 
 int main(void)
@@ -96,7 +103,7 @@ int main(void)
             (uint8_t *) SCISERVER_COMMON_X509_HEADER_ADDR,
             &clientPrms.inPmPrms, &clientPrms.inRmPrms);
     }
-    
+
     if (ret == CSL_PASS)
     {
         ret = Sciclient_init(&clientPrms);
@@ -115,23 +122,23 @@ int main(void)
     /* Enable UART console print*/
     if (ret == CSL_PASS)
     {
-        App_sciclientConsoleInit();
+        SciApp_consoleInit();
     }
 
     version_str = Sciserver_getVersionStr();
     rmpmhal_version_str = Sciserver_getRmPmHalVersionStr();
 
-    App_sciclientPrintf("Sciserver Testapp Built On: %s %s\n", __DATE__, __TIME__);
-    App_sciclientPrintf("Sciserver Version: %s\n", version_str);
-    App_sciclientPrintf("RM_PM_HAL Version: %s\n", rmpmhal_version_str);
+    SciApp_printf("Sciserver Testapp Built On: %s %s\n", __DATE__, __TIME__);
+    SciApp_printf("Sciserver Version: %s\n", version_str);
+    SciApp_printf("RM_PM_HAL Version: %s\n", rmpmhal_version_str);
     if (ret == CSL_PASS)
     {
-        App_sciclientPrintf("Starting Sciserver..... PASSED\n");
+        SciApp_printf("Starting Sciserver..... PASSED\n");
         OS_start();
     }
     else
     {
-        App_sciclientPrintf("Starting Sciserver..... FAILED\n");
+        SciApp_printf("Starting Sciserver..... FAILED\n");
     }
     return ret;
 }

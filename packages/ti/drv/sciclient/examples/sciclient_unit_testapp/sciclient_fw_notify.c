@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2023-2023 Texas Instruments Incorporated
+ *  Copyright (C) 2023-2024 Texas Instruments Incorporated
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -43,17 +43,27 @@
 
 #include <stdint.h>
 #include <string.h>
-#include <ti/drv/sciclient/examples/common/sciclient_appCommon.h>
+#include <ti/drv/sciclient/examples/common/sci_app_common.h>
 #include <ti/drv/sciclient/examples/sciclient_unit_testapp/sciclient_fw_notify.h>
+
+/* ========================================================================== */
+/*                           Macros & Typedefs                                */
+/* ========================================================================== */
+
+/* None */
+
+/* ========================================================================== */
+/*                            Global Variables                                */
+/* ========================================================================== */
 
 uint32_t gInterruptRecieved;
 uint32_t gDmscGlbRegs = DMSC_FW_EXCP_LOG_REG;
-uint32_t gFwExcpExtInputRegAddr[FW_MAX_ISR_INPUTS] = 
+uint32_t gFwExcpExtInputRegAddr[FW_MAX_ISR_INPUTS] =
 {
     [0] = CMBN_FW_EXCP_LOG_REG_0,
     [1] = CMBN_FW_EXCP_LOG_REG_1,
     [2] = CMBN_FW_EXCP_LOG_REG_3,
-    [3] = CMBN_FW_EXCP_LOG_REG_4,  
+    [3] = CMBN_FW_EXCP_LOG_REG_4,
     [4] = CMBN_FW_EXCP_LOG_REG_5,
     [5] = CMBN_FW_EXCP_LOG_REG_6,
     [6] = CMBN_FW_EXCP_LOG_REG_7,
@@ -68,9 +78,9 @@ uint32_t gFwExcpExtInputRegAddr[FW_MAX_ISR_INPUTS] =
     [15] = CMBN_FW_EXCP_LOG_REG_16,
     [16] = CMBN_FW_EXCP_LOG_REG_17,
     [17] = CMBN_FW_EXCP_LOG_REG_18,
-    [18] = CMBN_FW_EXCP_LOG_REG_19, 
+    [18] = CMBN_FW_EXCP_LOG_REG_19,
     [19] = CMBN_FW_EXCP_LOG_REG_20,
-    [20] = CMBN_FW_EXCP_LOG_REG_21, 
+    [20] = CMBN_FW_EXCP_LOG_REG_21,
     [21] = CMBN_FW_EXCP_LOG_REG_24,
     [22] = CMBN_FW_EXCP_LOG_REG_25,
     [23] = CMBN_FW_EXCP_LOG_REG_26,
@@ -83,7 +93,7 @@ uint32_t gFwExcpExtInputRegAddr[FW_MAX_ISR_INPUTS] =
     [30] = CMBN_FW_EXCP_LOG_REG_36,
     [31] = CMBN_FW_EXCP_LOG_REG_37,
     [32] = CMBN_FW_EXCP_LOG_REG_38,
-    [33] = CMBN_FW_EXCP_LOG_REG_39, 
+    [33] = CMBN_FW_EXCP_LOG_REG_39,
     [34] = CMBN_FW_EXCP_LOG_REG_40,
     [35] = CMBN_FW_EXCP_LOG_REG_41,
     [36] = CMBN_FW_EXCP_LOG_REG_42,
@@ -91,7 +101,7 @@ uint32_t gFwExcpExtInputRegAddr[FW_MAX_ISR_INPUTS] =
     [38] = CMBN_FW_EXCP_LOG_REG_44,
     [39] = CMBN_FW_EXCP_LOG_REG_45,
     [40] = CMBN_FW_EXCP_LOG_REG_46,
-    [41] = CMBN_FW_EXCP_LOG_REG_47, 
+    [41] = CMBN_FW_EXCP_LOG_REG_47,
     [42] = CMBN_FW_EXCP_LOG_REG_48,
     [43] = CMBN_FW_EXCP_LOG_REG_50,
     [44] = CMBN_FW_EXCP_LOG_REG_51,
@@ -100,56 +110,74 @@ uint32_t gFwExcpExtInputRegAddr[FW_MAX_ISR_INPUTS] =
     [47] = CMBN_FW_EXCP_LOG_REG_54,
     [48] = CMBN_FW_EXCP_LOG_REG_55,
     [49] = CMBN_FW_EXCP_LOG_REG_56,
-    [50] = CMBN_FW_EXCP_LOG_REG_57, 
-};  
+    [50] = CMBN_FW_EXCP_LOG_REG_57,
+};
 
-void App_fwAbortHandlerIsr(void)
+/* ========================================================================== */
+/*                         Structure Declarations                             */
+/* ========================================================================== */
+
+/* None */
+
+/* ========================================================================== */
+/*                         Function Declarations                              */
+/* ========================================================================== */
+
+void SciclientApp_fwAbortHandlerIsr(void);
+void SciclientApp_fwExcepSendTrace(SciclientApp_fwExceptionData_t *ptr);
+void SciclientApp_fwNotiIsrDmsc(void);
+void SciclientApp_fwNotiIsrCmbn(void);
+
+/* ========================================================================== */
+/*                         Internal Function Declarations                     */
+/* ========================================================================== */
+
+/* None */
+
+/* ========================================================================== */
+/*                          Function Definitions                              */
+/* ========================================================================== */
+
+void SciclientApp_fwAbortHandlerIsr(void)
 {
-     App_sciclientPrintf("Exception due to abort handler\n");
+     SciApp_printf("Exception due to abort handler\n");
 }
 
-void App_fwExcepSendTrace(App_fwExceptionData_t *ptr)
+void SciclientApp_fwExcepSendTrace(SciclientApp_fwExceptionData_t *ptr)
 {
     uint32_t i = 0;
-    App_sciclientPrintf("Firewall exception Logging register\n");
-    App_sciclientPrintf("FW Exception %x\n", ptr->hdr[0]);
-    App_sciclientPrintf("%x\n", ptr->hdr[1]);
+    SciApp_printf("Firewall exception Logging register\n");
+    SciApp_printf("FW Exception %x\n", ptr->hdr[0]);
+    SciApp_printf("%x\n", ptr->hdr[1]);
     for (i = 0; i < SIZE_EXCEPTION_LOG_REG; i++) {
-        App_sciclientPrintf("%x\n", ptr->data[i]);
+        SciApp_printf("%x\n", ptr->data[i]);
     }
-    App_sciclientPrintf("\n");
+    SciApp_printf("\n");
 
     return;
 }
 
-void App_fwNotiIsrDmsc(void)
-{  
-    App_fwExceptionData_t *excepPtr;
-    excepPtr = (App_fwExceptionData_t *) gDmscGlbRegs;
-    gInterruptRecieved++; 
+void SciclientApp_fwNotiIsrDmsc(void)
+{
+    SciclientApp_fwExceptionData_t *excepPtr;
+    excepPtr = (SciclientApp_fwExceptionData_t *) gDmscGlbRegs;
+    gInterruptRecieved++;
     /* Do trace */
-    App_fwExcepSendTrace(excepPtr);
+    SciclientApp_fwExcepSendTrace(excepPtr);
 }
 
-void App_fwNotiIsrCmbn(void)
+void SciclientApp_fwNotiIsrCmbn(void)
 {
     uint32_t i = 0;
-    App_fwExceptionData_t *excepPtr;
-    gInterruptRecieved++; 
-    for (i = 0; i < FW_MAX_ISR_INPUTS; i++) 
+    SciclientApp_fwExceptionData_t *excepPtr;
+    gInterruptRecieved++;
+    for (i = 0; i < FW_MAX_ISR_INPUTS; i++)
     {
-        excepPtr =
-            (App_fwExceptionData_t *)
-            gFwExcpExtInputRegAddr
-            [i];
-        if (excepPtr != NULL && excepPtr->hdr[0]!=0) 
+        excepPtr = (SciclientApp_fwExceptionData_t *)gFwExcpExtInputRegAddr[i];
+        if (excepPtr != NULL && excepPtr->hdr[0]!=0)
         {
-            App_fwExcepSendTrace(excepPtr);
+            SciclientApp_fwExcepSendTrace(excepPtr);
         }
-        
     }
 }
-
-
-
 

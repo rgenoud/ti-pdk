@@ -1,5 +1,5 @@
 #
-# This file is the makefile for building Sciclient Unit Test application.
+# This file is the makefile for building Sciserver Test application.
 #
 ifeq ($(RULES_MAKE), )
 include $(PDK_INSTALL_PATH)/ti/build/Rules.make
@@ -14,19 +14,10 @@ INCDIR = . ../common
 
 # Common source files and CFLAGS across all platforms and cores
 SRCS_COMMON = sciserver_testapp_main.c \
-              sciclient_appCommon.c
+              sci_app_common.c
 
 CFLAGS_LOCAL_COMMON = $(PDK_CFLAGS)
 PACKAGE_SRCS_COMMON = . ../common
-
-# Enable XDC build for application by providing XDC CFG File per core
-ifeq ($(BUILD_OS_TYPE),tirtos)
-# List all the components required by the application
-COMP_LIST_COMMON  = $(PDK_COMMON_TIRTOS_COMP) bios xdc
-EXTERNAL_INTERFACES = bios xdc
-XDC_CFG_FILE_$(CORE) = $(PDK_INSTALL_PATH)/ti/build/$(SOC)/sysbios_$(ISA).cfg
-CONFIG_BLD_LNK_r5f = $(PDK_INSTALL_PATH)/ti/drv/sciclient/examples/sciserver_testapp/linker_r5_sysbios.lds
-endif
 
 ifeq ($(BUILD_OS_TYPE),freertos)
 CFLAGS_OS_DEFINES = -DFREERTOS

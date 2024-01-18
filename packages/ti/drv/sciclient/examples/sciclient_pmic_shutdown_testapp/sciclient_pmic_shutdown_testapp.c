@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Texas Instruments Incorporated
+ * Copyright (c) 2023-2024, Texas Instruments Incorporated
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -40,12 +40,13 @@
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
+
 #include <ti/csl/csl_types.h>
 #include <ti/osal/osal.h>
 #include <ti/osal/TaskP.h>
 #include <ti/board/board.h>
 #include <ti/drv/sciclient/sciclient.h>
-#include <ti/drv/sciclient/examples/common/sciclient_appCommon.h>
+#include <ti/drv/sciclient/examples/common/sci_app_common.h>
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
@@ -53,13 +54,6 @@
 
 /* Test application stack size */
 #define APP_TSK_STACK_MAIN              (16U * 1024U)
-
-/* ========================================================================== */
-/*                          Function Declarations                             */
-/* ========================================================================== */
-
-static void taskFxn(void* a0, void* a1);
-static void Pmic_powerOff();
 
 /* ========================================================================== */
 /*                            Global Variables                                */
@@ -72,6 +66,25 @@ static uint8_t  gAppTskStackMain[APP_TSK_STACK_MAIN] __attribute__((aligned(APP_
 #else
 static uint8_t  gAppTskStackMain[APP_TSK_STACK_MAIN] __attribute__((aligned(64)));
 #endif
+
+/* ========================================================================== */
+/*                         Structure Declarations                             */
+/* ========================================================================== */
+
+/* None */
+
+/* ========================================================================== */
+/*                         Function Declarations                              */
+/* ========================================================================== */
+
+/* None */
+
+/* ========================================================================== */
+/*                         Internal Function Declarations                     */
+/* ========================================================================== */
+
+static void taskFxn(void* a0, void* a1);
+static void Pmic_powerOff(void);
 
 /* ========================================================================== */
 /*                          Function Definitions                              */
@@ -102,6 +115,10 @@ int main(void)
     return(0);
 }
 
+/* ========================================================================== */
+/*                          Internal Function Definitions                     */
+/* ========================================================================== */
+
 static void taskFxn(void* a0, void* a1)
 {
     Board_initCfg           boardCfg;
@@ -115,9 +132,9 @@ static void taskFxn(void* a0, void* a1)
     return;
 }
 
-static void Pmic_powerOff()
+static void Pmic_powerOff(void)
 {
-    App_sciclientPrintf("\n#### Start of PMIC Poweroff Test ####\n");
+    SciApp_printf("\n#### Start of PMIC Poweroff Test ####\n");
     int32_t ret=CSL_PASS;
 
     /* Poweroff */
@@ -126,17 +143,18 @@ static void Pmic_powerOff()
                                TISCI_MSG_FLAG_AOP,
                                SCICLIENT_SERVICE_WAIT_FOREVER);
     /* Incase of Sucess, following code should not be excuted */
-    App_sciclientPrintf("ERROR!!: Device is still powered ON\n");
+    SciApp_printf("ERROR!!: Device is still powered ON\n");
 
     if(ret != CSL_PASS)
     {
-        App_sciclientPrintf("Sciclient function call to shutdown PMIC is failed\n");
+        SciApp_printf("Sciclient function call to shutdown PMIC is failed\n");
     }
     else
     {
-        App_sciclientPrintf(" Sciclient function call is passed but failed to poweroff the PMIC\n");
+        SciApp_printf(" Sciclient function call is passed but failed to poweroff the PMIC\n");
     }
 
-    App_sciclientPrintf("Testcase is Failed!!!");
+    SciApp_printf("Testcase is Failed!!!");
 
 }
+

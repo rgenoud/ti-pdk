@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2018-2023 Texas Instruments Incorporated
+ *  Copyright (C) 2018-2024 Texas Instruments Incorporated
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -43,27 +43,26 @@
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
-#include <string.h>
-#include <ti/csl/soc.h>
-#include <ti/drv/sciclient/examples/common/sciclient_appCommon.h>
+
+/* None */
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-#define SCICLIENT_NUM_TESTCASES   (sizeof (gSciclientTestcaseParams) / \
-                                   sizeof (App_sciclientTestParams_t))
+#define SCICLIENT_NUM_TESTCASES   (sizeof (gSciApp_TestcaseParams) / \
+                                   sizeof (SciApp_TestParams_t))
 
 /* ========================================================================== */
 /*                            Global Variables                                */
 /* ========================================================================== */
 
-/** \brief Defines the various SCICLIENT test cases. */
-App_sciclientTestParams_t gSciclientTestcaseParams[] =
+/** \brief Defines the various sciclient test cases. */
+SciApp_TestParams_t gSciApp_TestcaseParams[] =
 {
     {
         /** enableTest **/
-        TEST_ENABLE,
+        SCI_APP_TEST_ENABLE,
 
         /** testCaseId **/
         1U,
@@ -85,21 +84,17 @@ App_sciclientTestParams_t gSciclientTestcaseParams[] =
          message to firmware without any error ",
 
         /** cpuID **/
-        APP_SCICLIENT_R5F,
-
-        /** sciclientConfigParams **/
-        {},
+        SCI_APP_CORE_TYPE_R5F,
 
         /** printEnable **/
-        PRINT_ENABLE,
+        SCI_APP_PRINT_ENABLE,
 
         /** testType **/
-        (APP_SCICLIENT_TEST_TYPE_SANITY)
+        (SCI_APP_TEST_TYPE_SANITY)
     },
-
     {
         /** enableTest **/
-        TEST_ENABLE,
+        SCI_APP_TEST_ENABLE,
 
         /** testCaseId **/
         2U,
@@ -121,20 +116,17 @@ App_sciclientTestParams_t gSciclientTestcaseParams[] =
          message to firmware without any error ",
 
         /** cpuID **/
-        APP_SCICLIENT_R5F,
-
-        /** sciclientConfigParams **/
-        {},
+        SCI_APP_CORE_TYPE_R5F,
 
         /** printEnable **/
-        PRINT_ENABLE,
+        SCI_APP_PRINT_ENABLE,
 
         /** testType **/
-        (APP_SCICLIENT_TEST_TYPE_SANITY)
+        (SCI_APP_TEST_TYPE_SANITY)
     },
     {
         /** enableTest **/
-        TEST_ENABLE,
+        SCI_APP_TEST_ENABLE,
 
         /** testCaseId **/
         3U,
@@ -156,21 +148,17 @@ App_sciclientTestParams_t gSciclientTestcaseParams[] =
          called with invalid parameters ",
 
         /** cpuID **/
-        APP_SCICLIENT_R5F,
-
-        /** sciclientConfigParams **/
-        {},
+        SCI_APP_CORE_TYPE_R5F,
 
         /** printEnable **/
-        PRINT_ENABLE,
+        SCI_APP_PRINT_ENABLE,
 
         /** testType **/
-        (APP_SCICLIENT_TEST_TYPE_NEGATIVE)
+        (SCI_APP_TEST_TYPE_NEGATIVE)
     },
-
     {
         /** enableTest **/
-        TEST_ENABLE,
+        SCI_APP_TEST_ENABLE,
 
         /** testCaseId **/
         4U,
@@ -192,21 +180,18 @@ App_sciclientTestParams_t gSciclientTestcaseParams[] =
          called with invalid parameters ",
 
         /** cpuID **/
-        APP_SCICLIENT_R5F,
-
-        /** sciclientConfigParams **/
-        {},
+        SCI_APP_CORE_TYPE_R5F,
 
         /** printEnable **/
-        PRINT_ENABLE,
+        SCI_APP_PRINT_ENABLE,
 
         /** testType **/
-        (APP_SCICLIENT_TEST_TYPE_NEGATIVE)
+        (SCI_APP_TEST_TYPE_NEGATIVE)
     },
-#if defined(SOC_AM65XX) || defined(SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined(SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)
     {
         /** enableTest **/
-        TEST_ENABLE,
+        SCI_APP_TEST_ENABLE,
 
         /** testCaseId **/
         5U,
@@ -228,57 +213,19 @@ App_sciclientTestParams_t gSciclientTestcaseParams[] =
          start and end address of msmc region ",
 
         /** cpuID **/
-        APP_SCICLIENT_R5F,
-
-        /** sciclientConfigParams **/
-        {},
+        SCI_APP_CORE_TYPE_R5F,
 
         /** printEnable **/
-        PRINT_ENABLE,
+        SCI_APP_PRINT_ENABLE,
 
         /** testType **/
-        (APP_SCICLIENT_TEST_TYPE_SANITY)
+        (SCI_APP_TEST_TYPE_SANITY)
     },
 #endif
-#if defined(SOC_AM65XX)
+#if defined(ENABLE_MSG_FWD)
     {
         /** enableTest **/
-        TEST_ENABLE,
-
-        /** testCaseId **/
-        6U,
-
-        /** *reqId **/
-        "PDK:2145",
-
-        /** *testCaseName **/
-        "SCICLIENT RM Get Configuruation Test",
-
-        /** *userInfo **/
-        "None",
-
-        /** *disableReason **/
-        "None",
-
-        /** *passFailCriteria **/
-        "Sciclient_Get coniguration should return correctly for PG1.0 and PG2.0 ",
-
-        /** cpuID **/
-        APP_SCICLIENT_R5F,
-
-        /** sciclientConfigParams **/
-        {},
-
-        /** printEnable **/
-        PRINT_ENABLE,
-
-        /** testType **/
-        (APP_SCICLIENT_TEST_TYPE_SANITY)
-    }
-#elif defined(ENABLE_MSG_FWD)
-    {
-        /** enableTest **/
-        TEST_ENABLE,
+        SCI_APP_TEST_ENABLE,
 
         /** testCaseId **/
         6U,
@@ -300,22 +247,19 @@ App_sciclientTestParams_t gSciclientTestcaseParams[] =
          state message on a secure queue (to TIFS and then DM) without any error.",
 
         /** cpuID **/
-        APP_SCICLIENT_R5F,
-
-        /** sciclientConfigParams **/
-        {},
+        SCI_APP_CORE_TYPE_R5F,
 
         /** printEnable **/
-        PRINT_ENABLE,
+        SCI_APP_PRINT_ENABLE,
 
         /** testType **/
-        (APP_SCICLIENT_TEST_TYPE_SANITY)
+        (SCI_APP_TEST_TYPE_SANITY)
     },
 #endif
 #if defined(ENABLE_FW_NOTIFICATION)
     {
         /** enableTest **/
-        TEST_ENABLE,
+        SCI_APP_TEST_ENABLE,
 
         /** testCaseId **/
         7U,
@@ -337,22 +281,19 @@ App_sciclientTestParams_t gSciclientTestcaseParams[] =
         the firewall exception logging register value.",
 
         /** cpuID **/
-        APP_SCICLIENT_R5F,
-
-        /** sciclientConfigParams **/
-        {},
+        SCI_APP_CORE_TYPE_R,
 
         /** printEnable **/
-        PRINT_ENABLE,
+        SCI_APP_PRINT_ENABLE,
 
         /** testType **/
-        (APP_SCICLIENT_TEST_TYPE_SANITY)
+        (SCI_APP_TEST_TYPE_SANITY)
     },
 #endif
 #if ((defined (SOC_J721S2) || defined (SOC_J784S4)) && defined(BUILD_MCU2_0))
     {
         /** enableTest **/
-        TEST_ENABLE,
+        SCI_APP_TEST_ENABLE,
 
         /** testCaseId **/
         8U,
@@ -377,22 +318,19 @@ App_sciclientTestParams_t gSciclientTestcaseParams[] =
         the interrupt from PVU.",
 
         /** cpuID **/
-        APP_SCICLIENT_R5F,
-
-        /** sciclientConfigParams **/
-        {},
+        SCI_APP_CORE_TYPE_R5F,
 
         /** printEnable **/
-        PRINT_ENABLE,
+        SCI_APP_PRINT_ENABLE,
 
         /** testType **/
-        (APP_SCICLIENT_TEST_TYPE_SANITY)
+        (SCI_APP_TEST_TYPE_SANITY)
     },
 #endif
 #if ((defined (SOC_J721S2) || defined (SOC_J784S4)) && defined(BUILD_MCU2_0))
     {
         /** enableTest **/
-        TEST_ENABLE,
+        SCI_APP_TEST_ENABLE,
 
         /** testCaseId **/
         9U,
@@ -413,22 +351,19 @@ App_sciclientTestParams_t gSciclientTestcaseParams[] =
         "Sciclient programs the interrupt route between PVU and GIC in the Main domain.",
 
         /** cpuID **/
-        APP_SCICLIENT_R5F,
-
-        /** sciclientConfigParams **/
-        {},
+        SCI_APP_CORE_TYPE_R5F,
 
         /** printEnable **/
-        PRINT_ENABLE,
+        SCI_APP_PRINT_ENABLE,
 
         /** testType **/
-        (APP_SCICLIENT_TEST_TYPE_SANITY)
+        (SCI_APP_TEST_TYPE_SANITY)
     },
 #endif
 #if ((defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)) && defined (BUILD_MCU1_0))
     {
         /** enableTest **/
-        TEST_ENABLE,
+        SCI_APP_TEST_ENABLE,
 
         /** testCaseId **/
         10U,
@@ -450,23 +385,20 @@ App_sciclientTestParams_t gSciclientTestcaseParams[] =
         and tests the interaction between Main UART and MCU R5F core using the UART_write function.",
 
         /** cpuID **/
-        APP_SCICLIENT_R5F,
-
-        /** sciclientConfigParams **/
-        {},
+        SCI_APP_CORE_TYPE_R5F,
 
         /** printEnable **/
-        PRINT_ENABLE,
+        SCI_APP_PRINT_ENABLE,
 
         /** testType **/
-        (APP_SCICLIENT_TEST_TYPE_SANITY)
+        (SCI_APP_TEST_TYPE_SANITY)
     },
 #endif
 
 #if ((defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)) && (BUILD_MCU1_0))
 {
     /** enableTest **/
-    TEST_ENABLE,
+    SCI_APP_TEST_ENABLE,
 
     /** testCaseId **/
     11U,
@@ -487,22 +419,19 @@ App_sciclientTestParams_t gSciclientTestcaseParams[] =
     "Testcase to cover PM related functions ",
 
     /** cpuID **/
-    APP_SCICLIENT_R5F,
-
-    /** sciclientConfigParams **/
-    {},
+    SCI_APP_CORE_TYPE_R5F,
 
     /** printEnable **/
-    PRINT_ENABLE,
+    SCI_APP_PRINT_ENABLE,
 
     /** testType **/
-    (APP_SCICLIENT_TEST_TYPE_NEGATIVE)
+    (SCI_APP_TEST_TYPE_NEGATIVE)
   },
 #endif
 #if defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)
     {
         /** enableTest **/
-        TEST_ENABLE,
+        SCI_APP_TEST_ENABLE,
 
         /** testCaseId **/
         12U,
@@ -524,22 +453,19 @@ App_sciclientTestParams_t gSciclientTestcaseParams[] =
          the request parameter is set to NULL ",
 
         /** cpuID **/
-        APP_SCICLIENT_R5F,
-
-        /** sciclientConfigParams **/
-        {},
+        SCI_APP_CORE_TYPE_R5F,
 
         /** printEnable **/
-        PRINT_ENABLE,
+        SCI_APP_PRINT_ENABLE,
 
         /** testType **/
-        (APP_SCICLIENT_TEST_TYPE_NEGATIVE)
+        (SCI_APP_TEST_TYPE_NEGATIVE)
     },
 #endif
 #if defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)
     {
         /** enableTest **/
-        TEST_ENABLE,
+        SCI_APP_TEST_ENABLE,
 
         /** testCaseId **/
         13U,
@@ -560,22 +486,19 @@ App_sciclientTestParams_t gSciclientTestcaseParams[] =
         "Testcase to cover sciclient keywriter function",
 
         /** cpuID **/
-        APP_SCICLIENT_R5F,
-
-        /** sciclientConfigParams **/
-        {},
+        SCI_APP_CORE_TYPE_R5F,
 
         /** printEnable **/
-        PRINT_ENABLE,
+        SCI_APP_PRINT_ENABLE,
 
         /** testType **/
-        (APP_SCICLIENT_TEST_TYPE_NEGATIVE)
+        (SCI_APP_TEST_TYPE_NEGATIVE)
     },
 #endif
 #if defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)
     {
         /** enableTest **/
-        TEST_ENABLE,
+        SCI_APP_TEST_ENABLE,
 
         /** testCaseId **/
         14U,
@@ -596,16 +519,13 @@ App_sciclientTestParams_t gSciclientTestcaseParams[] =
         "Testcase to cover sciclient dkek functions",
 
         /** cpuID **/
-        APP_SCICLIENT_R5F,
-
-        /** sciclientConfigParams **/
-        {},
+        SCI_APP_CORE_TYPE_R5F,
 
         /** printEnable **/
-        PRINT_ENABLE,
+        SCI_APP_PRINT_ENABLE,
 
         /** testType **/
-        (APP_SCICLIENT_TEST_TYPE_NEGATIVE)
+        (SCI_APP_TEST_TYPE_NEGATIVE)
     }
 #endif
 };

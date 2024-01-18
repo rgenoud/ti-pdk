@@ -30,11 +30,7 @@ SRCS_COMMON = sciclient_ccs_init_main.c
 CFLAGS_LOCAL_COMMON = $(PDK_CFLAGS)
 PACKAGE_SRCS_COMMON = . ../common
 
-ifeq ($(SOC),$(filter $(SOC), am64x))
-CONFIG_BLD_LNK_r5f = linker_r5_lite.lds
-else
 CONFIG_BLD_LNK_r5f = linker_r5.lds
-endif
 
 ifeq ($(CORE), mcu1_0)
     LNKFLAGS_LOCAL_mcu1_0 += -Xlinker --entry_point=_c_int00

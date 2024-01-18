@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2023-2023 Texas Instruments Incorporated
+ *  Copyright (C) 2023-2024 Texas Instruments Incorporated
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -43,8 +43,7 @@
 /*                             Include Files                                  */
 /* ========================================================================== */
 
-#include <string.h>
-#include <ti/csl/soc.h>
+/* None */
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
@@ -176,7 +175,7 @@ typedef struct
     uint32_t rsvd_64;
     uint32_t pend_set;
     uint32_t pend_clr;
-} App_fwExceptionData_t; 
+} SciclientApp_fwExceptionData_t; 
 
 
 /* ========================================================================== */
@@ -184,13 +183,13 @@ typedef struct
 /* ========================================================================== */
 
 /* Callback function for dmsc firewall exception notification interrupt */
-void App_fwNotiIsrDmsc(void);
+void SciclientApp_fwNotiIsrDmsc(void);
 /* Callback function for cmbn firewall exception notification interrupt */
-void App_fwNotiIsrCmbn(void);
+void SciclientApp_fwNotiIsrCmbn(void);
 /* Function to print firewall exception logging information */
-void App_fwExcepSendTrace(App_fwExceptionData_t *ptr);
+void SciclientApp_fwExcepSendTrace(SciclientApp_fwExceptionData_t *ptr);
 /* Callback function for abort handler */
-void App_fwAbortHandlerIsr(void);
+void SciclientApp_fwAbortHandlerIsr(void);
 
 #endif /* #ifndef SCICLIENT_FW_NOTIFY_H_ */
 

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2020 Texas Instruments Incorporated
+ *  Copyright (C) 2020-2024 Texas Instruments Incorporated
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -42,19 +42,17 @@
 /*                             Include Files                                  */
 /* ========================================================================== */
 
+#include <stdint.h>
+#include <string.h>
+#include <ti/csl/soc.h>
+#include <ti/csl/arch/csl_arch.h>
+#include <ti/csl/hw_types.h>
 #include <ti/osal/osal.h>
 #include <ti/osal/TimerP.h>
 #include <ti/osal/TaskP.h>
 #include <ti/osal/CacheP.h>
-
-#include <stdint.h>
-#include <string.h>
-#include <ti/csl/tistdtypes.h>
-#include <ti/csl/soc.h>
-#include <ti/csl/arch/csl_arch.h>
-#include <ti/csl/hw_types.h>
-#include <ti/drv/sciclient/examples/common/sciclient_appCommon.h>
-
+#include <ti/drv/sciclient/sciclient.h>
+#include <ti/drv/sciclient/examples/common/sci_app_common.h>
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
@@ -109,38 +107,6 @@
 #define PROC_HOST_ID (TISCI_HOST_ID_MCU_0_R5_1)
 #endif
 
-#if defined (SOC_AM65XX)
-#define MCU_1_0_PRIVID (96)
-#define MCU_SRAM_FWL_ID (1050)
-#define MSMC_SRAM_FWL_ID (4449)
-#define DRAM_FWL_ID (1280)
-#define PROC_HOST_ID (TISCI_HOST_ID_R5_1)
-#endif
-
-/* ========================================================================== */
-/*                         Structures and Enums                               */
-/* ========================================================================== */
-
-/* None */
-
-/* ========================================================================== */
-/*                 Internal Function Declarations                             */
-/* ========================================================================== */
-void mainTask(void *arg0, void *arg1);
-
-int32_t Sciclient_fw_test(
-        uint16_t fwl_id,
-        uint32_t pass_start_address,
-        uint32_t pass_end_address,
-        uint32_t fail_start_address,
-        uint32_t fail_end_address,
-        uint32_t hostId,
-        uint32_t privId, uint32_t passTest, uint32_t failTest);
-
-int32_t Sciclient_firewallBackground();
-
-void Sciclient_fw_abort_C_handler();
-
 /* ========================================================================== */
 /*                            Global Variables                                */
 /* ========================================================================== */
@@ -158,6 +124,60 @@ static uint8_t  gAppTskStackMain[32*1024] __attribute__((aligned(8192)));
  */
 
 volatile uint32_t gAbortRecieved = 0U;
+volatile uint32_t *p;
+
+/* ========================================================================== */
+/*                         Structure Declarations                             */
+/* ========================================================================== */
+
+/* None */
+
+/* ========================================================================== */
+/*                         Function Declarations                              */
+/* ========================================================================== */
+
+/* None */
+
+/* ========================================================================== */
+/*                         Internal Function Declarations                     */
+/* ========================================================================== */
+
+void mainTask(void *arg0, void *arg1);
+
+/**
+ * \brief This function will first set up the firewalls to access a region of
+ *        memory and not have any access to another region of memory. Once set
+ *        the CPU would try to write a known pattern to the region of memory
+ *        and check it is able to write and read back to the region where it
+ *        has access and cannot write and readback from the region it does not
+ *        have access.
+ *
+ * \param fwl_id             ID of the firewall being tested.
+ * \param pass_start_address Start Address of the pass region
+ * \param pass_end_address   End Address of the pass region
+ * \param fail_start_address Start Address of the fail region
+ * \param fail_end_address   End Address of the fail region
+ * \param hostId             Host ID being tested.
+ * \param privId             Priv ID being tested.
+ * \param passTest           Bool Flag to run the test of writing and
+ *                           reading patterns.
+ * \param failTest           Bool Flag to run the test of writing and
+ *                           reading patterns.
+ *
+ * \return CSL_PASS/CSL_EFAIL based on the status of the test run.
+ */
+int32_t SciclientApp_fw_test(uint16_t fwl_id,
+                             uint32_t pass_start_address,
+                             uint32_t pass_end_address,
+                             uint32_t fail_start_address,
+                             uint32_t fail_end_address,
+                             uint32_t hostId,
+                             uint32_t privId, 
+                             uint32_t passTest, 
+                             uint32_t failTest);
+        
+int32_t SciclientApp_firewallBackground(void);
+void Sciclient_fw_abort_C_handler();
 
 /* ========================================================================== */
 /*                          Function Definitions                              */
@@ -167,7 +187,6 @@ int main(void)
 {
     TaskP_Handle task;
     TaskP_Params taskParams;
-
 #if defined (SOC_J721E)
 #if defined (USE_BIOS)
     extern const UInt32 ti_sysbios_family_arm_v7r_keystone3_Hwi_vectors[];
@@ -190,7 +209,6 @@ int main(void)
     uint32_t retVal = CSL_PASS;
 
     OS_init();
-
     TaskP_Params_init(&taskParams);
     taskParams.priority = 2;
     taskParams.stack        = gAppTskStackMain;
@@ -212,7 +230,6 @@ void mainTask(void *arg0, void* arg1)
     /*To suppress unused variable warning*/
     (void)arg0;
     (void)arg1;
-
     int32_t r = CSL_PASS;
     volatile uint32_t loopForever = 1U;
     Sciclient_ConfigPrms_t        config =
@@ -225,38 +242,32 @@ void mainTask(void *arg0, void* arg1)
     };
 
     r = Sciclient_init(&config);
-    App_sciclientConsoleInit();
-    App_sciclientPrintf( "\n=====================\n");
-    App_sciclientPrintf( "\nSciclient FW Test\n");
-    App_sciclientPrintf( "\n=====================\n");
+    SciApp_consoleInit();
+    SciApp_printf( "\n=====================\n");
+    SciApp_printf( "\nSciclient FW Test\n");
+    SciApp_printf( "\n=====================\n");
     if (CSL_PASS == r)
     {
-        App_sciclientPrintf ("Sciclient_Init Passed.\n");
+        SciApp_printf ("Sciclient_Init Passed.\n");
     }
     else
     {
-        App_sciclientPrintf ("Sciclinet_Init Failed.\n");
+        SciApp_printf ("Sciclinet_Init Failed.\n");
     }
 
     if (r == CSL_PASS)
     {
-        r = Sciclient_firewallBackground();
+        r = SciclientApp_firewallBackground();
     }
     /* Firwalling MCU SRAM */
     if (r == CSL_PASS)
     {
-#if defined (SOC_AM65XX)
-        #define MCU_SRAM_ADDRESS_PASS_START (0x41C00000)
-        #define MCU_SRAM_ADDRESS_PASS_END (0x41C00000 + 4 * 1024 - 1)
-        #define MCU_SRAM_ADDRESS_FAIL_START (0x41C00000 + 8 * 1024 - 1)
-        #define MCU_SRAM_ADDRESS_FAIL_END (0x41C00000 + 12 * 1024 - 1)
-#else
         #define MCU_SRAM_ADDRESS_PASS_START (0x41C3E000)
         #define MCU_SRAM_ADDRESS_PASS_END (0x41C3E000 + 4 * 1024 - 1)
         #define MCU_SRAM_ADDRESS_FAIL_START (0x41C3E000 + 8 * 1024 - 1)
         #define MCU_SRAM_ADDRESS_FAIL_END (0x41C3E000 + 12 * 1024 - 1)
-#endif
-        r = Sciclient_fw_test(
+
+        r = SciclientApp_fw_test(
                 MCU_SRAM_FWL_ID,
                 MCU_SRAM_ADDRESS_PASS_START,
                 MCU_SRAM_ADDRESS_PASS_END,
@@ -266,13 +277,11 @@ void mainTask(void *arg0, void* arg1)
                 MCU_1_0_PRIVID, TRUE, TRUE);
         if (CSL_PASS == r)
         {
-            App_sciclientPrintf(
-                              "\nMCU SRAM Tests Passed.\n");
+            SciApp_printf("\nMCU SRAM Tests Passed.\n");
         }
         else
         {
-            App_sciclientPrintf(
-                              "\nMCU SRAM Tests have FAILED.\n");
+            SciApp_printf("\nMCU SRAM Tests have FAILED.\n");
         }
     }
 
@@ -290,7 +299,7 @@ void mainTask(void *arg0, void* arg1)
         #define MSMC_RAM_ADDRESS_FAIL_START (0x70100000 + 8 * 1024)
         #define MSMC_RAM_ADDRESS_FAIL_END (0x70100000 + 12 * 1024 - 1)
 #endif
-        r = Sciclient_fw_test(
+        r = SciclientApp_fw_test(
                 MSMC_SRAM_FWL_ID,
                 MSMC_RAM_ADDRESS_PASS_START,
                 MSMC_RAM_ADDRESS_PASS_END,
@@ -301,13 +310,11 @@ void mainTask(void *arg0, void* arg1)
                 FALSE, TRUE);
         if (CSL_PASS == r)
         {
-            App_sciclientPrintf(
-                              "\nMSMC SRAM Tests Passed.\n");
+            SciApp_printf("\nMSMC SRAM Tests Passed.\n");
         }
         else
         {
-            App_sciclientPrintf(
-                              "\nMSMC SRAM Tests have FAILED.\n");
+            SciApp_printf("\nMSMC SRAM Tests have FAILED.\n");
         }
     }
 
@@ -327,7 +334,7 @@ void mainTask(void *arg0, void* arg1)
         #define DRAM_ADDRESS_FAIL_START (0x81000000 + 4 * 1024)
         #define DRAM_ADDRESS_FAIL_END (0x81000000 + 8 * 1024 - 1)
         /* Tests are not run to avoid overwriting DDR data sections */
-        r = Sciclient_fw_test(
+        r = SciclientApp_fw_test(
                 DRAM_FWL_ID,
                 DRAM_ADDRESS_PASS_START,
                 DRAM_ADDRESS_PASS_END,
@@ -338,25 +345,21 @@ void mainTask(void *arg0, void* arg1)
                 TRUE, TRUE);
         if (CSL_PASS == r)
         {
-            App_sciclientPrintf("\nDRAM Tests Passed.\n");
+            SciApp_printf("\nDRAM Tests Passed.\n");
         }
         else
         {
-            App_sciclientPrintf(
-                              "\nDRAM Tests have FAILED.\n");
+            SciApp_printf("\nDRAM Tests have FAILED.\n");
         }
     }
 
-
     if (CSL_PASS == r)
     {
-        App_sciclientPrintf(
-                          "\nAll tests have PASSED.\n");
+        SciApp_printf("\nAll tests have PASSED.\n");
     }
     else
     {
-        App_sciclientPrintf(
-                          "\nSome of the Test-cases have FAILED.\n");
+        SciApp_printf("\nSome of the Test-cases have FAILED.\n");
     }
 
     while(loopForever);
@@ -366,7 +369,7 @@ void mainTask(void *arg0, void* arg1)
 /*                 Internal Function Definitions                              */
 /* ========================================================================== */
 
-int32_t Sciclient_firewallBackground()
+int32_t SciclientApp_firewallBackground(void)
 {
     int32_t ret = CSL_PASS;
     uint32_t fwl_id;
@@ -397,7 +400,7 @@ int32_t Sciclient_firewallBackground()
         .permissions[2] = (uint32_t) 0,
         .start_address = 0,
         .end_address = 0
-        };
+    };
     fwl_id = MCU_SRAM_FWL_ID;
     /* Set this background region for access from the CPU core
      */
@@ -462,30 +465,7 @@ int32_t Sciclient_firewallBackground()
     return ret;
 }
 
-volatile uint32_t *p;
-/**
- * \brief This function will first set up the firewalls to access a region of
- *        memory and not have any access to another region of memory. Once set
- *        the CPU would try to write a known pattern to the region of memory
- *        and check it is able to write and read back to the region where it
- *        has access and cannot write and readback from the region it does not
- *        have access.
- *
- * \param fwl_id             ID of the firewall being tested.
- * \param pass_start_address Start Address of the pass region
- * \param pass_end_address   End Address of the pass region
- * \param fail_start_address Start Address of the fail region
- * \param fail_end_address   End Address of the fail region
- * \param hostId             Host ID being tested.
- * \param privId             Priv ID being tested.
- * \param passTest           Bool Flag to run the test of writing and
- *                           reading patterns.
- * \param failTest           Bool Flag to run the test of writing and
- *                           reading patterns.
- *
- * \return CSL_PASS/CSL_EFAIL based on the status of the test run.
- */
-int32_t Sciclient_fw_test(
+int32_t SciclientApp_fw_test(
         uint16_t fwl_id,
         uint32_t pass_start_address,
         uint32_t pass_end_address,
@@ -517,7 +497,7 @@ int32_t Sciclient_fw_test(
         .region = (uint16_t) 1,
         .n_permission_regs = (uint32_t) 1,
         .control = (uint32_t) 0xA,
-        .permissions = 
+        .permissions =
         {
             (uint32_t) (privId << 16) | perm_for_access, 0, 0
         },
@@ -529,7 +509,7 @@ int32_t Sciclient_fw_test(
         .region = (uint16_t) 2,
         .n_permission_regs = (uint32_t) 1,
         .control = (uint32_t) 0xA,
-        .permissions = 
+        .permissions =
         {
             (uint32_t) (privId << 16) | perm_for_no_access, 0, 0
         },
@@ -539,40 +519,40 @@ int32_t Sciclient_fw_test(
     struct tisci_msg_fwl_set_firewall_region_resp resp_fw_set = {0};
 
     gAbortRecieved = 0U;
-    App_sciclientPrintf( "\nTesting Firewalls:");
-    App_sciclientPrintf( "\n1. Changing the Firewall Owner for region 1.");
+    SciApp_printf( "\nTesting Firewalls:");
+    SciApp_printf( "\n1. Changing the Firewall Owner for region 1.");
     r = Sciclient_firewallChangeOwnerInfo(&req, &resp, timeout);
     if (r == CSL_PASS)
     {
         req.region = (uint16_t) 2;
-        App_sciclientPrintf( "\n2. Changing the Firewall Owner for region 2.");
+        SciApp_printf( "\n2. Changing the Firewall Owner for region 2.");
         r = Sciclient_firewallChangeOwnerInfo(&req, &resp, timeout);
         if (r != CSL_PASS)
         {
-            App_sciclientPrintf( "\nThis Step Failed!!");
+            SciApp_printf( "\nThis Step Failed!!");
         }
     }
     if (r == CSL_PASS)
     {
-        App_sciclientPrintf( "\n3. Changing the Firewall Permissions for region 1.");
+        SciApp_printf( "\n3. Changing the Firewall Permissions for region 1.");
         r = Sciclient_firewallSetRegion(&req_fw_set_pass, &resp_fw_set, timeout);
         if (r != CSL_PASS)
         {
-            App_sciclientPrintf( "\nThis Step Failed!!");
+            SciApp_printf( "\nThis Step Failed!!");
         }
     }
     if (r == CSL_PASS)
     {
-        App_sciclientPrintf( "\n4. Changing the Firewall Permissions for region 2.");
+        SciApp_printf( "\n4. Changing the Firewall Permissions for region 2.");
         r = Sciclient_firewallSetRegion(&req_fw_set_fail, &resp_fw_set, timeout);
         if (r != CSL_PASS)
         {
-            App_sciclientPrintf( "\nThis Step Failed!!");
+            SciApp_printf( "\nThis Step Failed!!");
         }
     }
     if ((r == CSL_PASS) && (passTest == TRUE))
     {
-        App_sciclientPrintf( "\n5. Reading content from Region 1 to make sure the address is accesible.");
+        SciApp_printf( "\n5. Reading content from Region 1 to make sure the address is accesible.");
         /* Access memory region to make sure able to read and write */
         p = (uint32_t*)pass_start_address;
         while (p < (uint32_t*)pass_end_address)
@@ -589,12 +569,12 @@ int32_t Sciclient_fw_test(
         }
         if (r != CSL_PASS)
         {
-            App_sciclientPrintf( "\nThis Step Failed!!");
+            SciApp_printf( "\nThis Step Failed!!");
         }
     }
     if ((r == CSL_PASS) && (failTest == TRUE))
     {
-        App_sciclientPrintf( "\n5. Reading content from Region 2 to make sure the address is not accesible.");
+        SciApp_printf( "\n5. Reading content from Region 2 to make sure the address is not accesible.");
         /* Access memory region to make sure unable to read and write */
         volatile uint32_t* pointer = (volatile uint32_t*)fail_start_address;
         volatile uint32_t value = 0U;
@@ -614,7 +594,7 @@ int32_t Sciclient_fw_test(
         }
         if (r != CSL_PASS)
         {
-            App_sciclientPrintf( "\nThis Step Failed!!");
+            SciApp_printf( "\nThis Step Failed!!");
         }
     }
     return r;

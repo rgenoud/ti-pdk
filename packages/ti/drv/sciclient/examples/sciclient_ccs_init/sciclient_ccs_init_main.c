@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2018-2020 Texas Instruments Incorporated
+ *  Copyright (C) 2018-2024 Texas Instruments Incorporated
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -49,39 +49,30 @@
 #include <ti/csl/soc.h>
 #include <ti/csl/arch/csl_arch.h>
 #include <ti/csl/hw_types.h>
-#include <sciclient.h>
-#include <ti/board/board.h>
-#include <ti/drv/sciclient/src/sciclient/sciclient_priv.h>
 #include <ti/osal/CacheP.h>
+#include <ti/board/board.h>
+#include <sciclient.h>
+#include <ti/drv/sciclient/src/sciclient/sciclient_priv.h>
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
-/* Set desired DDR PLL frequency here */
-#define CSL_DDR_PLL_CLK_FREQ                 (400000000)
 
-/* Config flag to disable PM and RM board config */
-#define CONFIG_NO_PM_RM                      (1)
+#define CONFIG_BOARDCFG           (1)
+#define CONFIG_BOARDCFG_SECURITY  (1)
 
-#define CONFIG_BOARDCFG (1)
-#define CONFIG_BOARDCFG_SECURITY (1)
-
-/* PM Init is specifically done as the DDR init needs to happen afetr this
+/* PM Init is specifically done as the DDR init needs to happen after this
  * The sciserver may do pm init again. But that is harmless.
  */
-#define CONFIG_BOARDCFG_PM (1)
+#define CONFIG_BOARDCFG_PM        (1)
 
-#if defined(SOC_AM65XX) || defined (SOC_AM64X)
-#define CONFIG_BOARDCFG_RM (1)
+#if defined (SOC_J721E) || defined (SOC_J7200)
+#define SCICLIENT_CCS_DEVGRP0     (DEVGRP_00)
+#define SCICLIENT_CCS_DEVGRP1     (DEVGRP_01)
 #endif
 
-#if defined (SOC_AM65XX) || defined (SOC_J721E) || defined (SOC_J7200)
-#define SCICLIENT_CCS_DEVGRP0 (DEVGRP_00)
-#define SCICLIENT_CCS_DEVGRP1 (DEVGRP_01)
-#endif
-
-#if defined (SOC_AM64X) || defined (SOC_J721S2) || defined (SOC_J784S4)
-#define SCICLIENT_CCS_DEVGRP0 (DEVGRP_ALL)
+#if defined (SOC_J721S2) || defined (SOC_J784S4)
+#define SCICLIENT_CCS_DEVGRP0     (DEVGRP_ALL)
 #endif
 
 #if defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)
@@ -89,13 +80,18 @@
 #define SCISERVER_BOARDCONFIG_HEADER_ADDR (0x41c80000U)
 
 /** \brief Aligned address at which the Board Config is placed. */
-#define SCISERVER_BOARDCONFIG_DATA_ADDR (0x41c80040U)
-
-#define SCISERVER_POPULATE_BOARDCFG (1U)
+#define SCISERVER_BOARDCONFIG_DATA_ADDR   (0x41c80040U)
+#define SCISERVER_POPULATE_BOARDCFG       (1U)
 #endif
 
 /* ========================================================================== */
 /*                            Global Variables                                */
+/* ========================================================================== */
+
+/* None */
+
+/* ========================================================================== */
+/*                         Structure Declarations                             */
 /* ========================================================================== */
 
 const struct tisci_boardcfg gBoardConfigLow_debug
@@ -120,9 +116,7 @@ __attribute__(( aligned(128), section(".boardcfg_data") )) =
         /* Host-ID allowed to send SCI-message for main isolation.
          * If mismatch, SCI message will be rejected with NAK.
          */
-#if defined (SOC_AM64X)
-        .main_isolation_hostid = TISCI_HOST_ID_MAIN_0_R5_0,
-#elif defined (SOC_J7200) || defined (SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined (SOC_J7200) || defined (SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4)
         .main_isolation_hostid = TISCI_HOST_ID_MCU_0_R5_1,
 #else
         .main_isolation_hostid = TISCI_HOST_ID_R5_1,
@@ -189,22 +183,19 @@ __attribute__(( aligned(128), section(".boardcfg_data") )) =
 };
 
 /* ========================================================================== */
-/*                         Structure Declarations                             */
+/*                        Function Declarations                               */
 /* ========================================================================== */
 
 /* None */
 
 /* ========================================================================== */
-/*                          Function Declarations                             */
+/*                        Internal Function Declarations                      */
 /* ========================================================================== */
 
-#if defined (SOC_AM65XX)
-static int32_t setPLLClk(uint32_t modId, uint32_t clkId, uint64_t clkRate);
-#endif
-static int32_t App_getRevisionTest(void);
-static int32_t Sciclient_ccs_init_send_boardcfg (uint8_t devgrp_curr);
+static int32_t SciclientApp_getRevisionTest(void);
+static int32_t SciclientApp_ccs_init_send_boardcfg (uint8_t devgrp_curr);
 #if defined (SCISERVER_POPULATE_BOARDCFG)
-static void Sciclient_ccsSetBoardConfigHeader ();
+static void SciclientApp_ccsSetBoardConfigHeader(void);
 #endif
 
 /* ========================================================================== */
@@ -213,13 +204,13 @@ static void Sciclient_ccsSetBoardConfigHeader ();
 
 int32_t main(void)
 {
-    
-    printf(" SCICLIENT_CCS_INIT: %s, %s", __DATE__, __TIME__);
-    App_getRevisionTest();
 
-    #if defined (SCISERVER_POPULATE_BOARDCFG)
-    Sciclient_ccsSetBoardConfigHeader ();
-    #endif
+    printf(" SCICLIENT_CCS_INIT: %s, %s", __DATE__, __TIME__);
+    SciclientApp_getRevisionTest();
+
+#if defined (SCISERVER_POPULATE_BOARDCFG)
+    SciclientApp_ccsSetBoardConfigHeader ();
+#endif
 
     return 0;
 }
@@ -228,7 +219,7 @@ int32_t main(void)
 /*                 Internal Function Definitions                              */
 /* ========================================================================== */
 
-static int32_t App_getRevisionTest(void)
+static int32_t SciclientApp_getRevisionTest(void)
 {
     int32_t status = CSL_EFAIL;
     Sciclient_ConfigPrms_t        config =
@@ -266,13 +257,12 @@ static int32_t App_getRevisionTest(void)
     {
         printf ("Sciclinet_Init Failed.\n");
     }
-    status = Sciclient_ccs_init_send_boardcfg (SCICLIENT_CCS_DEVGRP0);
+    status = SciclientApp_ccs_init_send_boardcfg (SCICLIENT_CCS_DEVGRP0);
 #if defined (SCICLIENT_CCS_DEVGRP1)
     if (CSL_PASS == status)
     {
         printf ("=================================================================\n");
         printf ("Sciclient Dev Group 01 initilization started\n");
-#if !defined (SOC_AM65XX)
 #if CONFIG_BOARDCFG_PM
         printf ("Power on the WKUPMCU to MAIN and MAIN to WKUPMCU VDs... ");
         /* This is specifically required if you are booting in MCU_ONLY boot mode. */
@@ -293,13 +283,12 @@ static int32_t App_getRevisionTest(void)
             printf("FAILED\n");
         }
 #endif
-#endif
     }
     if (CSL_PASS == status)
     {
-        status = Sciclient_ccs_init_send_boardcfg (SCICLIENT_CCS_DEVGRP1);
+        status = SciclientApp_ccs_init_send_boardcfg (SCICLIENT_CCS_DEVGRP1);
     }
-#endif    
+#endif
     if (status == CSL_PASS)
     {
         status = Sciclient_service(&reqPrm, &respPrm);
@@ -318,16 +307,7 @@ static int32_t App_getRevisionTest(void)
             printf(" DMSC Firmware Get Version failed \n");
         }
     }
-    /* Set DDR PLL to 400 Mhz. SYSFW default sets this to 333.33 Mhz */
-    /* Comment this code if LPDDR is used */
-#if defined(SOC_AM65XX)
-    if (status == CSL_PASS)
-    {
-        /* Set DDR PLL to 400 Mhz. SYSFW default sets this to 333.33 Mhz */
-        /* Comment this code if LPDDR is used */
-        status = setPLLClk(TISCI_DEV_DDRSS0, TISCI_DEV_DDRSS0_BUS_DDRSS_BYP_4X_CLK, CSL_DDR_PLL_CLK_FREQ);
-    }
-#endif
+
     if (status == CSL_PASS)
     {
         status = Sciclient_deinit();
@@ -344,10 +324,10 @@ static int32_t App_getRevisionTest(void)
     return status;
 }
 
-static int32_t Sciclient_ccs_init_send_boardcfg (uint8_t devgrp_curr)
+static int32_t SciclientApp_ccs_init_send_boardcfg (uint8_t devgrp_curr)
 {
     int32_t status = CSL_PASS;
-    /* Common Board configuration to set up trace, secure Proxy and 
+    /* Common Board configuration to set up trace, secure Proxy and
      * MSMC configuration.
      */
 #if CONFIG_BOARDCFG
@@ -454,161 +434,8 @@ static int32_t Sciclient_ccs_init_send_boardcfg (uint8_t devgrp_curr)
     return status;
 }
 
-#if defined(SOC_AM65XX)
-/**
- * \brief  PLL clock configuration
- *
- * This function is used to set the PLL Module clock frequency
- *
- * \param  moduleId [IN]  Module for which the state should be set.
- *                        Refer Sciclient_PmDeviceIds in sciclient_fmwMsgParams.h
- * \param  clockId  [IN]  Clock Id for the module.
- *                        Refer Sciclient_PmModuleClockIds in sciclient_fmwMsgParams.h
- * \param  clkRate  [IN]  Value of the clock frequency to be set
- *
- * \return int32_t
- *                CSL_PASS - on Success
- *                CSL_EFAIL - on Failure
- *
- */
-static int32_t setPLLClk(uint32_t modId,
-                             uint32_t clkId,
-                             uint64_t clkRate)
-{
-    uint8_t parentId = 0;
-    uint32_t i = 0U;
-    int32_t status   = 0;
-    uint64_t respClkRate = 0;
-    uint32_t clockBaseId = 0U;
-    uint32_t numParents = 0U;
-    uint32_t clockStatus;
-
-    status = Sciclient_pmQueryModuleClkFreq(modId,
-                                        clkId,
-                                        clkRate,
-                                        &respClkRate,
-                                        SCICLIENT_SERVICE_WAIT_FOREVER);
-    if(status == CSL_PASS)
-    {
-        /* Check if the clock is enabled or not */
-        status = Sciclient_pmModuleGetClkStatus(modId,
-                                                clkId,
-                                                &clockStatus,
-                                                SCICLIENT_SERVICE_WAIT_FOREVER);
-    }
-
-    if(status == CSL_PASS)
-    {
-        /* Check if the clock is enabled or not */
-        status = Sciclient_pmGetModuleClkNumParent(modId,
-                                                clkId,
-                                                &numParents,
-                                                SCICLIENT_SERVICE_WAIT_FOREVER);
-    }
-
-    if ((status == CSL_PASS) && (respClkRate == clkRate))
-    {
-        status = Sciclient_pmSetModuleClkFreq(
-                                modId,
-                                clkId,
-                                clkRate,
-                                TISCI_MSG_FLAG_CLOCK_ALLOW_FREQ_CHANGE,
-                                SCICLIENT_SERVICE_WAIT_FOREVER);
-        if (status == CSL_PASS)
-        {
-            if (clockStatus == TISCI_MSG_VALUE_CLOCK_SW_STATE_UNREQ)
-            {
-                /* Enable the clock */
-                status = Sciclient_pmModuleClkRequest(
-                                                    modId,
-                                                    clkId,
-                                                    TISCI_MSG_VALUE_CLOCK_SW_STATE_REQ,
-                                                    0U,
-                                                    SCICLIENT_SERVICE_WAIT_FOREVER);
-            }
-        }
-    }
-    else if (status == CSL_PASS)
-    {
-        /* Try to loop and change parents of the clock */
-        for(i = 0U; i < numParents; i++)
-        {
-            /* Disabling the clock */
-            status = Sciclient_pmModuleClkRequest(modId,
-                                                  clkId,
-                                                  TISCI_MSG_VALUE_CLOCK_SW_STATE_UNREQ,
-                                                  0U,
-                                                  SCICLIENT_SERVICE_WAIT_FOREVER);
-            if (status == CSL_PASS)
-            {
-                clockStatus = TISCI_MSG_VALUE_CLOCK_SW_STATE_UNREQ;
-                /* Setting the new parent */
-                status = Sciclient_pmSetModuleClkParent(
-                                        modId,
-                                        clkId,
-                                        clkId+i+1,
-                                        SCICLIENT_SERVICE_WAIT_FOREVER);
-            }
-            /* Check if the clock can be set to desirable freq. */
-            if (status == CSL_PASS)
-            {
-                status = Sciclient_pmQueryModuleClkFreq(modId,
-                                                        clkId,
-                                                        clkRate,
-                                                        &respClkRate,
-                                                        SCICLIENT_SERVICE_WAIT_FOREVER);
-            }
-            if (status == CSL_PASS)
-            {
-                if(respClkRate == clkRate)
-                {
-                    break;
-                }
-                else
-                {
-                    status = CSL_EFAIL;
-                }
-            }
-            parentId++;
-            clockBaseId++;
-        }
-
-        if (status == CSL_PASS)
-        {
-            /* Set the clock at the desirable frequency*/
-            status = Sciclient_pmSetModuleClkFreq(
-                                    modId,
-                                    clkId,
-                                    clkRate,
-                                    TISCI_MSG_FLAG_CLOCK_ALLOW_FREQ_CHANGE,
-                                    SCICLIENT_SERVICE_WAIT_FOREVER);
-        }
-        if((status == CSL_PASS) && (clockStatus == TISCI_MSG_VALUE_CLOCK_SW_STATE_UNREQ))
-        {
-            /*Enable the clock again */
-            status = Sciclient_pmModuleClkRequest(
-                                                modId,
-                                                clkId,
-                                                TISCI_MSG_VALUE_CLOCK_SW_STATE_REQ,
-                                                0U,
-                                                SCICLIENT_SERVICE_WAIT_FOREVER);
-        }
-    }
-    if (CSL_PASS == status)
-    {
-        printf("PLL set to %f MHz \n", (float)(clkRate/1000000) );
-    }
-    else
-    {
-        printf("Failed to change PLL clock \n");
-    }
-
-    return status;
-}
-#endif
-
 #if defined (SCISERVER_POPULATE_BOARDCFG)
-static void Sciclient_ccsSetBoardConfigHeader ()
+static void SciclientApp_ccsSetBoardConfigHeader(void)
 {
     int32_t status = CSL_PASS;
     uint32_t boardCfgLowPm[] = SCICLIENT_BOARDCFG_PM;
@@ -634,8 +461,8 @@ static void Sciclient_ccsSetBoardConfigHeader ()
         (uint8_t *) SCISERVER_COMMON_X509_HEADER_ADDR,
         (uint8_t *) SCISERVER_BOARDCONFIG_HEADER_ADDR,
         &boardCfgPrms_pm, &boardCfgPrms_rm);
-    CacheP_wbInv((void*)SCISERVER_COMMON_X509_HEADER_ADDR, 0x500); 
-    CacheP_wbInv((void*)SCISERVER_BOARDCONFIG_HEADER_ADDR, 0x500); 
+    CacheP_wbInv((void*)SCISERVER_COMMON_X509_HEADER_ADDR, 0x500);
+    CacheP_wbInv((void*)SCISERVER_BOARDCONFIG_HEADER_ADDR, 0x500);
     if (CSL_PASS == status)
     {
         printf("PASSED\n");
@@ -645,8 +472,9 @@ static void Sciclient_ccsSetBoardConfigHeader ()
         printf("FAILED\n");
     }
     memcpy((void *)boardCfgPrms_pm.boardConfigLow, (void *) boardCfgLowPm, sizeof(boardCfgLowPm));
-    CacheP_wbInv((void*)boardCfgPrms_pm.boardConfigLow, sizeof(boardCfgLowPm)); 
+    CacheP_wbInv((void*)boardCfgPrms_pm.boardConfigLow, sizeof(boardCfgLowPm));
     memcpy((void *)boardCfgPrms_rm.boardConfigLow, (void *) boardCfgLowRm, sizeof(boardCfgLowRm));
-    CacheP_wbInv((void*)boardCfgPrms_rm.boardConfigLow, sizeof(boardCfgLowRm)); 
+    CacheP_wbInv((void*)boardCfgPrms_rm.boardConfigLow, sizeof(boardCfgLowRm));
 }
 #endif
+

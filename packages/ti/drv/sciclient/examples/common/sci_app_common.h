@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2017 Texas Instruments Incorporated
+ *  Copyright (C) 2024 Texas Instruments Incorporated
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -28,28 +28,24 @@
  *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
  */
 
 /**
- *  \file st_sciclient.h
+ *  \file  sci_app_common.h
  *
- *  \brief This file contains all the structures, macros, enums
- *  used by the SCICLIENT UT applications.
+ *  \brief This file contains common structures, macros and function declarations
+ *         used by the SCI applications.
+ * 
  */
 
-#ifndef ST_SCICLIENT_H_
-#define ST_SCICLIENT_H_
+#ifndef SCI_APP_COMMON_H_
+#define SCI_APP_COMMON_H_
 
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
-#include <stdint.h>
-#include <stdio.h>
-#include <ti/csl/soc.h>
+
 #include <ti/csl/tistdtypes.h>
-#include <ti/drv/sciclient/sciclient.h>
-#include <ti/drv/uart/UART.h>
 #include <ti/drv/uart/UART_stdio.h>
 
 #ifdef __cplusplus
@@ -57,18 +53,19 @@ extern "C" {
 #endif
 
 /* ========================================================================== */
-/*                                 Macros                                     */
+/*                           Macros & Typedefs                                */
 /* ========================================================================== */
+
 /**
  *  \anchor Sciclient_TestEnables
  *  \name Sciclient Test Enable and Disable indexes
  *  @{
- *  Macros to enable or disable tests and printing.
+ *  Macros to enable or disable tests and prints.
  */
-#define TEST_ENABLE                     (TRUE)
-#define TEST_DISABLE                    (FALSE)
-#define PRINT_ENABLE                    (TRUE)
-#define PRINT_DISABLE                   (FALSE)
+#define SCI_APP_TEST_ENABLE                 (TRUE)
+#define SCI_APP_TEST_DISABLE                (FALSE)
+#define SCI_APP_PRINT_ENABLE                (TRUE)
+#define SCI_APP_PRINT_DISABLE               (FALSE)
 /* @} */
 
 /**
@@ -77,87 +74,56 @@ extern "C" {
  *  @{
  *  Parser ID used to identify the different test types.
  */
-#define RUN_TEST_ID                 ('1')
-#define RUN_TESTS_SANITY            ('2')
-#define RUN_TESTS_REGRESSION        ('3')
-#define RUN_TESTS_R5F               ('4')
-#define RUN_TESTS_A53               ('5')
-#define RUN_TESTS_ALL               ('A')
-#define PRINT_ALLTESTS              ('d')
-#define PRINT_TEST_ID               ('t')
-#define PRINT_RESULTS               ('g')
-#define PARSER_QUIT                 ('q')
+#define SCI_APP_RUN_TEST_ID                 ('1')
+#define SCI_APP_RUN_TESTS_SANITY            ('2')
+#define SCI_APP_RUN_TESTS_ALL               ('A')
+#define SCI_APP_PRINT_ALLTESTS              ('d')
+#define SCI_APP_PRINT_TEST_ID               ('t')
+#define SCI_APP_PRINT_RESULTS               ('g')
+#define SCI_APP_PARSER_QUIT                 ('q')
 /* @} */
 
-#define App_sciclientPrintf UART_printf
+#define SciApp_printf                       UART_printf
+#define SciApp_getChar                      UART_getc
 
-#define App_sciclientGetChar UART_getc
+/* Change this to 0 for interactive UT */
+#define SCI_APP_AUTORUN                     1
 
-/*Change this to 0 for interactive UT*/
-#define APP_SCICLIENT_UT_AUTORUN 1
+/* CPU Id of the test to be run on */
+#define SCI_APP_CORE_TYPE_R5F                 0
+/**< Select R5F for execution */
+
+/* Test types */
+#define SCI_APP_TEST_TYPE_SANITY            0x01
+/**< Sanity testing */
+
+#define SCI_APP_TEST_TYPE_NEGATIVE          0x02
+/**< Negative testing */
 
 /* ========================================================================== */
-/*                         Structures and Enums                               */
+/*                            Global Variables                                */
 /* ========================================================================== */
 
-/**
- *  \brief CPU Id of the test to be run on.
- */
-typedef enum
-{
-    APP_SCICLIENT_R5F = 0,
-    /**< Select R5F for execution */
-    APP_SCICLIENT_A53 = 1,
-    /**< Select A53 for execution */
-}App_sciclientCpuId;
+/* None */
 
-/**
- *  \brief Test types.
- */
-typedef enum
-{
-    APP_SCICLIENT_TEST_TYPE_SANITY      = 0x01,
-    /**< Sanity testing */
-    APP_SCICLIENT_TEST_TYPE_REGRESSION  = 0x02,
-    /**< Regression testing */
-    APP_SCICLIENT_TEST_TYPE_FULL        = 0x04,
-    /**< Full testing */
-    APP_SCICLIENT_TEST_TYPE_FUNCTIONAL  = 0x08,
-    /**< Functional testing */
-    APP_SCICLIENT_TEST_TYPE_STRESS      = 0x10,
-    /**< Stress testing */
-    APP_SCICLIENT_TEST_TYPE_NEGATIVE    = 0x20,
-    /**< Negative testing */
-    APP_SCICLIENT_TEST_TYPE_PERFORMANCE = 0x40,
-    /**< Performance Testing */
-    APP_SCICLIENT_TEST_TYPE_MISC        = 0x80,
-    /**< Miscellaneous Testing */
-    APP_SCICLIENT_TEST_TYPE_API         = 0x100
-    /**< API testing */
-} App_sciclientTestType;
+/* ========================================================================== */
+/*                         Structure Declarations                             */
+/* ========================================================================== */
 
 /**
  * \brief Typedef for test case parameters.
  */
-typedef struct App_sciclientTestParams App_sciclientTestParams_t;
+typedef struct SciApp_TestParams SciApp_TestParams_t;
 
 /**
  * \brief Typedef for test case type function pointer.
  */
-typedef void (*sciclientTestCaseFxnPtr)(App_sciclientTestParams_t *testPrms);
-
-/**
- * \brief Typedef for test case configuration parameters.
- */
-typedef struct
-{
-
-} App_sciclientTestConfigParams_t;
+typedef void (*SciApp_testCaseFxnPtr)(SciApp_TestParams_t *testPrms);
 
 /**
  *  \brief Test case parameter structure.
  */
-struct App_sciclientTestParams
+struct SciApp_TestParams
 {
     Bool                       enableTest;
     /**< Whether test case should be executed or not. */
@@ -173,59 +139,90 @@ struct App_sciclientTestParams
     /**< Reason string for disabling a test case. */
     char                      *passFailCriteria;
     /**< Test case pass/fail criteria. */
-    App_sciclientCpuId         cpuID;
+    uint32_t                  cpuID;
     /**< Test case CPU ID field */
-    App_sciclientTestConfigParams_t sciclientConfigParams;
-    /**< Configuration parameters */
     Bool                       printEnable;
     /**< Enable/disable print statements, used for stress testing. */
     uint32_t                   testType;
-    /**< Refer #App_sciclientTestType */
+    /**< Refer #Test types */
     /*
      * Below variables are initialized in code and not in table!!
      */
     int32_t                    isRun;
     /**< Flag to indicate whether the test case is run or not. */
-    Int32                      testResult;
+    int32_t                    testResult;
     /**< Test result. */
 };
+
 /* ========================================================================== */
 /*                          Function Declarations                             */
 /* ========================================================================== */
-/**
- * \brief   Fetch testcase data and run the testcase.
- *
- * \param   testParams        structure to details of testcase to run.
- */
-void App_sciclientRun(App_sciclientTestParams_t *testParams);
 
 /**
- * \brief   Parse the testcase data
+ * \brief   Parse the testcase data.
  *
  * \param   None.
  *
- * \return  None
+ * \return  None.
  */
-int32_t App_sciclientParser(void);
+void SciApp_parser(void);
 
 /**
  * \brief   Fetch testcase data and run the testcase.
  *
- * \param   testParams        structure to details of testcase to run.
+ * \param   testParams        Structure to details of testcase to be run.
+ *
+ * \return  None.
  */
-int32_t App_sciclientTestMain(App_sciclientTestParams_t *testParams);
+int32_t SciApp_testMain(SciApp_TestParams_t *testParams);
 
-uint32_t App_sciclientGetNum();
+/**
+ * \brief   Fetch testcase number to be run.
+ *
+ * \param   None.
+ *
+ * \return  Testcase number to be run.
+ */
+uint32_t SciApp_getNum(void);
 
-void App_sciclientConsoleInit();
+/**
+ * \brief   Initializes UART to print testcase details.
+ *
+ * \param   None.
+ *
+ * \return  None.
+ */
+void SciApp_consoleInit(void);
 
-uint32_t   App_sciclientGetNumTests(void);
+/**
+ * \brief   Fetches total number of test cases.
+ *
+ * \param   None.
+ *
+ * \return  Total number of test cases.
+ */
+uint32_t SciApp_getNumTests(void);
 
-uint32_t App_sciclientConsolePuts(char *pTxBuffer,
-                         int32_t numBytesToWrite);
+/* ========================================================================== */
+/*                        Internal Function Declarations                      */
+/* ========================================================================== */
+
+/* None */
+
+/* ========================================================================== */
+/*                        Function Definitions                                */
+/* ========================================================================== */
+
+/* None */
+
+/* ========================================================================== */
+/*                        Internal Function Definitions                       */
+/* ========================================================================== */
+
+/* None */
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* ST_SCICLIENT_H_ */
+#endif /* SCI_APP_COMMON_H_ */
