@@ -77,7 +77,7 @@ extern "C" {
 /** \brief Maximum number of UDMA instance */
 #define UDMA_INST_ID_MAX                 (UDMA_INST_ID_4)
 /** \brief Total number of UDMA instances */
-#define UDMA_NUM_INST_ID                 (3)
+#define UDMA_NUM_INST_ID                 (UDMA_INST_ID_MAX - UDMA_INST_ID_START + 1U)
 /** @} */
 
 /**
@@ -107,6 +107,7 @@ extern "C" {
 
 /** \brief Flag to indicate Proxy is present or not in the SOC*/
 #define UDMA_SOC_CFG_PROXY_PRESENT               (0U) 
+
 /** \brief Flag to indicate Interrupt Router is present or not in the SOC*/
 #define UDMA_SOC_CFG_INTR_ROUTER_PRESENT         (0U) 
 
@@ -304,12 +305,12 @@ extern "C" {
 /** \brief Total number of BCDMA resources */
 #define UDMA_RM_NUM_BCDMA_RES                   (11U)
 /** \brief Total number of PKTDMA resources */
-#define UDMA_RM_NUM_PKTDMA_RES                  (35U)
+#define UDMA_RM_NUM_PKTDMA_RES                  (27U)
 
-#define UDMA_RM_DEFAULT_BOARDCFG_NUM_RES UDMA_RM_NUM_BCDMA_RES
+#define UDMA_RM_DEFAULT_BOARDCFG_NUM_RES        (35U)
 
 /** \brief Total number of resources */
-#define UDMA_RM_NUM_RES                         (UDMA_RM_NUM_PKTDMA_RES + UDMA_RM_NUM_BCDMA_RES)
+#define UDMA_RM_NUM_RES                         (35U)
 /** @} */
 
 /** \brief Total number of shared resources -
@@ -333,15 +334,23 @@ extern "C" {
 
 #define UDMA_PSIL_CH_CPSW2_RX           (0x4600U)
 #define UDMA_PSIL_CH_SAUL0_RX           (0x7504U)
+#define UDMA_PSIL_CH_ICSS_G0_RX         (0x4100U)
+#define UDMA_PSIL_CH_ICSS_G1_RX         (0x4200U)
 
 #define UDMA_PSIL_CH_CPSW2_TX           (UDMA_PSIL_CH_CPSW2_RX | UDMA_PSIL_DEST_THREAD_OFFSET)
 #define UDMA_PSIL_CH_SAUL0_TX           (UDMA_PSIL_CH_SAUL0_RX | UDMA_PSIL_DEST_THREAD_OFFSET)
+#define UDMA_PSIL_CH_ICSS_G0_TX         (UDMA_PSIL_CH_ICSS_G0_RX | UDMA_PSIL_DEST_THREAD_OFFSET)
+#define UDMA_PSIL_CH_ICSS_G1_TX         (UDMA_PSIL_CH_ICSS_G1_RX | UDMA_PSIL_DEST_THREAD_OFFSET)
 
 #define UDMA_PSIL_CH_CPSW2_TX_CNT       (8U)
 #define UDMA_PSIL_CH_SAUL0_TX_CNT       (2U)
+#define UDMA_PSIL_CH_ICSS_G0_TX_CNT     (9U)
+#define UDMA_PSIL_CH_ICSS_G1_TX_CNT     (9U)
 
 #define UDMA_PSIL_CH_CPSW2_RX_CNT       (1U)
 #define UDMA_PSIL_CH_SAUL0_RX_CNT       (4U)
+#define UDMA_PSIL_CH_ICSS_G0_RX_CNT     (5U)
+#define UDMA_PSIL_CH_ICSS_G1_RX_CNT     (5U)
 
 /** @} */
 

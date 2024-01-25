@@ -41,13 +41,10 @@
 /*                             Include Files                                  */
 /* ========================================================================== */
 
-//#include <drivers/udma/udma_priv.h>
-//#include <drivers/hw_include/cslr_soc.h>
-
 #include <ti/drv/udma/src/udma_priv.h>
 
 #ifdef QNX_OS
-//#define QNX_UDMA_DEBUG_CSL_REGS
+#define QNX_UDMA_DEBUG_CSL_REGS
 #endif
 
 /* ========================================================================== */
@@ -72,30 +69,37 @@ uint16_t Udma_getCoreSciDevId(void);
 /*                            Global Variables                                */
 /* ========================================================================== */
 
+/* NOTE:: Currently we have Udma_MappedChRingAttributes array defined for
+ * TX and RX as a single array for all relevant IPs (CPSW, SAUL_0, and SAUL_1
+ * for J722S). This means that there is no distinction between a request for a ring
+ * coming from CPSW or SAUL_x. Ideally, it would be good to have a per IP level
+ * Udma_MappedChRingAttributes array to ensure that the user of the RingAlloc API
+ * doesn't accidentally allocate a CPSW ring for SAUL.
+ */
 const Udma_MappedChRingAttributes gUdmaTxMappedChRingAttributes[CSL_DMSS_PKTDMA_NUM_TX_CHANS - CSL_DMSS_PKTDMA_TX_CHANS_UNMAPPED_CNT] =
 {
     /* defaultRing, startFreeRing, numFreeRing */
-    {16U, 17U, 7U}, /* Channel 16 - UDMA_MAPPED_TX_GROUP_CPSW Ch 0 */
-    {24U, 25U, 7U}, /* Channel 17 - UDMA_MAPPED_TX_GROUP_CPSW Ch 1 */
-    {32U, 33U, 7U}, /* Channel 18 - UDMA_MAPPED_TX_GROUP_CPSW Ch 2 */
-    {40U, 41U, 7U}, /* Channel 19 - UDMA_MAPPED_TX_GROUP_CPSW Ch 3 */
-    {48U, 49U, 7U}, /* Channel 20 - UDMA_MAPPED_TX_GROUP_CPSW Ch 4 */
-    {56U, 57U, 7U}, /* Channel 21 - UDMA_MAPPED_TX_GROUP_CPSW Ch 5 */
-    {64U, 65U, 7U}, /* Channel 22 - UDMA_MAPPED_TX_GROUP_CPSW Ch 6 */
-    {72U, 73U, 7U}, /* Channel 23 - UDMA_MAPPED_TX_GROUP_CPSW Ch 7 */
-    {80U, 81U, 7U}, /* Channel 24 - UDMA_MAPPED_TX_GROUP_SAUL Ch 0  */
-    {88U, 89U, 7U}, /* Channel 25 - UDMA_MAPPED_TX_GROUP_SAUL Ch 1 */
+    {19U, 20U, 8U}, /* Channel 16 - UDMA_MAPPED_TX_GROUP_CPSW Ch 0 */
+    {28U, 29U, 8U}, /* Channel 17 - UDMA_MAPPED_TX_GROUP_CPSW Ch 1 */
+    {36U, 37U, 8U}, /* Channel 18 - UDMA_MAPPED_TX_GROUP_CPSW Ch 2 */
+    {43U, 44U, 8U}, /* Channel 19 - UDMA_MAPPED_TX_GROUP_CPSW Ch 3 */
+    {51U, 52U, 8U}, /* Channel 20 - UDMA_MAPPED_TX_GROUP_CPSW Ch 4 */
+    {59U, 60U, 8U}, /* Channel 21 - UDMA_MAPPED_TX_GROUP_CPSW Ch 5 */
+    {67U, 68U, 8U}, /* Channel 22 - UDMA_MAPPED_TX_GROUP_CPSW Ch 6 */
+    {75U, 76U, 7U}, /* Channel 23 - UDMA_MAPPED_TX_GROUP_CPSW Ch 7 */
+    {83U, 84U, 7U}, /* Channel 24 - UDMA_MAPPED_TX_GROUP_SAUL Ch 0  */
+    {91U, 92U, 7U}, /* Channel 25 - UDMA_MAPPED_TX_GROUP_SAUL Ch 1 */
 };
 
 const Udma_MappedChRingAttributes gUdmaRxMappedChRingAttributes[CSL_DMSS_PKTDMA_NUM_RX_CHANS - CSL_DMSS_PKTDMA_RX_CHANS_UNMAPPED_CNT] =
 {
     /* defaultRing, startFreeRing, numFreeRing */
     /*RX Ring Offset of 112U added to the startRing */
-    {128U, 129U, 15U}, /* Channel 16 - UDMA_MAPPED_RX_GROUP_CPSW Ch 0 */
-    {144U, 146U, 6U}, /* Channel 17 - UDMA_MAPPED_RX_GROUP_SAUL Ch 0 */
-    {145U, 146U, 6U}, /* Channel 18 - UDMA_MAPPED_RX_GROUP_SAUL Ch 1 */
-    {152U, 154U, 6U}, /* Channel 19 - UDMA_MAPPED_RX_GROUP_SAUL Ch 2 */
-    {153U, 154U, 6U}, /* Channel 20 - UDMA_MAPPED_RX_GROUP_SAUL Ch 3 */
+    {118U, 119U, 15U}, /* Channel 16 - UDMA_MAPPED_RX_GROUP_CPSW Ch 0 */
+    {134U, 135U, 4U}, /* Channel 17 - UDMA_MAPPED_RX_GROUP_SAUL Ch 0 */
+    {139U, 140U, 3U}, /* Channel 18 - UDMA_MAPPED_RX_GROUP_SAUL Ch 1 */
+    {142U, 143U, 4U}, /* Channel 19 - UDMA_MAPPED_RX_GROUP_SAUL Ch 2 */
+    {147U, 148U, 3U}, /* Channel 20 - UDMA_MAPPED_RX_GROUP_SAUL Ch 3 */
 };
 
 /* ========================================================================== */
@@ -116,23 +120,6 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
      * BCDMA/PKTDMA config init
      */
     /* Init the config structure - one time step */
-#if (UDMA_LOCAL_C7X_DRU_PRESENT == 1)
-    if(UDMA_INST_ID_C7X_DRU_0 == instId)
-    {
-        drvHandle->instType         = UDMA_INST_TYPE_C7X_DRU;
-        drvHandle->druRegs          = ((CSL_DRU_t *)CSL_C7X256V0_DRU_BASE);
-
-        drvHandle->numQueue         = CSL_DMSS_UTC_MSMC_DRU_QUEUE_CNT;
-    }
-    else if(UDMA_INST_ID_C7X_DRU_1 == instId)
-    {
-        drvHandle->instType         = UDMA_INST_TYPE_C7X_DRU;
-        drvHandle->druRegs          = ((CSL_DRU_t *)CSL_C7X256V0_DRU_BASE);
-
-        drvHandle->numQueue         = CSL_DMSS_UTC_MSMC_DRU_QUEUE_CNT;
-    }
-    else
-#endif
     if(UDMA_INST_ID_BCDMA_0 == instId)
     {
         drvHandle->instType = UDMA_INST_TYPE_LCDMA_BCDMA;
@@ -166,8 +153,8 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
          * registers */
         CSL_bcdmaGetCfg(pBcdmaRegs);
 
-        pBcdmaRegs->bcChanCnt += pBcdmaRegs->bcHighCapacityChanCnt;
-        pBcdmaRegs->txChanCnt += pBcdmaRegs->bcHighCapacityChanCnt;
+        //pBcdmaRegs->bcChanCnt += pBcdmaRegs->bcHighCapacityChanCnt;
+        //pBcdmaRegs->txChanCnt += pBcdmaRegs->bcHighCapacityChanCnt;
 
         pPktdmaRegs = &drvHandle->pktdmaRegs;
         memset(pPktdmaRegs, 0, sizeof(*pPktdmaRegs));
@@ -221,8 +208,8 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
          * registers */
         CSL_bcdmaGetCfg(pBcdmaRegs);
 
-        pBcdmaRegs->bcChanCnt += pBcdmaRegs->bcHighCapacityChanCnt;
-        pBcdmaRegs->txChanCnt += pBcdmaRegs->bcHighCapacityChanCnt;
+        //pBcdmaRegs->bcChanCnt += pBcdmaRegs->bcHighCapacityChanCnt;
+        //pBcdmaRegs->txChanCnt += pBcdmaRegs->bcHighCapacityChanCnt;
 
         pPktdmaRegs = &drvHandle->pktdmaRegs;
         memset(pPktdmaRegs, 0, sizeof(*pPktdmaRegs));
@@ -291,12 +278,12 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
         pLcdmaRaRegs->pRingRtRegs    = (CSL_lcdma_ringacc_ringrtRegs *) CSL_DMASS0_BCDMA_RINGRT_BASE;
         pLcdmaRaRegs->pCredRegs      = (CSL_lcdma_ringacc_credRegs *) CSL_DMASS0_BCDMA_CRED_BASE;
 #else
-	    pLcdmaRaRegs->pRingCfgRegs   = (CSL_lcdma_ringacc_ring_cfgRegs *) mmap_device_memory(0,
-              CSL_DMASS0_BCDMA_RING_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, CSL_DMASS0_BCDMA_RING_BASE);
-	    pLcdmaRaRegs->pRingRtRegs    = (CSL_lcdma_ringacc_ringrtRegs *) mmap_device_memory(0,
-              CSL_DMASS0_BCDMA_RINGRT_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, CSL_DMASS0_BCDMA_RINGRT_BASE);
-	    pLcdmaRaRegs->pCredRegs      = (CSL_lcdma_ringacc_credRegs *) mmap_device_memory(0,
-              CSL_DMASS0_BCDMA_CRED_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, CSL_DMASS0_BCDMA_CRED_BASE);
+        pLcdmaRaRegs->pRingCfgRegs   = (CSL_lcdma_ringacc_ring_cfgRegs *) mmap_device_memory(0,
+          CSL_DMASS0_BCDMA_RING_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, CSL_DMASS0_BCDMA_RING_BASE);
+        pLcdmaRaRegs->pRingRtRegs    = (CSL_lcdma_ringacc_ringrtRegs *) mmap_device_memory(0,
+          CSL_DMASS0_BCDMA_RINGRT_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, CSL_DMASS0_BCDMA_RINGRT_BASE);
+        pLcdmaRaRegs->pCredRegs      = (CSL_lcdma_ringacc_credRegs *) mmap_device_memory(0,
+          CSL_DMASS0_BCDMA_CRED_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, CSL_DMASS0_BCDMA_CRED_BASE);
 
 #ifdef QNX_UDMA_DEBUG_CSL_REGS
         printf( "%s: pLcdmaRaRegs->pRingCfgRegs phys/0x%lx virt/0x%p size/%ld\n",__FUNCTION__,
@@ -381,57 +368,9 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
 
     /* IA config init */
     pIaRegs = &drvHandle->iaRegs;
-    if(UDMA_INST_ID_BCDMA_1 == instId)
+    if(UDMA_INST_ID_BCDMA_1 != instId)
     {
-#ifndef QNX_OS
-        pIaRegs->pCfgRegs       = (CSL_intaggr_cfgRegs *) CSL_DMASS1_INTAGGR_CFG_BASE;
-        pIaRegs->pImapRegs      = (CSL_intaggr_imapRegs *) CSL_DMASS1_INTAGGR_IMAP_BASE;
-        pIaRegs->pIntrRegs      = (CSL_intaggr_intrRegs *) CSL_DMASS1_INTAGGR_INTR_BASE;
-        pIaRegs->pMcastRegs     = (CSL_intaggr_mcastRegs *) CSL_DMASS1_INTAGGR_MCAST_BASE;
-        pIaRegs->pGcntCfgRegs   = (CSL_intaggr_gcntcfgRegs *) CSL_DMASS1_INTAGGR_GCNTCFG_BASE;
-        pIaRegs->pGcntRtiRegs   = (CSL_intaggr_gcntrtiRegs *) CSL_DMASS1_INTAGGR_GCNTRTI_BASE;
-        CSL_intaggrGetCfg(pIaRegs);
 
-        drvHandle->iaGemOffset  = CSL_DMSS1_GEM_INTA0_SEVI_OFFSET;
-        drvHandle->devIdIa      = TISCI_DEV_DMASS1_INTAGGR_0;
-        drvHandle->devIdCore    = Udma_getCoreSciDevId();
-#else
-        pIaRegs->pCfgRegs       = (CSL_intaggr_cfgRegs *) mmap_device_memory(0,
-                CSL_DMASS1_INTAGGR_CFG_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, CSL_DMASS1_INTAGGR_CFG_BASE);
-        pIaRegs->pImapRegs      = (CSL_intaggr_imapRegs *) mmap_device_memory(0,
-                CSL_DMASS1_INTAGGR_IMAP_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, CSL_DMASS1_INTAGGR_IMAP_BASE);
-        pIaRegs->pIntrRegs      = (CSL_intaggr_intrRegs *) mmap_device_memory(0,
-                CSL_DMASS1_INTAGGR_INTR_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, CSL_DMASS1_INTAGGR_INTR_BASE);
-        pIaRegs->pMcastRegs     = (CSL_intaggr_mcastRegs *) mmap_device_memory(0,
-                CSL_DMASS1_INTAGGR_MCAST_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, CSL_DMASS1_INTAGGR_MCAST_BASE);
-        pIaRegs->pGcntCfgRegs   = (CSL_intaggr_gcntcfgRegs *) mmap_device_memory(0,
-                CSL_DMASS1_INTAGGR_GCNTCFG_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, CSL_DMASS1_INTAGGR_GCNTCFG_BASE);
-        pIaRegs->pGcntRtiRegs   = (CSL_intaggr_gcntrtiRegs *) mmap_device_memory(0,
-                CSL_DMASS1_INTAGGR_GCNTRTI_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, CSL_DMASS1_INTAGGR_GCNTRTI_BASE);
-        CSL_intaggrGetCfg(pIaRegs);
-
-#ifdef QNX_UDMA_DEBUG_CSL_REGS
-        printf( "%s: pIaRegs->pCfgRegs phys/0x%lx virt/0x%p size/%ld\n",__FUNCTION__,
-                CSL_DMASS1_INTAGGR_CFG_BASE, pIaRegs->pCfgRegs, CSL_DMASS1_INTAGGR_CFG_SIZE);
-        printf( "%s: pIaRegs->pImapRegs phys/0x%lx virt/0x%p size/%ld\n",__FUNCTION__,
-                CSL_DMASS1_INTAGGR_IMAP_BASE, pIaRegs->pImapRegs, CSL_DMASS1_INTAGGR_IMAP_SIZE);
-        printf( "%s: pIaRegs->pIntrRegs phys/0x%lx virt/0x%p size/%ld\n",__FUNCTION__,
-                CSL_DMASS1_INTAGGR_INTR_BASE, pIaRegs->pIntrRegs, CSL_DMASS1_INTAGGR_INTR_SIZE);
-        printf( "%s: pIaRegs->pMcastRegs phys/0x%lx virt/0x%p size/%ld\n",__FUNCTION__,
-                CSL_DMASS1_INTAGGR_MCAST_BASE, pIaRegs->pIntrRegs, CSL_DMASS1_INTAGGR_MCAST_SIZE);
-        printf( "%s: pIaRegs->pGcntCfgRegs phys/0x%lx virt/0x%p size/%ld\n",__FUNCTION__,
-                CSL_DMASS1_INTAGGR_GCNTCFG_BASE, pIaRegs->pGcntCfgRegs, CSL_DMASS1_INTAGGR_GCNTCFG_SIZE);
-        printf( "%s: pIaRegs->pGcntRtiRegs phys/0x%lx virt/0x%p size/%ld\n",__FUNCTION__,
-                CSL_DMASS1_INTAGGR_GCNTRTI_BASE, pIaRegs->pGcntRtiRegs, CSL_DMASS1_INTAGGR_GCNTRTI_SIZE);
-#endif
-
-        drvHandle->iaGemOffset  = CSL_DMSS1_GEM_INTA0_SEVI_OFFSET;
-        drvHandle->devIdIa      = TISCI_DEV_DMASS1_INTAGGR_0;
-        drvHandle->devIdCore    = Udma_getCoreSciDevId();
-#endif
-    }
-    else
-    {
 #ifndef QNX_OS
         pIaRegs->pCfgRegs       = (CSL_intaggr_cfgRegs *) CSL_DMASS0_INTAGGR_CFG_BASE;
         pIaRegs->pImapRegs      = (CSL_intaggr_imapRegs *) CSL_DMASS0_INTAGGR_IMAP_BASE;
@@ -463,21 +402,63 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
                 CSL_DMASS0_INTAGGR_IMAP_BASE, pIaRegs->pImapRegs, CSL_DMASS0_INTAGGR_IMAP_SIZE);
         printf( "%s: pIaRegs->pIntrRegs phys/0x%lx virt/0x%p size/%ld\n",__FUNCTION__,
                 CSL_DMASS0_INTAGGR_INTR_BASE, pIaRegs->pIntrRegs, CSL_DMASS0_INTAGGR_INTR_SIZE);
+        printf( "%s: pIaRegs->pL2gRegs phys/0x%lx virt/0x%p size/%ld\n",__FUNCTION__,
+                CSL_DMASS0_INTAGGR_L2G_SIZE, pIaRegs->pL2gRegs, CSL_DMASS0_INTAGGR_L2G_SIZE);
         printf( "%s: pIaRegs->pMcastRegs phys/0x%lx virt/0x%p size/%ld\n",__FUNCTION__,
                 CSL_DMASS0_INTAGGR_MCAST_BASE, pIaRegs->pIntrRegs, CSL_DMASS0_INTAGGR_MCAST_SIZE);
         printf( "%s: pIaRegs->pGcntCfgRegs phys/0x%lx virt/0x%p size/%ld\n",__FUNCTION__,
                 CSL_DMASS0_INTAGGR_GCNTCFG_BASE, pIaRegs->pGcntCfgRegs, CSL_DMASS0_INTAGGR_GCNTCFG_SIZE);
         printf( "%s: pIaRegs->pGcntRtiRegs phys/0x%lx virt/0x%p size/%ld\n",__FUNCTION__,
                 CSL_DMASS0_INTAGGR_GCNTRTI_BASE, pIaRegs->pGcntRtiRegs, CSL_DMASS0_INTAGGR_GCNTRTI_SIZE);
-#endif
+#endif //QNX_UDMA_DEBUG_CSL_REGS
+        drvHandle->devIdIa      = TISCI_DEV_DMASS0_INTAGGR_0;
+#endif //QNX_OS
+    } else  {
+#ifndef QNX_OS
+        pIaRegs->pCfgRegs       = (CSL_intaggr_cfgRegs *) CSL_DMASS1_INTAGGR_CFG_BASE;
+        pIaRegs->pImapRegs      = (CSL_intaggr_imapRegs *) CSL_DMASS1_INTAGGR_IMAP_BASE;
+        pIaRegs->pIntrRegs      = (CSL_intaggr_intrRegs *) CSL_DMASS1_INTAGGR_INTR_BASE;
+        /* pIaRegs->pL2gRegs       = (CSL_intaggr_l2gRegs *) CSL_DMASS1_INTAGGR_L2G_BASE; */
+        pIaRegs->pMcastRegs     = (CSL_intaggr_mcastRegs *) CSL_DMASS1_INTAGGR_MCAST_BASE;
+        pIaRegs->pGcntCfgRegs   = (CSL_intaggr_gcntcfgRegs *) CSL_DMASS1_INTAGGR_GCNTCFG_BASE;
+        pIaRegs->pGcntRtiRegs   = (CSL_intaggr_gcntrtiRegs *) CSL_DMASS1_INTAGGR_GCNTRTI_BASE;
+#else //QNX_OS
+        pIaRegs->pCfgRegs       = (CSL_intaggr_cfgRegs *) mmap_device_memory(0,
+                CSL_DMASS1_INTAGGR_CFG_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, CSL_DMASS1_INTAGGR_CFG_BASE);
+        pIaRegs->pImapRegs      = (CSL_intaggr_imapRegs *) mmap_device_memory(0,
+                CSL_DMASS1_INTAGGR_IMAP_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, CSL_DMASS1_INTAGGR_IMAP_BASE);
+        pIaRegs->pIntrRegs      = (CSL_intaggr_intrRegs *) mmap_device_memory(0,
+                CSL_DMASS1_INTAGGR_INTR_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, CSL_DMASS1_INTAGGR_INTR_BASE);
+        /* pIaRegs->pL2gRegs       = (CSL_intaggr_l2gRegs *) mmap_device_memory(0,
+                CSL_DMASS1_INTAGGR_L2G_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, CSL_DMASS1_INTAGGR_L2G_BASE); */
+        pIaRegs->pMcastRegs     = (CSL_intaggr_mcastRegs *) mmap_device_memory(0,
+                CSL_DMASS1_INTAGGR_MCAST_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, CSL_DMASS1_INTAGGR_MCAST_BASE);
+        pIaRegs->pGcntCfgRegs   = (CSL_intaggr_gcntcfgRegs *) mmap_device_memory(0,
+                CSL_DMASS1_INTAGGR_GCNTCFG_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, CSL_DMASS1_INTAGGR_GCNTCFG_BASE);
+        pIaRegs->pGcntRtiRegs   = (CSL_intaggr_gcntrtiRegs *) mmap_device_memory(0,
+                CSL_DMASS1_INTAGGR_GCNTRTI_SIZE, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, CSL_DMASS1_INTAGGR_GCNTRTI_BASE);
 
-#endif
+#ifdef QNX_UDMA_DEBUG_CSL_REGS
+        printf( "%s: pIaRegs->pCfgRegs phys/0x%lx virt/0x%p size/%ld\n",__FUNCTION__,
+                CSL_DMASS1_INTAGGR_CFG_BASE, pIaRegs->pCfgRegs, CSL_DMASS1_INTAGGR_CFG_SIZE);
+        printf( "%s: pIaRegs->pImapRegs phys/0x%lx virt/0x%p size/%ld\n",__FUNCTION__,
+                CSL_DMASS1_INTAGGR_IMAP_BASE, pIaRegs->pImapRegs, CSL_DMASS1_INTAGGR_IMAP_SIZE);
+        printf( "%s: pIaRegs->pIntrRegs phys/0x%lx virt/0x%p size/%ld\n",__FUNCTION__,
+                CSL_DMASS1_INTAGGR_INTR_BASE, pIaRegs->pIntrRegs, CSL_DMASS1_INTAGGR_INTR_SIZE);
+        printf( "%s: pIaRegs->pMcastRegs phys/0x%lx virt/0x%p size/%ld\n",__FUNCTION__,
+                CSL_DMASS1_INTAGGR_MCAST_BASE, pIaRegs->pIntrRegs, CSL_DMASS1_INTAGGR_MCAST_SIZE);
+        printf( "%s: pIaRegs->pGcntCfgRegs phys/0x%lx virt/0x%p size/%ld\n",__FUNCTION__,
+                CSL_DMASS1_INTAGGR_GCNTCFG_BASE, pIaRegs->pGcntCfgRegs, CSL_DMASS1_INTAGGR_GCNTCFG_SIZE);
+        printf( "%s: pIaRegs->pGcntRtiRegs phys/0x%lx virt/0x%p size/%ld\n",__FUNCTION__,
+                CSL_DMASS1_INTAGGR_GCNTRTI_BASE, pIaRegs->pGcntRtiRegs, CSL_DMASS1_INTAGGR_GCNTRTI_SIZE);
+#endif //QNX_UDMA_DEBUG_CSL_REGS
+
+#endif //QNX_OS
         drvHandle->devIdIa      = TISCI_DEV_DMASS0_INTAGGR_0;
     }
     CSL_intaggrGetCfg(pIaRegs);
 
     drvHandle->iaGemOffset  = CSL_DMSS_GEM_INTA0_SEVI_OFFSET;
-
     drvHandle->devIdCore    = Udma_getCoreSciDevId();
 
     /* Init other variables */
@@ -503,6 +484,7 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
         drvHandle->blkCopyTrIrqOffset   = TISCI_BCDMA0_BC_DC_OES_IRQ_SRC_IDX_START;
         drvHandle->txTrIrqOffset        = TISCI_BCDMA0_TX_DC_OES_IRQ_SRC_IDX_START;
         drvHandle->rxTrIrqOffset        = TISCI_BCDMA0_RX_DC_OES_IRQ_SRC_IDX_START;
+        drvHandle->devIdPsil            = TISCI_DEV_DMASS0;
     }
     else if(UDMA_INST_ID_BCDMA_1 == instId)
     {
@@ -524,6 +506,7 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
         drvHandle->srcIdTrIrq           = drvHandle->devIdIa;
         drvHandle->txTrIrqOffset        = TISCI_BCDMA1_TX_DC_OES_IRQ_SRC_IDX_START;
         drvHandle->rxTrIrqOffset        = TISCI_BCDMA1_RX_DC_OES_IRQ_SRC_IDX_START;
+        drvHandle->devIdPsil            = TISCI_DEV_DMASS1;
     }
     else
     {
@@ -542,23 +525,15 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
         drvHandle->blkCopyTrIrqOffset   = 0U;
         drvHandle->txTrIrqOffset        = 0U;
         drvHandle->rxTrIrqOffset        = 0U;
+        drvHandle->devIdPsil            = TISCI_DEV_DMASS0;
     }
-    drvHandle->devIdPsil     = TISCI_DEV_DMASS1;
+    drvHandle->maxProxy     = 0U;
+    drvHandle->maxRingMon   = CSL_DMSS_RINGACC_NUM_MONITORS;
     drvHandle->extChOffset  = 0U;
     drvHandle->srcIdRingIrq = drvHandle->devIdIa;
 
     return;
 }
-
-uint32_t Udma_isCacheCoherent(void)
-{
-    uint32_t isCacheCoherent;
-
-    isCacheCoherent = FALSE;
-
-    return (isCacheCoherent);
-}
-
 
 uint32_t Udma_getGlobalEventOffset(void)
 {
@@ -576,6 +551,15 @@ uint16_t Udma_getCoreId(void)
 uint16_t Udma_getCoreSciDevId(void)
 {
             return  TISCI_DEV_GICSS0;
+}
+
+uint32_t Udma_isCacheCoherent(void)
+{
+    uint32_t isCacheCoherent;
+
+    isCacheCoherent = FALSE;
+
+    return (isCacheCoherent);
 }
 
 int32_t Udma_getMappedChRingAttributes(Udma_DrvHandle drvHandle,

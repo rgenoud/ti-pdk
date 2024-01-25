@@ -139,18 +139,19 @@ Udma_RmSharedResPrms gUdmaRmSharedResPrms[UDMA_RM_NUM_SHARED_RES] =
 {
     /* Global Events/VINTR must be used based on core and split across BCDMA and PKTDMA instances */
     /* resId,                     startResrvCnt, endResrvCnt, numInst,           minReq, instShare[BCDMA,PKTDMA,BCDMA(CSI)] */
-    {UDMA_RM_RES_ID_GLOBAL_EVENT, 0U,            0U,          UDMA_NUM_INST_ID,  50U, gEvtInstShare},
-    {UDMA_RM_RES_ID_VINTR,        0U,            0U,          UDMA_NUM_INST_ID,  4U, gEvtInstShare},
+    {UDMA_RM_RES_ID_GLOBAL_EVENT, 0U,            0U,          UDMA_NUM_INST_ID,  0U, gEvtInstShare},
+    {UDMA_RM_RES_ID_VINTR,        0U,            0U,          UDMA_NUM_INST_ID,  0U, gEvtInstShare},
 };
 /** \brief Shared resource Params */
 Udma_RmSharedResPrms gBcdmaCsiRmSharedResPrms[UDMA_RM_NUM_SHARED_RES] =
 {
     /* Global Events/VINTR must be used based on core and split across BCDMA and PKTDMA instances */
     /* resId,                     startResrvCnt, endResrvCnt, numInst,           minReq, instShare[BCDMA,PKTDMA,BCDMA(CSI)] */
-    {UDMA_RM_RES_ID_GLOBAL_EVENT, 0U,            0U,          UDMA_NUM_INST_ID,  50U,    {0U, 0U, UDMA_RM_SHARED_RES_CNT_REST} },
-    {UDMA_RM_RES_ID_VINTR,        0U,            0U,          UDMA_NUM_INST_ID,  4U,     {0U, 0U, UDMA_RM_SHARED_RES_CNT_REST} },
+    {UDMA_RM_RES_ID_GLOBAL_EVENT, 0U,            0U,          UDMA_NUM_INST_ID, 0U, gEvtInstShare},
+    {UDMA_RM_RES_ID_VINTR,        0U,            0U,          UDMA_NUM_INST_ID, 0U, gEvtInstShare},
 };
 
+#if (UDMA_LOCAL_C7X_DRU_PRESENT == 1)
 /* These DRUs are local to C7X cores, user need to take care of resource overlapping when they try to override default allocation */
 Udma_RmSharedResPrms gBcdmaDruRmSharedResPrms[UDMA_RM_NUM_SHARED_RES] =
 {
@@ -163,6 +164,7 @@ Udma_RmSharedResPrms gBcdmaDruRmSharedResPrms[UDMA_RM_NUM_SHARED_RES] =
     {UDMA_INST_ID_C7X_DRU_1,       0U,            0U,          UDMA_NUM_C7X_CORE,     4U, {UDMA_RM_SHARED_RES_CNT_REST, UDMA_RM_SHARED_RES_CNT_MIN}},
 #endif
 };
+#endif
 
 /* ========================================================================== */
 /*                          Function Definitions                              */
@@ -189,19 +191,26 @@ const Udma_RmDefBoardCfgPrms *Udma_rmGetDefBoardCfgPrms(uint32_t instId)
 }
 
 
-// TODO:: Lohit reviewed. Need to add instance id and check between CSI and general bcdma.
-// Need to handle CSI separately
-Udma_RmSharedResPrms *Udma_rmGetSharedResPrms(uint32_t resId)
+Udma_RmSharedResPrms *Udma_rmGetSharedResPrms(uint32_t instId, uint32_t resId)
 {
     Udma_RmSharedResPrms  *rmSharedResPrms = NULL;
     uint32_t    i;
 
-    for(i = 0; i < UDMA_RM_NUM_SHARED_RES; i++)
-    {
-        if(resId == gUdmaRmSharedResPrms[i].resId)
-        {
-            rmSharedResPrms = &gUdmaRmSharedResPrms[i];
-            break;
+    if(instId == UDMA_INST_ID_BCDMA_1) {
+        for(i = 0; i < UDMA_RM_NUM_SHARED_RES; i++) {
+            if(resId == gBcdmaCsiRmSharedResPrms[i].resId)
+            {
+                rmSharedResPrms = &gBcdmaCsiRmSharedResPrms[i];
+                break;
+            }
+        }
+    } else {
+        for(i = 0; i < UDMA_RM_NUM_SHARED_RES; i++) {
+            if(resId == gUdmaRmSharedResPrms[i].resId)
+            {
+                rmSharedResPrms = &gUdmaRmSharedResPrms[i];
+                break;
+            }
         }
     }
     
