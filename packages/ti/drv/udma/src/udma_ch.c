@@ -2581,7 +2581,11 @@ static int32_t Udma_chFreeResource(Udma_ChHandle chHandle)
 #if (UDMA_NUM_MAPPED_TX_GROUP > 0)
             else if((chHandle->chType & UDMA_CH_FLAG_MAPPED) == UDMA_CH_FLAG_MAPPED)
             {
+#if QNX_OS
+                Udma_resmgr_rmFreeMappedTxCh(chHandle->txChNum, drvHandle, chHandle->chPrms.mappedChGrp);
+#else
                 Udma_rmFreeMappedTxCh(chHandle->txChNum, drvHandle, chHandle->chPrms.mappedChGrp);
+#endif
             }
 #endif
             else if((chHandle->chType & UDMA_CH_FLAG_UHC) == UDMA_CH_FLAG_UHC)
@@ -2617,7 +2621,11 @@ static int32_t Udma_chFreeResource(Udma_ChHandle chHandle)
             else if((chHandle->chType & UDMA_CH_FLAG_MAPPED) == UDMA_CH_FLAG_MAPPED)
             {
                 Udma_assert(drvHandle, chHandle->chPrms.mappedChGrp >= UDMA_NUM_MAPPED_TX_GROUP);
+#if QNX_OS
+                Udma_resmgr_rmFreeMappedRxCh(chHandle->rxChNum, drvHandle, chHandle->chPrms.mappedChGrp - UDMA_NUM_MAPPED_TX_GROUP);
+#else
                 Udma_rmFreeMappedRxCh(chHandle->rxChNum, drvHandle, chHandle->chPrms.mappedChGrp - UDMA_NUM_MAPPED_TX_GROUP);
+#endif
             }
 #endif
             else if((chHandle->chType & UDMA_CH_FLAG_UHC) == UDMA_CH_FLAG_UHC)

@@ -44,7 +44,7 @@
 #include <ti/drv/udma/src/udma_priv.h>
 
 #ifdef QNX_OS
-#define QNX_UDMA_DEBUG_CSL_REGS
+//#define QNX_UDMA_DEBUG_CSL_REGS
 #endif
 
 /* ========================================================================== */
@@ -153,9 +153,6 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
          * registers */
         CSL_bcdmaGetCfg(pBcdmaRegs);
 
-        //pBcdmaRegs->bcChanCnt += pBcdmaRegs->bcHighCapacityChanCnt;
-        //pBcdmaRegs->txChanCnt += pBcdmaRegs->bcHighCapacityChanCnt;
-
         pPktdmaRegs = &drvHandle->pktdmaRegs;
         memset(pPktdmaRegs, 0, sizeof(*pPktdmaRegs));
     }
@@ -207,9 +204,6 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
         /* Fill other SOC specific parameters by reading from UDMA config
          * registers */
         CSL_bcdmaGetCfg(pBcdmaRegs);
-
-        //pBcdmaRegs->bcChanCnt += pBcdmaRegs->bcHighCapacityChanCnt;
-        //pBcdmaRegs->txChanCnt += pBcdmaRegs->bcHighCapacityChanCnt;
 
         pPktdmaRegs = &drvHandle->pktdmaRegs;
         memset(pPktdmaRegs, 0, sizeof(*pPktdmaRegs));
