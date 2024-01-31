@@ -125,6 +125,13 @@ extern uint32_t LoadP_getCPULoad(void);
  */
 extern void LoadP_update(void);
 
+/*!
+ *  @brief  Function to get timer counter Difference
+ *          
+ *  @return Differnce value
+ */
+uint32_t LoadP_calcCounterDiff(uint32_t cur, uint32_t last);
+
 
 #ifdef __cplusplus
 }

@@ -84,7 +84,6 @@ typedef struct LoadP_freertos_s
 /*                          Function Declarations                             */
 /* ========================================================================== */
 
-static uint32_t LoadP_calcCounterDiff(uint32_t cur, uint32_t last);
 static uint32_t LoadP_calcPercentLoad(uint64_t threadTime, uint64_t totalTime);
 void LoadP_addTask(TaskP_Handle handle, uint32_t tskId);
 void LoadP_removeTask(uint32_t tskId);
@@ -232,7 +231,7 @@ void LoadP_update(void)
 
 /* ========================================================================================================================== */
 
-static uint32_t LoadP_calcCounterDiff(uint32_t cur, uint32_t last)
+uint32_t LoadP_calcCounterDiff(uint32_t cur, uint32_t last)
 {
     uint32_t delta;
 
@@ -253,14 +252,8 @@ static uint32_t LoadP_calcPercentLoad(uint64_t threadTime, uint64_t totalTime)
 
     percentLoad = (uint32_t)(threadTime  / (totalTime / 100U));
 
-    if(100U < percentLoad)
-    {
-        percentLoad = 100U;
-    }
-
     return percentLoad;
 }
-
 
 void LoadP_addTask(TaskP_Handle handle, uint32_t tskId)
 {

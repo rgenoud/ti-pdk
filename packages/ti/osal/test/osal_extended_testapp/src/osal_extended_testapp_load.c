@@ -32,34 +32,18 @@
  */
 
 /**
- *  \file   osal_extended_test.h
+ *  \file   osal_extended_testapp_load.c
  *
- *  \brief  Osal extended test header file.
+ *  \brief  OSAL load Sub Module testcase file.
  *
  */
-
-#ifndef _OSAL_EXTENDED_TEST_H_
-#define _OSAL_EXTENDED_TEST_H_
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
 
-#include <stdio.h>
-#include <string.h>
-#include <ti/csl/soc.h>
-#include <ti/csl/tistdtypes.h>
-#include <ti/csl/arch/csl_arch.h>
-#include <ti/osal/osal.h>
-#include <ti/osal/SwiP.h>
-#include <ti/osal/soc/osal_soc.h>
-#include <ti/osal/src/nonos/Nonos_config.h>
-#include "OSAL_log.h"
-#include "OSAL_board.h"
+#include <ti/osal/LoadP.h>
+#include "osal_extended_test.h"
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
@@ -68,67 +52,82 @@ extern "C" {
 /* None */
 
 /* ========================================================================== */
-/*                         Structure Declarations                             */
+/*                            Global Variables                                */
 /* ========================================================================== */
 
 /* None */
 
 /* ========================================================================== */
-/*                  Internal/Private Function Declarations                    */
+/*                           Function Declarations                            */
 /* ========================================================================== */
 
-/* None */
+/*
+ * Description: Testing Nullcheck for LoadP_getTaskLoad API
+ */
+static int32_t OsalApp_freertosLoadNullTest(void);
+
+/*
+ * Description: Testing Negative condition for LoadP_calcCounterDiff API
+ */
+static int32_t OsalApp_freertosLoadCounterDiffTest(void);
 
 /* ========================================================================== */
-/*                          Function Declarations                             */
+/*                    Internal Function Definitions                           */
 /* ========================================================================== */
 
-/* Top level function for Heap tests */
-int32_t OsalApp_heapFreertosTest(void);
+static int32_t OsalApp_freertosLoadNullTest(void)
+{
+    TaskP_Handle      hLoadTestTask = NULL_PTR;
+    LoadP_Stats       *loadStatsTask = NULL_PTR;
+    int32_t	          result = osal_OK;
 
-/* Top level function for Hwi tests */
-int32_t OsalApp_hwiTests(void);
+    LoadP_reset();
 
-/* Top level function for Mutex tests */
-int32_t OsalApp_mutexTests(void);
+    if(LoadP_OK == LoadP_getTaskLoad(hLoadTestTask, loadStatsTask))
+    {
+        result = osal_FAILURE;
+        OSAL_log("\n getTaskLoad Null test failed!\n");
+    }
 
-/* Top level function for Queue tests */
-int32_t OsalApp_queueTests(void);
-
-/* Top level function for Cache tests */
-int32_t OsalApp_cacheTests(void);
-
-/* Top level function for Mailbox tests */
-int32_t OsalApp_mailboxTests(void);
-
-/* Top level function for Task tests */
-int32_t OsalApp_taskTests(void);
-
-/* Top level function for Memory tests */
-int32_t OsalApp_memoryTests(void);
-
-/* Top level function for Event tests */
-int32_t OsalApp_eventTests(void);
-
-/* Top level function for Semaphore tests */
-int32_t OsalApp_semaphoreTests(void);
-
-/* Top level function for utils tests */
-int32_t OsalApp_utilsNonosTests(void);
-
-/* Top level function for Cycleprofiler test */
-int32_t OsalApp_cycleProfilerTest(void);
-
-/* Top level function for load tests */
-int32_t OsalApp_freertosLoadTests(void);
-
-/* ========================================================================== */
-/*                       Static Function Definitions                          */
-/* ========================================================================== */
-
-/* None */
-
-#ifdef __cplusplus
+    return result;
 }
-#endif
-#endif /* _OSAL_EXTENDED_TEST_H_ */
+
+static int32_t OsalApp_freertosLoadCounterDiffTest(void)
+{
+    int32_t result = osal_OK;
+    uint32_t delta = 0U;
+
+    /* Providing the last value to be greater than current value 
+     * delta = ((0xFFFFFFFFU - 0xDEADDEADU) + 0xDEADBAD0U) */
+    delta = LoadP_calcCounterDiff(0xDEADBAD0U, 0xDEADDEADU);
+    if(0xFFFFDC22 != delta)
+    {
+        result = osal_FAILURE;
+        OSAL_log("\n LoadP_calcCounterDiff negative test failed!\n");
+    }
+
+    return result;
+}
+
+/* ========================================================================== */
+/*                          Function Definitions                              */
+/* ========================================================================== */
+
+int32_t OsalApp_freertosLoadTests(void)
+{
+    int32_t result = osal_OK;
+    
+    result += OsalApp_freertosLoadNullTest();
+    result += OsalApp_freertosLoadCounterDiffTest();
+    
+    if(osal_OK == result)
+    {
+        OSAL_log("\n All Load Freertos tests have passed!\n");
+    }
+    else
+    {
+        OSAL_log("\n Some or All Load Freertos tests have failed!\n");
+    }
+    
+    return result;
+}

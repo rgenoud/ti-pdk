@@ -314,30 +314,6 @@ void RegisterIntr_nonos_NegTest(void)
 }
 #endif
 
-#if defined (FREERTOS)
-/*
- * Description: Testing Nullcheck condition for the LoadP_getTaskLoad API
- */
-void loadP_freertos_test(void)
-{
-    TaskP_Handle      hLoadTestTask = NULL_PTR;
-    LoadP_Stats       *loadStatsTask = NULL_PTR;
-    LoadP_Status      status = LoadP_OK;
-
-    LoadP_reset();
-
-    status += LoadP_getTaskLoad(hLoadTestTask, loadStatsTask);
-    if (LoadP_OK != status)
-    {
-        OSAL_log("\n LoadP_getTaskLoad Null check test Passed!!\n");
-    }
-    else
-    {
-        OSAL_log("\n LoadP_getTaskLoad Null check test Failed!!\n");
-    }
-}
-#endif
-
 /*
  * Description: Testing Negative condition for the Osal_RegisterInterruptDirect API
  */
@@ -1213,10 +1189,10 @@ void OSAL_tests(void *arg0, void *arg1)
     Sema_create_extended_mem_block_test();
 
     Semaphore_create_null_param_test();
-
-    loadP_freertos_test();
     
     result += OsalApp_memoryTests();
+    
+    result += OsalApp_freertosLoadTests();
 
 #endif
 
@@ -1295,6 +1271,11 @@ int main(void)
 #ifdef BARE_METAL
     OSAL_tests();
 #else
+
+/* Loading before Task is created */
+#if defined(FREERTOS)
+LoadP_update();
+#endif
 
     TaskP_Params taskParams;
 
