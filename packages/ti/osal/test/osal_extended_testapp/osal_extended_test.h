@@ -107,6 +107,9 @@ int32_t OsalApp_taskTests(void);
 /* Top level function for Memory tests */
 int32_t OsalApp_memoryTests(void);
 
+/* Top level function for Semaphore tests */
+int32_t OsalApp_semaphoreTests(void);
+
 /* ========================================================================== */
 /*                       Static Function Definitions                          */
 /* ========================================================================== */

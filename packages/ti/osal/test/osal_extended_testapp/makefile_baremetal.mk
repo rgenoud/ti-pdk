@@ -16,6 +16,7 @@ SRCDIR = src
 INCDIR = . ../src
 SRCS_COMMON += osal_extended_testapp.c
 SRCS_COMMON += osal_extended_testapp_hwi.c osal_extended_testapp_mutex.c osal_extended_testapp_cache.c
+SRCS_COMMON += osal_extended_testapp_semaphore.c
 
 # List all the components required by the application
 COMP_LIST_COMMON = $(PDK_COMMON_BAREMETAL_COMP)

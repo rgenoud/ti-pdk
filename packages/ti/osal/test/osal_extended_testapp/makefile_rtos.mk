@@ -17,7 +17,7 @@ INCDIR = . ../src
 # Common source files across all platforms and cores
 SRCS_COMMON += osal_extended_testapp.c
 SRCS_COMMON += osal_extended_testapp_hwi.c osal_extended_testapp_mutex.c osal_extended_testapp_cache.c
-SRCS_COMMON += osal_extended_testapp_mailbox.c osal_extended_testapp_task.c
+SRCS_COMMON += osal_extended_testapp_mailbox.c osal_extended_testapp_task.c osal_extended_testapp_semaphore.c
 
 ifeq ($(BUILD_OS_TYPE),freertos)
 CFLAGS_OS_DEFINES = -DFREERTOS

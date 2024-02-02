@@ -1560,6 +1560,8 @@ void OSAL_tests(void *arg0, void *arg1)
     int32_t result = osal_OK;
     Board_initOSAL();
 
+    result += OsalApp_semaphoreTests();
+    
 #if defined(SAFERTOS)
 
     ClockP_start_HwiP_Test();
