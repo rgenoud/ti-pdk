@@ -585,11 +585,13 @@ int32_t Sciclient_ProcessPmMessage(const uint32_t reqFlags, void *tx_msg)
                                 reqFlags,
                                 SCICLIENT_DEV_MCU_R5FSS0_CORE0_PROCID);
                     break;
+#if ! (defined(SOC_AM62X) || defined (SOC_AM62A) || defined (SOC_AM62PX) || defined (SOC_J722S))
                     case SCICLIENT_DEV_MCU_R5FSS0_CORE1:
                         ret = Sciclient_pmSetMsgProxy((uint32_t*)tx_msg,
                                 reqFlags,
                                 SCICLIENT_DEV_MCU_R5FSS0_CORE1_PROCID);
                     break;
+#endif
                     case TISCI_DEV_BOARD0:
                         if (state == (uint8_t)TISCI_MSG_VALUE_DEVICE_SW_STATE_ON) {
                             coreRefCnt++;
@@ -628,10 +630,12 @@ int32_t Sciclient_ProcessPmMessage(const uint32_t reqFlags, void *tx_msg)
                         ret = Sciclient_pmSetCpuResetMsgProxy((uint32_t*)tx_msg,
                                 SCICLIENT_DEV_MCU_R5FSS0_CORE0_PROCID);
                     break;
+#if ! (defined(SOC_AM62X) || defined (SOC_AM62A) || defined (SOC_AM62PX) || defined (SOC_J722S))
                     case SCICLIENT_DEV_MCU_R5FSS0_CORE1:
                         ret = Sciclient_pmSetCpuResetMsgProxy((uint32_t*)tx_msg,
                                 SCICLIENT_DEV_MCU_R5FSS0_CORE1_PROCID);
                     break;
+#endif
                     default:
                         ret = set_device_resets_handler((uint32_t*)tx_msg);
                     break;

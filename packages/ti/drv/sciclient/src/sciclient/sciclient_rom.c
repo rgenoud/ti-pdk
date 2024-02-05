@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Texas Instruments Incorporated
+ * Copyright (c) 2020-2023, Texas Instruments Incorporated
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -115,6 +115,8 @@ int32_t Sciclient_loadFirmware(const uint32_t *pSciclient_firmware)
     header.host = TISCI_HOST_ID_MAIN_0_R5_0;
 #elif defined (SOC_J7200) || defined (SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4)
     header.host = TISCI_HOST_ID_MCU_0_R5_1;;
+#elif defined (SOC_J722S)
+    header.host = TISCI_HOST_ID_DEVICE_MANAGER; //TISCI_HOST_ID_WKUP_0_R5_0
 #else
     header.host = TISCI_HOST_ID_R5_1;
 #endif
