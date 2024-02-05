@@ -753,6 +753,15 @@ int32_t udmaTestUdmaVirtToPhyNegTc(UdmaTestTaskObj *taskObj);
 int32_t udmaTestUdmaPrinftMutexNegTc(UdmaTestTaskObj *taskObj);
 
 /*
+ * UDMA rm test case functions
+ */
+int32_t UdmaRmFreeBlkCopyUhcChTest(UdmaTestTaskObj *taskObj);
+int32_t UdmaRmFreeTxHcChTest(UdmaTestTaskObj *taskObj);
+int32_t UdmaRmFreeTxUhcChTest(UdmaTestTaskObj *taskObj);
+int32_t UdmaRmFreeRxUhcChTest(UdmaTestTaskObj *taskObj);
+int32_t UdmaRmInitPrmsinitTestNeg(UdmaTestTaskObj *taskObj);
+
+/*
  * UDMA SOC specific functions
  */
 int32_t udmaTestPrintPsilMacro(UdmaTestTaskObj *taskObj);

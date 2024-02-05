@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) Texas Instruments Incorporated 2018-2022
+ *  Copyright (c) Texas Instruments Incorporated 2018-2024
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -456,6 +456,41 @@ static void udmaTestOverrideDefRes(Udma_InitPrms   *initPrms)
         initPrms->rmInitPrms.startBlkCopyHcCh  = initPrms->rmInitPrms.startRxHcCh;
         initPrms->rmInitPrms.numBlkCopyHcCh = initPrms->rmInitPrms.numRxHcCh;
     }
+
+    if((initPrms->rmInitPrms.numBlkCopyHcCh != 0U) && 
+    (initPrms->rmInitPrms.numTxHcCh == 0U) )
+    {
+        initPrms->rmInitPrms.startTxHcCh = initPrms->rmInitPrms.startBlkCopyHcCh;
+        initPrms->rmInitPrms.numTxHcCh   = initPrms->rmInitPrms.numBlkCopyHcCh;
+    }
+
+    /* As per BoardCfg, if there no UHC Block Copy Channel assigned to the core, 
+    * use the resource assigned for UHC RX/TX channels
+    * to test various UHC Block Copy testcases.
+    * This is with the assumption that, the range of this resources are same
+    * for both RX and TX High Capacity channels. */
+    if((initPrms->rmInitPrms.numBlkCopyUhcCh == 0U) && 
+    ((initPrms->rmInitPrms.numRxUhcCh != 0U) && (initPrms->rmInitPrms.numTxUhcCh != 0U)) &&
+    (initPrms->rmInitPrms.startRxUhcCh == initPrms->rmInitPrms.startTxUhcCh))
+    {
+        initPrms->rmInitPrms.startBlkCopyHcCh = initPrms->rmInitPrms.startRxUhcCh;
+        initPrms->rmInitPrms.numBlkCopyHcCh   = initPrms->rmInitPrms.numRxUhcCh;
+    }
+
+    if((initPrms->rmInitPrms.numBlkCopyUhcCh != 0U) && 
+    (initPrms->rmInitPrms.numRxUhcCh == 0U) )
+    {
+        initPrms->rmInitPrms.startRxUhcCh = initPrms->rmInitPrms.startBlkCopyHcCh;
+        initPrms->rmInitPrms.numRxUhcCh   = initPrms->rmInitPrms.numBlkCopyUhcCh;
+    }
+
+    if((initPrms->rmInitPrms.numBlkCopyUhcCh != 0U) && 
+    (initPrms->rmInitPrms.numTxUhcCh == 0U) )
+    {
+        initPrms->rmInitPrms.startTxUhcCh = initPrms->rmInitPrms.startBlkCopyHcCh;
+        initPrms->rmInitPrms.numTxUhcCh   = initPrms->rmInitPrms.numBlkCopyUhcCh;
+    }
+    
     /*
     * For chaining TC atleast 2 channels are required, 
     * if a core does not have enough Block Copy channels
