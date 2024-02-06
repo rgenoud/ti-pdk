@@ -133,7 +133,11 @@ typedef struct Ipc_InitPrms_s
 
     Ipc_NewMsgReceivedFxn   newMsgFxn;
     /**< Optional callback function, that would be invoked when a new message
-        is received */
+     *   is received */
+
+    Ipc_RpMboxMsgFxn       rpMboxMsgFxn;
+    /**< Optional callback function, that would be invoked when remote processor
+     *   sends actual message via mailbox instead of kick */
 
     Ipc_PrintFxn           printFxn;
     /**< If not NULL, this function will be called to print debug/info message

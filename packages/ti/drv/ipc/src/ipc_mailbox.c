@@ -120,6 +120,8 @@ Ipc_MailboxData        g_ipc_mBoxData[IPC_MBOX_MAXDATA];
  */
 uintptr_t       gIpcRProcIdToMBoxDataMap[IPC_MAX_PROCS];
 
+extern Ipc_Object gIpcObject;
+
 /* ========================================================================== */
 /*                             Local Functions                                */
 /* ========================================================================== */
@@ -435,10 +437,14 @@ int32_t Ipc_mailboxRegister(uint16_t selfId, uint16_t remoteProcId,
  */
 static void Ipc_mailboxInternalCallback(uintptr_t arg)
 {
-    uint32_t              n;
-    Ipc_MailboxData      *mbox;
-    uint32_t              msg[4];
-    Ipc_MailboxFifo      *fifo;
+    uint32_t          n, i;
+    Ipc_MailboxData  *mbox;
+    volatile uint32_t msg[4] = {0, 0, 0, 0};
+    volatile uint32_t parsedMsg[4] = {0, 0, 0, 0};
+    volatile uint32_t rpMboxMsgRecv = 0, rpMboxMsg = 0;
+    volatile uint32_t numMessages;
+    Ipc_MailboxFifo  *fifo;
+    uint32_t shutdownMsg = IPC_RP_MBOX_SHUTDOWN;
 
     mbox = (Ipc_MailboxData *)arg;
     if(mbox != NULL)
@@ -451,17 +457,41 @@ static void Ipc_mailboxInternalCallback(uintptr_t arg)
 
             if(0U != Mailbox_getRawNewMsgStatus(mbox->baseAddr, mbox->userId, fifo->queueId))
             {
-                if(Mailbox_getMessageCount(mbox->baseAddr, fifo->queueId) > 0U)
+                numMessages = Mailbox_getMessageCount(mbox->baseAddr, fifo->queueId);
+                if(numMessages > 0U)
                 {
                     /* Get the message from Mailbox fifo */
-                    Mailbox_getMessage(mbox->baseAddr, fifo->queueId, msg);
+                    Mailbox_getMessage(mbox->baseAddr, fifo->queueId, (uint32_t *)msg);
 
                     /* Clear new message status of Mailbox */
                     Mailbox_clrNewMsgStatus(mbox->baseAddr, mbox->userId,
                                                fifo->queueId);
 
-                    /* Call the function with arg */
-                    (mbox->fifoTable[n].func)(msg, fifo->arg);
+                    /* Process till we get the special RP Mbox message */
+                    for(i=0; i<numMessages; i++)
+                    {
+                        if(msg[i] != shutdownMsg)
+                        {
+                            parsedMsg[i] = msg[i];
+                        }
+                        else
+                        {
+                            rpMboxMsgRecv = 1;
+                            rpMboxMsg = msg[i];
+                            break;
+                        }
+                    }
+
+                    if((0U == rpMboxMsgRecv) || ((1U == rpMboxMsgRecv) && (numMessages > 1U)))
+                    {
+                        /* Call the function with arg */
+                        (mbox->fifoTable[n].func)((uint32_t *)parsedMsg, fifo->arg);
+                    }
+
+                    if((1U == rpMboxMsgRecv) && (NULL != gIpcObject.initPrms.rpMboxMsgFxn))
+                    {
+                        gIpcObject.initPrms.rpMboxMsgFxn(IPC_MPU1_0, rpMboxMsg);
+                    }
                 }
                 else
                 {

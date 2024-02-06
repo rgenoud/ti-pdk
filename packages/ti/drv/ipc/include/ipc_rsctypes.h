@@ -70,6 +70,29 @@ extern "C" {
 /** \brief Support symmetric vring */
 #define VIRTIO_RING_F_SYMMETRIC 30
 
+/**
+ *  \anchor Ipc_RpMboxMessages
+ *  \name IPC RP Mailbox Messages
+ *
+ *  List of various IPC RP messages sent by remote proc kernel driver
+ *
+ *  @{
+ */
+#define IPC_RP_MBOX_READY                     ((uint32_t)0xFFFFFF00U)
+#define IPC_RP_MBOX_PENDING_MSG               ((uint32_t)0xFFFFFF01U)
+#define IPC_RP_MBOX_CRASH                     ((uint32_t)0xFFFFFF02U)
+#define IPC_RP_MBOX_ECHO_REQUEST              ((uint32_t)0xFFFFFF03U)
+#define IPC_RP_MBOX_ECHO_REPLY                ((uint32_t)0xFFFFFF04U)
+#define IPC_RP_MBOX_ABORT_REQUEST             ((uint32_t)0xFFFFFF05U)
+#define IPC_RP_MBOX_SUSPEND_AUTO              ((uint32_t)0xFFFFFF10U)
+#define IPC_RP_MBOX_SUSPEND_SYSTEM            ((uint32_t)0xFFFFFF11U)
+#define IPC_RP_MBOX_SUSPEND_ACK               ((uint32_t)0xFFFFFF12U)
+#define IPC_RP_MBOX_SUSPEND_CANCEL            ((uint32_t)0xFFFFFF13U)
+#define IPC_RP_MBOX_SHUTDOWN                  ((uint32_t)0xFFFFFF14U)
+#define IPC_RP_MBOX_SHUTDOWN_ACK              ((uint32_t)0xFFFFFF15U)
+#define IPC_RP_MBOX_END_MSG                   ((uint32_t)0xFFFFFF16U)
+/* @} */
+
 /* Resource info: Must match include/linux/remoteproc.h: */
 /** \brief carvout type */
 #define TYPE_CARVEOUT    0U

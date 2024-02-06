@@ -326,6 +326,14 @@ typedef void (*Ipc_OsalUnRegisterIntrFxn)(void *hwiHandle);
 typedef void (*Ipc_NewMsgReceivedFxn)(uint32_t srcEndPt, uint32_t procId);
 
 /**
+ *  \brief IPC message for RP Mbox notification
+ *
+ *  \param remoteCoreId [IN] Specifies the remote core identifier
+ *  \param msgVal       [IN] Specifies the message value
+ */
+typedef void (*Ipc_RpMboxMsgFxn)(uint32_t remoteCoreId, uint32_t msgVal);
+
+/**
  *  \brief IPC driver OSAL function pointers.
  */
 typedef struct Ipc_OsalPrms_s

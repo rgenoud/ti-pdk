@@ -46,15 +46,19 @@
 #include <stdint.h>
 #include <string.h>
 
+#include <ti/csl/arch/csl_arch.h>
 #include <ti/drv/ipc/examples/common/src/ipc_setup.h>
 
 /* OSAL Header files */
 #include <ti/osal/osal.h>
 #include <ti/osal/TaskP.h>
 #include <ti/osal/EventP.h>
+#include <ti/osal/src/nonos/Nonos_config.h>
+
 
 #include <ti/drv/ipc/ipc.h>
 #include <ti/osal/osal.h>
+#include <ti/drv/sciclient/sciclient.h>
 
 #ifndef BUILD_MPU1_0
 #if defined(SOC_AM65XX)
@@ -104,6 +108,7 @@ uint32_t rpmsgDataSize = RPMSG_DATA_SIZE;
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
+#define IPC_APP_NUM_RESPONDER_TASKS         (2)
 #define IPC_SETUP_TASK_PRI                  (3)
 /**< Priority for sender and receiver tasks */
 
@@ -124,6 +129,12 @@ uint32_t rpmsgDataSize = RPMSG_DATA_SIZE;
 static uint32_t geteventID(uint32_t coreID);
 static void ipc_checker_task(void *arg0, void *arg1);
 #endif
+
+extern int32_t Ipc_mailboxSend(uint32_t selfId,
+                               uint32_t remoteProcId,
+                               uint32_t val,
+                               uint32_t timeoutCnt);
+
 /* ========================================================================== */
 /*                            Global Variables                                */
 /* ========================================================================== */
@@ -143,6 +154,9 @@ static uint32_t		RecvEndPt = 0;
 //#define DEBUG_PRINT
 
 bool g_exitRespTsk = 0;
+volatile uint32_t gbShutdown = 0U;
+volatile uint32_t gbShutdownRemotecoreID = 0U;
+
 /* ========================================================================== */
 /*                          Function Definitions                              */
 /* ========================================================================== */
@@ -159,21 +173,23 @@ void rpmsg_exit_responseTask()
 
 void rpmsg_responderFxn(void *arg0, void *arg1)
 {
-    RPMessage_Handle    handle;
-    RPMessage_Params    params;
-    uint32_t		myEndPt = 0;
-    uint32_t		remoteEndPt;
-    uint32_t		remoteProcId;
-    uint16_t		len;
-    int32_t		n;
-    int32_t		status = 0;
-    void		*buf;
-    uint32_t            requestedEpt = (uint32_t)(*(uint32_t*)arg0);
-    char *              name = (char *)arg1;
-    uintptr_t key;
-    
-    uint32_t            bufSize = rpmsgDataSize;
-    char                str[MSGSIZE];
+    RPMessage_Handle handle;
+    RPMessage_Params params;
+    TaskP_Handle     selfTaskHandle;
+    uint32_t		 myEndPt = 0;
+    uint32_t		 remoteEndPt;
+    uint32_t		 remoteProcId;
+    uint16_t		 len;
+    int32_t		     n;
+    int32_t		     status = 0;
+    void		     *buf;
+    uint32_t          requestedEpt = (uint32_t)(*(uint32_t*)arg0);
+    char *            name = (char *)arg1;
+
+    uintptr_t         key;
+    uint32_t          bufSize = rpmsgDataSize;
+    char              str[MSGSIZE];
+
 
     buf = &pRecvTaskBuf[gRecvTaskBufIdx++ * rpmsgDataSize];
     if(buf == NULL)
@@ -212,6 +228,11 @@ void rpmsg_responderFxn(void *arg0, void *arg1)
     {
         status = RPMessage_recv(handle, (Ptr)str, &len, &remoteEndPt, &remoteProcId,
                 IPC_RPMESSAGE_TIMEOUT_FOREVER);
+        if (gbShutdown == 1U)
+        {
+            break;
+        }
+
         if(status != IPC_SOK)
         {
             App_printf("RecvTask: failed with code %d\n", status);
@@ -262,6 +283,31 @@ void rpmsg_responderFxn(void *arg0, void *arg1)
                 Ipc_mpGetName(remoteProcId));
         }
     }
+
+    /* Below code will execute only in case of shutdown message */
+    Sciclient_deinit();
+
+    /* Disable CPU interrupts */
+    for (int loopCnt = 0; loopCnt <R5_VIM_INTR_NUM; loopCnt ++)
+    {
+        OsalArch_disableInterrupt(loopCnt);
+        OsalArch_clearInterrupt(loopCnt);
+    }
+    HwiP_disable();
+
+    /* ACK the suspend message */
+    Ipc_mailboxSend(selfProcId, gbShutdownRemotecoreID, IPC_RP_MBOX_SHUTDOWN_ACK, 1u);
+
+#if (__ARM_ARCH_PROFILE == 'R') ||  (__ARM_ARCH_PROFILE == 'M')
+    /* For ARM R and M cores*/
+    __asm__ __volatile__ ("wfi"   "\n\t": : : "memory");
+#endif
+#if defined(BUILD_C7X)
+    asm (" idle");
+#endif
+
+    selfTaskHandle = TaskP_self();
+    TaskP_delete(&selfTaskHandle);
 
     App_printf("%s responder task exiting ...\n",
                     Ipc_mpGetSelfName());
@@ -443,6 +489,24 @@ static void IpcTestPrint(const char *str)
     return;
 }
 
+static void IpcRpMboxCallback(uint32_t remoteCoreId, uint32_t msgVal)
+{
+    if (msgVal == IPC_RP_MBOX_SHUTDOWN) /* Shutdown request from the remotecore */
+    {
+        gbShutdown = 1U;
+        gbShutdownRemotecoreID = remoteCoreId;
+        RPMessage_unblock((RPMessage_Handle)&pRecvTaskBuf[0]);
+        RPMessage_unblock((RPMessage_Handle)&pRecvTaskBuf[rpmsgDataSize]);
+        for(uint32_t i = 0; i < gNumRemoteProc; i++)
+        {
+            if(pRemoteProcArray[i] == IPC_MPU1_0)
+                continue;
+
+            RPMessage_unblock((RPMessage_Handle)&pSendTaskBuf[i * rpmsgDataSize]);
+        }
+    }
+}
+
 int32_t Ipc_echo_test(void)
 {
     uint32_t          t;
@@ -461,6 +525,10 @@ int32_t Ipc_echo_test(void)
     IpcInitPrms_init(0U, &initPrms);
 
     initPrms.printFxn = &IpcTestPrint;
+
+#if !defined(BUILD_MCU1_0)
+    initPrms.rpMboxMsgFxn = &IpcRpMboxCallback;
+#endif
 
     Ipc_init(&initPrms);
 

@@ -217,7 +217,7 @@ static int32_t RPMessage_processAnnounceMsg(const RPMessage_Announcement *amsg, 
 static RPMessage_Module module;
 
 /**< IPC Object */
-static Ipc_Object gIpcObject;
+Ipc_Object gIpcObject;
 
 /* ========================================================================== */
 /*                          Function Definitions                              */
@@ -1689,12 +1689,12 @@ void IpcInitPrms_init(uint32_t instId, Ipc_InitPrms *initPrms)
     if(NULL != initPrms)
     {
         memset(initPrms, 0, sizeof(*initPrms));
-        initPrms->instId                = instId;
-
-        initPrms->virtToPhyFxn          = NULL;
-        initPrms->phyToVirtFxn          = NULL;
-        initPrms->newMsgFxn             = NULL;
-        initPrms->printFxn              = NULL;
+        initPrms->instId        = instId;
+        initPrms->virtToPhyFxn  = NULL;
+        initPrms->phyToVirtFxn  = NULL;
+        initPrms->newMsgFxn     = NULL;
+        initPrms->rpMboxMsgFxn  = NULL;
+        initPrms->printFxn      = NULL;
 
         IpcOsalPrms_init(&initPrms->osalPrms);
     }
