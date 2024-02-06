@@ -369,63 +369,44 @@ int32_t Ipc_mailboxRegister(uint16_t selfId, uint16_t remoteProcId,
             if (NULL != pOsal->registerIntr)
             {
                 /* Do not clear the mailbox, other cores could have already sent messages */
+                Ipc_MbConfig cfg;
 
-#ifdef MAILBOX_INTERRUPT_MODE
+                Mailbox_clrNewMsgStatus(baseAddr, userId, queueId);
+
+                /* Get the Interrupt Configuration */
+                Ipc_getMailboxIntrRouterCfg(selfId, clusterId, userId, &cfg, g_ipc_mBoxCnt);
+
                 {
-                    Ipc_MbConfig cfg;
+                    /* Release the resource first */
+                    Ipc_sciclientIrqRelease(selfId, clusterId, userId, cfg.eventId);
 
-                    Mailbox_clrNewMsgStatus(baseAddr, userId, queueId);
-
-#ifdef IPC_SUPPORT_SCICLIENT
-                    /* Get the Interrupt Configuration */
-                    Ipc_getMailboxIntrRouterCfg(selfId, clusterId, userId, &cfg, g_ipc_mBoxCnt);
-
+                    uint32_t timeout_cnt = 10;
+                    do
                     {
-                        /* Release the resource first */
-                        Ipc_sciclientIrqRelease(selfId, clusterId, userId, cfg.eventId);
-
-                        uint32_t timeout_cnt = 10;
-                        do
+                        retVal = Ipc_sciclientIrqSet(selfId, clusterId, userId, cfg.eventId);
+                        if(retVal != 0)
                         {
-                            retVal = Ipc_sciclientIrqSet(selfId, clusterId, userId, cfg.eventId);
-                            if(retVal != 0)
-                            {
-                                SystemP_printf("Failed to register irq through sciclient...%x\n", retVal);
-                            }
-                            timeout_cnt--;
-                        }while((retVal != 0) && (timeout_cnt > 0U));
-
-                        if(timeout_cnt == 0U)
-                        {
-                            retVal = IPC_EFAIL;
+                            SystemP_printf("Failed to register irq through sciclient...%x\n", retVal);
                         }
-                    }
-#endif
-                    /* Register Mailbox interrupt now... */
-                    if (retVal == IPC_SOK)
+                        timeout_cnt--;
+                    }while((retVal != 0) && (timeout_cnt > 0U));
+
+                    if(timeout_cnt == 0U)
                     {
-                        /* disable the mailbox interrupt (from previous runs) */
-                        Ipc_mailboxDisable(baseAddr, userId, queueId);
-                        pObj->interruptHandle = pOsal->registerIntr(
-                                &cfg,Ipc_mailboxInternalCallback,
-                                (uintptr_t)mbox);
+                        retVal = IPC_EFAIL;
                     }
-
                 }
-#endif /* MAILBOX_INTERRUPT_MODE */
-	    }
 
-#ifndef IPC_EXCLUDE_POLLED_RX
-#ifndef MAILBOX_INTERRUPT_MODE
-            {
-                /* Mailbox interrupt is not supported currently */
-                if(g_pollTask == NULL)
+                /* Register Mailbox interrupt now... */
+                if (retVal == IPC_SOK)
                 {
-                    StartmailboxPollingTask();
+                    /* disable the mailbox interrupt (from previous runs) */
+                    Ipc_mailboxDisable(baseAddr, userId, queueId);
+                    pObj->interruptHandle = pOsal->registerIntr(
+                            &cfg,Ipc_mailboxInternalCallback,
+                            (uintptr_t)mbox);
                 }
-            }
-#endif /* MAILBOX_INTERRUPT_MODE */
-#endif /* IPC_EXCLUDE_POLLED_RX */
+	        }
 
             g_ipc_mBoxCnt++;
         }
