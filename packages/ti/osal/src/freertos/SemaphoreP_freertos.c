@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2018, Texas Instruments Incorporated
+ * Copyright (c) 2015-2024, Texas Instruments Incorporated
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -242,8 +242,6 @@ int32_t SemaphoreP_constructCounting(SemaphoreP_freertos *handle, uint32_t initC
  */
 SemaphoreP_Status SemaphoreP_delete(SemaphoreP_Handle handle)
 {
-    DebugP_assert(NULL_PTR != handle);
-
     uintptr_t   key;
     SemaphoreP_Status ret = SemaphoreP_OK;
     SemaphoreP_freertos *semaphore = (SemaphoreP_freertos *)handle;
@@ -276,12 +274,9 @@ void SemaphoreP_Params_init(SemaphoreP_Params *params)
 {
     DebugP_assert(NULL_PTR != params);
 
-    if(NULL_PTR != params)
-    {
-      params->mode = SemaphoreP_Mode_COUNTING;
-      params->name = (char *) NULL_PTR;
-      params->maxCount = 0xFFU;
-    }
+    params->mode = SemaphoreP_Mode_COUNTING;
+    params->name = (char *) NULL_PTR;
+    params->maxCount = 0xFFU;
 }
 
 /*
@@ -332,22 +327,30 @@ SemaphoreP_Status SemaphoreP_pend(SemaphoreP_Handle handle, uint32_t timeout)
  */
 SemaphoreP_Status SemaphoreP_post(SemaphoreP_Handle handle)
 {
-    DebugP_assert(NULL_PTR != handle);
+    SemaphoreP_Status ret = SemaphoreP_OK;
     SemaphoreP_freertos *pSemaphore = (SemaphoreP_freertos *)handle;
 
-    if( 1 == xPortInIsrContext() )
+    if(NULL_PTR != pSemaphore)
     {
-        BaseType_t xHigherPriorityTaskWoken = 0;
+        if( 1 == xPortInIsrContext() )
+        {
+            BaseType_t xHigherPriorityTaskWoken = 0;
 
-        (void)xSemaphoreGiveFromISR(pSemaphore->semHndl, &xHigherPriorityTaskWoken);
-        portYIELD_FROM_ISR((uint32_t)xHigherPriorityTaskWoken);
+            (void)xSemaphoreGiveFromISR(pSemaphore->semHndl, &xHigherPriorityTaskWoken);
+            portYIELD_FROM_ISR((uint32_t)xHigherPriorityTaskWoken);
+        }
+        else
+        {
+            (void)xSemaphoreGive(pSemaphore->semHndl);
+        }
+        ret = SemaphoreP_OK;
     }
     else
     {
-        (void)xSemaphoreGive(pSemaphore->semHndl);
+        ret = SemaphoreP_FAILURE;
     }
 
-    return (SemaphoreP_OK);
+    return ret;
 }
 
 /*
@@ -370,11 +373,14 @@ SemaphoreP_Status SemaphoreP_postFromISR(SemaphoreP_Handle handle)
  */
 int32_t SemaphoreP_getCount(SemaphoreP_Handle handle)
 {
-    DebugP_assert(NULL_PTR != handle);
-		
-    SemaphoreP_freertos *pSemaphore = (SemaphoreP_freertos *)handle;
+    int32_t uxCount = 0;
+    if(NULL_PTR != handle)
+    {
+        SemaphoreP_freertos *pSemaphore = (SemaphoreP_freertos *)handle;
+        uxCount = ((int32_t)uxSemaphoreGetCount(pSemaphore->semHndl));
+    }
 
-    return ((int32_t)uxSemaphoreGetCount(pSemaphore->semHndl));
+    return uxCount;
 }
 
 /* IMPORTANT:

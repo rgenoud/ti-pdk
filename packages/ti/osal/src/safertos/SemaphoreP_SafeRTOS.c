@@ -1,5 +1,5 @@
 /*
- * Copyright ( c ) 2015-2018, Texas Instruments Incorporated
+ * Copyright ( c ) 2015-2024, Texas Instruments Incorporated
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -272,14 +272,11 @@ SemaphoreP_Status SemaphoreP_delete( SemaphoreP_Handle handle )
  */
 void SemaphoreP_Params_init( SemaphoreP_Params *params )
 {
-    DebugP_assert( NULL_PTR != params );
+    DebugP_assert(NULL_PTR != params);
 
-    if( NULL_PTR != params )
-    {
-      params->mode = SemaphoreP_Mode_COUNTING;
-      params->name = ( char * ) NULL_PTR;
-      params->maxCount = 0xFFU;
-    }
+    params->mode = SemaphoreP_Mode_COUNTING;
+    params->name = ( char * ) NULL_PTR;
+    params->maxCount = 0xFFU;
 }
 
 /*
@@ -328,20 +325,28 @@ SemaphoreP_Status SemaphoreP_pend( SemaphoreP_Handle handle, uint32_t timeout )
  */
 SemaphoreP_Status SemaphoreP_post( SemaphoreP_Handle handle )
 {
-    DebugP_assert( NULL_PTR != handle );
+    SemaphoreP_Status ret = SemaphoreP_OK;
     SemaphoreP_safertos *pSemaphore = ( SemaphoreP_safertos * )handle;
 
-    if( 1 == Osal_isInISRContext() )
+    if(NULL_PTR != pSemaphore)
     {
-        xSemaphoreGiveFromISR( pSemaphore->semHndl);
-        safertosapiYIELD_FROM_ISR();
+        if( 1 == Osal_isInISRContext() )
+        {
+            xSemaphoreGiveFromISR( pSemaphore->semHndl);
+            safertosapiYIELD_FROM_ISR();
+        }
+        else
+        {
+            xSemaphoreGive( pSemaphore->semHndl );
+        }
+        ret = SemaphoreP_OK;
     }
     else
     {
-        xSemaphoreGive( pSemaphore->semHndl );
+        ret = SemaphoreP_FAILURE;
     }
 
-    return ( SemaphoreP_OK );
+    return ret;
 }
 
 /*
@@ -364,18 +369,18 @@ SemaphoreP_Status SemaphoreP_postFromISR( SemaphoreP_Handle handle )
  */
 int32_t SemaphoreP_getCount( SemaphoreP_Handle handle )
 {
-	portBaseType xResult;
-	portUnsignedBaseType uxCount;
+    portBaseType xResult;
+    portUnsignedBaseType uxCount = 0U;
 
-    DebugP_assert( NULL_PTR != handle );
-
-    SemaphoreP_safertos *pSemaphore = ( SemaphoreP_safertos * )handle;
-
-	xResult = xSemaphoreGetCountDepth(  pSemaphore->semHndl, &uxCount  );
-	if(  xResult != pdPASS  )
-  {
-		uxCount = 0U;
-  }
+    if(NULL_PTR != handle)
+    {
+        SemaphoreP_safertos *pSemaphore = ( SemaphoreP_safertos * )handle;
+        xResult = xSemaphoreGetCountDepth(  pSemaphore->semHndl, &uxCount  );
+        if(xResult != pdPASS)
+        {
+            uxCount = 0U;
+        }
+    }
     return (int32_t)uxCount;
 }
 /* Nothing past this point */
