@@ -71,6 +71,11 @@ int32_t OsalApp_hwiCreateAllocOvrflwTest(void);
  */
 int32_t OsalApp_hwiNullTest(void);
 
+/*
+ * Description : Testing Negative test for API Hwi_delete
+ */
+int32_t OsalApp_hwiDeleteNegativeTest(void);
+
 /* ========================================================================== */
 /*                          Internal Function Definitions                     */
 /* ========================================================================== */
@@ -127,8 +132,12 @@ int32_t OsalApp_hwiCreateAllocOvrflwTest()
     handle1 = HwiP_create(OSAL_APP_IRQ_INT_NUM, (HwiP_Fxn)OsalApp_hwiIRQ, &hwiParams);
     handle2 = HwiP_createDirect(OSAL_APP_IRQ_SECONDARY_INT_NUM, (HwiP_DirectFxn)OsalApp_hwiIRQ, &hwiParams);
 
-    /* Second handle is not useful, so delete it */
+    /* handle2 is not deleted for C7x as HwiP_createDirect returns NULL for C7x */
+#if defined(BUILD_C7X)
+    if((NULL_PTR == handle1) || (NULL_PTR != handle2))
+#else
     if((NULL_PTR == handle1) || (NULL_PTR == handle2) || (HwiP_OK != HwiP_delete(handle2)))
+#endif
     {
         result = osal_FAILURE;
     }
@@ -160,11 +169,71 @@ int32_t OsalApp_hwiCreateAllocOvrflwTest()
     return result;
 }
 
+int32_t OsalApp_hwiDeleteNegativeTest(void)
+{
+    HwiP_Params    hwiParams;
+    HwiP_Handle    handle;
+    int32_t        result = osal_OK;
+    
+    HwiP_Params_init(&hwiParams);
+    
+    handle = HwiP_create(OSAL_APP_IRQ_INT_NUM, (HwiP_Fxn)OsalApp_hwiIRQ, &hwiParams);
+    
+    /* Here handleAddr is used to get the memory location of the handle
+     * we are corrupting the content of the handle and passing in a corrupt handle to the driver
+     * to test negative condition for HwiP_delete API
+     */
+    uint32_t *handleAddr = (uint32_t *)handle, temp;
+    temp = (*handleAddr);
+    (*handleAddr) = 0U;
+    
+    if((NULL_PTR == handle) || (HwiP_OK == HwiP_delete(handle)))
+    {
+        result = osal_FAILURE;
+    }
+
+    /* Restore the value in the handle and delete the created Hwi. */
+    *handleAddr = temp;
+    if((osal_OK != result) || (HwiP_OK != HwiP_delete(handle)))
+    {
+        result = osal_FAILURE;
+    }
+
+#if defined(BUILD_MCU)
+    /* This handle is already deleted, but we are setting the 
+     * isUsed parameter to 1(forced corruption), to see how the driver reacts. */
+    if(osal_OK == result)
+    {
+        for(uint32_t Cnt = 0U; Cnt < 2U; Cnt++)
+        {
+            *handleAddr = 1U;
+            if(HwiP_OK != HwiP_delete(handle))
+            {
+                break;
+            }
+        }
+    }    
+#endif
+
+    if(osal_OK == result)
+    {
+        OSAL_log("\n Hwi Delete negative test passed!\n");
+    }
+    else
+    {
+        OSAL_log("\n Hwi Delete negative test failed!\n");
+    }
+    
+    return result;
+}
+
 int32_t OsalApp_hwiTests(void)
 {
     int32_t result = osal_OK;
 
     result += OsalApp_hwiCreateAllocOvrflwTest();
+    result += OsalApp_hwiDeleteNegativeTest();
+
     /*
      * TODO: HwiP_create and HwiP_createdirect NULL tests are broken.
      * result += OsalApp_HwiPNullTest();

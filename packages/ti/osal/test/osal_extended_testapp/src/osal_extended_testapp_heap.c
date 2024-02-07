@@ -240,15 +240,19 @@ int32_t OsalApp_heapFreertosIsUsedTest(void)
 
     /* Restore the value in the handle and delete the created Heap. */
     *handleAddr = temp;
-    if(osal_OK == result)
+    if((osal_OK != result) || (HeapP_OK != HeapP_delete(handle)))
     {
-        status = HeapP_delete(handle);
-        if(HeapP_OK != status)
-        {
-            result = osal_FAILURE;
-        }
+        result = osal_FAILURE;
     }
-
+    
+    /* This handle is already deleted, but we are setting the isUsed parameter to 1(forced corruption),
+     * to see how the driver reacts. */
+    *handleAddr = 1U;
+    if((osal_OK != result) || (HeapP_OK != HeapP_delete(handle)))
+    {
+        result = osal_FAILURE;
+    }
+    
     if(osal_OK == result)
     {
         OSAL_log("\n HeapP test for used parameter passed! \n");

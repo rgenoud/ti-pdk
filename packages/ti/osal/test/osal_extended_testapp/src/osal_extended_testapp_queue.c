@@ -161,8 +161,15 @@ int32_t OsalApp_queueNegativeTest(void)
 
     /* Restore the halue of the handle */
     (*handleAddr) = temp; 
-    status = QueueP_delete(handle);
-    if(QueueP_OK != status)
+    if(QueueP_OK != QueueP_delete(handle))
+    {
+        result = osal_FAILURE;
+    }
+    
+    /* This handle is already deleted, but we are setting the 
+     * isUsed parameter to 1(forced corruption), to see how the driver reacts. */
+    (*handleAddr) = 1U;
+    if(QueueP_OK != QueueP_delete(handle))
     {
         result = osal_FAILURE;
     }
@@ -181,14 +188,12 @@ int32_t OsalApp_queueNegativeTest(void)
 
 int32_t OsalApp_queueDeleteNullTest(void)
 {
-    QueueP_Status      status;
     int32_t            result = osal_OK;
 
     /* checking QueueP_Params_init else condition */
     QueueP_Params_init(NULL_PTR);
 
-    status = QueueP_delete(NULL_PTR);
-    if(QueueP_OK == status)
+    if(QueueP_OK == QueueP_delete(NULL_PTR))
     {
         result = osal_FAILURE;
     }

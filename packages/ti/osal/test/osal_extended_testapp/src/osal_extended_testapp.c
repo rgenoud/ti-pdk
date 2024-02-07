@@ -514,6 +514,7 @@ void RegisterIntrDirect_NegTest(void)
     }
     else
     {
+        Osal_DeleteInterrupt(&hwiHandle, intrPrms.corepacConfig.corepacEventNum);
         OSAL_log("\n Osal_RegisterInterruptDirect Negative Test passed!! \n");
     }
 }
@@ -1559,6 +1560,8 @@ void OSAL_tests(void *arg0, void *arg1)
 {
     int32_t result = osal_OK;
     Board_initOSAL();
+    
+    result += OsalApp_hwiTests();
 
     result += OsalApp_semaphoreTests();
     
@@ -1620,8 +1623,6 @@ void OSAL_tests(void *arg0, void *arg1)
     Utils_nonos_test();
 
     Utils_nonos_SetHwAttr_Multi_Test();
-    
-    result += OsalApp_hwiTests();
 
     SemaphoreP_create_extended_mem_block_test();
 
@@ -1638,12 +1639,12 @@ void OSAL_tests(void *arg0, void *arg1)
 #endif
 
 #if !defined(BARE_METAL)
-
+#if defined(BUILD_MCU)
     RegisterIntr_Test();
 
-    EventP_Test();
-
     result += OsalApp_taskTests();
+#endif
+    EventP_Test();
 
     Semaphore_flow_test();
 
@@ -1653,12 +1654,10 @@ void OSAL_tests(void *arg0, void *arg1)
 
     result += OsalApp_mutexTests();
     
-    result += OsalApp_hwiTests();
-    
     result += OsalApp_mailboxTests();
 
 #endif
-
+    
     if(osal_OK == result)
     {
         OSAL_log("\n All tests have passed. \n");
