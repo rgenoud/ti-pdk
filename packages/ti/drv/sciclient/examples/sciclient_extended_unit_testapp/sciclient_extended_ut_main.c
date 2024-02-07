@@ -101,6 +101,11 @@ static int32_t SciclientApp_prepareHeaderNegTest(void);
 static int32_t SciclientApp_contextNegTest(void);
 #endif
 static int32_t SciclientApp_initTest(void);
+static int32_t SciclientApp_rmPsilNegTest(void);
+static int32_t SciclientApp_rmRingCfgNegTest(void);
+static int32_t SciclientApp_rmRingMonCfgNegTest(void);
+static int32_t SciclientApp_rmUdmapNegTest(void);
+static int32_t SciclientApp_rmSetProxyNegTest(void);
 
 /* ========================================================================== */
 /*                          Function Definitions                              */
@@ -181,6 +186,21 @@ int32_t SciApp_testMain(SciApp_TestParams_t *testParams)
 #endif
         case 8:
             testParams->testResult =  SciclientApp_initTest();
+            break;
+        case 9:
+            testParams->testResult = SciclientApp_rmPsilNegTest();
+            break;
+        case 10:
+            testParams->testResult = SciclientApp_rmRingCfgNegTest();
+            break;
+        case 11:
+            testParams->testResult = SciclientApp_rmRingMonCfgNegTest();
+            break;
+        case 12:
+            testParams->testResult = SciclientApp_rmUdmapNegTest();
+            break;
+        case 13:
+            testParams->testResult = SciclientApp_rmSetProxyNegTest();
             break;
         default:
             break;
@@ -962,6 +982,415 @@ static int32_t SciclientApp_initTest(void)
     }
 
     return sciclientInitStatus;
+}
+
+static int32_t SciclientApp_rmPsilNegTest(void)
+{
+    int32_t  status              = CSL_PASS;
+    int32_t  sciclientInitStatus = CSL_PASS;
+    int32_t  rmPsilTestStatus    = CSL_PASS;
+    const struct tisci_msg_rm_psil_pair_req SciApp_RmPsilPairReq     = {0};
+    const struct tisci_msg_rm_psil_unpair_req SciApp_RmPsilUnpairReq = {0};
+    const struct tisci_msg_rm_psil_read_req SciApp_RmPsilReadReq     = {0};
+    const struct tisci_msg_rm_psil_write_req SciApp_RmPsilWriteReq   = {0};
+    struct tisci_msg_rm_psil_read_resp SciApp_RmPsilReadResp;
+    Sciclient_ConfigPrms_t SciApp_Config =
+    {
+        SCICLIENT_SERVICE_OPERATION_MODE_INTERRUPT,
+        NULL,
+        0 /* isSecure = 0 un secured for all cores */
+    };
+
+    while (gSciclientHandle.initCount != 0U)
+    {
+        status = Sciclient_deinit();
+    }
+    status = Sciclient_init(&SciApp_Config);
+    sciclientInitStatus = status;
+
+    if(status == CSL_PASS)
+    {
+        SciApp_printf ("Sciclient_init PASSED.\n");
+      /* Passing a zero request parameter, sciclient_service function will return pass but response flag will be NAK */
+        status = Sciclient_rmPsilPair(&SciApp_RmPsilPairReq, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            rmPsilTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_rmPsilPair: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+            rmPsilTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_rmPsilPair: Negative Arg Test Failed.\n");
+        }
+
+        status = Sciclient_rmPsilUnpair(&SciApp_RmPsilUnpairReq, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            rmPsilTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_rmPsilUnpair: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+            rmPsilTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_rmPsilUnpair: Negative Arg Test Failed.\n");
+        }
+
+        status = Sciclient_rmPsilRead(&SciApp_RmPsilReadReq, &SciApp_RmPsilReadResp,
+                                      SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            rmPsilTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_rmPsilRead: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+            rmPsilTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_rmPsilRead: Negative Arg Test Failed.\n");
+        }
+
+        status = Sciclient_rmPsilWrite(&SciApp_RmPsilWriteReq, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            rmPsilTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_rmPsilWrite: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+            rmPsilTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_rmPsilWrite: Negative Arg Test Failed.\n");
+        }
+    }
+    else
+    {
+        rmPsilTestStatus += CSL_EFAIL;
+        SciApp_printf("Sciclient_init FAILED.\n");
+    }
+
+    if(sciclientInitStatus == CSL_PASS)
+    {
+        status = Sciclient_deinit();
+        if(status == CSL_PASS)
+        {
+            rmPsilTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_deinit PASSED.\n");
+        }
+        else
+        {
+            rmPsilTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_deinit FAILED.\n");
+        }
+    }
+
+     return rmPsilTestStatus;
+}
+
+static int32_t SciclientApp_rmRingCfgNegTest(void)
+{
+    int32_t  status              = CSL_PASS;
+    int32_t  sciclientInitStatus = CSL_PASS;
+    int32_t  rmRingCfgTestStatus = CSL_PASS;
+    const struct tisci_msg_rm_ring_cfg_req SciApp_RmRingCfgReq = {0};
+    struct tisci_msg_rm_ring_cfg_resp SciApp_RmRingCfgResp;
+    Sciclient_ConfigPrms_t SciApp_Config =
+    {
+        SCICLIENT_SERVICE_OPERATION_MODE_INTERRUPT,
+        NULL,
+        0 /* isSecure = 0 un secured for all cores */
+    };
+
+    while (gSciclientHandle.initCount != 0U)
+    {
+        status = Sciclient_deinit();
+    }
+    status = Sciclient_init(&SciApp_Config);
+    sciclientInitStatus = status;
+
+    if(status == CSL_PASS)
+    {
+        SciApp_printf ("Sciclient_init PASSED.\n");
+      /* Passing a zero request parameter, sciclient_service function will return pass but response flag will be NAK */
+        status = Sciclient_rmRingCfg(&SciApp_RmRingCfgReq, &SciApp_RmRingCfgResp,
+                                     SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            rmRingCfgTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_rmRingCfg: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+            rmRingCfgTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_rmRingCfg: Negative Arg Test Failed.\n");
+        }
+    }
+    else
+    {
+        rmRingCfgTestStatus += CSL_EFAIL;
+        SciApp_printf("Sciclient_init FAILED.\n");
+    }
+
+    if(sciclientInitStatus == CSL_PASS)
+    {
+        status = Sciclient_deinit();
+        if(status == CSL_PASS)
+        {
+            rmRingCfgTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_deinit PASSED.\n");
+        }
+        else
+        {
+            rmRingCfgTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_deinit FAILED.\n");
+        }
+    }
+
+     return rmRingCfgTestStatus;
+}
+
+static int32_t SciclientApp_rmRingMonCfgNegTest(void)
+{
+    int32_t  status                 = CSL_PASS;
+    int32_t  sciclientInitStatus    = CSL_PASS;
+    int32_t  rmRingMonCfgTestStatus = CSL_PASS;
+    const struct tisci_msg_rm_ring_mon_cfg_req SciApp_RmRingMonCfgReq = {0};
+    struct tisci_msg_rm_ring_mon_cfg_resp SciApp_RmRingMonCfgResp;
+    Sciclient_ConfigPrms_t SciApp_Config =
+    {
+        SCICLIENT_SERVICE_OPERATION_MODE_INTERRUPT,
+        NULL,
+        0 /* isSecure = 0 un secured for all cores */
+    };
+
+    while (gSciclientHandle.initCount != 0U)
+    {
+        status = Sciclient_deinit();
+    }
+    status = Sciclient_init(&SciApp_Config);
+    sciclientInitStatus = status;
+
+    if(status == CSL_PASS)
+    {
+        SciApp_printf ("Sciclient_init PASSED.\n");
+      /* Passing a zero request parameter, sciclient_service function will return pass but response flag will be NAK */
+        status = Sciclient_rmRingMonCfg(&SciApp_RmRingMonCfgReq, &SciApp_RmRingMonCfgResp,
+                                        SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            rmRingMonCfgTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_rmRingMonCfg: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+            rmRingMonCfgTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_rmRingMonCfg: Negative Arg Test Failed.\n");
+        }
+    }
+    else
+    {
+        rmRingMonCfgTestStatus += CSL_EFAIL;
+        SciApp_printf("Sciclient_init FAILED.\n");
+    }
+
+    if(sciclientInitStatus == CSL_PASS)
+    {
+        status = Sciclient_deinit();
+        if(status == CSL_PASS)
+        {
+            rmRingMonCfgTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_deinit PASSED.\n");
+        }
+        else
+        {
+            rmRingMonCfgTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_deinit FAILED.\n");
+        }
+    }
+
+     return rmRingMonCfgTestStatus;
+}
+
+static int32_t SciclientApp_rmUdmapNegTest(void)
+{
+    int32_t  status              = CSL_PASS;
+    int32_t  sciclientInitStatus = CSL_PASS;
+    int32_t  rmUdmapTestStatus   = CSL_PASS;
+    const struct tisci_msg_rm_udmap_gcfg_cfg_req SciApp_RmUdmapGcfgReq       = {0};
+    const struct tisci_msg_rm_udmap_tx_ch_cfg_req SciApp_RmUdmapTxChCfgReq   = {0};
+    const struct tisci_msg_rm_udmap_rx_ch_cfg_req SciApp_RMUdmapRxChCfgReq   = {0};
+    const struct tisci_msg_rm_udmap_flow_cfg_req SciApp_RmUdmapFlowCfgReq    = {0};
+    const struct tisci_msg_rm_udmap_flow_size_thresh_cfg_req SciApp_RmUdmapFlowSizeThreshCfgReq = {0};
+    struct tisci_msg_rm_udmap_gcfg_cfg_resp SciApp_RmUdmapGcfgResp;
+    struct tisci_msg_rm_udmap_tx_ch_cfg_resp SciApp_RmUdmapTxChCfgResp;
+    struct tisci_msg_rm_udmap_rx_ch_cfg_resp SciApp_RMUdmapRxChCfgResp;
+    struct tisci_msg_rm_udmap_flow_cfg_resp SciApp_RmUdmapFlowCfgResp;
+    struct tisci_msg_rm_udmap_flow_size_thresh_cfg_resp SciApp_RmUdmapFlowSizeThreshCfgResp;
+
+    Sciclient_ConfigPrms_t SciApp_Config =
+    {
+        SCICLIENT_SERVICE_OPERATION_MODE_INTERRUPT,
+        NULL,
+        0 /* isSecure = 0 un secured for all cores */
+    };
+
+    while (gSciclientHandle.initCount != 0U)
+    {
+        status = Sciclient_deinit();
+    }
+    status = Sciclient_init(&SciApp_Config);
+    sciclientInitStatus = status;
+
+    if(status == CSL_PASS)
+    {
+        SciApp_printf ("Sciclient_init PASSED.\n");
+      /* Passing a zero request parameter, sciclient_service function will return pass but response flag will be NAK */
+        status = Sciclient_rmUdmapTxChCfg(&SciApp_RmUdmapTxChCfgReq, &SciApp_RmUdmapTxChCfgResp,
+                                          SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            rmUdmapTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_rmUdmapTxChCfg: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+            rmUdmapTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_rmUdmapTxChCfg: Negative Arg Test Failed.\n");
+        }
+
+        status = Sciclient_rmUdmapRxChCfg(&SciApp_RMUdmapRxChCfgReq, &SciApp_RMUdmapRxChCfgResp,
+                                          SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            rmUdmapTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_rmUdmapRxChCfg: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+            rmUdmapTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_rmUdmapRxChCfg: Negative Arg Test Failed.\n");
+        }
+
+        status = Sciclient_rmUdmapFlowCfg(&SciApp_RmUdmapFlowCfgReq, &SciApp_RmUdmapFlowCfgResp,
+                                          SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            rmUdmapTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_rmUdmapFlowCfg: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+            rmUdmapTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_rmUdmapFlowCfg: Negative Arg Test Failed.\n");
+        }
+
+        status = Sciclient_rmUdmapFlowSizeThreshCfg(&SciApp_RmUdmapFlowSizeThreshCfgReq, 
+                                                    &SciApp_RmUdmapFlowSizeThreshCfgResp,
+                                                    SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            rmUdmapTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_rmUdmapFlowSizeThreshCfg: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+            rmUdmapTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_rmUdmapFlowSizeThreshCfg: Negative Arg Test Failed.\n");
+        }
+
+        status = Sciclient_rmUdmapGcfgCfg(&SciApp_RmUdmapGcfgReq, &SciApp_RmUdmapGcfgResp,
+                                          SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            rmUdmapTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_rmUdmapGcfgCfg: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+            rmUdmapTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_rmUdmapGcfgCfg: Negative Arg Test Failed.\n");
+        }
+    }
+    else
+    {
+        rmUdmapTestStatus += CSL_EFAIL;
+        SciApp_printf("Sciclient_init FAILED.\n");
+    }
+
+    if(sciclientInitStatus == CSL_PASS)
+    {
+        status = Sciclient_deinit();
+        if(status == CSL_PASS)
+        {
+            rmUdmapTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_deinit PASSED.\n");
+        }
+        else
+        {
+            rmUdmapTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_deinit FAILED.\n");
+        }
+    }
+
+     return rmUdmapTestStatus;
+}
+
+static int32_t SciclientApp_rmSetProxyNegTest(void)
+{
+    int32_t  status               = CSL_PASS;
+    int32_t  sciclientInitStatus  = CSL_PASS;
+    int32_t  rmSetProxyTestStatus = CSL_PASS;
+    const struct tisci_msg_rm_proxy_cfg_req SciApp_RmSetProxyCfgReq = {0};
+    Sciclient_ConfigPrms_t SciApp_Config =
+    {
+        SCICLIENT_SERVICE_OPERATION_MODE_INTERRUPT,
+        NULL,
+        0 /* isSecure = 0 un secured for all cores */
+    };
+
+    while (gSciclientHandle.initCount != 0U)
+    {
+        status = Sciclient_deinit();
+    }
+    status = Sciclient_init(&SciApp_Config);
+    sciclientInitStatus = status;
+
+    if(status == CSL_PASS)
+    {
+        SciApp_printf ("Sciclient_init PASSED.\n");
+      /* Passing a zero request parameter, sciclient_service function will return pass but response flag will be NAK */
+        status = Sciclient_rmSetProxyCfg(&SciApp_RmSetProxyCfgReq, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            rmSetProxyTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_rmSetProxyCfg: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+            rmSetProxyTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_rmSetProxyCfg: Negative Arg Test Failed.\n");
+        }
+    }
+    else
+    {
+        rmSetProxyTestStatus += CSL_EFAIL;
+        SciApp_printf("Sciclient_init FAILED.\n");
+    }
+
+    if(sciclientInitStatus == CSL_PASS)
+    {
+        status = Sciclient_deinit();
+        if(status == CSL_PASS)
+        {
+            rmSetProxyTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_deinit PASSED.\n");
+        }
+        else
+        {
+            rmSetProxyTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_deinit FAILED.\n");
+        }
+    }
+
+     return rmSetProxyTestStatus;
 }
 
 #if defined(BUILD_MPU) || defined (BUILD_C7X)
