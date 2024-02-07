@@ -177,6 +177,13 @@ else
   endif
 endif
 
+ifeq ($(CPLUSPLUS_BUILD), yes)
+  ifeq ($(CPLUSPLUS_ENET), yes)
+	# For cpp files removed '-nostdlibinc' for Enet LLD libs
+    _CFLAGS := $(filter-out -nostdlibinc,$(_CFLAGS))
+  endif
+endif
+
 # Decide the compile mode
 COMPILEMODE = -x c
 ifeq ($(CPLUSPLUS_BUILD), yes)
@@ -192,6 +199,11 @@ $(OBJ_PATHS): $(OBJDIR)/%.$(OBJEXT): %.c $(GEN_FILE) | $(OBJDIR) $(DEPDIR)
 	$(CC) -MMD $(_CFLAGS) $(INCLUDES) -c $(COMPILEMODE) $< -o $@ -MF $(DEPFILE).d
 	$(CC) $(_CFLAGS) $(INCLUDES) -c $(COMPILEMODE) $< -o $@
 
+$(OBJ_PATHS_CPP): $(OBJDIR)/%.$(OBJEXT): %.cpp $(GEN_FILE) | $(OBJDIR) $(DEPDIR)
+	$(ECHO) \# Compiling $(PRINT_MESSAGE):$<
+	$(MKDIR) -p $(dir $@)
+	$(CC) -MMD $(_CFLAGS) $(INCLUDES) -c -x c++ $< -o $@ -MF $(DEPFILE).d
+	$(CC) $(_CFLAGS) $(INCLUDES) -c -x c++ $< -o $@
 
 #TODO: Check ASMFLAGS if really required
 ASMFLAGS = -me -g -mthumb --diag_warning=225
@@ -217,11 +229,11 @@ $(PACKAGE_PATHS): $(PACKAGEDIR)/%: %
 ARFLAGS = rc
 
 # Archive/library file creation
-$(LIBDIR)/$(LIBNAME).$(LIBEXT) : $(OBJ_PATHS_ASM) $(OBJ_PATHS_S) $(OBJ_PATHS) $(GEN_FILE) | $(LIBDIR)
+$(LIBDIR)/$(LIBNAME).$(LIBEXT) : $(OBJ_PATHS_ASM) $(OBJ_PATHS_S) $(OBJ_PATHS) $(OBJ_PATHS_CPP) $(GEN_FILE) | $(LIBDIR)
 	$(ECHO) \#
 	$(ECHO) \# Archiving $(PRINT_MESSAGE) into $@ ...
 	$(ECHO) \#
-	$(AR) $(ARFLAGS) $@ $(OBJ_PATHS_ASM) $(OBJ_PATHS_S) $(OBJ_PATHS)
+	$(AR) $(ARFLAGS) $@ $(OBJ_PATHS_ASM) $(OBJ_PATHS_S) $(OBJ_PATHS) $(OBJ_PATHS_CPP)
 
 $(LIBDIR)/$(LIBNAME).$(LIBEXT)_size: $(LIBDIR)/$(LIBNAME).$(LIBEXT)
 	$(ECHO) \#
@@ -299,14 +311,14 @@ endif
 #	$(CGT_PATH)/lib/mklib --pattern=$(RTSLIB_NAME) --parallel=$(NUM_PROCS) --compiler_bin_dir=$(CGT_PATH)/bin
 #endif
 
-$(EXE_NAME) : $(OBJ_PATHS_ASM) $(OBJ_PATHS_S) $(OBJ_PATHS) $(LIB_PATHS) $(LNKCMD_FILE) $(BUILD_LIB_ONCE)
+$(EXE_NAME) : $(OBJ_PATHS_ASM) $(OBJ_PATHS_S) $(OBJ_PATHS) $(OBJ_PATHS_CPP) $(LIB_PATHS) $(LNKCMD_FILE) $(BUILD_LIB_ONCE)
 ifeq ($(BUILD_OS_TYPE), freertos)
 	$(CP) $(pdk_PATH)/ti/kernel/freertos/rov/syscfg_c.rov.xs $(BINDIR)
 endif
 
 	$(ECHO) \# Linking into $(EXE_NAME)...
 	$(ECHO) \#
-	$(LNK) $(_LNKFLAGS) $(OBJ_PATHS_ASM) $(OBJ_PATHS_S) $(OBJ_PATHS) -Xlinker $(LNKCMD_FILE) $(EXTERNAL_LNKCMD_FILE) $(APPEND_LNKCMD_FILE) -Xlinker --map_file=$@.map -Xlinker --output_file=$@ $(LNK_LIBS) $(RTSLIB_PATH)
+	$(LNK) $(_LNKFLAGS) $(OBJ_PATHS_ASM) $(OBJ_PATHS_S) $(OBJ_PATHS) $(OBJ_PATHS_CPP) -Xlinker $(LNKCMD_FILE) $(EXTERNAL_LNKCMD_FILE) $(APPEND_LNKCMD_FILE) -Xlinker --map_file=$@.map -Xlinker --output_file=$@ $(LNK_LIBS) $(RTSLIB_PATH)
 	$(ECHO) \#
 	$(ECHO) \# $@ created.
 	$(ECHO) \#

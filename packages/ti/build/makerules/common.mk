@@ -178,6 +178,7 @@ $(PACKAGEDIR) :
 
 # Assemble list of source file names
 SRCS = $(SRCS_COMMON) $(SRCS_$(CORE)) $(SRCS_$(SOC))
+SRCS_CPP = $(SRCS_COMMON_CPP)
 SRCS_ASM = $(SRCS_ASM_COMMON) $(SRCS_ASM_$(CORE)) $(SRCS_ASM_$(SOC))
 SRCS_S = $(SRCS_S_COMMON) $(SRCS_S_$(CORE)) $(SRCS_S_$(SOC))
 
@@ -218,6 +219,9 @@ endif
 
 # Change the extension from C to $(OBJEXT) and also add path
 OBJ_PATHS = $(patsubst %.c, $(OBJDIR)/%.$(OBJEXT), $(SRCS))
+
+# Change the extension from C++ (Cpp) to $(OBJEXT) and also add path
+OBJ_PATHS_CPP = $(patsubst %.cpp, $(OBJDIR)/%.$(OBJEXT), $(SRCS_CPP))
 
 # Change the extension from ASM to $(OBJEXT) and also add path
 OBJ_PATHS_ASM = $(patsubst %.asm, $(OBJDIR)/%.$(OBJEXT), $(SRCS_ASM))
