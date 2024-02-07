@@ -66,7 +66,7 @@ static inline u32 osal_hwip_disable(void)
  */
 static inline void osal_hwip_restore(u32 key)
 {
-        return HwiP_restore(key);
+        HwiP_restore(key);
 }
 
 #endif /* OSAL_HWI_H */
