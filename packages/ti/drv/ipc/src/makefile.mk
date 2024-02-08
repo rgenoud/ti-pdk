@@ -12,7 +12,8 @@ endif
 ifeq ($(SOC),$(filter $(SOC), j784s4))
   SRCDIR += soc/V4
 endif
-INCDIR =
+SRCDIR += src/mailbox/V0/priv
+INCDIR += src/mailbox
 
 #$(ECHO) $(ISA)
 
@@ -21,11 +22,11 @@ INCDIR =
 INCLUDE_EXTERNAL_INTERFACES = pdk
 
 # Common source files and CFLAGS across all platforms and cores
-SRCS_COMMON += ipc_api.c ipc_mp.c ipc_soc.c ipc_virtio.c ipc_utils.c ipc_mailbox.c
+SRCS_COMMON += ipc_api.c ipc_mp.c ipc_soc.c ipc_virtio.c ipc_utils.c ipc_mailbox.c mailbox.c
 SRCS_COMMON += ipc_osal.c
 
 PACKAGE_SRCS_COMMON = ipc.h ipc_component.mk makefile .gitignore include $(SRCDIR)
-PACKAGE_SRCS_COMMON += soc/ipc_soc.h
+PACKAGE_SRCS_COMMON += soc/ipc_soc.h src/mailbox src/mailbox/csl_mailbox.h  src/mailbox/cslr_mailbox.h
 CFLAGS_LOCAL_COMMON += $(PDK_CFLAGS) $(IPC_CFLAGS) -DIPC_SUPPORT_SCICLIENT -DIPC_EXCLUDE_POLLED_RX -DMAILBOX_INTERRUPT_MODE
 
 # Core/SoC/platform specific source files and CFLAGS
