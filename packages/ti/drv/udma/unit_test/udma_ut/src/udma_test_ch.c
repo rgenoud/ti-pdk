@@ -776,3 +776,63 @@ int32_t UdmaTestChGetDefaultFlowHandle(UdmaTestTaskObj *taskObj)
     return retVal;
 }
 
+/* 
+ * Test Case Description: Verifies the function Udma_chDisable when
+ * Test scenario 1: Check when chType is UDMA_CH_TYPE_TX and instType is UDMA_INST_TYPE_NORMAL
+ */ 
+int32_t UdmaChDisableTest(UdmaTestTaskObj *taskObj)
+{
+    int32_t            retVal = UDMA_SOK;
+    struct Udma_ChObj  chObj;
+    Udma_ChHandle      chHandle;
+    uint32_t           timeout = 0U;
+    uint32_t           instID;
+    struct Udma_DrvObj backUpDrvObj;
+    Udma_DrvHandle     drvHandle;
+    Udma_ChPrms        chPrms;
+    uint32_t           chType;
+
+    GT_1trace(taskObj->traceMask, GT_INFO1,
+              " |TEST INFO|:: Task:%d: UDMA ChDisable Testcase ::\r\n",
+              taskObj->taskId);
+
+    /* Test scenario 1: Check when chType is UDMA_CH_TYPE_TX and instType is UDMA_INST_TYPE_NORMAL */
+    chHandle         = &chObj;
+    chType           = UDMA_CH_TYPE_TX;
+    UdmaChPrms_init(&chPrms, chType);
+    instID           = UDMA_TEST_DEFAULT_UDMA_INST;
+    backUpDrvObj     = taskObj->testObj->drvObj[instID];
+    drvHandle        = &taskObj->testObj->drvObj[instID];
+    chPrms.peerChNum = UDMA_PSIL_CH_MCU_CPSW0_TX;
+    retVal           = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
+    Udma_ChTxPrms txChPrms;
+    UdmaChTxPrms_init(&txChPrms, chType);
+    if(UDMA_SOK == retVal)
+    {
+        retVal = Udma_chConfigTx(chHandle, &txChPrms);
+        if(UDMA_SOK == retVal)
+        {
+            retVal = Udma_chEnable(chHandle);
+            if(UDMA_SOK == retVal)
+            {
+                retVal = Udma_chDisable(chHandle, timeout);
+                if(UDMA_SOK != retVal)
+                {
+                    GT_0trace(taskObj->traceMask, GT_ERR,
+                            " |TEST INFO|:: FAIL:: UDMA:: UdmachDisableTxChan:: Pos:: "
+                            " Check when chType is UDMA_CH_TYPE_TX and instType is UDMA_INST_TYPE_NORMAL!!\n");
+                    retVal = UDMA_EFAIL;
+                }
+                else
+                {
+                    retVal = UDMA_SOK;
+                }
+            }
+        }
+    }
+    Udma_chClose(chHandle);
+    taskObj->testObj->drvObj[instID] = backUpDrvObj;
+   
+    return retVal;
+}
+

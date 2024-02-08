@@ -182,6 +182,7 @@ int32_t UdmaTestChPauseNeg(UdmaTestTaskObj *taskObj)
  *                   is UDMA_DMA_CH_INVALID for Udma_chCheckParams
  * Test scenario 11: Check when chType is UDMA_CH_FLAG_PSIL and peerChNum 
  *                   is UDMA_DMA_CH_NA for Udma_chCheckParams
+ * Test scenario 12: Check to fail UDMA channel paring
  */
 int32_t UdmaTestChOpenNeg(UdmaTestTaskObj *taskObj)
 {
@@ -414,6 +415,27 @@ int32_t UdmaTestChOpenNeg(UdmaTestTaskObj *taskObj)
     }
 #endif
     drvHandle->drvInitDone = backUpDrvInitDone;
+
+    /* Test scenario 12: Check to fail UDMA channel paring */
+    if(retVal == UDMA_SOK)
+    {
+        chType           = UDMA_CH_TYPE_TX;
+        drvHandle        = &taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0];
+        UdmaChPrms_init(&chPrms, chType);
+        chPrms.peerChNum = UDMA_PSIL_CH_MCU_CPSW0_RX;
+        retVal           = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
+        if(UDMA_SOK == retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Udma_chOpen:: Neg:: "
+                      " Check to fail UDMA channel paring!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        else
+        {
+            retVal = UDMA_SOK;
+        } 
+    }        
 
     return (retVal);
 }
@@ -2058,6 +2080,314 @@ int32_t UdmaTestChSetSwTriggerChTypeNeg(UdmaTestTaskObj *taskObj)
         }
     }
     taskObj->testObj->drvObj[instID] = backUpDrvObj;
+
+    return retVal;
+}
+
+/* 
+ * Test Case Description: Verifies the function Udma_chGetStats when
+ * Test scenario 1: Null check for chHandle
+ * Test scenario 2: Check when chInitDone is not UDMA_INIT_DONE
+ * Test scenario 3: Null check for chStats
+ * Test scenario 4: Null check for drvHandle
+ * Test scenario 5: Check when drvInitDone is not UDMA_INIT_DONE
+ */
+int32_t UdmaChGetStatsTestNeg(UdmaTestTaskObj *taskObj)
+{
+    int32_t            retVal = UDMA_SOK;
+    struct Udma_ChObj  chObj;
+    Udma_ChHandle      chHandle;
+    Udma_ChStats       chStats;
+    uint32_t           instID;
+    uint32_t           backUpDrvInitDone;
+
+    GT_1trace(taskObj->traceMask, GT_INFO1,
+              " |TEST INFO|:: Task:%d: UDMA ChGetStats Negative Testcase ::\r\n",
+              taskObj->taskId);
+              
+    /* Test scenario 1: Null check for chHandle */
+    retVal = Udma_chGetStats(NULL, &chStats);
+    if(UDMA_SOK == retVal)
+    {
+        GT_0trace(taskObj->traceMask, GT_ERR,
+                  " |TEST INFO|:: FAIL:: UDMA:: chGetStats:: Neg:: "
+                  " NULL check for chHandle!!\n");
+        retVal = UDMA_EFAIL;
+    }
+    else
+    {
+        retVal = UDMA_SOK;
+    }
+
+    /* Test scenario 2: Check when chInitDone is not UDMA_INIT_DONE */
+    chHandle             = &chObj;
+    chHandle->chInitDone = UDMA_DEINIT_DONE;
+    if(UDMA_SOK == retVal)
+    {
+        retVal = Udma_chGetStats(chHandle, &chStats);
+        if(UDMA_SOK == retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: chGetStats:: Neg:: "
+                      " Check when chInitDone is not UDMA_INIT_DONE!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        else
+        {
+            retVal = UDMA_SOK;
+        }
+    }
+
+    /* Test scenario 3: Null check for chStats */
+    chHandle->chInitDone = UDMA_INIT_DONE;
+    if(UDMA_SOK == retVal)
+    {
+        retVal = Udma_chGetStats(chHandle, NULL);
+        if(UDMA_SOK == retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: chGetStats:: Neg:: "
+                      " Null check for chStats!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        else
+        {
+            retVal = UDMA_SOK;
+        }
+    }
+
+    /* Test scenario 4: Null check for drvHandle */
+    chHandle->drvHandle  = NULL_PTR;
+    if(UDMA_SOK == retVal)
+    {
+        retVal = Udma_chGetStats(chHandle, &chStats);
+        if(UDMA_SOK == retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: chGetStats:: Neg:: "
+                      " Null check for drvHandle!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        else
+        {
+            retVal = UDMA_SOK;
+        }
+    }
+
+    /* Test scenario 5: Check when drvInitDone is not UDMA_INIT_DONE */
+    instID = UDMA_TEST_INST_ID_MAIN_0;
+    if(UDMA_SOK == retVal)
+    {
+        chHandle->drvHandle              = &taskObj->testObj->drvObj[instID];
+        backUpDrvInitDone                = chHandle->drvHandle->drvInitDone;
+        chHandle->drvHandle->drvInitDone = UDMA_DEINIT_DONE;
+        retVal = Udma_chGetStats(chHandle, &chStats);
+        if(UDMA_SOK == retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: chGetStats:: Neg:: "
+                      " Check when drvInitDone is not UDMA_INIT_DONE!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        else
+        {
+            retVal = UDMA_SOK;
+        }
+        chHandle->drvHandle->drvInitDone = backUpDrvInitDone;
+    }
+
+    return (retVal);
+}
+
+/* 
+ * Test Case Description: Verifies the function Udma_chDisable when
+ * Test scenario 1: Null check for chHandle
+ * Test scenario 2: Check when chInitDone is not UDMA_INIT_DONE
+ * Test scenario 3: Null check for drvHandle
+ * Test scenario 4: Check when drvInitDone is not UDMA_INIT_DONE
+ */ 
+int32_t UdmaChDisableTestNeg(UdmaTestTaskObj *taskObj)
+{
+    int32_t            retVal = UDMA_SOK;
+    struct Udma_ChObj  chObj;
+    Udma_ChHandle      chHandle;
+    uint32_t           timeout = 0U;
+    uint32_t           instID;
+    uint32_t           backUpDrvInitDone;
+
+    GT_1trace(taskObj->traceMask, GT_INFO1,
+              " |TEST INFO|:: Task:%d: UDMA ChDisable Negative Testcase ::\r\n",
+              taskObj->taskId);
+
+    /* Test scenario 1: Null check for chHandle */
+    retVal = Udma_chDisable(NULL, timeout);
+    if(UDMA_SOK == retVal)
+    {
+        GT_0trace(taskObj->traceMask, GT_ERR,
+                  " |TEST INFO|:: FAIL:: UDMA:: chDisable:: Neg:: "
+                  " Null check for chHandle!!\n");
+        retVal = UDMA_EFAIL;
+    }
+    else
+    {
+        retVal = UDMA_SOK;
+    }
+
+    /* Test scenario 2: Check when chInitDone is not UDMA_INIT_DONE */
+    chHandle             = &chObj;
+    chHandle->chInitDone = UDMA_DEINIT_DONE;
+    if(UDMA_SOK == retVal)
+    {
+        retVal = Udma_chDisable(chHandle, timeout);
+        if(UDMA_SOK == retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: chDisable:: Neg:: "
+                      " Check when chInitDone is not UDMA_INIT_DONE!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        else
+        {
+            retVal = UDMA_SOK;
+        }
+    }
+
+    /* Test scenario 3: Null check for drvHandle */
+    chHandle->drvHandle  = NULL_PTR;
+    chHandle->chInitDone = UDMA_INIT_DONE;
+    if(UDMA_SOK == retVal)
+    {
+        retVal = Udma_chDisable(chHandle, timeout);
+        if(UDMA_SOK == retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: chDisable:: Neg:: "
+                      " Null check for drvHandle!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        else
+        {
+            retVal = UDMA_SOK;
+        }
+    }
+
+    /* Test scenario 4: Check when drvInitDone is not UDMA_INIT_DONE */
+    instID = UDMA_TEST_INST_ID_MAIN_0;
+    if(UDMA_SOK == retVal)
+    {
+        chHandle->drvHandle              = &taskObj->testObj->drvObj[instID];
+        backUpDrvInitDone                = chHandle->drvHandle->drvInitDone;
+        chHandle->drvHandle->drvInitDone = UDMA_DEINIT_DONE;
+        retVal = Udma_chDisable(chHandle, timeout);
+        if(UDMA_SOK == retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: chDisable:: Neg:: "
+                      " Check when drvInitDone is not UDMA_INIT_DONE!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        else
+        {
+            retVal = UDMA_SOK;
+        }
+        chHandle->drvHandle->drvInitDone = backUpDrvInitDone;
+    }
+   
+    return retVal;
+}
+
+/* 
+ * Test Case Description: Verifies the function Udma_chResume when
+ * Test scenario 1: Null check for chHandle
+ * Test scenario 2: Check when chInitDone is UDMA_INIT_DONE
+ * Test scenario 3: NUll check for drvHandle 
+ * Test scenario 4: Check when drvInitDone is not UDMA_INIT_DONE
+ */ 
+int32_t UdmaChResumeTestNeg(UdmaTestTaskObj *taskObj)
+{
+    int32_t           retVal = UDMA_SOK;
+    struct Udma_ChObj chObj;
+    Udma_ChHandle     chHandle;
+    uint32_t          instID;
+    uint32_t          backUpDrvInitDone;
+
+    GT_1trace(taskObj->traceMask, GT_INFO1,
+              " |TEST INFO|:: Task:%d: UDMA ChResume Negative Testcase ::\r\n",
+              taskObj->taskId);
+
+    /* Test scenario 1: Null check for chHandle */
+    retVal = Udma_chResume(NULL);
+    if(UDMA_SOK == retVal)
+    {
+        GT_0trace(taskObj->traceMask, GT_ERR,
+                  " |TEST INFO|:: FAIL:: UDMA:: chDisable:: Neg:: "
+                  " Null check for chHandle!!\n");
+        retVal = UDMA_EFAIL;
+    }
+    else
+    {
+        retVal = UDMA_SOK;
+    }
+
+    /* Test scenario 2: Check when chInitDone is UDMA_INIT_DONE */
+    chHandle             = &chObj;
+    chHandle->chInitDone = UDMA_DEINIT_DONE;
+    if(UDMA_SOK == retVal)
+    {
+        retVal = Udma_chResume(chHandle);
+        if(UDMA_SOK == retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: chDisable:: Neg::"
+                      " Check when chInitDone is UDMA_INIT_DONE!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        else
+        {
+            retVal = UDMA_SOK;
+        }
+    }
+    
+    /* Test scenario 3: NUll check for drvHandle */
+    chHandle->drvHandle  = NULL_PTR;
+    chHandle->chInitDone = UDMA_INIT_DONE;
+    if(UDMA_SOK == retVal)
+    {
+        retVal = Udma_chResume(chHandle);
+        if(UDMA_SOK == retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: chDisable:: Neg::"
+                      " NUll check for drvHandle!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        else
+        {
+            retVal = UDMA_SOK;
+        }
+    }
+
+    /* Test scenario 4: Check when drvInitDone is not UDMA_INIT_DONE */
+    instID = UDMA_TEST_INST_ID_MAIN_0;
+    if(UDMA_SOK == retVal)
+    {
+        chHandle->drvHandle              = &taskObj->testObj->drvObj[instID];
+        backUpDrvInitDone                = chHandle->drvHandle->drvInitDone;
+        chHandle->drvHandle->drvInitDone = UDMA_DEINIT_DONE;
+        retVal = Udma_chResume(chHandle);
+        if(UDMA_SOK == retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: chDisable:: Neg::"
+                      " Check when drvInitDone is not UDMA_INIT_DONE!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        else
+        {
+            retVal = UDMA_SOK;
+        }
+        chHandle->drvHandle->drvInitDone = backUpDrvInitDone;
+    }
 
     return retVal;
 }

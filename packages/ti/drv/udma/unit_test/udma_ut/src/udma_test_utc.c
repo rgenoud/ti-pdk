@@ -735,3 +735,4 @@ int32_t UdmaTestDruGetTriggerRegAddr(UdmaTestTaskObj *taskObj)
 
     return retVal;
 }
+
