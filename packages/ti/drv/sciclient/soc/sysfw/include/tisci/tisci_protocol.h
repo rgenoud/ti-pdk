@@ -194,6 +194,10 @@ struct tisci_sec_header {
 #define TISCI_MSG_FWL_EXCP_NOTIFICATION         (0x900BU)
 /** Message to open debug firewalls using a certificate */
 #define TISCI_MSG_OPEN_DEBUG_FWLS               (0x900CU)
+/** Message to allow read access of the firewall config data */
+#define TISCI_MSG_ALLOW_FWL_CTRL_READ           (0x902CU)
+/** Message to disable read access of the firewall config data */
+#define TISCI_MSG_FORBID_FWL_CTRL_READ          (0x902DU)
 /**
  * Message to write partitioning data and provisioned keys to the keystore
  * memory
