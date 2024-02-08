@@ -382,6 +382,12 @@ int32_t Sciclient_service (const Sciclient_ReqPrm_t *pReqPrm,
                 ret = Sciclient_serviceSecureProxy(pReqPrm, pRespPrm);
                 break;
             }
+            case TISCI_MSG_ALLOW_FWL_CTRL_READ:
+            case TISCI_MSG_FORBID_FWL_CTRL_READ:
+            {
+                ret = Sciclient_serviceSecureProxy(pReqPrm, pRespPrm);
+                break;
+            }
             default:
             {
                 /*
