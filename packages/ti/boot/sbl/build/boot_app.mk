@@ -58,6 +58,10 @@ ifeq ($(BOOTMODE), ospi)
     endif
     CFLAGS_LOCAL_COMMON += -DBOOT_OSPI
 endif
+ifeq ($(CANRESP), enabled)
+    CFLAGS_LOCAL_COMMON += -DCAN_RESP_TASK_ENABLED
+    SRCS_COMMON += boot_app_can.c
+endif
 
 ifeq ($(HLOSBOOT), linux)
     CFLAGS_LOCAL_COMMON += -DMPU1_HLOS_BOOT_ENABLED -DHLOS_BOOT_LINUX_OS

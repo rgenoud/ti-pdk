@@ -1783,7 +1783,7 @@ boot_app_ospi_COMP_LIST = boot_app_ospi
 boot_app_ospi_RELPATH = ti/boot/sbl/example/boot_app
 boot_app_ospi_CUSTOM_BINPATH = $(PDK_SBL_COMP_PATH)/example/boot_app/binary/$(BOARD)/ospi
 boot_app_ospi_PATH = $(PDK_SBL_COMP_PATH)/example/boot_app
-boot_app_ospi_MAKEFILE = -f$(PDK_SBL_COMP_PATH)/build/boot_app.mk BOOTMODE=ospi BUILD_HS=no HLOSBOOT=none
+boot_app_ospi_MAKEFILE = -f$(PDK_SBL_COMP_PATH)/build/boot_app.mk BOOTMODE=ospi BUILD_HS=no HLOSBOOT=none CANRESP=disabled
 export boot_app_ospi_MAKEFILE
 boot_app_ospi_BOARD_DEPENDENCY = yes
 boot_app_ospi_SOC_DEPENDENCY = yes

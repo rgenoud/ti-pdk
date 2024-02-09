@@ -31,12 +31,8 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/**
- *  \file     boot_core_defs.h
- *
- *  \brief    Header file for slave boot core definitions
- *
- */
+#ifndef BOOT_APP_CAN_H_
+#define BOOT_APP_CAN_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -46,47 +42,68 @@ extern "C" {
 /*                             Include Files                                  */
 /* ========================================================================== */
 
-#include <ti/boot/sbl/src/mmcsd/sbl_mmcsd.h>
+#include <ti/csl/csl_mcan.h>
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-/* Number of boot stages for the main domain multi-stage boot sequence */
-#define NUM_BOOT_STAGES     2
+#define BOOT_APP_MCU_MCAN0_ENABLE_PIN                 (0x0)
+#if defined (SOC_J721E)
+#define BOOT_APP_MCU_MCAN0_STBZ_PIN                   (0x36)
+#elif defined (SOC_J7200)
+#define BOOT_APP_MCU_MCAN0_STBZ_PIN                   (0x3A)
+#elif defined (SOC_J721S2)
+#define BOOT_APP_MCU_MCAN0_STBZ_PIN                   (0x45)
+#elif defined (SOC_J784S4)
+#define BOOT_APP_MCU_MCAN0_STB_PIN                    (0x45)
+#endif
+#define BOOT_APP_MCAN_STD_ID_FILT_NUM                 (0U)
+#define BOOT_APP_MCAN_EXT_ID_FILT_NUM                 (0U)
+#define BOOT_APP_MCAN_TX_EVENT_SIZE                   (0U)
+#define BOOT_APP_MCAN_TX_BUFF_START_ADDR              (0U)
+#define BOOT_APP_MCAN_TX_BUFF_SIZE                    (2U)
+#define BOOT_APP_MCAN_TX_FIFO_SIZE                    (0U)
+#define BOOT_APP_MCAN_RX_FIFO_0_NUM                   (0U)
+#define BOOT_APP_MCAN_RX_FIFO_1_NUM                   (0U)
+#define BOOT_APP_MCAN_RX_BUFF_START_ADDR              (80U)
 
-/* Maximum number of boot cores per boot stage */
-#define MAX_CORES_PER_STAGE 4
+/* ========================================================================== */
+/*                         Structure Declarations                             */
+/* ========================================================================== */
 
-#define MAX_APPIMAGE_NAME_LEN   (16)
+/* None */
 
-/* Macros representing the offset where the App Image has to be written/Read from
-   the OSPI Flash.
-*/
-#define OSPI_OFFSET_SI               (0x2E0000U)
-#define OSPI_OFFSET_SYSFW            (0x80000U)
+/* ========================================================================== */
+/*                            Global Variables                                */
+/* ========================================================================== */
 
-/* Location of ATF/OPTEE - used for both Linux and QNX */
-#define OSPI_OFFSET_A72IMG1          (0x1C0000U)
-/* Location of Kernel for Linux or IFS for QNX */
-#define OSPI_OFFSET_A72IMG2          (0x7C0000U)
-/* Location of DTB for Linux */
-#define OSPI_OFFSET_A72IMG3          (0x1EC0000U)
+/* None */
 
-#define MAIN_DOMAIN_APPS_FLASH_ADDR  (0x1FC0000U)
-#define MAIN_DOMAIN_APPS_FLASH_ADDR2 (0x27C0000U)
-#define MAIN_DOMAIN_APPS_FLASH_ADDR3 (0x37C0000U)
+/* ========================================================================== */
+/*                          Function Declarations                             */
+/* ========================================================================== */
 
-/* Location Address used as flag to indicate loading of
- * all HLOS appimages for OSPI */
-#define MAIN_DOMAIN_HLOS             (0x1)
-/* Name indicating that appimages for HLOS should be
- * loaded from MMCSD filesystem */
-#define MAIN_DOMAIN_HLOS_NAME        "hlos"
+/**
+ * \brief  This function will enable CAN transceivers
+ *
+ * \param  None
+ *
+ * \return None
+ */
+void BootApp_canEnableTransceivers(void);
 
-/* Important RAM address macros */
-#define ATF_START_RAM_ADDR          (0x70000000)
+/**
+ * \brief  This function transmits a CAN message
+ *
+ * \param  None
+ *
+ * \return None
+ */
+void BootApp_canResponseTest(void);
 
 #ifdef __cplusplus
 }
 #endif
+
+#endif /* #ifndef BOOT_APP_CAN_H_ */
