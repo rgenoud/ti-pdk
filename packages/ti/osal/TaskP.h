@@ -210,6 +210,15 @@ extern uint32_t TaskP_disable(void);
  */
 extern void TaskP_restore(uint32_t key);
 
+/*!
+ *  @brief  Return the task stack high watermark value (in bytes)
+ *
+ *  This represents the smallest distance in bytes thus far before experiencing a stack overflow
+ *
+ *  @param handle  A TaskP_Handle returned from TaskP_create.
+ */
+extern uint32_t TaskP_getTaskStackHighWatermark(TaskP_Handle handle);
+
 #ifdef __cplusplus
 }
 #endif

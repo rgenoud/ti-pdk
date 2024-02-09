@@ -400,6 +400,18 @@ portTaskHandleType TaskP_getSafeRTOSHandle( TaskP_Handle handle )
     return ( taskHandle->taskHndl );
 }
 
+uint32_t TaskP_getTaskStackHighWatermark(TaskP_Handle handle)
+{
+    TaskP_SafeRTOS *taskHandle = (TaskP_SafeRTOS *)handle;
+
+    DebugP_assert(NULL_PTR != handle);
+    DebugP_assert((bool)false != taskHandle->used);
+
+    /* SafeRTOS doesn't support this functionality, return 0 */
+
+    return (0);
+}
+
 void OS_start(void)
 {
     /* Check if the OS_init is done. */

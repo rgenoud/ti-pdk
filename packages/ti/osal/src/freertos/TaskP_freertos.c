@@ -428,6 +428,16 @@ uint32_t TaskP_getTaskId(TaskP_Handle handle)
     return (taskHandle->tskId);
 }
 
+uint32_t TaskP_getTaskStackHighWatermark(TaskP_Handle handle)
+{
+    TaskP_freertos *taskHandle = (TaskP_freertos *)handle;
+
+    DebugP_assert(NULL_PTR != handle);
+    DebugP_assert((bool)false != taskHandle->used);
+
+    return (uxTaskGetStackHighWaterMark(taskHandle->taskHndl)*sizeof(UBaseType_t));
+}
+
 static int32_t prvSetupTimerPSC( void )
 {
     int32_t xStatus = CSL_PASS;
