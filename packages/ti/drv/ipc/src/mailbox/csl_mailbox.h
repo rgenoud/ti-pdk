@@ -75,4 +75,9 @@ extern "C"
 
 /* None */
 
+#ifdef __cplusplus
+}
 #endif
+
+#endif
+
