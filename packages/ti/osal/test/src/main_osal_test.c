@@ -130,7 +130,8 @@ void ErrorHandler(Error_Block *eb)
 void C66xTimerInterruptInit(void);
 
     #if defined(SOC_J721E)
-    /* To set C66 timer interrupts on J7ES */
+        #define EXT_BLOCK_TEST_EVENT_ID             (10U)
+        /* To set C66 timer interrupts on J7ES */
         #if defined (BUILD_C66X_1)
             #define OSAL_TEST_CORE_TISCI_ID         (TISCI_DEV_C66SS0_CORE0)
             #define OSAL_TEST_OS_TIMER_TISCI_ID     (TISCI_DEV_TIMER0)
@@ -1372,7 +1373,9 @@ bool OSAL_ExtBlock_test(void)
 
     /* Default parameter initialization */
     HwiP_Params_init(&hwiParams);
-
+#if defined (BUILD_C66X)
+    hwiParams.evtId = EXT_BLOCK_TEST_EVENT_ID;
+#endif
     /* create the hwi block */
     hwiHandle = HwiP_create(8U, (HwiP_Fxn)myIsr, &hwiParams);
     if (hwiHandle == (HwiP_Handle) NULL_PTR)
