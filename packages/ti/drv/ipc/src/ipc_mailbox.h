@@ -91,15 +91,6 @@ int32_t Ipc_mailboxSend(uint32_t selfId, uint32_t remoteProcId, uint32_t val,
 int32_t Ipc_mailboxRegister(uint16_t selfId, uint16_t remoteProcId,
             Mailbox_hwiCallback func, uint32_t arg, uint32_t timeoutCnt);
 
-/** \brief Handles Interrupts from remote cores.
- *          Expected to be invoked on occurrence of new message in mailbox FIFO
- *
- *  \param  uint32_t    Valid Remote Processors identifier
- *
- *  \return None
- */
-void Ipc_mailboxIsr(uint32_t remoteProcId);
-
 /** \brief Mailbox Interrupts  */
 void *Mailbox_plugInterrupt(Ipc_MbConfig *cfg, Ipc_OsalIsrFxn func, uintptr_t arg);
 

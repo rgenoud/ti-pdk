@@ -430,23 +430,6 @@ int32_t Ipc_mailboxRegister(uint16_t selfId, uint16_t remoteProcId,
     return retVal;
 }
 
-/** \brief Low Level Mailbox ISR for a given remote processor */
-void Ipc_mailboxIsr(uint32_t remoteProcId)
-{
-    uintptr_t mBoxData = 0U;
-
-    if (IPC_MAX_PROCS > remoteProcId)
-    {
-        mBoxData = gIpcRProcIdToMBoxDataMap[remoteProcId];
-        if (0U != mBoxData)
-        {
-            Ipc_mailboxInternalCallback(mBoxData);
-        }
-    }
-
-    return;
-}
-
 /*!
  *  ======== Ipc_mailboxInternalCallback ========
  */

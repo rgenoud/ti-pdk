@@ -280,15 +280,6 @@ int32_t Rpmsg_Extended_ResponderFxn(uint32_t testId)
       
       Ipc_getVqObjMemoryRequired();
 
-      Ipc_newMessageIsr(selfProcId);
-
-      /* Testing invalid remoteprocId for mailbox ISR */
-      Ipc_mailboxIsr(remoteProcId);
-
-      Ipc_mailboxIsr(IPC_APP_INVALID_ID);
-
-      Ipc_mailboxIsr(IPC_APP_ENDPT1);
-
       IpcUtils_getMemoryAddress(daAddr,size);
 
       Ipc_getMailboxInfoTx(17U,remoteProcId,&clusterId,&userId,&queueId);

@@ -1780,10 +1780,3 @@ int32_t Ipc_deinit(void)
 
     return (retVal);
 }
-
-void Ipc_newMessageIsr(uint32_t srcProcId)
-{
-    Ipc_mailboxIsr(srcProcId);
-
-    return;
-}

@@ -522,23 +522,6 @@ void RPMessage_unblockGetRemoteEndPt(uint32_t token);
 int32_t RPMessage_announce(uint32_t remoteProcId, uint32_t endPt,
        const char* name);
 
-/**
- *  \brief New Message Interrupt Handler
- *
- *  \warning To be used only when built for baremetal
- *
- *  When built for baremetal applications, the IPC driver do not register
- *  interrupt handler to handle interrupts from mailbox.
- *  It's expected that user of this driver shall invoke this function, on
- *  reception of interrupt from the mailbox associated with remote processor
- *
- *  \param srcProcId    [IN] The remote processor ID
- *
- *  \return     - None
- *
- */
-void Ipc_newMessageIsr(uint32_t srcProcId);
-
 /** \brief API Mailbox Enable new MSG interrupt for a given remote processor
  *
  *  \warning To be used only when built for baremetal
