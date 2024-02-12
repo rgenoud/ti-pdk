@@ -804,6 +804,7 @@ static bool I2CApp_negativeTest(void *arg)
     int16_t             status;
     bool                testStatus = BTRUE;
     I2CApp_TestCfg      *test = (I2CApp_TestCfg *)arg;
+    I2C_HwAttrs const   *i2cCfg = NULL;
 
     /* Set the I2C EEPROM write/read address */
     txBuf[0] = (I2C_APP_EEPROM_TEST_ADDR >> 8) & 0xFF; /* EEPROM memory high address byte */
@@ -827,6 +828,11 @@ static bool I2CApp_negativeTest(void *arg)
     {
         testStatus = BFALSE;
     }
+
+    /*Set Rx and Tx FIFO threshold value*/
+    i2cCfg = (I2C_HwAttrs const *)handle->hwAttrs;
+    I2CFIFOThresholdConfig(i2cCfg->baseAddr, 0U, I2C_TX_MODE);
+    I2CFIFOThresholdConfig(i2cCfg->baseAddr, 0U, I2C_RX_MODE);
 
     memset(rxBuf, 0, I2C_APP_EEPROM_TEST_LENGTH);
     I2C_transactionInit(&i2cTransaction);
@@ -863,6 +869,9 @@ static bool I2CApp_negativeTest(void *arg)
         UART_printf("I2C Test: 10bit Address not supporting \n");
         testStatus = BTRUE;
     }
+
+    /*clear the FIFO*/
+    I2CFlushFifo(i2cCfg->baseAddr);
 
     if(handle)
     {
