@@ -45,7 +45,6 @@
 #if !defined(BARE_METAL)
 /* include for both safertos and freertos. */
 #include <ti/osal/TaskP.h>
-#include <ti/osal/EventP.h>
 #endif
 
 #if defined (FREERTOS)
@@ -144,12 +143,6 @@ ClockP_Handle gclockp_handle;
 volatile uint64_t gTestlocalTimeout = 0x100000U;
 volatile bool gFlagSwi = false, gFlagIRQ = false;
 
-/* for EventP APIs */
-EventP_Handle gEventP_handle;
-uint32_t geventMask = EventP_ID_01;
-extern int gOsalEventPFreeRtosPool[OSAL_FREERTOS_CONFIGNUM_EVENT];
-extern uint32_t gOsalEventAllocCnt;
-
 /*Semaphore block*/
 uint8_t semPMemBlock[SEMP_BLOCK_SIZE]
 __attribute__ ((aligned(64)));
@@ -182,21 +175,6 @@ void Hwi_IRQ(uintptr_t arg)
 void SwiP_nonosIRQ(uintptr_t arg0, uintptr_t arg1)
 {
    gFlagSwi = true;
-}
-
-/*isr which calls EventP and ghwip_isr_got_execute which indicates isr got executed*/
-void EventP_IRQ(void *arg)
-{
-    ghwip_isr_got_execute = 4U;
-    gTestlocalTimeout = 0x300000U;
-    EventP_post(gEventP_handle, geventMask);
-    EventP_getPostedEvents(gEventP_handle);
-}
-
-void EventP_Neg_IRQ(void *arg)
-{
-      gTestlocalTimeout = 0x100000U;
-      EventP_post(gEventP_handle, geventMask);
 }
 
 /*=============================================================================*/
@@ -485,242 +463,6 @@ void RegisterIntr_Test(void)
     RegisterIntrDirect_NegTest();
     RegisterIntr_pos_Test();
     RegisterIntr_Neg_Test();
-}
-
-/*
- * Description  : for ISR context in EventP_post and EventP_getPostedEvents APIs
- */
-static void Osal_isInISRContext_EventP_Test(void)
-{
-    uint32_t      interruptNum = INT_NUM_IRQ;
-    HwiP_Params   hwipParams;
-    HwiP_Handle   handle;
-    HwiP_Status   status;
-    int8_t        ret;
-    volatile int intCount = 0;
-    bool test_pass = true;
-
-    HwiP_Params_init(&hwipParams);
-
-    handle = HwiP_create(interruptNum, (HwiP_Fxn)EventP_IRQ, &hwipParams);
-
-    if(NULL_PTR == handle)
-    {
-        OSAL_log("\t Failed to create the HwiP handle for start \n");
-        test_pass = false;
-    }
-
-    if(true == test_pass)
-    {
-        HwiP_enableInterrupt(interruptNum);
-
-        while (intCount != LOOP_CNT - 1)
-        {
-            ret = HwiP_post(interruptNum);
-            if(osal_UNSUPPORTED == ret)
-            {
-                OSAL_log("\t HwiP_post unsupported/failed!\n");
-                test_pass = false;
-                break;
-            }
-
-            /* Wait for software timeout, ISR should hit
-            * otherwise return the test as failed */
-            while (gTestlocalTimeout != 0U)
-            {
-                gTestlocalTimeout--;
-                if (ghwip_isr_got_execute)
-                {
-                    ghwip_isr_got_execute = 0;
-                    intCount++;
-                    break;
-                }
-            }
-            /* Wait is over - did not get any interrupts posted/received
-            * declare the test as fail
-            */
-            if (gTestlocalTimeout == 0)
-            {
-                OSAL_log("\t Failed to get interrupts \n");
-            }
-        }
-
-        OSAL_log("\t %d IRQs received.\n",intCount);
-
-        status = HwiP_delete(handle);
-        if(HwiP_OK != status)
-        {
-            OSAL_log("\t HwiP delete failed\n");
-            test_pass = false;
-        }
-
-        if((true == test_pass) && (4 == ghwip_isr_got_execute))
-        {
-            OSAL_log("\n EventP ISR executed!!\n");
-        }
-    }
-}
-
-/*
- * Description: Testing ISR condition for the below mentioned APIs
- *      1. EventP_post
- *      2. EventP_getPostedEvents
- */
-void EventP_ISR_Test()
-{
-    EventP_Params   params;
-    EventP_Status   status;
-    uint8_t         loop;
-
-    EventP_Params_init(&params);
-
-    gEventP_handle = EventP_create(&params);
-    if (NULL_PTR == gEventP_handle)
-    {
-       OSAL_log("\t Failed to create event \n");
-    }
-
-    for(loop = 0U; loop < LOOP_CNT ; loop++)
-    {
-        Osal_isInISRContext_EventP_Test();
-        if(1U == loop)
-        {
-            /*Code Snippet: if (gOsalEventAllocCnt > 0U) */
-            gOsalEventAllocCnt = 0U;
-        }
-    }
-
-    status = EventP_delete(&gEventP_handle);
-    if(EventP_OK != status)
-    {
-        OSAL_log("\t Failed to delete event \n");
-    }
-    else
-    {
-        OSAL_log("\n EventP ISR Test passed!! \n");
-    }
-}
-
-/*
- * Description: Testing Negative condition for the below mentioned APIs
- *      1. EventP_create
- *      2. EventP_post
- */
-void EventP_Neg_Test(void)
-{
-    EventP_Params   params;
-    EventP_Status   status;
-    uint32_t        retEventMask;
-    uint32_t        *addr_handle = NULL;
-    int8_t          loop;
-    bool            test_pass = true;
-
-    EventP_Params_init(&params);
-
-    gEventP_handle = EventP_create(&params);
-    if (NULL_PTR == gEventP_handle)
-    {
-          OSAL_log("\t Failed to create event \n");
-          test_pass = false;
-    }
-
-    if(true == test_pass)
-    {
-          /* to check else condition of "if((NULL_PTR != event) && ((bool)true == event->used))" statement"*/
-          /* Test 1: event post test */
-          addr_handle = gEventP_handle;
-          for(loop = 0U; loop <= LOOP_CNT; loop++)
-          {
-              addr_handle[loop] = 0U;
-          }
-          status = EventP_post(gEventP_handle, EventP_ID_NONE);
-          if(EventP_OK == status)
-          {
-              OSAL_log("\t Negative condition check of EventP_test Failed \n");
-          }
-
-          /* Test : event get posted events test */
-          retEventMask = EventP_getPostedEvents(gEventP_handle);
-          if((retEventMask & EventP_ID_00) == EventP_ID_00)
-          {
-              OSAL_log("\t EventP_getPostedEvents returned %d, but expect %d \n",EventP_ID_00, retEventMask);
-          }
-
-          /* Checking the Negative condition */
-          retEventMask = EventP_wait(gEventP_handle, geventMask, EventP_WaitMode_ALL, EventP_WAIT_FOREVER);
-          if((retEventMask & geventMask) == geventMask)
-          {
-              OSAL_log("\t EventP_wait returned %d, but expect %d \n", retEventMask, geventMask);
-          }
-
-          status = EventP_delete(&gEventP_handle);
-          if(EventP_OK == status)
-          {
-              OSAL_log("\t Failed to check the negative condition of delete event \n");
-              test_pass = false;
-          }
-          if(true == test_pass)
-          {
-              OSAL_log("\n EventP Negative Test passed!! \n");
-          }
-          else
-          {
-              OSAL_log("\n EventP Negative Test failed!! \n");
-          }
-      }
-}
-
-uint32_t event_num = 20;
-
-/*
- * Description: Testing Maximum event creation condition
- */
-void EventP_Max_Test(void)
-{
-    EventP_Params   params;
-    EventP_Handle   handle[2];
-    EventP_Status   status;
-    uint32_t        loop;
-    bool            test_pass = false;
-
-
-    EventP_Params_init(&params);
-
-    for (loop = 0U; loop <= LOOP_CNT ; loop++)
-    {
-        handle[loop] = EventP_create(&params);
-        if (NULL_PTR != handle[loop])
-        {
-            test_pass = true;
-        }
-    }
-    if(true == test_pass)
-    {
-        for (loop = 0; loop < LOOP_CNT ; loop++)
-        {
-            status = EventP_delete(&handle[loop]);
-            if(EventP_OK != status)
-            {
-                OSAL_log("Failed to delete event \n");
-                OSAL_log("\t Maximum event creation test Failed!! \n");
-                test_pass = false;
-            }
-        }
-        if(true == test_pass)
-        {
-            OSAL_log("\n\t Maximum event creation test Passed!! \n");
-        }
-    }
-    else
-    {
-        OSAL_log("\t Maximum event creation test Failed!! \n");
-    }
-}
-
-void EventP_Test(void)
-{
-    EventP_ISR_Test();
-    EventP_Neg_Test();
 }
 
 /*
@@ -1472,8 +1214,6 @@ void OSAL_tests(void *arg0, void *arg1)
 
     Semaphore_create_null_param_test();
 
-    EventP_Max_Test();
-
     loadP_freertos_test();
     
     result += OsalApp_memoryTests();
@@ -1516,8 +1256,6 @@ void OSAL_tests(void *arg0, void *arg1)
     result += OsalApp_taskTests();
 #endif
 
-    EventP_Test();
-
     Semaphore_flow_test();
 
     Semaphore_compile_time_size_test();
@@ -1527,6 +1265,8 @@ void OSAL_tests(void *arg0, void *arg1)
     result += OsalApp_mutexTests();
     
     result += OsalApp_mailboxTests();
+    
+    result += OsalApp_eventTests();
 
 #endif
     
