@@ -473,21 +473,21 @@ static void udmaTestOverrideDefRes(Udma_InitPrms   *initPrms)
     ((initPrms->rmInitPrms.numRxUhcCh != 0U) && (initPrms->rmInitPrms.numTxUhcCh != 0U)) &&
     (initPrms->rmInitPrms.startRxUhcCh == initPrms->rmInitPrms.startTxUhcCh))
     {
-        initPrms->rmInitPrms.startBlkCopyHcCh = initPrms->rmInitPrms.startRxUhcCh;
-        initPrms->rmInitPrms.numBlkCopyHcCh   = initPrms->rmInitPrms.numRxUhcCh;
+        initPrms->rmInitPrms.startBlkCopyUhcCh = initPrms->rmInitPrms.startRxUhcCh;
+        initPrms->rmInitPrms.numBlkCopyUhcCh   = initPrms->rmInitPrms.numRxUhcCh;
     }
 
     if((initPrms->rmInitPrms.numBlkCopyUhcCh != 0U) && 
     (initPrms->rmInitPrms.numRxUhcCh == 0U) )
     {
-        initPrms->rmInitPrms.startRxUhcCh = initPrms->rmInitPrms.startBlkCopyHcCh;
+        initPrms->rmInitPrms.startRxUhcCh = initPrms->rmInitPrms.startBlkCopyUhcCh;
         initPrms->rmInitPrms.numRxUhcCh   = initPrms->rmInitPrms.numBlkCopyUhcCh;
     }
 
     if((initPrms->rmInitPrms.numBlkCopyUhcCh != 0U) && 
     (initPrms->rmInitPrms.numTxUhcCh == 0U) )
     {
-        initPrms->rmInitPrms.startTxUhcCh = initPrms->rmInitPrms.startBlkCopyHcCh;
+        initPrms->rmInitPrms.startTxUhcCh = initPrms->rmInitPrms.startBlkCopyUhcCh;
         initPrms->rmInitPrms.numTxUhcCh   = initPrms->rmInitPrms.numBlkCopyUhcCh;
     }
     

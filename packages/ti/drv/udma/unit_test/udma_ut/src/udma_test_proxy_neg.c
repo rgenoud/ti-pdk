@@ -281,6 +281,7 @@ int32_t UdmaTest_proxyFreeNeg(UdmaTestTaskObj *taskObj)
             retVal = UDMA_EFAIL;
         }
         proxyHandle->drvHandle->drvInitDone = backUpDrvInitDone;
+        proxyHandle->drvHandle->instType    = UDMA_INST_TYPE_NORMAL;
     }
 
     return (retVal);
@@ -388,6 +389,7 @@ int32_t UdmaTest_proxyConfigNeg(UdmaTestTaskObj *taskObj)
             retVal = UDMA_EFAIL;
         }
         proxyHandle->drvHandle->drvInitDone = backUpDrvInitDone;
+        proxyHandle->drvHandle->instType    = UDMA_INST_TYPE_NORMAL;
     }
 
    return (retVal);

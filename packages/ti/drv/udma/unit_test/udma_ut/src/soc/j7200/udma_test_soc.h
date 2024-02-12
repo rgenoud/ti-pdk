@@ -126,6 +126,9 @@ extern "C" {
                                          UDMA_TEST_RF_CORE_MCU1_0 | \
                                          UDMA_TEST_RF_CFG_DEF)
 #define UDMA_TEST_RF_DRU_MT             (UDMA_TEST_RF_DRU)
+#define UDMA_TEST_RF_UHC                (UDMA_TEST_RF_SOC | \
+                                         UDMA_TEST_RF_CORE_MCU2_1 | \
+                                         UDMA_TEST_RF_CFG_DEF)
 
 #define UDMA_TEST_RF_FLOW               (UDMA_TEST_RF_SOC | \
                                          UDMA_TEST_RF_CORE_MPU1_0 | \

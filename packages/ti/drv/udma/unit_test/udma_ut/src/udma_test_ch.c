@@ -819,8 +819,8 @@ int32_t UdmaChDisableTest(UdmaTestTaskObj *taskObj)
                 if(UDMA_SOK != retVal)
                 {
                     GT_0trace(taskObj->traceMask, GT_ERR,
-                            " |TEST INFO|:: FAIL:: UDMA:: UdmachDisableTxChan:: Pos:: "
-                            " Check when chType is UDMA_CH_TYPE_TX and instType is UDMA_INST_TYPE_NORMAL!!\n");
+                              " |TEST INFO|:: FAIL:: UDMA:: UdmachDisableTxChan:: Pos:: "
+                              " Check when chType is UDMA_CH_TYPE_TX and instType is UDMA_INST_TYPE_NORMAL!!\n");
                     retVal = UDMA_EFAIL;
                 }
                 else
@@ -834,5 +834,175 @@ int32_t UdmaChDisableTest(UdmaTestTaskObj *taskObj)
     taskObj->testObj->drvObj[instID] = backUpDrvObj;
    
     return retVal;
+}
+
+/* 
+ * Test Case Description: Verifies the function Udma_chConfigPdma when
+ * Test scenario 1: Check when instType is UDMA_INST_TYPE_NORMAL and chType is UDMA_CH_TYPE_PDMA_TX
+ */ 
+int32_t UdmaChConfigPdmaTest(UdmaTestTaskObj *taskObj)
+{
+    int32_t           retVal = UDMA_SOK;
+    struct Udma_ChObj chObj;
+    Udma_ChHandle     chHandle;
+    Udma_ChTxPrms     txPrms;
+    Udma_ChPdmaPrms   pdmaPrms;
+    uint32_t          instID;
+    Udma_DrvHandle    drvHandle;
+    Udma_ChPrms       chPrms;
+    uint32_t          chType;
+    
+    GT_1trace(taskObj->traceMask, GT_INFO1,
+              " |TEST INFO|:: Task:%d: UDMA ChConfigPdma Testcase ::\r\n",
+              taskObj->taskId);
+
+    /* Test scenario 1: Check when instType is UDMA_INST_TYPE_NORMAL and chType is UDMA_CH_TYPE_PDMA_TX */
+    chHandle         = &chObj;
+    chType           = UDMA_CH_TYPE_PDMA_TX;
+    UdmaChPrms_init(&chPrms, chType);
+    instID           = UDMA_TEST_DEFAULT_UDMA_INST;
+    drvHandle        = &taskObj->testObj->drvObj[instID];
+    chPrms.peerChNum = CSL_PDMA_CH_MCU_MCAN0_CH0_TX;
+    retVal           = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
+    if(UDMA_SOK == retVal)
+    {
+        /* Config RX channel */
+        UdmaChTxPrms_init(&txPrms, UDMA_CH_TYPE_PDMA_TX);
+        retVal = Udma_chConfigTx(chHandle, &txPrms);
+        /* Config PDMA channel */
+        UdmaChPdmaPrms_init(&pdmaPrms);
+        retVal = Udma_chConfigPdma(chHandle, &pdmaPrms);
+        if(UDMA_SOK != retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: ChConfigPdma:: Neg:: "
+                      " when instType is UDMA_INST_TYPE_NORMAL and chType is UDMA_CH_TYPE_PDMA_TX!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        else
+        {
+            retVal = UDMA_SOK;
+        }
+    }
+    Udma_chClose(chHandle);
+
+    return retVal;
+}
+
+/* 
+ * Test Case Description: Verifies the function Udma_chGetTdCqRingHandle 
+ * Test scenario 1: Check for Valid args
+ */
+int32_t UdmaTestChGetTdCqRingHandle(UdmaTestTaskObj *taskObj)
+{
+    int32_t           retVal = UDMA_SOK;
+    Udma_ChHandle     chHandle;
+    struct Udma_ChObj chObj;
+    Udma_ChPrms       chPrms;
+    uint32_t          chType;
+    Udma_DrvHandle    drvHandle;
+    uint32_t          instID;
+
+    GT_1trace(taskObj->traceMask, GT_INFO1,
+              " |TEST INFO|:: Task:%d: UDMA ChGetTdCqRingHandle Testcase ::\r\n",
+              taskObj->taskId);
+
+    /*Test scenario 1: Check for Valid args*/
+    chHandle         = &chObj;
+    instID           = UDMA_TEST_DEFAULT_UDMA_INST;
+    chType           = UDMA_CH_TYPE_TX;
+    UdmaChPrms_init(&chPrms, chType);
+    drvHandle        = &taskObj->testObj->drvObj[instID];
+    chPrms.peerChNum = UDMA_PSIL_CH_MCU_CPSW0_TX;
+    retVal           = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
+    if(UDMA_SOK == retVal)
+    {
+        if(Udma_chGetTdCqRingHandle(chHandle) != NULL_PTR)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: chGetTdCqRingHandle:: Pos::"
+                      " Check for Valid args!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        else
+        {
+            retVal = UDMA_SOK;
+        }
+    }
+    Udma_chClose(chHandle);
+
+    return retVal;
+}
+
+/* 
+ * Test Case Description: Verifies the function Udma_chGetFqRingNum
+ * Test scenario 1: Check for Valid args
+ */
+int32_t UdmaTestChGetFqRingNum(UdmaTestTaskObj *taskObj)
+{
+    int32_t           retVal = UDMA_SOK;
+    uint32_t          heapId = UTILS_MEM_HEAP_ID_MSMC;
+    uint32_t          instID;
+    Udma_ChHandle     chHandle;
+    struct Udma_ChObj chObj;
+    Udma_ChPrms       chPrms;
+    uint32_t          elemCnt = 50U, ringMemSize;
+    uint32_t          chType;
+    Udma_DrvHandle    drvHandle;
+    void              *ringMem = NULL;
+
+    GT_1trace(taskObj->traceMask, GT_INFO1,
+              " |TEST INFO|:: Task:%d: UDMA ChGetFqRingNum Testcase ::\r\n",
+              taskObj->taskId);
+
+    ringMemSize = elemCnt * sizeof (uint64_t);
+    ringMem = Utils_memAlloc(heapId, ringMemSize, UDMA_CACHELINE_ALIGNMENT);
+    if(NULL == ringMem)
+    {
+        retVal = UDMA_EALLOC;
+        GT_0trace(taskObj->traceMask, GT_ERR, " Ring memory allocation failure\r\n");
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /*Test scenario 1: Check for Valid args*/
+        chHandle                      = &chObj;
+        instID                        = UDMA_TEST_DEFAULT_UDMA_INST;
+        chType                        = UDMA_CH_TYPE_TX;
+        UdmaChPrms_init(&chPrms, chType);
+        drvHandle                     = &taskObj->testObj->drvObj[instID];
+        chPrms.peerChNum              = UDMA_PSIL_CH_MCU_CPSW0_TX;
+        chPrms.fqRingPrms.ringMem     = ringMem;
+        chPrms.fqRingPrms.ringMemSize = ringMemSize;
+        chPrms.fqRingPrms.elemCnt     = elemCnt;
+        retVal                        = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
+        if(UDMA_SOK == retVal)
+        {
+            retVal = Udma_chGetFqRingNum(chHandle);
+            if(retVal == UDMA_RING_INVALID)
+            {
+                GT_0trace(taskObj->traceMask, GT_ERR,
+                          " |TEST INFO|:: FAIL:: UDMA:: chGetFqRingNum:: Pos::"
+                          " Check for Valid args!!\n");
+                retVal = UDMA_EFAIL;
+            }
+            else
+            {
+                retVal = UDMA_SOK;
+            }
+        }
+        Udma_chClose(chHandle);
+    }
+
+    if(NULL != ringMem)
+    {
+        retVal += Utils_memFree(heapId, ringMem, ringMemSize);
+        if(UDMA_SOK != retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR, " Ring free failed!!\n");
+        }
+    }
+
+    return (retVal);
 }
 

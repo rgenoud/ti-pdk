@@ -128,6 +128,9 @@ extern "C" {
                                          UDMA_TEST_RF_CORE_C66X_1 | \
                                          UDMA_TEST_RF_CORE_C66X_2 | \
                                          UDMA_TEST_RF_CFG_DEF)
+#define UDMA_TEST_RF_UHC                (UDMA_TEST_RF_SOC | \
+                                         UDMA_TEST_RF_CORE_MCU2_0 | \
+                                         UDMA_TEST_RF_CFG_DEF)
 /* Need at least two channels - so enable only for those cores */
 #define UDMA_TEST_RF_CHAIN              (UDMA_TEST_RF_SOC | \
                                          UDMA_TEST_RF_CORE_MPU1_0 | \
