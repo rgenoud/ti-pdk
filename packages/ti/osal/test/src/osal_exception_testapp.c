@@ -1,12 +1,5 @@
-/**
- *  \file   osal_exception_testapp.c
- *
- *  \brief  OSAL driver test application main file.
- *
- */
-
 /*
- * Copyright (C) 2023 Texas Instruments Incorporated - http://www.ti.com/
+ * Copyright (C) 2024 Texas Instruments Incorporated - http://www.ti.com/
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -38,14 +31,33 @@
  *
  */
 
+/**
+ *  \file   osal_exception_testapp.c
+ *
+ *  \brief  OSAL driver test application main file.
+ *
+ */
+  
+/*===========================================================================*/
+/*                             Includes                                      */
+/*===========================================================================*/
+
 #include <ti/board/board.h>
 #include <ti/osal/DebugP.h>
 #include <stdint.h>
 #include <ti/csl/arch/csl_arch.h>
-#include <ti/drv/uart/UART.h>
 #include <ti/drv/uart/UART_stdio.h>
+#include "OSAL_log.h"
 
-#define OSAL_log                UART_printf
+/*===========================================================================*/
+/*                             Macros & Typedefs                             */
+/*===========================================================================*/
+
+/* None */
+
+/* ==========================================================================*/
+/*                            Global Variables                               */
+/* ==========================================================================*/
 
 #if defined (BUILD_MCU)
 extern const CSL_ArmR5MpuRegionCfg __attribute__((section(".startupData"))) gCslR5MpuCfg[CSL_ARM_R5F_MPU_REGIONS_MAX] =
@@ -124,35 +136,104 @@ extern const CSL_ArmR5MpuRegionCfg __attribute__((section(".startupData"))) gCsl
 };
 #endif
 
-static Board_STATUS Board_initOSAL(void)
+/* ==========================================================================*/
+/*                         Structure Declarations                            */
+/* ==========================================================================*/
+
+/* None */
+
+/* ==========================================================================*/
+/*                          Internal Function Declarations                   */
+/* ==========================================================================*/
+
+/*
+ * Description  : Test the below debug Exception APIs :
+ *                 1. DebugP_registerExcptnLogFxn()
+ *                 2. DebugP_deRegisterExcptnLogFxn()
+ *                 3. DebugP_exceptionLog()
+ */
+static void OsalApp_debugNegativeTest(void);
+
+/* Description  : BoardInit for OSAL */
+static Board_STATUS OsalApp_boardInit(void);
+
+/* Description  : Genearting the OSAL Exception*/
+static void OsalApp_generateException(void); 
+
+/* ==========================================================================*/
+/*                      Internal Function Definitions                        */
+/* ==========================================================================*/
+
+static Board_STATUS OsalApp_boardInit(void)
 {
     return Board_init(BOARD_INIT_UART_STDIO);
 }
 
-static void OSAL_generateException()
+static void OsalApp_generateException()
 {
-	volatile uint32_t *myBadAddr;
+    volatile uint32_t *myBadAddr;
 #if defined (BUILD_MCU)
-	myBadAddr = (uint32_t *)0xFFFFF001;
+    myBadAddr = (uint32_t *)(0xFFFFF001);
 #elif defined (BUILD_C7X)
-	myBadAddr = (uint32_t*)(0xC000B000);
+    myBadAddr = (uint32_t*)(0xC000B000);
 #endif
-	*myBadAddr = (0xDEADFADE);
+    *myBadAddr = (0xDEADFADE);
 }
 
+static void OsalApp_debugNegativeTest(void)
+{
+    int32_t retval = DEBUGP_LOGFXN_ALREADY_REGISTERD;
+
+    /* Checking the exception log before registering the exception */
+    DebugP_exceptionLog(" \n ExceptionLog before Registering  \n", 0U, 0U);
+
+    /* Registration of OSAL_log function */
+    retval = DebugP_registerExcptnLogFxn(OSAL_log);
+    if(DEBUGP_LOGFXN_ALREADY_REGISTERD == retval)
+    {
+        OSAL_log("\n Registration of Exception log function failed!!\n");
+    }
+    else
+    {
+        /* Checking the exception log after registering the exception */
+        DebugP_exceptionLog("\n ExceptionLog after Registering !\n", 0U, 0U);
+    }
+
+    /* Registering twice without de-registarting the exception to check the DEBUGP_LOGFXN_ALREADY_REGISTERD condition */
+    retval = DebugP_registerExcptnLogFxn(OSAL_log);
+    if(DEBUGP_LOGFXN_ALREADY_REGISTERD == retval)
+    {
+        OSAL_log("\n DebugP Negative test for exception passed!\n");
+    }
+    else
+    {
+        OSAL_log("\n DebugP Negative test for exception failed!\n");
+    }
+
+    /* Debug log function de-registration */
+    DebugP_deRegisterExcptnLogFxn();
+}
+
+/*
+ *  ======== main ========
+ */
+ 
 int main(void)
 {
-	int32_t status = 0;
-	if (BOARD_SOK != Board_initOSAL())
-	{
-		status = -1;
-	}
-	
-	if (0 == status)
-	{
-		DebugP_registerExcptnLogFxn(OSAL_log);
-		OSAL_generateException();
-	}
+    int32_t status = CSL_PASS;
+    if(BOARD_SOK != OsalApp_boardInit())
+    {
+        status = CSL_EFAIL;
+    }
+
+    OsalApp_debugNegativeTest();
+
+    if(CSL_PASS == status)
+    {
+        DebugP_registerExcptnLogFxn(OSAL_log);
+        OsalApp_generateException();
+    }
+
     return (status);
 }
 
