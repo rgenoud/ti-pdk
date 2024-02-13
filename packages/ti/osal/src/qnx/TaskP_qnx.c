@@ -36,8 +36,9 @@
 #include <ti/osal/TaskP.h>
 
 #include <pthread.h>
-#include <unix.h>
+#include <unistd.h>
 #include <sched.h>
+#include <stdlib.h>
 
 #include <ti/osal/osal.h>
 /*
@@ -122,7 +123,7 @@ void TaskP_Params_init(TaskP_Params *params)
  */
 void TaskP_sleep(uint32_t timeout)
 {
-    nap(timeout);
+    delay(timeout);
 }
 
 /*

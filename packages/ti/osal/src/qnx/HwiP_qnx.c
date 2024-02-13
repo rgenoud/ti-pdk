@@ -38,6 +38,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/neutrino.h>
+#include <sys/procmgr.h>
 #include <ti/osal/HwiP.h>
 #include <unistd.h>
 #include <pthread.h>
@@ -86,7 +87,7 @@ void *isr_thread (void *arg)
 
                     /* Check if application wants interrupt re-enabled */
                     if(1U == hwi->irq_autoEnable) {
-                        HwiP_enableInterrupt(interruptNum);
+                        InterruptUnmask (interruptNum, hwi->evtId);
                     }
                     break;
                 default:
@@ -150,6 +151,7 @@ HwiP_Handle HwiP_create(uint32_t coreIntrNum, HwiP_Fxn hwiFxn,
         OSAL_Assert(1);
     }
 
+    procmgr_ability(0, PROCMGR_AID_INTERRUPT);
     pthread_attr_init(&thread_attr);
     pthread_attr_setdetachstate(&thread_attr, PTHREAD_CREATE_DETACHED);
     param.sched_priority = intrPriority;
@@ -188,7 +190,7 @@ HwiP_Handle HwiP_create(uint32_t coreIntrNum, HwiP_Fxn hwiFxn,
        OSAL_Assert(1);
     }
     else {
-        //printf("%s: InterruptAttachEvent succeed irq/%d\n",__FUNCTION__, coreIntrNum);
+       DebugP_log1("InterruptAttachEvent succeed irq/%d\n", coreIntrNum);
     }
 
     return ((HwiP_Handle)hwi);
@@ -225,12 +227,35 @@ void HwiP_restore(uintptr_t key)
     InterruptUnlock((intrspin_t *)key);
 }
 
+// TODO:: We probably need to protect accesses to g_hwi.
+void * __getHwiFromInterrupNum(uint32_t interruptNum)
+{
+    for(int i= 0; i < g_currIntrCount; i++) {
+        qnx_osal_hwi_info *hwi = &g_hwi[i];
+        if(hwi &&
+           (interruptNum == hwi->isr_event.sigev_value.sival_int)) {
+            return hwi;
+        }
+    }
+    DebugP_log1("InterruptNum (%d) does not have a valid hwi", interruptNum);
+
+    return 0;
+}
+
 /*
  *  ======== HwiP_disableInterrupt ========
  */
 void HwiP_disableInterrupt(uint32_t interruptNum)
 {
-    InterruptMask(interruptNum, -1); // -1, don't track mask/unmask count
+    qnx_osal_hwi_info *hwi = __getHwiFromInterrupNum(interruptNum);
+
+    if(hwi) {
+        uint32_t id = hwi->evtId;
+
+        InterruptMask(interruptNum, id); // -1, don't track mask/unmask count
+    } else  {
+        DebugP_log0("Invalid argument passed to Mask interrupt. No action performed");
+    }
 }
 
 /*
@@ -238,8 +263,16 @@ void HwiP_disableInterrupt(uint32_t interruptNum)
  */
 void HwiP_enableInterrupt(uint32_t interruptNum)
 {
-    /* Unmask interrupt */
-    InterruptUnmask (interruptNum, -1);
+    qnx_osal_hwi_info *hwi = __getHwiFromInterrupNum(interruptNum);
+
+    if(hwi) {
+        uint32_t id = hwi->evtId;
+
+        /* Unmask interrupt */
+        InterruptUnmask (interruptNum, id);
+    } else  {
+        DebugP_log0("Invalid argument passed to UnMask interrupt. No action performed");
+    }
 }
 
 /*
