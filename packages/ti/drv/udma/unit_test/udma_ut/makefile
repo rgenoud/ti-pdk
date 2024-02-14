@@ -60,6 +60,7 @@ SRCS_COMMON += udma_test_flow_neg.c
 SRCS_COMMON += udma_test_ring_normal.c
 SRCS_COMMON += udma_test_ring_common.c
 SRCS_COMMON += udma_test_proxy_neg.c
+SRCS_COMMON += udma_test_event_neg.c
 
 ifeq ($(SOC),$(filter $(SOC), j721e j721s2 j784s4))
 SRCS_COMMON += udma_test_utc.c

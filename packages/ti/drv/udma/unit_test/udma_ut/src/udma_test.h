@@ -847,6 +847,19 @@ int32_t UdmaTestDruGetTriggerRegAddrNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestDruGetTriggerRegAddr(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestChPauseDru(UdmaTestTaskObj *taskObj);
 
+/*
+ * UDMA Event test functions
+ */
+int32_t UdmaTestEventRegisterNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestEventUnRegisterNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestEventGetIdNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestEventDisableNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestEvenEnableNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestEventGetGlobalNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestEventGetRxFlowStatusNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestEventRegisterBcdmaTestNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestEventUnRegisterBcdmaTestNeg(UdmaTestTaskObj *taskObj);
+
 /* ========================================================================== */
 /*      Internal Function Declarations (Needed for other static inlines)      */
 /* ========================================================================== */
