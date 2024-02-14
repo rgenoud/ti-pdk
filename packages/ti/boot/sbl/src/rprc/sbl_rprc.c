@@ -75,6 +75,9 @@ extern void SBL_DCacheClean(void *addr, uint32_t size);
 extern int32_t SBL_OSPI_ReadSectors(void *dstAddr, void *srcOffsetAddr, uint32_t length);
 #endif
 
+extern uint32_t SBL_getAtcmSize(uint32_t CoreId);
+extern uint32_t SBL_getBtcmSize(uint32_t CoreId);
+
 /* read of block of data from buffer */
 int32_t SBL_ReadMem(void       *buff,
                     void       *srcAddr,
@@ -524,8 +527,8 @@ static int32_t SBL_RprcImageParse(void *srcAddr,
 #if (SBL_USE_DMA && defined(BOOT_OSPI) && (defined (SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4)))
                 /* Need address translation to SoC level addresses of MCU1_0 TCMs, when trying to copy to local addresses */
                 case MCU1_CPU0_ID:
-                    atcmSize = sblAtcmSize();
-                    btcmSize = sblBtcmSize();
+                    atcmSize = SBL_getAtcmSize(CoreId);
+                    btcmSize = SBL_getBtcmSize(CoreId);
                     /* Only do TCM addr remapping for MCU1_0 if using UDMA for transfers from OSPI to local TCMs */
                     if (fp_readData == SBL_OSPI_ReadSectors)
                     {
@@ -561,8 +564,8 @@ static int32_t SBL_RprcImageParse(void *srcAddr,
                 case MCU3_CPU1_ID:
                 case MCU4_CPU0_ID:
                 case MCU4_CPU1_ID:
-                    atcmSize = sblAtcmSize();
-                    btcmSize = sblBtcmSize();
+                    atcmSize = SBL_getAtcmSize(CoreId);
+                    btcmSize = SBL_getBtcmSize(CoreId);
                     /*Remap TCM address from R5 local to SoC memory map*/
                     if (section.addr < (SBL_MCU_ATCM_BASE + atcmSize))
                     {

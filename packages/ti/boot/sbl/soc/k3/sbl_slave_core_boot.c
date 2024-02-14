@@ -338,6 +338,79 @@ SBL_MCU4_CPU1_BTCM_BASE_ADDR_SOC
 /*                           Internal Functions                               */
 /* ========================================================================== */
 
+uint32_t SBL_getAtcmSize(cpu_core_id_t coreId)
+{
+    uint32_t atcmSize;
+    switch (coreId)
+    {
+        case MCU1_CPU0_ID:
+            atcmSize = SBL_MCU1_CPU0_ATCM_SIZE;
+            break;
+        case MCU1_CPU1_ID:
+            atcmSize = SBL_MCU1_CPU1_ATCM_SIZE;
+            break;
+        case MCU2_CPU0_ID:
+            atcmSize = SBL_MCU2_CPU0_ATCM_SIZE;
+            break;
+        case MCU2_CPU1_ID:
+            atcmSize = SBL_MCU2_CPU1_ATCM_SIZE;
+            break;
+        case MCU3_CPU0_ID:
+            atcmSize = SBL_MCU3_CPU0_ATCM_SIZE;
+            break;
+        case MCU3_CPU1_ID:
+            atcmSize = SBL_MCU3_CPU1_ATCM_SIZE;
+            break;
+        case MCU4_CPU0_ID:
+            atcmSize = SBL_MCU4_CPU0_ATCM_SIZE;
+            break;
+        case MCU4_CPU1_ID:
+            atcmSize = SBL_MCU4_CPU1_ATCM_SIZE;
+            break;
+        default:
+            atcmSize = 0;
+            break;
+    }
+    return atcmSize;
+}
+
+uint32_t SBL_getBtcmSize(cpu_core_id_t coreId)
+{
+    uint32_t btcmSize;
+    switch (coreId)
+    {
+        case MCU1_CPU0_ID:
+            btcmSize = SBL_MCU1_CPU0_BTCM_SIZE;
+            break;
+        case MCU1_CPU1_ID:
+            btcmSize = SBL_MCU1_CPU1_BTCM_SIZE;
+            break;
+        case MCU2_CPU0_ID:
+            btcmSize = SBL_MCU2_CPU0_BTCM_SIZE;
+            break;
+        case MCU2_CPU1_ID:
+            btcmSize = SBL_MCU2_CPU1_BTCM_SIZE;
+            break;
+        case MCU3_CPU0_ID:
+            btcmSize = SBL_MCU3_CPU0_BTCM_SIZE;
+            break;
+        case MCU3_CPU1_ID:
+            btcmSize = SBL_MCU3_CPU1_BTCM_SIZE;
+            break;
+        case MCU4_CPU0_ID:
+            btcmSize = SBL_MCU4_CPU0_BTCM_SIZE;
+            break;
+        case MCU4_CPU1_ID:
+            btcmSize = SBL_MCU4_CPU1_BTCM_SIZE;
+            break;
+        default:
+            btcmSize = 0;
+            break;
+    }
+    return btcmSize;
+
+}
+
 static void SBL_RequestCore(cpu_core_id_t core_id)
 {
 #if !defined(SBL_SKIP_BRD_CFG_BOARD) && !defined(SBL_SKIP_SYSFW_INIT)
@@ -501,6 +574,8 @@ void SBL_SetupCoreMem(uint32_t core_id)
     int32_t status = CSL_EFAIL;
     uint8_t runLockStep = 0;
     uint8_t mcuModeConfigured = 0;
+    uint32_t atcmSize;
+    uint32_t btcmSize;
     struct tisci_msg_proc_get_status_resp cpuStatus;
     struct tisci_msg_proc_set_config_req  proc_set_config_req;
     const sblSlaveCoreInfo_t *sblSlaveCoreInfoPtr;
@@ -636,8 +711,17 @@ void SBL_SetupCoreMem(uint32_t core_id)
             /* SBL running on MCU0, don't fool around with its power & TCMs */
             if (core_id != MCU1_CPU0_ID)
             {
-                uint32_t atcm_size =  sblAtcmSize();
-                uint32_t btcm_size =  sblBtcmSize();
+                if (runLockStep)
+                {
+                    /* When operating in lockstep, size of atcm becomes sum of atcm of both the cores in the cluster */
+                    atcmSize =  SBL_getAtcmSize(core_id) + SBL_getAtcmSize(core_id+1);
+                    btcmSize =  SBL_getBtcmSize(core_id) + SBL_getBtcmSize(core_id+1);
+                }
+                else
+                {
+                    atcmSize =  SBL_getAtcmSize(core_id);
+                    btcmSize =  SBL_getBtcmSize(core_id);
+                }
 
                 if (runLockStep)
                 {
@@ -650,10 +734,10 @@ void SBL_SetupCoreMem(uint32_t core_id)
 
                 /* Initialize the TCMs - TCMs of MCU running SBL are already initialized by ROM & SBL */
                 SBL_log(SBL_LOG_MAX, "Clearing core_id %d (lock-step) ATCM @ 0x%x\n", core_id, SblAtcmAddr[core_id - MCU1_CPU0_ID]);
-                memset(((void *)(SblAtcmAddr[core_id - MCU1_CPU0_ID])), 0xFF, atcm_size);
+                memset(((void *)(SblAtcmAddr[core_id - MCU1_CPU0_ID])), 0xFF, atcmSize);
 
                 SBL_log(SBL_LOG_MAX, "Clearing core_id %d (lock-step) BTCM @ 0x%x\n", core_id, SblBtcmAddr[core_id - MCU1_CPU0_ID]);
-                memset(((void *)(SblBtcmAddr[core_id - MCU1_CPU0_ID])), 0xFF, btcm_size);
+                memset(((void *)(SblBtcmAddr[core_id - MCU1_CPU0_ID])), 0xFF, btcmSize);
             }
             break;
         case MPU1_SMP_ID:
