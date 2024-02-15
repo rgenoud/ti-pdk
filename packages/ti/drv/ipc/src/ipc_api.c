@@ -654,8 +654,8 @@ static int32_t RPMessage_processAnnounceMsg(const RPMessage_Announcement *amsg, 
                         w->procId = procId;
                         w->endPt = amsg->endPt;
 #ifdef DEBUG_PRINT
-                        SystemP_printf("RPMessage_processAnnounceMsg :Semphore Handle 0x%x\n",
-                                (uint32_t)w->semHandle);
+                        SystemP_printf("RPMessage_processAnnounceMsg :Semphore Handle 0x%p\n",
+                            w->semHandle);
 #endif
 
                         pOsalPrms->unlockMutex(w->semHandle);
@@ -847,8 +847,8 @@ void RPMessage_unblockGetRemoteEndPt(uint32_t token)
                     w->procId = IPC_MP_INVALID_ID;
                     w->endPt = RPMESSAGE_ANY;
 #ifdef DEBUG_PRINT
-                    SystemP_printf("RPMessage_unblockGetRemoteEpt :Semphore Handle 0x%x\n",
-                            (uint32_t)w->semHandle);
+                    SystemP_printf("RPMessage_unblockGetRemoteEpt :Semphore Handle 0x%p\n",
+                        w->semHandle);
 #endif
 
                     pOsalPrms->unlockMutex(w->semHandle);

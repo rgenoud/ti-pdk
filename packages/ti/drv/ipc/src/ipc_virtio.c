@@ -1028,7 +1028,7 @@ int32_t VirtioIPC_init(Ipc_VirtIoParams *vqParams)
         retVal = VirtioIPC_createVirtioCorePair(&vqInfo, vqParams->timeoutCnt);
         if(retVal != IPC_SOK)
         {
-            SystemP_printf("VirtioIPC_init: Failed to create VirtIO for procId..\n",
+            SystemP_printf("VirtioIPC_init: Failed to create VirtIO for procId=%u..\n",
                  procId);
             break;
         }
@@ -1070,7 +1070,7 @@ int32_t Ipc_lateVirtioCreate(uint16_t procId)
             retVal = VirtioIPC_createVirtioCorePair(&vqInfo, 100);
             if(retVal != IPC_SOK)
             {
-                SystemP_printf("Ipc_lateVirtioCreate: Failed to create VirtIO for procId..\n",
+                SystemP_printf("Ipc_lateVirtioCreate: Failed to create VirtIO for procId=%u..\n",
                     procId);
             }
         }
