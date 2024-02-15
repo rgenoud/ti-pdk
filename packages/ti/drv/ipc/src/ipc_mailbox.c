@@ -394,7 +394,7 @@ int32_t Ipc_mailboxRegister(uint16_t selfId, uint16_t remoteProcId,
                             retVal = Ipc_sciclientIrqSet(selfId, clusterId, userId, cfg.eventId);
                             if(retVal != 0)
                             {
-                                SystemP_printf("Failed to register irq through sciclient...%x\n", retVal);
+                                SystemP_printf("Failed to register irq through sciclient...%d\n", retVal);
                             }
                             timeout_cnt--;
                         }while((retVal != 0) && (timeout_cnt > 0U));
@@ -404,6 +404,8 @@ int32_t Ipc_mailboxRegister(uint16_t selfId, uint16_t remoteProcId,
                             retVal = IPC_EFAIL;
                         }
                     }
+#else
+                    Ipc_getMailboxIntrRouterCfg(selfId, clusterId, userId, &cfg, g_ipc_mBoxCnt);
 #endif
                     /* Register Mailbox interrupt now... */
                     if (retVal == IPC_SOK)
@@ -559,6 +561,7 @@ void *Mailbox_plugInterrupt(Ipc_MbConfig *cfg, Ipc_OsalIsrFxn func, uintptr_t ar
     OsalInterruptRetCode_e      osalRetVal;
     HwiP_Handle                 hwiHandle = NULL;
     uint32_t                    coreIntrNum = 0U;
+#if !defined(SOC_J722S)
 #ifndef IPC_SUPPORT_SCICLIENT
     CSL_IntrRouterCfg           irRegs;
 #endif
@@ -606,6 +609,7 @@ void *Mailbox_plugInterrupt(Ipc_MbConfig *cfg, Ipc_OsalIsrFxn func, uintptr_t ar
 #endif
 
 #endif  /* IPC_SUPPORT_SCICLIENT */
+#endif
 
     /*
      * CLEC needs to be configured for all modes - CSL and Sciclient
