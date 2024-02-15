@@ -73,6 +73,8 @@
 #define I2C_APP_EEPROM_ADDR_SIZE                     2   /* in bytes */
 #define I2C_APP_EEPROM_TEST_LENGTH                   10  /* Read (and write) length in bytes */
 
+#define I2C_APP_IRQSTATUS_STC_MASK                   (0x00000040U)
+
 /* ========================================================================== */
 /*                         Structure Declarations                             */
 /* ========================================================================== */
@@ -107,6 +109,7 @@ static void I2CApp_initConfig(uint32_t instance, I2CApp_TestCfg *test);
 static bool I2CApp_callBackTest(void *arg);
 static void I2CApp_callBackFxn(I2C_Handle handle, I2C_Transaction * transaction, int16_t transferStatus);
 static bool I2CApp_negativeTest(void *arg);
+static bool I2CApp_wakeupEnableDiasbleTest(void *arg);
 
 /* ========================================================================== */
 /*                            Global Variables                                */
@@ -133,7 +136,8 @@ I2CApp_TestCfg gI2cApp_Tests[] =
     {I2CApp_callBackTest,             I2C_APP_ID_BIT_RATE_CALLBACK_MODE,  BFALSE, BTRUE,  BFALSE, SemaphoreP_WAIT_FOREVER, I2C_APP_EEPROM_TEST_LENGTH, I2C_APP_EEPROM_ADDR_SIZE, I2C_APP_EEPROM_ADDR, "\r\n I2C bit rate test in callback mode"},
     {I2CApp_probeBusFreqTest,         I2C_APP_ID_PROBE_BUS_FREQ,          BFALSE, BTRUE,  BFALSE, SemaphoreP_WAIT_FOREVER, I2C_APP_EEPROM_TEST_LENGTH, I2C_APP_EEPROM_ADDR_SIZE, I2C_APP_EEPROM_ADDR, "\r\n I2C probe bus frequency test in interrupt mode"},
     {I2CApp_negativeTest,             I2C_APP_ID_BIT_RATE_POLLING_MODE,   BFALSE, BFALSE, BFALSE, SemaphoreP_WAIT_FOREVER, I2C_APP_EEPROM_TEST_LENGTH, I2C_APP_EEPROM_ADDR_SIZE, I2C_APP_EEPROM_ADDR, "\r\n I2C bitrate NegativeTest"},
-    {I2CApp_nullTest,                 I2C_APP_ID_NULL_CHECK,              BFALSE, BFALSE, BFALSE, 1, I2C_APP_EEPROM_TEST_LENGTH, I2C_APP_EEPROM_ADDR_SIZE, I2C_APP_EEPROM_ADDR, "\r\n I2C null check test"},
+    {I2CApp_wakeupEnableDiasbleTest, I2C_APP_ID_BIT_RATE_INTERRUPT_MODE, FALSE, TRUE, FALSE, SemaphoreP_WAIT_FOREVER, I2C_APP_EEPROM_TEST_LENGTH, I2C_APP_EEPROM_ADDR_SIZE, I2C_APP_EEPROM_ADDR, "\r\n I2C WakeUP enable and disable test"},
+	{I2CApp_nullTest,                 I2C_APP_ID_NULL_CHECK,              BFALSE, BFALSE, BFALSE, 1, I2C_APP_EEPROM_TEST_LENGTH, I2C_APP_EEPROM_ADDR_SIZE, I2C_APP_EEPROM_ADDR, "\r\n I2C null check test"},
     {NULL, },
 };
 
@@ -791,6 +795,119 @@ static bool I2CApp_probeBusFreqTest(void *arg)
         I2C_close(handle);
     }
     return testStatus;
+}
+
+static bool I2CApp_wakeupEnableDiasbleTest(void *arg)
+{
+    I2C_Params          i2cParams;
+    I2C_Handle          handle = NULL;
+    I2C_Transaction     i2cTransaction;
+    uint8_t             txBuf[I2C_APP_EEPROM_TEST_LENGTH + I2C_APP_EEPROM_ADDR_SIZE] = {0x00, };
+    uint8_t             rxBuf[I2C_APP_EEPROM_TEST_LENGTH];
+    int16_t             status;
+    bool                testStatus = BTRUE;
+    I2CApp_TestCfg      *test = (I2CApp_TestCfg *)arg;
+    I2C_HwAttrs const   *i2cCfg = NULL;
+
+    /* Set the I2C EEPROM write/read address */
+    txBuf[0] = (I2C_APP_EEPROM_TEST_ADDR >> 8) & 0xff; /* EEPROM memory high address byte */
+    txBuf[1] = I2C_APP_EEPROM_TEST_ADDR & 0xff;        /* EEPROM memory low address byte */
+
+    I2CApp_initConfig(I2C_APP_EEPROM_INSTANCE, test);
+
+    I2C_Params_init(&i2cParams);
+
+    /* Set bitRate */
+    i2cParams.bitRate = I2C_100kHz;
+    handle = I2C_open(I2C_APP_EEPROM_INSTANCE, &i2cParams);
+    if(handle == NULL)
+    {
+        testStatus = BFALSE;
+    }
+
+    /* Global Wake up enable*/
+    i2cCfg = (I2C_HwAttrs const *)handle->hwAttrs;
+    I2CGlobalWakeUpEnable(i2cCfg->baseAddr);
+
+    /* Setting Mode smart idle*/
+	I2CIdleModeSelect(i2cCfg->baseAddr, 2U);
+
+	/* Set STC: Start Condition IRQ wakeup set Invalid Flag*/
+	I2CWakeUpEnable(i2cCfg->baseAddr, I2C_APP_IRQSTATUS_STC_MASK, 0U);
+
+	/* Set STC: Start Condition IRQ wakeup set*/
+	I2CWakeUpEnable(i2cCfg->baseAddr, I2C_APP_IRQSTATUS_STC_MASK, 1U);
+
+	/* Select clock activity OCP_CLK-> OFF, SYS_CLK->OFF */
+	I2CClockActivitySelect(i2cCfg->baseAddr, 2U);
+
+    /* EEPROM write disabled on K2, need copy data */
+    memset(rxBuf, 0, I2C_APP_EEPROM_TEST_LENGTH);
+    I2C_transactionInit(&i2cTransaction);
+    i2cTransaction.slaveAddress = test->slaveAddress;
+    i2cTransaction.writeBuf = (uint8_t *)&txBuf[0];
+    i2cTransaction.writeCount = test->writecount;
+    i2cTransaction.readBuf = (uint8_t *)&rxBuf[0];
+    i2cTransaction.readCount = test->readcount;
+    i2cTransaction.timeout   = test->timeout;
+    status = I2C_transfer(handle, &i2cTransaction);
+
+    if(I2C_STS_SUCCESS != status)
+    {
+        UART_printf("I2C Test: Read Data Transfer failed. \n");
+        testStatus = BFALSE;
+    }
+    else
+    {
+        testStatus = I2CApp_compareData(&gI2CApp_EepromData[0], &rxBuf[0], I2C_APP_EEPROM_TEST_LENGTH);
+        if(FALSE == testStatus)
+        {
+            UART_printf("I2C Test: Data Mismatch. \n");
+        }
+    }
+
+    /*Auto Idle Enable set and check transaction*/
+    I2CAutoIdleEnable(i2cCfg->baseAddr);
+
+    memset(rxBuf, 0, I2C_APP_EEPROM_TEST_LENGTH);
+    I2C_transactionInit(&i2cTransaction);
+    i2cTransaction.slaveAddress = test->slaveAddress;
+    i2cTransaction.writeBuf = (uint8_t *)&txBuf[0];
+    i2cTransaction.writeCount = test->writecount;
+    i2cTransaction.readBuf = (uint8_t *)&rxBuf[0];
+    i2cTransaction.readCount = test->readcount;
+    i2cTransaction.timeout   = test->timeout;
+    status = I2C_transfer(handle, &i2cTransaction);
+
+    if(I2C_STS_SUCCESS != status)
+    {
+        UART_printf("I2C Test: Read Data Transfer failed. \n");
+        testStatus = BFALSE;
+    }
+    else
+    {
+        testStatus = I2CApp_compareData(&gI2CApp_EepromData[0], &rxBuf[0], I2C_APP_EEPROM_TEST_LENGTH);
+        if(BFALSE == testStatus)
+        {
+            UART_printf("I2C Test: Data Mismatch. \n");
+        }
+    }
+
+    /*Disable I2C Wake up*/
+    I2CGlobalWakeUpDisable(i2cCfg->baseAddr);
+
+	/* Disabled STC: Start Condition IRQ wakeup clear with invalid Flag*/
+    I2CWakeUpDisable(i2cCfg->baseAddr, I2C_APP_IRQSTATUS_STC_MASK, 0U);
+
+	/* Disabled STC: Start Condition IRQ wakeup clear*/
+    I2CWakeUpDisable(i2cCfg->baseAddr, I2C_APP_IRQSTATUS_STC_MASK, 1U);
+
+    if(handle)
+    {
+        I2C_close(handle);
+    }
+
+    return (testStatus);
 }
 
 static bool I2CApp_negativeTest(void *arg)
