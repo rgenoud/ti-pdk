@@ -272,11 +272,12 @@ SemaphoreP_Status SemaphoreP_delete(SemaphoreP_Handle handle)
  */
 void SemaphoreP_Params_init(SemaphoreP_Params *params)
 {
-    DebugP_assert(NULL_PTR != params);
-
-    params->mode = SemaphoreP_Mode_COUNTING;
-    params->name = (char *) NULL_PTR;
-    params->maxCount = 0xFFU;
+    if(NULL_PTR != params)
+    {
+        params->mode = SemaphoreP_Mode_COUNTING;
+        params->name = (char *) NULL_PTR;
+        params->maxCount = 0xFFU;
+    }
 }
 
 /*

@@ -200,9 +200,10 @@ SemaphoreP_Status SemaphoreP_delete(SemaphoreP_Handle handle)
  */
 void SemaphoreP_Params_init(SemaphoreP_Params *params)
 {
-    if(NULL_PTR != params) {
-      params->mode = SemaphoreP_Mode_COUNTING;
-      params->name = (char *) NULL_PTR;
+    if(NULL_PTR != params)
+    {
+        params->mode = SemaphoreP_Mode_COUNTING;
+        params->name = (char *) NULL_PTR;
     }  
 }
 

@@ -827,321 +827,6 @@ void DebugP_log_Test()
     OSAL_log("\nDebugP_log_Test passed!!\n");
 }
 
-/*
- * Description:Testing semaphore creation,posting and deletion flow for freertos,safertos
- */
-void Semaphore_flow_test()
-{
-    SemaphoreP_Params params;
-    uint32_t count = 2;
-    SemaphoreP_Handle ret_handle;
-    SemaphoreP_Status sem_post_stat;
-    uint32_t sema_count = 0;
-    SemaphoreP_Status sema_pend_stat;
-    SemaphoreP_Status sema_delete_stat;
-    uint32_t ctrlBitMap = OSAL_HWATTR_SET_SEMP_EXT_BASE;
-    Osal_HwAttrs hwAttrs;
-    hwAttrs.extSemaphorePBlock.base = (uintptr_t) & semPMemBlock[0];
-#if defined(FREERTOS)
-    hwAttrs.extSemaphorePBlock.size = (1*OSAL_FREERTOS_SEMAPHOREP_SIZE_BYTES);
-#endif
-#if defined(SAFERTOS)
-    hwAttrs.extSemaphorePBlock.size = (1*OSAL_SAFERTOS_SEMAPHOREP_SIZE_BYTES);
-#endif
-    /* Set the extended memmory block for semaphore operations */
-    Osal_setHwAttrs(ctrlBitMap,&hwAttrs);
-    SemaphoreP_Params_init(&params);
-    ret_handle = SemaphoreP_create(count,&params);
-    if(ret_handle == NULL_PTR)
-    {
-        OSAL_log("Err : Semaphore creation failed\n");
-    }
-    sem_post_stat = SemaphoreP_post(ret_handle);
-    if(sem_post_stat == SemaphoreP_OK)
-    {
-        OSAL_log("Semaphore post suceeded\n");
-    }
-    else
-    {
-        OSAL_log("Err : Semaphore post failed\n");
-    }
-    sema_count = SemaphoreP_getCount(ret_handle);
-
-    if(sema_count == 3)
-    {
-        OSAL_log("Semaphore Get count was successful\n");
-    }
-    else
-    {
-        OSAL_log("Received semaphore count is incorrect\n");
-    }
-    sema_pend_stat = SemaphoreP_pend ( ret_handle , 100 ) ;
-    if(sema_pend_stat == SemaphoreP_TIMEOUT)
-    {
-        OSAL_log("Err : Semaphore timeout\n");
-    }
-    sema_delete_stat = SemaphoreP_delete(ret_handle) ;
-    if(sema_delete_stat == SemaphoreP_FAILURE)
-    {
-        OSAL_log("Err : Semaphore not deleted\n");
-    }
-    OSAL_log("Semaphore_flow_test passed !!\n");
-}
-
-/*
-Description : Testing SemaphoreP_compileTime_SizeChk function
-*/
-void Semaphore_compile_time_size_test()
-{
-    SemaphoreP_Params params;
-    uint32_t count = 2;
-    SemaphoreP_Handle ret_handle;
-    SemaphoreP_Status sema_delete_stat;
-    ret_handle = SemaphoreP_create(count,&params);
-    if(ret_handle == NULL_PTR)
-    {
-        OSAL_log("Err : Semaphore creation failed\n");
-    }
-    SemaphoreP_compileTime_SizeChk();
-    sema_delete_stat = SemaphoreP_delete(ret_handle);
-    if(sema_delete_stat == SemaphoreP_FAILURE)
-    {
-        OSAL_log("Err : Semaphore not deleted\n");
-    }
-    OSAL_log ("Semaphore_compile_time_size_test passed !!\n") ;
-}
-
-/*
-Description : Set the extended memmory block for semaphore operations and test semaphore
-*/
-void Sema_create_extended_mem_block_test()
-{
-    uint32_t ctrlBitMap = OSAL_HWATTR_SET_SEMP_EXT_BASE;
-    Osal_HwAttrs hwAttrs;
-    hwAttrs.extSemaphorePBlock.base = (uintptr_t) & semPMemBlock[0];
-    hwAttrs.extSemaphorePBlock.size = (1*OSAL_FREERTOS_SEMAPHOREP_SIZE_BYTES);
-    SemaphoreP_Params params;
-    uint32_t count = 2;
-    SemaphoreP_Handle ret_handle;
-    SemaphoreP_Status sema_delete_stat;
-
-    /* Set the extended memmory block for semaphore operations */
-    Osal_setHwAttrs(ctrlBitMap,&hwAttrs);
-    SemaphoreP_Params_init(&params);
-    ret_handle = SemaphoreP_create(count,&params);
-    if(ret_handle == NULL_PTR)
-    {
-        OSAL_log("Err : Freertos Semaphore creation failed\n");
-    }
-
-    SemaphoreP_postFromClock(ret_handle);
-    SemaphoreP_postFromISR(ret_handle);
-    sema_delete_stat=SemaphoreP_delete ( ret_handle );
-    if(sema_delete_stat == SemaphoreP_FAILURE)
-    {
-        OSAL_log("Err : Freertos Semaphore not deleted\n");
-    }
-
-    /*added to execute for loop for more semaphore creation*/
-    SemaphoreP_create(count,&params);
-    SemaphoreP_create(count,&params);
-    SemaphoreP_create(count,&params);
-
-    sema_delete_stat = 0;
-    uint32_t *addr_handle = ret_handle;
-    addr_handle[0] = 0U;
-    SemaphoreP_delete(ret_handle);/*Test negative scenario when sems->used zero*/
-    if(sema_delete_stat == SemaphoreP_FAILURE)
-    {
-        OSAL_log("Err : Freertos Semaphore not deleted\n");
-    }
-    OSAL_log("Sema_create_extended_mem_block_test passed !!\n");
-}
-
-/*
-Description : Testing semaphore creation with NULL parameter
-*/
-void Semaphore_create_null_param_test()
-{
-    SemaphoreP_Params params;
-    SemaphoreP_Handle ret_handle;
-    uint32_t count = 2U;
-    SemaphoreP_Params_init(&params);
-
-    ret_handle = SemaphoreP_create(count,NULL_PTR);
-    if(ret_handle != NULL_PTR)
-    {
-        OSAL_log("Semaphore_create_null_param_test passed !!\n");
-    }
-    else
-    {
-        OSAL_log("NULL_PTR test for semaphore_create failed\n");
-    }
-}
-
-/*
-Description:Testing SemaphoreP_compileTime_SizeChk function
-*/
-void SemaphoreP_compileTime_size_check_test()
-{
-    SemaphoreP_compileTime_SizeChk();/*Checking size during compile time so no check
-                                      check can be added in running app*/
-    OSAL_log("SemaphoreP_compileTime_Size_check_test passed !!\n");
-}
-
-/*
-Description:Testing semaphore creation with extended memory block
-*/
-void SemaphoreP_create_extended_mem_block_test()
-{
-    uint32_t ctrlBitMap = OSAL_HWATTR_SET_SEMP_EXT_BASE;
-    Osal_HwAttrs hwAttrs;
-    hwAttrs.extSemaphorePBlock.base = (uintptr_t) & semPMemBlock[0];
-    hwAttrs.extSemaphorePBlock.size = (1*OSAL_NONOS_SEMAPHOREP_SIZE_BYTES);
-    SemaphoreP_Params params;
-    uint32_t count = 2U;
-    SemaphoreP_Handle ret_handle;
-    SemaphoreP_Status sema_delete_stat;
-    uint32_t B_Sema_count;
-    uint32_t timeout = 10U;
-    SemaphoreP_Status ret_val = SemaphoreP_OK;
-
-    /* Set the extended memmory block for semaphore operations */
-    Osal_setHwAttrs(ctrlBitMap,&hwAttrs);
-    SemaphoreP_Params_init(&params);
-    ret_handle = SemaphoreP_create(count,&params);
-    if(ret_handle == NULL_PTR)
-    {
-        UART_printf("Err : Semaphore creation failed\n");
-    }
-
-    B_Sema_count = SemaphoreP_getCount(ret_handle);
-
-    if(B_Sema_count != 2U)
-    {
-        OSAL_log("Err : Count is wrong\n");
-    }
-
-    ret_val = SemaphoreP_pend(ret_handle, timeout);
-    if(ret_val == SemaphoreP_FAILURE)
-    {
-        OSAL_log("Err : Semaphore not pended \n");
-    }
-
-    sema_delete_stat=SemaphoreP_delete(ret_handle);
-    if(sema_delete_stat == SemaphoreP_FAILURE)
-    {
-        UART_printf("Err : Semaphore not deleted\n");
-    }
-    OSAL_log("B_SemaphoreP_create_extended_mem_block_test passed !!\n");
-}
-
-/*
-Description:Testing SemaphoreP_pend function
-*/
-void SemaphoreP_pend_test()
-{
-    uint32_t ctrlBitMap = OSAL_HWATTR_SET_SEMP_EXT_BASE;
-    Osal_HwAttrs hwAttrs;
-    hwAttrs.extSemaphorePBlock.base = (uintptr_t) & semPMemBlock[0];
-    hwAttrs.extSemaphorePBlock.size = (1*OSAL_FREERTOS_SEMAPHOREP_SIZE_BYTES);
-    SemaphoreP_Params params;
-    uint32_t count = 2U;
-    SemaphoreP_Handle ret_handle;
-    SemaphoreP_Status sema_delete_stat;
-    uint32_t B_Sema_count;
-    uint32_t timeout = 10U;
-    SemaphoreP_Status ret_val = SemaphoreP_OK;
-
-    /* Set the extended memmory block for semaphore operations */
-    Osal_setHwAttrs(ctrlBitMap,&hwAttrs);
-    SemaphoreP_Params_init(&params);
-    ret_handle = SemaphoreP_create(count,&params);
-    if(ret_handle == NULL_PTR)
-    {
-        UART_printf("Err : Semaphore creation failed\n");
-    }
-
-    B_Sema_count = SemaphoreP_getCount(ret_handle);
-
-    if(B_Sema_count != 2U)
-    {
-        OSAL_log("Err : Count is wrong\n");
-    }
-
-    ret_val = SemaphoreP_pend(ret_handle, timeout);
-    if(ret_val == SemaphoreP_FAILURE)
-    {
-        OSAL_log("Err : Semaphore not pended \n");
-    }
-
-    sema_delete_stat=SemaphoreP_delete(ret_handle);
-    if(sema_delete_stat == SemaphoreP_FAILURE)
-    {
-        UART_printf("Err : Semaphore not deleted\n");
-    }
-    OSAL_log("SemaphoreP_pend_test passed !!\n");
-}
-
-/*
-Description: Testing SemaphoreP_pend function when semS->count is zero
-*/
-void Sema_pend_semacount0_test()
-{
-    SemaphoreP_Params params;
-    uint32_t count = 2U;
-    SemaphoreP_Handle ret_handle;
-    SemaphoreP_Status sema_delete_stat;
-    uint32_t timeout = 10U;
-    SemaphoreP_Status ret_val = SemaphoreP_OK;
-    params.mode = SemaphoreP_Mode_BINARY;
-
-    SemaphoreP_Params_init(&params);
-    ret_handle = SemaphoreP_create(count,&params);
-    if(ret_handle == NULL_PTR)
-    {
-        UART_printf("Err : Semaphore creation failed\n");
-    }
-
-    /*pending thrice and as semacount is 2 it will fail at 3rd pend*/
-    SemaphoreP_pend(ret_handle, timeout);
-    SemaphoreP_pend(ret_handle, timeout);
-    ret_val = SemaphoreP_pend(ret_handle, timeout);
-    if(ret_val == SemaphoreP_TIMEOUT)
-    {
-        OSAL_log("Semaphore pend returned failure. Test is successful \n");
-    }
-
-    sema_delete_stat=SemaphoreP_delete(ret_handle);
-    if(sema_delete_stat == SemaphoreP_FAILURE)
-    {
-        UART_printf("Err : Semaphore not deleted\n");
-    }
-    OSAL_log("Sema_pend_semacount0_test passed !!\n");
-}
-
-/*
-Description: Testing SemaphoreP_delete when semS->used is zero
-*/
-void Sema_delete_sems_used_zero_test()
-{
-    SemaphoreP_Params params;
-    uint32_t count = 2U;
-    SemaphoreP_Handle ret_handle;
-    SemaphoreP_Status sema_delete_stat;
-    params.mode = SemaphoreP_Mode_BINARY;
-
-    SemaphoreP_Params_init(&params);
-    ret_handle = SemaphoreP_create(count,&params);
-    uint32_t *addr_handle = ret_handle;
-    addr_handle[0] = 0U;
-    sema_delete_stat=SemaphoreP_delete(ret_handle);
-    if(sema_delete_stat == SemaphoreP_FAILURE)
-    {
-        UART_printf("Sema_delete_sems_used_zero_test passed!!\n");
-    }
-}
-
 #if defined(BARE_METAL)
 void OSAL_tests()
 #else
@@ -1150,11 +835,7 @@ void OSAL_tests(void *arg0, void *arg1)
 {
     int32_t result = osal_OK;
     Board_initOSAL();
-    
-    result += OsalApp_hwiTests();
 
-    result += OsalApp_semaphoreTests();
-    
 #if defined(SAFERTOS)
 
     ClockP_start_HwiP_Test();
@@ -1186,10 +867,6 @@ void OSAL_tests(void *arg0, void *arg1)
 
     result += OsalApp_queueTests();
 
-    Sema_create_extended_mem_block_test();
-
-    Semaphore_create_null_param_test();
-    
     result += OsalApp_memoryTests();
     
     result += OsalApp_freertosLoadTests();
@@ -1209,16 +886,6 @@ void OSAL_tests(void *arg0, void *arg1)
     RegisterIntrDirect_NegTest();
 
     result += OsalApp_utilsNonosTests();
-    
-    result += OsalApp_hwiTests();
-
-    SemaphoreP_create_extended_mem_block_test();
-
-    SemaphoreP_pend_test();
-
-    Sema_pend_semacount0_test();
-
-    Sema_delete_sems_used_zero_test();
 
     result += OsalApp_mutexTests();
 
@@ -1232,20 +899,20 @@ void OSAL_tests(void *arg0, void *arg1)
     result += OsalApp_taskTests();
 #endif
 
-    Semaphore_flow_test();
-
-    Semaphore_compile_time_size_test();
-
     ClockP_init_start_stop_null_test();
 
     result += OsalApp_mutexTests();
-    
+
     result += OsalApp_mailboxTests();
-    
+
     result += OsalApp_eventTests();
 
 #endif
-    
+
+    result += OsalApp_hwiTests();
+
+    result += OsalApp_semaphoreTests();
+
     if(osal_OK == result)
     {
         OSAL_log("\n All tests have passed. \n");

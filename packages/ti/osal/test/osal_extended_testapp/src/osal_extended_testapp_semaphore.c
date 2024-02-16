@@ -55,22 +55,37 @@
 #elif defined(SAFERTOS)
 #define OSAL_APP_MAX_SEMAPHORE    OSAL_SAFERTOS_CONFIGNUM_SEMAPHORE
 #endif
+#define OSAL_APP_INT_NUM_IRQ       (30U)
+#define OSAL_APP_ISUSED_OFFSET     (0x25U)
 
 /* ========================================================================== */
 /*                            Global Variables                                */
 /* ========================================================================== */
 
-/* None */
+volatile SemaphoreP_Handle    gOsalAppsemhandle;
+volatile bool gOsalAppsemISRisExecuted = BFALSE;
 
 /* ========================================================================== */
 /*                           Function Declarations                            */
 /* ========================================================================== */
 
 /*
+ * Description : Semaphore Callback Function
+ */
+static void OsalApp_semaphoreISR(void *arg);
+
+/*
+ * Description : Testing SemaphoreP_post and SemaphoreP_pend APIs from ISR context
+ */
+static int32_t OsalApp_isInISRsemaphoreTest(void);
+
+/*
  * Description : Testing Null check on below semaphore APIs
  *                 1. SemaphoreP_Params_init
- *                 2. SemaphoreP_postFromISR
- *                 3. SemaphoreP_getCount
+ *                 2. SemaphoreP_create
+ *                 3. SemaphoreP_postFromISR
+ *                 4. SemaphoreP_postFromClock
+ *                 5. SemaphoreP_getCount
  */
 static int32_t OsalApp_semaphoreNullTest(void);
 
@@ -86,38 +101,129 @@ static int32_t OsalApp_semaphorePendTest(void);
  */
 static int32_t OsalApp_semaphoreMaxTest(void);
 
+/*
+ * Description : Testing Negative condition for below APIs
+ *                 1. SemaphoreP_getCount
+ *                 2. SemaphoreP_delete
+ */
+static int32_t OsalApp_semaphoreNegativeTest(void);
+
 /* ========================================================================== */
 /*                    Internal Function Definitions                           */
 /* ========================================================================== */
 
+static void OsalApp_semaphoreISR(void *arg)
+{
+    gOsalAppsemISRisExecuted = BTRUE;
+    SemaphoreP_post(gOsalAppsemhandle);
+    SemaphoreP_pend(gOsalAppsemhandle, SemaphoreP_NO_WAIT);
+}
+
+static int32_t OsalApp_isInISRsemaphoreTest(void)
+{
+    uint32_t             interruptNum = OSAL_APP_INT_NUM_IRQ, timeout = 10000U;
+    SemaphoreP_Params    semParams;
+    HwiP_Params          hwiParams;
+    HwiP_Handle          hwiHandle;
+    int32_t              result = osal_OK;
+
+    SemaphoreP_Params_init(&semParams);
+    HwiP_Params_init(&hwiParams);
+
+    semParams.mode = SemaphoreP_Mode_COUNTING;
+    gOsalAppsemhandle = SemaphoreP_create(0, &semParams);
+    hwiHandle = HwiP_create(interruptNum, (HwiP_Fxn)OsalApp_semaphoreISR, (void *)&hwiParams);
+    if((NULL_PTR == hwiHandle) || (NULL_PTR == gOsalAppsemhandle))
+    {
+        result = osal_FAILURE;
+    }
+    else
+    {
+        HwiP_enableInterrupt(interruptNum);
+
+        if(HwiP_OK != HwiP_post(interruptNum))
+        {
+            result = osal_FAILURE;
+        }
+        if(osal_OK == result)
+        {
+            /* Wait for software timeout, ISR should hit
+             * otherwise return the test as failed */
+            while(timeout--)
+            {
+                if(BTRUE == gOsalAppsemISRisExecuted)
+                {
+                    break;
+                }
+            }
+            /* Wait is over - did not get any interrupts posted/received
+             * declare the test as fail
+             */
+            if(0U == timeout)
+            {
+                result = osal_FAILURE;
+            }
+        }
+
+        if((HwiP_OK != HwiP_delete(hwiHandle)) || (SemaphoreP_OK != SemaphoreP_delete(gOsalAppsemhandle)))
+        {
+            result = osal_FAILURE;
+        }
+    }
+
+    if(osal_OK != result)
+    {
+         OSAL_log("\t ISR context test for Semaphore has failed!! \n");
+    }
+
+    return result;
+}
+
 static int32_t OsalApp_semaphoreNullTest(void)
 {
-    SemaphoreP_Params    semParams;
-    SemaphoreP_Handle    nullPtr = NULL_PTR;
+    SemaphoreP_Handle    semhandle, nullPtr = NULL_PTR;
     int32_t              result = osal_OK;
     
-    SemaphoreP_Params_init(&semParams);
-    
-    /* SemaphoreP_post will also be covered */
-    if(SemaphoreP_OK == SemaphoreP_postFromISR(nullPtr))
+    SemaphoreP_Params_init(nullPtr);
+
+    semhandle = SemaphoreP_create(0, nullPtr);
+    if((nullPtr == semhandle) || (SemaphoreP_OK != SemaphoreP_delete(semhandle)))
     {
         result = osal_FAILURE;
     }
-    
-    if(0U != SemaphoreP_getCount(nullPtr))
+    else
     {
-        result = osal_FAILURE;
+        if(SemaphoreP_OK == SemaphoreP_postFromISR(nullPtr))
+        {
+            result = osal_FAILURE;
+        }
+#if defined(BARE_METAL)
+        if(SemaphoreP_OK == SemaphoreP_pend(nullPtr, SemaphoreP_WAIT_FOREVER))
+        {
+            result = osal_FAILURE;
+        }
+#else
+        /* Only for RTOS */
+        if(SemaphoreP_OK == SemaphoreP_postFromClock(nullPtr))
+        {
+            result = osal_FAILURE;
+        }
+#endif
+        if((0U != SemaphoreP_getCount(semhandle)) || (0U != SemaphoreP_getCount(nullPtr)))
+        {
+            result = osal_FAILURE;
+        }
+        if(SemaphoreP_OK == SemaphoreP_delete(nullPtr))
+        {
+            result = osal_FAILURE;
+        }
     }
-    
-    if(SemaphoreP_OK == SemaphoreP_delete(nullPtr))
-    {
-        result = osal_FAILURE;
-    }
+
     if(osal_OK != result)
     {
         OSAL_log("\n Semaphore Null test has failed!\n");
     }
-    
+
     return result;
 }
 
@@ -137,23 +243,28 @@ static int32_t OsalApp_semaphorePendTest(void)
         {
             result = osal_FAILURE;
         }
-        if(SemaphoreP_OK != SemaphoreP_pend(semhandle, SemaphoreP_WAIT_FOREVER))
+        if((osal_OK != result) || (SemaphoreP_OK != SemaphoreP_pend(semhandle, SemaphoreP_NO_WAIT)))
+        {
+            result = osal_FAILURE;
+        }
+        if((osal_OK != result) || (0U != SemaphoreP_getCount(semhandle)))
         {
             result = osal_FAILURE;
         }
         SemaphoreP_compileTime_SizeChk();
-        if(SemaphoreP_OK != SemaphoreP_delete(semhandle))
+        if((osal_OK != result) || (SemaphoreP_OK != SemaphoreP_delete(semhandle)))
         {
             result = osal_FAILURE;
         }    
     }
+    else
+    {
+        result = osal_FAILURE;
+    }
+
     if(osal_OK != result)
     {
         OSAL_log("\n Semaphore Pend test failed! \n");
-    }
-    else
-    {
-        OSAL_log("\n Semaphore Pend test passed! \n");
     }
     
     return result;
@@ -189,13 +300,42 @@ static int32_t OsalApp_semaphoreMaxTest(void)
             result = osal_FAILURE;
         }
     }
+
     if(osal_OK != result)
     {
         OSAL_log("\n Multiple Semaphore create test failed! \n");
     }
+
+    return result;
+}
+
+static int32_t OsalApp_semaphoreNegativeTest(void)
+{
+    SemaphoreP_Params    semParams;
+    SemaphoreP_Handle    semhandle;
+    int32_t              result = osal_OK;
+
+    SemaphoreP_Params_init(&semParams);
+    semhandle = SemaphoreP_create(0, &semParams);
+    uint32_t *handleAddr = (uint32_t *)semhandle;
+    if((NULL_PTR == semhandle) || (SemaphoreP_OK != SemaphoreP_delete(semhandle)))
+    {
+        result = osal_FAILURE;
+    }
     else
     {
-        OSAL_log("\n Multiple Semaphore create test passed! \n");
+        /* This handle is already deleted, but we are setting the 
+         * isUsed parameter of offset  to 1(forced corruption), to see how the driver reacts. */
+        *(handleAddr + OSAL_APP_ISUSED_OFFSET) = 1U;
+        if(SemaphoreP_OK != SemaphoreP_delete(semhandle))
+        {
+            result = osal_FAILURE;
+        }
+    }
+
+    if(osal_OK != result)
+    {
+        OSAL_log("\n Semaphore Negative test failed!\n");
     }
     return result;
 }
@@ -211,6 +351,8 @@ int32_t OsalApp_semaphoreTests(void)
     result += OsalApp_semaphoreNullTest();
     result += OsalApp_semaphorePendTest();
     result += OsalApp_semaphoreMaxTest();
+    result += OsalApp_isInISRsemaphoreTest();
+    result += OsalApp_semaphoreNegativeTest();
     
     if(osal_OK == result)
     {
