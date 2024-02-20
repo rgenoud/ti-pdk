@@ -433,9 +433,9 @@ uint32_t TaskP_getTaskStackHighWatermark(TaskP_Handle handle)
     TaskP_freertos *taskHandle = (TaskP_freertos *)handle;
 
     DebugP_assert(NULL_PTR != handle);
-    DebugP_assert((bool)false != taskHandle->used);
+    DebugP_assert(BFALSE != taskHandle->used);
 
-    return (uxTaskGetStackHighWaterMark(taskHandle->taskHndl)*sizeof(UBaseType_t));
+    return (uint32_t)(uxTaskGetStackHighWaterMark(taskHandle->taskHndl)*sizeof(UBaseType_t));
 }
 
 static int32_t prvSetupTimerPSC( void )
