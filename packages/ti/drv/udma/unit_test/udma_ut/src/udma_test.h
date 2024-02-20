@@ -699,6 +699,7 @@ int32_t UdmaChDisableTest(UdmaTestTaskObj *taskObj);
 int32_t UdmaChConfigPdmaTest(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestChGetTdCqRingHandle(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestChGetFqRingNum(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestChSetSwTriggerRegister(UdmaTestTaskObj *taskObj);
 
 /*
  * UDMA Driver Negative test functions
@@ -827,6 +828,8 @@ int32_t UdmaChResumeTestNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaChConfigPdmaTestNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaChConfigRxTestNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaChEnableTestNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaChInitPrmsNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaChGetSwTriggerRegisterTestNeg(UdmaTestTaskObj *taskObj);
 
 /*
  * UDMA utc test functions
@@ -839,6 +842,7 @@ int32_t UdmaTestDruGetNumQueueNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestDruQueueConfigNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestDruGetTriggerRegAddrNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestDruGetTriggerRegAddr(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestChPauseDru(UdmaTestTaskObj *taskObj);
 
 /* ========================================================================== */
 /*      Internal Function Declarations (Needed for other static inlines)      */
