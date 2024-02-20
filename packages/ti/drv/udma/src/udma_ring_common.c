@@ -120,7 +120,11 @@ int32_t Udma_ringAlloc(Udma_DrvHandle drvHandle,
 #if((UDMA_NUM_MAPPED_TX_GROUP + UDMA_NUM_MAPPED_RX_GROUP) > 0)
             else
             {
+#ifdef QNX_OS
+                ringHandle->ringNum = Udma_resmgr_rmAllocMappedRing(drvHandle, ringPrms->mappedRingGrp, ringPrms->mappedChNum);
+#else
                 ringHandle->ringNum = Udma_rmAllocMappedRing(drvHandle, ringPrms->mappedRingGrp, ringPrms->mappedChNum);
+#endif
             }
 #endif
             if(UDMA_RING_INVALID == ringHandle->ringNum)
@@ -228,7 +232,11 @@ int32_t Udma_ringAlloc(Udma_DrvHandle drvHandle,
 #if((UDMA_NUM_MAPPED_TX_GROUP + UDMA_NUM_MAPPED_RX_GROUP) > 0)
             else
             {
+#ifdef QNX_OS
+                Udma_resmgr_rmFreeMappedRing(ringHandle->ringNum, drvHandle, ringHandle->mappedRingGrp, ringHandle->mappedChNum);
+#else
                 Udma_rmFreeMappedRing(ringHandle->ringNum, drvHandle, ringHandle->mappedRingGrp, ringHandle->mappedChNum);
+#endif
             }
 #endif
         }
@@ -278,7 +286,11 @@ int32_t Udma_ringFree(Udma_RingHandle ringHandle)
 #if((UDMA_NUM_MAPPED_TX_GROUP + UDMA_NUM_MAPPED_RX_GROUP) > 0)
         else
         {
+#ifdef QNX_OS
+            Udma_resmgr_rmFreeMappedRing(ringHandle->ringNum, drvHandle, ringHandle->mappedRingGrp, ringHandle->mappedChNum);
+#else
             Udma_rmFreeMappedRing(ringHandle->ringNum, drvHandle, ringHandle->mappedRingGrp, ringHandle->mappedChNum);
+#endif
         }
 #endif
         ringHandle->ringNum         = UDMA_RING_INVALID;
@@ -583,7 +595,9 @@ int32_t Udma_ringMonAlloc(Udma_DrvHandle drvHandle,
                           uint16_t ringMonNum)
 {
     int32_t     retVal = UDMA_SOK;
+#if (UDMA_SOC_CFG_RING_MON_PRESENT == 1)
     uint32_t    allocDone = (uint32_t) FALSE;
+#endif
     uint32_t    instType;
 
     /* Error check */

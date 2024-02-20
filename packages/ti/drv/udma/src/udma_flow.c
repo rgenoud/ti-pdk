@@ -292,6 +292,7 @@ int32_t Udma_flowAlloc(Udma_DrvHandle drvHandle,
     return (retVal);
 }
 
+/* TODO:: This API needs a QNX resource manager devctl. Not used at the moment */
 int32_t Udma_flowAllocMapped(Udma_DrvHandle drvHandle,
                              Udma_FlowHandle flowHandle,
                              const Udma_FlowAllocMappedPrms *flowAllocMappedPrms)

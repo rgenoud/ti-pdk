@@ -220,7 +220,7 @@ const Udma_RmDefBoardCfgPrms *Udma_rmGetDefBoardCfgPrms(uint32_t instId)
     return (rmDefBoardCfgPrms);
 }
 
-Udma_RmSharedResPrms *Udma_rmGetSharedResPrms(uint32_t resId)
+Udma_RmSharedResPrms *Udma_rmGetSharedResPrms(uint32_t instId, uint32_t resId)
 {
     Udma_RmSharedResPrms  *rmSharedResPrms = NULL;
     uint32_t    i;

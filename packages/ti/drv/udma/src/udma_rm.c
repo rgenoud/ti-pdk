@@ -2200,6 +2200,7 @@ uint32_t Udma_rmTranslateCoreIntrInput(Udma_DrvHandle drvHandle, uint32_t coreIn
 
 #ifdef QNX_OS
 
+#if (UDMA_SOC_CFG_UDMAP_PRESENT == 1)
 uint32_t Udma_rmAllocflow(uint32_t  flowCnt, Udma_DrvHandle drvHandle)
 {
     uint32_t            flowStart = UDMA_FLOW_INVALID;
@@ -2289,6 +2290,7 @@ void Udma_rmFreeflow(uint32_t  flowStart, uint32_t  flowCnt, Udma_DrvHandle drvH
 
     return;
 }
+#endif // UDMA_SOC_CFG_UDMAP_PRESENT
 
 //*********** QNX_OS end ***********
 #endif
@@ -2316,7 +2318,7 @@ int32_t UdmaRmInitPrms_init(uint32_t instId, Udma_RmInitPrms *rmInitPrms)
             memset(rmDefBoardCfgResp, 0, sizeof(rmDefBoardCfgResp));
             memset(rmInitPrms, 0, sizeof(*rmInitPrms));
 
-        #if (UDMA_SOC_CFG_UDMAP_PRESENT == 1)
+#if (UDMA_SOC_CFG_UDMAP_PRESENT == 1)
 
             uint32_t numtTxCh = 0U;
             uint32_t numRxCh  = 0U;
@@ -2341,23 +2343,23 @@ int32_t UdmaRmInitPrms_init(uint32_t instId, Udma_RmInitPrms *rmInitPrms)
                 numExtCh    = CSL_NAVSS_MAIN_UDMAP_NUM_EXT_CHANS;
             }
             else
-        #endif
-        #if (UDMA_SOC_CFG_BCDMA_PRESENT == 1)
+#endif
+#if (UDMA_SOC_CFG_BCDMA_PRESENT == 1)
             if(UDMA_INST_ID_BCDMA_0 == instId)
             {
                 blkCopySubType = (bool)true;
                 numRes = UDMA_RM_NUM_BCDMA_RES;
             }
             else
-        #endif
-        #if (UDMA_SOC_CFG_PKTDMA_PRESENT == 1)
+#endif
+#if (UDMA_SOC_CFG_PKTDMA_PRESENT == 1)
             if(UDMA_INST_ID_PKTDMA_0 == instId)
             {
                 blkCopySubType = true;
                 numRes = UDMA_RM_NUM_PKTDMA_RES;
             }
             else
-        #endif
+#endif
             {
                 retVal = UDMA_EFAIL;
             }
@@ -2521,7 +2523,7 @@ int32_t UdmaRmInitPrms_init(uint32_t instId, Udma_RmInitPrms *rmInitPrms)
 
               if(resp != NULL_PTR)
               {
-                  retVal += Udma_rmSetSharedResRmInitPrms(Udma_rmGetSharedResPrms(rmId),
+                  retVal += Udma_rmSetSharedResRmInitPrms(Udma_rmGetSharedResPrms(instId, rmId),
                                                           Udma_getCoreId(),
                                                           UDMA_CORE_ID_C7X_1,
                                                           resp->rangeStart,
@@ -2546,7 +2548,7 @@ int32_t UdmaRmInitPrms_init(uint32_t instId, Udma_RmInitPrms *rmInitPrms)
           }
           else
           {
-              retVal += Udma_rmSetSharedResRmInitPrms(Udma_rmGetSharedResPrms(UDMA_RM_RES_ID_RX_FLOW),
+              retVal += Udma_rmSetSharedResRmInitPrms(Udma_rmGetSharedResPrms(instId, UDMA_RM_RES_ID_RX_FLOW),
                                                       Udma_getCoreId(),
                                                       0U,
                                                       rmDefBoardCfgResp[UDMA_RM_RES_ID_RX_FLOW].rangeStart,
@@ -2572,7 +2574,7 @@ int32_t UdmaRmInitPrms_init(uint32_t instId, Udma_RmInitPrms *rmInitPrms)
 
           /* Global Event */
           /* Shared resource - Split based on instance */
-          retVal += Udma_rmSetSharedResRmInitPrms(Udma_rmGetSharedResPrms(UDMA_RM_RES_ID_GLOBAL_EVENT),
+          retVal += Udma_rmSetSharedResRmInitPrms(Udma_rmGetSharedResPrms(instId, UDMA_RM_RES_ID_GLOBAL_EVENT),
                                                  instId,
                                                  UDMA_INST_ID_START,
                                                  rmDefBoardCfgResp[UDMA_RM_RES_ID_GLOBAL_EVENT].rangeStart,
@@ -2595,7 +2597,7 @@ int32_t UdmaRmInitPrms_init(uint32_t instId, Udma_RmInitPrms *rmInitPrms)
 
           /* Virtual Interrupts */
           /* Shared resource - Split based on instance */
-          retVal += Udma_rmSetSharedResRmInitPrms(Udma_rmGetSharedResPrms(UDMA_RM_RES_ID_VINTR),
+          retVal += Udma_rmSetSharedResRmInitPrms(Udma_rmGetSharedResPrms(instId, UDMA_RM_RES_ID_VINTR),
                                                  instId,
                                                  UDMA_INST_ID_START,
                                                  rmDefBoardCfgResp[UDMA_RM_RES_ID_VINTR].rangeStart,
@@ -2610,7 +2612,7 @@ int32_t UdmaRmInitPrms_init(uint32_t instId, Udma_RmInitPrms *rmInitPrms)
           /* Interrupts available for UDMA driver */
           uint32_t numIrIntrAvbl  = 0U;
 
-          Udma_RmSharedResPrms *rmSharedResPrms = Udma_rmGetSharedResPrms(UDMA_RM_RES_ID_IR_INTR);
+          Udma_RmSharedResPrms *rmSharedResPrms = Udma_rmGetSharedResPrms(instId, UDMA_RM_RES_ID_IR_INTR);
           /*
            * startResrvCnt and endResrvCnt are number of interrupts reserved for other
            * drivers, can't be used by UDMA driver. \ref Udma_RmSharedResPrms
@@ -2633,7 +2635,7 @@ int32_t UdmaRmInitPrms_init(uint32_t instId, Udma_RmInitPrms *rmInitPrms)
   #endif
       #if (UDMA_SOC_CFG_INTR_ROUTER_PRESENT == 1)
           /* Shared resource - Split based on instance */
-          retVal += Udma_rmSetSharedResRmInitPrms(Udma_rmGetSharedResPrms(UDMA_RM_RES_ID_IR_INTR),
+          retVal += Udma_rmSetSharedResRmInitPrms(Udma_rmGetSharedResPrms(instId, UDMA_RM_RES_ID_IR_INTR),
                                               instId,
                                               UDMA_INST_ID_START,
                                               rmDefBoardCfgResp[UDMA_RM_RES_ID_IR_INTR].rangeStart,
@@ -2667,7 +2669,7 @@ int32_t UdmaRmInitPrms_init(uint32_t instId, Udma_RmInitPrms *rmInitPrms)
 
               /* Get the startInstIrStart i.e., start value of range of IR interrupts
                  allocated to first instance */
-              retVal += Udma_rmSetSharedResRmInitPrms(Udma_rmGetSharedResPrms(UDMA_RM_RES_ID_IR_INTR),
+              retVal += Udma_rmSetSharedResRmInitPrms(Udma_rmGetSharedResPrms(instId, UDMA_RM_RES_ID_IR_INTR),
                                                      UDMA_INST_ID_START,
                                                      UDMA_INST_ID_START,
                                                      rmDefBoardCfgResp[UDMA_RM_RES_ID_IR_INTR].rangeStart,
@@ -2677,7 +2679,7 @@ int32_t UdmaRmInitPrms_init(uint32_t instId, Udma_RmInitPrms *rmInitPrms)
 
               /* Get the curInstIrStart i.e., start value of range of IR interrupts
                  allocated to current instance */
-              retVal += Udma_rmSetSharedResRmInitPrms(Udma_rmGetSharedResPrms(UDMA_RM_RES_ID_IR_INTR),
+              retVal += Udma_rmSetSharedResRmInitPrms(Udma_rmGetSharedResPrms(instId, UDMA_RM_RES_ID_IR_INTR),
                                                      instId,
                                                      UDMA_INST_ID_START,
                                                      rmDefBoardCfgResp[UDMA_RM_RES_ID_IR_INTR].rangeStart,
