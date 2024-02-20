@@ -39,15 +39,33 @@
 #include <stdlib.h>
 
 #include <ti/osal/CacheP.h>
+#include <sys/cache.h>
+#include <sys/mman.h>
 
+static struct cache_ctrl cinfo;
+
+static int init_cache = 0;
+
+//TODO:: These APIs SHOULD BE STUBBED for J7 devices. Sitara variants need the Cache Ops
+/*
+ *  ======== CacheP_init ========
+ */
+static void CacheP_init()
+{
+    if (init_cache == 0) {
+        cinfo.fd = NOFD;
+        cache_init(0, &cinfo, NULL);
+        init_cache  = 1;
+    }
+}
 
 /*
  *  ======== CacheP_wb ========
  */
 void CacheP_wb(const void * addr, uint32_t size)
 {
-    /* Not supported by QNX OSAL */
-   return;
+    CacheP_init();
+    CACHE_FLUSH(&cinfo, (void *)addr, 0, size);
 }
 
 /*
@@ -55,8 +73,8 @@ void CacheP_wb(const void * addr, uint32_t size)
  */
 void CacheP_wbInv(const void * addr, uint32_t size)
 {
-    /* Not supported by QNX OSAL */
-    return;
+    CacheP_init();
+    CACHE_INVAL(&cinfo, (void *)addr, 0, size);
 }
 
 /*
@@ -64,9 +82,8 @@ void CacheP_wbInv(const void * addr, uint32_t size)
  */
 void CacheP_Inv(const void * addr, uint32_t size)
 {
-    /* Not supported by QNX OSAL */
-    return;
+    CacheP_init();
+    CACHE_INVAL(&cinfo, (void *)addr, 0, size);
 }
 
 /* Nothing past this point */
-

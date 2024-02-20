@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) Texas Instruments Incorporated 2020
+ *  Copyright (C) 2023 Texas Instruments Incorporated
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -83,6 +83,23 @@ const Udma_RmDefBoardCfgPrms gUdmaRmDefBoardCfg_Bcdma[UDMA_RM_NUM_BCDMA_RES] =
     {UDMA_RM_RES_ID_VINTR,                  TISCI_DEV_DMASS0_INTAGGR_0,        TISCI_RESASG_SUBTYPE_IA_VINT,                TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST},
 };
 
+/** \brief BCDMA(CSI) defaultBoardCfg Params */
+const Udma_RmDefBoardCfgPrms gUdmaRmDefBoardCfg_BcdmaCsi[UDMA_RM_NUM_BCDMA_RES] =
+{
+    /* resId,                               reqType,                           reqSubtype,                                  secHost */
+    {UDMA_RM_RES_ID_BC_UHC,                 UDMA_RM_SCI_REQ_TYPE_INVALID,      UDMA_RM_SCI_REQ_SUBTYPE_INVALID,             TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST},
+    {UDMA_RM_RES_ID_BC_HC,                  UDMA_RM_SCI_REQ_TYPE_INVALID,      UDMA_RM_SCI_REQ_SUBTYPE_INVALID,             TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST},
+    {UDMA_RM_RES_ID_BC,                     UDMA_RM_SCI_REQ_TYPE_INVALID,      UDMA_RM_SCI_REQ_SUBTYPE_INVALID,             TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST},
+    {UDMA_RM_RES_ID_TX_UHC,                 UDMA_RM_SCI_REQ_TYPE_INVALID,      UDMA_RM_SCI_REQ_SUBTYPE_INVALID,             TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST},
+    {UDMA_RM_RES_ID_TX_HC,                  UDMA_RM_SCI_REQ_TYPE_INVALID,      UDMA_RM_SCI_REQ_SUBTYPE_INVALID,             TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST},
+    {UDMA_RM_RES_ID_TX,                     TISCI_DEV_DMASS1_BCDMA_0,          TISCI_RESASG_SUBTYPE_BCDMA_SPLIT_TR_TX_CHAN, TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST},
+    {UDMA_RM_RES_ID_RX_UHC,                 UDMA_RM_SCI_REQ_TYPE_INVALID,      UDMA_RM_SCI_REQ_SUBTYPE_INVALID,             TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST},
+    {UDMA_RM_RES_ID_RX_HC,                  UDMA_RM_SCI_REQ_TYPE_INVALID,      UDMA_RM_SCI_REQ_SUBTYPE_INVALID,             TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST},
+    {UDMA_RM_RES_ID_RX,                     TISCI_DEV_DMASS1_BCDMA_0,          TISCI_RESASG_SUBTYPE_BCDMA_SPLIT_TR_RX_CHAN, TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST},
+    {UDMA_RM_RES_ID_GLOBAL_EVENT,           TISCI_DEV_DMASS1_INTAGGR_0,        TISCI_RESASG_SUBTYPE_GLOBAL_EVENT_SEVT,      TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST},
+    {UDMA_RM_RES_ID_VINTR,                  TISCI_DEV_DMASS1_INTAGGR_0,        TISCI_RESASG_SUBTYPE_IA_VINT,                TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST},
+};
+
 /** \brief PKTDMA defaultBoardCfg Params */
 const Udma_RmDefBoardCfgPrms gUdmaRmDefBoardCfg_Pktdma[UDMA_RM_NUM_PKTDMA_RES] =
 {
@@ -101,64 +118,53 @@ const Udma_RmDefBoardCfgPrms gUdmaRmDefBoardCfg_Pktdma[UDMA_RM_NUM_PKTDMA_RES] =
     {UDMA_RM_RES_ID_MAPPED_TX_CPSW,         TISCI_DEV_DMASS0_PKTDMA_0,      TISCI_RESASG_SUBTYPE_PKTDMA_CPSW_TX_CHAN,           TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST},
     {UDMA_RM_RES_ID_MAPPED_TX_SAUL_0,       TISCI_DEV_DMASS0_PKTDMA_0,      TISCI_RESASG_SUBTYPE_PKTDMA_SAUL_TX_0_CHAN,         TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST},
     {UDMA_RM_RES_ID_MAPPED_TX_SAUL_1,       TISCI_DEV_DMASS0_PKTDMA_0,      TISCI_RESASG_SUBTYPE_PKTDMA_SAUL_TX_1_CHAN,         TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST},
-    {UDMA_RM_RES_ID_MAPPED_TX_ICSSG_0,      TISCI_DEV_DMASS0_PKTDMA_0,      TISCI_RESASG_SUBTYPE_PKTDMA_ICSSG_0_TX_CHAN,        TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST},
-    {UDMA_RM_RES_ID_MAPPED_TX_ICSSG_1,      TISCI_DEV_DMASS0_PKTDMA_0,      TISCI_RESASG_SUBTYPE_PKTDMA_ICSSG_1_TX_CHAN,        TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST},
     {UDMA_RM_RES_ID_MAPPED_RX_CPSW,         TISCI_DEV_DMASS0_PKTDMA_0,      TISCI_RESASG_SUBTYPE_PKTDMA_CPSW_RX_CHAN,           TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST},
     {UDMA_RM_RES_ID_MAPPED_RX_SAUL_0,       TISCI_DEV_DMASS0_PKTDMA_0,      TISCI_RESASG_SUBTYPE_PKTDMA_SAUL_RX_0_CHAN,         TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST},
     {UDMA_RM_RES_ID_MAPPED_RX_SAUL_1,       TISCI_DEV_DMASS0_PKTDMA_0,      TISCI_RESASG_SUBTYPE_PKTDMA_SAUL_RX_1_CHAN,         TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST},
     {UDMA_RM_RES_ID_MAPPED_RX_SAUL_2,       TISCI_DEV_DMASS0_PKTDMA_0,      TISCI_RESASG_SUBTYPE_PKTDMA_SAUL_RX_2_CHAN,         TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST},
     {UDMA_RM_RES_ID_MAPPED_RX_SAUL_3,       TISCI_DEV_DMASS0_PKTDMA_0,      TISCI_RESASG_SUBTYPE_PKTDMA_SAUL_RX_3_CHAN,         TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST},
-    {UDMA_RM_RES_ID_MAPPED_RX_ICSSG_0,      TISCI_DEV_DMASS0_PKTDMA_0,      TISCI_RESASG_SUBTYPE_PKTDMA_ICSSG_0_RX_CHAN,        TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST},
-    {UDMA_RM_RES_ID_MAPPED_RX_ICSSG_1,      TISCI_DEV_DMASS0_PKTDMA_0,      TISCI_RESASG_SUBTYPE_PKTDMA_ICSSG_1_RX_CHAN,        TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST},
     {UDMA_RM_RES_ID_MAPPED_TX_RING_CPSW,    TISCI_DEV_DMASS0_PKTDMA_0,      TISCI_RESASG_SUBTYPE_PKTDMA_RING_CPSW_TX_CHAN,      TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST},
     {UDMA_RM_RES_ID_MAPPED_TX_RING_SAUL_0,  TISCI_DEV_DMASS0_PKTDMA_0,      TISCI_RESASG_SUBTYPE_PKTDMA_RING_SAUL_TX_0_CHAN,    TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST},
     {UDMA_RM_RES_ID_MAPPED_TX_RING_SAUL_1,  TISCI_DEV_DMASS0_PKTDMA_0,      TISCI_RESASG_SUBTYPE_PKTDMA_RING_SAUL_TX_1_CHAN,    TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST},
-    {UDMA_RM_RES_ID_MAPPED_TX_RING_ICSSG_0, TISCI_DEV_DMASS0_PKTDMA_0,      TISCI_RESASG_SUBTYPE_PKTDMA_RING_ICSSG_0_TX_CHAN,   TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST},
-    {UDMA_RM_RES_ID_MAPPED_TX_RING_ICSSG_1, TISCI_DEV_DMASS0_PKTDMA_0,      TISCI_RESASG_SUBTYPE_PKTDMA_RING_ICSSG_1_TX_CHAN,   TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST},
     {UDMA_RM_RES_ID_MAPPED_RX_RING_CPSW,    TISCI_DEV_DMASS0_PKTDMA_0,      TISCI_RESASG_SUBTYPE_PKTDMA_RING_CPSW_RX_CHAN,      TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST},
     {UDMA_RM_RES_ID_MAPPED_RX_RING_SAUL_0,  TISCI_DEV_DMASS0_PKTDMA_0,      TISCI_RESASG_SUBTYPE_PKTDMA_RING_SAUL_RX_0_CHAN,    TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST},
     {UDMA_RM_RES_ID_MAPPED_RX_RING_SAUL_1,  TISCI_DEV_DMASS0_PKTDMA_0,      TISCI_RESASG_SUBTYPE_PKTDMA_RING_SAUL_RX_1_CHAN,    TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST},
     {UDMA_RM_RES_ID_MAPPED_RX_RING_SAUL_2,  TISCI_DEV_DMASS0_PKTDMA_0,      TISCI_RESASG_SUBTYPE_PKTDMA_RING_SAUL_RX_2_CHAN,    TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST},
     {UDMA_RM_RES_ID_MAPPED_RX_RING_SAUL_3,  TISCI_DEV_DMASS0_PKTDMA_0,      TISCI_RESASG_SUBTYPE_PKTDMA_RING_SAUL_RX_3_CHAN,    TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST},
-    {UDMA_RM_RES_ID_MAPPED_RX_RING_ICSSG_0, TISCI_DEV_DMASS0_PKTDMA_0,      TISCI_RESASG_SUBTYPE_PKTDMA_RING_ICSSG_0_RX_CHAN,   TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST},
-    {UDMA_RM_RES_ID_MAPPED_RX_RING_ICSSG_1, TISCI_DEV_DMASS0_PKTDMA_0,      TISCI_RESASG_SUBTYPE_PKTDMA_RING_ICSSG_1_RX_CHAN,   TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST},
 };
 
+uint32_t gEvtInstShare[UDMA_NUM_INST_ID]  = {UDMA_RM_SHARED_RES_CNT_REST, UDMA_RM_SHARED_RES_CNT_REST, 0U};
 /** \brief Shared resource Params */
 Udma_RmSharedResPrms gUdmaRmSharedResPrms[UDMA_RM_NUM_SHARED_RES] =
 {
     /* Global Events/VINTR must be used based on core and split across BCDMA and PKTDMA instances */
-#if defined (BUILD_MPU1_0)
-    /* resId,                     startResrvCnt, endResrvCnt, numInst,           minReq, instShare[BCDMA,PKTDMA] */
-    {UDMA_RM_RES_ID_GLOBAL_EVENT, 0U,            0U,          UDMA_NUM_INST_ID,  50U,    {UDMA_RM_SHARED_RES_CNT_REST, UDMA_RM_SHARED_RES_CNT_REST} },
-    {UDMA_RM_RES_ID_VINTR,        0U,            0U,          UDMA_NUM_INST_ID,  4U,     {UDMA_RM_SHARED_RES_CNT_REST, UDMA_RM_SHARED_RES_CNT_REST} },
-#endif
-#if defined (BUILD_MCU1_0)
-    /* resId,                     startResrvCnt, endResrvCnt, numInst,           minReq, instShare[BCDMA,PKTDMA] */
-    {UDMA_RM_RES_ID_GLOBAL_EVENT, 0U,            0U,          UDMA_NUM_INST_ID,  50U,    {UDMA_RM_SHARED_RES_CNT_REST, UDMA_RM_SHARED_RES_CNT_REST} },
-    {UDMA_RM_RES_ID_VINTR,        0U,            0U,          UDMA_NUM_INST_ID,  4U,     {UDMA_RM_SHARED_RES_CNT_REST, UDMA_RM_SHARED_RES_CNT_REST} },
-#endif
-#if defined (BUILD_MCU1_1)
-    /* resId,                     startResrvCnt, endResrvCnt, numInst,           minReq, instShare[BCDMA,PKTDMA] */
-    {UDMA_RM_RES_ID_GLOBAL_EVENT, 0U,            0U,          UDMA_NUM_INST_ID,  50U,    {UDMA_RM_SHARED_RES_CNT_REST, UDMA_RM_SHARED_RES_CNT_REST} },
-    {UDMA_RM_RES_ID_VINTR,        0U,            0U,          UDMA_NUM_INST_ID,  4U,     {UDMA_RM_SHARED_RES_CNT_REST, UDMA_RM_SHARED_RES_CNT_REST} },
-#endif
-#if defined (BUILD_MCU2_0)
-    /* resId,                     startResrvCnt, endResrvCnt, numInst,           minReq, instShare[BCDMA,PKTDMA] */
-    {UDMA_RM_RES_ID_GLOBAL_EVENT, 0U,            0U,          UDMA_NUM_INST_ID,  50U,    {UDMA_RM_SHARED_RES_CNT_REST, UDMA_RM_SHARED_RES_CNT_REST} },
-    {UDMA_RM_RES_ID_VINTR,        0U,            0U,          UDMA_NUM_INST_ID,  4U,    {UDMA_RM_SHARED_RES_CNT_REST, UDMA_RM_SHARED_RES_CNT_REST} },
-#endif
-#if defined (BUILD_MCU2_1)
-    /* resId,                     startResrvCnt, endResrvCnt, numInst,           minReq, instShare[BCDMA,PKTDMA] */
-    {UDMA_RM_RES_ID_GLOBAL_EVENT, 0U,            0U,          UDMA_NUM_INST_ID,  50U,    {UDMA_RM_SHARED_RES_CNT_REST, UDMA_RM_SHARED_RES_CNT_REST} },
-    {UDMA_RM_RES_ID_VINTR,        0U,            0U,          UDMA_NUM_INST_ID,  4U,     {UDMA_RM_SHARED_RES_CNT_REST, UDMA_RM_SHARED_RES_CNT_REST} },
-#endif
-#if defined (BUILD_M4F_0)
-    /* resId,                     startResrvCnt, endResrvCnt, numInst,           minReq, instShare[BCDMA,PKTDMA] */
-    {UDMA_RM_RES_ID_GLOBAL_EVENT, 0U,            0U,          UDMA_NUM_INST_ID,  8U,     {UDMA_RM_SHARED_RES_CNT_REST, UDMA_RM_SHARED_RES_CNT_REST} },
-    {UDMA_RM_RES_ID_VINTR,        0U,            0U,          UDMA_NUM_INST_ID,  2U,     {UDMA_RM_SHARED_RES_CNT_REST, UDMA_RM_SHARED_RES_CNT_REST} },
+    /* resId,                     startResrvCnt, endResrvCnt, numInst,           minReq, instShare[BCDMA,PKTDMA,BCDMA(CSI)] */
+    {UDMA_RM_RES_ID_GLOBAL_EVENT, 0U,            0U,          UDMA_NUM_INST_ID,  0U, gEvtInstShare},
+    {UDMA_RM_RES_ID_VINTR,        0U,            0U,          UDMA_NUM_INST_ID,  0U, gEvtInstShare},
+};
+/** \brief Shared resource Params */
+Udma_RmSharedResPrms gBcdmaCsiRmSharedResPrms[UDMA_RM_NUM_SHARED_RES] =
+{
+    /* Global Events/VINTR must be used based on core and split across BCDMA and PKTDMA instances */
+    /* resId,                     startResrvCnt, endResrvCnt, numInst,           minReq, instShare[BCDMA,PKTDMA,BCDMA(CSI)] */
+    {UDMA_RM_RES_ID_GLOBAL_EVENT, 0U,            0U,          UDMA_NUM_INST_ID, 0U, gEvtInstShare},
+    {UDMA_RM_RES_ID_VINTR,        0U,            0U,          UDMA_NUM_INST_ID, 0U, gEvtInstShare},
+};
+
+#if (UDMA_LOCAL_C7X_DRU_PRESENT == 1)
+/* These DRUs are local to C7X cores, user need to take care of resource overlapping when they try to override default allocation */
+Udma_RmSharedResPrms gBcdmaDruRmSharedResPrms[UDMA_RM_NUM_SHARED_RES] =
+{
+#if defined (BUILD_C75X_1)
+    /* resId,                     startResrvCnt, endResrvCnt, numInst,           minReq, instShare */
+    {UDMA_INST_ID_C7X_DRU_0,       0U,            0U,          UDMA_NUM_C7X_CORE,     4U, {UDMA_RM_SHARED_RES_CNT_REST, UDMA_RM_SHARED_RES_CNT_MIN}},
+    {UDMA_INST_ID_C7X_DRU_1,       0U,            0U,          UDMA_NUM_C7X_CORE,     4U, {UDMA_RM_SHARED_RES_CNT_MIN, UDMA_RM_SHARED_RES_CNT_REST}},
+#elif defined (BUILD_C75X_2)
+    {UDMA_INST_ID_C7X_DRU_0,       0U,            0U,          UDMA_NUM_C7X_CORE,     4U, {UDMA_RM_SHARED_RES_CNT_MIN, UDMA_RM_SHARED_RES_CNT_REST}},
+    {UDMA_INST_ID_C7X_DRU_1,       0U,            0U,          UDMA_NUM_C7X_CORE,     4U, {UDMA_RM_SHARED_RES_CNT_REST, UDMA_RM_SHARED_RES_CNT_MIN}},
 #endif
 };
+#endif
 
 /* ========================================================================== */
 /*                          Function Definitions                              */
@@ -172,6 +178,10 @@ const Udma_RmDefBoardCfgPrms *Udma_rmGetDefBoardCfgPrms(uint32_t instId)
     {
         rmDefBoardCfgPrms = &gUdmaRmDefBoardCfg_Bcdma[0U];
     }
+    else if(UDMA_INST_ID_BCDMA_1 == instId)
+    {
+        rmDefBoardCfgPrms = &gUdmaRmDefBoardCfg_BcdmaCsi[0U];
+    }
     else
     {
         rmDefBoardCfgPrms = &gUdmaRmDefBoardCfg_Pktdma[0U];
@@ -180,20 +190,30 @@ const Udma_RmDefBoardCfgPrms *Udma_rmGetDefBoardCfgPrms(uint32_t instId)
     return (rmDefBoardCfgPrms);
 }
 
+
 Udma_RmSharedResPrms *Udma_rmGetSharedResPrms(uint32_t instId, uint32_t resId)
 {
     Udma_RmSharedResPrms  *rmSharedResPrms = NULL;
     uint32_t    i;
 
-    for(i = 0; i < UDMA_RM_NUM_SHARED_RES; i++)
-    {
-        if(resId == gUdmaRmSharedResPrms[i].resId)
-        {
-            rmSharedResPrms = &gUdmaRmSharedResPrms[i]; 
-            break;   
+    if(instId == UDMA_INST_ID_BCDMA_1) {
+        for(i = 0; i < UDMA_RM_NUM_SHARED_RES; i++) {
+            if(resId == gBcdmaCsiRmSharedResPrms[i].resId)
+            {
+                rmSharedResPrms = &gBcdmaCsiRmSharedResPrms[i];
+                break;
+            }
+        }
+    } else {
+        for(i = 0; i < UDMA_RM_NUM_SHARED_RES; i++) {
+            if(resId == gUdmaRmSharedResPrms[i].resId)
+            {
+                rmSharedResPrms = &gUdmaRmSharedResPrms[i];
+                break;
+            }
         }
     }
-    
+
     return (rmSharedResPrms);
 }
 

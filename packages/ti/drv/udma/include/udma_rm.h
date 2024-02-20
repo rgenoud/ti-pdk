@@ -346,6 +346,7 @@ typedef struct
  *  User can use this API to get the default parameters for a resource 
  *  and override as per need.
  *
+ *  \param instId      [IN] \ref Udma_instId
  *  \param resId       [IN] \ref Udma_RmResId
  *
  *  \return Pointer to default RM Shared Resource parameters
@@ -353,8 +354,9 @@ typedef struct
  *          Note: Returns NULL_PTR if the requested \ref Udma_RmResId
  *          dosen't have an entry in the array of default RM Shared Resource 
  *          parameters structure
+ *   NOTE:: This API is updated. Need to fix all other SoCs as well.
  */
-Udma_RmSharedResPrms *Udma_rmGetSharedResPrms(uint32_t resId);
+Udma_RmSharedResPrms *Udma_rmGetSharedResPrms(uint32_t instId, uint32_t resId);
 
 /* ========================================================================== */
 /*                       Static Function Definitions                          */
