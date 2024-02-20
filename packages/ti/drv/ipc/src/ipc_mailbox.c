@@ -514,15 +514,12 @@ void Ipc_mailboxEnableNewMsgInt(uint16_t selfId, uint16_t remoteProcId)
     uint32_t  queueId;
     uintptr_t baseAddr;
 
-    if ((IPC_MAX_PROCS > selfId) && (IPC_MAX_PROCS > remoteProcId))
-    {
-        Ipc_getMailboxInfoRx(selfId, remoteProcId, &clusterId, &userId,
-                                &queueId);
+    Ipc_getMailboxInfoRx(selfId, remoteProcId, &clusterId, &userId,
+                         &queueId);
 
-        baseAddr = Ipc_getMailboxBaseAddr(clusterId);
+    baseAddr = Ipc_getMailboxBaseAddr(clusterId);
 
-        Ipc_mailboxEnable(baseAddr, userId, queueId);
-    }
+    Ipc_mailboxEnable(baseAddr, userId, queueId);
 }
 
 void Ipc_mailboxDisableNewMsgInt(uint16_t selfId, uint16_t remoteProcId)
