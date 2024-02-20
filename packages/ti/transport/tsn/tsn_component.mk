@@ -108,7 +108,7 @@ export tsn_unibase_BOARD_DEPENDENCY = no
 export tsn_unibase_SOC_DEPENDENCY = no
 export tsn_unibase_CORE_DEPENDENCY = no
 tsn_unibase_PKG_LIST = tsn_unibase
-tsn_unibase_INCLUDE = $(tsn_unibase_PATH)
+tsn_unibase_INCLUDE = $(tsn_unibase_PATH) $(tsn_unibase_PATH)/tsn_unibase
 export tsn_unibase_SOCLIST = $(tsn_SOCLIST)
 export tsn_unibase_$(SOC)_CORELIST = $(tsn_$(SOC)_CORELIST)
 tsn_LIB_LIST += tsn_unibase
@@ -126,7 +126,8 @@ export tsn_combase_BOARD_DEPENDENCY = no
 export tsn_combase_SOC_DEPENDENCY = no
 export tsn_combase_CORE_DEPENDENCY = no
 tsn_combase_PKG_LIST = tsn_combase
-tsn_combase_INCLUDE = $(tsn_combase_PATH)
+tsn_combase_INCLUDE = $(tsn_combase_PATH) $(tsn_combase_PATH)/tsn_combase \
+	$(tsn_combase_PATH)/tsn_combase/tilld/jacinto
 export tsn_combase_SOCLIST = $(tsn_SOCLIST)
 export tsn_combase_$(SOC)_CORELIST = $(tsn_$(SOC)_CORELIST)
 tsn_LIB_LIST += tsn_combase
@@ -144,10 +145,11 @@ export tsn_gptp_BOARD_DEPENDENCY = no
 export tsn_gptp_SOC_DEPENDENCY = no
 export tsn_gptp_CORE_DEPENDENCY = no
 tsn_gptp_PKG_LIST = tsn_gptp
-tsn_gptp_INCLUDE = $(tsn_gptp_PATH)
+tsn_gptp_INCLUDE = $(tsn_gptp_PATH) $(tsn_gptp_PATH)/tsn_gptp
 export tsn_gptp_SOCLIST = $(tsn_SOCLIST)
 export tsn_gptp_$(SOC)_CORELIST = $(tsn_$(SOC)_CORELIST)
 tsn_LIB_LIST += tsn_gptp
+
 #
 # lldp library
 #
@@ -165,6 +167,7 @@ tsn_lldp_INCLUDE = $(tsn_lldp_PATH)
 export tsn_lldp_SOCLIST = $(tsn_SOCLIST)
 export tsn_lldp_$(SOC)_CORELIST = $(tsn_$(SOC)_CORELIST)
 tsn_LIB_LIST += tsn_lldp
+
 #
 # tsn_uniconf library
 #
@@ -178,11 +181,50 @@ export tsn_uniconf_BOARD_DEPENDENCY = no
 export tsn_uniconf_SOC_DEPENDENCY = no
 export tsn_uniconf_CORE_DEPENDENCY = no
 tsn_uniconf_PKG_LIST = tsn_uniconf
-tsn_uniconf_INCLUDE = $(tsn_uniconf_PATH)
+tsn_uniconf_INCLUDE = $(tsn_uniconf_PATH) $(tsn_uniconf_PATH)/tsn_uniconf
 export tsn_uniconf_SOCLIST = $(tsn_SOCLIST)
 export tsn_uniconf_$(SOC)_CORELIST = $(tsn_$(SOC)_CORELIST)
 tsn_LIB_LIST += tsn_uniconf
-endif
 
+#
+# tsn_netconf daemon/library
+#
+export tsn_netconf_COMP_LIST = tsn_netconf
+tsn_netconf_RELPATH = ti/transport/tsn/tsn-stack
+tsn_netconf_PATH = $(PDK_TSN_COMP_PATH)/tsn-stack
+export tsn_netconf_LIBNAME = tsn_netconf
+export tsn_netconf_LIBPATH = $(PDK_TSN_COMP_PATH)/lib
+export tsn_netconf_MAKEFILE =  -f ../makefile_tsn_netconf
+export tsn_netconf_BOARD_DEPENDENCY = no
+export tsn_netconf_SOC_DEPENDENCY = no
+export tsn_netconf_CORE_DEPENDENCY = no
+tsn_netconf_PKG_LIST = tsn_netconf
+tsn_netconf_INCLUDE = $(tsn_netconf_PATH) \
+	$(tsn_netconf_PATH)/tsn_netconf/src/common \
+	$(tsn_netconf_PATH)/tsn_netconf/src/daemon \
+	$(tsn_netconf_PATH)/tsn_netconf/src/platform/ti-frtos
+export tsn_netconf_SOCLIST = $(tsn_SOCLIST)
+export tsn_netconf_$(SOC)_CORELIST = $(tsn_$(SOC)_CORELIST)
+tsn_LIB_LIST += tsn_netconf
+
+#
+# pugixml library
+#
+export pugixml_COMP_LIST = pugixml
+pugixml_RELPATH = ti/transport/tsn/utils/pugixml
+pugixml_PATH = $(PDK_TSN_COMP_PATH)/utils/pugixml
+export pugixml_LIBNAME = pugixml
+export pugixml_LIBPATH = $(PDK_TSN_COMP_PATH)/lib
+export pugixml_MAKEFILE =  -f ../../makefile_pugixml
+export pugixml_BOARD_DEPENDENCY = no
+export pugixml_SOC_DEPENDENCY = no
+export pugixml_CORE_DEPENDENCY = no
+pugixml_PKG_LIST = pugixml
+pugixml_INCLUDE = $(pugixml_PATH) $(pugixml_PATH)/src
+export pugixml_SOCLIST = $(tsn_SOCLIST)
+export pugixml_$(SOC)_CORELIST = $(tsn_$(SOC)_CORELIST)
+tsn_LIB_LIST += pugixml
+
+endif
 # Common CFLAGS for TSN stack components
 TSN_CFLAGS =

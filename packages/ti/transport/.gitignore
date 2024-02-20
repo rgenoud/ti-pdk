@@ -16,5 +16,6 @@ timeSync/example/src/bios/ccsProjects/*/src/
 lwip/lwip-stack
 lwip/lwip-contrib
 tsn/tsn-stack
+tsn/utils
 *.d
 *.o
