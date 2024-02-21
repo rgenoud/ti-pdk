@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2020-2024 Texas Instruments Incorporated
+ *  Copyright (C) 2024 Texas Instruments Incorporated
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -32,7 +32,7 @@
  */
 
 /**
- *  \file sciserver_testapp_main.c
+ *  \file  sciserver_testapp_main.c
  *
  *  \brief Example Application for sciserver
  *
@@ -85,11 +85,11 @@
 
 int main(void)
 {
-    int32_t ret = CSL_PASS;
+    int32_t ret                = CSL_PASS;
+    char    *versionStr        = NULL;
+    char    *rmpmhalVersionStr = NULL;
     Sciclient_ConfigPrms_t clientPrms;
     Sciserver_TirtosCfgPrms_t appPrms;
-    char *version_str = NULL;
-    char *rmpmhal_version_str = NULL;
 
     OS_init();
 
@@ -125,12 +125,12 @@ int main(void)
         SciApp_consoleInit();
     }
 
-    version_str = Sciserver_getVersionStr();
-    rmpmhal_version_str = Sciserver_getRmPmHalVersionStr();
+    versionStr = Sciserver_getVersionStr();
+    rmpmhalVersionStr = Sciserver_getRmPmHalVersionStr();
 
     SciApp_printf("Sciserver Testapp Built On: %s %s\n", __DATE__, __TIME__);
-    SciApp_printf("Sciserver Version: %s\n", version_str);
-    SciApp_printf("RM_PM_HAL Version: %s\n", rmpmhal_version_str);
+    SciApp_printf("Sciserver Version: %s\n", versionStr);
+    SciApp_printf("RM_PM_HAL Version: %s\n", rmpmhalVersionStr);
     if (ret == CSL_PASS)
     {
         SciApp_printf("Starting Sciserver..... PASSED\n");

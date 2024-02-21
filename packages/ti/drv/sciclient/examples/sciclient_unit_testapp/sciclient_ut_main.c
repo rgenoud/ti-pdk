@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2018-2024 Texas Instruments Incorporated
+ *  Copyright (C) 2024 Texas Instruments Incorporated
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -84,9 +84,9 @@ extern Sciclient_ServiceHandle_t gSciclientHandle;
 extern uint32_t gInterruptRecieved;
 /* For SafeRTOS on R5F with FFI Support, task stack should be aligned to the stack size */
 #if defined(SAFERTOS) && defined (BUILD_MCU)
-static uint8_t  gSciclientApp_TskStackMain[32*1024] __attribute__((aligned(32*1024))) = { 0 };
+static uint8_t  gSciclientAppTskStackMain[32*1024] __attribute__((aligned(32*1024))) = { 0 };
 #else
-static uint8_t  gSciclientApp_TskStackMain[32*1024] __attribute__((aligned(8192)));
+static uint8_t  gSciclientAppTskStackMain[32*1024] __attribute__((aligned(8192)));
 #endif
 /* IMPORTANT NOTE: For C7x,
  * - stack size and stack ptr MUST be 8KB aligned
@@ -114,7 +114,7 @@ static volatile int32_t gAppIsrExecNum = 0;
 /*                       Internal Function Declarations                       */
 /* ========================================================================== */
 
-void mainTask(void* arg0, void* arg1);
+static void mainTask(void* arg0, void* arg1);
 static int32_t SciclientApp_getRevisionTestPol(void);
 static int32_t SciclientApp_getRevisionTestIntr(void);
 static int32_t SciclientApp_timeoutTest(void);
@@ -151,11 +151,11 @@ int main(void)
     /*  This should be called before any other OS calls (like Task creation, OS_start, etc..) */
     OS_init();
 
-    memset(gSciclientApp_TskStackMain, 0xFF, sizeof(gSciclientApp_TskStackMain));
+    memset(gSciclientAppTskStackMain, 0xFF, sizeof(gSciclientAppTskStackMain));
     TaskP_Params_init(&taskParams);
     taskParams.priority     = 2;
-    taskParams.stack        = gSciclientApp_TskStackMain;
-    taskParams.stacksize    = sizeof (gSciclientApp_TskStackMain);
+    taskParams.stack        = gSciclientAppTskStackMain;
+    taskParams.stacksize    = sizeof (gSciclientAppTskStackMain);
     task = TaskP_create(&mainTask, &taskParams);
     if(NULL == task)
     {
@@ -165,18 +165,6 @@ int main(void)
     OS_start();
 
     return retVal;
-}
-
-void mainTask(void* arg0, void* arg1)
-{
-    /*To suppress unused variable warning*/
-    (void)arg0;
-    (void)arg1;
-    volatile uint32_t loopForever = 1U;
-
-    SciApp_parser();
-
-    while(loopForever);
 }
 
 uint32_t SciApp_getNumTests(void)
@@ -239,10 +227,23 @@ int32_t SciApp_testMain(SciApp_TestParams_t *testParams)
 /*                 Internal Function Definitions                              */
 /* ========================================================================== */
 
-int32_t SciclientApp_getRevisionTestPol(void)
+
+static void mainTask(void* arg0, void* arg1)
 {
-    int32_t status = CSL_EFAIL;
-    Sciclient_ConfigPrms_t  config =
+    /*To suppress unused variable warning*/
+    (void)arg0;
+    (void)arg1;
+    volatile uint32_t loopForever = 1U;
+
+    SciApp_parser();
+
+    while(loopForever);
+}
+
+static int32_t SciclientApp_getRevisionTestPol(void)
+{
+    int32_t status                  = CSL_EFAIL;
+    Sciclient_ConfigPrms_t  config  =
     {
         SCICLIENT_SERVICE_OPERATION_MODE_POLLED,
         NULL,
@@ -259,7 +260,7 @@ int32_t SciclientApp_getRevisionTestPol(void)
     };
 
     struct tisci_msg_version_resp response;
-    Sciclient_RespPrm_t respPrm =
+    Sciclient_RespPrm_t     respPrm =
     {
         0,
         (uint8_t *) &response,
@@ -309,10 +310,10 @@ int32_t SciclientApp_getRevisionTestPol(void)
     return status;
 }
 
-int32_t SciclientApp_getRevisionTestIntr(void)
+static int32_t SciclientApp_getRevisionTestIntr(void)
 {
-    int32_t status = CSL_EFAIL;
-    Sciclient_ConfigPrms_t  config =
+    int32_t status                  = CSL_EFAIL;
+    Sciclient_ConfigPrms_t   config =
     {
         SCICLIENT_SERVICE_OPERATION_MODE_INTERRUPT,
         NULL,
@@ -320,7 +321,7 @@ int32_t SciclientApp_getRevisionTestIntr(void)
     };
 
     struct tisci_msg_version_req request;
-    const Sciclient_ReqPrm_t  reqPrm =
+    const Sciclient_ReqPrm_t reqPrm =
     {
         TISCI_MSG_VERSION,
         TISCI_MSG_FLAG_AOP,
@@ -329,7 +330,7 @@ int32_t SciclientApp_getRevisionTestIntr(void)
         SCICLIENT_SERVICE_WAIT_FOREVER
     };
     struct tisci_msg_version_resp response;
-    Sciclient_RespPrm_t           respPrm =
+    Sciclient_RespPrm_t     respPrm =
     {
         0,
         (uint8_t *) &response,
@@ -379,9 +380,8 @@ int32_t SciclientApp_getRevisionTestIntr(void)
 
 static int32_t SciclientApp_invalidReqPrmTest(void)
 {
-    int32_t status = CSL_EFAIL;
-
-    Sciclient_ConfigPrms_t config =
+    int32_t status                            = CSL_EFAIL;
+    Sciclient_ConfigPrms_t             config =
     {
         SCICLIENT_SERVICE_OPERATION_MODE_POLLED,
         NULL,
@@ -397,7 +397,7 @@ static int32_t SciclientApp_invalidReqPrmTest(void)
         SCICLIENT_SERVICE_WAIT_FOREVER
     };
 
-    const Sciclient_ReqPrm_t  reqPrm_good =
+    const Sciclient_ReqPrm_t      reqPrm_good =
     {
         TISCI_MSG_VERSION,
         TISCI_MSG_FLAG_AOP,
@@ -407,14 +407,14 @@ static int32_t SciclientApp_invalidReqPrmTest(void)
     };
 
     struct tisci_msg_version_resp response;
-    Sciclient_RespPrm_t respPrm_badRxsize =
+    Sciclient_RespPrm_t     respPrm_badRxsize =
     {
         0,
         (uint8_t *) &response,
         100
     };
 
-    Sciclient_RespPrm_t respPrm_good =
+    Sciclient_RespPrm_t          respPrm_good =
     {
         0,
         (uint8_t *) &response,
@@ -471,8 +471,8 @@ static int32_t SciclientApp_invalidReqPrmTest(void)
 
 static int32_t SciclientApp_timeoutTest(void)
 {
-    int32_t status = CSL_EFAIL;
-    Sciclient_ConfigPrms_t  config =
+    int32_t status                  = CSL_EFAIL;
+    Sciclient_ConfigPrms_t   config =
     {
         SCICLIENT_SERVICE_OPERATION_MODE_POLLED,
         NULL,
@@ -488,7 +488,7 @@ static int32_t SciclientApp_timeoutTest(void)
         (uint32_t)0x0A
     };
     struct tisci_msg_version_resp response;
-    Sciclient_RespPrm_t respPrm =
+    Sciclient_RespPrm_t     respPrm =
     {
         0,
         (uint8_t *) &response,
@@ -526,8 +526,8 @@ static int32_t SciclientApp_timeoutTest(void)
 #if defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)
 static int32_t SciclientApp_msmcQueryTest(void)
 {
-    int32_t status = CSL_EFAIL;
-    Sciclient_ConfigPrms_t  config =
+    int32_t status                = CSL_EFAIL;
+    Sciclient_ConfigPrms_t config =
     {
         SCICLIENT_SERVICE_OPERATION_MODE_POLLED,
         NULL,
@@ -571,8 +571,8 @@ static int32_t SciclientApp_msmcQueryTest(void)
 #if defined(ENABLE_MSG_FWD)
 static int32_t SciclientApp_tifs2dmMsgForwardingTest(void)
 {
-    int32_t status = CSL_EFAIL;
-    Sciclient_ConfigPrms_t config =
+    int32_t status                  = CSL_EFAIL;
+    Sciclient_ConfigPrms_t config   =
     {
         SCICLIENT_SERVICE_OPERATION_MODE_INTERRUPT,
         NULL,
@@ -593,7 +593,7 @@ static int32_t SciclientApp_tifs2dmMsgForwardingTest(void)
     };
 
     struct tisci_msg_get_device_resp response;
-    Sciclient_RespPrm_t respPrm =
+    Sciclient_RespPrm_t     respPrm =
     {
         0,
         (uint8_t *) &response,
@@ -649,8 +649,8 @@ static int32_t SciclientApp_fwExcpNotificationTest(void)
     int32_t   status = CSL_PASS;
     volatile  uint32_t* excpRegCmbn;
     volatile  uint32_t* excpRegDmsc;
-    OsalRegisterIntrParams_t    intrPrmsDmscIntr;
-    OsalRegisterIntrParams_t    intrPrmsCmbnIntr;
+    OsalRegisterIntrParams_t intrPrmsDmscIntr;
+    OsalRegisterIntrParams_t intrPrmsCmbnIntr;
     CSL_R5ExptnHandlers sciclientR5ExptnHandlers;
     HwiP_Handle hwiPHandleDmscIntr;
     HwiP_Handle hwiPHandleCmbnIntr;
@@ -713,18 +713,18 @@ static void SciclientApp_pvu2R5IntrTestIsr(void)
 static int32_t SciclientApp_pvu2R5IntrTest(void)
 {
     int32_t  status                = CSL_PASS;
-    int32_t  sciclient_init_status = CSL_PASS;
-    int32_t  pvu2R5_route_status   = CSL_PASS;
+    int32_t  sciclientInitStatus   = CSL_PASS;
+    int32_t  pvu2R5RouteStatus     = CSL_PASS;
     uint16_t intNum                = 0;
-    Sciclient_ConfigPrms_t config =
+    Sciclient_ConfigPrms_t config  =
     {
         SCICLIENT_SERVICE_OPERATION_MODE_POLLED,
         NULL,
         0 /* isSecure = 0 un secured for all cores */
     };
-    struct tisci_msg_rm_irq_set_req     rmIrqReq;
-    struct tisci_msg_rm_irq_set_resp    rmIrqResp;
-    struct tisci_msg_rm_get_resource_range_req  req;
+    struct tisci_msg_rm_irq_set_req rmIrqReq;
+    struct tisci_msg_rm_irq_set_resp rmIrqResp;
+    struct tisci_msg_rm_get_resource_range_req req;
     struct tisci_msg_rm_get_resource_range_resp res;
     struct tisci_msg_rm_irq_release_req rmIrqReqRel;
     memset(&req, 0, sizeof(req));
@@ -739,9 +739,9 @@ static int32_t SciclientApp_pvu2R5IntrTest(void)
         status = Sciclient_deinit();
     }
     status = Sciclient_init(&config);
-    sciclient_init_status = status;
+    sciclientInitStatus = status;
 
-    if(sciclient_init_status == CSL_PASS)
+    if(sciclientInitStatus == CSL_PASS)
     {
         SciApp_printf("PVU to Main R5 Interrupt Test\n");
 
@@ -778,7 +778,7 @@ static int32_t SciclientApp_pvu2R5IntrTest(void)
                 status                  = Sciclient_rmIrqSet(&rmIrqReq,
                                                             &rmIrqResp,
                                                             SCICLIENT_SERVICE_WAIT_FOREVER);
-                pvu2R5_route_status     = status;
+                pvu2R5RouteStatus       = status;
                 if(status == CSL_PASS)
                 {
                     SciApp_printf("Sciclient_rmIrqSet() execution is successful\n");
@@ -837,7 +837,7 @@ static int32_t SciclientApp_pvu2R5IntrTest(void)
             }
         }
 
-        if(pvu2R5_route_status == CSL_PASS)
+        if(pvu2R5RouteStatus == CSL_PASS)
         {
             SciApp_printf("\nDeleting PVU to Main R5 Interrupt Route\n");
 
@@ -866,7 +866,7 @@ static int32_t SciclientApp_pvu2R5IntrTest(void)
         SciApp_printf("Sciclient_init() has failed\n");
     }
 
-    if (sciclient_init_status == CSL_PASS)
+    if (sciclientInitStatus == CSL_PASS)
     {
         status = Sciclient_deinit();
     }
@@ -876,18 +876,18 @@ static int32_t SciclientApp_pvu2R5IntrTest(void)
 
 static int32_t SciclientApp_pvu2GICIntrTest(void)
 {
-    int32_t  status                = CSL_PASS;
-    int32_t  sciclient_init_status = CSL_PASS;
-    uint16_t intNum                = 0;
-    Sciclient_ConfigPrms_t config  =
+    int32_t  status               = CSL_PASS;
+    int32_t  sciclientInitStatus  = CSL_PASS;
+    uint16_t intNum               = 0;
+    Sciclient_ConfigPrms_t config =
     {
         SCICLIENT_SERVICE_OPERATION_MODE_POLLED,
         NULL,
         0 /* isSecure = 0 un secured for all cores */
     };
-    struct tisci_msg_rm_irq_set_req     rmIrqReq;
-    struct tisci_msg_rm_irq_set_resp    rmIrqResp;
-    struct tisci_msg_rm_get_resource_range_req  req;
+    struct tisci_msg_rm_irq_set_req rmIrqReq;
+    struct tisci_msg_rm_irq_set_resp rmIrqResp;
+    struct tisci_msg_rm_get_resource_range_req req;
     struct tisci_msg_rm_get_resource_range_resp res;
     memset(&req, 0, sizeof(req));
     memset(&res, 0, sizeof(res));
@@ -900,9 +900,9 @@ static int32_t SciclientApp_pvu2GICIntrTest(void)
         status = Sciclient_deinit();
     }
     status = Sciclient_init(&config);
-    sciclient_init_status = status;
+    sciclientInitStatus = status;
 
-    if(sciclient_init_status == CSL_PASS)
+    if(sciclientInitStatus == CSL_PASS)
     {
         SciApp_printf("PVU to GIC Interrupt Test\n");
 
@@ -933,7 +933,7 @@ static int32_t SciclientApp_pvu2GICIntrTest(void)
                 rmIrqReq.dst_host_irq   = intNum;
                 rmIrqReq.secondary_host = TISCI_HOST_ID_A72_2;
 
-                status                    = Sciclient_rmIrqSet(&rmIrqReq,
+                status                  = Sciclient_rmIrqSet(&rmIrqReq,
                                                             &rmIrqResp,
                                                             SCICLIENT_SERVICE_WAIT_FOREVER);
                 if(status == CSL_PASS)
@@ -960,7 +960,7 @@ static int32_t SciclientApp_pvu2GICIntrTest(void)
         SciApp_printf("Sciclient_init() has failed\n");
     }
 
-    if (sciclient_init_status == CSL_PASS)
+    if (sciclientInitStatus == CSL_PASS)
     {
         status = Sciclient_deinit();
     }
@@ -979,28 +979,28 @@ static int32_t SciclientApp_mainUart2MCUR5IntrTest(void)
     uint32_t mainUartTestInstance;
     const UART_Params userParams       = 
     {
-        UART_MODE_BLOCKING,     /* readMode */
-        UART_MODE_BLOCKING,     /* writeMode */
-        SemaphoreP_WAIT_FOREVER,/* readTimeout */
-        SemaphoreP_WAIT_FOREVER,/* writeTimeout */
-        NULL,                  /* readCallback */
-        NULL,                 /* writeCallback */
-        UART_RETURN_NEWLINE,  /* readReturnMode */
-        UART_DATA_TEXT,       /* readDataMode */
-        UART_DATA_TEXT,       /* writeDataMode */
-        UART_ECHO_ON,         /* readEcho */
-        115200,               /* baudRate */
-        UART_LEN_8,           /* dataLength */
-        UART_STOP_ONE,        /* stopBits */
-        UART_PAR_NONE         /* parityType */
+        UART_MODE_BLOCKING,       /* readMode */
+        UART_MODE_BLOCKING,       /* writeMode */
+        SemaphoreP_WAIT_FOREVER,  /* readTimeout */
+        SemaphoreP_WAIT_FOREVER,  /* writeTimeout */
+        NULL,                     /* readCallback */
+        NULL,                     /* writeCallback */
+        UART_RETURN_NEWLINE,      /* readReturnMode */
+        UART_DATA_TEXT,           /* readDataMode */
+        UART_DATA_TEXT,           /* writeDataMode */
+        UART_ECHO_ON,             /* readEcho */
+        115200,                   /* baudRate */
+        UART_LEN_8,               /* dataLength */
+        UART_STOP_ONE,            /* stopBits */
+        UART_PAR_NONE             /* parityType */
     };
     struct UART_HWAttrs uartHwAttrs;
     UART_Handle uartHandle = NULL;
-    char echoPrompt[] = "Testing Main UART to MCU R5F routing\n";
+    char echoPrompt[]      = "Testing Main UART to MCU R5F routing\n";
 
-    struct tisci_msg_rm_irq_set_req     rmIrqReq;
-    struct tisci_msg_rm_irq_set_resp    rmIrqResp;
-    struct tisci_msg_rm_get_resource_range_req  req;
+    struct tisci_msg_rm_irq_set_req rmIrqReq;
+    struct tisci_msg_rm_irq_set_resp rmIrqResp;
+    struct tisci_msg_rm_get_resource_range_req req;
     struct tisci_msg_rm_get_resource_range_resp res;
     struct tisci_msg_rm_irq_release_req rmIrqReqRel;
 
@@ -1057,7 +1057,7 @@ static int32_t SciclientApp_mainUart2MCUR5IntrTest(void)
             rmIrqReq.dst_host_irq       = intNum;
             rmIrqReq.secondary_host     = TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST;
             status                      = Sciclient_rmIrqSet(&rmIrqReq, &rmIrqResp, SCICLIENT_SERVICE_WAIT_FOREVER);
-            mainUart2MCUR5RouteStatus = status;
+            mainUart2MCUR5RouteStatus   = status;
         }
     }
     (uartHwAttrs).intNum = intNum;

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2020-2024 Texas Instruments Incorporated
+ *  Copyright (C) 2024 Texas Instruments Incorporated
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -32,7 +32,7 @@
  */
 
 /**
- *  \file sciclient_fw_main.c
+ *  \file  sciclient_fw_main.c
  *
  *  \brief Implementation of Sciclient Firewall Unit Test
  *
@@ -58,53 +58,37 @@
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-#define SEC_SUPV_WRITE_MASK (0x00000001U)
-#define SEC_SUPV_READ_MASK (0x00000002U)
-#define SEC_SUPV_CACHEABLE_MASK (0x00000004U)
-#define SEC_SUPV_DEBUG_MASK (0x00000008U)
-#define SEC_USER_WRITE_MASK (0x00000010U)
-#define SEC_USER_READ_MASK (0x00000020U)
-#define SEC_USER_CACHEABLE_MASK (0x00000040U)
-#define SEC_USER_DEBUG_MASK (0x00000080U)
-#define NONSEC_SUPV_WRITE_MASK (0x00000100U)
-#define NONSEC_SUPV_READ_MASK (0x00000200U)
-#define NONSEC_SUPV_CACHEABLE_MASK (0x00000400U)
-#define NONSEC_SUPV_DEBUG_MASK (0x00000800U)
-#define NONSEC_USER_WRITE_MASK (0x00001000U)
-#define NONSEC_USER_READ_MASK (0x00002000U)
-#define NONSEC_USER_CACHEABLE_MASK (0x00004000U)
-#define NONSEC_USER_DEBUG_MASK (0x00008000U)
+#define SCICLIENT_APP_SEC_SUPV_WRITE_MASK         (0x00000001U)
+#define SCICLIENT_APP_SEC_SUPV_READ_MASK          (0x00000002U)
+#define SCICLIENT_APP_SEC_SUPV_CACHEABLE_MASK     (0x00000004U)
+#define SCICLIENT_APP_SEC_SUPV_DEBUG_MASK         (0x00000008U)
+#define SCICLIENT_APP_SEC_USER_WRITE_MASK         (0x00000010U)
+#define SCICLIENT_APP_SEC_USER_READ_MASK          (0x00000020U)
+#define SCICLIENT_APP_SEC_USER_CACHEABLE_MASK     (0x00000040U)
+#define SCICLIENT_APP_SEC_USER_DEBUG_MASK         (0x00000080U)
+#define SCICLIENT_APP_NONSEC_SUPV_WRITE_MASK      (0x00000100U)
+#define SCICLIENT_APP_NONSEC_SUPV_READ_MASK       (0x00000200U)
+#define SCICLIENT_APP_NONSEC_SUPV_CACHEABLE_MASK  (0x00000400U)
+#define SCICLIENT_APP_NONSEC_SUPV_DEBUG_MASK      (0x00000800U)
+#define SCICLIENT_APP_NONSEC_USER_WRITE_MASK      (0x00001000U)
+#define SCICLIENT_APP_NONSEC_USER_READ_MASK       (0x00002000U)
+#define SCICLIENT_APP_NONSEC_USER_CACHEABLE_MASK  (0x00004000U)
+#define SCICLIENT_APP_NONSEC_USER_DEBUG_MASK      (0x00008000U)
 
-#if defined (SOC_J721S2)
-#define MCU_1_0_PRIVID (96)
-#define MCU_SRAM_FWL_ID (1050)
-#define MSMC_SRAM_FWL_ID (5140)
-#define DRAM_FWL_ID (1280)
-#define PROC_HOST_ID (TISCI_HOST_ID_MCU_0_R5_1)
+#if defined (SOC_J721S2) || defined (SOC_J784S4)
+#define SCICLIENT_APP_MCU_1_0_PRIVID              (96)
+#define SCICLIENT_APP_MCU_SRAM_FWL_ID             (1050)
+#define SCICLIENT_APP_MSMC_SRAM_FWL_ID            (5140)
+#define SCICLIENT_APP_DRAM_FWL_ID                 (1280)
+#define SCICLIENT_APP_PROC_HOST_ID                (TISCI_HOST_ID_MCU_0_R5_1)
 #endif
 
-#if defined (SOC_J784S4)
-#define MCU_1_0_PRIVID (96)
-#define MCU_SRAM_FWL_ID (1050)
-#define MSMC_SRAM_FWL_ID (5140)
-#define DRAM_FWL_ID (1280)
-#define PROC_HOST_ID (TISCI_HOST_ID_MCU_0_R5_1)
-#endif
-
-#if defined (SOC_J721E)
-#define MCU_1_0_PRIVID (96)
-#define MCU_SRAM_FWL_ID (1050)
-#define MSMC_SRAM_FWL_ID (4760)
-#define DRAM_FWL_ID (1280)
-#define PROC_HOST_ID (TISCI_HOST_ID_MCU_0_R5_1)
-#endif
-
-#if defined (SOC_J7200)
-#define MCU_1_0_PRIVID (96)
-#define MCU_SRAM_FWL_ID (1050)
-#define MSMC_SRAM_FWL_ID (4760)
-#define DRAM_FWL_ID (1280)
-#define PROC_HOST_ID (TISCI_HOST_ID_MCU_0_R5_1)
+#if defined (SOC_J721E) || defined (SOC_J7200)
+#define SCICLIENT_APP_MCU_1_0_PRIVID              (96)
+#define SCICLIENT_APP_MCU_SRAM_FWL_ID             (1050)
+#define SCICLIENT_APP_MSMC_SRAM_FWL_ID            (4760)
+#define SCICLIENT_APP_DRAM_FWL_ID                 (1280)
+#define SCICLIENT_APP_PROC_HOST_ID                (TISCI_HOST_ID_MCU_0_R5_1)
 #endif
 
 /* ========================================================================== */
@@ -112,9 +96,9 @@
 /* ========================================================================== */
 
 #if defined(SAFERTOS)
-static uint8_t  gAppTskStackMain[32*1024] __attribute__((aligned(32*1024)));
+static uint8_t  gSciclientAppTskStackMain[32*1024] __attribute__((aligned(32*1024)));
 #else
-static uint8_t  gAppTskStackMain[32*1024] __attribute__((aligned(8192)));
+static uint8_t  gSciclientAppTskStackMain[32*1024] __attribute__((aligned(8192)));
 #endif
 /* IMPORTANT NOTE: For C7x,
  * - stack size and stack ptr MUST be 8KB aligned
@@ -142,7 +126,7 @@ volatile uint32_t *p;
 /*                         Internal Function Declarations                     */
 /* ========================================================================== */
 
-void mainTask(void *arg0, void *arg1);
+static void mainTask(void *arg0, void *arg1);
 
 /**
  * \brief This function will first set up the firewalls to access a region of
@@ -166,7 +150,7 @@ void mainTask(void *arg0, void *arg1);
  *
  * \return CSL_PASS/CSL_EFAIL based on the status of the test run.
  */
-int32_t SciclientApp_fw_test(uint16_t fwl_id,
+static int32_t SciclientApp_fw_test(uint16_t fwl_id,
                              uint32_t pass_start_address,
                              uint32_t pass_end_address,
                              uint32_t fail_start_address,
@@ -176,8 +160,8 @@ int32_t SciclientApp_fw_test(uint16_t fwl_id,
                              uint32_t passTest, 
                              uint32_t failTest);
         
-int32_t SciclientApp_firewallBackground(void);
-void Sciclient_fw_abort_C_handler();
+static int32_t SciclientApp_firewallBackground(void);
+static void Sciclient_fw_abort_C_handler();
 
 /* ========================================================================== */
 /*                          Function Definitions                              */
@@ -210,9 +194,9 @@ int main(void)
 
     OS_init();
     TaskP_Params_init(&taskParams);
-    taskParams.priority = 2;
-    taskParams.stack        = gAppTskStackMain;
-    taskParams.stacksize    = sizeof (gAppTskStackMain);
+    taskParams.priority     = 2;
+    taskParams.stack        = gSciclientAppTskStackMain;
+    taskParams.stacksize    = sizeof (gSciclientAppTskStackMain);
 
     task = TaskP_create(&mainTask, &taskParams);
     if(NULL==task)
@@ -225,14 +209,14 @@ int main(void)
     return retVal;
 }
 
-void mainTask(void *arg0, void* arg1)
+static void mainTask(void *arg0, void* arg1)
 {
     /*To suppress unused variable warning*/
     (void)arg0;
     (void)arg1;
     int32_t r = CSL_PASS;
     volatile uint32_t loopForever = 1U;
-    Sciclient_ConfigPrms_t        config =
+    Sciclient_ConfigPrms_t config =
     {
         SCICLIENT_SERVICE_OPERATION_MODE_POLLED,
         NULL,
@@ -262,19 +246,19 @@ void mainTask(void *arg0, void* arg1)
     /* Firwalling MCU SRAM */
     if (r == CSL_PASS)
     {
-        #define MCU_SRAM_ADDRESS_PASS_START (0x41C3E000)
-        #define MCU_SRAM_ADDRESS_PASS_END (0x41C3E000 + 4 * 1024 - 1)
-        #define MCU_SRAM_ADDRESS_FAIL_START (0x41C3E000 + 8 * 1024 - 1)
-        #define MCU_SRAM_ADDRESS_FAIL_END (0x41C3E000 + 12 * 1024 - 1)
+        #define SCICLIENT_APP_MCU_SRAM_ADDRESS_PASS_START   (0x41C3E000)
+        #define SCICLIENT_APP_MCU_SRAM_ADDRESS_PASS_END     (0x41C3E000 + 4 * 1024 - 1)
+        #define SCICLIENT_APP_MCU_SRAM_ADDRESS_FAIL_START   (0x41C3E000 + 8 * 1024 - 1)
+        #define SCICLIENT_APP_MCU_SRAM_ADDRESS_FAIL_END     (0x41C3E000 + 12 * 1024 - 1)
 
         r = SciclientApp_fw_test(
-                MCU_SRAM_FWL_ID,
-                MCU_SRAM_ADDRESS_PASS_START,
-                MCU_SRAM_ADDRESS_PASS_END,
-                MCU_SRAM_ADDRESS_FAIL_START,
-                MCU_SRAM_ADDRESS_FAIL_END,
-                PROC_HOST_ID,
-                MCU_1_0_PRIVID, TRUE, TRUE);
+                SCICLIENT_APP_MCU_SRAM_FWL_ID,
+                SCICLIENT_APP_MCU_SRAM_ADDRESS_PASS_START,
+                SCICLIENT_APP_MCU_SRAM_ADDRESS_PASS_END,
+                SCICLIENT_APP_MCU_SRAM_ADDRESS_FAIL_START,
+                SCICLIENT_APP_MCU_SRAM_ADDRESS_FAIL_END,
+                SCICLIENT_APP_PROC_HOST_ID,
+                SCICLIENT_APP_MCU_1_0_PRIVID, TRUE, TRUE);
         if (CSL_PASS == r)
         {
             SciApp_printf("\nMCU SRAM Tests Passed.\n");
@@ -289,24 +273,24 @@ void mainTask(void *arg0, void* arg1)
     if (r == CSL_PASS)
     {
 #if defined (SOC_J7200)
-        #define MSMC_RAM_ADDRESS_PASS_START (0x70040000)
-        #define MSMC_RAM_ADDRESS_PASS_END (0x70040000 + 4 * 1024 - 1)
-        #define MSMC_RAM_ADDRESS_FAIL_START (0x70040000 + 8 * 1024)
-        #define MSMC_RAM_ADDRESS_FAIL_END (0x70040000 + 12 * 1024 - 1)
+        #define SCICLIENT_APP_MSMC_RAM_ADDRESS_PASS_START   (0x70040000)
+        #define SCICLIENT_APP_MSMC_RAM_ADDRESS_PASS_END     (0x70040000 + 4 * 1024 - 1)
+        #define SCICLIENT_APP_MSMC_RAM_ADDRESS_FAIL_START   (0x70040000 + 8 * 1024)
+        #define SCICLIENT_APP_MSMC_RAM_ADDRESS_FAIL_END     (0x70040000 + 12 * 1024 - 1)
 #else
-        #define MSMC_RAM_ADDRESS_PASS_START (0x70100000)
-        #define MSMC_RAM_ADDRESS_PASS_END (0x70100000 + 4 * 1024 - 1)
-        #define MSMC_RAM_ADDRESS_FAIL_START (0x70100000 + 8 * 1024)
-        #define MSMC_RAM_ADDRESS_FAIL_END (0x70100000 + 12 * 1024 - 1)
+        #define SCICLIENT_APP_MSMC_RAM_ADDRESS_PASS_START   (0x70100000)
+        #define SCICLIENT_APP_MSMC_RAM_ADDRESS_PASS_END     (0x70100000 + 4 * 1024 - 1)
+        #define SCICLIENT_APP_MSMC_RAM_ADDRESS_FAIL_START   (0x70100000 + 8 * 1024)
+        #define SCICLIENT_APP_MSMC_RAM_ADDRESS_FAIL_END     (0x70100000 + 12 * 1024 - 1)
 #endif
         r = SciclientApp_fw_test(
-                MSMC_SRAM_FWL_ID,
-                MSMC_RAM_ADDRESS_PASS_START,
-                MSMC_RAM_ADDRESS_PASS_END,
-                MSMC_RAM_ADDRESS_FAIL_START,
-                MSMC_RAM_ADDRESS_FAIL_END,
-                PROC_HOST_ID,
-                MCU_1_0_PRIVID,
+                SCICLIENT_APP_MSMC_SRAM_FWL_ID,
+                SCICLIENT_APP_MSMC_RAM_ADDRESS_PASS_START,
+                SCICLIENT_APP_MSMC_RAM_ADDRESS_PASS_END,
+                SCICLIENT_APP_MSMC_RAM_ADDRESS_FAIL_START,
+                SCICLIENT_APP_MSMC_RAM_ADDRESS_FAIL_END,
+                SCICLIENT_APP_PROC_HOST_ID,
+                SCICLIENT_APP_MCU_1_0_PRIVID,
                 FALSE, TRUE);
         if (CSL_PASS == r)
         {
@@ -324,24 +308,24 @@ void mainTask(void *arg0, void* arg1)
          * From MCU domain or UDMA coming from MCU domain –
          * There are two options.
          * a.Interdomain firewall from MCU to DDR can be
-         * configured to filter accesses. – J721E ID DRAM_FWL_ID |  AM65xx DRAM_FWL_ID
+         * configured to filter accesses. – J721E ID SCICLIENT_APP_DRAM_FWL_ID |  AM65xx SCICLIENT_APP_DRAM_FWL_ID
          * b.Northbridge firewall between NAVSS and Compute cluster can
          * be configured. – J721E ID 4762, 4763 | AM65xx 4450
          * The below example shows option a.
          */
-        #define DRAM_ADDRESS_PASS_START (0x81000000)
-        #define DRAM_ADDRESS_PASS_END (0x81000000 + 4 * 1024 - 1)
-        #define DRAM_ADDRESS_FAIL_START (0x81000000 + 4 * 1024)
-        #define DRAM_ADDRESS_FAIL_END (0x81000000 + 8 * 1024 - 1)
+        #define SCICLIENT_APP_DRAM_ADDRESS_PASS_START       (0x81000000)
+        #define SCICLIENT_APP_DRAM_ADDRESS_PASS_END         (0x81000000 + 4 * 1024 - 1)
+        #define SCICLIENT_APP_DRAM_ADDRESS_FAIL_START       (0x81000000 + 4 * 1024)
+        #define SCICLIENT_APP_DRAM_ADDRESS_FAIL_END         (0x81000000 + 8 * 1024 - 1)
         /* Tests are not run to avoid overwriting DDR data sections */
         r = SciclientApp_fw_test(
-                DRAM_FWL_ID,
-                DRAM_ADDRESS_PASS_START,
-                DRAM_ADDRESS_PASS_END,
-                DRAM_ADDRESS_FAIL_START,
-                DRAM_ADDRESS_FAIL_END,
-                PROC_HOST_ID,
-                MCU_1_0_PRIVID,
+                SCICLIENT_APP_DRAM_FWL_ID,
+                SCICLIENT_APP_DRAM_ADDRESS_PASS_START,
+                SCICLIENT_APP_DRAM_ADDRESS_PASS_END,
+                SCICLIENT_APP_DRAM_ADDRESS_FAIL_START,
+                SCICLIENT_APP_DRAM_ADDRESS_FAIL_END,
+                SCICLIENT_APP_PROC_HOST_ID,
+                SCICLIENT_APP_MCU_1_0_PRIVID,
                 TRUE, TRUE);
         if (CSL_PASS == r)
         {
@@ -369,50 +353,50 @@ void mainTask(void *arg0, void* arg1)
 /*                 Internal Function Definitions                              */
 /* ========================================================================== */
 
-int32_t SciclientApp_firewallBackground(void)
+static int32_t SciclientApp_firewallBackground(void)
 {
     int32_t ret = CSL_PASS;
     uint32_t fwl_id;
-    const uint32_t perm_for_access =
-            SEC_SUPV_WRITE_MASK | SEC_SUPV_READ_MASK |
-            SEC_SUPV_CACHEABLE_MASK | SEC_SUPV_DEBUG_MASK |
-            SEC_USER_WRITE_MASK | SEC_USER_READ_MASK |
-            SEC_USER_CACHEABLE_MASK | SEC_USER_DEBUG_MASK |
-            NONSEC_SUPV_WRITE_MASK | NONSEC_SUPV_READ_MASK |
-            NONSEC_SUPV_CACHEABLE_MASK | NONSEC_SUPV_DEBUG_MASK |
-            NONSEC_USER_WRITE_MASK | NONSEC_USER_READ_MASK |
-            NONSEC_USER_CACHEABLE_MASK | NONSEC_USER_DEBUG_MASK;
+    const uint32_t permForAccess =
+            SCICLIENT_APP_SEC_SUPV_WRITE_MASK | SCICLIENT_APP_SEC_SUPV_READ_MASK |
+            SCICLIENT_APP_SEC_SUPV_CACHEABLE_MASK | SCICLIENT_APP_SEC_SUPV_DEBUG_MASK |
+            SCICLIENT_APP_SEC_USER_WRITE_MASK | SCICLIENT_APP_SEC_USER_READ_MASK |
+            SCICLIENT_APP_SEC_USER_CACHEABLE_MASK | SCICLIENT_APP_SEC_USER_DEBUG_MASK |
+            SCICLIENT_APP_NONSEC_SUPV_WRITE_MASK | SCICLIENT_APP_NONSEC_SUPV_READ_MASK |
+            SCICLIENT_APP_NONSEC_SUPV_CACHEABLE_MASK | SCICLIENT_APP_NONSEC_SUPV_DEBUG_MASK |
+            SCICLIENT_APP_NONSEC_USER_WRITE_MASK | SCICLIENT_APP_NONSEC_USER_READ_MASK |
+            SCICLIENT_APP_NONSEC_USER_CACHEABLE_MASK | SCICLIENT_APP_NONSEC_USER_DEBUG_MASK;
     uint32_t timeout = 0xFFFFFFFFU;
     struct tisci_msg_fwl_change_owner_info_req req = {
-        .fwl_id = (uint16_t)0,
-        .region = (uint16_t) 0,
-        .owner_index = (uint8_t) PROC_HOST_ID
+        .fwl_id      = (uint16_t)0,
+        .region      = (uint16_t) 0,
+        .owner_index = (uint8_t) SCICLIENT_APP_PROC_HOST_ID
         };
     struct tisci_msg_fwl_change_owner_info_resp resp = {0};
     struct tisci_msg_fwl_set_firewall_region_resp resp_fw_set_pass = {0};
     struct tisci_msg_fwl_set_firewall_region_req req_fw_set_pass = {
-        .fwl_id = (uint16_t)0,
-        .region = (uint16_t) 0,
+        .fwl_id            = (uint16_t) 0,
+        .region            = (uint16_t) 0,
         .n_permission_regs = (uint32_t) 3,
-        .control = (uint32_t) 0xA,
-        .permissions[0] = (uint32_t) 0,
-        .permissions[1] = (uint32_t) 0,
-        .permissions[2] = (uint32_t) 0,
-        .start_address = 0,
-        .end_address = 0
+        .control           = (uint32_t) 0xA,
+        .permissions[0]    = (uint32_t) 0,
+        .permissions[1]    = (uint32_t) 0,
+        .permissions[2]    = (uint32_t) 0,
+        .start_address     = 0,
+        .end_address       = 0
     };
-    fwl_id = MCU_SRAM_FWL_ID;
+    fwl_id = SCICLIENT_APP_MCU_SRAM_FWL_ID;
     /* Set this background region for access from the CPU core
      */
-    req_fw_set_pass.fwl_id = fwl_id;
-    req_fw_set_pass.start_address = 0x41C00000;
-    req_fw_set_pass.end_address = 0x41c00000 + 512 *1024 - 1;
-    req_fw_set_pass.region = 0;
+    req_fw_set_pass.fwl_id            = fwl_id;
+    req_fw_set_pass.start_address     = 0x41C00000;
+    req_fw_set_pass.end_address       = 0x41c00000 + 512 *1024 - 1;
+    req_fw_set_pass.region            = 0;
     req_fw_set_pass.n_permission_regs = 3;
-    req_fw_set_pass.permissions[0] = 195 << 16 | perm_for_access;
-    req_fw_set_pass.permissions[1] = 0;
-    req_fw_set_pass.permissions[2] = 0;
-    req_fw_set_pass.control = 0x10A;
+    req_fw_set_pass.permissions[0]    = 195 << 16 | permForAccess;
+    req_fw_set_pass.permissions[1]    = 0;
+    req_fw_set_pass.permissions[2]    = 0;
+    req_fw_set_pass.control           = 0x10A;
 
     req.fwl_id = fwl_id;
     req.region = 1;
@@ -431,7 +415,7 @@ int32_t SciclientApp_firewallBackground(void)
     }
     if (ret == CSL_PASS)
     {
-        fwl_id = MSMC_SRAM_FWL_ID;
+        fwl_id = SCICLIENT_APP_MSMC_SRAM_FWL_ID;
         /* DMSC sets the default region accessible. Only change ownership for MSMC
          */
         req.fwl_id = fwl_id;
@@ -440,20 +424,21 @@ int32_t SciclientApp_firewallBackground(void)
     }
     if (ret == CSL_PASS)
     {
-        fwl_id = DRAM_FWL_ID;
+        fwl_id = SCICLIENT_APP_DRAM_FWL_ID;
         /* DMSC sets the default region accessible. Only change ownership for MSMC
          */
         req.fwl_id = fwl_id;
         req.region = 0;
-        req_fw_set_pass.fwl_id = fwl_id;
-        req_fw_set_pass.start_address = 0x70000000;
-        req_fw_set_pass.end_address = 0xFFFFFFFF;
-        req_fw_set_pass.region = 0;
+
+        req_fw_set_pass.fwl_id            = fwl_id;
+        req_fw_set_pass.start_address     = 0x70000000;
+        req_fw_set_pass.end_address       = 0xFFFFFFFF;
+        req_fw_set_pass.region            = 0;
         req_fw_set_pass.n_permission_regs = 3;
-        req_fw_set_pass.permissions[0] = 195 << 16 | perm_for_access;
-        req_fw_set_pass.permissions[1] = 0;
-        req_fw_set_pass.permissions[2] = 0;
-        req_fw_set_pass.control = 0x10A;
+        req_fw_set_pass.permissions[0]    = 195 << 16 | permForAccess;
+        req_fw_set_pass.permissions[1]    = 0;
+        req_fw_set_pass.permissions[2]    = 0;
+        req_fw_set_pass.control           = 0x10A;
 
         ret = Sciclient_firewallChangeOwnerInfo(&req, &resp, timeout);
         if (ret == CSL_PASS)
@@ -465,7 +450,7 @@ int32_t SciclientApp_firewallBackground(void)
     return ret;
 }
 
-int32_t SciclientApp_fw_test(
+static int32_t SciclientApp_fw_test(
         uint16_t fwl_id,
         uint32_t pass_start_address,
         uint32_t pass_end_address,
@@ -475,46 +460,46 @@ int32_t SciclientApp_fw_test(
         uint32_t privId, uint32_t passTest, uint32_t failTest)
 {
     int32_t r = CSL_PASS;
-    const uint32_t perm_for_access =
-            SEC_SUPV_WRITE_MASK | SEC_SUPV_READ_MASK |
-            SEC_SUPV_CACHEABLE_MASK | SEC_SUPV_DEBUG_MASK |
-            SEC_USER_WRITE_MASK | SEC_USER_READ_MASK |
-            SEC_USER_CACHEABLE_MASK | SEC_USER_DEBUG_MASK |
-            NONSEC_SUPV_WRITE_MASK | NONSEC_SUPV_READ_MASK |
-            NONSEC_SUPV_CACHEABLE_MASK | NONSEC_SUPV_DEBUG_MASK |
-            NONSEC_USER_WRITE_MASK | NONSEC_USER_READ_MASK |
-            NONSEC_USER_CACHEABLE_MASK | NONSEC_USER_DEBUG_MASK;
+    const uint32_t permForAccess =
+            SCICLIENT_APP_SEC_SUPV_WRITE_MASK | SCICLIENT_APP_SEC_SUPV_READ_MASK |
+            SCICLIENT_APP_SEC_SUPV_CACHEABLE_MASK | SCICLIENT_APP_SEC_SUPV_DEBUG_MASK |
+            SCICLIENT_APP_SEC_USER_WRITE_MASK | SCICLIENT_APP_SEC_USER_READ_MASK |
+            SCICLIENT_APP_SEC_USER_CACHEABLE_MASK | SCICLIENT_APP_SEC_USER_DEBUG_MASK |
+            SCICLIENT_APP_NONSEC_SUPV_WRITE_MASK | SCICLIENT_APP_NONSEC_SUPV_READ_MASK |
+            SCICLIENT_APP_NONSEC_SUPV_CACHEABLE_MASK | SCICLIENT_APP_NONSEC_SUPV_DEBUG_MASK |
+            SCICLIENT_APP_NONSEC_USER_WRITE_MASK | SCICLIENT_APP_NONSEC_USER_READ_MASK |
+            SCICLIENT_APP_NONSEC_USER_CACHEABLE_MASK | SCICLIENT_APP_NONSEC_USER_DEBUG_MASK;
     const uint32_t perm_for_no_access = 0;
     uint32_t timeout = 0xFFFFFFFFU;
     struct tisci_msg_fwl_change_owner_info_req req = {
-        .fwl_id = (uint16_t)fwl_id,
-        .region = (uint16_t) 1,
-        .owner_index = (uint8_t) hostId
+        .fwl_id      = (uint16_t) fwl_id,
+        .region      = (uint16_t) 1,
+        .owner_index = (uint8_t)  hostId
         };
     struct tisci_msg_fwl_change_owner_info_resp resp = {0};
     struct tisci_msg_fwl_set_firewall_region_req req_fw_set_pass = {
-        .fwl_id = (uint16_t)fwl_id,
-        .region = (uint16_t) 1,
+        .fwl_id            = (uint16_t) fwl_id,
+        .region            = (uint16_t) 1,
         .n_permission_regs = (uint32_t) 1,
-        .control = (uint32_t) 0xA,
-        .permissions =
+        .control           = (uint32_t) 0xA,
+        .permissions       =
         {
-            (uint32_t) (privId << 16) | perm_for_access, 0, 0
+            (uint32_t) (privId << 16) | permForAccess, 0, 0
         },
-        .start_address = pass_start_address,
-        .end_address = pass_end_address
+        .start_address     = pass_start_address,
+        .end_address       = pass_end_address
         };
     struct tisci_msg_fwl_set_firewall_region_req req_fw_set_fail = {
-        .fwl_id = (uint16_t)fwl_id,
-        .region = (uint16_t) 2,
+        .fwl_id            = (uint16_t)fwl_id,
+        .region            = (uint16_t) 2,
         .n_permission_regs = (uint32_t) 1,
-        .control = (uint32_t) 0xA,
-        .permissions =
+        .control           = (uint32_t) 0xA,
+        .permissions       =
         {
             (uint32_t) (privId << 16) | perm_for_no_access, 0, 0
         },
-        .start_address = fail_start_address,
-        .end_address = fail_end_address
+        .start_address     = fail_start_address,
+        .end_address       = fail_end_address
         };
     struct tisci_msg_fwl_set_firewall_region_resp resp_fw_set = {0};
 
@@ -600,7 +585,7 @@ int32_t SciclientApp_fw_test(
     return r;
 }
 
-void Sciclient_fw_abort_C_handler()
+static void Sciclient_fw_abort_C_handler()
 {
     gAbortRecieved++;
 }

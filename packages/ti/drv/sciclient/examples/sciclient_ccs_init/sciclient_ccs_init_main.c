@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2018-2024 Texas Instruments Incorporated
+ *  Copyright (C) 2024 Texas Instruments Incorporated
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -32,7 +32,7 @@
  */
 
 /**
- *  \file sciclient_ccs_init_main.c
+ *  \file  sciclient_ccs_init_main.c
  *
  *  \brief Implementation of System firmware boot test for CCS initialization
  *
@@ -58,30 +58,30 @@
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-#define CONFIG_BOARDCFG           (1)
-#define CONFIG_BOARDCFG_SECURITY  (1)
+#define SCICLIENT_APP_CONFIG_BOARDCFG            (1)
+#define SCICLIENT_APP_CONFIG_BOARDCFG_SECURITY   (1)
 
 /* PM Init is specifically done as the DDR init needs to happen after this
  * The sciserver may do pm init again. But that is harmless.
  */
-#define CONFIG_BOARDCFG_PM        (1)
+#define SCICLIENT_APP_CONFIG_BOARDCFG_PM         (1)
 
 #if defined (SOC_J721E) || defined (SOC_J7200)
-#define SCICLIENT_CCS_DEVGRP0     (DEVGRP_00)
-#define SCICLIENT_CCS_DEVGRP1     (DEVGRP_01)
+#define SCICLIENT_APP_CCS_DEVGRP0                (DEVGRP_00)
+#define SCICLIENT_APP_CCS_DEVGRP1                (DEVGRP_01)
 #endif
 
 #if defined (SOC_J721S2) || defined (SOC_J784S4)
-#define SCICLIENT_CCS_DEVGRP0     (DEVGRP_ALL)
+#define SCICLIENT_APP_CCS_DEVGRP0                (DEVGRP_ALL)
 #endif
 
 #if defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)
 /** \brief Aligned address at which the Board Config header is placed. */
-#define SCISERVER_BOARDCONFIG_HEADER_ADDR (0x41c80000U)
+#define SCISERVER_APP_BOARDCONFIG_HEADER_ADDR    (0x41c80000U)
 
 /** \brief Aligned address at which the Board Config is placed. */
-#define SCISERVER_BOARDCONFIG_DATA_ADDR   (0x41c80040U)
-#define SCISERVER_POPULATE_BOARDCFG       (1U)
+#define SCISERVER_APP_BOARDCONFIG_DATA_ADDR      (0x41c80040U)
+#define SCISERVER_APP_POPULATE_BOARDCFG          (1U)
 #endif
 
 /* ========================================================================== */
@@ -107,7 +107,7 @@ __attribute__(( aligned(128), section(".boardcfg_data") )) =
     .control = {
         .subhdr = {
             .magic = TISCI_BOARDCFG_CONTROL_MAGIC_NUM,
-            .size = sizeof(struct tisci_boardcfg_control),
+            .size  = sizeof(struct tisci_boardcfg_control),
         },
         /* Enable/disable support for System Firmware main isolation.
          * If disabled, main isolation SCI message will be rejected with NAK.
@@ -127,7 +127,7 @@ __attribute__(( aligned(128), section(".boardcfg_data") )) =
     .secproxy = {
         .subhdr = {
             .magic = TISCI_BOARDCFG_SECPROXY_MAGIC_NUM,
-            .size = sizeof(struct tisci_boardcfg_secproxy),
+            .size  = sizeof(struct tisci_boardcfg_secproxy),
         },
         /* Memory allocation for messages scaling factor. In current design,
          * only value of “1” is supported. For future design, a value of “2”
@@ -151,7 +151,7 @@ __attribute__(( aligned(128), section(".boardcfg_data") )) =
     .msmc = {
         .subhdr = {
             .magic = TISCI_BOARDCFG_MSMC_MAGIC_NUM,
-            .size = sizeof(struct tisci_boardcfg_msmc),
+            .size  = sizeof(struct tisci_boardcfg_msmc),
         },
         /* If the whole memory is X MB the value you write to this field is n.
          * The value of n sets the cache size as n * X/32. The value of n should
@@ -165,7 +165,7 @@ __attribute__(( aligned(128), section(".boardcfg_data") )) =
     .debug_cfg = {
         .subhdr = {
             .magic = TISCI_BOARDCFG_DBG_CFG_MAGIC_NUM,
-            .size = sizeof(struct tisci_boardcfg_dbg_cfg),
+            .size  = sizeof(struct tisci_boardcfg_dbg_cfg),
         },
         /* This enables the trace for DMSC logging. Should be used only for
          * debug. Profiling should not be done with this enabled.
@@ -193,8 +193,8 @@ __attribute__(( aligned(128), section(".boardcfg_data") )) =
 /* ========================================================================== */
 
 static int32_t SciclientApp_getRevisionTest(void);
-static int32_t SciclientApp_ccs_init_send_boardcfg (uint8_t devgrp_curr);
-#if defined (SCISERVER_POPULATE_BOARDCFG)
+static int32_t SciclientApp_ccs_init_send_boardcfg(uint8_t devgrp_curr);
+#if defined (SCISERVER_APP_POPULATE_BOARDCFG)
 static void SciclientApp_ccsSetBoardConfigHeader(void);
 #endif
 
@@ -208,8 +208,8 @@ int32_t main(void)
     printf(" SCICLIENT_CCS_INIT: %s, %s", __DATE__, __TIME__);
     SciclientApp_getRevisionTest();
 
-#if defined (SCISERVER_POPULATE_BOARDCFG)
-    SciclientApp_ccsSetBoardConfigHeader ();
+#if defined (SCISERVER_APP_POPULATE_BOARDCFG)
+    SciclientApp_ccsSetBoardConfigHeader();
 #endif
 
     return 0;
@@ -221,8 +221,8 @@ int32_t main(void)
 
 static int32_t SciclientApp_getRevisionTest(void)
 {
-    int32_t status = CSL_EFAIL;
-    Sciclient_ConfigPrms_t        config =
+    int32_t status                   = CSL_EFAIL;
+    Sciclient_ConfigPrms_t   config  =
     {
         SCICLIENT_SERVICE_OPERATION_MODE_POLLED,
         NULL,
@@ -231,7 +231,7 @@ static int32_t SciclientApp_getRevisionTest(void)
         TRUE
     };
     struct tisci_msg_version_req req = {0};
-    const Sciclient_ReqPrm_t      reqPrm =
+    const Sciclient_ReqPrm_t  reqPrm =
     {
         TISCI_MSG_VERSION,
         TISCI_MSG_FLAG_AOP,
@@ -240,30 +240,30 @@ static int32_t SciclientApp_getRevisionTest(void)
         SCICLIENT_SERVICE_WAIT_FOREVER
     };
     struct tisci_msg_version_resp response;
-    Sciclient_RespPrm_t           respPrm =
+    Sciclient_RespPrm_t      respPrm =
     {
         0,
         (uint8_t *) &response,
-        sizeof (response)
+        sizeof(response)
     };
 
-    /* Sciclient CCS Init to start the operation. Call this beforr board init */
+    /* Sciclient CCS Init to start the operation. Call this before board init */
     status = Sciclient_init(&config);
     if (CSL_PASS == status)
     {
-        printf ("Sciclient_Init Passed.\n");
+        printf("Sciclient_Init Passed.\n");
     }
     else
     {
-        printf ("Sciclinet_Init Failed.\n");
+        printf("Sciclinet_Init Failed.\n");
     }
-    status = SciclientApp_ccs_init_send_boardcfg (SCICLIENT_CCS_DEVGRP0);
-#if defined (SCICLIENT_CCS_DEVGRP1)
+    status = SciclientApp_ccs_init_send_boardcfg(SCICLIENT_APP_CCS_DEVGRP0);
+#if defined (SCICLIENT_APP_CCS_DEVGRP1)
     if (CSL_PASS == status)
     {
         printf ("=================================================================\n");
         printf ("Sciclient Dev Group 01 initilization started\n");
-#if CONFIG_BOARDCFG_PM
+#if SCICLIENT_APP_CONFIG_BOARDCFG_PM
         printf ("Power on the WKUPMCU to MAIN and MAIN to WKUPMCU VDs... ");
         /* This is specifically required if you are booting in MCU_ONLY boot mode. */
         status = Sciclient_pmSetModuleState(TISCI_DEV_WKUPMCU2MAIN_VD,
@@ -286,7 +286,7 @@ static int32_t SciclientApp_getRevisionTest(void)
     }
     if (CSL_PASS == status)
     {
-        status = SciclientApp_ccs_init_send_boardcfg (SCICLIENT_CCS_DEVGRP1);
+        status = SciclientApp_ccs_init_send_boardcfg(SCICLIENT_APP_CCS_DEVGRP1);
     }
 #endif
     if (status == CSL_PASS)
@@ -295,7 +295,7 @@ static int32_t SciclientApp_getRevisionTest(void)
         if ((CSL_PASS == status) && (respPrm.flags == TISCI_MSG_FLAG_ACK))
         {
             status = CSL_PASS;
-            printf ("=================================================================\n");
+            printf("=================================================================\n");
             printf(" DMSC Firmware Version %s\n",
                               (char *) response.str);
             printf(" Firmware revision 0x%x\n", response.version);
@@ -324,25 +324,25 @@ static int32_t SciclientApp_getRevisionTest(void)
     return status;
 }
 
-static int32_t SciclientApp_ccs_init_send_boardcfg (uint8_t devgrp_curr)
+static int32_t SciclientApp_ccs_init_send_boardcfg(uint8_t devgrp_curr)
 {
     int32_t status = CSL_PASS;
     /* Common Board configuration to set up trace, secure Proxy and
      * MSMC configuration.
      */
-#if CONFIG_BOARDCFG
+#if SCICLIENT_APP_CONFIG_BOARDCFG
     if (CSL_PASS == status)
     {
-        printf ("=================================================================\n");
-        printf (" DEVGRP = %d\n", devgrp_curr);
-        printf ("=================================================================\n");
+        printf("=================================================================\n");
+        printf(" DEVGRP = %d\n", devgrp_curr);
+        printf("=================================================================\n");
         printf("SYSFW Common Board Configuration with Debug enabled... ");
         Sciclient_BoardCfgPrms_t boardCfgPrms =
         {
-            .boardConfigLow = (uint32_t) &gBoardConfigLow_debug,
+            .boardConfigLow  = (uint32_t) &gBoardConfigLow_debug,
             .boardConfigHigh = 0,
             .boardConfigSize = sizeof(gBoardConfigLow_debug),
-            .devGrp = devgrp_curr
+            .devGrp          = devgrp_curr
         };
         status = Sciclient_boardCfg(&boardCfgPrms);
         if (CSL_PASS == status)
@@ -358,16 +358,16 @@ static int32_t SciclientApp_ccs_init_send_boardcfg (uint8_t devgrp_curr)
     /* PM board configuration to setup the PLLs and internal state of
      * the devices.
      */
-#if CONFIG_BOARDCFG_PM
+#if SCICLIENT_APP_CONFIG_BOARDCFG_PM
     if (CSL_PASS == status)
     {
         uint32_t boardCfgLow[] = SCICLIENT_BOARDCFG_PM;
         Sciclient_BoardCfgPrms_t boardCfgPrms_pm =
         {
-            .boardConfigLow = (uint32_t)boardCfgLow,
+            .boardConfigLow  = (uint32_t)boardCfgLow,
             .boardConfigHigh = 0,
             .boardConfigSize = 0,
-            .devGrp = devgrp_curr
+            .devGrp          = devgrp_curr
         };
         printf("SYSFW PM Board Configuration... ");
         status = Sciclient_boardCfgPm(&boardCfgPrms_pm);
@@ -390,10 +390,10 @@ static int32_t SciclientApp_ccs_init_send_boardcfg (uint8_t devgrp_curr)
         uint32_t boardCfgLow[] = SCICLIENT_BOARDCFG_RM;
         Sciclient_BoardCfgPrms_t boardCfgPrms_rm =
         {
-            .boardConfigLow = (uint32_t) boardCfgLow,
+            .boardConfigLow  = (uint32_t) boardCfgLow,
             .boardConfigHigh = 0,
             .boardConfigSize = SCICLIENT_BOARDCFG_RM_SIZE_IN_BYTES,
-            .devGrp = devgrp_curr
+            .devGrp          = devgrp_curr
         };
         printf("SYSFW RM Board Configuration... ");
         status = Sciclient_boardCfgRm(&boardCfgPrms_rm);
@@ -408,16 +408,16 @@ static int32_t SciclientApp_ccs_init_send_boardcfg (uint8_t devgrp_curr)
     }
 #endif
     /* Security board configuration for the security subsystem init */
-#if CONFIG_BOARDCFG_SECURITY
+#if SCICLIENT_APP_CONFIG_BOARDCFG_SECURITY
     if (status == CSL_PASS)
     {
         uint32_t boardCfgLow[] = SCICLIENT_BOARDCFG_SECURITY;
         Sciclient_BoardCfgPrms_t boardCfgPrms_security =
         {
-            .boardConfigLow = (uint32_t) boardCfgLow,
+            .boardConfigLow  = (uint32_t) boardCfgLow,
             .boardConfigHigh = 0,
             .boardConfigSize = SCICLIENT_BOARDCFG_SECURITY_SIZE_IN_BYTES,
-            .devGrp = devgrp_curr
+            .devGrp          = devgrp_curr
         };
         printf("SYSFW Security Board Configuration... ");
         status = Sciclient_boardCfgSec(&boardCfgPrms_security) ;
@@ -434,35 +434,34 @@ static int32_t SciclientApp_ccs_init_send_boardcfg (uint8_t devgrp_curr)
     return status;
 }
 
-#if defined (SCISERVER_POPULATE_BOARDCFG)
+#if defined (SCISERVER_APP_POPULATE_BOARDCFG)
 static void SciclientApp_ccsSetBoardConfigHeader(void)
 {
-    int32_t status = CSL_PASS;
+    int32_t  status          = CSL_PASS;
     uint32_t boardCfgLowPm[] = SCICLIENT_BOARDCFG_PM;
     uint32_t boardCfgLowRm[] = SCICLIENT_BOARDCFG_RM;
-    uint32_t alignedOffset = ((sizeof(boardCfgLowPm) + 128U)/128U)*128U;
+    uint32_t alignedOffset   = ((sizeof(boardCfgLowPm) + 128U)/128U)*128U;
     Sciclient_BoardCfgPrms_t boardCfgPrms_pm =
     {
-        .boardConfigLow = (uint32_t)SCISERVER_BOARDCONFIG_DATA_ADDR,
+        .boardConfigLow  = (uint32_t)SCISERVER_APP_BOARDCONFIG_DATA_ADDR,
         .boardConfigHigh = 0,
         .boardConfigSize = SCICLIENT_BOARDCFG_PM_SIZE_IN_BYTES,
-        .devGrp = DEVGRP_ALL
+        .devGrp          = DEVGRP_ALL
     };
     Sciclient_BoardCfgPrms_t boardCfgPrms_rm =
     {
-        .boardConfigLow =
-            (uint32_t) SCISERVER_BOARDCONFIG_DATA_ADDR + alignedOffset,
+        .boardConfigLow  = (uint32_t) SCISERVER_APP_BOARDCONFIG_DATA_ADDR + alignedOffset,
         .boardConfigHigh = 0,
         .boardConfigSize = SCICLIENT_BOARDCFG_RM_SIZE_IN_BYTES,
-        .devGrp = DEVGRP_ALL
+        .devGrp          = DEVGRP_ALL
     };
     printf("SCISERVER Board Configuration header population... ");
     status = Sciclient_boardCfgPrepHeader (
         (uint8_t *) SCISERVER_COMMON_X509_HEADER_ADDR,
-        (uint8_t *) SCISERVER_BOARDCONFIG_HEADER_ADDR,
+        (uint8_t *) SCISERVER_APP_BOARDCONFIG_HEADER_ADDR,
         &boardCfgPrms_pm, &boardCfgPrms_rm);
     CacheP_wbInv((void*)SCISERVER_COMMON_X509_HEADER_ADDR, 0x500);
-    CacheP_wbInv((void*)SCISERVER_BOARDCONFIG_HEADER_ADDR, 0x500);
+    CacheP_wbInv((void*)SCISERVER_APP_BOARDCONFIG_HEADER_ADDR, 0x500);
     if (CSL_PASS == status)
     {
         printf("PASSED\n");

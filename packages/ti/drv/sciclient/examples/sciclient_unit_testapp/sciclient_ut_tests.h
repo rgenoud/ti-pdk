@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2018-2024 Texas Instruments Incorporated
+ *  Copyright (C) 2024 Texas Instruments Incorporated
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -299,7 +299,7 @@ SciApp_TestParams_t gSciApp_TestcaseParams[] =
         8U,
 
         /** *reqId **/
-        "PDK-13207",
+        "PDK-14039",
 
         /** *testCaseName **/
         "PVU to Main R5 Interrupt Route Testing",
@@ -336,7 +336,7 @@ SciApp_TestParams_t gSciApp_TestcaseParams[] =
         9U,
 
         /** *reqId **/
-        "PDK-13207",
+        "PDK-14040",
 
         /** *testCaseName **/
         "PVU to GIC Interrupt Route Testing",
@@ -369,7 +369,7 @@ SciApp_TestParams_t gSciApp_TestcaseParams[] =
         10U,
 
         /** *reqId **/
-        "PDK-13154",
+        "PDK-14041",
 
         /** *testCaseName **/
         "SCICLIENT UART Interrupt Route Testing",
