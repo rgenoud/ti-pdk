@@ -117,6 +117,7 @@ ifeq ($(BUILD_PROFILE_$(CORE)), release)
  else
   CFLAGS_INTERNAL += --symdebug:none
  endif
+  CFLAGS_INTERNAL += --advice:performance=none
 else
  CFLAGS_INTERNAL += --opt_level=0 --symdebug:dwarf
 endif
