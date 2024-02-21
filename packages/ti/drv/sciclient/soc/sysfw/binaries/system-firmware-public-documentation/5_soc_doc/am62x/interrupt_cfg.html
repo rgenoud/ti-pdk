@@ -79,7 +79,7 @@
             
             
               <div class="version">
-                09.01.09
+                09.02.03
               </div>
             
           
@@ -148,6 +148,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../index.html#j721e">J721E</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../index.html#j7200">J7200</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../index.html#j721s2">J721S2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#j722s">J722S</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../index.html#j784s4">J784S4</a></li>
 </ul>
 </li>
@@ -3626,7 +3627,14 @@ detected.</p>
 <td>40 to 43</td>
 </tr>
 <tr class="row-odd"><td>AM62X_DEV_DMASS0_INTAGGR_0</td>
-<td>44 to 135</td>
+<td>44 to 78</td>
+</tr>
+<tr class="row-even"><td>AM62X_DEV_DMASS0_INTAGGR_0
+(<strong>RESERVED BY SYSTEM FIRMWARE</strong>)</td>
+<td>79 to 79</td>
+</tr>
+<tr class="row-odd"><td>AM62X_DEV_DMASS0_INTAGGR_0</td>
+<td>80 to 135</td>
 </tr>
 <tr class="row-even"><td>AM62X_DEV_DMASS0_INTAGGR_0
 (<strong>RESERVED BY SYSTEM FIRMWARE</strong>)</td>
@@ -4228,7 +4236,8 @@ detected.</p>
 <td>intr</td>
 <td>14</td>
 </tr>
-<tr class="row-odd"><td>AM62X_DEV_DMASS0_INTAGGR_0</td>
+<tr class="row-odd"><td>AM62X_DEV_DMASS0_INTAGGR_0
+(<strong>Reserved by System Firmware</strong>)</td>
 <td>28</td>
 <td>79</td>
 <td>AM62X_DEV_WKUP_R5FSS0_CORE0</td>
@@ -4997,18 +5006,22 @@ detected.</p>
 <td>0 to 12</td>
 </tr>
 <tr class="row-odd"><td>DMASS0_INTAGGR_0 SEVT</td>
-<td>13 to 1535</td>
+<td>13 to 1534</td>
 </tr>
-<tr class="row-even"><td>DMASS0_INTAGGR_0 MEVT</td>
+<tr class="row-even"><td>DMASS0_INTAGGR_0 SEVT
+(<strong>RESERVED BY SYSTEM FIRMWARE</strong>)</td>
+<td>1535 to 1535</td>
+</tr>
+<tr class="row-odd"><td>DMASS0_INTAGGR_0 MEVT</td>
 <td>8192 to 8319</td>
 </tr>
-<tr class="row-odd"><td>DMASS0_INTAGGR_0 GEVT</td>
+<tr class="row-even"><td>DMASS0_INTAGGR_0 GEVT</td>
 <td>10240 to 10495</td>
 </tr>
-<tr class="row-even"><td>DMASS0_INTAGGR_0 LEVT</td>
+<tr class="row-odd"><td>DMASS0_INTAGGR_0 LEVT</td>
 <td>32768 to 32799</td>
 </tr>
-<tr class="row-odd"><td>DMASS0_BCDMA_0 TRIGGER</td>
+<tr class="row-even"><td>DMASS0_BCDMA_0 TRIGGER</td>
 <td>50176 to 50339</td>
 </tr>
 </tbody>
@@ -5145,7 +5158,7 @@ detected.</p>
 
   <div role="contentinfo">
     <p>
-      <a href="http://www.ti.com/corp/docs/legal/copyright.shtml">&copy; Copyright 2016-2023</a>, Texas Instruments Incorporated. All rights reserved. <br>
+      <a href="http://www.ti.com/corp/docs/legal/copyright.shtml">&copy; Copyright 2016-2024</a>, Texas Instruments Incorporated. All rights reserved. <br>
       <a href="http://www.ti.com/corp/docs/legal/trademark/trademrk.htm">Trademarks</a> | <a href="http://www.ti.com/corp/docs/legal/privacy.shtml">Privacy policy</a> | <a href="http://www.ti.com/corp/docs/legal/termsofuse.shtml">Terms of use</a> | <a href="http://www.ti.com/lsds/ti/legal/termsofsale.page">Terms of sale</a>
 
     </p>
@@ -5167,7 +5180,7 @@ detected.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'09.01.09',
+            VERSION:'09.02.03',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

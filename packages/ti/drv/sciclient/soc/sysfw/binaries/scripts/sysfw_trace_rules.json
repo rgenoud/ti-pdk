@@ -4199,12 +4199,12 @@
                         {
                             "fmt": "%d",
                             "higher_bit": 19,
-                            "lower_bit": 14,
+                            "lower_bit": 13,
                             "name": "Power domain ID"
                         },
                         {
                             "fmt": "%d",
-                            "higher_bit": 13,
+                            "higher_bit": 12,
                             "lower_bit": 0,
                             "name": "PD Usage Count"
                         }
@@ -4223,12 +4223,12 @@
                         {
                             "fmt": "%d",
                             "higher_bit": 19,
-                            "lower_bit": 14,
+                            "lower_bit": 13,
                             "name": "Power domain ID"
                         },
                         {
                             "fmt": "%d",
-                            "higher_bit": 13,
+                            "higher_bit": 12,
                             "lower_bit": 0,
                             "name": "PD Usage Count"
                         }
@@ -4247,7 +4247,7 @@
                         {
                             "fmt": "%d",
                             "higher_bit": 19,
-                            "lower_bit": 14,
+                            "lower_bit": 13,
                             "name": "LPSC ID"
                         },
                         {
@@ -4271,12 +4271,12 @@
                         {
                             "fmt": "%d",
                             "higher_bit": 19,
-                            "lower_bit": 14,
+                            "lower_bit": 13,
                             "name": "LPSC ID"
                         },
                         {
                             "fmt": "%d",
-                            "higher_bit": 13,
+                            "higher_bit": 12,
                             "lower_bit": 0,
                             "name": "Module Use Count"
                         }
@@ -4295,12 +4295,12 @@
                         {
                             "fmt": "%d",
                             "higher_bit": 19,
-                            "lower_bit": 14,
+                            "lower_bit": 13,
                             "name": "LPSC ID"
                         },
                         {
                             "fmt": "%d",
-                            "higher_bit": 13,
+                            "higher_bit": 12,
                             "lower_bit": 0,
                             "name": "Module Use Count"
                         }
@@ -4319,12 +4319,12 @@
                         {
                             "fmt": "%d",
                             "higher_bit": 19,
-                            "lower_bit": 14,
+                            "lower_bit": 13,
                             "name": "LPSC ID"
                         },
                         {
                             "fmt": "%d",
-                            "higher_bit": 13,
+                            "higher_bit": 12,
                             "lower_bit": 0,
                             "name": "Module Retention Count"
                         }
@@ -4343,12 +4343,12 @@
                         {
                             "fmt": "%d",
                             "higher_bit": 19,
-                            "lower_bit": 14,
+                            "lower_bit": 13,
                             "name": "LPSC ID"
                         },
                         {
                             "fmt": "%d",
-                            "higher_bit": 13,
+                            "higher_bit": 12,
                             "lower_bit": 0,
                             "name": "Module Retention Count"
                         }
@@ -4367,12 +4367,12 @@
                         {
                             "fmt": "%d",
                             "higher_bit": 19,
-                            "lower_bit": 14,
+                            "lower_bit": 13,
                             "name": "Power domain ID"
                         },
                         {
                             "fmt": "%d",
-                            "higher_bit": 13,
+                            "higher_bit": 12,
                             "lower_bit": 0,
                             "name": "Module Retention Count"
                         }
@@ -4397,7 +4397,7 @@
                         {
                             "fmt": "%d",
                             "higher_bit": 19,
-                            "lower_bit": 14,
+                            "lower_bit": 13,
                             "name": "Power domain ID"
                         },
                         {
@@ -4421,7 +4421,7 @@
                         {
                             "fmt": "%d",
                             "higher_bit": 19,
-                            "lower_bit": 14,
+                            "lower_bit": 13,
                             "name": "Power domain ID"
                         },
                         {
@@ -4445,7 +4445,7 @@
                         {
                             "fmt": "%d",
                             "higher_bit": 19,
-                            "lower_bit": 14,
+                            "lower_bit": 13,
                             "name": "Power domain ID"
                         },
                         {
@@ -4469,7 +4469,7 @@
                         {
                             "fmt": "%d",
                             "higher_bit": 19,
-                            "lower_bit": 14,
+                            "lower_bit": 13,
                             "name": "LPSC ID"
                         },
                         {
@@ -4658,9 +4658,6 @@
                                 "0x22":{
                                     "msg": "Reset status"
                                 },
-                                "0x51":{
-                                    "msg": "Enabling main LPSC"
-                                },
                                 "0x23":{
                                     "msg": "Moving to SMS PLL from MCU PLL"
                                 },
@@ -4714,6 +4711,15 @@
                                 },
                                 "0x34":{
                                     "msg": "Removed main domain reset isolation"
+                                },
+                                "0x35":{
+                                    "msg": "Gated clock of legacy peripherals"
+                                },
+                                "0x36":{
+                                    "msg": "Ungated clock of legacy peripherals"
+                                },
+                                "0x51":{
+                                    "msg": "Enabling main LPSC"
                                 }
                             }
                         },

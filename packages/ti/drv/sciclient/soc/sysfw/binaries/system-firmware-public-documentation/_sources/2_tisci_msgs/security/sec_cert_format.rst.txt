@@ -1496,7 +1496,7 @@ Sample x509 template
     bootCoreOpts_set = INTEGER:0x00000000
     bootCoreOpts_clr = INTEGER:0x00000000
     resetVec = FORMAT:HEX,OCT:41c02100
-    flagsValid = INTEGER:0x00
+    flagsValid = FORMAT:HEX,OCT:00000000
     rsvd1 = INTEGER:0x00
     rsdv2 = INTEGER:0x00
     rsdv3 = INTEGER:0x00

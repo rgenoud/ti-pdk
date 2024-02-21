@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2017-2023 Texas Instruments Incorporated
+ *  Copyright (C) 2017-2024 Texas Instruments Incorporated
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -225,7 +225,7 @@ struct tisci_fwl_req {
  * \param hdr Generic TISCI message header.
  */
 struct tisci_fwl_resp {
-    struct tisci_header    hdr;
+    struct tisci_header hdr;
 } __attribute__((__packed__));
 
 #endif
