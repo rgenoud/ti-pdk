@@ -860,6 +860,17 @@ int32_t UdmaTestEventGetRxFlowStatusNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestEventRegisterBcdmaTestNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestEventUnRegisterBcdmaTestNeg(UdmaTestTaskObj *taskObj);
 
+/*
+ * UDMA Ring Negative Lcdma test functions
+ */
+int32_t UdmaTestRingGetModeLcdmaNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestRingGetElementCntLcdmaNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestRingGetForwardRingOccLcdmaNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestRingGetReverseRingOccLcdmaNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestRingGetWrIdxLcdmaNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestRingGetRdIdxLcdmaNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestRingGetMemPtrLcdmaNeg(UdmaTestTaskObj *taskObj);
+
 /* ========================================================================== */
 /*      Internal Function Declarations (Needed for other static inlines)      */
 /* ========================================================================== */
