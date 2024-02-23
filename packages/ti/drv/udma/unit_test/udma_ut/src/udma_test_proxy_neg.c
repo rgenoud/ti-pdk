@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) Texas Instruments Incorporated 2023
+ *  Copyright (c) Texas Instruments Incorporated 2023-2024
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -77,47 +77,57 @@
  * 2)Test scenario 2: NULL Check for driver handle.
  * 3)Test scenario 3: NULL check for proxyHandle.
  * 4)Test scenario 4: Check for drvInitDone when it is not equal to UDMA_INIT_DONE.
- * 5)Test scenario 5: Check for proxyNum when it is not equal to UDMA_PROXY_ANY.
+ * 5)Test scenario 5: Check to print [Error] Out of range proxy index when proxyNum
+ *                    is UDMA_PROXY_INVALID.
+ * 6)Test scenario 6: Check when maxProxy is greater than proxyNum.
+ * 7)Test scenario 7: Check when proxyNum is UDMA_PROXY_ANY and to get error from proxy RM API's.
+ * 8)Test scenario 8: Check to get [Error] SciClient Set proxy config failed when proxyNum
+ *                    is UDMA_PROXY_ANY.
  */
 int32_t UdmaTest_proxyAllocNeg(UdmaTestTaskObj *taskObj)
 {
-    int32_t              retVal = UDMA_SOK;
+    int32_t              retVal   = UDMA_SOK;
+    uint16_t             proxyNum = UDMA_PROXY_ANY;
     struct Udma_ProxyObj proxyObj;
+    struct Udma_DrvObj   backUpDrvObj;
     Udma_ProxyHandle     proxyHandle;
     Udma_DrvHandle       drvHandle;
-    uint16_t             proxyNum = UDMA_PROXY_ANY;
     uint32_t             backUpDrvInitDone;
+    uint32_t             backUpMaxproxy;
 
     GT_1trace(taskObj->traceMask, GT_INFO1,
-          " |TEST INFO|:: Task:%d: UDMA proxy alloc negative Testcase ::\r\n", taskObj->taskId);
+              " |TEST INFO|:: Task:%d: UDMA proxy alloc negative Testcase ::\r\n",
+              taskObj->taskId);
 
     /* Test scenario 1: NULL Check for proxyHandle and driver handle */
-    drvHandle   = (Udma_DrvHandle)NULL_PTR;
-    proxyHandle = (Udma_ProxyHandle)NULL_PTR;
-    retVal = Udma_proxyAlloc(drvHandle, proxyHandle, proxyNum);
+    drvHandle   = (Udma_DrvHandle) NULL_PTR;
+    proxyHandle = (Udma_ProxyHandle) NULL_PTR;
+    retVal      = Udma_proxyAlloc(drvHandle, proxyHandle, proxyNum);
     if(UDMA_SOK != retVal)
     {
         retVal = UDMA_SOK;
     }
     else
     {
-        GT_0trace(taskObj->traceMask, GT_ERR," |TEST INFO|:: FAIL:: UDMA:: Proxy Alloc:: Neg:: NULL Check for proxyHandle and driver handle!!\n");
+        GT_0trace(taskObj->traceMask, GT_ERR," |TEST INFO|:: FAIL:: UDMA:: Proxy Alloc:: Neg::"
+                  " NULL Check for proxyHandle and driver handle!!\n");
         retVal = UDMA_EFAIL;
     }
 
     if(UDMA_SOK == retVal)
     {
         /* Test scenario 2: NULL Check for driver handle */
-        drvHandle   =  (Udma_DrvHandle)NULL_PTR;
-        proxyHandle =  &proxyObj;
-        retVal = Udma_proxyAlloc(drvHandle, proxyHandle, proxyNum);
+        drvHandle   = (Udma_DrvHandle) NULL_PTR;
+        proxyHandle = &proxyObj;
+        retVal      = Udma_proxyAlloc(drvHandle, proxyHandle, proxyNum);
         if(UDMA_SOK != retVal)
         {
             retVal = UDMA_SOK;
         }
         else
         {
-            GT_0trace(taskObj->traceMask, GT_ERR," |TEST INFO|:: FAIL:: UDMA:: Proxy Alloc:: Neg:: NULL Check for driver handle!!\n");
+            GT_0trace(taskObj->traceMask, GT_ERR," |TEST INFO|:: FAIL:: UDMA:: Proxy Alloc:: Neg::"
+                      " NULL Check for driver handle!!\n");
             retVal = UDMA_EFAIL;
         }
     }
@@ -126,15 +136,16 @@ int32_t UdmaTest_proxyAllocNeg(UdmaTestTaskObj *taskObj)
     {
         /* Test scenario 3: NULL check for proxyHandle */
         drvHandle   = &taskObj->testObj->drvObj[UDMA_INST_ID_MAIN_0];
-        proxyHandle = (Udma_ProxyHandle)NULL_PTR;
-        retVal = Udma_proxyAlloc(drvHandle, proxyHandle, proxyNum);
+        proxyHandle = (Udma_ProxyHandle) NULL_PTR;
+        retVal      = Udma_proxyAlloc(drvHandle, proxyHandle, proxyNum);
         if(UDMA_SOK != retVal)
         {
             retVal = UDMA_SOK;
         }
         else
         {
-            GT_0trace(taskObj->traceMask, GT_ERR," |TEST INFO|:: FAIL:: UDMA:: Proxy Alloc:: Neg:: NULL check for proxyHandle!!\n");
+            GT_0trace(taskObj->traceMask, GT_ERR," |TEST INFO|:: FAIL:: UDMA:: Proxy Alloc:: Neg::"
+                      " NULL check for proxyHandle!!\n");
             retVal = UDMA_EFAIL;
         }
     }
@@ -145,36 +156,105 @@ int32_t UdmaTest_proxyAllocNeg(UdmaTestTaskObj *taskObj)
         proxyHandle            = &proxyObj;
         backUpDrvInitDone      = drvHandle->drvInitDone;
         drvHandle->drvInitDone = UDMA_DEINIT_DONE;
-        retVal = Udma_proxyAlloc(drvHandle, proxyHandle, proxyNum);
+        retVal                 = Udma_proxyAlloc(drvHandle, proxyHandle, proxyNum);
         if(UDMA_SOK != retVal)
         {
              retVal = UDMA_SOK;
         }
         else
         {
-             GT_0trace(taskObj->traceMask, GT_ERR," |TEST INFO|:: FAIL:: UDMA:: Proxy Alloc:: Neg:: Check for drvInitDone when it is not equal to UDMA_INIT_DONE!!\n");
+             GT_0trace(taskObj->traceMask, GT_ERR," |TEST INFO|:: FAIL:: UDMA:: Proxy Alloc:: Neg::"
+                       " Check for drvInitDone when it is not equal to UDMA_INIT_DONE!!\n");
              retVal = UDMA_EFAIL;
         }
         drvHandle->drvInitDone = backUpDrvInitDone;
-     }
+    }
 
     if(UDMA_SOK == retVal)
     {
-        /* Test scenario 5: Check for proxyNum when it is not equal to UDMA_PROXY_ANY */
-        backUpDrvInitDone      = drvHandle->drvInitDone;
-        drvHandle->drvInitDone = UDMA_INIT_DONE;
-        proxyNum               = UDMA_PROXY_INVALID;
-        retVal = Udma_proxyAlloc(drvHandle, proxyHandle, proxyNum);
+        /* Test scenario 5: Check to print [Error] Out of range proxy index when proxyNum is
+         *                  UDMA_PROXY_INVALID
+         */
+        proxyNum = UDMA_PROXY_INVALID;
+        retVal   = Udma_proxyAlloc(drvHandle, proxyHandle, proxyNum);
         if(UDMA_SOK != retVal)
         {
             retVal = UDMA_SOK;
         }
         else
         {
-            GT_0trace(taskObj->traceMask, GT_ERR," |TEST INFO|:: FAIL:: UDMA:: Proxy Alloc:: Neg:: Check for proxyNum  when it is not equal to UDMA_PROXY_ANY!!\n");
+            GT_0trace(taskObj->traceMask, GT_ERR," |TEST INFO|:: FAIL:: UDMA:: Proxy Alloc:: Neg::"
+                      " Check to print [Error] Out of range proxy index when proxyNum is"
+                      " UDMA_PROXY_INVALID!!\n");
             retVal = UDMA_EFAIL;
         }
-        drvHandle->drvInitDone = backUpDrvInitDone;
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 6: Check when maxProxy is greater than proxyNum */
+        backUpMaxproxy      = drvHandle->maxProxy;
+        drvHandle->maxProxy = UDMA_PROXY_INVALID + 1U;
+        retVal              = Udma_proxyAlloc(drvHandle, proxyHandle, proxyNum);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR," |TEST INFO|:: FAIL:: UDMA:: Proxy Alloc:: Neg::"
+                      " Check when maxProxy is greater than proxyNum!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        drvHandle->maxProxy = backUpMaxproxy;
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 7: Check when proxyNum is UDMA_PROXY_ANY and to get error from proxy RM API's */
+        backUpDrvObj                            = taskObj->testObj->drvObj[UDMA_INST_ID_MAIN_0];
+        drvHandle                               = &taskObj->testObj->drvObj[UDMA_INST_ID_MAIN_0];
+        proxyNum                                = UDMA_PROXY_ANY;
+        drvHandle->initPrms.rmInitPrms.numProxy = 0U;
+        proxyHandle->proxyNum                   = UDMA_PROXY_INVALID;
+        retVal                                  = Udma_proxyAlloc(drvHandle, proxyHandle, proxyNum);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR," |TEST INFO|:: FAIL:: UDMA:: Proxy Alloc:: Neg::"
+                      " Check when proxyNum is UDMA_PROXY_ANY and to get error from proxy RM API's!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        taskObj->testObj->drvObj[UDMA_INST_ID_MAIN_0] = backUpDrvObj;
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 8: Check to get [Error] SciClient Set proxy config failed when proxyNum
+         *                  is UDMA_PROXY_ANY
+         */
+        backUpDrvObj                            = taskObj->testObj->drvObj[UDMA_INST_ID_MAIN_0];
+        drvHandle                               = &taskObj->testObj->drvObj[UDMA_INST_ID_MAIN_0];
+        proxyNum                                = UDMA_PROXY_ANY;
+        drvHandle->devIdProxy                   = UDMA_PROXY_INVALID;
+        drvHandle->initPrms.rmInitPrms.numProxy = 1U;
+        retVal                                  = Udma_proxyAlloc(drvHandle, proxyHandle,
+                                                                  proxyNum);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR," |TEST INFO|:: FAIL:: UDMA:: Proxy Alloc:: Neg::"
+                      " Check to get [Error] SciClient Set proxy config failed when proxyNum"
+                      " is UDMA_PROXY_ANY\n");
+            retVal = UDMA_EFAIL;
+        }
+        taskObj->testObj->drvObj[UDMA_INST_ID_MAIN_0] = backUpDrvObj;
     }
 
     return (retVal);
@@ -196,18 +276,20 @@ int32_t UdmaTest_proxyFreeNeg(UdmaTestTaskObj *taskObj)
     uint32_t             backUpDrvInitDone;
 
     GT_1trace(taskObj->traceMask, GT_INFO1,
-       " |TEST INFO|:: Task:%d: UDMA proxy free negative Testcase ::\r\n", taskObj->taskId);
+              " |TEST INFO|:: Task:%d: UDMA proxy free negative Testcase ::\r\n",
+              taskObj->taskId);
 
     /* Test scenario 1: NULL check for proxyHandle */
-    proxyHandle = (Udma_ProxyHandle)NULL_PTR;
-    retVal = Udma_proxyFree(proxyHandle);
+    proxyHandle = (Udma_ProxyHandle) NULL_PTR;
+    retVal      = Udma_proxyFree(proxyHandle);
     if(UDMA_SOK != retVal)
     {
         retVal = UDMA_SOK;
     }
     else
     {
-        GT_0trace(taskObj->traceMask, GT_ERR," |TEST INFO|:: FAIL:: UDMA:: Proxy Free:: Neg:: NULL check for ProxyHandle!!\n");
+        GT_0trace(taskObj->traceMask, GT_ERR," |TEST INFO|:: FAIL:: UDMA:: Proxy Free:: Neg::"
+                  " NULL check for ProxyHandle!!\n");
         retVal = UDMA_EFAIL;
     }
 
@@ -216,14 +298,15 @@ int32_t UdmaTest_proxyFreeNeg(UdmaTestTaskObj *taskObj)
         /* Test scenario 2: Check for proxyInitDone when it is not equal UDMA_INIT_DONE */
         proxyHandle                = &proxyObj;
         proxyHandle->proxyInitDone = UDMA_DEINIT_DONE;
-        retVal = Udma_proxyFree(proxyHandle);
+        retVal                     = Udma_proxyFree(proxyHandle);
         if(UDMA_SOK != retVal)
         {
             retVal = UDMA_SOK;
         }
         else
         {
-            GT_0trace(taskObj->traceMask, GT_ERR," |TEST INFO|:: FAIL:: UDMA:: Proxy Free:: Neg:: Check for proxyInitDone when it is not equal UDMA_INIT_DONE!!\n");
+            GT_0trace(taskObj->traceMask, GT_ERR," |TEST INFO|:: FAIL:: UDMA:: Proxy Free:: Neg::"
+                      " Check for proxyInitDone when it is not equal UDMA_INIT_DONE!!\n");
             retVal = UDMA_EFAIL;
         }
     }
@@ -233,14 +316,15 @@ int32_t UdmaTest_proxyFreeNeg(UdmaTestTaskObj *taskObj)
         /* Test scenario 3: NULL check for driver Handle */
         proxyHandle->proxyInitDone = UDMA_INIT_DONE;
         proxyHandle->drvHandle     = NULL_PTR;
-        retVal = Udma_proxyFree(proxyHandle);
+        retVal                     = Udma_proxyFree(proxyHandle);
         if(UDMA_SOK != retVal)
         {
             retVal = UDMA_SOK;
         }
         else
         {
-            GT_0trace(taskObj->traceMask, GT_ERR," |TEST INFO|:: FAIL:: UDMA:: Proxy Free:: Neg:: NULL check for driver handle!!\n");
+            GT_0trace(taskObj->traceMask, GT_ERR," |TEST INFO|:: FAIL:: UDMA:: Proxy Free:: Neg::"
+                      " NULL check for driver handle!!\n");
             retVal = UDMA_EFAIL;
         }
     }
@@ -251,14 +335,15 @@ int32_t UdmaTest_proxyFreeNeg(UdmaTestTaskObj *taskObj)
         proxyHandle->drvHandle              = &taskObj->testObj->drvObj[UDMA_INST_ID_MAIN_0];
         backUpDrvInitDone                   = proxyHandle->drvHandle->drvInitDone;
         proxyHandle->drvHandle->drvInitDone = UDMA_DEINIT_DONE;
-        retVal = Udma_proxyFree(proxyHandle);
+        retVal                              = Udma_proxyFree(proxyHandle);
         if(UDMA_SOK != retVal)
         {
             retVal = UDMA_SOK;
         }
         else
         {
-            GT_0trace(taskObj->traceMask, GT_ERR," |TEST INFO|:: FAIL:: UDMA:: Proxy Free:: Neg:: Check for drvInitDone when it is not equal to UDMA_INIT_DONE!!\n");
+            GT_0trace(taskObj->traceMask, GT_ERR," |TEST INFO|:: FAIL:: UDMA:: Proxy Free:: Neg::"
+                      " Check for drvInitDone when it is not equal to UDMA_INIT_DONE!!\n");
             retVal = UDMA_EFAIL;
         }
         proxyHandle->drvHandle->drvInitDone = backUpDrvInitDone;
@@ -270,14 +355,15 @@ int32_t UdmaTest_proxyFreeNeg(UdmaTestTaskObj *taskObj)
         backUpDrvInitDone                   = proxyHandle->drvHandle->drvInitDone;
         proxyHandle->drvHandle->drvInitDone = UDMA_INIT_DONE;
         proxyHandle->drvHandle->instType    = UDMA_INST_TYPE_LCDMA_BCDMA;
-        retVal = Udma_proxyFree(proxyHandle);
+        retVal                              = Udma_proxyFree(proxyHandle);
         if(UDMA_SOK != retVal)
         {
             retVal = UDMA_SOK;
         }
         else
         {
-            GT_0trace(taskObj->traceMask, GT_ERR," |TEST INFO|:: FAIL:: UDMA:: Proxy Free:: Neg:: Check for instType when it is not equal to UDMA_INST_TYPE_NORMAL!!\n");
+            GT_0trace(taskObj->traceMask, GT_ERR," |TEST INFO|:: FAIL:: UDMA:: Proxy Free:: Neg::"
+                      " Check for instType when it is not equal to UDMA_INST_TYPE_NORMAL!!\n");
             retVal = UDMA_EFAIL;
         }
         proxyHandle->drvHandle->drvInitDone = backUpDrvInitDone;
@@ -294,6 +380,7 @@ int32_t UdmaTest_proxyFreeNeg(UdmaTestTaskObj *taskObj)
  * 3)Test scenario 3: NULL check for driver handle.
  * 4)Test scenario 4: Check for drvInitDone when it is not equal to UDMA_DEINIT_DONE.
  * 5)Test scenario 5: Check when instType when it is not equal to UDMA_INST_TYPE_NORMAL.
+ * 6)Test scenario 6: Check to  print "[Error] Proxy config failed.
  */
 int32_t UdmaTest_proxyConfigNeg(UdmaTestTaskObj *taskObj)
 {
@@ -304,34 +391,37 @@ int32_t UdmaTest_proxyConfigNeg(UdmaTestTaskObj *taskObj)
     uint32_t             backUpDrvInitDone;
 
     GT_1trace(taskObj->traceMask, GT_INFO1,
-       " |TEST INFO|:: Task:%d: UDMA proxy Config negative Testcase ::\r\n", taskObj->taskId);
+              " |TEST INFO|:: Task:%d: UDMA proxy Config negative Testcase ::\r\n",
+              taskObj->taskId);
 
     /* Test scenario 1: NULL check for proxyHandle */
-    proxyHandle = (Udma_ProxyHandle)NULL_PTR;
-    retVal = Udma_proxyConfig(proxyHandle, &proxyCfg);
+    proxyHandle = (Udma_ProxyHandle) NULL_PTR;
+    retVal      = Udma_proxyConfig(proxyHandle, &proxyCfg);
     if(UDMA_SOK != retVal)
     {
         retVal = UDMA_SOK;
     }
     else
     {
-        GT_0trace(taskObj->traceMask, GT_ERR," |TEST INFO|:: FAIL:: UDMA:: Proxy Config:: Neg:: NULL check for ProxyHandle!!\n");
+        GT_0trace(taskObj->traceMask, GT_ERR," |TEST INFO|:: FAIL:: UDMA:: Proxy Config:: Neg::"
+                  " NULL check for ProxyHandle!!\n");
         retVal = UDMA_EFAIL;
     }
 
     if(UDMA_SOK == retVal)
     {
         /* Test scenario 2: Check for proxyInitDone when it is not equal to UDMA_INIT_DONE */
-        proxyHandle                =  &proxyObj;
+        proxyHandle                = &proxyObj;
         proxyHandle->proxyInitDone = UDMA_DEINIT_DONE;
-        retVal = Udma_proxyConfig(proxyHandle, &proxyCfg);
+        retVal                     = Udma_proxyConfig(proxyHandle, &proxyCfg);
         if(UDMA_SOK != retVal)
         {
             retVal = UDMA_SOK;
         }
         else
         {
-            GT_0trace(taskObj->traceMask, GT_ERR," |TEST INFO|:: FAIL:: UDMA:: Proxy Config:: Neg:: Check for proxyInitDone when it is not equal to UDMA_INIT_DONE!!\n");
+            GT_0trace(taskObj->traceMask, GT_ERR," |TEST INFO|:: FAIL:: UDMA:: Proxy Config:: Neg::"
+                      " Check for proxyInitDone when it is not equal to UDMA_INIT_DONE!!\n");
             retVal = UDMA_EFAIL;
         }
     }
@@ -341,14 +431,15 @@ int32_t UdmaTest_proxyConfigNeg(UdmaTestTaskObj *taskObj)
         /* Test scenario 3: NULL Check for driver handle */
         proxyHandle->proxyInitDone = UDMA_INIT_DONE;
         proxyHandle->drvHandle     = NULL_PTR;
-        retVal = Udma_proxyConfig(proxyHandle, &proxyCfg);
+        retVal                     = Udma_proxyConfig(proxyHandle, &proxyCfg);
         if(UDMA_SOK != retVal)
         {
             retVal = UDMA_SOK;
         }
         else
         {
-            GT_0trace(taskObj->traceMask, GT_ERR," |TEST INFO|:: FAIL:: UDMA:: Proxy Config:: Neg:: NULL Check for driver handle!!\n");
+            GT_0trace(taskObj->traceMask, GT_ERR," |TEST INFO|:: FAIL:: UDMA:: Proxy Config:: Neg::"
+                      " NULL Check for driver handle!!\n");
             retVal = UDMA_EFAIL;
         }
     }
@@ -359,14 +450,15 @@ int32_t UdmaTest_proxyConfigNeg(UdmaTestTaskObj *taskObj)
         proxyHandle->drvHandle              = &taskObj->testObj->drvObj[UDMA_INST_ID_MAIN_0];
         backUpDrvInitDone                   = proxyHandle->drvHandle->drvInitDone;
         proxyHandle->drvHandle->drvInitDone = UDMA_DEINIT_DONE;
-        retVal = Udma_proxyConfig(proxyHandle, &proxyCfg);
+        retVal                              = Udma_proxyConfig(proxyHandle, &proxyCfg);
         if(UDMA_SOK != retVal)
         {
             retVal = UDMA_SOK;
         }
         else
         {
-            GT_0trace(taskObj->traceMask, GT_ERR," |TEST INFO|:: FAIL:: UDMA:: Proxy Config:: Neg:: Check for drvInitDone when it is not equal to UDMA_INIT_DONE!!\n");
+            GT_0trace(taskObj->traceMask, GT_ERR," |TEST INFO|:: FAIL:: UDMA:: Proxy Config:: Neg::"
+                      " Check for drvInitDone when it is not equal to UDMA_INIT_DONE!!\n");
             retVal = UDMA_EFAIL;
         }
         proxyHandle->drvHandle->drvInitDone = backUpDrvInitDone;
@@ -378,19 +470,38 @@ int32_t UdmaTest_proxyConfigNeg(UdmaTestTaskObj *taskObj)
         backUpDrvInitDone                   = proxyHandle->drvHandle->drvInitDone;
         proxyHandle->drvHandle->drvInitDone = UDMA_INIT_DONE;
         proxyHandle->drvHandle->instType    = UDMA_INST_TYPE_LCDMA_BCDMA;
-        retVal = Udma_proxyConfig(proxyHandle, &proxyCfg);
+        retVal                              = Udma_proxyConfig(proxyHandle, &proxyCfg);
         if(UDMA_SOK != retVal)
         {
             retVal = UDMA_SOK;
         }
         else
         {
-            GT_0trace(taskObj->traceMask, GT_ERR," |TEST INFO|:: FAIL:: UDMA:: Proxy Config:: Neg:: Check for instType when it is not equal to UDMA_INST_TYPE_NORMAL!!\n");
+            GT_0trace(taskObj->traceMask, GT_ERR," |TEST INFO|:: FAIL:: UDMA:: Proxy Config:: Neg::"
+                      " Check for instType when it is not equal to UDMA_INST_TYPE_NORMAL!!\n");
             retVal = UDMA_EFAIL;
         }
         proxyHandle->drvHandle->drvInitDone = backUpDrvInitDone;
         proxyHandle->drvHandle->instType    = UDMA_INST_TYPE_NORMAL;
     }
 
-   return (retVal);
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 6: Check to  print [Error] Proxy config failed!! */
+        proxyHandle->proxyNum = UDMA_PROXY_INVALID;
+        retVal                = Udma_proxyConfig(proxyHandle, &proxyCfg);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR," |TEST INFO|:: FAIL:: UDMA:: Proxy Config:: Neg::"
+                      " Check to  print [Error] Proxy config failed!!\n");
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    return (retVal);
 }
+
