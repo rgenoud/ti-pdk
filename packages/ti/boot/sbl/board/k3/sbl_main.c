@@ -448,6 +448,7 @@ int main()
         SBL_log(SBL_LOG_MAX, "Failed to boot HSM core !! \n");
     }
 #endif
+#if !defined(BOOT_PERF)
     /* Change parent clock of input muxed clock to A72 core.
        This is needed to change the A72 core frequency at run time */
     retVal = Sciclient_pmSetModuleClkParent(TISCI_DEV_MAIN_PLL8_SEL_EXTWAVE_VD,
@@ -458,6 +459,7 @@ int main()
     {
         SBL_log(SBL_LOG_ERR, "\n Sciclient_pmSetModuleClkParent Failed !! \n");
     }
+#endif
 
     SBL_log(SBL_LOG_MAX, "Begin parsing user application\n");
 
