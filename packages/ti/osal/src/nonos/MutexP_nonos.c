@@ -86,6 +86,10 @@ MutexP_Status MutexP_delete(MutexP_Handle handle)
             status = MutexP_FAILURE;
         }
     }
+    else
+    {
+        status = MutexP_FAILURE;
+    }
     return status;
 }
 
@@ -106,6 +110,10 @@ MutexP_Status MutexP_lock(MutexP_Handle handle, uint32_t timeout)
         {
             status = MutexP_FAILURE;
         }
+    }
+    else
+    {
+        status = MutexP_FAILURE;
     }
     
     return status;
@@ -128,6 +136,10 @@ MutexP_Status MutexP_unlock(MutexP_Handle handle)
         {
             status = MutexP_FAILURE;
         }
+    }
+    else
+    {
+        status = MutexP_FAILURE;
     }
 
     return status;

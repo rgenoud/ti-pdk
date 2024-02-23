@@ -887,7 +887,7 @@ void OSAL_tests(void *arg0, void *arg1)
 
     result += OsalApp_utilsNonosTests();
 
-    result += OsalApp_mutexTests();
+    result += OsalApp_cacheTests();
 
 #endif
 
@@ -900,9 +900,7 @@ void OSAL_tests(void *arg0, void *arg1)
 #endif
 
     ClockP_init_start_stop_null_test();
-
-    result += OsalApp_mutexTests();
-
+    
     result += OsalApp_mailboxTests();
 
     result += OsalApp_eventTests();
@@ -912,6 +910,8 @@ void OSAL_tests(void *arg0, void *arg1)
     result += OsalApp_hwiTests();
 
     result += OsalApp_semaphoreTests();
+
+    result += OsalApp_mutexTests();
 
     if(osal_OK == result)
     {
