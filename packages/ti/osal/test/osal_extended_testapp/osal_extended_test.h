@@ -61,6 +61,10 @@ extern "C" {
 #include "OSAL_log.h"
 #include "OSAL_board.h"
 
+#if defined(SAFERTOS)
+#include <SafeRTOS_API.h>
+#endif
+
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */

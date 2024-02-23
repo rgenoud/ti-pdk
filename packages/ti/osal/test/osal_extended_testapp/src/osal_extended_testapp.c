@@ -942,10 +942,10 @@ int main(void)
 /* Loading before Task is created */
 #if defined(FREERTOS)
 LoadP_update();
+OS_stop();
 #endif
 
     TaskP_Params taskParams;
-
     OS_init();
     memset( gAppTskStackMain, 0xFF, sizeof( gAppTskStackMain ) );
     TaskP_Params_init(&taskParams);

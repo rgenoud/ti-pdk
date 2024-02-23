@@ -37,7 +37,7 @@
 #include "SafeRTOS_priv.h"
 #include "SafeRTOS_config.h"
 
-portTaskHandleType TaskP_getSafeRTOSHandle( TaskP_Handle handle );
+portTaskHandleType TaskP_getSafeRTOSHandle(TaskP_Handle handle);
 
 /**
  * \brief Value to be used for lowest priority task
@@ -70,38 +70,12 @@ typedef struct TaskP_SafeRTOS_s {
 /* The function that implements the task being created. */
 static void TaskP_Function (void *arg);
 
-/*
- * Dummy function to check size during compile time
- *  ======== TaskP_compileTime_SizeChk ========
- */
-static void TaskP_compileTime_SizeChk(void);
-
 /* global pool of statically allocated task pools */
 static TaskP_SafeRTOS gOsalTaskPSafeRTOSPool[OSAL_SAFERTOS_CONFIGNUM_TASK];
 
 uint32_t  gOsalTaskAllocCnt = 0U, gOsalTaskPeak = 0U;
 
 extern uint32_t gSaftRtosInitDone;
-
-static void TaskP_compileTime_SizeChk( void )
-{
-#if defined( __GNUC__ ) && !defined( __ti__ )
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-variable"
-#else
-/* TI compiler */
-#if defined(__clang__)
-/* Clang compiler*/
-#pragma clang diagnostic ignored "-Wunused-variable"
-#else
-#pragma diag_suppress 179
-#endif
-#endif
-    OSAL_COMPILE_TIME_SIZE_CHECK ( ( uint32_t )sizeof( TaskP_SafeRTOS ),OSAL_SAFERTOS_TASKP_SIZE_BYTES );
-#if defined( __GNUC__ ) && !defined( __ti__ )
-#pragma GCC diagnostic pop
-#endif
-}
 
 static void TaskP_Function ( void *arg )
 {
@@ -405,7 +379,7 @@ uint32_t TaskP_getTaskStackHighWatermark(TaskP_Handle handle)
     TaskP_SafeRTOS *taskHandle = (TaskP_SafeRTOS *)handle;
 
     DebugP_assert(NULL_PTR != handle);
-    DebugP_assert((bool)false != taskHandle->used);
+    DebugP_assert(BFALSE != taskHandle->used);
 
     /* SafeRTOS doesn't support this functionality, return 0 */
 

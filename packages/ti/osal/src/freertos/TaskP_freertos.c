@@ -63,12 +63,6 @@ static int32_t prvSetupTimerPSC( void );
 /* The function that implements the task being created. */
 static void TaskP_Function (void *arg);
 
-/*
- * Dummy function to check size during compile time
- *  ======== TaskP_compileTime_SizeChk ========
- */
-static void TaskP_compileTime_SizeChk(void);
-
 /**
  * \brief Value to be used for lowest priority task
  */
@@ -104,26 +98,6 @@ static StaticTask_t   gOsalFreertosTaskObjPool[OSAL_FREERTOS_CONFIGNUM_TASK];
 static TaskP_freertos gOsalTaskPfreertosPool[OSAL_FREERTOS_CONFIGNUM_TASK];
 
 uint32_t  gOsalTaskAllocCnt = 0U, gOsalTaskPeak = 0U;
-
-static void TaskP_compileTime_SizeChk(void)
-{
-#if defined(__GNUC__) && !defined(__ti__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-variable"
-#else
-/* TI compiler */
-#if defined(__clang__)
-/* Clang compiler*/
-#pragma clang diagnostic ignored "-Wunused-variable"
-#else
-#pragma diag_suppress 179
-#endif
-#endif
-    OSAL_COMPILE_TIME_SIZE_CHECK ((uint32_t)sizeof(TaskP_freertos),OSAL_FREERTOS_TASKP_SIZE_BYTES);
-#if defined(__GNUC__) && !defined(__ti__)
-#pragma GCC diagnostic pop
-#endif
-}
 
 static void TaskP_Function (void *arg)
 {

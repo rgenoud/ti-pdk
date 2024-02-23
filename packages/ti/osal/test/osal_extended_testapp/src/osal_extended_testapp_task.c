@@ -90,6 +90,15 @@ static int32_t OsalApp_taskGeneralTests(void);
  */
 static int32_t OsalApp_taskIsTerminated(void);
 
+/*
+ * Description : Testing Negative checks for Task APIs
+ */
+static int32_t OsalApp_taskNegativeTests(void);
+
+#if defined(SAFERTOS)
+extern portTaskHandleType TaskP_getSafeRTOSHandle( TaskP_Handle handle );
+#endif
+
 /* ========================================================================== */
 /*                     Internal Function Definitions                          */
 /* ========================================================================== */
@@ -159,11 +168,7 @@ static int32_t OsalApp_taskCreateMaxTaskTest(void)
         }
     }
 
-    if(osal_OK == result)
-    {
-        OSAL_log("Creating max tasks test has passed!!\n");
-    }
-    else
+    if(osal_OK != result)
     {
         OSAL_log("Creating max tasks test has failed!!\n");
     }
@@ -213,12 +218,17 @@ static int32_t OsalApp_taskGeneralTests(void)
     {
         result = osal_FAILURE;
     }
-
-    if(osal_OK == result)
+#if defined(FREERTOS)
+    if(0U == TaskP_getTaskStackHighWatermark(gOsalAppTaskPSelfmacroTaskHandle))
+#elif defined(SAFERTOS)
+    /* SafeRTOS doesn't support WaterMark functionality, always returns zero */
+    if(0U != TaskP_getTaskStackHighWatermark(gOsalAppTaskPSelfmacroTaskHandle))
+#endif
     {
-        OSAL_log("General TaskP test has passed!!\n");
+        result = osal_FAILURE;
     }
-    else
+
+    if(osal_OK != result)
     {
         OSAL_log("Generel TaskP test has failed!!\n");
     }
@@ -251,13 +261,56 @@ static int32_t OsalApp_taskIsTerminated(void)
         result = osal_FAILURE;
     }
 
-    if(osal_OK == result)
-    {
-        OSAL_log("TaskP Termination test check has passed!!\n");
-    }
-    else
+    if(osal_OK != result)
     {
         OSAL_log("TaskP Termination test check has failed!!\n");
+    }
+
+    return result;
+}
+
+static int32_t OsalApp_taskNegativeTests(void)
+{
+    TaskP_Params    params;
+    TaskP_Handle    handle;
+    int32_t         result = osal_OK;
+
+#if defined(FREERTOS)
+    TaskP_Params_init(NULL_PTR);
+    uint32_t        key = 0U;
+
+    key = TaskP_disable();
+    
+    TaskP_restore(key);
+#endif
+    
+    TaskP_Params_init(&params);
+    params.priority = OSAL_APP_PRIORITY_HIGHEST;
+    memset(gOsalAppTskStack, 0, sizeof(gOsalAppTskStack));
+    params.stack    = gOsalAppTskStack[0];
+    params.stacksize = OSAL_APP_TASK_STACK_SIZE;
+
+    handle = TaskP_create((TaskP_Fxn)OsalApp_dummytaskFxn, &params);
+    if(NULL_PTR == handle)
+    {
+        result = osal_FAILURE;
+    }
+
+#if defined(SAFERTOS)
+    if(NULL_PTR == TaskP_getSafeRTOSHandle(handle))
+    {
+        result = osal_FAILURE;
+    }
+#endif
+
+    if((TaskP_OK != TaskP_delete(&handle)) || (TaskP_OK == TaskP_delete(NULL_PTR)))
+    {
+        result = osal_FAILURE;
+    }
+
+    if(osal_OK != result)
+    {
+        OSAL_log("\n OsalApp_taskNegativeTests failed \n");
     }
 
     return result;
@@ -274,14 +327,15 @@ int32_t OsalApp_taskTests(void)
     result += OsalApp_taskCreateMaxTaskTest();
     result += OsalApp_taskGeneralTests();
     result += OsalApp_taskIsTerminated();
+    result += OsalApp_taskNegativeTests();
 
     if(osal_OK == result)
     {
-        OSAL_log("All TaskP tests have passed!!\n");
+        OSAL_log(" All TaskP tests have passed!!\n");
     }
     else
     {
-        OSAL_log("Some or all TaskP tests have failed!!\n");
+        OSAL_log(" Some or all TaskP tests have failed!!\n");
     }
 
     return result;

@@ -13,7 +13,7 @@ APP_NAME = osal_extended_testapp_$(BUILD_OS_TYPE)
 PACKAGE_SRCS_COMMON = src osal_extended_test.h makefile_rtos.mk
 
 SRCDIR = src
-INCDIR = . ../src
+INCDIR = . ../src ../../src/safertos
 # Common source files across all platforms and cores
 SRCS_COMMON += osal_extended_testapp.c
 SRCS_COMMON += osal_extended_testapp_hwi.c osal_extended_testapp_mutex.c osal_extended_testapp_cache.c
