@@ -10,7 +10,7 @@ endif
 MODULE_NAME = tsn_combase
 
 SRCDIR = tsn_combase tsn_combase/tilld tsn_combase/tilld/jacinto
-INCDIR = tsn_combase tsn_combase/tilld/jacinto
+INCDIR = tsn_combase tsn_combase/tilld tsn_combase/tilld/jacinto
 
 SRC_PATH := $(PDK_TSN_COMP_PATH)/tsn-stack/tsn_combase
 UB_VERSION = $(shell sed -n '/AC_INIT/p' $(SRC_PATH)/configure.ac | awk -F"[][]" '{print $$4}')
@@ -28,13 +28,16 @@ SRCS_COMMON += cb_noipcshmem.c \
 	cb_lld_tmevent.c \
 	ub_lld_binding.c \
 	lldenet.c \
+	lldenetext.c \
 	lldtsync.c \
 	cb_link_tilld.c \
 	fs_stdio.c \
 	cb_xtimer.c
 
 PACKAGE_SRCS_COMMON = ../makefile_tsn_combase
-PACKAGE_SRCS_COMMON += $(SRCDIR) ../tsn_tilld_include.h
+PACKAGE_SRCS_COMMON += $(SRCDIR)
+PACKAGE_SRCS_COMMON += tsn_buildconf
+
 CFLAGS_LOCAL_COMMON = $(PDK_CFLAGS) $(TSN_CFLAGS) -DTSNPKGVERSION=\"$(TSNPKGVERSION)\" \
 	-include $(PDK_TSN_COMP_PATH)/tsn-stack/tsn_buildconf/jacinto_buildconf.h
 
