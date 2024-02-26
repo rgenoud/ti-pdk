@@ -2011,6 +2011,22 @@ export sbl_eeprom_test_$(SOC)_CORELIST = mcu1_0
 export sbl_eeprom_test_SBL_APPIMAGEGEN = yes
 sbl_EXAMPLE_LIST += sbl_eeprom_test
 
+# SBL example to verify whether non-booted cores are properly switched off or not
+export sbl_non_booted_core_test_COMP_LIST = sbl_non_booted_core_test
+sbl_non_booted_core_test_RELPATH = ti/boot/sbl/example/non_booted_core_test
+sbl_non_booted_core_test_CUSTOM_BINPATH = $(PDK_SBL_COMP_PATH)/example/binary/$(BOARD)/non_booted_core_test
+sbl_non_booted_core_test_PATH = $(PDK_SBL_COMP_PATH)/example/non_booted_core_test
+export sbl_non_booted_core_test_MAKEFILE = -f$(PDK_SBL_COMP_PATH)/example/non_booted_core_test/makefile
+export sbl_non_booted_core_test_BOARD_DEPENDENCY = yes
+export sbl_non_booted_core_test_SOC_DEPENDENCY = no
+export sbl_non_booted_core_test_CORE_DEPENDENCY = no
+sbl_non_booted_core_test_PKG_LIST = sbl_non_booted_core_test
+sbl_non_booted_core_test_INCLUDE = $(sbl_non_booted_core_test_PATH)
+export sbl_non_booted_core_test_BOARDLIST = $(sbl_BOARDLIST)
+export sbl_non_booted_core_test_$(SOC)_CORELIST = mcu1_0
+export sbl_non_booted_core_test_SBL_APPIMAGEGEN = yes
+sbl_EXAMPLE_LIST += sbl_non_booted_core_test
+
 # SBL not supported for any profile
 # other than release
 ifneq ($(BUILD_PROFILE), release)
