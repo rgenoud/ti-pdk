@@ -88,13 +88,19 @@ static uint8_t  gSciclientAppTskStackMain[32*1024] __attribute__((aligned(8192))
 /*                        Internal Function Declarations                      */
 /* ========================================================================== */
 
-void mainTask(void* arg0, void* arg1);
+static void mainTask(void* arg0, void* arg1);
 #if defined (BUILD_MCU1_0)
 static int32_t SciclientApp_pmMessageTest(void);
 #endif
 static int32_t SciclientApp_msmcQueryNegTest(void);
 static int32_t SciclientApp_otpProcessKeyCfgNegTest(void);
 static int32_t SciclientApp_dkekNegTest(void);
+static int32_t SciclientApp_firewallNegTest(void);
+static int32_t SciclientApp_prepareHeaderNegTest(void);
+#if defined (SOC_J784S4)
+static int32_t SciclientApp_contextNegTest(void);
+#endif
+static int32_t SciclientApp_initTest(void);
 
 /* ========================================================================== */
 /*                          Function Definitions                              */
@@ -126,7 +132,7 @@ int main(void)
     return retVal;
 }
 
-void mainTask(void* arg0, void* arg1)
+static void mainTask(void* arg0, void* arg1)
 {
     /*To suppress unused variable warning*/
     (void)arg0;
@@ -161,6 +167,20 @@ int32_t SciApp_testMain(SciApp_TestParams_t *testParams)
             break;
         case 4:
             testParams->testResult = SciclientApp_dkekNegTest();
+            break;
+        case 5:
+            testParams->testResult = SciclientApp_firewallNegTest();
+            break;
+        case 6:
+            testParams->testResult =  SciclientApp_prepareHeaderNegTest();
+            break;
+#if defined (SOC_J784S4)
+        case 7:
+            testParams->testResult =  SciclientApp_contextNegTest();
+            break;
+#endif
+        case 8:
+            testParams->testResult =  SciclientApp_initTest();
             break;
         default:
             break;
@@ -621,6 +641,327 @@ static int32_t SciclientApp_dkekNegTest(void)
     }
 
   return dkekTestStatus;
+}
+
+static int32_t SciclientApp_firewallNegTest(void)
+{
+    int32_t status                = CSL_PASS;
+    int32_t sciclientInitStatus   = CSL_PASS;
+    int32_t firewallNegTestStatus = CSL_PASS;
+    Sciclient_ConfigPrms_t SciApp_Config =
+    {
+       SCICLIENT_SERVICE_OPERATION_MODE_INTERRUPT,
+       NULL,
+       0 /* isSecure = 0 un secured for all cores */
+    };
+
+    while (gSciclientHandle.initCount != 0U)
+    {
+        status = Sciclient_deinit();
+    }
+    status = Sciclient_init(&SciApp_Config);
+    sciclientInitStatus = status;
+
+    if(status == CSL_PASS)
+    {
+        SciApp_printf ("Sciclient_init PASSED.\n");
+
+        status = Sciclient_firewallChangeOwnerInfo(NULL, NULL, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            firewallNegTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_firewallChangeOwnerInfo: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+            firewallNegTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_firewallChangeOwnerInfo: Negative Arg Test Failed.\n");
+        }
+
+        status = Sciclient_firewallSetRegion(NULL, NULL, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            firewallNegTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_firewallSetRegion: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+            firewallNegTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_firewallSetRegion: Negative Arg Test Failed.\n");
+        }
+
+        status = Sciclient_firewallGetRegion(NULL, NULL, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            firewallNegTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_firewallGetRegion: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+            firewallNegTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_firewallGetRegion: Negative Arg Test Failed.\n");
+        }
+     }
+     else
+     {
+         firewallNegTestStatus += CSL_EFAIL;
+         SciApp_printf ("Sciclient_init FAILED.\n");
+     }
+
+    if(sciclientInitStatus == CSL_PASS)
+    {
+        status = Sciclient_deinit();
+        if(status == CSL_PASS)
+        {
+            firewallNegTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_deinit PASSED.\n");
+        }
+        else
+        {
+            firewallNegTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_deinit FAILED.\n");
+        }
+    }
+
+   return firewallNegTestStatus;
+}
+
+static int32_t SciclientApp_prepareHeaderNegTest(void)
+{
+    int32_t  status              = CSL_PASS;
+    int32_t  sciclientInitStatus = CSL_PASS;
+    int32_t  sciclientTestStatus = CSL_PASS;
+    const Sciclient_ReqPrm_t SciApp_ReqPrm = {};
+    Sciclient_ConfigPrms_t   SciApp_Config =
+    {
+       SCICLIENT_SERVICE_OPERATION_MODE_INTERRUPT,
+       NULL,
+       0 /* isSecure = 0 un secured for all cores */
+    };
+
+     while (gSciclientHandle.initCount != 0U)
+     {
+         status = Sciclient_deinit();
+     }
+     status = Sciclient_init(&SciApp_Config);
+     sciclientInitStatus = status;
+
+     if(status == CSL_PASS)
+     {
+          SciApp_printf("Sciclient_init PASSED.\n");
+          status = Sciclient_servicePrepareHeader(NULL, NULL, SCICLIENT_CONTEXT_R5_NONSEC_0, NULL);
+          if (status == CSL_EBADARGS)
+          {
+               sciclientTestStatus += CSL_PASS;
+               SciApp_printf("Sciclient_servicePrepareHeader: Negative Arg Test Passed.\n");
+          }
+          else
+          {
+               sciclientTestStatus += CSL_EFAIL;
+               SciApp_printf("Sciclient_servicePrepareHeader: Negative Arg Test Failed.\n");
+          }
+
+          status = Sciclient_servicePrepareHeader(&SciApp_ReqPrm, NULL, SCICLIENT_CONTEXT_MAX_NUM, NULL);
+          if (status == CSL_EBADARGS)
+          {
+               sciclientTestStatus += CSL_PASS;
+               SciApp_printf("Sciclient_servicePrepareHeader: Negative Arg Test Passed.\n");
+          }
+          else
+          {
+               sciclientTestStatus += CSL_EFAIL;
+               SciApp_printf("Sciclient_servicePrepareHeader: Negative Arg Test Failed.\n");
+          }
+    }
+    else
+    {
+        sciclientInitStatus += CSL_EFAIL;
+        SciApp_printf ("Sciclient_init FAILED.\n");
+    }
+
+    if(sciclientInitStatus == CSL_PASS)
+    {
+        status = Sciclient_deinit();
+        if(status == CSL_PASS)
+        {
+            sciclientTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_deinit PASSED.\n");
+        }
+        else
+        {
+            sciclientTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_deinit FAILED.\n");
+        }
+    }
+
+  return sciclientTestStatus;
+}
+
+#if defined (SOC_J784S4)
+static int32_t SciclientApp_contextNegTest(void)
+{
+    int32_t  status              = CSL_PASS;
+    int32_t  sciclientInitStatus = CSL_PASS;
+    int32_t  sciclientTestStatus = CSL_PASS;
+    uint32_t IntrNum1            = CSLR_MCU_R5FSS0_CORE0_INTR_MCU_NAVSS0_INTR_ROUTER_0_OUTL_INTR_1;
+    uint32_t IntrNum2            = CSLR_MCU_R5FSS0_CORE0_INTR_MCU_MCAN0_MCANSS_MCAN_LVL_INT_0;
+    uint32_t IntrNum3            = CSLR_MCU_R5FSS0_CORE0_INTR_MCU_CPSW0_EVNT_PEND_0;
+    uint16_t messagetype[4]      = {TISCI_MSG_BOOT_NOTIFICATION, 
+                                    TISCI_MSG_BOARD_CONFIG, 
+                                    TISCI_MSG_BOARD_CONFIG_SECURITY
+                                    };
+    int8_t   num;
+    Sciclient_ConfigPrms_t SciApp_Config =
+    {
+       SCICLIENT_SERVICE_OPERATION_MODE_INTERRUPT,
+       NULL,
+       0 /* isSecure = 0 un secured for all cores */
+    };
+
+     while (gSciclientHandle.initCount != 0U)
+     {
+         status = Sciclient_deinit();
+     }
+     status = Sciclient_init(&SciApp_Config);
+     sciclientInitStatus = status;
+
+     if(status == CSL_PASS)
+     {
+          SciApp_printf("Sciclient_init PASSED.\n");
+        /* Passing different interrupt numbers to check proxy map context id for 'gSciclientMap' */
+          status = Sciclient_contextIdFromIntrNum(IntrNum1);
+          if (status == 0U)
+          {
+               sciclientTestStatus += CSL_PASS;
+               SciApp_printf("Sciclient_contextIdFromIntrNum initial condition Test Passed.\n");
+          }
+          else
+          {
+               sciclientTestStatus += CSL_EFAIL;
+               SciApp_printf("Sciclient_contextIdFromIntrNum initial condition Test Failed.\n");
+          }
+
+          status = Sciclient_contextIdFromIntrNum(IntrNum2);
+          if (status != CSL_EFAIL)
+          {
+               sciclientTestStatus += CSL_PASS;
+               SciApp_printf("Sciclient_contextIdFromIntrNum: IntrNum2 Arg Test Passed.\n");
+          }
+          else
+          {
+               sciclientTestStatus += CSL_EFAIL;
+               SciApp_printf("Sciclient_contextIdFromIntrNum: IntrNum2 Arg Test Failed.\n");
+          }
+
+          status = Sciclient_contextIdFromIntrNum(IntrNum3);
+          if (status == CSL_EFAIL)
+          {
+               sciclientTestStatus += CSL_PASS;
+               SciApp_printf("Sciclient_contextIdFromIntrNum: Negative Arg Test Passed.\n");
+          }
+          else
+          {
+               sciclientTestStatus += CSL_EFAIL;
+               SciApp_printf("Sciclient_contextIdFromIntrNum: Negative Arg Test Failed.\n");
+          }
+
+          /* Passing different message types to determine the which context to be used.*/
+          for(num = 0; num < 3; num++)
+          {
+            status = Sciclient_getCurrentContext(messagetype[num]);
+            if (status == SCICLIENT_CONTEXT_SEC)
+            {
+                sciclientTestStatus += CSL_PASS;
+                SciApp_printf("Sciclient_getCurrentContext: Secure Arg Test Passed.\n");
+            }
+            else
+            {
+                sciclientTestStatus += CSL_EFAIL;
+                SciApp_printf("Sciclient_getCurrentContext: Secure Arg Test Failed.\n");
+            }
+          }
+    }
+    else
+    {
+        sciclientInitStatus += CSL_EFAIL;
+        SciApp_printf ("Sciclient_init FAILED.\n");
+    }
+
+    if(sciclientInitStatus == CSL_PASS)
+    {
+        status = Sciclient_deinit();
+        if(status == CSL_PASS)
+        {
+            sciclientTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_deinit PASSED.\n");
+        }
+        else
+        {
+            sciclientTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_deinit FAILED.\n");
+        }
+    }
+
+  return sciclientTestStatus;
+}
+#endif
+
+static int32_t SciclientApp_initTest(void)
+{
+    int32_t status              = CSL_PASS;
+    int32_t sciclientInitStatus = CSL_PASS;
+    Sciclient_ConfigPrms_t SciApp_Config =
+    {
+       2,
+       NULL,
+       0 /* isSecure = 0 un secured for all cores */
+    };
+
+    Sciclient_ConfigPrms_t SciApp_ConfigIntrMode =
+    {
+       SCICLIENT_SERVICE_OPERATION_MODE_INTERRUPT,
+       NULL,
+       2 /* isSecure = 0 un secured for all cores */
+    };
+
+    status = Sciclient_init(&SciApp_Config);
+    if (status == CSL_EBADARGS)
+    {
+        sciclientInitStatus += CSL_PASS;
+        SciApp_printf("Sciclient_init: Negative Arg Test Passed.\n");
+    }
+    else
+    {
+        sciclientInitStatus += CSL_EFAIL;
+        SciApp_printf("Sciclient_init: Negative Arg Test Failed.\n");
+    }
+
+    Sciclient_deinit();
+    status = Sciclient_init(&SciApp_ConfigIntrMode);
+    if (status == CSL_EBADARGS)
+    {
+        sciclientInitStatus += CSL_PASS;
+        SciApp_printf("Sciclient_init: Negative Arg Test Passed.\n");
+    }
+    else
+    {
+        sciclientInitStatus += CSL_EFAIL;
+        SciApp_printf("Sciclient_init: Negative Arg Test Failed.\n");
+    }
+
+    status = Sciclient_deinit();
+    if(status == CSL_PASS)
+    {
+        sciclientInitStatus += CSL_PASS;
+        SciApp_printf("Sciclient_deinit PASSED.\n");
+    }
+    else
+    {
+        sciclientInitStatus += CSL_EFAIL;
+        SciApp_printf("Sciclient_deinit FAILED.\n");
+    }
+
+    return sciclientInitStatus;
 }
 
 #if defined(BUILD_MPU) || defined (BUILD_C7X)
