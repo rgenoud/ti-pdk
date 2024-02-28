@@ -235,7 +235,7 @@ uint32_t RPMessage_getObjMemRequired(void);
  */
 int32_t RPMessage_init(RPMessage_Params *params);
 
-#if defined (SOC_J721E)  || defined (SOC_J7200)
+#if defined (SOC_J721E)  || defined (SOC_J7200) || defined (SOC_J784S4)
 /**
  *  \brief      Add a proc to RPMessage Module
  *
