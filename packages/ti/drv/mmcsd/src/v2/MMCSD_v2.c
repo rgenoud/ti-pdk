@@ -2208,7 +2208,7 @@ MMCSD_Error MMCSD_switch_eMMC_mode(MMCSD_Handle handle, MMCSD_SupportedMMCModes_
          */
          HS_TIMING_val=MMCSD_ECSD_HS_TIMING_HIGH_SPEED;
          transaction.cmd = MMCSD_CMD(6U);
-         transaction.arg = 0x03000000 | (MMCSD_ECSD_HS_TIMING_INDEX << 16) | (( (enhancedStrobe <<4) | HS_TIMING_val) << 8);
+         transaction.arg = 0x03000000 | (MMCSD_ECSD_HS_TIMING_INDEX << 16) | (( (drvStrength <<4) | HS_TIMING_val) << 8);
          transaction.flags = MMCSD_CMDRSP_BUSY;
          ret = MMCSD_v2_transfer(handle, &transaction);
 
@@ -2248,7 +2248,7 @@ MMCSD_Error MMCSD_switch_eMMC_mode(MMCSD_Handle handle, MMCSD_SupportedMMCModes_
         if(MMCSD_OK == ret)
         {
           transaction.cmd = MMCSD_CMD(6U);
-          transaction.arg = 0x03000000 | (MMCSD_ECSD_HS_TIMING_INDEX << 16) | (( (enhancedStrobe <<4) | MMCSD_ECSD_HS_TIMING_HS400) << 8);
+          transaction.arg = 0x03000000 | (MMCSD_ECSD_HS_TIMING_INDEX << 16) | (( (drvStrength <<4) | MMCSD_ECSD_HS_TIMING_HS400) << 8);
           transaction.flags = MMCSD_CMDRSP_BUSY;
           ret = MMCSD_v2_transfer(handle, &transaction);
         }
