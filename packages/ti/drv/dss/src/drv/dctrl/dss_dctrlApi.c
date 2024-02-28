@@ -1760,7 +1760,7 @@ static int32_t Dss_dctrlDrvSetOldiParamsIoctl(
                             const Dss_DctrlOldiParams *oldiParams)
 {
     int32_t retVal = FVID2_SOK;
-    uint32_t resetOldi = UFALSE;
+    uint32_t resetOldi = FALSE;
     CSL_dss_commRegs *commRegs;
     CSL_dss_vpRegs *vpRegs;
     const Dss_SocInfo *socInfo;
@@ -1790,10 +1790,10 @@ static int32_t Dss_dctrlDrvSetOldiParamsIoctl(
     do
     {
         resetOldi = CSL_dssIsOldiResetDone(commRegs);
-    } while (UTRUE != resetOldi);
+    } while (TRUE != resetOldi);
 
     CSL_dssVpSetOldiConfig(vpRegs, oldiCfg);
-    CSL_dssVpOldiEnable(vpRegs, UTRUE);
+    CSL_dssVpOldiEnable(vpRegs, TRUE);
 
     if(FVID2_SOK != retVal)
     {

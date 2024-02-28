@@ -366,7 +366,7 @@ static int32_t App_create(M2MApp_AppObj *appObj)
                                              &instObj->createStatus,
                                              &instObj->cbParams);
         if((NULL == instObj->drvHandle) ||
-           (FVID2_SOK == instObj->createStatus.retVal))
+           (FVID2_SOK != instObj->createStatus.retVal))
         {
             retVal = instObj->createStatus.retVal;
             App_consolePrintf("\nERROR: Display M2M DRV Create Failed!!!\r\n");
