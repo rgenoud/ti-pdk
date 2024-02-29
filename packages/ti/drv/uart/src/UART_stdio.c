@@ -659,6 +659,24 @@ uint8_t UART_getc(void)
 }
 
 /**
+ * \brief   This function reads a byte entered on the serial console.
+ *
+ * \return  Returns the entered byte typecasted as an unsigned character.
+ */
+
+uint8_t UART_getByteFromConsole(void)
+{
+    uint8_t temp = 0;
+    if (uart_stdio.uart_handle != NULL)
+    {
+        /* When enableInterrupt is disabled UART_read
+         * falls back to UART_readPolling */
+        (void)UART_read(uart_stdio.uart_handle, &temp, 1u);
+    }
+    return(temp);
+}
+
+/**
  * Writes a string of characters to the UART output.
  *
  * \param pcBuf points to a buffer containing the string to transmit.

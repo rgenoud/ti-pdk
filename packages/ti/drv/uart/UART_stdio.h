@@ -201,6 +201,8 @@ void UART_putc(uint8_t byteTx);
 
 uint8_t UART_getc(void);
 
+uint8_t UART_getByteFromConsole(void);
+
 /**
  * @brief   This function initializes the specified UART instance for use for
  *          console operations , with a configuration specified by 'uartParams'
