@@ -43,7 +43,7 @@
 /* ================================================================================== */
 
 #include "osal_extended_test.h"
-#if defined (SAFERTOS)
+#if defined(SAFERTOS)
 #include "SafeRTOS_API.h"
 #endif
 
@@ -55,47 +55,36 @@
 #define OSAL_APP_MAX_NUM_MAILBOX   (OSAL_FREERTOS_CONFIGNUM_MAILBOX)
 #define OSAL_APP_MAILBOX_OVERHEAD  (0U)
 #elif defined(SAFERTOS)
-#define OSAL_APP_MAX_NUM_MAILBOX   (OSAL_SAFERTOS_CONFIGNUM_MAILBOX-4)
+/* MailboxP_create API is called for safertos 5 times*/ 
+#define OSAL_APP_MAX_NUM_MAILBOX   (OSAL_SAFERTOS_CONFIGNUM_MAILBOX - 5U)
 #define OSAL_APP_MAILBOX_OVERHEAD  (safertosapiQUEUE_OVERHEAD_BYTES)
 #endif
 #define OSAL_APP_MB_TIMEOUT        (1U)
 #define OSAL_APP_MB_SEND_STR       ("Texas Instruments\0")
 #define OSAL_APP_MAX_MB_BUF_LEN    (256U)
 #define OSAL_APP_IRQ_INT_NUM       (32U)
+#define OSAL_APP_MB_WAIT_TIMEOUT   (~((uint32_t)0U))
 
 /* ================================================================================== */
 /*                                     Global Variables                               */
 /* ================================================================================== */
 
-/* Mailbox handle used to mailbox post in isr */
+/* Mailbox handle used to mailbox API's*/
 volatile MailboxP_Handle gmailboxpHandle;
 uint8_t gOsalAppMbQueueBuf[OSAL_APP_MAX_MB_BUF_LEN] __attribute__((aligned(64)));
 uint8_t gOsalAppMbMultiCreateQueueBuf[OSAL_APP_MAX_NUM_MAILBOX][OSAL_APP_MAX_MB_BUF_LEN] __attribute__((aligned(64)));
 uint8_t gOsalAppStrToSend[64] = {'T', 'e', 'x', 'a', 's', ' ', 'I', 'n', 's', 't', 'r', 'u','m', 'e', 'n', 't', 's', '\0',};
+volatile bool gOsalAppmbISRisExecuted = BFALSE;
+uint8_t gOsalApprecvBuf[OSAL_APP_MAX_MB_BUF_LEN];
 
 /* ================================================================================== */
-/*                                     Internal Functions                             */
-/* ================================================================================== */
-
-void OsalApp_mbISR(void *arg)
-{   
-    uint32_t iter;
-    uint32_t len = strlen((char *)gOsalAppStrToSend);
-
-    for(iter = 0U; iter < len; iter++)
-    {
-        MailboxP_post(gmailboxpHandle, &gOsalAppStrToSend[iter], OSAL_APP_MB_TIMEOUT);
-    }
-}
-
-/* ================================================================================== */
-/*                                    Function Declarations                           */
+/*                            Function Declarations                             */
 /* ================================================================================== */
 
 /* 
  * Description: Test creation of as many mailboxes as supported.
  */
-int32_t OsalApp_mailboxCreateMultipleTest(void);
+static int32_t OsalApp_mailboxCreateMultipleTest(void);
 
 /* 
  * Description: Test the mailbox pend and post functionality by calling below mentioned APIs :
@@ -105,33 +94,86 @@ int32_t OsalApp_mailboxCreateMultipleTest(void);
  *      4. MailboxP_post
  *      5. MailboxP_pend
  */
-int32_t OsalApp_mailboxPendPostTest(uint32_t timeout);
+static int32_t OsalApp_mailboxPendPostTest(uint32_t timeout);
+
+#if defined(BUILD_MCU)
+/* 
+ * Description: Test the mailbox ISR call back function..
+ */
+static void OsalApp_mbISR(void *arg);
+
+/*
+ * Description : Testing from ISR context on below mailbox APIs
+ *      1. MailboxP_post
+ *      2. MailboxP_pend
+ *      3. MailboxP_getNumPendingMsgs
+ */
+static int32_t OsalApp_mailboxISRTest(void);
+#endif
+
+#if defined(SAFERTOS)
+/* 
+ * Description: Test the mailbox create Negative condition..
+ */
+static int32_t osalApp_mailboxCreateNegativeTest(void);
+
+/* 
+ * Description: Test the mailbox post and pend Negative condition..
+ */
+static int32_t OsalApp_mailboxPostPendNegativeTest(void);
+
+#endif
+
+#if defined(FREERTOS)
+/* 
+ * Description: Test the mailbox Delete by making handle as NULL_PTR..
+ */
+static int32_t OsalApp_mailboxDeleteNegativeTest(void);
 
 /*
  * Description  : Tests MailboxP create when the used parameter of mailbox is 0.
  */
-int32_t OsalApp_mailboxUsedTest(void);
-
-/* 
- * Description: Test the mailbox pend and post functionality, while posting from an ISR..
- */
-int32_t OsalApp_mailboxISRTest(void);
+static int32_t OsalApp_mailboxUsedTest(void);
+#endif
 
 /* ================================================================================== */
-/*                                  Function Definitions                              */
+/*                               Internal Function Definitions                        */
 /* ================================================================================== */
 
-int32_t OsalApp_mailboxCreateMultipleTest(void)
+#if defined(BUILD_MCU)
+static void OsalApp_mbISR(void *arg)
+{   
+    uint32_t iter;
+    uint32_t len = strlen((char *)gOsalAppStrToSend);
+    
+    for(iter = 0U; iter < len; iter++)
+    {
+        MailboxP_post(gmailboxpHandle, &gOsalAppStrToSend[iter], OSAL_APP_MB_TIMEOUT);
+    }
+    
+    MailboxP_getNumPendingMsgs(gmailboxpHandle);
+
+    for(iter = 0U; iter < len; iter++)
+    {
+        MailboxP_pend(gmailboxpHandle, &gOsalApprecvBuf[iter], OSAL_APP_MB_TIMEOUT);
+    }
+    
+    gOsalAppmbISRisExecuted = BTRUE;
+}
+#endif
+
+static int32_t OsalApp_mailboxCreateMultipleTest(void)
 {
     MailboxP_Params params;
     MailboxP_Handle handles[OSAL_APP_MAX_NUM_MAILBOX];
     uint32_t mbindex;
     int32_t result = osal_OK;
     
+    MailboxP_Params_init(NULL_PTR);
     MailboxP_Params_init(&params);
     params.count = strlen((char *)gOsalAppStrToSend);
     params.size  = sizeof(uint8_t);
-    params.bufsize = params.count*params.size + OSAL_APP_MAILBOX_OVERHEAD;
+    params.bufsize = (params.count * params.size) + OSAL_APP_MAILBOX_OVERHEAD;
 
     for(mbindex = 0U; mbindex < (OSAL_APP_MAX_NUM_MAILBOX); mbindex++)
     {
@@ -143,6 +185,7 @@ int32_t OsalApp_mailboxCreateMultipleTest(void)
             break;
         }
     }
+
     if(osal_OK == result)
     {
         if(NULL != MailboxP_create(&params))
@@ -159,7 +202,7 @@ int32_t OsalApp_mailboxCreateMultipleTest(void)
             /* MailboxP_delete is a dummy call in SafeRTOS. */
             MailboxP_delete(handles[mbindex]);
 #elif defined (FREERTOS)
-            if(MailboxP_delete(handles[mbindex]) != MailboxP_OK)
+            if( MailboxP_OK != MailboxP_delete(handles[mbindex]))
             {
                 result = osal_FAILURE;
                 break;
@@ -167,6 +210,7 @@ int32_t OsalApp_mailboxCreateMultipleTest(void)
 #endif
         }
     }
+    
     if(osal_OK == result)
     {
         OSAL_log("\n Multiple mailbox create test has passed!!\n");
@@ -179,7 +223,7 @@ int32_t OsalApp_mailboxCreateMultipleTest(void)
     return result;
 }
 
-int32_t OsalApp_mailboxPendPostTest(uint32_t timeout)
+static int32_t OsalApp_mailboxPendPostTest(uint32_t timeout)
 {
     MailboxP_Params params;
     MailboxP_Handle handle;
@@ -193,7 +237,7 @@ int32_t OsalApp_mailboxPendPostTest(uint32_t timeout)
     params.size  = sizeof(uint8_t);
     memset(gOsalAppMbQueueBuf, 0U, sizeof(gOsalAppMbQueueBuf)/sizeof(gOsalAppMbQueueBuf[0]));
     params.buf = gOsalAppMbQueueBuf;
-    params.bufsize = params.count*params.size + OSAL_APP_MAILBOX_OVERHEAD;
+    params.bufsize = (params.count * params.size) + OSAL_APP_MAILBOX_OVERHEAD;
 
     handle = MailboxP_create(&params);
     if(NULL_PTR == handle)
@@ -205,7 +249,7 @@ int32_t OsalApp_mailboxPendPostTest(uint32_t timeout)
     {
         for(index = 0U; index < params.count; index++)
         {
-            status += MailboxP_post(handle, &gOsalAppStrToSend[index], OSAL_APP_MB_TIMEOUT);
+            status += MailboxP_post(handle, &gOsalAppStrToSend[index], timeout);
         }
         if(MailboxP_OK != status)
         {
@@ -217,7 +261,7 @@ int32_t OsalApp_mailboxPendPostTest(uint32_t timeout)
     {
         for(index = 0U; index < params.count; index++)
         {
-            status += MailboxP_pend(handle, &recvBuf[index], OSAL_APP_MB_TIMEOUT);
+            status += MailboxP_pend(handle, &recvBuf[index], timeout);
         }
         if(MailboxP_OK != status)
         {
@@ -237,6 +281,7 @@ int32_t OsalApp_mailboxPendPostTest(uint32_t timeout)
 #if defined (FREERTOS)
         if(MailboxP_OK != MailboxP_delete(handle))
 #elif defined (SAFERTOS)
+        /* MailboxP_delete is a dummy call in SafeRTOS. */
         if(MailboxP_FAILURE != MailboxP_delete(handle))
 #endif
         {
@@ -256,20 +301,205 @@ int32_t OsalApp_mailboxPendPostTest(uint32_t timeout)
     return result;
 }
 
-int32_t OsalApp_mailboxUsedTest(void)
+#if defined(BUILD_MCU)
+static int32_t OsalApp_mailboxISRTest(void)
+{
+    int32_t result = osal_OK;
+    HwiP_Params hwipParams;
+    HwiP_Handle hHwi;
+    MailboxP_Params params;
+    uint32_t        timeout = 10000U;
+
+    MailboxP_Params_init(&params);
+    params.count = strlen((char *)gOsalAppStrToSend);
+    params.size  = sizeof(uint8_t);
+    memset(gOsalAppMbQueueBuf, 0U, sizeof(gOsalAppMbQueueBuf)/sizeof(gOsalAppMbQueueBuf[0]));
+    params.buf = gOsalAppMbQueueBuf;
+    params.bufsize = (params.count * params.size) + OSAL_APP_MAILBOX_OVERHEAD;
+
+    gmailboxpHandle = MailboxP_create(&params);
+    if(NULL == gmailboxpHandle)
+    {
+        result = osal_FAILURE;
+    }
+
+    HwiP_Params_init(&hwipParams);
+
+    hHwi = HwiP_create(OSAL_APP_IRQ_INT_NUM, (HwiP_Fxn)OsalApp_mbISR, (void *)&hwipParams);
+    if(NULL_PTR == hHwi) 
+    {
+        result = osal_FAILURE;
+    }
+
+    if(osal_OK == result)
+    {
+        HwiP_enableInterrupt(OSAL_APP_IRQ_INT_NUM);
+  
+        if(HwiP_OK != HwiP_post(OSAL_APP_IRQ_INT_NUM))
+        {
+            result = osal_FAILURE;
+        }   
+          
+        if(osal_OK == result)
+        {
+             /* Wait for software timeout, ISR should hit
+             * otherwise return the test as failed */
+             while(timeout--)
+             {
+                if(BTRUE == gOsalAppmbISRisExecuted)
+                {
+                    break;
+                }
+             }
+             /* Wait is over - did not get any interrupts posted/received
+             * declare the test as fail
+             */
+             if(0U == timeout)
+             {
+                result = osal_FAILURE;
+             }
+        } 
+      
+#if defined (FREERTOS)
+        if(MailboxP_OK != MailboxP_delete(gmailboxpHandle))
+#elif defined (SAFERTOS)
+        /* MailboxP_delete is a dummy call in SafeRTOS. */
+        if(MailboxP_FAILURE != MailboxP_delete(gmailboxpHandle))
+#endif
+        {
+            result = osal_FAILURE;
+        }
+    }
+
+    if(0U != memcmp((char *)gOsalApprecvBuf, (char *)gOsalAppStrToSend, params.count))
+    {
+        result = osal_FAILURE;       
+    }
+
+    if(HwiP_OK != HwiP_delete(hHwi))
+    {
+        result = osal_FAILURE;
+    }
+    
+    if(osal_OK == result)
+    {
+        OSAL_log("\n Mailbox ISR test has passed!!\n");
+    }
+    else
+    {
+        OSAL_log("\n Mailbox ISR test has failed!!\n");      
+    }
+
+    return result;
+}
+#endif
+
+#if defined(SAFERTOS)
+static int32_t osalApp_mailboxCreateNegativeTest(void)
+{
+    MailboxP_Params params;
+    MailboxP_Handle handle;
+    int32_t result = osal_OK;
+
+    MailboxP_Params_init(&params);
+    params.count = strlen((char *)gOsalAppStrToSend);
+    params.size  = sizeof(uint8_t);
+    memset(gOsalAppMbQueueBuf, 0U, sizeof(gOsalAppMbQueueBuf)/sizeof(gOsalAppMbQueueBuf[0]));
+    params.buf = gOsalAppMbQueueBuf;
+    params.bufsize = params.count * params.size;
+
+    handle = MailboxP_create(&params);
+    if(NULL_PTR != handle)
+    {
+        result = osal_FAILURE; 
+    }
+  
+    if(osal_OK == result)
+    {
+        OSAL_log("\n Mailbox CreateNegativeTest has passed!!\n");
+    }
+    else
+    {
+        OSAL_log("\n Mailbox CreateNegativeTest has failed!!\n");
+    }
+  
+    return result;
+}
+
+static int32_t OsalApp_mailboxPostPendNegativeTest(void)
+{
+    MailboxP_Params params;
+    MailboxP_Handle handle;
+    MailboxP_Status status = MailboxP_OK;
+    int32_t result = osal_OK;
+    void *msg = (void *)NULL;
+
+    MailboxP_Params_init(&params);
+    params.count = strlen((char *)gOsalAppStrToSend);
+    params.size  = sizeof(uint8_t);
+    memset(gOsalAppMbQueueBuf, 0U, sizeof(gOsalAppMbQueueBuf)/sizeof(gOsalAppMbQueueBuf[0]));
+    params.buf = gOsalAppMbQueueBuf;
+    params.bufsize = (params.count * params.size) + OSAL_APP_MAILBOX_OVERHEAD;
+
+    handle = MailboxP_create(&params);
+    if(NULL_PTR == handle)
+    {
+        result = osal_FAILURE;
+    }
+    
+    if(osal_OK == result)
+    {
+        /* Mailbox post will retuen errINVALID_QUEUE_HANDLE 
+        while passing msg as NULLto achrive the negative case*/
+        status = MailboxP_post(handle, msg, OSAL_APP_MB_WAIT_TIMEOUT);
+        
+        if((MailboxP_OK == status))
+        {
+            result = osal_FAILURE;
+        }
+        
+        /* Mailbox pend will retuen errINVALID_QUEUE_HANDLE 
+        while passing msg as NULLto achrive the negative case*/
+        status = MailboxP_pend(handle, msg, OSAL_APP_MB_WAIT_TIMEOUT);
+        
+        if(osal_OK == result)
+        {
+            /* MainlboxP_delete is a dummy call for SafeRTOS. */
+            if((MailboxP_FAILURE != MailboxP_delete(handle)) || (MailboxP_OK == status))
+            {
+                result = osal_FAILURE;
+            }
+        
+        }
+    }
+    
+    if(osal_OK == result)
+    {
+        OSAL_log("\n Mailbox PostPend_NegativeTest has passed!!\n");
+    }
+    else
+    {
+        OSAL_log("\n Mailbox PostPend_NegativeTest has failed!!\n");
+    }
+
+    return result;
+}
+#endif
+
+#if defined(FREERTOS)
+static int32_t OsalApp_mailboxUsedTest(void)
 {
     MailboxP_Params params;
     MailboxP_Handle handle;
     uint32_t *handleAddr, temp;
     int32_t result = osal_OK;
 
-    MailboxP_Params_init(NULL_PTR);
     MailboxP_Params_init(&params);
     params.count = strlen((char *)gOsalAppStrToSend);
     params.size  = sizeof(uint8_t);
     memset(gOsalAppMbQueueBuf, 0U, sizeof(gOsalAppMbQueueBuf)/sizeof(gOsalAppMbQueueBuf[0]));
     params.buf = gOsalAppMbQueueBuf;
-    params.bufsize = params.count*params.size + OSAL_APP_MAILBOX_OVERHEAD;
+    params.bufsize = (params.count * params.size) + OSAL_APP_MAILBOX_OVERHEAD;
 
     handle = MailboxP_create(&params);
     if(NULL == handle)
@@ -293,15 +523,18 @@ int32_t OsalApp_mailboxUsedTest(void)
 
         /* Restore the value of the handle. */
         (*handleAddr) = temp;
-#if defined (SAFERTOS)
-        /* MainlboxP_delete is a dummy call for SafeRTOS. */
-        MailboxP_delete(handle);
-#elif defined (FREERTOS)
-        if(MailboxP_OK != MailboxP_delete(handle))
+        if(MailboxP_OK != (MailboxP_delete(handle)))
         {
             result = osal_FAILURE;
         }
-#endif
+        
+       /* This handle is already deleted, but we are setting the isUsed parameter to 1(forced corruption),
+        * to see how the driver reacts. */
+        *handleAddr = 1U;
+        if((osal_OK != result) || (MailboxP_OK != MailboxP_delete(handle)))
+        {
+            result = osal_FAILURE;
+        }
     }
 
     if(osal_OK == result)
@@ -316,81 +549,55 @@ int32_t OsalApp_mailboxUsedTest(void)
     return result;
 }
 
-int32_t OsalApp_mailboxISRTest(void)
+static int32_t OsalApp_mailboxDeleteNegativeTest(void)
 {
+  
+    MailboxP_Handle handle;
+    MailboxP_Status status = MailboxP_OK;
     int32_t result = osal_OK;
-    uint8_t recvBuf[OSAL_APP_MAX_MB_BUF_LEN];
-    uint32_t index;
-    HwiP_Params hwipParams;
-    HwiP_Handle hHwi;
-    MailboxP_Params params;
-
-    MailboxP_Params_init(&params);
-    params.count = strlen((char *)gOsalAppStrToSend);
-    params.size  = sizeof(uint8_t);
-    memset(gOsalAppMbQueueBuf, 0U, sizeof(gOsalAppMbQueueBuf)/sizeof(gOsalAppMbQueueBuf[0]));
-    params.buf = gOsalAppMbQueueBuf;
-    params.bufsize = params.count*params.size + OSAL_APP_MAILBOX_OVERHEAD;
-
-    gmailboxpHandle = MailboxP_create(&params);
-    if(NULL == gmailboxpHandle)
+   
+    handle = NULL_PTR;
+    status = MailboxP_delete(handle);
+  
+    if(status == MailboxP_OK)
     {
         result = osal_FAILURE;
-    }
-
-    HwiP_Params_init(&hwipParams);
-
-    hHwi = HwiP_create(OSAL_APP_IRQ_INT_NUM, (HwiP_Fxn) OsalApp_mbISR, (void *)&hwipParams);
-    if(NULL_PTR == hHwi) 
-    {
-        result = osal_FAILURE;
-    }
-
-    if(osal_OK == result)
-    {
-        HwiP_enableInterrupt(OSAL_APP_IRQ_INT_NUM);
-
-        HwiP_post(OSAL_APP_IRQ_INT_NUM);
-
-        for(index = 0U; index < params.count; index++)
-        {
-            MailboxP_pend(gmailboxpHandle, &recvBuf[index], MailboxP_WAIT_FOREVER);
-        }
-        MailboxP_delete(gmailboxpHandle);
-    }
-
-    if(0U != memcmp((char *)recvBuf, (char *)gOsalAppStrToSend, params.count))
-    {
-        result = osal_FAILURE;
-    }
-
-    if(NULL != hHwi)
-    {
-        HwiP_delete( hHwi );
     }
     
     if(osal_OK == result)
     {
-        OSAL_log("\n Mailbox Post from ISR test has passed!!\n");
+        OSAL_log("\n Mailbox Delete_NegativeTest has passed!!\n");
     }
     else
     {
-        OSAL_log("\n Mailbox Post from ISR test has failed!!\n");
+        OSAL_log("\n Mailbox Delete_NegativeTest has failed!!\n");
     }
 
     return result;
+  
 }
+#endif
 
 int32_t OsalApp_mailboxTests(void)
 {
     int32_t result = osal_OK;
 
+    #if defined(SAFERTOS)
+    result += osalApp_mailboxCreateNegativeTest();
+    result += OsalApp_mailboxPostPendNegativeTest();
+    #endif
+    #if defined(FREERTOS)
+    result += OsalApp_mailboxDeleteNegativeTest();
+    result += OsalApp_mailboxUsedTest();
+    #endif
     result += OsalApp_mailboxPendPostTest(OSAL_APP_MB_TIMEOUT);
     result += OsalApp_mailboxPendPostTest(0);
-    result += OsalApp_mailboxUsedTest();
+    result += OsalApp_mailboxPendPostTest(OSAL_APP_MB_WAIT_TIMEOUT);
+    #if defined(BUILD_MCU)
     result += OsalApp_mailboxISRTest();
+    #endif
     result += OsalApp_mailboxCreateMultipleTest();
-
+        
     if(osal_OK == result)
     {
         OSAL_log("\n All Mailbox tests have passed!!\n");
