@@ -40,7 +40,7 @@
 #include <assert.h>
 #include <sys/slog.h>
 #include <sys/slogcodes.h>
-
+#include <tistdtypes.h>
 #include <ti/osal/osal.h>
 #include <ti/osal/DebugP.h>
 

@@ -37,6 +37,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <tistdtypes.h>
 #include <ti/osal/QueueP.h>
 #include <ti/osal/HwiP.h>
 
