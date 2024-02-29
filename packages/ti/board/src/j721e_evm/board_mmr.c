@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2019-2022 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2019-2024 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -64,7 +64,7 @@ static uint32_t Board_mmrGetBaseAddr(uint8_t domain)
     switch(domain)
     {
         case BOARD_SOC_DOMAIN_MAIN:
-            baseAddr = (CSL_CTRL_MMR0_CFG0_BASE + CSL_MAIN_CTRL_MMR_CFG0_LOCK0_KICK0);
+            baseAddr = (BOARD_CTRL_MMR0_CFG0_BASE + CSL_MAIN_CTRL_MMR_CFG0_LOCK0_KICK0);
         break;
         case BOARD_SOC_DOMAIN_MCU:
             baseAddr = (CSL_MCU_CTRL_MMR0_CFG0_BASE + CSL_MCU_CTRL_MMR_CFG0_LOCK0_KICK0);
