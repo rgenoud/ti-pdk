@@ -87,7 +87,6 @@
 /*--------------------------------------------------------------------------*/
 MEMORY
 {
-    L2SRAM (RWX):  org = 0x64800000,          len = 0x00070000
     DDR0_RESERVED: org = 0x80000000,          len = 0x20000000   /* 512MB Reserved for A72 OS */
     C7X_IPC_D:     org = C7X_ALLOCATED_START, len = 0x00100000   /*  1MB DDR */
     C7X_EXT_D:     org = C7X_EXT_DATA_BASE,   len = 0x00100000   /*  1MB DDR */

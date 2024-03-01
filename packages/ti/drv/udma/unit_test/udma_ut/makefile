@@ -81,19 +81,10 @@ endif
 ifeq ($(UDMA_UT_DYNAMIC_ANALYSIS), yes)
   CFLAGS_LOCAL_COMMON += -DUDMA_UT_DYNAMIC_ANALYSIS -DUDMA_UT_BAREMETAL
 endif
-ifeq ($(BUILD_OS_TYPE), freertos)
-  ifeq ($(SOC),$(filter $(SOC), j721s2))
-    APPEND_LNKCMD_FILE = rtos/j721s2/linker_append_$(ISA).cmd
-  else
-    APPEND_LNKCMD_FILE = rtos/linker_append_$(ISA).cmd
-  endif
-endif
-ifeq ($(BUILD_OS_TYPE), safertos)
-  ifeq ($(SOC),$(filter $(SOC), j721s2))
-    APPEND_LNKCMD_FILE = rtos/j721s2/linker_append_$(ISA).cmd
-  else
-    APPEND_LNKCMD_FILE = rtos/linker_append_$(ISA).cmd
-  endif
+ifeq ($(ISA), c7x)
+  APPEND_LNKCMD_FILE = rtos/$(SOC)/linker_append_$(CORE).cmd
+else
+  APPEND_LNKCMD_FILE = rtos/$(SOC)/linker_append_$(ISA).cmd
 endif
 # Core/SoC/platform specific source files and CFLAGS
 # Example:

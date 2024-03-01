@@ -10,6 +10,7 @@ MEMORY
 {
     C7X_DDR_SPACE_2: org = (C7X_DDR_SPACE_BASE + 0x00C00000),  len = (0x08000000 - 0x00C00000)
     MSMC3 (RWIX):  org = 0x70200000,          len = 0x00080000   /* 512 KB per core */
+    L2SRAM (RWX):  org = 0x65800000,          len = 0x00070000
 }
 
 SECTIONS
