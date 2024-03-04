@@ -464,6 +464,13 @@ static void udmaTestOverrideDefRes(Udma_InitPrms   *initPrms)
         initPrms->rmInitPrms.numTxHcCh   = initPrms->rmInitPrms.numBlkCopyHcCh;
     }
 
+    if((initPrms->rmInitPrms.numBlkCopyHcCh != 0U) && 
+    (initPrms->rmInitPrms.numRxHcCh == 0U) )
+    {
+        initPrms->rmInitPrms.startRxHcCh = initPrms->rmInitPrms.startBlkCopyHcCh;
+        initPrms->rmInitPrms.numRxHcCh   = initPrms->rmInitPrms.numBlkCopyHcCh;
+    }
+
     /* As per BoardCfg, if there no UHC Block Copy Channel assigned to the core, 
     * use the resource assigned for UHC RX/TX channels
     * to test various UHC Block Copy testcases.

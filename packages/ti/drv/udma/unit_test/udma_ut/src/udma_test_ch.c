@@ -656,16 +656,16 @@ int32_t UdmaTestChPause(UdmaTestTaskObj *taskObj)
     retVal           = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
     Udma_ChTxPrms txChPrms;
     UdmaChTxPrms_init(&txChPrms, chType);
-    if(retVal == UDMA_SOK)
+    if(UDMA_SOK == retVal)
     {
         retVal = Udma_chConfigTx(chHandle, &txChPrms);
-        if(retVal == UDMA_SOK)
+        if(UDMA_SOK == retVal)
         {
             retVal = Udma_chEnable(chHandle);
-            if(retVal == UDMA_SOK)
+            if(UDMA_SOK == retVal)
             {
                 retVal = Udma_chPause(chHandle);
-                if(retVal != UDMA_SOK)
+                if(UDMA_SOK != retVal)
                 {
                     GT_0trace(taskObj->traceMask, GT_ERR,
                               " |TEST INFO|:: FAIL:: UDMA:: Udma_chPauseTxLocal:: "
@@ -676,7 +676,7 @@ int32_t UdmaTestChPause(UdmaTestTaskObj *taskObj)
                 else
                 {
                     retVal = Udma_chResume(chHandle);
-                    if(retVal != UDMA_SOK)
+                    if(UDMA_SOK != retVal)
                     {
                         GT_0trace(taskObj->traceMask, GT_ERR,
                                   " |TEST INFO|:: FAIL:: UDMA:: Udma_chUnpauseTxLocal::"
@@ -694,7 +694,7 @@ int32_t UdmaTestChPause(UdmaTestTaskObj *taskObj)
 
 
     /* Test scenario 2: Check when chType is UDMA_CH_TYPE_RX */
-    if(retVal == UDMA_SOK)
+    if(UDMA_SOK == retVal)
     {
         chType           = UDMA_CH_TYPE_RX;
         backUpDrvObj     = taskObj->testObj->drvObj[instID];
@@ -704,16 +704,16 @@ int32_t UdmaTestChPause(UdmaTestTaskObj *taskObj)
         retVal           = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
         Udma_ChRxPrms rxPrms;
         UdmaChRxPrms_init(&rxPrms, chType);
-        if(retVal == UDMA_SOK)
+        if(UDMA_SOK == retVal)
         {
             retVal = Udma_chConfigRx(chHandle, &rxPrms);
-            if(retVal == UDMA_SOK)
+            if(UDMA_SOK == retVal)
             {
                 retVal = Udma_chEnable(chHandle);
-                if(retVal == UDMA_SOK)
+                if(UDMA_SOK == retVal)
                 {
                     retVal = Udma_chPause(chHandle);
-                    if(retVal != UDMA_SOK)
+                    if(UDMA_SOK != retVal)
                     {
                         GT_0trace(taskObj->traceMask, GT_ERR,
                                   " |TEST INFO|:: FAIL:: UDMA:: Udma_chPauseRxLocal:: "
@@ -723,7 +723,7 @@ int32_t UdmaTestChPause(UdmaTestTaskObj *taskObj)
                     else
                     {
                         retVal = Udma_chResume(chHandle);
-                        if(retVal != UDMA_SOK)
+                        if(UDMA_SOK != retVal)
                         {
                             GT_0trace(taskObj->traceMask, GT_ERR,
                                       " |TEST INFO|:: FAIL:: UDMA:: Udma_chUnpauseRxLocal:: "
@@ -802,8 +802,8 @@ int32_t UdmaTestChGetDefaultFlowHandle(UdmaTestTaskObj *taskObj)
                 }
             }
         }
+        Udma_chClose(chHandle);
     }
-    Udma_chClose(chHandle);
     taskObj->testObj->drvObj[instID] = backUpDrvObj;
     
     return retVal;
@@ -862,8 +862,8 @@ int32_t UdmaChDisableTest(UdmaTestTaskObj *taskObj)
                 }
             }
         }
+        Udma_chClose(chHandle);
     }
-    Udma_chClose(chHandle);
     taskObj->testObj->drvObj[instID] = backUpDrvObj;
    
     return retVal;
@@ -916,8 +916,8 @@ int32_t UdmaChConfigPdmaTest(UdmaTestTaskObj *taskObj)
         {
             retVal = UDMA_SOK;
         }
+        Udma_chClose(chHandle);
     }
-    Udma_chClose(chHandle);
 
     return retVal;
 }
@@ -961,8 +961,8 @@ int32_t UdmaTestChGetTdCqRingHandle(UdmaTestTaskObj *taskObj)
         {
             retVal = UDMA_SOK;
         }
+        Udma_chClose(chHandle);
     }
-    Udma_chClose(chHandle);
 
     return retVal;
 }
@@ -1084,7 +1084,7 @@ int32_t UdmaTestChSetSwTriggerRegister(UdmaTestTaskObj *taskObj)
         if(UDMA_SOK == retVal)
         {
             retVal = Udma_chGetStats(chHandle, &chStats);
-            if(retVal != UDMA_SOK)
+            if(UDMA_SOK != retVal)
             {
                 GT_0trace(taskObj->traceMask, GT_ERR,
                           " |TEST INFO|:: FAIL:: UDMA:: chGetStats:: Pos:: when instType"
@@ -1152,10 +1152,10 @@ int32_t UdmaChGetStatsTest(UdmaTestTaskObj *taskObj)
     if(UDMA_SOK == retVal)
     {
         retVal = Udma_chConfigTx(chHandle, &txChPrms);     
-        if(retVal == UDMA_SOK)
+        if(UDMA_SOK == retVal)
         {
             retVal = Udma_chGetStats(chHandle, &chStats);
-            if(retVal != UDMA_SOK)
+            if(UDMA_SOK != retVal)
             {
                 GT_0trace(taskObj->traceMask, GT_ERR,
                           " |TEST INFO|:: FAIL:: UDMA:: chGetStats:: Pos:: when instType"
@@ -1167,8 +1167,8 @@ int32_t UdmaChGetStatsTest(UdmaTestTaskObj *taskObj)
                 retVal = UDMA_SOK;
             }
         }
+        Udma_chClose(chHandle);
     }
-    Udma_chClose(chHandle);
     taskObj->testObj->drvObj[instID] = backUpDrvObj;
 
     /* Test scenario 2: Check when instType is UDMA_INST_TYPE_NORMAL and chType is UDMA_CH_TYPE_RX */
@@ -1178,13 +1178,13 @@ int32_t UdmaChGetStatsTest(UdmaTestTaskObj *taskObj)
     chPrms.peerChNum = UDMA_PSIL_CH_MCU_CPSW0_RX;
     retVal           = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
     UdmaChRxPrms_init(&rxChPrms, chType);
-    if(retVal == UDMA_SOK)
+    if(UDMA_SOK == retVal)
     {
         retVal = Udma_chConfigRx(chHandle, &rxChPrms); 
-        if(retVal == UDMA_SOK)
+        if(UDMA_SOK == retVal)
         {
             retVal = Udma_chGetStats(chHandle, &chStats);
-            if(retVal != UDMA_SOK)
+            if(UDMA_SOK != retVal)
             {
                 GT_0trace(taskObj->traceMask, GT_ERR,
                           " |TEST INFO|:: FAIL:: UDMA:: chGetStats:: Pos:: when instType"
@@ -1196,8 +1196,8 @@ int32_t UdmaChGetStatsTest(UdmaTestTaskObj *taskObj)
                 retVal = UDMA_SOK;
             }
         }
+        Udma_chClose(chHandle);
     }
-    Udma_chClose(chHandle);
     taskObj->testObj->drvObj[instID] = backUpDrvObj;
     
     return retVal;

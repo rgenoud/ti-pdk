@@ -674,6 +674,7 @@ int32_t udmaTestFlowAllocTc(UdmaTestTaskObj *taskObj);
  */
 int32_t udmaTestEventOutOfRangeFlow(UdmaTestTaskObj *taskObj);
 int32_t udmaTestEventDisableEnableSanity(UdmaTestTaskObj *taskObj);
+int32_t UdmaRmTranslateCoreIntrInputTest(UdmaTestTaskObj *taskObj);
 /*
  * UDMA misc test functions
  */
@@ -767,10 +768,15 @@ int32_t udmaTestUdmaPrinftMutexNegTc(UdmaTestTaskObj *taskObj);
  * UDMA rm test case functions
  */
 int32_t UdmaRmFreeBlkCopyUhcChTest(UdmaTestTaskObj *taskObj);
-int32_t UdmaRmFreeTxHcChTest(UdmaTestTaskObj *taskObj);
+int32_t UdmaRmFreeHcChTest(UdmaTestTaskObj *taskObj);
 int32_t UdmaRmFreeTxUhcChTest(UdmaTestTaskObj *taskObj);
 int32_t UdmaRmFreeRxUhcChTest(UdmaTestTaskObj *taskObj);
 int32_t UdmaRmInitPrmsinitTestNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaRmAllocBlkCopyChTestNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaRmAllocTxChTestNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaRmAllocRxChTestNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaRmAllocTestNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaRmTranslateCoreIntrInputTestNeg(UdmaTestTaskObj *taskObj);
 
 /*
  * UDMA SOC specific functions

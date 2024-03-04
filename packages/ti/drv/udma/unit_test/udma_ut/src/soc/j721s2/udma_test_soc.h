@@ -278,6 +278,10 @@ extern "C" {
 /* Peer Channel Number for BCDMA Channel API Test Case */
 #define UDMA_TEST_BCDMA_PEER_CH_NUM_TX                    (CSL_PSIL_CSI_TX0_CH0)
 #define UDMA_TEST_BCDMA_PEER_CH_NUM_RX                    (CSL_PSIL_CSI_RX0_CH0)
+
+#define UDMA_TEST_MAIN_PEER_CH_NUM_TX     UDMA_PSIL_CH_MAIN_CPSW2_TX
+#define UDMA_TEST_MAIN_PEER_CH_NUM_RX     UDMA_PSIL_CH_MAIN_CPSW2_RX
+
 /* ========================================================================== */
 /*                         Structure Declarations                             */
 /* ========================================================================== */

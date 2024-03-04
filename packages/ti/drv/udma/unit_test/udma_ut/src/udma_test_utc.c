@@ -103,19 +103,19 @@ int32_t UdmaTestChPauseDruNeg(UdmaTestTaskObj *taskObj)
     retVal           = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
     Udma_ChUtcPrms utcPrms;
     UdmaChUtcPrms_init(&utcPrms);
-    if(retVal == UDMA_SOK)
+    if(UDMA_SOK == retVal)
     {
         retVal = Udma_chConfigUtc(chHandle, &utcPrms);
-        if(retVal == UDMA_SOK)
+        if(UDMA_SOK == retVal)
         {
             retVal = Udma_chEnable(chHandle);
-            if(retVal == UDMA_SOK)
+            if(UDMA_SOK == retVal)
             {
                 backUpChObj                = chObj;
                 chHandle->utcPrms.druOwner = CSL_DRU_OWNER_DIRECT_TR;
                 chHandle->extChNum         = CSL_DRU_NUM_CH;
                 retVal = Udma_chPause(chHandle);
-                if(retVal == UDMA_SOK)
+                if(UDMA_SOK == retVal)
                 {
                     GT_0trace(taskObj->traceMask, GT_ERR,
                               " |TEST INFO|:: FAIL:: UDMA:: chPause:: Neg:: "
@@ -192,7 +192,21 @@ int32_t UdmaTestChPauseDruNeg(UdmaTestTaskObj *taskObj)
                         chObj  = backUpChObj;
                         Udma_chEnable(chHandle); 
                         Udma_chDisable(chHandle, timeout);
-                        Udma_chClose(chHandle);
+                        chHandle->peerThreadId = UDMA_THREAD_ID_INVALID;
+                        retVal = Udma_chClose(chHandle);
+                        if(UDMA_SOK == retVal)
+                        {
+                            GT_0trace(taskObj->traceMask, GT_ERR,
+                                      " |TEST INFO|:: FAIL:: UDMA:: chUnpair:: Neg::"
+                                      " Check when peerThreadId is Invalid!!\n");
+                            retVal = UDMA_EFAIL;
+                        }
+                        else
+                        {
+                            retVal = UDMA_SOK;
+                            chObj  = backUpChObj;
+                            Udma_chClose(chHandle);
+                        }
                     } 
                 }
             }
@@ -240,18 +254,18 @@ int32_t UdmaTestChDisableDruNeg(UdmaTestTaskObj *taskObj)
     Udma_ChUtcPrms utcPrms;
     UdmaChUtcPrms_init(&utcPrms);
     utcPrms.druOwner = CSL_DRU_OWNER_DIRECT_TR;
-    if(retVal == UDMA_SOK)
+    if(UDMA_SOK == retVal)
     {
         retVal = Udma_chConfigUtc(chHandle, &utcPrms);
-        if(retVal == UDMA_SOK)
+        if(UDMA_SOK == retVal)
         {
             retVal = Udma_chEnable(chHandle);
-            if(retVal == UDMA_SOK)
+            if(UDMA_SOK == retVal)
             {
                 bkupExtCh          = chHandle->extChNum;
                 chHandle->extChNum = CSL_DRU_NUM_CH;
                 retVal             = Udma_chDisable(chHandle, timeout);
-                if(retVal == UDMA_SOK)
+                if(UDMA_SOK == retVal)
                 {
                     GT_0trace(taskObj->traceMask, GT_ERR,
                               " |TEST INFO|:: FAIL:: UDMA:: chDisable:: Pos:: "
@@ -307,11 +321,11 @@ int32_t UdmaTestChConfigUtcDruTestNeg(UdmaTestTaskObj *taskObj)
     UdmaChPrms_init(&chPrms, chType);
     chPrms.utcId    = UDMA_UTC_ID_MSMC_DRU0;
     retVal          = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
-    if(retVal == UDMA_SOK)
+    if(UDMA_SOK == retVal)
     {
         utcPrms.druOwner = CSL_DRU_OWNER_UDMAC_TR;
         retVal           = Udma_chConfigUtc(chHandle, &utcPrms);
-        if(retVal == UDMA_SOK)
+        if(UDMA_SOK == retVal)
         {
             GT_0trace(taskObj->traceMask, GT_ERR,
                       " |TEST INFO|:: FAIL:: UDMA:: chConfigUtc:: Neg:: "
@@ -339,7 +353,7 @@ int32_t UdmaTestChConfigUtcDruTestNeg(UdmaTestTaskObj *taskObj)
         drvHandle    = &taskObj->testObj->drvObj[instID];
         retVal       = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
         UdmaChUtcPrms_init(&utcPrms);
-        if(retVal == UDMA_SOK)
+        if(UDMA_SOK == retVal)
         {
             utcPrms.druQueueId = CSL_DRU_NUM_QUEUE;
             retVal             = Udma_chConfigUtc(chHandle, &utcPrms);
@@ -427,7 +441,7 @@ int32_t UdmaTestChSetSwTriggerDruNeg(UdmaTestTaskObj *taskObj)
     chPrms.utcId = UDMA_UTC_ID_MSMC_DRU0;
     drvHandle    = &taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0];
     retVal       = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
-    if(retVal == UDMA_SOK)
+    if(UDMA_SOK == retVal)
     {
         trigger = CSL_UDMAP_TR_FLAGS_TRIGGER_GLOBAL1;
         retVal  = Udma_chSetSwTrigger(chHandle, trigger);
@@ -482,7 +496,7 @@ int32_t UdmaTestDruGetNumQueueNeg(UdmaTestTaskObj *taskObj)
         retVal = UDMA_EFAIL;
     }
 
-    if(retVal == UDMA_SOK)
+    if(UDMA_SOK == retVal)
     {
         /* Test scenario 2: Check when drvInitDone is UDMA_DEINIT_DONE */
         drvHandle              = &taskObj->testObj->drvObj[UDMA_INST_ID_MAIN_0];
@@ -503,7 +517,7 @@ int32_t UdmaTestDruGetNumQueueNeg(UdmaTestTaskObj *taskObj)
         drvHandle->drvInitDone = BackupdrvInitDone;
     }
 
-    if(retVal == UDMA_SOK)
+    if(UDMA_SOK == retVal)
     {
         /* Test scenario 3: Check to get error print message as Invalid UTC ID */
         utcId    = UDMA_NUM_UTC_INSTANCE + 1U;
@@ -564,7 +578,7 @@ int32_t UdmaTestDruQueueConfigNeg(UdmaTestTaskObj *taskObj)
         retVal = UDMA_EFAIL;
     }
 
-    if(retVal == UDMA_SOK)
+    if(UDMA_SOK == retVal)
     {
         /* Test scenario 2: Check when driver handle is NULL */
         drvHandle = (Udma_DrvHandle) NULL_PTR;
@@ -582,7 +596,7 @@ int32_t UdmaTestDruQueueConfigNeg(UdmaTestTaskObj *taskObj)
         }
     }
 
-    if(retVal == UDMA_SOK)
+    if(UDMA_SOK == retVal)
     {
         /* Test scenario 3: Check when drvInitDone is UDMA_DEINIT_DONE and
          *                  queueCfg is NULL
@@ -606,7 +620,7 @@ int32_t UdmaTestDruQueueConfigNeg(UdmaTestTaskObj *taskObj)
         drvHandle->drvInitDone = BackupdrvInitDone;
     }
 
-    if(retVal == UDMA_SOK)
+    if(UDMA_SOK == retVal)
     {
         /* Test scenario 4: Check for drvInitDone is UDMA_DEINIT_DONE */
         drvHandle              = &taskObj->testObj->drvObj[UDMA_INST_ID_MAIN_0];
@@ -627,7 +641,7 @@ int32_t UdmaTestDruQueueConfigNeg(UdmaTestTaskObj *taskObj)
         drvHandle->drvInitDone = BackupdrvInitDone;
     }
 
-    if(retVal == UDMA_SOK)
+    if(UDMA_SOK == retVal)
     {
         /* Test scenario 5: Check when queueCfg is NULL */
         retVal = Udma_druQueueConfig(drvHandle, utcId, queId, NULL);
@@ -644,7 +658,7 @@ int32_t UdmaTestDruQueueConfigNeg(UdmaTestTaskObj *taskObj)
         }
     }
 
-    if(retVal == UDMA_SOK)
+    if(UDMA_SOK == retVal)
     {
         /* Test scenario 6: Check to get error print message as Invalid UTC ID */
         UdmaDruQueueConfig_init(&DruqueueCfg);
@@ -663,7 +677,7 @@ int32_t UdmaTestDruQueueConfigNeg(UdmaTestTaskObj *taskObj)
         }
     }
 
-    if(retVal == UDMA_SOK)
+    if(UDMA_SOK == retVal)
     {
         /* Test scenario 7: Check to get error print message DRU queue config failed */
         queId  = CSL_DRU_NUM_QUEUE + 1U;
@@ -721,7 +735,7 @@ int32_t UdmaTestDruGetTriggerRegAddrNeg(UdmaTestTaskObj *taskObj)
         retVal = UDMA_EFAIL;
     }
 
-    if(retVal == UDMA_SOK)
+    if(UDMA_SOK == retVal)
     {
         /* Test scenario 2: Check when chInitDone is not UDMA_DEINIT_DONE
          *                  and chType is not UDMA_CH_FLAG_UTC
@@ -744,7 +758,7 @@ int32_t UdmaTestDruGetTriggerRegAddrNeg(UdmaTestTaskObj *taskObj)
         }
     }
 
-    if(retVal == UDMA_SOK)
+    if(UDMA_SOK == retVal)
     {
         /* Test scenario 3: Check when chInitDone is UDMA_DEINIT_DONE */
         channelHandle->chInitDone = UDMA_DEINIT_DONE;
@@ -763,7 +777,7 @@ int32_t UdmaTestDruGetTriggerRegAddrNeg(UdmaTestTaskObj *taskObj)
         }
     }
 
-    if(retVal == UDMA_SOK)
+    if(UDMA_SOK == retVal)
     {
         /* Test scenario 4: Check when chType is not UDMA_CH_FLAG_UTC */
         channelHandle->chInitDone = UDMA_INIT_DONE;
@@ -782,7 +796,7 @@ int32_t UdmaTestDruGetTriggerRegAddrNeg(UdmaTestTaskObj *taskObj)
         }
     }
 
-    if(retVal == UDMA_SOK)
+    if(UDMA_SOK == retVal)
     {
         /* Test scenario 5: Check when driver handle is NULL */
         channelHandle->chType    = UDMA_CH_TYPE_UTC;
@@ -801,7 +815,7 @@ int32_t UdmaTestDruGetTriggerRegAddrNeg(UdmaTestTaskObj *taskObj)
         }
     }
 
-    if(retVal == UDMA_SOK)
+    if(UDMA_SOK == retVal)
     {
         /* Test scenario 6: Check when drvInitDone is UDMA_DEINIT_DONE */
         channelHandle->drvHandle              = &taskObj->testObj->drvObj[UDMA_INST_ID_MAIN_0];

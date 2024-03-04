@@ -279,6 +279,9 @@ extern "C" {
 #define UDMA_TEST_RING_MODE_DEFAULT_START       (TISCI_MSG_VALUE_RM_RING_MODE_RING)
 #define UDMA_TEST_RING_MODE_DEFAULT_STOP        (TISCI_MSG_VALUE_RM_RING_MODE_MESSAGE)
 
+#define UDMA_TEST_MAIN_PEER_CH_NUM_TX    UDMA_PSIL_CH_MAIN_CPSW9_TX
+#define UDMA_TEST_MAIN_PEER_CH_NUM_RX    UDMA_PSIL_CH_MAIN_CPSW9_RX
+
 /* ========================================================================== */
 /*                         Structure Declarations                             */
 /* ========================================================================== */

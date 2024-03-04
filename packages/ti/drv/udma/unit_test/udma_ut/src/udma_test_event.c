@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) Texas Instruments Incorporated 2018-2022
+ *  Copyright (c) Texas Instruments Incorporated 2018-2024
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -347,3 +347,70 @@ static void udmaTestEventCb(Udma_EventHandle eventHandle,
 
     return;
 }
+
+/* 
+ * Test Case Description: Verifies the function Udma_rmTranslateCoreIntrInput
+ * Test scenario 1: Check when valid args are passed
+ */
+int32_t UdmaRmTranslateCoreIntrInputTest(UdmaTestTaskObj *taskObj)
+{
+    int32_t              retVal = UDMA_SOK;
+    uint32_t             instID;
+    Udma_ChHandle        chHandle;
+    struct Udma_ChObj    chObj;
+    Udma_ChPrms          chPrms;
+    uint32_t             chType;
+    Udma_DrvHandle       drvHandle;
+    struct Udma_EventObj eventObj;
+    Udma_EventHandle     eventHandle;
+    Udma_EventPrms       eventPrms;
+
+    GT_1trace(taskObj->traceMask, GT_INFO1,
+              " |TEST INFO|:: Task:%d: UDMA Rm Translate Core Intr Input Testcase ::\r\n"
+              , taskObj->taskId);
+
+    /* Test scenario 1: Check when valid args are passed */
+    chHandle         = &chObj;
+    chType           = UDMA_CH_TYPE_TX;
+    instID           = UDMA_TEST_DEFAULT_UDMA_INST;
+    drvHandle        = &taskObj->testObj->drvObj[instID];
+    UdmaChPrms_init(&chPrms, chType);
+    chPrms.peerChNum = UDMA_PSIL_CH_MCU_CPSW0_TX;
+    retVal           = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
+    Udma_ChTxPrms txChPrms;
+    UdmaChTxPrms_init(&txChPrms, chType);
+    if(UDMA_SOK == retVal)
+    {
+        retVal = Udma_chConfigTx(chHandle, &txChPrms);
+        if(UDMA_SOK == retVal)
+        {
+            eventHandle = &eventObj;
+            UdmaEventPrms_init(&eventPrms);
+            eventPrms.eventType         = UDMA_EVENT_TYPE_ERR_OUT_OF_RANGE_FLOW;
+            eventPrms.eventMode         = UDMA_EVENT_MODE_SHARED;
+            eventPrms.masterEventHandle = NULL_PTR;
+            eventPrms.eventCb           = &udmaTestEventCb;
+            retVal = Udma_eventRegister(drvHandle, eventHandle, &eventPrms); 
+            if(UDMA_SOK == retVal)
+            {
+                retVal = Udma_rmTranslateCoreIntrInput(drvHandle, eventHandle->coreIntrNum);
+                if(UDMA_INTR_INVALID == retVal)
+                {
+                    GT_0trace(taskObj->traceMask, GT_ERR,
+                              " |TEST INFO|:: FAIL:: UDMA:: Udma_rmTranslateCoreIntrInput::" 
+                              " Pos:: Check when valid args are passed!!\n");
+                    retVal = UDMA_EFAIL;
+                }
+                else 
+                {
+                    retVal = UDMA_SOK;
+                }
+                Udma_eventUnRegister(eventHandle);
+            }
+        }
+        Udma_chClose(chHandle);
+    }
+
+    return retVal;
+}
+
