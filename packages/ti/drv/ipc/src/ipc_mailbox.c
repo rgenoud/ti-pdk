@@ -490,7 +490,7 @@ static void Ipc_mailboxInternalCallback(uintptr_t arg)
 
                     if((1U == rpMboxMsgRecv) && (NULL != gIpcObject.initPrms.rpMboxMsgFxn))
                     {
-                        gIpcObject.initPrms.rpMboxMsgFxn(IPC_MPU1_0, rpMboxMsg);
+                        gIpcObject.initPrms.rpMboxMsgFxn(fifo->arg, rpMboxMsg);
                     }
                 }
                 else

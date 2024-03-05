@@ -170,7 +170,6 @@ void rpmsg_exit_responseTask()
  * This "Task" waits for a "ping" message from any processor
  * then replies with a "pong" message.
  */
-
 void rpmsg_responderFxn(void *arg0, void *arg1)
 {
     RPMessage_Handle handle;
@@ -183,12 +182,13 @@ void rpmsg_responderFxn(void *arg0, void *arg1)
     int32_t		     n;
     int32_t		     status = 0;
     void		     *buf;
-    uint32_t          requestedEpt = (uint32_t)(*(uint32_t*)arg0);
-    char *            name = (char *)arg1;
+    uint32_t         requestedEpt = (uint32_t)(*(uint32_t*)arg0);
+    char *           name = (char *)arg1;
 
-    uintptr_t         key;
-    uint32_t          bufSize = rpmsgDataSize;
-    char              str[MSGSIZE];
+    uintptr_t        key;
+    uint32_t         bufSize = rpmsgDataSize;
+    uint32_t         cores;
+    char             str[MSGSIZE];
 
 
     buf = &pRecvTaskBuf[gRecvTaskBufIdx++ * rpmsgDataSize];
@@ -288,12 +288,25 @@ void rpmsg_responderFxn(void *arg0, void *arg1)
     Sciclient_deinit();
 
     /* Disable CPU interrupts */
+    #if defined (BUILD_MCU)
     for (int loopCnt = 0; loopCnt <R5_VIM_INTR_NUM; loopCnt ++)
     {
         OsalArch_disableInterrupt(loopCnt);
         OsalArch_clearInterrupt(loopCnt);
     }
+    #endif
+
     HwiP_disable();
+
+    for(cores = 0; cores < gNumRemoteProc; cores++)
+    {
+        if(pRemoteProcArray[cores] == IPC_MPU1_0)
+        {
+            continue;
+        }
+
+        Ipc_mailboxSend(selfProcId, pRemoteProcArray[cores], IPC_RP_MBOX_SHUTDOWN, 1u);    
+    }
 
     /* ACK the suspend message */
     Ipc_mailboxSend(selfProcId, gbShutdownRemotecoreID, IPC_RP_MBOX_SHUTDOWN_ACK, 1u);
@@ -301,9 +314,6 @@ void rpmsg_responderFxn(void *arg0, void *arg1)
 #if (__ARM_ARCH_PROFILE == 'R') ||  (__ARM_ARCH_PROFILE == 'M')
     /* For ARM R and M cores*/
     __asm__ __volatile__ ("wfi"   "\n\t": : : "memory");
-#endif
-#if defined(BUILD_C7X)
-    asm (" idle");
 #endif
 
     selfTaskHandle = TaskP_self();
@@ -491,18 +501,27 @@ static void IpcTestPrint(const char *str)
 
 static void IpcRpMboxCallback(uint32_t remoteCoreId, uint32_t msgVal)
 {
+    uint32_t i;
+
     if (msgVal == IPC_RP_MBOX_SHUTDOWN) /* Shutdown request from the remotecore */
     {
-        gbShutdown = 1U;
-        gbShutdownRemotecoreID = remoteCoreId;
-        RPMessage_unblock((RPMessage_Handle)&pRecvTaskBuf[0]);
-        RPMessage_unblock((RPMessage_Handle)&pRecvTaskBuf[rpmsgDataSize]);
-        for(uint32_t i = 0; i < gNumRemoteProc; i++)
+        if (IPC_MPU1_0 == remoteCoreId)
         {
-            if(pRemoteProcArray[i] == IPC_MPU1_0)
-                continue;
+            gbShutdown = 1U;
+            gbShutdownRemotecoreID = remoteCoreId;
+            RPMessage_unblock((RPMessage_Handle)&pRecvTaskBuf[0]);
+            RPMessage_unblock((RPMessage_Handle)&pRecvTaskBuf[rpmsgDataSize]);
+            for(i = 0; i < gNumRemoteProc; i++)
+            {
+                if(pRemoteProcArray[i] == IPC_MPU1_0)
+                    continue;
 
-            RPMessage_unblock((RPMessage_Handle)&pSendTaskBuf[i * rpmsgDataSize]);
+                RPMessage_unblock((RPMessage_Handle)&pSendTaskBuf[i * rpmsgDataSize]);
+            }
+        }
+        else
+        {
+            Ipc_resetCoreVirtIO(remoteCoreId);
         }
     }
 }
@@ -525,10 +544,7 @@ int32_t Ipc_echo_test(void)
     IpcInitPrms_init(0U, &initPrms);
 
     initPrms.printFxn = &IpcTestPrint;
-
-#if !defined(BUILD_MCU1_0)
     initPrms.rpMboxMsgFxn = &IpcRpMboxCallback;
-#endif
 
     Ipc_init(&initPrms);
 

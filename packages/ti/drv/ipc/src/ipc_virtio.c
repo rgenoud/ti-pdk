@@ -477,6 +477,21 @@ int32_t Ipc_loadResourceTable(void *rsctbl)
     return IPC_SOK;
 }
 
+void Ipc_resetCoreVirtIO(uint32_t coreId)
+{
+    Virtio_Handle rxVqHandle = Virtio_getHandle(coreId, VIRTIO_RX);
+    Virtio_Handle txVqHandle = Virtio_getHandle(coreId, VIRTIO_TX);
+
+    txVqHandle->last_avail_idx = 0U;
+    txVqHandle->last_used_idx = 0U;
+    (txVqHandle->vring.used)->idx = 0U;
+    (txVqHandle->vring.avail)->idx = 0U;
+    rxVqHandle->last_avail_idx = 0U;
+    rxVqHandle->last_used_idx = 0U;
+    (rxVqHandle->vring.used)->idx = 0U;
+    (rxVqHandle->vring.avail)->idx = 0U;
+}
+
 /*
  *  \brief Gets the trace buffer pointer from
  *  the resource table

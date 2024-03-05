@@ -145,6 +145,16 @@ int32_t Ipc_lateVirtioCreate(uint16_t procId);
  */
 Bool Ipc_isRemoteVirtioCreated(uint32_t remoteId);
 
+/**
+ * \brief Resets the local VRing queue handles for the remote core.
+ *
+ * \param remoteId  [IN] Id of remote processor
+ *
+ * \return  None
+ *
+ */
+void Ipc_resetCoreVirtIO(uint32_t remoteId);
+
 #ifdef __cplusplus
 }
 #endif
