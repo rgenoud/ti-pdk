@@ -168,11 +168,12 @@ ifeq ($(CORE), mcu1_0)
 	@echo "Create unsigned Board Configuration binary"
 	$(SCICLIENT_OBJCOPY) -S -O binary $(OBJDIR)/$(notdir $(2)).$(OBJEXT) $(OBJDIR)/$(1).bin.unsigned
 	# If the file name has sr2 in the name, then we need to use a different soc in the validator.
-	@if [ "$(findstring sr2, $(OBJDIR)/$(BRD_CFG)$(1).bin.unsigned)" == "sr2" ]; then \
-		$(PYTHON) $(VALIDATOR_SCRIPT) -b $(OBJDIR)/$(1).bin.unsigned -s $(PARSER_SOC2) -l $(OBJDIR)/output_$(BRD_CFG).log -i -o $(OBJDIR)/$(1)_temp.bin.unsigned -r $(VALIDATOR_JSON);\
-	else \
-		$(PYTHON) $(VALIDATOR_SCRIPT) -b $(OBJDIR)/$(1).bin.unsigned -s $(PARSER_SOC) -l $(OBJDIR)/output_$(BRD_CFG).log -i -o $(OBJDIR)/$(1)_temp.bin.unsigned -r $(VALIDATOR_JSON) ;\
-	fi
+
+ifeq ($(findstring sr2, $(OBJDIR)/$(BRD_CFG)$(1).bin.unsigned),sr2)
+	$(PYTHON) $(VALIDATOR_SCRIPT) -b $(OBJDIR)/$(1).bin.unsigned -s $(PARSER_SOC2) -l $(OBJDIR)/output_$(BRD_CFG).log -i -o $(OBJDIR)/$(1)_temp.bin.unsigned -r $(VALIDATOR_JSON)
+else
+	$(PYTHON) $(VALIDATOR_SCRIPT) -b $(OBJDIR)/$(1).bin.unsigned -s $(PARSER_SOC) -l $(OBJDIR)/output_$(BRD_CFG).log -i -o $(OBJDIR)/$(1)_temp.bin.unsigned -r $(VALIDATOR_JSON)
+endif
 	$(MV) $(OBJDIR)/$(1)_temp.bin.unsigned $(OBJDIR)/$(1).bin.unsigned
 endif
 
