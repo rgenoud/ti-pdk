@@ -110,6 +110,8 @@ static int32_t SciclientApp_rmUdmapNegTest(void);
 static int32_t SciclientApp_rmSetProxyNegTest(void);
 static int32_t SciclientApp_procbootNegTest(void);
 static int32_t SciclientApp_rmNegTest(void);
+static int32_t SciclientApp_procbootTest(void);
+static int32_t SciclientApp_procbootFuncNegTest(void);
 
 /* ========================================================================== */
 /*                          Function Definitions                              */
@@ -207,6 +209,12 @@ int32_t SciApp_testMain(SciApp_TestParams_t *testParams)
         case 17:
             testParams->testResult = SciclientApp_rmNegTest();
             break;     
+        case 18:
+            testParams->testResult = SciclientApp_procbootTest();
+            break;
+        case 19:
+            testParams->testResult = SciclientApp_procbootFuncNegTest();
+            break;
         default:
             break;
     }
@@ -2249,6 +2257,176 @@ static int32_t SciclientApp_rmNegTest(void)
     }
 
     return rmTestStatus;
+}
+
+static int32_t SciclientApp_procbootTest(void)
+{
+    int32_t  status                      = CSL_PASS;
+    int32_t  sciclientInitStatus         = CSL_PASS;
+    int32_t  procbootTestStatus          = CSL_PASS;
+    struct tisci_msg_proc_get_status_resp SciApp_ProcStatus;
+    Sciclient_ConfigPrms_t SciApp_Config =
+    {
+       SCICLIENT_SERVICE_OPERATION_MODE_INTERRUPT,
+       NULL,
+       0 /* isSecure = 0 un secured for all cores */
+    };
+
+     while (gSciclientHandle.initCount != 0)
+     {
+         status = Sciclient_deinit();
+     }
+     status = Sciclient_init(&SciApp_Config);
+     sciclientInitStatus = status;
+
+     if(status == CSL_PASS)
+     {
+        SciApp_printf ("Sciclient_init PASSED.\n");
+        status = Sciclient_procBootRequestProcessor(SCICLIENT_PROC_ID_MCU_R5FSS0_CORE0, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_PASS)
+        {
+            procbootTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_procBootRequestProcessor: Positive Arg Test Passed.\n");
+        }
+        else
+        {
+            procbootTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_procBootRequestProcessor: Positive Arg Test Failed.\n");
+        }
+
+        status = Sciclient_procBootGetProcessorState(SCICLIENT_PROC_ID_MCU_R5FSS0_CORE0, &SciApp_ProcStatus, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_PASS)
+        {
+            procbootTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_procBootGetProcessorState: Positive Arg Test Passed.\n");
+        }
+        else
+        {
+            procbootTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_procBootGetProcessorState: Positive Arg Test Failed.\n");
+        }
+
+        status = Sciclient_procBootReleaseProcessor(SCICLIENT_PROC_ID_MCU_R5FSS0_CORE0, TISCI_MSG_FLAG_AOP, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_PASS)
+        {
+            procbootTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_procBootReleaseProcessor: Positive Arg Test Passed.\n");
+        }
+        else
+        {
+            procbootTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_procBootReleaseProcessor: Positive Arg Test Failed.\n");
+        }
+    }
+    else
+    {
+        procbootTestStatus += CSL_EFAIL;
+        SciApp_printf ("Sciclient_init FAILED.\n");
+    }
+
+    if(sciclientInitStatus == CSL_PASS)
+    {
+        status = Sciclient_deinit();
+        if(status == CSL_PASS)
+        {
+            procbootTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_deinit PASSED.\n");
+        }
+        else
+        {
+            procbootTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_deinit FAILED.\n");
+        }
+    }
+
+     return procbootTestStatus;
+}
+
+static int32_t SciclientApp_procbootFuncNegTest(void)
+{
+    int32_t  status                      = CSL_PASS;
+    int32_t  sciclientInitStatus         = CSL_PASS;
+    int32_t  procbootNegTestStatus       = CSL_PASS;
+    uint8_t  invalidProcId               = 0x81U;
+    struct tisci_msg_proc_get_status_resp SciApp_ProcStatus;
+    const struct tisci_msg_proc_set_config_req SciApp_ConfigReq  = {0};
+    const struct tisci_msg_proc_auth_boot_req SciApp_AuthBootCfg = {0};
+    Sciclient_ConfigPrms_t SciApp_Config =
+    {
+       SCICLIENT_SERVICE_OPERATION_MODE_INTERRUPT,
+       NULL,
+       0 /* isSecure = 0 un secured for all cores */
+    };
+
+     while (gSciclientHandle.initCount != 0)
+     {
+         status = Sciclient_deinit();
+     }
+     status = Sciclient_init(&SciApp_Config);
+     sciclientInitStatus = status;
+
+     if(status == CSL_PASS)
+     {
+        SciApp_printf ("Sciclient_init PASSED.\n");
+
+        status = Sciclient_procBootGetProcessorState(invalidProcId, &SciApp_ProcStatus, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            procbootNegTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_procBootGetProcessorState: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+            procbootNegTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_procBootGetProcessorState: Negative Arg Test Failed.\n");
+        }
+
+        status = Sciclient_procBootSetProcessorCfg(&SciApp_ConfigReq, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            procbootNegTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_procBootSetProcessorCfg: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+            procbootNegTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_procBootSetProcessorCfg: Negative Arg Test Failed.\n");
+        }
+
+        status = Sciclient_procBootAuthAndStart(&SciApp_AuthBootCfg, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            procbootNegTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_procBootAuthAndStart: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+            procbootNegTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_procBootAuthAndStart: Negative Arg Test Failed.\n");
+        }
+    }
+    else
+    {
+        procbootNegTestStatus += CSL_EFAIL;
+        SciApp_printf ("Sciclient_init FAILED.\n");
+    }
+
+    if(sciclientInitStatus == CSL_PASS)
+    {
+        status = Sciclient_deinit();
+        if(status == CSL_PASS)
+        {
+            procbootNegTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_deinit PASSED.\n");
+        }
+        else
+        {
+            procbootNegTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_deinit FAILED.\n");
+        }
+    }
+
+     return procbootNegTestStatus;
 }
 
 #if defined(BUILD_MPU) || defined (BUILD_C7X)

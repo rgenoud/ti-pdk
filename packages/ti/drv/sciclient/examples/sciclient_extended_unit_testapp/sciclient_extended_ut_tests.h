@@ -607,7 +607,71 @@ SciApp_TestParams_t gSciApp_TestcaseParams[] =
 
         /** testType **/
         (SCI_APP_TEST_TYPE_SANITY)
-    }    
+    },
+    {
+        /** enableTest **/
+        SCI_APP_TEST_ENABLE,
+
+        /** testCaseId **/
+        18U,
+
+        /** *reqId **/
+        "PDK-14063",
+
+        /** *testCaseName **/
+        "Sciclient procboot Positive Testcase",
+
+        /** *userInfo **/
+        "None",
+
+        /** *disableReason **/
+        "None",
+
+        /** *passFailCriteria **/
+        "sciclient procboot functions should pass when \
+         called with valid parameters",
+
+        /** cpuID **/
+        SCI_APP_CORE_TYPE_R5F,
+
+        /** printEnable **/
+        SCI_APP_PRINT_ENABLE,
+
+        /** testType **/
+        (SCI_APP_TEST_TYPE_SANITY)
+    },
+    {
+        /** enableTest **/
+        SCI_APP_TEST_ENABLE,
+
+        /** testCaseId **/
+        19U,
+
+        /** *reqId **/
+        "PDK-14064",
+
+        /** *testCaseName **/
+        "Sciclient procboot Negative Testcase",
+
+        /** *userInfo **/
+        "None",
+
+        /** *disableReason **/
+        "None",
+
+        /** *passFailCriteria **/
+        "sciclient procboot functions should fail when \
+         called with invalid parameters",
+
+        /** cpuID **/
+        SCI_APP_CORE_TYPE_R5F,
+
+        /** printEnable **/
+        SCI_APP_PRINT_ENABLE,
+
+        /** testType **/
+        (SCI_APP_TEST_TYPE_SANITY)
+    }
 };
 
 /* ========================================================================== */
