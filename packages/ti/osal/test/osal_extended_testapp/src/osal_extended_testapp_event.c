@@ -48,11 +48,14 @@
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-#define OSAL_APP_INT_NUM_IRQ  (29U)
+#define OSAL_APP_INT_NUM_IRQ      (29U)
+/* Offset for uxEventMirror of EventP safertos object structure */
+#define OSAL_APP_EVTMIRROR_OFFSET (0x0EU)
+#define OSAL_APP_EVTHANDLE_OFFSET (0x0FU)
 #if defined (FREERTOS)
-#define OSAL_APP_MAX_EVENT    (OSAL_FREERTOS_CONFIGNUM_EVENT)
+#define OSAL_APP_MAX_EVENT        (OSAL_FREERTOS_CONFIGNUM_EVENT)
 #elif defined (SAFERTOS)
-#define OSAL_APP_MAX_EVENT    (OSAL_SAFERTOS_CONFIGNUM_EVENT)
+#define OSAL_APP_MAX_EVENT        (OSAL_SAFERTOS_CONFIGNUM_EVENT)
 #endif
 
 /* ========================================================================== */
@@ -69,7 +72,7 @@ volatile uint32_t gOsalAppEventMaskA = EventP_ID_01, gOsalAppEventMaskB = EventP
 /*
  * Description  : Event Callback Function
  */
- static void OsalApp_eventIRQ(void *arg);
+static void OsalApp_eventIRQ(void *arg);
 
 /*
  * Description  : Test EventP_post and EventP_getPostedEvents APIs from ISR context
@@ -77,14 +80,26 @@ volatile uint32_t gOsalAppEventMaskA = EventP_ID_01, gOsalAppEventMaskB = EventP
 static int32_t OsalApp_isInISRCtxEventTest(void);
 
 /*
- * Description: Testing Negative condition for OSAL EvenP APIs
+ * Description: Testing Null checks for Event APIs
  */
-static int32_t OsalApp_eventNegTest(void);
+static int32_t OsalApp_eventNullTest(void);
 
 /*
- * Description: Tests creation of maximum supported events.
+ * Description: Testing negative check for Used parameter of Event structure
+ */
+static int32_t OsalApp_eventisUsedTest(void);
+
+/*
+ * Description: Tests creation of maximum supported events
  */
 static int32_t OsalApp_maxEventTest(void);
+
+#if defined(SAFERTOS)
+/*
+ * Description: Testing Negative condition for eventPost APIs on safertos
+ */
+static int32_t OsalApp_eventSafeNegPostTest(void);
+#endif
 
 /* ========================================================================== */
 /*                          Internal Function Definitions                     */
@@ -175,72 +190,76 @@ static int32_t OsalApp_isInISRCtxEventTest(void)
     return result;
 }
 
-static int32_t OsalApp_eventNegTest(void)
+static int32_t OsalApp_eventNullTest(void)
+{
+    EventP_Handle   nullPtr = NULL_PTR;
+    int32_t         result = osal_OK;
+
+    if((EventP_OK == EventP_post(nullPtr, EventP_ID_01)) || (0U != EventP_getPostedEvents(nullPtr)))
+    {
+        result = osal_FAILURE;
+    }
+    if(0U != EventP_wait(nullPtr, EventP_ID_01, EventP_WaitMode_ALL, EventP_WAIT_FOREVER))
+    {
+        result = osal_FAILURE;
+    }
+    if(EventP_OK == EventP_delete(&nullPtr))
+    {
+        result = osal_FAILURE;
+    }
+
+    if(osal_OK != result)
+    {
+        OSAL_log(" EventP Null Test Failed! \n");
+    }
+
+    return result;
+}
+
+static int32_t OsalApp_eventisUsedTest(void)
 {
     EventP_Params   params;
     EventP_Handle   eventHandle;
-    uint32_t        temp, *handleAddr, eventMask = EventP_ID_01;
+    uint32_t        *handleAddr;
     int32_t         result = osal_OK;
 
     EventP_Params_init(&params);
 
     eventHandle = EventP_create(&params);
-    if(NULL_PTR == eventHandle)
-    {
-          result = osal_FAILURE;
-    }
 
-    /* Corrupt the handle, and set used as 0U, also keep a backup of the handle */
+    /* Here handleAddr is used to get the memory location of the handle and uxEventMirror */
     handleAddr = (uint32_t *)eventHandle;
-    temp = (*handleAddr);
-    (*handleAddr) = 0U;
-
-    if((EventP_OK == EventP_post(handleAddr, EventP_ID_01)) || (EventP_OK == EventP_post(NULL_PTR, EventP_ID_01)))
-    {
-        result = osal_FAILURE;
-    }
-    
-    if(0U != EventP_wait(eventHandle, eventMask, EventP_WaitMode_ALL, EventP_WAIT_FOREVER))
-    {
-        result = osal_FAILURE;
-    }
-    
-    /* Testing Null handle for EventP_wait API */
-    if(0U != EventP_wait(NULL_PTR, eventMask, EventP_WaitMode_ALL, EventP_WAIT_FOREVER))
-    {
-        result = osal_FAILURE;
-    }
-
-    /* Pass negative parameters to EventP_getPostedEvents */
-    if((0U != EventP_getPostedEvents(eventHandle)) || (0U != EventP_getPostedEvents(NULL_PTR)))
-    {
-        result = osal_FAILURE;
-    }
-
-    if((EventP_FAILURE != EventP_delete(&eventHandle)) || (EventP_FAILURE != EventP_delete(NULL_PTR)))
-    {
-        result = osal_FAILURE;
-    }
-
-    /* Restoring handle */
-    (*handleAddr) = temp;
-    if(EventP_OK != EventP_delete(&eventHandle))
-    {
-        result = osal_FAILURE;
-    }
-#if defined (FREERTOS)
-    /* Testing the Allocation Count to be zero
-    by making the isused parameter as 1U after deleting the event */
-    (*handleAddr) = 1U;
-    if(EventP_OK != EventP_delete(&eventHandle))
-    {
-        result = osal_FAILURE;
-    }
+#if defined(SAFERTOS)
+    uint32_t evtMirrorAddr = *(handleAddr + OSAL_APP_EVTMIRROR_OFFSET);
 #endif
+    if((NULL_PTR == eventHandle) || (EventP_OK != EventP_delete(&eventHandle)))
+    {
+        result = osal_FAILURE;
+    }
+
+    if(0U != EventP_wait(eventHandle, EventP_ID_01, EventP_WaitMode_ALL, EventP_WAIT_FOREVER))
+    {
+        result = osal_FAILURE;
+    }
+    /* we are corrupting the content of the handle "used" parameter
+     * and passing in a corrupt handle to the driver to check how the driver reacts */
+    (*handleAddr) = 1U;
+#if defined(FREERTOS)
+    if(EventP_OK != EventP_delete(&eventHandle))
+#elif defined(SAFERTOS)
+    /* restoring the EventMirror of Structure EventP_safertos->eventGroupType->uxEventMirror,
+     * to get the return value of xEventGroupDelete as passed to check the gOsalEventAllocCnt
+     * value whether 0 or not */
+    *(handleAddr + OSAL_APP_EVTMIRROR_OFFSET) = evtMirrorAddr;
+    if(EventP_OK != EventP_delete(&eventHandle))
+#endif
+    {
+        result = osal_FAILURE;
+    }
 
     if(osal_OK != result)
     {
-        OSAL_log("\t Negative test for Event has failed!! \n");
+        OSAL_log(" EventP isUsed parameter negative Test Failed! \n");
     }
 
     return result;
@@ -292,6 +311,46 @@ static int32_t OsalApp_maxEventTest(void)
     return result;
 }
 
+#if defined(SAFERTOS) 
+static int32_t OsalApp_eventSafeNegPostTest(void)
+{
+    EventP_Params   params;
+    EventP_Handle   eventHandle;
+    uint32_t        *handleAddr;
+    int32_t         result = osal_OK;
+
+    EventP_Params_init(&params);
+
+    eventHandle = EventP_create(&params);
+    /* Here handleAddr is used to get the memory location of the handle and eventHndl of EventP structure*/
+    handleAddr = (uint32_t *)eventHandle;
+    if((NULL_PTR == eventHandle) || (EventP_OK != EventP_delete(&eventHandle)))
+    {
+          result = osal_FAILURE;
+    }
+    /* This handle is already deleted, we are corrupting the content of the handle "used" parameter
+     * (forcfully corrupting) and evthandle of struct EventP and 
+     * passing in a corrupt handle to the driver to check how the driver reacts */
+    (*handleAddr) = 1U;
+    *(handleAddr + OSAL_APP_EVTHANDLE_OFFSET) = 0U;
+    if((EventP_OK == EventP_post(eventHandle, EventP_ID_01)) || (0U != EventP_getPostedEvents(eventHandle)))
+    {
+        result = osal_FAILURE;
+    }
+    if(EventP_OK == EventP_delete(&eventHandle))
+    {
+        result = osal_FAILURE;
+    }
+
+    if(osal_OK != result)
+    {
+        OSAL_log("\t Safertos Negative test for Eventpost has failed!! \n");
+    }
+
+    return result;
+}
+#endif
+
 /* ========================================================================== */
 /*                          Function Definitions                              */
 /* ========================================================================== */
@@ -301,8 +360,12 @@ int32_t OsalApp_eventTests(void)
     int32_t result = osal_OK;
     
     result += OsalApp_isInISRCtxEventTest();
-    result += OsalApp_eventNegTest();
+    result += OsalApp_eventNullTest();
+    result += OsalApp_eventisUsedTest();
     result += OsalApp_maxEventTest();
+#if defined(SAFERTOS)
+    result += OsalApp_eventSafeNegPostTest();
+#endif
     
     if(osal_OK == result)
     {
