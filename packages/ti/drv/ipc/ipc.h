@@ -235,7 +235,6 @@ uint32_t RPMessage_getObjMemRequired(void);
  */
 int32_t RPMessage_init(RPMessage_Params *params);
 
-#if defined (SOC_J721E)  || defined (SOC_J7200)
 /**
  *  \brief      Add a proc to RPMessage Module
  *
@@ -248,7 +247,7 @@ int32_t RPMessage_init(RPMessage_Params *params);
  *  \return      #IPC_SOK or #IPC_EFAIL
  */
 int32_t RPMessage_lateInit(uint32_t proc);
-#endif
+
 
 /**
  *  \brief      Tear down the RPMessage Module.  The module API

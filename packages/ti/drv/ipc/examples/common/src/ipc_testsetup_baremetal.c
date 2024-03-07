@@ -582,10 +582,8 @@ int32_t Ipc_echo_test(void)
     uint32_t          numProc = gNumRemoteProc;
     Ipc_InitPrms      initPrms;
     Ipc_VirtIoParams  vqParam;
-#if defined (SOC_J721E)  || defined (SOC_J7200)
 #if !defined(BUILD_MPU1_0) && defined(A72_LINUX_OS) && !defined(A72_LINUX_OS_IPC_ATTACH)
     uint32_t          t;
-#endif
 #endif
 
     /* Step1 : Initialize the multiproc */
@@ -610,7 +608,6 @@ int32_t Ipc_echo_test(void)
     App_printf("Required Local memory for Virtio_Object = %d\r\n",
                   numProc * Ipc_getVqObjMemoryRequiredPerCore());
 #endif
-#if defined (SOC_J721E)  || defined (SOC_J7200)
 #if !defined(BUILD_MPU1_0) && defined(A72_LINUX_OS)
     /* If A72 remote core is running Linux OS, then
      * load resource table
@@ -627,7 +624,6 @@ int32_t Ipc_echo_test(void)
         }
     }
     App_printf("Linux VDEV ready now .....\n");
-#endif
 #endif
 #endif
 

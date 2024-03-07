@@ -94,7 +94,7 @@ uint32_t Ipc_getVqObjMemoryRequiredPerCore(void);
  */
 int32_t Ipc_initVirtIO(Ipc_VirtIoParams *vqParam);
 
-#if defined (SOC_J721E)  || defined (SOC_J7200)
+
 /**
  *  \brief     Loads the resource table. If the remote
  *             core A72, and has valid radource table
@@ -134,7 +134,6 @@ Bool Ipc_isRemoteReady(uint16_t procId);
  * \return #IPC_SOK or #IPC_EFAIL
  */
 int32_t Ipc_lateVirtioCreate(uint16_t procId);
-#endif
 
 /**
  * \brief Check if a remote Virtio has been created
