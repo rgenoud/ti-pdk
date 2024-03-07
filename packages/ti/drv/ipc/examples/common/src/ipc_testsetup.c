@@ -467,7 +467,7 @@ int32_t Ipc_echo_test(void)
     //App_printf("Required Local memory for Virtio_Object = %d\r\n",
     //   numProc * Ipc_getVqObjMemoryRequiredPerCore());
 
-#if defined (SOC_J721E)  || defined (SOC_J7200) || defined (SOC_J784S4)
+#if defined (SOC_J721E)  || defined (SOC_J7200)
 #if !defined(BUILD_MPU1_0) && defined(A72_LINUX_OS)
     /* If A72 remote core is running Linux OS, then
      * load resource table
