@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2019-2020 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2019-2024 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -122,9 +122,9 @@ typedef struct Board_PinmuxConfig_s
  *  \param    offset [IN]    Pad config offset of the pin
  *  \param    mode   [IN]    Pad config mux mode.
  *
- *  \return   None
+ *  \return   BOARD_SOK in case of success or appropriate error code
  */
-void Board_pinMuxSetMode(uint32_t offset, uint32_t mode);
+Board_STATUS Board_pinMuxSetMode(uint32_t offset, uint32_t mode);
 
 /**
  *  \brief  Sets pinmux mode for a pin in wake-up domain
@@ -135,9 +135,9 @@ void Board_pinMuxSetMode(uint32_t offset, uint32_t mode);
  *  \param    offset [IN]    Pad config offset of the pin
  *  \param    mode   [IN]    Pad config mux mode.
  *
- *  \return   None
+ *  \return   BOARD_SOK in case of success or appropriate error code
  */
-void Board_pinMuxSetModeWkup(uint32_t offset, uint32_t mode);
+Board_STATUS Board_pinMuxSetModeWkup(uint32_t offset, uint32_t mode);
 
 /**
  *  \brief Sets padconfig register of a pin at given offset
@@ -251,10 +251,10 @@ Board_STATUS Board_pinmuxConfig (void);
  *
  * \param   void
  *
- * \return  void
+ * \return  BOARD_SOK in case of success or appropriate error code
  *
  */
-void Board_uartTxPinmuxConfig(void);
+Board_STATUS Board_uartTxPinmuxConfig(void);
 
 #ifdef __cplusplus
 }

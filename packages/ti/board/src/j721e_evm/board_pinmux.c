@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2019-2023 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2019-2024 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -158,28 +158,33 @@ static uint32_t Board_pinmuxGetBaseAddr(uint8_t domain)
  *  \param    offset [IN]    Pad config offset of the pin
  *  \param    mode   [IN]    Pad config mux mode.
  *
- *  \return   None
+ *  \return   BOARD_SOK in case of success or appropriate error code
  */
-void Board_pinMuxSetMode(uint32_t offset, uint32_t mode)
+Board_STATUS Board_pinMuxSetMode(uint32_t offset, uint32_t mode)
 {
-    uint32_t baseAddr;
-    uint32_t regVal;
+    Board_STATUS status = BOARD_SOK;
+    uint32_t     baseAddr;
+    uint32_t     regVal;
 
     /* Unlock MMR write access */
-    Board_pinmuxKickCtrl(BOARD_SOC_DOMAIN_MAIN, 0);
+    status = Board_pinmuxKickCtrl(BOARD_SOC_DOMAIN_MAIN, 0);
+    if(BOARD_SOK == status)
+    {
+        baseAddr = Board_pinmuxGetBaseAddr(BOARD_SOC_DOMAIN_MAIN);
 
-    baseAddr = Board_pinmuxGetBaseAddr(BOARD_SOC_DOMAIN_MAIN);
+        regVal = HW_RD_REG32((baseAddr + offset));
+        regVal &= ~(BOARD_MODE_PIN_MASK);
+        mode &= BOARD_MODE_PIN_MASK;
+        regVal |= mode;
+        Board_pinmuxWriteProxy1Reg(BOARD_SOC_DOMAIN_MAIN, 
+                                   (baseAddr + offset), 
+                                   regVal);
 
-    regVal = HW_RD_REG32((baseAddr + offset));
-    regVal &= ~(BOARD_MODE_PIN_MASK);
-    mode &= BOARD_MODE_PIN_MASK;
-    regVal |= mode;
-    Board_pinmuxWriteProxy1Reg(BOARD_SOC_DOMAIN_MAIN, 
-                               (baseAddr + offset), 
-                               regVal);
+        /* Lock MMR write access */
+        status = Board_pinmuxKickCtrl(BOARD_SOC_DOMAIN_MAIN, 1);
+    }
 
-    /* Lock MMR write access */
-    Board_pinmuxKickCtrl(BOARD_SOC_DOMAIN_MAIN, 1);
+    return status;
 }
 
 /**
@@ -191,28 +196,33 @@ void Board_pinMuxSetMode(uint32_t offset, uint32_t mode)
  *  \param    offset [IN]    Pad config offset of the pin
  *  \param    mode   [IN]    Pad config mux mode.
  *
- *  \return   None
+ *  \return   BOARD_SOK in case of success or appropriate error code
  */
-void Board_pinMuxSetModeWkup(uint32_t offset, uint32_t mode)
+Board_STATUS Board_pinMuxSetModeWkup(uint32_t offset, uint32_t mode)
 {
+    Board_STATUS status = BOARD_SOK;
     uint32_t baseAddr;
     uint32_t regVal;
 
     /* Unlock MMR write access */
-    Board_pinmuxKickCtrl(BOARD_SOC_DOMAIN_WKUP, 0);
+    status = Board_pinmuxKickCtrl(BOARD_SOC_DOMAIN_WKUP, 0);
+    if(BOARD_SOK == status)
+    {
+        baseAddr = Board_pinmuxGetBaseAddr(BOARD_SOC_DOMAIN_WKUP);
 
-    baseAddr = Board_pinmuxGetBaseAddr(BOARD_SOC_DOMAIN_WKUP);
+        regVal = HW_RD_REG32((baseAddr + offset));
+        regVal &= ~(BOARD_MODE_PIN_MASK);
+        mode &= BOARD_MODE_PIN_MASK;
+        regVal |= mode;
+        Board_pinmuxWriteProxy1Reg(BOARD_SOC_DOMAIN_WKUP, 
+                                   (baseAddr + offset), 
+                                   regVal);
 
-    regVal = HW_RD_REG32((baseAddr + offset));
-    regVal &= ~(BOARD_MODE_PIN_MASK);
-    mode &= BOARD_MODE_PIN_MASK;
-    regVal |= mode;
-    Board_pinmuxWriteProxy1Reg(BOARD_SOC_DOMAIN_WKUP, 
-                               (baseAddr + offset), 
-                               regVal);
+        /* Lock MMR write access */
+        status = Board_pinmuxKickCtrl(BOARD_SOC_DOMAIN_WKUP, 1);
+    }
 
-    /* Lock MMR write access */
-    Board_pinmuxKickCtrl(BOARD_SOC_DOMAIN_WKUP, 1);
+    return status;
 }
 
 /**
@@ -239,22 +249,24 @@ Board_STATUS Board_pinmuxSetReg(uint8_t  domain,
     Board_STATUS status = BOARD_SOK;
 
     /* Unlock MMR write access */
-    Board_pinmuxKickCtrl(domain, 0);
-
-    baseAddr = Board_pinmuxGetBaseAddr(domain);
-    if(0U != baseAddr)
+    status = Board_pinmuxKickCtrl(domain, 0);
+    if(BOARD_SOK == status)
     {
-        Board_pinmuxWriteProxy1Reg(domain, 
-                                   (baseAddr + offset), 
-                                   muxData);
-    }
-    else
-    {
-        status = BOARD_INVALID_PARAM;
-    }
+        baseAddr = Board_pinmuxGetBaseAddr(domain);
+        if(0U != baseAddr)
+        {
+            Board_pinmuxWriteProxy1Reg(domain, 
+                                       (baseAddr + offset), 
+                                       muxData);
+        }
+        else
+        {
+            status = BOARD_INVALID_PARAM;
+        }
 
-    /* Lock MMR write access */
-    Board_pinmuxKickCtrl(domain, 1);
+        /* Lock MMR write access */
+        status = Board_pinmuxKickCtrl(domain, 1);
+    }
 
     return status;
 }
@@ -362,50 +374,52 @@ Board_STATUS Board_pinmuxUpdate (pinmuxBoardCfg_t *pinmuxData,
     Board_STATUS status = BOARD_SOK;
 
     /* Unlock MMR write access */
-    Board_pinmuxKickCtrl(domain, 0);
-
-    /* MAIN domain pinmux needs RAT configuration for C66x core. */
-    if(BOARD_SOC_DOMAIN_MAIN == domain)
+    status = Board_pinmuxKickCtrl(domain, 0);
+    if(BOARD_SOK == status)
     {
-        Board_setRATCfg();
-    }
-
-    baseAddr = Board_pinmuxGetBaseAddr(domain);
-    if(0U != baseAddr)
-    {
-        for(i = 0; PINMUX_END != pinmuxData[i].moduleId; i++)
+        /* MAIN domain pinmux needs RAT configuration for C66x core. */
+        if(BOARD_SOC_DOMAIN_MAIN == domain)
         {
-            pModuleData = pinmuxData[i].modulePinCfg;
-            for(j = 0; (PINMUX_END != pModuleData[j].modInstNum); j++)
+            Board_setRATCfg();
+        }
+
+        baseAddr = Board_pinmuxGetBaseAddr(domain);
+        if(0U != baseAddr)
+        {
+            for(i = 0; PINMUX_END != pinmuxData[i].moduleId; i++)
             {
-                if((int16_t)BTRUE == pModuleData[j].doPinConfig)
+                pModuleData = pinmuxData[i].modulePinCfg;
+                for(j = 0; (PINMUX_END != pModuleData[j].modInstNum); j++)
                 {
-                    pInstanceData = pModuleData[j].instPins;
-                    for(k = 0; (PINMUX_END != pInstanceData[k].pinOffset); k++)
+                    if((int16_t)BTRUE == pModuleData[j].doPinConfig)
                     {
-                        rdRegVal = HW_RD_REG32((baseAddr + pInstanceData[k].pinOffset));
-                        rdRegVal = (rdRegVal & BOARD_PINMUX_BIT_MASK);
-                        Board_pinmuxWriteProxy1Reg(domain, 
-                                                   (baseAddr + pInstanceData[k].pinOffset), 
-                                                   (pInstanceData[k].pinSettings));
+                        pInstanceData = pModuleData[j].instPins;
+                        for(k = 0; (PINMUX_END != pInstanceData[k].pinOffset); k++)
+                        {
+                            rdRegVal = HW_RD_REG32((baseAddr + pInstanceData[k].pinOffset));
+                            rdRegVal = (rdRegVal & BOARD_PINMUX_BIT_MASK);
+                            Board_pinmuxWriteProxy1Reg(domain, 
+                                                       (baseAddr + pInstanceData[k].pinOffset), 
+                                                       (pInstanceData[k].pinSettings));
+                        }
                     }
                 }
             }
         }
-    }
-    else
-    {
-        status = BOARD_INVALID_PARAM;
-    }
+        else
+        {
+            status = BOARD_INVALID_PARAM;
+        }
 
-    if(BOARD_SOC_DOMAIN_MAIN == domain)
-    {
-        /* Clear the RAT configuration to allow applications to use the region */
-        Board_restoreRATCfg();
-    }
+        if(BOARD_SOC_DOMAIN_MAIN == domain)
+        {
+            /* Clear the RAT configuration to allow applications to use the region */
+            Board_restoreRATCfg();
+        }
 
-    /* Lock MMR write access */
-    Board_pinmuxKickCtrl(domain, 1);
+        /* Lock MMR write access */
+        status = Board_pinmuxKickCtrl(domain, 1);
+    }
 
     return status;
 }
@@ -620,14 +634,20 @@ Board_STATUS Board_pinmuxConfigWkup (void)
     return status;
 }
 
-void Board_uartTxPinmuxConfig(void)
+Board_STATUS Board_uartTxPinmuxConfig(void)
 {
+    Board_STATUS status = BOARD_SOK;
+
     /* Unlock partition lock kick */
-    Board_pinmuxKickCtrl(BOARD_SOC_DOMAIN_WKUP, 0);
+    status = Board_pinmuxKickCtrl(BOARD_SOC_DOMAIN_WKUP, 0);
+    if(BOARD_SOK == status)
+    {
+        /* Configure pinmux for UART Tx pin */
+        HW_WR_REG32(BOARD_MCU_UART_TX_PINMUX_ADDR, BOARD_MCU_UART_TX_PINMUX_VAL);
 
-    /* Configure pinmux for UART Tx pin */
-    HW_WR_REG32(BOARD_MCU_UART_TX_PINMUX_ADDR, BOARD_MCU_UART_TX_PINMUX_VAL);
+        /* Lock partition lock kick */
+        status = Board_pinmuxKickCtrl(BOARD_SOC_DOMAIN_WKUP, 1);
+    }
 
-    /* Lock partition lock kick */
-    Board_pinmuxKickCtrl(BOARD_SOC_DOMAIN_WKUP, 1);
+    return status;
 }
