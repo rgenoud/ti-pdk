@@ -52,7 +52,7 @@
  */
 void Osal_DebugP_assert_fcn(bool expression, const char *file, int32_t line)
 {
-    if (BTRUE == expression)
+    if (BFALSE == expression)
     {
         slogf(_SLOGC_PRIVATE_OSAL, _SLOG_ERROR,"Assert in the file %s at line %d...Calling Abort!", file, line);
         abort();
