@@ -439,7 +439,7 @@ int main()
 /* Defined separate target for sbl uart i.e sbl_hsm_boot_uart_img to boot HSM core 
    For MMCSD, OSPI NOR, OSPI NAND boot HSM core will be boot in with the normal sbl targets i.e 
    sbl_mmcsd_img_hs, sbl_ospi_img_hs and sbl_ospi_nand_img_hs if hsm.bin is present else SBL proceeds to boot appimage */
-#if ((defined(BUILD_HS) && (defined(SOC_J721S2) || defined(SOC_J784S4)) && (defined(BOOT_OSPI) || defined(BOOT_MMCSD) || (defined(BOOT_UART) && defined(SECURE_HSM_BOOT)))))
+#if ((defined(SOC_J721S2) || defined(SOC_J784S4)) && (defined(BOOT_OSPI) || defined(BOOT_MMCSD) || (defined(BOOT_UART) && defined(SECURE_HSM_BOOT))))
     SBL_log(SBL_LOG_MAX, "Booting HSM core ... \n");
     if (SBL_loadAndAuthHsmBinary() == CSL_PASS)
     {
