@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2020, Texas Instruments Incorporated
+ * Copyright (c) 2010-2024, Texas Instruments Incorporated
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -320,17 +320,15 @@ typedef uint32_t Board_initCfg;
 #define BOARD_INIT_MODULE_CLOCK_MCU     (1U << 6U)
 #define BOARD_INIT_MODULE_CLOCK_MAIN    (1U << 7U)
 #define BOARD_INIT_DDR                  (1U << 8U)
-#define BOARD_INIT_WATCHDOG_DISABLE     (1U << 9U)
-#define BOARD_INIT_PINMUX_CONFIG        (1U << 10U)
-#define BOARD_INIT_PINMUX_CONFIG_MAIN   (1U << 11U)
-#define BOARD_INIT_PINMUX_CONFIG_MCU    (1U << 12U)
-#define BOARD_INIT_UART_STDIO           (1U << 13U)
-#define BOARD_INIT_ICSS_PINMUX          (1U << 14U)
-#define BOARD_INIT_ETH_PHY              (1U << 15U)
-#define BOARD_INIT_ECC                  (1U << 16U)
-#define BOARD_INIT_PLL_OPP_HIGH         (1U << 17U)
-#define BOARD_INIT_PLL_OPP_OD           (1U << 18U)
-#define BOARD_INIT_PLL_OPP_NOM          (1U << 19U)
+
+#define BOARD_INIT_PINMUX_CONFIG        (1U << 9U)
+#define BOARD_INIT_PINMUX_CONFIG_MAIN   (1U << 10U)
+#define BOARD_INIT_PINMUX_CONFIG_MCU    (1U << 11U)
+#define BOARD_INIT_UART_STDIO           (1U << 12U)
+#define BOARD_INIT_ICSS_PINMUX          (1U << 13U)
+#define BOARD_INIT_ETH_PHY              (1U << 14U)
+#define BOARD_INIT_ECC                  (1U << 15U)
+
 /* iceK2G requires board specific Ethernet configurations for
    proper operation of Ethernet interfaces. Applications
    using NSS(Gigabit) or ICSS(10/100mbps) Ethernet inteface
@@ -339,37 +337,30 @@ typedef uint32_t Board_initCfg;
    'BOARD_INIT_ICSS_ETH_PHY' to invoke the PRU_ICSS Ethernet PHY
    initialization */
 /* Config control bit definition for 10/100 Ethernet PHY intialization */
-#define BOARD_INIT_ICSS_ETH_PHY         (1 << 20U)
+#define BOARD_INIT_ICSS_ETH_PHY         (1 << 16U)
 /* Flag to enable EMIF pin mux configuration during Board_init.
    EMIF pin mux is done as part of default pin mux as configuring EMIF pinmux
    while system is running from SDRAM/DDR can corrupt the memory.
    Use this flag only from the applications which are not running from SDRAM/DDR
 */
-#define BOARD_INIT_EMIF_PINMUX          (1 << 21U)
+#define BOARD_INIT_EMIF_PINMUX          (1 << 17U)
 /* Applies only to devices with DDR ECC support.
    BOARD_DDR_ENABLE_DDR_MEM_PRIME macro in board_cfg.h should be enabled
    to prime the DDR Memory for ECC.
 */
-#define BOARD_INIT_DDR_ECC              (1 << 22U)
+#define BOARD_INIT_DDR_ECC              (1 << 18U)
 /* Initializes SerDes module */
-#define BOARD_INIT_SERDES_PHY           (1 << 23U)
-/* Initializes I2C controller instances used by the board */
-#define BOARD_INIT_I2C                  (1 << 24U)
-/* De-Initializes I2C controller instances used by the board */
-#define BOARD_DEINIT_I2C                (1 << 25U)
-#define BOARD_INIT_CPSW9G_ETH_PHY       (1 << 26U)
+#define BOARD_INIT_SERDES_PHY           (1 << 19U)
+#define BOARD_INIT_CPSW9G_ETH_PHY       (1 << 20U)
 
 /* Configures ENET Control(mac mode, delay settings) for CPSW/ICCS ports */
-#define BOARD_INIT_ENETCTRL_CPSW3G      (1 << 27U)
-#define BOARD_INIT_ENETCTRL_CPSW2G      (1 << 27U)
-#define BOARD_INIT_ENETCTRL_CPSW9G      (1 << 28U)
-#define BOARD_INIT_ENETCTRL_ICSS        (1 << 29U)
+#define BOARD_INIT_ENETCTRL_CPSW3G      (1 << 21U)
+#define BOARD_INIT_ENETCTRL_CPSW2G      (1 << 21U)
+#define BOARD_INIT_ENETCTRL_CPSW9G      (1 << 22U)
+#define BOARD_INIT_ENETCTRL_ICSS        (1 << 23U)
 #define BOARD_INIT_DEFAULT              BOARD_INIT_ALL
 #define BOARD_INIT_CPSW5G_ETH_PHY       (BOARD_INIT_CPSW9G_ETH_PHY)
 #define BOARD_INIT_ENETCTRL_CPSW5G      (BOARD_INIT_ENETCTRL_CPSW9G)
-/* Re-using I2C init and deinit flag values for below two macros as '1 << 31' causing
- * build failure for C7x. I2C flags are not used/supported by any platforms
- */
 #define BOARD_INIT_CPSW2G_MAIN_ETH_PHY  (1 << 24U)
 #define BOARD_INIT_ENETCTRL_CPSW2G_MAIN (1 << 25U)
 
