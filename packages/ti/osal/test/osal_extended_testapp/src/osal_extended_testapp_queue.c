@@ -63,26 +63,28 @@
 /* ================================================================================== */
 
 /*
- * Description : Testing Null check for API QueueP_delete
+ * Description : Testing Null check for below APIs
+ *                  1. QueueP_put
+ *                  2. QueueP_delete
  */
-int32_t OsalApp_queueDeleteNullTest(void);
+static int32_t OsalApp_queueNullTest(void);
 
 /*
  * Description: Testing negative condition check for the below mentioned APIs :
- *      1. QueueP_Params_init
- *      2. QueueP_create
- *      3. QueueP_getQPtr
- *      4. QueueP_put
- *      5. QueueP_get
- *      6. QueueP_delete
+ *                  1. QueueP_Params_init
+ *                  2. QueueP_create
+ *                  3. QueueP_getQPtr
+ *                  4. QueueP_put
+ *                  5. QueueP_get
+ *                  6. QueueP_delete
  */
-int32_t OsalApp_queueNegativeTest(void);
+static int32_t OsalApp_queueNegativeTest(void);
 
 /* ================================================================================== */
-/*                                  Function Definitions                              */
+/*                           Internal Function Definitions                            */
 /* ================================================================================== */
 
-int32_t OsalApp_queueNegativeTest(void)
+static int32_t OsalApp_queueNegativeTest(void)
 {
     QueueP_Params params;
     QueueP_Handle handles[OSAL_APP_NUM_TEST_QUEUES], handle;
@@ -152,8 +154,11 @@ int32_t OsalApp_queueNegativeTest(void)
          * or even delete the queue as the queue is not effectively, not used.
          */
         (*handleAddr) = 0U;
+        if(NULL_PTR != QueueP_get(handle))
+        {
+            result = osal_FAILURE;
+        }
         if((QueueP_OK == QueueP_put(handle, elem)) || (QueueP_OK == QueueP_delete(handle)))
-        if(QueueP_OK == status)
         {
             result = osal_FAILURE;
         }
@@ -174,11 +179,7 @@ int32_t OsalApp_queueNegativeTest(void)
         result = osal_FAILURE;
     }
 
-    if(osal_OK == result)
-    {   
-        OSAL_log("\n QueueP negative tests have passed! \n");
-    }
-    else
+    if(osal_OK != result)
     {
         OSAL_log("\n QueueP negative tests have falied! \n");
     }
@@ -186,35 +187,41 @@ int32_t OsalApp_queueNegativeTest(void)
     return result;
 }
 
-int32_t OsalApp_queueDeleteNullTest(void)
+static int32_t OsalApp_queueNullTest(void)
 {
     int32_t            result = osal_OK;
+    QueueP_Handle      nullPtr = NULL_PTR;
 
     /* checking QueueP_Params_init else condition */
     QueueP_Params_init(NULL_PTR);
-
-    if(QueueP_OK == QueueP_delete(NULL_PTR))
+    
+    if(QueueP_OK == QueueP_put(nullPtr, NULL))
     {
         result = osal_FAILURE;
     }
 
-    if(osal_OK == result)
-    {   
-        OSAL_log("\n QueueP_delete NULL test has passed! \n");
-    }
-    else
+    if((osal_OK != result) || (QueueP_OK == QueueP_delete(nullPtr)))
     {
-        OSAL_log("\n QueueP_delete NULL test has failed! \n");
+        result = osal_FAILURE;
+    }
+
+    if(osal_OK != result)
+    {
+        OSAL_log("\n QueueP NULL test failed! \n");
     }
 
     return result;
 }
 
+/* ================================================================================== */
+/*                                  Function Definitions                              */
+/* ================================================================================== */
+
 int32_t OsalApp_queueTests(void)
 {
     int32_t result = osal_OK;
 
-    result += OsalApp_queueDeleteNullTest();
+    result += OsalApp_queueNullTest();
     result += OsalApp_queueNegativeTest();
 
     if(osal_OK == result)
@@ -223,7 +230,7 @@ int32_t OsalApp_queueTests(void)
     }
     else
     {
-        OSAL_log("\n All QueueP tests have passed! \n");
+        OSAL_log("\n Some or all QueueP tests have failed! \n");
     }
 
     return result;

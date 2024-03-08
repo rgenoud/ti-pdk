@@ -62,39 +62,35 @@ volatile uint32_t gOsalAppFlagHwiTest = UFALSE;
 /* ========================================================================== */
 
 /*
- * Description : Test posting of interrupts. 
+ * Description : Testing Null check for Hwi API
  */
-int32_t OsalApp_hwiCreateAllocOvrflwTest(void);
+static int32_t OsalApp_hwiNullTest(void);
 
 /*
- * Description : Testing Null check for API Hwi_delete
+ * Description : Test posting of interrupts. 
  */
-int32_t OsalApp_hwiNullTest(void);
+static int32_t OsalApp_hwiCreateAllocOvrflwTest(void);
 
 /*
  * Description : Testing Negative test for API Hwi_delete
  */
-int32_t OsalApp_hwiDeleteNegativeTest(void);
+static int32_t OsalApp_hwiDeleteNegativeTest(void);
 
 /* ========================================================================== */
-/*                          Internal Function Definitions                     */
+/*                       Internal Function Definitions                        */
 /* ========================================================================== */
 
-void OsalApp_hwiIRQ(uintptr_t arg)
+static void OsalApp_hwiIRQ(uintptr_t arg)
 {
     gOsalAppFlagHwiTest = UTRUE;
 }
 
-/* ========================================================================== */
-/*                          Function Definitions                              */
-/* ========================================================================== */
-
-int32_t OsalApp_hwiNullTest()
+static int32_t OsalApp_hwiNullTest()
 {
-    int32_t result = osal_OK;
+    HwiP_Params      hwiParams;
+    int32_t          result = osal_OK;
 
-    /* Test the else block of HwiP_Params_init with a NULL */
-    HwiP_Params_init(NULL_PTR);
+    HwiP_Params_init(&hwiParams);
 
     if(NULL_PTR != HwiP_create(CSL_INVALID_VEC_ID, NULL_PTR, NULL_PTR))
     {
@@ -116,11 +112,20 @@ int32_t OsalApp_hwiNullTest()
             result = osal_FAILURE;
         }
     }
+    
+    if(osal_OK != result)
+    {
+        OSAL_log("\n HwiP Null test failed!\n");
+    }
+    else
+    {
+        OSAL_log("\n HwiP Null test passed!\n");
+    }
 
     return result;
 }
 
-int32_t OsalApp_hwiCreateAllocOvrflwTest()
+static int32_t OsalApp_hwiCreateAllocOvrflwTest()
 {
     HwiP_Params hwiParams;
     HwiP_Handle handle1, handle2;
@@ -156,20 +161,15 @@ int32_t OsalApp_hwiCreateAllocOvrflwTest()
             result = osal_FAILURE;
         }
     }
-
-    if(osal_FAILURE == result)
+    if(osal_OK != result)
     {
-        OSAL_log("\n HwiP create delete test has failed!! \n");
-    }
-    else
-    {
-        OSAL_log("\n HwiP create delete test has passed!! \n");
+        OSAL_log("\n HwiP create Alloc overflow test failed!\n");
     }
 
     return result;
 }
 
-int32_t OsalApp_hwiDeleteNegativeTest(void)
+static int32_t OsalApp_hwiDeleteNegativeTest(void)
 {
     HwiP_Params    hwiParams;
     HwiP_Handle    handle;
@@ -227,17 +227,17 @@ int32_t OsalApp_hwiDeleteNegativeTest(void)
     return result;
 }
 
+/* ========================================================================== */
+/*                          Function Definitions                              */
+/* ========================================================================== */
+
 int32_t OsalApp_hwiTests(void)
 {
     int32_t result = osal_OK;
 
     result += OsalApp_hwiCreateAllocOvrflwTest();
+    result += OsalApp_hwiNullTest();
     result += OsalApp_hwiDeleteNegativeTest();
-
-    /*
-     * TODO: HwiP_create and HwiP_createdirect NULL tests are broken.
-     * result += OsalApp_HwiPNullTest();
-     */
 
     if(osal_OK == result)
     {

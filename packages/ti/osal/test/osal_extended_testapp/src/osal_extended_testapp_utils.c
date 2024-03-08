@@ -32,34 +32,17 @@
  */
 
 /**
- *  \file   osal_extended_test.h
+ *  \file   osal_extended_testapp_utils.c
  *
- *  \brief  Osal extended test header file.
+ *  \brief  OSAL utils Sub Module testcases file.
  *
  */
-
-#ifndef _OSAL_EXTENDED_TEST_H_
-#define _OSAL_EXTENDED_TEST_H_
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
 
-#include <stdio.h>
-#include <string.h>
-#include <ti/csl/soc.h>
-#include <ti/csl/tistdtypes.h>
-#include <ti/csl/arch/csl_arch.h>
-#include <ti/osal/osal.h>
-#include <ti/osal/SwiP.h>
-#include <ti/osal/soc/osal_soc.h>
-#include <ti/osal/src/nonos/Nonos_config.h>
-#include "OSAL_log.h"
-#include "OSAL_board.h"
+#include "osal_extended_test.h"
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
@@ -68,61 +51,115 @@ extern "C" {
 /* None */
 
 /* ========================================================================== */
-/*                         Structure Declarations                             */
+/*                            Global Variables                                */
 /* ========================================================================== */
 
 /* None */
 
 /* ========================================================================== */
-/*                  Internal/Private Function Declarations                    */
+/*                            Function Declarations                           */
 /* ========================================================================== */
 
-/* None */
+/*
+ * Description  : Test the following APIs for Null check :
+ *                  1) Osal_getHwAttrs
+ *                  2) Osal_setHwAttrs
+ *                  3) Osal_getStaticMemStatus
+ */
+static int32_t OsalApp_utilsNullcheckTest(void);
+
+/*
+ * Description: Testing Multi control for Osal_setHwAttrs API
+ *
+ */
+static int32_t OsalApp_utilsSetHwAttrMultiCtrlTest(void);
 
 /* ========================================================================== */
-/*                          Function Declarations                             */
+/*                      Internal Function Definitions                         */
 /* ========================================================================== */
 
-/* Top level function for Heap tests */
-int32_t OsalApp_heapFreertosTest(void);
+static int32_t OsalApp_utilsNullcheckTest(void)
+{
+    Osal_HwAttrs          *hwAttrs = NULL_PTR;
+    Osal_StaticMemStatus  *pMemStats = NULL_PTR;
+    int32_t               result = osal_OK;
+    uint32_t              ctrlBitMap = 0U;
 
-/* Top level function for Hwi tests */
-int32_t OsalApp_hwiTests(void);
+    if(osal_OK == Osal_getHwAttrs(hwAttrs))
+    {
+        result = osal_FAILURE;
+    }
+    if(osal_OK == result)
+    {
+        if(osal_OK == Osal_setHwAttrs(ctrlBitMap, hwAttrs))
+        {
+            result = osal_FAILURE;
+        }
+    }
+    if(osal_OK == result)
+    {
+        if(osal_OK == Osal_getStaticMemStatus(pMemStats))
+        {
+            result = osal_FAILURE;
+        }
+    }
+    
+    if(osal_OK != result)
+    {
+        OSAL_log("\n Utils Null test failed! \n");
+    }
 
-/* Top level function for Mutex tests */
-int32_t OsalApp_mutexTests(void);
-
-/* Top level function for Queue tests */
-int32_t OsalApp_queueTests(void);
-
-/* Top level function for Cache tests */
-int32_t OsalApp_cacheTests(void);
-
-/* Top level function for Mailbox tests */
-int32_t OsalApp_mailboxTests(void);
-
-/* Top level function for Task tests */
-int32_t OsalApp_taskTests(void);
-
-/* Top level function for Memory tests */
-int32_t OsalApp_memoryTests(void);
-
-/* Top level function for Semaphore tests */
-int32_t OsalApp_semaphoreTests(void);
-
-/* Top level function for utils tests */
-int32_t OsalApp_utilsNonosTests(void);
-
-/* Top level function for Cycleprofiler test */
-int32_t OsalApp_cycleProfilerTest(void);
-
-/* ========================================================================== */
-/*                       Static Function Definitions                          */
-/* ========================================================================== */
-
-/* None */
-
-#ifdef __cplusplus
+    return result;
 }
-#endif
-#endif /* _OSAL_EXTENDED_TEST_H_ */
+
+static int32_t OsalApp_utilsSetHwAttrMultiCtrlTest(void)
+{
+    Osal_HwAttrs      hwAttrs;
+    int32_t           result = osal_OK;
+    uint32_t          ctrlBitMap = (OSAL_HWATTR_SET_EXT_CLK |
+                                    OSAL_HWATTR_SET_HWACCESS_TYPE |
+                                    OSAL_HWATTR_SET_CPU_FREQ);
+
+    if(osal_OK != Osal_getHwAttrs(&hwAttrs))
+    {
+        result = osal_FAILURE;
+    }
+    if(osal_OK == result)
+    {
+        if(osal_OK != Osal_setHwAttrs(ctrlBitMap, &hwAttrs))
+        {
+            result = osal_FAILURE;
+        }
+    }
+
+    if(osal_OK != result)
+    {
+        OSAL_log("\n Utils Multi HwAttribute test failed! \n");
+    }
+    
+    return result;
+}
+
+/* ========================================================================== */
+/*                          Function Definitions                              */
+/* ========================================================================== */
+
+int32_t OsalApp_utilsNonosTests(void)
+{
+    int32_t result = osal_OK;
+    
+    result += OsalApp_utilsNullcheckTest();
+    result += OsalApp_utilsSetHwAttrMultiCtrlTest();
+    
+    if(osal_OK == result)
+    {
+        OSAL_log("\n All Utils tests have passed!!\n");
+    }
+    else
+    {
+        OSAL_log("Some or all Utils tests have failed!!\n");
+    }
+    
+    return result;
+}
+

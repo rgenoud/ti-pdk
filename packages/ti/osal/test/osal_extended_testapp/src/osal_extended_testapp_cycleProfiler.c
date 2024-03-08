@@ -32,34 +32,17 @@
  */
 
 /**
- *  \file   osal_extended_test.h
+ *  \file   osal_extended_testapp_cycleProfiler.c
  *
- *  \brief  Osal extended test header file.
+ *  \brief  OSAL CycleProfiler Sub Module testcase file.
  *
  */
-
-#ifndef _OSAL_EXTENDED_TEST_H_
-#define _OSAL_EXTENDED_TEST_H_
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
 
-#include <stdio.h>
-#include <string.h>
-#include <ti/csl/soc.h>
-#include <ti/csl/tistdtypes.h>
-#include <ti/csl/arch/csl_arch.h>
-#include <ti/osal/osal.h>
-#include <ti/osal/SwiP.h>
-#include <ti/osal/soc/osal_soc.h>
-#include <ti/osal/src/nonos/Nonos_config.h>
-#include "OSAL_log.h"
-#include "OSAL_board.h"
+#include "osal_extended_test.h"
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
@@ -68,61 +51,81 @@ extern "C" {
 /* None */
 
 /* ========================================================================== */
-/*                         Structure Declarations                             */
+/*                            Global Variables                                */
 /* ========================================================================== */
 
 /* None */
 
 /* ========================================================================== */
-/*                  Internal/Private Function Declarations                    */
+/*                            Function Declarations                           */
 /* ========================================================================== */
 
 /* None */
 
 /* ========================================================================== */
-/*                          Function Declarations                             */
-/* ========================================================================== */
-
-/* Top level function for Heap tests */
-int32_t OsalApp_heapFreertosTest(void);
-
-/* Top level function for Hwi tests */
-int32_t OsalApp_hwiTests(void);
-
-/* Top level function for Mutex tests */
-int32_t OsalApp_mutexTests(void);
-
-/* Top level function for Queue tests */
-int32_t OsalApp_queueTests(void);
-
-/* Top level function for Cache tests */
-int32_t OsalApp_cacheTests(void);
-
-/* Top level function for Mailbox tests */
-int32_t OsalApp_mailboxTests(void);
-
-/* Top level function for Task tests */
-int32_t OsalApp_taskTests(void);
-
-/* Top level function for Memory tests */
-int32_t OsalApp_memoryTests(void);
-
-/* Top level function for Semaphore tests */
-int32_t OsalApp_semaphoreTests(void);
-
-/* Top level function for utils tests */
-int32_t OsalApp_utilsNonosTests(void);
-
-/* Top level function for Cycleprofiler test */
-int32_t OsalApp_cycleProfilerTest(void);
-
-/* ========================================================================== */
-/*                       Static Function Definitions                          */
+/*                      Internal Function Definitions                         */
 /* ========================================================================== */
 
 /* None */
 
-#ifdef __cplusplus
+/* ========================================================================== */
+/*                          Function Definitions                              */
+/* ========================================================================== */
+
+int32_t OsalApp_cycleProfilerTest(void)
+{
+    uint32_t time, timeChigh, timeClow, timeAhigh, timeAlow;
+    uint64_t timeC, timeA, timeDiff, limitLow, limitHigh;
+    TimeStamp_Struct timestamp64;
+    int32_t result = osal_OK;
+
+    OSAL_log("\n Cycle Profile nonos Test:\n\t  wait for 5 seconds\n");
+    CSL_armR5PmuResetCycleCnt();
+    CycleprofilerP_init();
+
+    osalArch_TimestampGet64(&timestamp64);
+    timeAhigh = timestamp64.hi;
+    timeAlow = timestamp64.lo;
+    time = CycleprofilerP_getTimeStamp();
+    DebugP_assert((time - timeAlow) < 2000U);
+    timeA = ((uint64_t)timeAhigh << 32U) | (timeAlow);
+
+    /* Delay of 2 seconds */
+    Osal_delay(2000);
+
+    CycleprofilerP_refreshCounter();
+
+    /* Delay of 3 seconds */
+    Osal_delay(3000);
+
+    osalArch_TimestampGet64(&timestamp64);
+    timeChigh = timestamp64.hi;
+    timeClow = timestamp64.lo;
+    time = CycleprofilerP_getTimeStamp();
+    DebugP_assert((time - timeClow) < 2000U);
+    timeC = ((uint64_t)timeChigh << 32U) | (timeClow);
+
+    timeDiff = timeC - timeA;
+    /* PMU counter uses R5 clock. R5 operates with 1GHz.
+     * There are 1000_000_000 ticks in a second. */
+    limitLow = ((uint64_t)5*(1000U*1000U*1000U));
+     /*  5.1 seconds */
+    limitHigh = ((uint64_t)51*(1000U*1000U*100U));
+
+    if(limitLow <= timeDiff)
+    {
+      if(timeDiff < limitHigh)
+      {
+          result = osal_OK;
+          OSAL_log("\n CycleprofilerP nonos Test Passed!!\n");
+      }
+    }
+    else
+    {
+        result = osal_FAILURE;
+        OSAL_log("\n CycleprofilerP nonos Test Failed!!\n");
+    }
+    
+    return result;
 }
-#endif
-#endif /* _OSAL_EXTENDED_TEST_H_ */
+

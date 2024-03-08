@@ -47,8 +47,11 @@
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
-
-/* None */
+#if defined (FREERTOS)
+#define OSAL_APP_MAX_MUTEX         (OSAL_FREERTOS_CONFIGNUM_MUTEX)
+#elif defined (SAFERTOS)
+#define OSAL_APP_MAX_MUTEX         (OSAL_SAFERTOS_CONFIGNUM_MUTEX)
+#endif
 
 /* ========================================================================== */
 /*                            Global Variables                                */
@@ -61,23 +64,25 @@
 /* ========================================================================== */
 
 /*
- * Description: Test Null parameter checks for MutexP_create API
+ * Description: Test Mutex nonos APIs by calling in this function
  */
-int32_t OsalApp_mutexNullCheckTest(void);
+static int32_t OsalApp_mutexGeneralTest(void);
 
-#if defined(BARE_METAL)
 /*
- * Description: Test MutexP nonos APIs by calling in this function
+ * Description: Negative Test for Mutex API
  */
-int32_t OsalApp_mutexGeneralTest(void);
-#endif
+static int32_t OsalApp_mutexNegativeCheckTest(void);
+
+/*
+ * Description: Multiple Mutex creation Test
+ */
+static int32_t OsalApp_mutexMaxCreateTest(void);
 
 /* ========================================================================== */
-/*                          Function Definitions                              */
+/*                      Internal Function Definitions                         */
 /* ========================================================================== */
 
-#if defined(BARE_METAL)
-int32_t OsalApp_mutexGeneralTest(void)
+static int32_t OsalApp_mutexGeneralTest(void)
 {
     MutexP_Object         mutexObj;
     MutexP_Handle         mutexHandle;
@@ -100,7 +105,7 @@ int32_t OsalApp_mutexGeneralTest(void)
 
     if(osal_OK == result)
     {
-        if(MutexP_OK != MutexP_lock(mutexHandle, MutexP_WAIT_FOREVER))
+        if(MutexP_OK != MutexP_lock(mutexHandle, MutexP_NO_WAIT))
         {
             result = osal_FAILURE;
         }
@@ -120,21 +125,15 @@ int32_t OsalApp_mutexGeneralTest(void)
             result = osal_FAILURE;
         }
     }
-    
-    if(osal_OK == result)
+    if(osal_OK != result)
     {
-        OSAL_log("\n MutexP Test has passed!! \n");
-    }
-    else
-    {
-        OSAL_log("\n MutexP Test has failed!! \n");
+        OSAL_log("\n Mutex general test failed! \n");
     }
 
     return result;
 }
-#endif
 
-int32_t OsalApp_mutexNullCheckTest(void)
+static int32_t OsalApp_mutexNegativeCheckTest(void)
 {
     MutexP_Object         *mutexObj = (MutexP_Object *)NULL;
     MutexP_Handle         mutexHandle;
@@ -172,23 +171,74 @@ int32_t OsalApp_mutexNullCheckTest(void)
             result = osal_FAILURE;
         }
     }
+    
+    if(osal_OK != result)
+    {
+        OSAL_log("\n Mutex negative test failed! \n");
+    }
 
     return result;
 }
+
+#if !defined (BARE_METAL)
+static int32_t OsalApp_mutexMaxCreateTest(void)
+{
+    MutexP_Object         mutexObj[OSAL_APP_MAX_MUTEX];
+    MutexP_Handle         mutexHandles[OSAL_APP_MAX_MUTEX];
+    int32_t               result = osal_OK;
+    uint32_t              index = 0U;
+
+    for(index = 0U; index < OSAL_APP_MAX_MUTEX; index++)
+    {
+        mutexHandles[index] = MutexP_create(&mutexObj[index]);
+        if(NULL_PTR == mutexHandles[index])
+        {
+            result = osal_FAILURE;
+        }
+    }
+    if((osal_OK != result) || (NULL_PTR != MutexP_create(&mutexObj[index])))
+    {
+        result = osal_FAILURE;
+    }
+    if(osal_OK == result)
+    {
+        for(index = 0U; index < OSAL_APP_MAX_MUTEX; index++)
+        {
+            if(MutexP_OK != MutexP_delete(mutexHandles[index]))
+            {
+                result = osal_FAILURE;
+            }
+        }
+    }
+
+    if(osal_OK != result)
+    {
+        OSAL_log("\n Multiple Mutex create test failed! \n");
+    }
+    
+    return result;
+}
+#endif
+
+/* ========================================================================== */
+/*                          Function Definitions                              */
+/* ========================================================================== */
 
 int32_t OsalApp_mutexTests(void)
 {
     int32_t result = osal_OK;
 
-#if defined(BARE_METAL)
     result += OsalApp_mutexGeneralTest();
-#else
-    result += OsalApp_mutexNullCheckTest();
+/*    
+ * TODO : The Negative check for Mutex APIs
+ */
+#if !defined(BARE_METAL)
+    result += OsalApp_mutexMaxCreateTest();
 #endif
 
     if(osal_OK != result)
     {
-        OSAL_log("\n All MutexP tests have failed! \n");
+        OSAL_log("\n Some or all MutexP tests have failed! \n");
     }
     else
     {

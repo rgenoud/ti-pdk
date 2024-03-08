@@ -228,59 +228,6 @@ void Board_initOSAL(void)
 
 #if defined (BARE_METAL)
 /*
- * Description: To test Cycle profile APIs by calling in this function
- */
-void CycleprofilerP_nonos_Test(void)
-{
-    uint32_t time, timeC_high, timeC_low, timeA_high, timeA_low;
-    uint64_t timeC, timeA;
-    TimeStamp_Struct timestamp64;
-
-    OSAL_log("\n Cycle Profile nonos Test:\n\t  wait for 5 seconds\n");
-    CSL_armR5PmuResetCycleCnt();
-    CycleprofilerP_init();
-
-    osalArch_TimestampGet64(&timestamp64);
-    timeA_high = timestamp64.hi;
-    timeA_low = timestamp64.lo;
-    time = CycleprofilerP_getTimeStamp();
-    DebugP_assert((time - timeA_low) < 2000U);
-    timeA = ((uint64_t)timeA_high << 32U) | (timeA_low);
-
-    /* Delay of 2 seconds */
-    Osal_delay(2000);
-
-    CycleprofilerP_refreshCounter();
-
-    /* Delay of 3 seconds */
-    Osal_delay(3000);
-
-
-    osalArch_TimestampGet64(&timestamp64);
-    timeC_high = timestamp64.hi;
-    timeC_low = timestamp64.lo;
-    time = CycleprofilerP_getTimeStamp();
-    DebugP_assert((time - timeC_low) < 2000U);
-    timeC = ((uint64_t)timeC_high << 32U) | (timeC_low);
-
-    uint64_t time_diff = timeC - timeA;
-    uint64_t limit_low = ((uint64_t)5*(10000U*100000U));
-    uint64_t limit_high = ((uint64_t)51*(10000U*10000U));
-
-    if(limit_low <= time_diff)
-    {
-      if(time_diff < limit_high)
-      {
-          OSAL_log("\n CycleprofilerP nonos Test Passed!!\n");
-      }
-    }
-    else
-    {
-      OSAL_log("\n CycleprofilerP nonos Test Failed!!\n");
-    }
-}
-
-/*
  * Description: Testing Negative condition check for the below mentioned SwiP APIs :
  *      1. SwiP_Params_init
  *      2. SwiP_create
@@ -387,79 +334,6 @@ void RegisterIntr_nonos_NegTest(void)
          OSAL_log("\n RegisterIntr nonos Negative Test failed!! \n");
      }
 }
-
-/*
- * Description: Null check for below mentioned APIs in the Utils_nonos
- *      1. Osal_getHwAttrs
- *      2. Osal_setHwAttrs
- *      3. Osal_getStaticMemStatus
- */
-void Utils_nonos_test(void)
-{
-    Osal_HwAttrs          *hwAttrs = NULL_PTR;
-    int32_t               osal_ret;
-    uint32_t              ctrlBitMap = ( 0U );
-    Osal_StaticMemStatus  *pMemStats = NULL_PTR;
-    bool                  test_status = true;
-
-    osal_ret = Osal_getHwAttrs(hwAttrs);
-    if (osal_ret != osal_OK)
-    {
-        OSAL_log("\n Osal_getHwAttrs Null check test Passed!!\n");
-    }
-    else
-    {
-          test_status = false;
-    }
-    osal_ret = Osal_setHwAttrs(ctrlBitMap, hwAttrs);
-    if (osal_ret != osal_OK)
-    {
-        OSAL_log("\n Osal_setHwAttrs Null check test Passed!!\n");
-    }
-    else
-    {
-        test_status = false;
-    }
-    osal_ret = Osal_getStaticMemStatus(pMemStats);
-    if (osal_ret != osal_OK)
-    {
-        OSAL_log("\n Osal_getStaticMemStatus Null check test Passed!!\n");
-    }
-    else
-    {
-        test_status = false;
-    }
-    if(true != test_status)
-    {
-        OSAL_log("\n Utils_nonos Null check test Failed\n");
-    }
-}
-
-/*
- * Description: Testing Osal_setHwAttrs by setting the Multi control bit parameter
- *
- */
-void Utils_nonos_SetHwAttr_Multi_Test(void)
-{
-    Osal_HwAttrs      hwAttrs;
-    int32_t           osal_ret;
-    uint32_t          ctrlBitMap = ( OSAL_HWATTR_SET_EXT_CLK |
-                                     OSAL_HWATTR_SET_HWACCESS_TYPE |
-                                     OSAL_HWATTR_SET_CPU_FREQ);
-
-    osal_ret = Osal_getHwAttrs(&hwAttrs);
-
-    osal_ret = Osal_setHwAttrs(ctrlBitMap, &hwAttrs);
-    if (osal_ret == osal_OK)
-    {
-        OSAL_log("\n Osal_setHwAttrs Multi Access test Passed!!\n");
-    }
-    else
-    {
-        OSAL_log("\n Osal_setHwAttrs Multi Access test Failed!!\n");
-    }
-}
-
 #endif
 
 #if defined (FREERTOS)
@@ -1385,8 +1259,6 @@ void Semaphore_create_null_param_test()
     {
         OSAL_log("NULL_PTR test for semaphore_create failed\n");
     }
-
-    
 }
 
 /*
@@ -1612,7 +1484,7 @@ void OSAL_tests(void *arg0, void *arg1)
 
     result += OsalApp_cacheTests();
 
-    CycleprofilerP_nonos_Test();
+    result += OsalApp_cycleProfilerTest();
 
     SwiP_nonos_Test();
 
@@ -1620,9 +1492,9 @@ void OSAL_tests(void *arg0, void *arg1)
 
     RegisterIntrDirect_NegTest();
 
-    Utils_nonos_test();
-
-    Utils_nonos_SetHwAttr_Multi_Test();
+    result += OsalApp_utilsNonosTests();
+    
+    result += OsalApp_hwiTests();
 
     SemaphoreP_create_extended_mem_block_test();
 
@@ -1632,18 +1504,18 @@ void OSAL_tests(void *arg0, void *arg1)
 
     Sema_delete_sems_used_zero_test();
 
-    result += OsalApp_cacheTests();
-
     result += OsalApp_mutexTests();
 
 #endif
 
 #if !defined(BARE_METAL)
+
 #if defined(BUILD_MCU)
     RegisterIntr_Test();
 
     result += OsalApp_taskTests();
 #endif
+
     EventP_Test();
 
     Semaphore_flow_test();

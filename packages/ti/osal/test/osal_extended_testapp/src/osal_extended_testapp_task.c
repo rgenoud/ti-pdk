@@ -75,7 +75,7 @@ uint32_t     gOsalAppMakeProgress = UFALSE;
  *                  2) Create tasks with priorities higher than highest supported.
  *                  3) Create tasks more than supported number of tasks.
  */
-int32_t OsalApp_taskCreateMaxTaskTest(void);
+static int32_t OsalApp_taskCreateMaxTaskTest(void);
 
 /*
  * Description  : Test the following:
@@ -83,23 +83,23 @@ int32_t OsalApp_taskCreateMaxTaskTest(void);
  *                  2) TaskP_sleep()
  *                  3) TaskP_selfmacro()
  */
-int32_t OsalApp_taskGeneralTests(void);
+static int32_t OsalApp_taskGeneralTests(void);
 
 /*
  * Description  : Test the TaskP_isTerminated API
  */
-int32_t OsalApp_taskIsTerminated(void);
+static int32_t OsalApp_taskIsTerminated(void);
 
 /* ========================================================================== */
-/*                            Internal Function                               */
+/*                     Internal Function Definitions                          */
 /* ========================================================================== */
 
-void OsalApp_dummytaskFxn(void *arg)
+static void OsalApp_dummytaskFxn(void *arg)
 {
     /* Do Nothing */
 }
 
-void OsalApp_taskSelfHandleTestTask(void *arg)
+static void OsalApp_taskSelfHandleTestTask(void *arg)
 {
     if(gOsalAppTaskPSelfmacroTaskHandle == TaskP_selfmacro())
     {
@@ -109,14 +109,10 @@ void OsalApp_taskSelfHandleTestTask(void *arg)
     TaskP_delete(&gOsalAppTaskPSelfmacroTaskHandle);
 }
 
-/* ========================================================================== */
-/*                          Function Definitions                              */
-/* ========================================================================== */
-
 /*
 Description  : Creating OSAL_APP_MAX_TASK number of tasks tp test the when tasks count go beyond limit
 */
-int32_t OsalApp_taskCreateMaxTaskTest(void)
+static int32_t OsalApp_taskCreateMaxTaskTest(void)
 {
     TaskP_Params params;
     TaskP_Handle tskHandles[OSAL_APP_MAX_TASK - 1];
@@ -182,7 +178,7 @@ Description  : Creating a task having priority more than zero to fulfill conditi
                TaskP_selfmacro calls TaskP_self
                finally calling taskp sleep
 */
-int32_t OsalApp_taskGeneralTests(void)
+static int32_t OsalApp_taskGeneralTests(void)
 {
     TaskP_Params params;
     uint32_t start, end, testTimeout = 100000U;
@@ -230,7 +226,7 @@ int32_t OsalApp_taskGeneralTests(void)
     return result;
 }
 
-int32_t OsalApp_taskIsTerminated(void)
+static int32_t OsalApp_taskIsTerminated(void)
 {
     TaskP_Params params;
     TaskP_Handle handle;
@@ -266,6 +262,10 @@ int32_t OsalApp_taskIsTerminated(void)
 
     return result;
 }
+
+/* ========================================================================== */
+/*                            Function Definitions                            */
+/* ========================================================================== */
 
 int32_t OsalApp_taskTests(void)
 {
