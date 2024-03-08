@@ -51,7 +51,7 @@ struct tisci_boardcfg_sec sblPerfTestBoardCfg_sec __attribute((section(".sysfw_d
     #define SBL_BOOT_PERF_ARRAY_LENGTH 18
     #define SBL_BOOT_PERF_ARRAY_SKIP_INDX 7
     /* This time includes RBL execution time */
-    float expCanRespTime = 40;
+    float expCanRespTime = 48;
 #else
     #define SBL_BOOT_PERF_ARRAY_LENGTH 17
     #define SBL_BOOT_PERF_ARRAY_SKIP_INDX 6
