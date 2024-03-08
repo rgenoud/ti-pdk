@@ -871,6 +871,14 @@ int32_t UdmaTestRingGetWrIdxLcdmaNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestRingGetRdIdxLcdmaNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestRingGetMemPtrLcdmaNeg(UdmaTestTaskObj *taskObj);
 
+/*
+ * UDMA Ring Lcdma test functions
+ */
+int32_t UdmaTestRingLcdma(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestRingLcdmaDoorBell(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestRingGetForwardRingOccLcdma(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestQueueDequeueLcdma(UdmaTestTaskObj *taskObj);
+
 /* ========================================================================== */
 /*      Internal Function Declarations (Needed for other static inlines)      */
 /* ========================================================================== */
