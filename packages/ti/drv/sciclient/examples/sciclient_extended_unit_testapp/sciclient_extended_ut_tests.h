@@ -737,7 +737,73 @@ SciApp_TestParams_t gSciApp_TestcaseParams[] =
 
         /** testType **/
         (SCI_APP_TEST_TYPE_SANITY)
-    }                          
+    },
+    {
+        /** enableTest **/
+        SCI_APP_TEST_ENABLE,
+
+        /** testCaseId **/
+        22U,
+
+        /** *reqId **/
+        "PDK-14124",
+
+        /** *testCaseName **/
+        "Sciclient rmTranslateIntOutput Testcase",
+
+        /** *userInfo **/
+        "None",
+
+        /** *disableReason **/
+        "None",
+
+        /** *passFailCriteria **/
+        "sciclient rmTranslateIntOutput functions should fail when \
+         called with invalid parameters and should pass when \
+         called with valid parameters",
+
+        /** cpuID **/
+        SCI_APP_CORE_TYPE_R5F,
+
+        /** printEnable **/
+        SCI_APP_PRINT_ENABLE,
+
+        /** testType **/
+        (SCI_APP_TEST_TYPE_SANITY)
+    },
+    {
+        /** enableTest **/
+        SCI_APP_TEST_ENABLE,
+
+        /** testCaseId **/
+        23U,
+
+        /** *reqId **/
+        "PDK-14125",
+
+        /** *testCaseName **/
+        "Sciclient rmTranslateIrqInput Testcase",
+
+        /** *userInfo **/
+        "None",
+
+        /** *disableReason **/
+        "None",
+
+        /** *passFailCriteria **/
+        "sciclient rmTranslateIrqInput functions should fail when \
+         called with invalid parameters and should pass when \
+         called with valid parameters",
+
+        /** cpuID **/
+        SCI_APP_CORE_TYPE_R5F,
+
+        /** printEnable **/
+        SCI_APP_PRINT_ENABLE,
+
+        /** testType **/
+        (SCI_APP_TEST_TYPE_SANITY)
+    }
 };
 
 /* ========================================================================== */

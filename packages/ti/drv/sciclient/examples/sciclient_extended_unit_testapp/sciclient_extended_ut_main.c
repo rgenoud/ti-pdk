@@ -52,7 +52,13 @@
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-/* None */
+#if defined (SOC_J721E)
+#define TISCI_DEV_NAVSS0_INTR             TISCI_DEV_NAVSS0_INTR_ROUTER_0
+#elif defined (SOC_J7200)
+#define TISCI_DEV_NAVSS0_INTR             TISCI_DEV_NAVSS0_INTR_ROUTER_0
+#elif defined (SOC_J721S2) || defined (SOC_J784S4)
+#define TISCI_DEV_NAVSS0_INTR             TISCI_DEV_NAVSS0_INTR_0
+#endif
 
 /* ========================================================================== */
 /*                            Global Variables                                */
@@ -77,7 +83,12 @@ static uint8_t  gSciclientAppTskStackMain[32*1024] __attribute__((aligned(8192))
 /*                         Structure Declarations                             */
 /* ========================================================================== */
 
-/* None */
+struct SciApp_RangeOfLines {
+    uint16_t src_start;
+    uint16_t src_end;
+    uint16_t dst_start;
+    uint16_t dst_end;
+};
 
 /* ========================================================================== */
 /*                         Function Declarations                              */
@@ -118,6 +129,10 @@ static int32_t SciclientApp_rmIrqValidParamsNegTest(void);
 static int32_t SciclientApp_rmIrqCfgIsUnmappedVintDirectEventNegTest(void);
 static int32_t SciclientApp_rmIrqCfgIsEventToVintMappingOnlyNegTest(void);
 static int32_t SciclientApp_rmIrqCfgIsOesOnlyNegTest(void);
+static int32_t SciclientApp_rmTranslateIntOutputTest(void);
+static int32_t SciclientApp_rmTranslateIrqInputTest(void);
+static int32_t SciclientApp_rmIrqCfgIsDirectEventTest(void);
+static void SciclientApp_getResoureRange(uint16_t src_id, uint16_t dst_dev_id, uint16_t dst_host_id, struct SciApp_RangeOfLines *range);
 
 /* ========================================================================== */
 /*                          Function Definitions                              */
@@ -228,7 +243,13 @@ int32_t SciApp_testMain(SciApp_TestParams_t *testParams)
 #endif
         case 21:
             testParams->testResult = SciclientApp_rmIrqValidParamsNegTest();
-            break;   
+            break;
+        case 22:
+            testParams->testResult = SciclientApp_rmTranslateIntOutputTest();
+            break;
+        case 23:
+            testParams->testResult = SciclientApp_rmTranslateIrqInputTest();
+            break;
         default:
             break;
     }
@@ -2541,10 +2562,11 @@ static int32_t SciclientApp_rmIrqValidParamsNegTest(void)
     if(status == CSL_PASS)
     {
         SciApp_printf("Sciclient_init PASSED.\n");
-        SciApp_printf("This test has three sub-tests:\n");
+        SciApp_printf("This test has four sub-tests:\n");
         rmIrqTestStatus += SciclientApp_rmIrqCfgIsUnmappedVintDirectEventNegTest();
         rmIrqTestStatus += SciclientApp_rmIrqCfgIsEventToVintMappingOnlyNegTest();
         rmIrqTestStatus += SciclientApp_rmIrqCfgIsOesOnlyNegTest();
+        rmIrqTestStatus += SciclientApp_rmIrqCfgIsDirectEventTest();
     }
     else
     {
@@ -2721,6 +2743,292 @@ static int32_t SciclientApp_rmIrqCfgIsOesOnlyNegTest(void)
     }
     
     return rmIrqCfgIsOesOnlyTestStatus;
+}
+
+static void SciclientApp_getResoureRange(uint16_t src_id, uint16_t dst_dev_id, uint16_t dst_host_id, struct SciApp_RangeOfLines *range)
+{
+    /* Get the range of lines between the given src_id and dst_id */
+    struct tisci_msg_rm_get_resource_range_req resourceRangeReq={0};
+    struct tisci_msg_rm_get_resource_range_resp resourceRangeRes={0};
+    uint16_t dst_start;
+    uint16_t dst_end;
+
+    resourceRangeReq.type = src_id;
+    resourceRangeReq.secondary_host = dst_host_id;
+    Sciclient_rmGetResourceRange(&resourceRangeReq, &resourceRangeRes, SCICLIENT_SERVICE_WAIT_FOREVER);
+    (*range).src_start = resourceRangeRes.range_start;
+    (*range).src_end   = resourceRangeRes.range_start + resourceRangeRes.range_num - 1;
+
+    Sciclient_rmTranslateIntOutput(src_id, (*range).src_start, dst_dev_id, &dst_start);
+    Sciclient_rmTranslateIntOutput(src_id, (*range).src_end, dst_dev_id, &dst_end);
+    (*range).dst_start = dst_start;
+    (*range).dst_end = dst_end;
+}
+
+static int32_t SciclientApp_rmTranslateIntOutputTest(void)
+{
+    int32_t  status                         = CSL_PASS;
+    int32_t  sciclientInitStatus            = CSL_PASS;
+    int32_t  rmTranslateIntOutputTestStatus = CSL_PASS;
+    uint16_t dstInput;
+    Sciclient_ConfigPrms_t config           =
+    {
+       SCICLIENT_SERVICE_OPERATION_MODE_INTERRUPT,
+       NULL,
+       0 /* isSecure = 0 un secured for all cores */
+    };
+    struct SciApp_RangeOfLines range;
+    while (gSciclientHandle.initCount != 0)
+    {
+        status = Sciclient_deinit();
+    }
+    status = Sciclient_init(&config);
+    sciclientInitStatus = status;
+
+    if(status == CSL_PASS)
+    {
+        SciApp_printf("Sciclient_init PASSED.\n");
+
+        SciclientApp_getResoureRange(TISCI_DEV_NAVSS0_INTR, TISCI_DEV_R5FSS0_CORE0, TISCI_HOST_ID_MAIN_0_R5_0, &range);
+
+        /* Passing valid dst_dev_id to translate the specified IA output to the destination processor IRQ input */
+        status = Sciclient_rmTranslateIntOutput(TISCI_DEV_NAVSS0_INTR, (range).src_start, TISCI_DEV_R5FSS0_CORE0, &dstInput);
+        if (status == CSL_PASS)
+        {
+            rmTranslateIntOutputTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_rmTranslateIntOutput: Valid Arg Test Passed.\n");
+        }
+        else
+        {
+            rmTranslateIntOutputTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_rmTranslateIntOutput: Valid Arg Test Failed.\n");
+        }
+
+        /* Passing invalid dst_dev_id */
+        status = Sciclient_rmTranslateIntOutput(TISCI_DEV_NAVSS0_INTR, (range).src_start, TISCI_DEV_GPIO0, &dstInput);
+        if (status != CSL_PASS)
+        {
+            rmTranslateIntOutputTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_rmTranslateIntOutput: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+            rmTranslateIntOutputTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_rmTranslateIntOutput: Negative Arg Test Failed.\n");
+        }
+
+        /* Passing valid src_id, dst_dev_id and invalid src_output */
+        status = Sciclient_rmTranslateIntOutput(TISCI_DEV_NAVSS0_INTR, (range).src_end + 1, TISCI_DEV_R5FSS0_CORE0, &dstInput);
+        if (status != CSL_PASS)
+        {
+            rmTranslateIntOutputTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_rmTranslateIntOutput: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+            rmTranslateIntOutputTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_rmTranslateIntOutput: Negative Arg Test Failed.\n");
+        }
+
+        /* Passing invalid src_id and invalid dst_dev_id */
+        status = Sciclient_rmTranslateIntOutput(TISCI_DEV_R5FSS0_CORE0, (range).src_start, TISCI_DEV_R5FSS0_CORE1, &dstInput);
+        if (status != CSL_PASS)
+        {
+            rmTranslateIntOutputTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_rmTranslateIntOutput: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+            rmTranslateIntOutputTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_rmTranslateIntOutput: Negative Arg Test Failed.\n");
+        }
+    }
+    else
+    {
+        rmTranslateIntOutputTestStatus += CSL_EFAIL;
+        SciApp_printf("Sciclient_init FAILED.\n");
+    }
+
+    if(sciclientInitStatus == CSL_PASS)
+    {
+        status = Sciclient_deinit();
+        if(status == CSL_PASS)
+        {
+            rmTranslateIntOutputTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_deinit PASSED.\n");
+        }
+        else
+        {
+            rmTranslateIntOutputTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_deinit FAILED.\n");
+        }
+    }
+
+  return rmTranslateIntOutputTestStatus;
+}
+
+static int32_t SciclientApp_rmTranslateIrqInputTest(void)
+{
+    int32_t  status                         = CSL_PASS;
+    int32_t  sciclientInitStatus            = CSL_PASS;
+    int32_t  rmTranslateIrqInputTestStatus  = CSL_PASS;
+    Sciclient_ConfigPrms_t config           =
+    {
+       SCICLIENT_SERVICE_OPERATION_MODE_INTERRUPT,
+       NULL,
+       0 /* isSecure = 0 un secured for all cores */
+    };
+    struct SciApp_RangeOfLines range;
+    uint16_t srcOutput;
+
+    while (gSciclientHandle.initCount != 0)
+    {
+        status = Sciclient_deinit();
+    }
+    status = Sciclient_init(&config);
+    sciclientInitStatus = status;
+
+    if(status == CSL_PASS)
+    {
+        SciApp_printf("Sciclient_init PASSED.\n");
+
+        SciclientApp_getResoureRange(TISCI_DEV_NAVSS0_INTR, TISCI_DEV_R5FSS0_CORE0, TISCI_HOST_ID_MAIN_0_R5_0, &range);
+
+        /* Passing valid dst_dev_id to translate the specified destination processor IRQ input to the IA output */
+        status = Sciclient_rmTranslateIrqInput(TISCI_DEV_R5FSS0_CORE0, (range).dst_start, TISCI_DEV_NAVSS0_INTR, &srcOutput);
+        if (status == CSL_PASS)
+        {
+            rmTranslateIrqInputTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_rmTranslateIrqInput: Valid Arg Test Passed.\n");
+        }
+        else
+        {
+            rmTranslateIrqInputTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_rmTranslateIrqInput: Valid Arg Test Failed.\n");
+        }
+
+        /* Passing invalid dst_dev_id */
+        status = Sciclient_rmTranslateIrqInput(TISCI_DEV_GPIO0, (range).dst_start, TISCI_DEV_NAVSS0_INTR, &srcOutput);
+        if (status != CSL_PASS)
+        {
+            rmTranslateIrqInputTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_rmTranslateIrqInput: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+            rmTranslateIrqInputTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_rmTranslateIrqInput: Negative Arg Test Failed.\n");
+        }
+
+        /* Passing invalid src_id and invalid dst_dev_id */
+        status = Sciclient_rmTranslateIrqInput(TISCI_DEV_R5FSS0_CORE0, (range).dst_start, TISCI_DEV_R5FSS0_CORE1, &srcOutput);
+        if (status != CSL_PASS)
+        {
+            rmTranslateIrqInputTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_rmTranslateIrqInput: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+            rmTranslateIrqInputTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_rmTranslateIrqInput: Negative Arg Test Failed.\n");
+        }
+
+        /* Passing valid src_id, dst_dev_id and invalid dst_input */
+        status = Sciclient_rmTranslateIrqInput(TISCI_DEV_R5FSS0_CORE0, (range).dst_end + 1, TISCI_DEV_NAVSS0_INTR, &srcOutput);
+        if (status != CSL_PASS)
+        {
+            rmTranslateIrqInputTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_rmTranslateIrqInput: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+            rmTranslateIrqInputTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_rmTranslateIrqInput: Negative Arg Test Failed.\n");
+        }
+    }
+    else
+    {
+        rmTranslateIrqInputTestStatus += CSL_EFAIL;
+        SciApp_printf("Sciclient_init FAILED.\n");
+    }
+
+    if(sciclientInitStatus == CSL_PASS)
+    {
+        status = Sciclient_deinit();
+        if(status == CSL_PASS)
+        {
+            rmTranslateIrqInputTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_deinit PASSED.\n");
+        }
+        else
+        {
+            rmTranslateIrqInputTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_deinit FAILED.\n");
+        }
+    }
+
+  return rmTranslateIrqInputTestStatus;
+}
+
+static int32_t SciclientApp_rmIrqCfgIsDirectEventTest(void)
+{
+    int32_t  status                          = CSL_PASS;
+    int32_t  rmIrqCfgIsDirectEventTestStatus = CSL_PASS;
+    uint32_t rmVintStatusBitIndexInvalid     = (TISCI_MSG_VALUE_RM_DST_ID_VALID | TISCI_MSG_VALUE_RM_DST_HOST_IRQ_VALID |
+                                               TISCI_MSG_VALUE_RM_IA_ID_VALID | TISCI_MSG_VALUE_RM_VINT_VALID | TISCI_MSG_VALUE_RM_GLOBAL_EVENT_VALID);
+    uint32_t rmGlobalEventInvalid            = (TISCI_MSG_VALUE_RM_DST_ID_VALID | TISCI_MSG_VALUE_RM_DST_HOST_IRQ_VALID | TISCI_MSG_VALUE_RM_IA_ID_VALID |
+                                                TISCI_MSG_VALUE_RM_VINT_VALID | TISCI_MSG_VALUE_RM_VINT_STATUS_BIT_INDEX_VALID);
+    uint32_t rmVintInvalid                   = (TISCI_MSG_VALUE_RM_DST_ID_VALID | TISCI_MSG_VALUE_RM_DST_HOST_IRQ_VALID | TISCI_MSG_VALUE_RM_IA_ID_VALID |
+                                                TISCI_MSG_VALUE_RM_GLOBAL_EVENT_VALID | TISCI_MSG_VALUE_RM_VINT_STATUS_BIT_INDEX_VALID);
+    uint32_t rmIaIdInvalid                   = (TISCI_MSG_VALUE_RM_DST_ID_VALID | TISCI_MSG_VALUE_RM_DST_HOST_IRQ_VALID | TISCI_MSG_VALUE_RM_VINT_VALID | 
+                                                TISCI_MSG_VALUE_RM_GLOBAL_EVENT_VALID | TISCI_MSG_VALUE_RM_VINT_STATUS_BIT_INDEX_VALID);
+    uint32_t rmDstHostIrqInvalid             = (TISCI_MSG_VALUE_RM_DST_ID_VALID | TISCI_MSG_VALUE_RM_IA_ID_VALID | TISCI_MSG_VALUE_RM_VINT_VALID |
+                                                TISCI_MSG_VALUE_RM_GLOBAL_EVENT_VALID | TISCI_MSG_VALUE_RM_VINT_STATUS_BIT_INDEX_VALID);
+    uint32_t rmDstIdInvalid                  = (TISCI_MSG_VALUE_RM_DST_HOST_IRQ_VALID | TISCI_MSG_VALUE_RM_IA_ID_VALID | TISCI_MSG_VALUE_RM_VINT_VALID |
+                                                TISCI_MSG_VALUE_RM_GLOBAL_EVENT_VALID | TISCI_MSG_VALUE_RM_VINT_STATUS_BIT_INDEX_VALID);
+    uint32_t directEventPass                 = (TISCI_MSG_VALUE_RM_DST_ID_VALID | TISCI_MSG_VALUE_RM_DST_HOST_IRQ_VALID |
+                                                TISCI_MSG_VALUE_RM_IA_ID_VALID | TISCI_MSG_VALUE_RM_VINT_VALID |
+                                                TISCI_MSG_VALUE_RM_GLOBAL_EVENT_VALID | TISCI_MSG_VALUE_RM_VINT_STATUS_BIT_INDEX_VALID);
+    uint32_t inValidParams[7]                = {directEventPass,
+                                                rmVintStatusBitIndexInvalid,
+                                                rmGlobalEventInvalid,
+                                                rmVintInvalid,
+                                                rmIaIdInvalid,
+                                                rmDstHostIrqInvalid,
+                                                rmDstIdInvalid};
+    uint8_t  num;
+    struct tisci_msg_rm_irq_set_resp sciclient_DirectEventResp;
+
+    /* To cover MC/DC for Sciclient_rmIrqCfgIsDirectEvent() */
+    for(num = 0; num < 7; num++)
+    {
+        const struct tisci_msg_rm_irq_set_req sciclient_DirectEventReq = 
+        {
+            .valid_params = inValidParams[num]
+        };
+        status = Sciclient_rmProgramInterruptRoute(&sciclient_DirectEventReq,
+                                                    &sciclient_DirectEventResp,
+                                                    SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status != CSL_PASS)
+        {
+            rmIrqCfgIsDirectEventTestStatus += CSL_PASS;
+        }
+        else
+        {
+            rmIrqCfgIsDirectEventTestStatus += CSL_EFAIL;
+        }
+    }
+
+    if(rmIrqCfgIsDirectEventTestStatus == CSL_PASS)
+    {
+        SciApp_printf("Sciclient_rmIrqCfgIsDirectEvent() Test Passed.\n");                                                  
+    }
+    else
+    {
+        SciApp_printf("Sciclient_rmIrqCfgIsDirectEvent() Test Failed.\n");                                                  
+    }
+
+  return rmIrqCfgIsDirectEventTestStatus;
 }
 
 #if defined(BUILD_MPU) || defined (BUILD_C7X)
