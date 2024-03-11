@@ -129,10 +129,13 @@ static int32_t SciclientApp_rmIrqValidParamsNegTest(void);
 static int32_t SciclientApp_rmIrqCfgIsUnmappedVintDirectEventNegTest(void);
 static int32_t SciclientApp_rmIrqCfgIsEventToVintMappingOnlyNegTest(void);
 static int32_t SciclientApp_rmIrqCfgIsOesOnlyNegTest(void);
+static int32_t SciclientApp_rmIrqCfgIsDirectEventTest(void);
+static int32_t SciclientApp_rmIrqCfgIsDirectNonEventTest(void);
 static int32_t SciclientApp_rmTranslateIntOutputTest(void);
 static int32_t SciclientApp_rmTranslateIrqInputTest(void);
-static int32_t SciclientApp_rmIrqCfgIsDirectEventTest(void);
 static void SciclientApp_getResoureRange(uint16_t src_id, uint16_t dst_dev_id, uint16_t dst_host_id, struct SciApp_RangeOfLines *range);
+static int32_t SciclientApp_rmClearInterruptRouteTest(void);
+static int32_t SciclientApp_rmProgramInterruptRouteTest(void);
 
 /* ========================================================================== */
 /*                          Function Definitions                              */
@@ -250,6 +253,12 @@ int32_t SciApp_testMain(SciApp_TestParams_t *testParams)
         case 23:
             testParams->testResult = SciclientApp_rmTranslateIrqInputTest();
             break;
+        case 24:  
+            testParams->testResult = SciclientApp_rmClearInterruptRouteTest();
+            break;   
+        case 25:  
+            testParams->testResult = SciclientApp_rmProgramInterruptRouteTest();
+            break;    
         default:
             break;
     }
@@ -729,6 +738,7 @@ static int32_t SciclientApp_firewallNegTest(void)
     int32_t status                = CSL_PASS;
     int32_t sciclientInitStatus   = CSL_PASS;
     int32_t firewallNegTestStatus = CSL_PASS;
+    
     Sciclient_ConfigPrms_t SciApp_Config =
     {
        SCICLIENT_SERVICE_OPERATION_MODE_INTERRUPT,
@@ -2559,14 +2569,28 @@ static int32_t SciclientApp_rmIrqValidParamsNegTest(void)
     status = Sciclient_init(&config);
     sciclientInitStatus = status;
     
+   /* For example, if a branch statement exists in the following way:
+      if(A && B && C && D) ==> Inorder to cover 16(2^4) combinations for MC/DC, we have to just cover 5 combinations given below:
+      (FFFF) ==> covers 8 combinations {The "&&" operation will stop it's search once it reaches a false condition, it doesn't 
+                                        care about what the other conditions evaluates to. So, on covering (FFFF) LDRA will
+                                        assume that (FTFF),(FTTF),(FTTT) etc... are also covered.}
+      (TFFF) ==> covers 4 combinations
+      (TTFF) ==> covers 2 combinations
+      (TTTF) ==> covers 1 combination
+      (TTTT) ==> covers 1 combination 
+      
+      The above logic is followed for all the below five sub-tests. These sub-tests have 6 conditions in their if statement,
+      so only 7 combinations are needed to covered inorder to cover all 64(2^6) MC/DC combinations. */
+
     if(status == CSL_PASS)
     {
         SciApp_printf("Sciclient_init PASSED.\n");
-        SciApp_printf("This test has four sub-tests:\n");
+        SciApp_printf("This test has five sub-tests:\n");
         rmIrqTestStatus += SciclientApp_rmIrqCfgIsUnmappedVintDirectEventNegTest();
         rmIrqTestStatus += SciclientApp_rmIrqCfgIsEventToVintMappingOnlyNegTest();
         rmIrqTestStatus += SciclientApp_rmIrqCfgIsOesOnlyNegTest();
         rmIrqTestStatus += SciclientApp_rmIrqCfgIsDirectEventTest();
+        rmIrqTestStatus += SciclientApp_rmIrqCfgIsDirectNonEventTest();
     }
     else
     {
@@ -2597,6 +2621,7 @@ static int32_t SciclientApp_rmIrqCfgIsUnmappedVintDirectEventNegTest(void)
     int32_t  status                     = CSL_PASS;
     int32_t  vintDirectEventTestStatus  = CSL_PASS;
     uint8_t  loopCounter                = 0U;
+    uint32_t numConditions              = 6U;
     uint32_t validParams[7]             = { 
                                             (TISCI_MSG_VALUE_RM_DST_ID_VALID | TISCI_MSG_VALUE_RM_DST_HOST_IRQ_VALID |
                                              TISCI_MSG_VALUE_RM_IA_ID_VALID  | TISCI_MSG_VALUE_RM_VINT_VALID |
@@ -2619,7 +2644,7 @@ static int32_t SciclientApp_rmIrqCfgIsUnmappedVintDirectEventNegTest(void)
     struct tisci_msg_rm_irq_set_resp  rmIrqResp = {0};
             
     /* To cover MC/DC for Sciclient_rmIrqCfgIsUnmappedVintDirectEvent() */
-    for(loopCounter = 0U; loopCounter < 7U; loopCounter++)
+    for(loopCounter = 0U; loopCounter <= numConditions; loopCounter++)
     {
           rmIrqReq.valid_params = validParams[loopCounter];
           status += Sciclient_rmProgramInterruptRoute(&rmIrqReq, &rmIrqResp, 
@@ -2651,6 +2676,7 @@ static int32_t SciclientApp_rmIrqCfgIsEventToVintMappingOnlyNegTest(void)
     int32_t  status                     = CSL_PASS;
     int32_t  vintMappingOnlyTestStatus  = CSL_PASS;
     uint8_t  loopCounter                = 0U;
+    uint32_t numConditions              = 6U;
     uint32_t validParams[7]             = { 
                                             (TISCI_MSG_VALUE_RM_IA_ID_VALID  | TISCI_MSG_VALUE_RM_VINT_VALID |
                                              TISCI_MSG_VALUE_RM_GLOBAL_EVENT_VALID),
@@ -2673,7 +2699,7 @@ static int32_t SciclientApp_rmIrqCfgIsEventToVintMappingOnlyNegTest(void)
     struct tisci_msg_rm_irq_set_resp  rmIrqResp = {0};
     
     /* To cover statement and MC/DC coverage for Sciclient_rmIrqCfgIsEventToVintMappingOnly() */
-    for(loopCounter = 0U; loopCounter < 7U; loopCounter++)
+    for(loopCounter = 0U; loopCounter <= numConditions; loopCounter++)
     {
           rmIrqReq.valid_params = validParams[loopCounter];
           status = Sciclient_rmProgramInterruptRoute(&rmIrqReq, &rmIrqResp, 
@@ -2705,7 +2731,8 @@ static int32_t SciclientApp_rmIrqCfgIsOesOnlyNegTest(void)
     int32_t  status                       = CSL_PASS;
     int32_t  rmIrqCfgIsOesOnlyTestStatus  = CSL_PASS;
     uint8_t  loopCounter                  = 0U;
-    uint32_t validParams[7]               = { 
+    uint32_t numConditions                = 6U;
+    uint32_t validParams[7]               = {
                                                 (TISCI_MSG_VALUE_RM_GLOBAL_EVENT_VALID  | TISCI_MSG_VALUE_RM_VINT_STATUS_BIT_INDEX_VALID),
                                                 (0U),
                                                 (TISCI_MSG_VALUE_RM_VINT_VALID  | TISCI_MSG_VALUE_RM_GLOBAL_EVENT_VALID),
@@ -2718,7 +2745,7 @@ static int32_t SciclientApp_rmIrqCfgIsOesOnlyNegTest(void)
     struct tisci_msg_rm_irq_set_resp  rmIrqResp = {0};
     
     /* To cover MC/DC conditions for Sciclient_rmIrqCfgIsOesOnly() */
-    for(loopCounter = 0U; loopCounter < 7U; loopCounter++)
+    for(loopCounter = 0U; loopCounter <= numConditions; loopCounter++)
     {
       rmIrqReq.valid_params = validParams[loopCounter];
       status = Sciclient_rmProgramInterruptRoute(&rmIrqReq, &rmIrqResp, 
@@ -2743,6 +2770,112 @@ static int32_t SciclientApp_rmIrqCfgIsOesOnlyNegTest(void)
     }
     
     return rmIrqCfgIsOesOnlyTestStatus;
+}
+
+static int32_t SciclientApp_rmIrqCfgIsDirectEventTest(void)
+{
+    int32_t  status                          = CSL_PASS;
+    int32_t  rmIrqCfgIsDirectEventTestStatus = CSL_PASS;
+    uint32_t rmVintStatusBitIndexInvalid     = (TISCI_MSG_VALUE_RM_DST_ID_VALID | TISCI_MSG_VALUE_RM_DST_HOST_IRQ_VALID |
+                                               TISCI_MSG_VALUE_RM_IA_ID_VALID | TISCI_MSG_VALUE_RM_VINT_VALID | TISCI_MSG_VALUE_RM_GLOBAL_EVENT_VALID);
+    uint32_t rmGlobalEventInvalid            = (TISCI_MSG_VALUE_RM_DST_ID_VALID | TISCI_MSG_VALUE_RM_DST_HOST_IRQ_VALID | TISCI_MSG_VALUE_RM_IA_ID_VALID |
+                                                TISCI_MSG_VALUE_RM_VINT_VALID | TISCI_MSG_VALUE_RM_VINT_STATUS_BIT_INDEX_VALID);
+    uint32_t rmVintInvalid                   = (TISCI_MSG_VALUE_RM_DST_ID_VALID | TISCI_MSG_VALUE_RM_DST_HOST_IRQ_VALID | TISCI_MSG_VALUE_RM_IA_ID_VALID |
+                                                TISCI_MSG_VALUE_RM_GLOBAL_EVENT_VALID | TISCI_MSG_VALUE_RM_VINT_STATUS_BIT_INDEX_VALID);
+    uint32_t rmIaIdInvalid                   = (TISCI_MSG_VALUE_RM_DST_ID_VALID | TISCI_MSG_VALUE_RM_DST_HOST_IRQ_VALID | TISCI_MSG_VALUE_RM_VINT_VALID | 
+                                                TISCI_MSG_VALUE_RM_GLOBAL_EVENT_VALID | TISCI_MSG_VALUE_RM_VINT_STATUS_BIT_INDEX_VALID);
+    uint32_t rmDstHostIrqInvalid             = (TISCI_MSG_VALUE_RM_DST_ID_VALID | TISCI_MSG_VALUE_RM_IA_ID_VALID | TISCI_MSG_VALUE_RM_VINT_VALID |
+                                                TISCI_MSG_VALUE_RM_GLOBAL_EVENT_VALID | TISCI_MSG_VALUE_RM_VINT_STATUS_BIT_INDEX_VALID);
+    uint32_t rmDstIdInvalid                  = (TISCI_MSG_VALUE_RM_DST_HOST_IRQ_VALID | TISCI_MSG_VALUE_RM_IA_ID_VALID | TISCI_MSG_VALUE_RM_VINT_VALID |
+                                                TISCI_MSG_VALUE_RM_GLOBAL_EVENT_VALID | TISCI_MSG_VALUE_RM_VINT_STATUS_BIT_INDEX_VALID);
+    uint32_t directEventPass                 = (TISCI_MSG_VALUE_RM_DST_ID_VALID | TISCI_MSG_VALUE_RM_DST_HOST_IRQ_VALID |
+                                                TISCI_MSG_VALUE_RM_IA_ID_VALID | TISCI_MSG_VALUE_RM_VINT_VALID |
+                                                TISCI_MSG_VALUE_RM_GLOBAL_EVENT_VALID | TISCI_MSG_VALUE_RM_VINT_STATUS_BIT_INDEX_VALID);
+    uint32_t inValidParams[7]                = {directEventPass,
+                                                rmVintStatusBitIndexInvalid,
+                                                rmGlobalEventInvalid,
+                                                rmVintInvalid,
+                                                rmIaIdInvalid,
+                                                rmDstHostIrqInvalid,
+                                                rmDstIdInvalid};
+    uint8_t  num;
+    uint32_t numConditions                   = 6U;
+    struct tisci_msg_rm_irq_set_resp sciclient_DirectEventResp;
+
+    /* To cover MC/DC for Sciclient_rmIrqCfgIsDirectEvent() */
+    for(num = 0; num <= numConditions; num++)
+    {
+        const struct tisci_msg_rm_irq_set_req sciclient_DirectEventReq = 
+        {
+            .valid_params = inValidParams[num]
+        };
+        status = Sciclient_rmProgramInterruptRoute(&sciclient_DirectEventReq,
+                                                    &sciclient_DirectEventResp,
+                                                    SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status != CSL_PASS)
+        {
+            rmIrqCfgIsDirectEventTestStatus += CSL_PASS;
+        }
+        else
+        {
+            rmIrqCfgIsDirectEventTestStatus += CSL_EFAIL;
+        }
+    }
+
+    if(rmIrqCfgIsDirectEventTestStatus == CSL_PASS)
+    {
+        SciApp_printf("Sciclient_rmIrqCfgIsDirectEvent() Test Passed.\n");                                                  
+    }
+    else
+    {
+        SciApp_printf("Sciclient_rmIrqCfgIsDirectEvent() Test Failed.\n");                                                  
+    }
+
+    return rmIrqCfgIsDirectEventTestStatus;
+}
+
+static int32_t SciclientApp_rmIrqCfgIsDirectNonEventTest(void)
+{
+    int32_t status                                = CSL_PASS;
+    int32_t rmIrqCfgIsDirectNonEventTestStatus    = CSL_PASS;
+    int32_t rmIrqCfgIsDirectNonEventParms[7]      = {(TISCI_MSG_VALUE_RM_DST_ID_VALID | TISCI_MSG_VALUE_RM_DST_HOST_IRQ_VALID  | TISCI_MSG_VALUE_RM_VINT_STATUS_BIT_INDEX_VALID),
+													 (TISCI_MSG_VALUE_RM_DST_ID_VALID | TISCI_MSG_VALUE_RM_DST_HOST_IRQ_VALID | TISCI_MSG_VALUE_RM_GLOBAL_EVENT_VALID),
+													 (TISCI_MSG_VALUE_RM_DST_ID_VALID | TISCI_MSG_VALUE_RM_DST_HOST_IRQ_VALID | TISCI_MSG_VALUE_RM_VINT_VALID),
+													 (TISCI_MSG_VALUE_RM_DST_ID_VALID | TISCI_MSG_VALUE_RM_IA_ID_VALID | TISCI_MSG_VALUE_RM_VINT_VALID | TISCI_MSG_VALUE_RM_GLOBAL_EVENT_VALID | TISCI_MSG_VALUE_RM_VINT_STATUS_BIT_INDEX_VALID),
+                                                      TISCI_MSG_VALUE_RM_DST_ID_VALID,
+                                                      TISCI_MSG_VALUE_RM_DST_HOST_IRQ_VALID,
+                                                     (TISCI_MSG_VALUE_RM_DST_ID_VALID | TISCI_MSG_VALUE_RM_DST_HOST_IRQ_VALID)
+													};
+    int8_t number;                 
+    uint32_t numConditions                        = 6U;                               
+    struct tisci_msg_rm_irq_release_req rmIrqReleaseReq;
+    struct tisci_msg_rm_irq_release_resp rmIrqReleaseResp;
+
+    /* To cover MC/DC for Sciclient_rmIrqCfgIsDirectNonEvent() */
+    for(number = 0; number <= numConditions; number++)
+    {
+        rmIrqReleaseReq.valid_params = rmIrqCfgIsDirectNonEventParms[number];
+        status = Sciclient_rmClearInterruptRoute(&rmIrqReleaseReq, &rmIrqReleaseResp, SCICLIENT_SERVICE_WAIT_FOREVER);        
+        if (status != CSL_PASS)
+        {
+            rmIrqCfgIsDirectNonEventTestStatus += CSL_PASS;
+        }
+        else
+        {
+            rmIrqCfgIsDirectNonEventTestStatus += CSL_EFAIL;
+        }
+    }
+
+    if(rmIrqCfgIsDirectNonEventTestStatus == CSL_PASS)
+    {
+        SciApp_printf("Sciclient_rmIrqCfgIsDirectNonEvent() Test Passed.\n");                                                  
+    }
+    else
+    {
+        SciApp_printf("Sciclient_rmIrqCfgIsDirectNonEvent() Test Failed.\n");                                                  
+    }
+
+    return rmIrqCfgIsDirectNonEventTestStatus;
 }
 
 static void SciclientApp_getResoureRange(uint16_t src_id, uint16_t dst_dev_id, uint16_t dst_host_id, struct SciApp_RangeOfLines *range)
@@ -2864,7 +2997,7 @@ static int32_t SciclientApp_rmTranslateIntOutputTest(void)
         }
     }
 
-  return rmTranslateIntOutputTestStatus;
+    return rmTranslateIntOutputTestStatus;
 }
 
 static int32_t SciclientApp_rmTranslateIrqInputTest(void)
@@ -2967,68 +3100,209 @@ static int32_t SciclientApp_rmTranslateIrqInputTest(void)
         }
     }
 
-  return rmTranslateIrqInputTestStatus;
+    return rmTranslateIrqInputTestStatus;
 }
 
-static int32_t SciclientApp_rmIrqCfgIsDirectEventTest(void)
+static int32_t SciclientApp_rmClearInterruptRouteTest(void)
 {
-    int32_t  status                          = CSL_PASS;
-    int32_t  rmIrqCfgIsDirectEventTestStatus = CSL_PASS;
-    uint32_t rmVintStatusBitIndexInvalid     = (TISCI_MSG_VALUE_RM_DST_ID_VALID | TISCI_MSG_VALUE_RM_DST_HOST_IRQ_VALID |
-                                               TISCI_MSG_VALUE_RM_IA_ID_VALID | TISCI_MSG_VALUE_RM_VINT_VALID | TISCI_MSG_VALUE_RM_GLOBAL_EVENT_VALID);
-    uint32_t rmGlobalEventInvalid            = (TISCI_MSG_VALUE_RM_DST_ID_VALID | TISCI_MSG_VALUE_RM_DST_HOST_IRQ_VALID | TISCI_MSG_VALUE_RM_IA_ID_VALID |
-                                                TISCI_MSG_VALUE_RM_VINT_VALID | TISCI_MSG_VALUE_RM_VINT_STATUS_BIT_INDEX_VALID);
-    uint32_t rmVintInvalid                   = (TISCI_MSG_VALUE_RM_DST_ID_VALID | TISCI_MSG_VALUE_RM_DST_HOST_IRQ_VALID | TISCI_MSG_VALUE_RM_IA_ID_VALID |
-                                                TISCI_MSG_VALUE_RM_GLOBAL_EVENT_VALID | TISCI_MSG_VALUE_RM_VINT_STATUS_BIT_INDEX_VALID);
-    uint32_t rmIaIdInvalid                   = (TISCI_MSG_VALUE_RM_DST_ID_VALID | TISCI_MSG_VALUE_RM_DST_HOST_IRQ_VALID | TISCI_MSG_VALUE_RM_VINT_VALID | 
-                                                TISCI_MSG_VALUE_RM_GLOBAL_EVENT_VALID | TISCI_MSG_VALUE_RM_VINT_STATUS_BIT_INDEX_VALID);
-    uint32_t rmDstHostIrqInvalid             = (TISCI_MSG_VALUE_RM_DST_ID_VALID | TISCI_MSG_VALUE_RM_IA_ID_VALID | TISCI_MSG_VALUE_RM_VINT_VALID |
-                                                TISCI_MSG_VALUE_RM_GLOBAL_EVENT_VALID | TISCI_MSG_VALUE_RM_VINT_STATUS_BIT_INDEX_VALID);
-    uint32_t rmDstIdInvalid                  = (TISCI_MSG_VALUE_RM_DST_HOST_IRQ_VALID | TISCI_MSG_VALUE_RM_IA_ID_VALID | TISCI_MSG_VALUE_RM_VINT_VALID |
-                                                TISCI_MSG_VALUE_RM_GLOBAL_EVENT_VALID | TISCI_MSG_VALUE_RM_VINT_STATUS_BIT_INDEX_VALID);
-    uint32_t directEventPass                 = (TISCI_MSG_VALUE_RM_DST_ID_VALID | TISCI_MSG_VALUE_RM_DST_HOST_IRQ_VALID |
-                                                TISCI_MSG_VALUE_RM_IA_ID_VALID | TISCI_MSG_VALUE_RM_VINT_VALID |
-                                                TISCI_MSG_VALUE_RM_GLOBAL_EVENT_VALID | TISCI_MSG_VALUE_RM_VINT_STATUS_BIT_INDEX_VALID);
-    uint32_t inValidParams[7]                = {directEventPass,
-                                                rmVintStatusBitIndexInvalid,
-                                                rmGlobalEventInvalid,
-                                                rmVintInvalid,
-                                                rmIaIdInvalid,
-                                                rmDstHostIrqInvalid,
-                                                rmDstIdInvalid};
-    uint8_t  num;
-    struct tisci_msg_rm_irq_set_resp sciclient_DirectEventResp;
+    int32_t status                            = CSL_PASS;
+    int32_t sciclientInitStatus               = CSL_PASS;
+    int32_t rmClearInterruptRouteTestStatus   = CSL_PASS;
+    int32_t rmClearInterruptRouteTestCases[4] = {0xffffff07,0x000000fc,0x0000000f,0x0000003f};
+    int8_t number;
+    struct tisci_msg_rm_irq_release_req rmIrqReleaseReq;
+    struct tisci_msg_rm_irq_release_req rmIrqReleaseFailReq;
+    struct tisci_msg_rm_irq_release_resp rmIrqReleaseFailResp;
+    struct tisci_msg_rm_irq_release_req rmIrqReleaseValidParamsReq;
+    rmIrqReleaseValidParamsReq.valid_params = TISCI_MSG_VALUE_RM_GLOBAL_EVENT_VALID;
 
-    /* To cover MC/DC for Sciclient_rmIrqCfgIsDirectEvent() */
-    for(num = 0; num < 7; num++)
+    Sciclient_ConfigPrms_t config =
     {
-        const struct tisci_msg_rm_irq_set_req sciclient_DirectEventReq = 
+       SCICLIENT_SERVICE_OPERATION_MODE_INTERRUPT,
+       NULL,
+       0 /* isSecure = 0 un secured for all cores */
+    };
+
+     while (gSciclientHandle.initCount != 0)
+     {
+         status = Sciclient_deinit();
+     }
+     status = Sciclient_init(&config);
+     sciclientInitStatus = status;
+
+    if(status == CSL_PASS)
+    {
+        SciApp_printf("Sciclient_init PASSED.\n");
+        /* Passing a NULL request and NULL response */
+        status = Sciclient_rmClearInterruptRoute(NULL, NULL, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EBADARGS)
         {
-            .valid_params = inValidParams[num]
-        };
-        status = Sciclient_rmProgramInterruptRoute(&sciclient_DirectEventReq,
-                                                    &sciclient_DirectEventResp,
-                                                    SCICLIENT_SERVICE_WAIT_FOREVER);
-        if (status != CSL_PASS)
-        {
-            rmIrqCfgIsDirectEventTestStatus += CSL_PASS;
+            rmClearInterruptRouteTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_rmClearInterruptRoute: Negative Arg Test Passed.\n");
         }
         else
         {
-            rmIrqCfgIsDirectEventTestStatus += CSL_EFAIL;
+            rmClearInterruptRouteTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_rmClearInterruptRoute: Negative Arg Test Failed.\n");
         }
-    }
 
-    if(rmIrqCfgIsDirectEventTestStatus == CSL_PASS)
-    {
-        SciApp_printf("Sciclient_rmIrqCfgIsDirectEvent() Test Passed.\n");                                                  
+        /* Passing a NULL response */
+        status = Sciclient_rmClearInterruptRoute(&rmIrqReleaseReq, NULL, SCICLIENT_SERVICE_WAIT_FOREVER);    
+        if (status == CSL_EBADARGS)
+        {
+            rmClearInterruptRouteTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_rmClearInterruptRoute: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+            rmClearInterruptRouteTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_rmClearInterruptRoute: Negative Arg Test Failed.\n");
+        }  
+
+        /* Covers negative test for Sciclient_rmIrqCfgIsOesOnly */
+        status = Sciclient_rmClearInterruptRoute(&rmIrqReleaseValidParamsReq, &rmIrqReleaseFailResp, SCICLIENT_SERVICE_WAIT_FOREVER);    
+        if (status == CSL_EFAIL)
+        {
+            rmClearInterruptRouteTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_rmClearInterruptRoute: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+            rmClearInterruptRouteTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_rmClearInterruptRoute: Negative Arg Test Failed.\n");
+        }
+
+        /* Covers the various event types */
+        for(number = 0; number < 4; number++)
+        {
+            rmIrqReleaseFailReq.valid_params = rmClearInterruptRouteTestCases[number];
+            status = Sciclient_rmClearInterruptRoute(&rmIrqReleaseFailReq, &rmIrqReleaseFailResp, SCICLIENT_SERVICE_WAIT_FOREVER);
+            if (status == CSL_EBADARGS)
+            {
+                rmClearInterruptRouteTestStatus += CSL_PASS;
+                SciApp_printf("Sciclient_rmClearInterruptRoute: Negative Arg Test Passed.\n");
+            }
+            else
+            {
+                rmClearInterruptRouteTestStatus += CSL_EFAIL;
+                SciApp_printf("Sciclient_rmClearInterruptRoute: Negative Arg Test Failed.\n");
+            }  
+        }  
     }
     else
     {
-        SciApp_printf("Sciclient_rmIrqCfgIsDirectEvent() Test Failed.\n");                                                  
+        rmClearInterruptRouteTestStatus += CSL_EFAIL;
+        SciApp_printf("Sciclient_init FAILED.\n");
+    }
+    if(sciclientInitStatus == CSL_PASS)
+    {
+        status = Sciclient_deinit();
+        if(status == CSL_PASS)
+        {
+            rmClearInterruptRouteTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_deinit PASSED.\n");
+        }
+        else
+        {
+            rmClearInterruptRouteTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_deinit FAILED.\n");
+        }
     }
 
-  return rmIrqCfgIsDirectEventTestStatus;
+    return rmClearInterruptRouteTestStatus;
+}
+
+static int32_t SciclientApp_rmProgramInterruptRouteTest(void)
+{
+    int32_t status                                           = CSL_PASS;
+    int32_t sciclientInitStatus                              = CSL_PASS;
+    int32_t rmProgramInterruptRouteTestStatus                = CSL_PASS;
+    int32_t rmProgramInterruptRouteTestparams[5]             = {0xffffff07,0x000000fc,0x0000000f,0x00000010,0x0000003f};
+    int8_t  number;
+    struct tisci_msg_rm_irq_set_req rmIrqSetReq;
+    struct tisci_msg_rm_irq_set_resp rmIrqSetResp;
+
+    Sciclient_ConfigPrms_t config =
+    {
+       SCICLIENT_SERVICE_OPERATION_MODE_INTERRUPT,
+       NULL,
+       0 /* isSecure = 0 un secured for all cores */
+    };
+
+    while (gSciclientHandle.initCount != 0)
+    {
+        status = Sciclient_deinit();
+    }
+    status = Sciclient_init(&config);
+    sciclientInitStatus = status;
+
+    if(status == CSL_PASS)
+    {
+        SciApp_printf("Sciclient_init PASSED.\n");
+        /* Passing a NULL request and a NULL response parameter */
+        status = Sciclient_rmProgramInterruptRoute(NULL, NULL, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EBADARGS)
+        {
+            rmProgramInterruptRouteTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_rmProgramInterruptRoute: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+            rmProgramInterruptRouteTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_rmProgramInterruptRoute: Negative Arg Test Failed.\n");
+        }
+
+        /* Passing a NULL response parameter */
+        status = Sciclient_rmProgramInterruptRoute(&rmIrqSetReq, NULL, SCICLIENT_SERVICE_WAIT_FOREVER);   
+        if (status == CSL_EBADARGS)
+        {
+            rmProgramInterruptRouteTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_rmProgramInterruptRoute: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+            rmProgramInterruptRouteTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_rmProgramInterruptRoute: Negative Arg Test Failed.\n");
+        }
+
+        /* Covers the various event types */
+        for(number = 0; number < 5; number++)
+        {
+            rmIrqSetReq.valid_params = rmProgramInterruptRouteTestparams[number];
+            status = Sciclient_rmProgramInterruptRoute(&rmIrqSetReq, &rmIrqSetResp, SCICLIENT_SERVICE_WAIT_FOREVER);  
+            if (status != CSL_PASS)
+            {
+                rmProgramInterruptRouteTestStatus += CSL_PASS;
+                SciApp_printf("Sciclient_rmProgramInterruptRoute: Negative Arg Test Passed.\n");
+            }
+            else
+            {
+                rmProgramInterruptRouteTestStatus += CSL_EFAIL;
+                SciApp_printf("Sciclient_rmProgramInterruptRoute: Negative Arg Test Failed.\n");
+            } 
+        }
+    }
+    else
+    {
+        rmProgramInterruptRouteTestStatus += CSL_EFAIL;
+        SciApp_printf("Sciclient_init FAILED.\n");
+    }
+    if(sciclientInitStatus == CSL_PASS)
+    {
+        status = Sciclient_deinit();
+        if(status == CSL_PASS)
+        {
+            rmProgramInterruptRouteTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_deinit PASSED.\n");
+        }
+        else
+        {
+            rmProgramInterruptRouteTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_deinit FAILED.\n");
+        }
+    }
+
+    return rmProgramInterruptRouteTestStatus;
 }
 
 #if defined(BUILD_MPU) || defined (BUILD_C7X)
@@ -3038,4 +3312,3 @@ void InitMmu(void)
     Osal_initMmuDefault();
 }
 #endif
-
