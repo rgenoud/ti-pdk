@@ -95,8 +95,13 @@ int32_t BootApp_OSPILeaveConfigSPI()
     /* Set the default SPI init configurations */
     OSPI_socSetInitCfg(BOARD_OSPI_DOMAIN, BOARD_OSPI_NOR_INSTANCE, &gOspiCfg);
 
-    flashHandle = Board_flashOpen(BOARD_FLASH_ID_MT35XU512ABA1G12,
+#if defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4)
+        flashHandle = Board_flashOpen(BOARD_FLASH_ID_S28HS512T,
                             BOARD_OSPI_NOR_INSTANCE, NULL);
+#else
+        flashHandle = Board_flashOpen(BOARD_FLASH_ID_MT35XU512ABA1G12,
+                            BOARD_OSPI_NOR_INSTANCE, NULL);
+#endif
 
     if (flashHandle)
     {
@@ -175,8 +180,8 @@ int32_t BootApp_OSPIBootImageLate(sblEntryPoint_t *pEntry, uint32_t imageOffset)
     /* Load the MAIN domain remotecore images included in the appimage */
     offset = imageOffset;
 
-    fp_readData = &BootApp_XIPReadMem;
-    fp_seek     = &BootApp_XIPSeekMem;
+    fp_readData = &SBL_OSPI_ReadSectors;
+    fp_seek     = &SBL_OSPI_seek;
 
     retVal = SBL_MulticoreImageParse((void *) &offset,
                                       imageOffset,
@@ -187,29 +192,4 @@ int32_t BootApp_OSPIBootImageLate(sblEntryPoint_t *pEntry, uint32_t imageOffset)
         UART_printf("Error parsing Main Domain appimage\n");
 
     return retVal;
-}
-
-/* read of block of data from buffer */
-int32_t BootApp_XIPReadMem(void    *buff,
-                    void    *srcOffsetAddr,
-                    uint32_t size)
-{
-
-    uint32_t imgOffset;
-    int32_t  retVal = E_PASS;
-
-    imgOffset = *((uint32_t*)srcOffsetAddr);
-
-    memcpy(buff, (void*)((uint8_t*)gXipMemBase + imgOffset), size);
-
-    /* Advance srcOffsetAddr for the next section to be read */
-    *((uint32_t *) srcOffsetAddr) += size;
-
-    return retVal;
-}
-
-/* move the buffer pointer */
-void BootApp_XIPSeekMem(void *srcAddr, uint32_t location)
-{
-    *((uint32_t *) srcAddr) = location;
 }

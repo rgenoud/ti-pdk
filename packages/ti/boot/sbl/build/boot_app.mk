@@ -52,9 +52,9 @@ ifeq ($(BOOTMODE), mmcsd)
 endif
 ifeq ($(BOOTMODE), ospi)
     ifeq ($(BUILD_HS), yes)
-        COMP_LIST_COMMON += spi sbl_lib_cust_hs
+        COMP_LIST_COMMON += spi_dma sbl_lib_cust_hs
     else 
-        COMP_LIST_COMMON += spi sbl_lib_cust
+        COMP_LIST_COMMON += spi_dma sbl_lib_cust
     endif
     CFLAGS_LOCAL_COMMON += -DBOOT_OSPI
 endif
