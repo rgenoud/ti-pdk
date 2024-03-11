@@ -2309,7 +2309,7 @@ static int32_t Udma_chAllocResource(Udma_ChHandle chHandle)
             else if(UDMA_CH_FLAG_MAPPED == (chHandle->chType & UDMA_CH_FLAG_MAPPED))
             {
                 /* For RX, Subtract the #UDMA_NUM_MAPPED_TX_GROUP from mappedChGrp, because the group id for TX and RX are continous */
-                Udma_assert(drvHandle, (UDMA_NUM_MAPPED_TX_GROUP <= chHandle->chPrms.mappedChGrp);
+                Udma_assert(drvHandle, (UDMA_NUM_MAPPED_TX_GROUP <= chHandle->chPrms.mappedChGrp));
 #ifdef QNX_OS
                 chHandle->rxChNum =
                     Udma_resmgr_rmAllocMappedRxCh(chHandle->chPrms.chNum, drvHandle, (chHandle->chPrms.mappedChGrp - UDMA_NUM_MAPPED_TX_GROUP));
