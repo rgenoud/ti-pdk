@@ -713,9 +713,16 @@ void SBL_SetupCoreMem(uint32_t core_id)
             {
                 if (runLockStep)
                 {
+                    /* For J721E, Hardware is not optimized to use the ATCM of both the cores
+                       in lockstep mode */
+#if !defined(SOC_J721E)
                     /* When operating in lockstep, size of atcm becomes sum of atcm of both the cores in the cluster */
                     atcmSize =  SBL_getAtcmSize(core_id) + SBL_getAtcmSize(core_id+1);
                     btcmSize =  SBL_getBtcmSize(core_id) + SBL_getBtcmSize(core_id+1);
+#else
+                    atcmSize =  SBL_getAtcmSize(core_id);
+                    btcmSize =  SBL_getBtcmSize(core_id);
+#endif
                 }
                 else
                 {
