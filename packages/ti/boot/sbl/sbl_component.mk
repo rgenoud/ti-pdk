@@ -140,7 +140,7 @@ ifeq ($(SOC),$(filter $(SOC), j721s2 j784s4))
   sbl_EXAMPLE_LIST += sbl_mmcsd_img_combined sbl_ospi_img_combined sbl_mmcsd_img_combined_hs sbl_ospi_img_combined_hs
   sbl_EXAMPLE_LIST += sbl_mmcsd_img_combined_hs_fs sbl_ospi_img_combined_hs_fs
   # sbl_hsm_boot_uart_img_hs is used to boot hsm core securely
-  sbl_EXAMPLE_LIST += sbl_hsm_boot_uart_img_hs
+  sbl_EXAMPLE_LIST += sbl_hsm_boot_uart_img_hs sbl_hsm_boot_uart_img
 else ifeq ($(SOC),$(filter $(SOC), j721e))
   sbl_EXAMPLE_LIST = sbl_uart_img sbl_emmc_uda_img sbl_emmc_boot0_img
   sbl_EXAMPLE_LIST += sbl_mmcsd_img sbl_mmcsd_img_hlos sbl_ospi_img sbl_ospi_img_hlos sbl_hyperflash_img sbl_hyperflash_img_hlos
@@ -1132,6 +1132,22 @@ sbl_hsm_boot_uart_img_hs_INCLUDE = $(sbl_hsm_boot_uart_img_hs_PATH)
 export sbl_hsm_boot_uart_img_hs_BOARDLIST = j721s2_evm j784s4_evm
 export sbl_hsm_boot_uart_img_hs_$(SOC)_CORELIST = mcu1_0
 export sbl_hsm_boot_uart_img_hs_SBL_IMAGEGEN = yes
+
+# SBL Boot HSM UART Image
+export sbl_hsm_boot_uart_img_COMP_LIST = sbl_hsm_boot_uart_img
+sbl_hsm_boot_uart_img_RELPATH = ti/boot/sbl/board/k3
+sbl_hsm_boot_uart_img_CUSTOM_BINPATH = $(PDK_SBL_COMP_PATH)/binary/$(BOARD)/uart/bin
+sbl_hsm_boot_uart_img_PATH = $(PDK_SBL_COMP_PATH)/board/k3
+export sbl_hsm_boot_uart_img_MAKEFILE = -f$(PDK_SBL_COMP_PATH)/build/sbl_img.mk BOOTMODE=uart SBL_USE_DMA=yes BUILD_HS=no SECURE_HSM_BOOT=yes
+export sbl_hsm_boot_uart_img_SBL_CERT_KEY=$(SBL_CERT_KEY)
+export sbl_hsm_boot_uart_img_BOARD_DEPENDENCY = yes
+export sbl_hsm_boot_uart_img_SOC_DEPENDENCY = yes
+export sbl_hsm_boot_uart_img_CORE_DEPENDENCY = no
+sbl_hsm_boot_uart_img_PKG_LIST = sbl
+sbl_hsm_boot_uart_img_INCLUDE = $(sbl_hsm_boot_uart_img_PATH)
+export sbl_hsm_boot_uart_img_BOARDLIST = j721s2_evm j784s4_evm
+export sbl_hsm_boot_uart_img_$(SOC)_CORELIST = mcu1_0
+export sbl_hsm_boot_uart_img_SBL_IMAGEGEN = yes
 
 # Individual Core Boot Test
 sbl_boot_test_COMP_LIST = sbl_boot_test
