@@ -93,6 +93,7 @@ static void mainTask(void* arg0, void* arg1);
 static int32_t SciclientApp_pmMessageTest(void);
 static int32_t SciclientApp_directNegTest(void);
 static int32_t SciclientApp_pmMessageNegTest(void);
+static int32_t SciclientApp_boardCfgNegTest(void);
 #endif
 static int32_t SciclientApp_msmcQueryNegTest(void);
 static int32_t SciclientApp_otpProcessKeyCfgNegTest(void);
@@ -215,6 +216,11 @@ int32_t SciApp_testMain(SciApp_TestParams_t *testParams)
         case 19:
             testParams->testResult = SciclientApp_procbootFuncNegTest();
             break;
+#if defined (BUILD_MCU1_0)
+        case 20:
+            testParams->testResult = SciclientApp_boardCfgNegTest();
+            break;
+#endif  
         default:
             break;
     }
@@ -2428,6 +2434,116 @@ static int32_t SciclientApp_procbootFuncNegTest(void)
 
      return procbootNegTestStatus;
 }
+
+#if defined (BUILD_MCU1_0)
+static int32_t SciclientApp_boardCfgNegTest(void)
+{
+    int32_t status                = CSL_PASS;
+    int32_t sciclientInitStatus   = CSL_PASS;
+    int32_t boardCfgNegTestStatus = CSL_PASS;
+    Sciclient_ConfigPrms_t config =
+    {
+        SCICLIENT_SERVICE_OPERATION_MODE_POLLED,
+        NULL,
+        1U,
+        0U,
+        UTRUE
+    };
+
+    while (gSciclientHandle.initCount != 0)
+    {
+        status = Sciclient_deinit();
+    }
+    status = Sciclient_init(&config);
+    sciclientInitStatus = status;
+
+    if (CSL_PASS == status)
+    {
+        SciApp_printf ("Sciclient_init Passed.\n");
+        status = Sciclient_boardCfg(NULL);
+        if(status == CSL_EFAIL)
+        {
+            boardCfgNegTestStatus += CSL_PASS;
+            SciApp_printf(" Sciclient_boardCfg NULL Arg Test PASSED \n");
+        }
+        else
+        {
+            boardCfgNegTestStatus += CSL_EFAIL;
+            SciApp_printf(" Sciclient_boardCfg NULL Arg Test FAILED \n");
+        }
+
+        status = Sciclient_boardCfgPm(NULL);
+        if(status == CSL_EFAIL)
+        {
+            boardCfgNegTestStatus += CSL_PASS;
+            SciApp_printf(" Sciclient_boardCfgPm NULL Arg Test PASSED \n");
+        }
+        else
+        {
+            boardCfgNegTestStatus += CSL_EFAIL;
+            SciApp_printf(" Sciclient_boardCfgPm NULL Arg Test FAILED \n");
+        }
+
+        status = Sciclient_boardCfgRm(NULL);
+        if(status == CSL_EFAIL)
+        {
+            boardCfgNegTestStatus += CSL_PASS;
+            SciApp_printf(" Sciclient_boardCfgRm NULL Arg Test PASSED \n");
+        }
+        else
+        {
+            boardCfgNegTestStatus += CSL_EFAIL;
+            SciApp_printf(" Sciclient_boardCfgRm NULL Arg Test FAILED \n");
+        }
+
+        status = Sciclient_boardCfgSec(NULL);
+        if(status == CSL_EFAIL)
+        {
+            boardCfgNegTestStatus += CSL_PASS;
+            SciApp_printf(" Sciclient_boardCfgSec NULL Arg Test PASSED \n");
+        }
+        else
+        {
+            boardCfgNegTestStatus += CSL_EFAIL;
+            SciApp_printf(" Sciclient_boardCfgSec NULL Arg Test FAILED \n");
+        }
+
+        status = Sciclient_getDefaultBoardCfgInfo(NULL);
+        if(status == CSL_EFAIL)
+        {
+            boardCfgNegTestStatus += CSL_PASS;
+            SciApp_printf(" Sciclient_getDefaultBoardCfgInfo NULL Arg Test PASSED \n");
+        }
+        else
+        {
+            boardCfgNegTestStatus += CSL_EFAIL;
+            SciApp_printf(" Sciclient_getDefaultBoardCfgInfo NULL Arg Test FAILED \n");
+        }
+    }
+    else
+    {
+        boardCfgNegTestStatus += CSL_EFAIL;
+        SciApp_printf ("Sciclient_init Failed.\n");
+    }
+
+    if(sciclientInitStatus == CSL_PASS)
+    {
+        status = Sciclient_deinit();
+        if(status == CSL_PASS)
+        {
+            boardCfgNegTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_deinit Passed.\n");
+        }
+        else
+        {
+            boardCfgNegTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_deinit Failed.\n");
+        }
+    }
+
+    return boardCfgNegTestStatus;
+}
+#endif
 
 #if defined(BUILD_MPU) || defined (BUILD_C7X)
 extern void Osal_initMmuDefault(void);

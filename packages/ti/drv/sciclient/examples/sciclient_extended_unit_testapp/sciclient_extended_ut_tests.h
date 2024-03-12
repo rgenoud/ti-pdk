@@ -671,7 +671,41 @@ SciApp_TestParams_t gSciApp_TestcaseParams[] =
 
         /** testType **/
         (SCI_APP_TEST_TYPE_SANITY)
+    },
+#if defined (BUILD_MCU1_0)
+    {
+        /** enableTest **/
+        SCI_APP_TEST_ENABLE,
+
+        /** testCaseId **/
+        20U,
+
+        /** *reqId **/
+        "PDK-14062",
+
+        /** *testCaseName **/
+        "SCICLIENT PM and RM BoardCfg Negative Testcase",
+
+        /** *userInfo **/
+        "None",
+
+        /** *disableReason **/
+        "None",
+
+        /** *passFailCriteria **/
+        "SCICLIENT PM and RM BoardCfg functions should fail \
+         when called with invalid parameters ",
+
+        /** cpuID **/
+        SCI_APP_CORE_TYPE_R5F,
+
+        /** printEnable **/
+        SCI_APP_PRINT_ENABLE,
+
+        /** testType **/
+        (SCI_APP_TEST_TYPE_SANITY)
     }
+#endif                          
 };
 
 /* ========================================================================== */
