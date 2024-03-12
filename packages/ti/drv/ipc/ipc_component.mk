@@ -343,8 +343,8 @@ export ipc_extended_test_$(1)_XDC_CONFIGURO = $(if $(findstring tirtos, $(1)), y
 export ipc_extended_test_$(1)_MAKEFILE =  -fmakefile BUILD_OS_TYPE=$(1)
 ipc_extended_test_$(1)_PKG_LIST = ipc_extended_test_$(1)
 ipc_extended_test_$(1)_INCLUDE = $(ipc_extended_test_$(1)_PATH)
-export ipc_extended_test_$(1)_BOARDLIST = $(filter $(DEFAULT_BOARDLIST_$(1)), $(drvipc_BOARDLIST))
-export ipc_extended_test_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), $(drvipc_$(SOC)_RTOS_CORELIST))
+export ipc_extended_test_$(1)_BOARDLIST = j784s4_evm
+export ipc_extended_test_$(1)_$(SOC)_CORELIST = mcu1_0
 export ipc_extended_test_$(1)_SBL_APPIMAGEGEN = yes
 ifneq ($(1),$(filter $(1), safertos))
 ipc_EXAMPLE_LIST += ipc_extended_test_$(1)
