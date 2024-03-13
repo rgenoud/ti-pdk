@@ -63,6 +63,8 @@ PDK_BOARD_UTILS_ROOT_PATH ?= $(pdk_PATH)
 export PDK_BOARD_UTILS_COMP_PATH = $(PDK_BOARD_UTILS_ROOT_PATH)/ti/board/utils
 PDK_BOARD_DIAG_ROOT_PATH ?= $(pdk_PATH)
 export PDK_BOARD_DIAG_COMP_PATH = $(PDK_BOARD_DIAG_ROOT_PATH)/ti/board/diag
+PDK_SA_ROOT_PATH ?= $(pdk_PATH)
+export PDK_SA_COMP_PATH = $(PDK_SA_ROOT_PATH)/ti/drv/sa
 
 #Below applicable only for K3 devices
 PDK_UDMA_ROOT_PATH ?= $(pdk_PATH)

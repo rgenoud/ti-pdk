@@ -83,6 +83,9 @@ ifneq ($(PDK_CSL2_ROOT_PATH), $(pdk_PATH))
   pdk_INCLUDE += $(PDK_CSL2_ROOT_PATH)/ti/csl
 endif
 
+ifneq ($(PDK_SA_ROOT_PATH), $(pdk_PATH))
+  pdk_INCLUDE += $(PDK_SA_ROOT_PATH)
+endif
 ifneq ($(PDK_PM_ROOT_PATH), $(pdk_PATH))
   pdk_INCLUDE += $(PDK_PM_ROOT_PATH)
 endif

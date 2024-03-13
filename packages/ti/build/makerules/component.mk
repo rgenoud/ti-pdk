@@ -655,6 +655,18 @@ ifneq ($(spi_EXAMPLE_LIST),)
 endif
 
 # - used to ignore include if component not present
+-include $(PDK_SA_COMP_PATH)/sa_component.mk
+ifneq ($(sa_LIB_LIST),)
+  pdk_LIB_LIST += $(sa_LIB_LIST)
+endif
+ifneq ($(sa_APP_LIB_LIST),)
+  pdk_APP_LIB_LIST += $(sa_APP_LIB_LIST)
+endif
+ifneq ($(sa_EXAMPLE_LIST),)
+  pdk_EXAMPLE_LIST += $(sa_EXAMPLE_LIST)
+endif
+
+# - used to ignore include if component not present
 -include $(PDK_MAILBOX_COMP_PATH)/mailbox_component.mk
 ifneq ($(mailbox_LIB_LIST),)
   pdk_LIB_LIST += $(mailbox_LIB_LIST)
