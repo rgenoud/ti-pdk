@@ -791,6 +791,8 @@ int32_t UdmaTestFlowAllocNeg(UdmaTestTaskObj *taskObj)
  * 6)Test scenario 6: Check when driver handle is NULL.
  * 7)Test scenario 7: Check when drvInitDone is not UDMA_INIT_DONE.
  * 8)Test scenario 8: To get error print message as [Error] Invalid flow index.
+ * 9)Test scenario 9: To get sciclient error message [Error] UDMA RX flow config failed!!
+ *                    and [Error] UDMA RX flow threshold config failed!!.
  */
 int32_t UdmaTestFlowConfigNeg(UdmaTestTaskObj *taskObj)
 {
@@ -799,6 +801,7 @@ int32_t UdmaTestFlowConfigNeg(UdmaTestTaskObj *taskObj)
     Udma_FlowHandle     flowHandle;
     Udma_FlowPrms       flowPrms;
     struct Udma_FlowObj flowObj;
+    struct Udma_DrvObj  backUpDrvObj;
     uint32_t            backUpDrvInitDone;
 
     GT_1trace(taskObj->traceMask, GT_INFO1,
@@ -957,5 +960,72 @@ int32_t UdmaTestFlowConfigNeg(UdmaTestTaskObj *taskObj)
         }
     }
 
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 9: To get sciclient error message [Error] UDMA RX flow config failed!!
+         *                  and [Error] UDMA RX flow threshold config failed!!
+         */
+        backUpDrvObj                     = taskObj->testObj->drvObj[UDMA_INST_ID_MAIN_0];
+        flowHandle->drvHandle            = &taskObj->testObj->drvObj[UDMA_INST_ID_MAIN_0];
+        flowHandle->flowCnt              = flowIdx + 1U;
+        flowHandle->drvHandle->devIdUdma = UDMA_DEFAULT_FLOW_ID;
+        retVal                           = Udma_flowConfig(flowHandle, flowIdx, &flowPrms);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Flow Config:: Neg:: "
+                      " To get sciclient error message [Error] UDMA RX flow config failed!! "
+                      " and [Error] UDMA RX flow threshold config failed!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        taskObj->testObj->drvObj[UDMA_INST_ID_MAIN_0] = backUpDrvObj;
+    }
+
     return retVal;
 }
+
+/*
+ * Test Case Description: Verifies the function Udma_flowAlloc when
+ * 1)Test scenario 1: Check To get freeFlowCnt as 0
+ */
+int32_t UdmaTestFlowAllocfreeFlowCntNeg(UdmaTestTaskObj *taskObj)
+{
+    int32_t             retVal = UDMA_SOK;
+    uint32_t            flowCnt;
+    Udma_DrvHandle      drvHandle;
+    struct Udma_FlowObj flowObj;
+    Udma_FlowHandle     flowHandle;
+    struct Udma_DrvObj  backUpDrvObj;
+
+    GT_1trace(taskObj->traceMask, GT_INFO1,
+              " |TEST INFO|:: Task:%d: UDMA Flow alloc Testcase ::\r\n",
+              taskObj->taskId);
+
+    /* Test scenario 1: Check To get freeFlowCnt as 0 */
+    flowHandle                 = &flowObj;
+    backUpDrvObj               = taskObj->testObj->drvObj[UDMA_INST_ID_MAIN_0];
+    drvHandle                  = &taskObj->testObj->drvObj[UDMA_INST_ID_MAIN_0];
+    /* Check for mcu2_1 core which has 8 flows allocated to it */
+    flowCnt                    = 8U;
+    drvHandle->freeFlowFlag[0] = 0U;
+    retVal                     = Udma_flowAlloc(drvHandle, flowHandle, flowCnt);
+    if(UDMA_SOK != retVal)
+    {
+        retVal = UDMA_SOK;
+    }
+    else
+    {
+        GT_0trace(taskObj->traceMask, GT_ERR,
+                  " |TEST INFO|:: FAIL:: UDMA:: Flow alloc:: Neg:: "
+                  " Check to get freeFlowCnt as 0!!\n");
+        retVal = UDMA_EFAIL;
+    }
+    taskObj->testObj->drvObj[UDMA_INST_ID_MAIN_0] = backUpDrvObj;
+
+    return retVal;
+}
+

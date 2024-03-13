@@ -745,6 +745,7 @@ int32_t UdmaTestFlowAttachNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestFlowDetachNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestFlowAllocNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestFlowConfigNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestFlowAllocfreeFlowCntNeg(UdmaTestTaskObj *taskObj);
 
 /*
  *UDMA Proxy Negative test case functions
@@ -876,7 +877,13 @@ int32_t UdmaTestRingFlushRawLcdmaNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestRingPrimeReadLcdmaNeg(UdmaTestTaskObj *taskObj);
 
 /*
- * UDMA Ring Lcdma test functions
+ * UDMA Osal test functions
+ */
+int32_t UdmaTestOsalSetCachePrmsNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestOsalRegisterIntrNeg(UdmaTestTaskObj *taskObj);
+
+/*
+ *  UDMA Ring Lcdma test functions
  */
 int32_t UdmaTestRingLcdma(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestRingLcdmaDoorBell(UdmaTestTaskObj *taskObj);
