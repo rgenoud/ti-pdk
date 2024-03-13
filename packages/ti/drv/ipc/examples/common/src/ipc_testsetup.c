@@ -315,6 +315,9 @@ void rpmsg_responderFxn(void *arg0, void *arg1)
     /* For ARM R and M cores*/
     __asm__ __volatile__ ("wfi"   "\n\t": : : "memory");
 #endif
+#if defined(BUILD_C7X)
+    asm (" idle");
+#endif
 
     selfTaskHandle = TaskP_self();
     TaskP_delete(&selfTaskHandle);
