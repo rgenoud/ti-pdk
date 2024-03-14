@@ -82,7 +82,7 @@ static int32_t OsalApp_mutexMaxCreateTest(void);
 /*                      Internal Function Definitions                         */
 /* ========================================================================== */
 
-static int32_t OsalApp_mutexGeneralTest(void)
+static int32_t OsalApp_mutexNegativeCheckTest(void)
 {
     MutexP_Object         mutexObj;
     MutexP_Handle         mutexHandle;
@@ -133,7 +133,7 @@ static int32_t OsalApp_mutexGeneralTest(void)
     return result;
 }
 
-static int32_t OsalApp_mutexNegativeCheckTest(void)
+static int32_t OsalApp_mutexGeneralTest(void)
 {
     MutexP_Object         *mutexObj = (MutexP_Object *)NULL;
     MutexP_Handle         mutexHandle;
@@ -235,6 +235,8 @@ int32_t OsalApp_mutexTests(void)
 #if !defined(BARE_METAL)
     result += OsalApp_mutexMaxCreateTest();
 #endif
+
+    result += OsalApp_mutexNegativeCheckTest();
 
     if(osal_OK != result)
     {
