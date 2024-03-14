@@ -85,18 +85,33 @@ static void OsalApp_hwiIRQ(uintptr_t arg)
     gOsalAppFlagHwiTest = UTRUE;
 }
 
-static int32_t OsalApp_hwiNullTest()
+static int32_t OsalApp_hwiNullTest(void)
 {
     HwiP_Params      hwiParams;
+    HwiP_Handle      hwiHandle = NULL_PTR;
     int32_t          result = osal_OK;
 
     HwiP_Params_init(&hwiParams);
 
-    if(NULL_PTR != HwiP_create(CSL_INVALID_VEC_ID, NULL_PTR, NULL_PTR))
+    hwiHandle = HwiP_create(CSL_INVALID_VEC_ID, NULL_PTR, NULL_PTR);
+#if defined(BUILD_MCU)
+    if(NULL_PTR != hwiHandle)
     {
         result = osal_FAILURE;
     }
-
+#else
+    if(NULL_PTR == hwiHandle)
+    {
+        result = osal_FAILURE;
+    }
+#endif
+    if(NULL_PTR != hwiHandle)
+    {
+        if(HwiP_OK != HwiP_delete(hwiHandle))
+        {
+            result = osal_FAILURE;
+        }
+    }
     if(osal_OK == result)
     {
         if(NULL_PTR != HwiP_createDirect(CSL_INVALID_VEC_ID, NULL_PTR, NULL_PTR))
@@ -107,7 +122,7 @@ static int32_t OsalApp_hwiNullTest()
 
     if(osal_OK == result)
     {
-        if(HwiP_OK == HwiP_delete(NULL))
+        if(HwiP_OK == HwiP_delete(NULL_PTR))
         {
             result = osal_FAILURE;
         }
@@ -174,6 +189,7 @@ static int32_t OsalApp_hwiDeleteNegativeTest(void)
     HwiP_Params    hwiParams;
     HwiP_Handle    handle;
     int32_t        result = osal_OK;
+    uint32_t       count = 0U;
     
     HwiP_Params_init(&hwiParams);
     
@@ -199,12 +215,11 @@ static int32_t OsalApp_hwiDeleteNegativeTest(void)
         result = osal_FAILURE;
     }
 
-#if defined(BUILD_MCU)
     /* This handle is already deleted, but we are setting the 
      * isUsed parameter to 1(forced corruption), to see how the driver reacts. */
     if(osal_OK == result)
     {
-        for(uint32_t Cnt = 0U; Cnt < 2U; Cnt++)
+        for(count = 0U; count < 2U; count++)
         {
             *handleAddr = 1U;
             if(HwiP_OK != HwiP_delete(handle))
@@ -212,8 +227,7 @@ static int32_t OsalApp_hwiDeleteNegativeTest(void)
                 break;
             }
         }
-    }    
-#endif
+    }
 
     if(osal_OK == result)
     {

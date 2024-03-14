@@ -32,110 +32,115 @@
  */
 
 /**
- *  \file   osal_extended_test.h
+ *  \file   osal_extended_testapp_archutils.c
  *
- *  \brief  Osal extended test header file.
+ *  \brief  OSAL archutils Sub Module testcase for c7x file.
  *
  */
-
-#ifndef _OSAL_EXTENDED_TEST_H_
-#define _OSAL_EXTENDED_TEST_H_
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
 
-#include <stdio.h>
-#include <string.h>
-#include <ti/csl/soc.h>
-#include <ti/csl/tistdtypes.h>
-#include <ti/csl/arch/csl_arch.h>
-#include <ti/osal/osal.h>
-#include <ti/osal/SwiP.h>
-#include <ti/osal/soc/osal_soc.h>
-#include <ti/osal/src/nonos/Nonos_config.h>
-#include "OSAL_log.h"
-#include "OSAL_board.h"
-
-#if defined(SAFERTOS)
-#include <SafeRTOS_API.h>
-#endif
+#include "osal_extended_test.h"
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-/* None */
+#define OSAL_APP_IRQ_INT_NUM           (28U)
 
 /* ========================================================================== */
-/*                         Structure Declarations                             */
-/* ========================================================================== */
-
-/* None */
-
-/* ========================================================================== */
-/*                  Internal/Private Function Declarations                    */
+/*                            Global Variables                                */
 /* ========================================================================== */
 
 /* None */
 
 /* ========================================================================== */
-/*                          Function Declarations                             */
+/*                           Function Declarations                            */
 /* ========================================================================== */
 
-/* Top level function for Heap tests */
-int32_t OsalApp_heapFreertosTest(void);
-
-/* Top level function for Hwi tests */
-int32_t OsalApp_hwiTests(void);
-
-/* Top level function for Mutex tests */
-int32_t OsalApp_mutexTests(void);
-
-/* Top level function for Queue tests */
-int32_t OsalApp_queueTests(void);
-
-/* Top level function for Cache tests */
-int32_t OsalApp_cacheTests(void);
-
-/* Top level function for Mailbox tests */
-int32_t OsalApp_mailboxTests(void);
-
-/* Top level function for Task tests */
-int32_t OsalApp_taskTests(void);
-
-/* Top level function for Memory tests */
-int32_t OsalApp_memoryTests(void);
-
-/* Top level function for Event tests */
-int32_t OsalApp_eventTests(void);
-
-/* Top level function for Semaphore tests */
-int32_t OsalApp_semaphoreTests(void);
-
-/* Top level function for utils tests */
-int32_t OsalApp_utilsNonosTests(void);
-
-/* Top level function for Cycleprofiler test */
-int32_t OsalApp_cycleProfilerTest(void);
-
-/* Top level function for load tests */
-int32_t OsalApp_freertosLoadTests(void);
-
-/* Top level function for c7x Arch utils tests */
-int32_t OsalApp_ArchutilsTests(void);
+/*
+ * Description: Testing Arch utils API for c7x
+ */
+static int32_t OsalApp_archUtilsGeneralTest(void);
 
 /* ========================================================================== */
-/*                       Static Function Definitions                          */
+/*                    Internal Function Definitions                           */
 /* ========================================================================== */
 
-/* None */
-
-#ifdef __cplusplus
+static void OsalApp_hwiIRQ(uintptr_t arg)
+{
+    /* Do Nothing */
 }
-#endif
-#endif /* _OSAL_EXTENDED_TEST_H_ */
+
+static int32_t OsalApp_archUtilsGeneralTest(void)
+{
+    HwiP_Params     hwiParams;
+    HwiP_Handle     hwiHandle;
+    uintptr_t       val = NULL;
+    uint32_t        intNum = OSAL_APP_IRQ_INT_NUM;
+    int32_t         result = osal_OK;
+
+    HwiP_Params_init(&hwiParams);
+    
+    if(CSL_INVALID_EVENT_ID != OsalArch_getEventId(intNum))
+    {
+        result = osal_FAILURE;
+    }
+    if(NULL_PTR != OsalArch_HwiPCreate(intNum, OsalApp_hwiIRQ, NULL_PTR))
+    {
+        result = osal_FAILURE;
+    }
+    hwiHandle = OsalArch_HwiPCreate(intNum, OsalApp_hwiIRQ, &hwiParams);
+    if((NULL_PTR == hwiHandle) || (NULL_PTR != OsalArch_getHandle(intNum)))
+    {
+        result = osal_FAILURE;
+    }
+
+    osalArch_TimestampCcntAutoRefresh(val);
+
+    OsalArch_enableInterrupt(intNum);
+
+    OsalArch_globalDisableInterrupt();
+
+    OsalArch_globalRestoreInterrupt(val);
+    
+    if(CSL_PASS == OsalArch_postInterrupt(intNum))
+    {
+        result = osal_FAILURE;
+    }
+
+    OsalArch_clearInterrupt(intNum);
+
+    OsalArch_disableInterrupt(intNum);
+
+    if(HwiP_OK != OsalArch_HwiPDelete(hwiHandle))
+    {
+        result = osal_FAILURE;
+    }
+
+    return result;
+}
+
+/* ========================================================================== */
+/*                          Function Definitions                              */
+/* ========================================================================== */
+
+int32_t OsalApp_ArchutilsTests(void)
+{
+    int32_t result = osal_OK;
+    
+    result += OsalApp_archUtilsGeneralTest();
+    
+    if(osal_OK == result)
+    {
+        OSAL_log("\n All Arch utils tests for c7x have passed!\n");
+    }
+    else
+    {
+        OSAL_log("\n Some or All Arch utils tests for c7x have failed!\n");
+    }
+    
+    return result;
+}

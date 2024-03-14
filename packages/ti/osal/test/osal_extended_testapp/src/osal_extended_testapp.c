@@ -837,7 +837,9 @@ void OSAL_tests(void *arg0, void *arg1)
     Board_initOSAL();
 
 #if defined(SAFERTOS)
-
+#if defined(BUILD_C7X_1)
+    result += OsalApp_ArchutilsTests();
+#endif
     ClockP_start_HwiP_Test();
 
     Clockp_safertos_Test();
@@ -875,8 +877,6 @@ void OSAL_tests(void *arg0, void *arg1)
 
 #if defined(BARE_METAL)
 
-    result += OsalApp_cacheTests();
-
     result += OsalApp_cycleProfilerTest();
 
     SwiP_nonos_Test();
@@ -907,11 +907,13 @@ void OSAL_tests(void *arg0, void *arg1)
 
 #endif
 
-    result += OsalApp_hwiTests();
+    result += OsalApp_cacheTests();
+
+    result += OsalApp_mutexTests();
 
     result += OsalApp_semaphoreTests();
 
-    result += OsalApp_mutexTests();
+    result += OsalApp_hwiTests();
 
     if(osal_OK == result)
     {
@@ -970,6 +972,9 @@ OS_stop();
 extern void Osal_initMmuDefault(void);
 void InitMmu(void)
 {
+    /* Setup CLEC access/configure in secure mode */
+    OsalCfgClecAccessCtrl(BTRUE);
+    /* Reverting to non-secure mode */
     Osal_initMmuDefault();
 }
 #endif

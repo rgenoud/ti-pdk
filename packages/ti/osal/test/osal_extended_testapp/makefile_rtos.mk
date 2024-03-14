@@ -32,6 +32,9 @@ ifeq ($(BUILD_OS_TYPE),safertos)
 CFLAGS_OS_DEFINES = -DSAFERTOS
 EXTERNAL_INTERFACES = safertos
 COMP_LIST_COMMON    = $(PDK_COMMON_SAFERTOS_COMP)
+ifeq ($(CORE),$(filter $(CORE), c7x_1))
+SRCS_COMMON += osal_extended_testapp_archutils.c
+endif
 endif
 
 # List all the external components/interfaces, whose interface header files
