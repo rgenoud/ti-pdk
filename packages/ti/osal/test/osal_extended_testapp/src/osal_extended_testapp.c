@@ -134,11 +134,8 @@ static uint8_t  gAppTskStackMain[APP_TSK_STACK_MAIN] __attribute__(( aligned( 0x
 /*                           Global Variables                                */
 /*===========================================================================*/
 
-volatile uint8_t gclockp_clockfxn_got_execute = 0U;
 volatile uint8_t ghwip_isr_got_execute = 0U;
 extern uint32_t gOsalHwiAllocCnt;
-
-ClockP_Handle gclockp_handle;
 
 volatile uint64_t gTestlocalTimeout = 0x100000U;
 volatile bool gFlagSwi = false, gFlagIRQ = false;
@@ -150,19 +147,6 @@ __attribute__ ((aligned(64)));
 /*===========================================================================*/
 /*                          Callback Functions                               */
 /*===========================================================================*/
-
-/*Callback function for clockp_create and gclockp_clockfxn_got_execute indicates it got called*/
-void clockp_clockfxn(void *arg)
-{
-    gclockp_clockfxn_got_execute = 1U;
-}
-
-/*isr which calls ClockP_start and ghwip_isr_got_execute which indicates isr got executed*/
-void clockp_start_isr(void *arg)
-{
-    ghwip_isr_got_execute = 1U;
-    ClockP_start(gclockp_handle);
-}
 
 /* ISR for SwiP_nonos Test */
 void SwiP_nonosIRQ(uintptr_t arg0, uintptr_t arg1)
@@ -245,366 +229,6 @@ void SwiP_nonos_Test(void)
 #endif
 
 /*
- * Description  : Testing null parameter check for ClockP_Params_init API
- */
-void ClockP_Params_init_NullTest()
-{
-    ClockP_Params_init(NULL);
-    ClockP_create(clockp_clockfxn,NULL);
-    OSAL_log("\n ClockP_Params_init_NullTest Passed!!\n");
-}
-
-/*
- * Description  : Testing overflow condition for ClockP_create API
- */
-void ClockP_create_test_clocks_limit()
-{
-    uint32_t i = 0U;
-    /* having 2 clocks */
-    ClockP_Params clockp_params;
-    ClockP_Params_init(&clockp_params);
-    clockp_params.period = 50;  /*to get 50msec period*/
-    clockp_params.runMode = ClockP_RunMode_CONTINUOUS;
-    clockp_params.startMode = ClockP_StartMode_AUTO;
-
-    for(i = 0U; i <= (OSAL_SAFERTOS_CONFIGNUM_CLOCK + 1U); i++)/*to overflow max clock limit*/
-    {
-        ClockP_create(clockp_clockfxn,&clockp_params);
-    }
-    OSAL_log("\n ClockP_create_test_clocks_limit passed!!\n");
-
-}
-
-/*
- * Description  : Testing null parameter check for ClockP_timerCallbackFunction API
- */
-void ClockP_create_callback_NullTest()
-{
-    ClockP_Params clockp_params;
-    ClockP_Params_init(&clockp_params);
-    clockp_params.period = 50;  /*to get 50msec period*/
-    clockp_params.runMode = ClockP_RunMode_CONTINUOUS;
-    clockp_params.startMode = ClockP_StartMode_AUTO;
-
-    ClockP_create(NULL,&clockp_params);
-    OSAL_log("\n ClockP_create_callback_NullTest passed!!\n");
-}
-
-/*
- * Description  : Testing null parameter check for ClockP_delete API
- */
-void ClockP_delete_NullTest()
-{
-    /*testing negative scenario of 1st if*/
-    ClockP_delete(NULL);
-
-    /*testing xCreateResult != pass scenario*/
-    OSAL_log("\n ClockP_delete_NullTest passed!!\n");
-}
-
-/*
- * Description  : Helper function for ClockP_start, to check if OSAL is in ISR context or not
- */
-static void Osal_isInISRContext_clockp_start()
-{
-    uint32_t interruptNum = 160;
-    const HwiP_Params *hwip_test_params;
-    HwiP_Params hwipParams;
-    HwiP_Handle hHwi;
-    HwiP_Status hwiStatus;
-    int8_t ret;
-
-    HwiP_Params_init(&hwipParams);
-
-    hHwi = HwiP_create(interruptNum,(HwiP_Fxn) clockp_start_isr,(void *)&hwip_test_params);
-    if (hHwi == NULL_PTR)
-    {
-      OSAL_log("\t Failed to create the HwiP handle for start \n");
-    }
-
-    HwiP_enableInterrupt(interruptNum);
-
-    ret = HwiP_post(interruptNum);
-    if(ret == osal_UNSUPPORTED)
-    { /* In case of unsupported SOC/error */
-        OSAL_log("\t HwiP_post unsupported/failed!\n");
-    }
-    hwiStatus = HwiP_delete( hHwi );
-    if(hwiStatus == HwiP_FAILURE)
-    {
-        OSAL_log("\t HwiP delete failed\n");
-    }
-
-
-    if(1U == ghwip_isr_got_execute)
-        OSAL_log("\nClockP_start ISR executed\n");
-}
-
-/*
- * Description  : Testing ISR in ClockP_start API
- */
-void ClockP_start_HwiP_Test()
-{
-    /*Testing Osal_isInISRContext = 1*/
-    ClockP_Params clockp_params;
-    ClockP_Params_init(&clockp_params);
-    clockp_params.period = 50;  /*to get 50msec period*/
-
-    gclockp_handle = ClockP_create(clockp_clockfxn,&clockp_params);
-    if (gclockp_handle == NULL_PTR)
-    {
-      OSAL_log("\t ClockP Create error in clcockp_start test \n");
-    }
-
-    Osal_isInISRContext_clockp_start();
-
-    /*testing negative condition of 1st if*/
-    ClockP_start(NULL);
-
-    if (ClockP_delete(gclockp_handle) != ClockP_OK)
-    {
-        OSAL_log("\t Err: Could not delete the clock \n");
-    }
-    OSAL_log("\nClockP_start_test passed!!\n");
-}
-
-/*
- * Description  : Testing ClockP safertos by calling the below mentioned APIs
- *      1. ClockP_Params_init
- *      2. ClockP_create
- *      3. ClockP_start
- *      4. ClockP_stop
- *      5. ClockP_delete
- */
-void Clockp_safertos_Test()
-{
-    ClockP_Handle handle;
-    ClockP_Status clockp_timerstatus;
-    bool ret=true;
-    /*test case for ClockP_Params_init*/
-    ClockP_Params clockp_params;
-    ClockP_Params_init(&clockp_params);
-    clockp_params.period = 50;  /*to get 50msec period*/
-
-    /*test case for ClockP_create */
-    handle = ClockP_create(clockp_clockfxn,&clockp_params);
-
-    /*test case for ClockP_start*/
-    clockp_timerstatus = ClockP_start(handle);
-    if(clockp_timerstatus != ClockP_OK)
-    {
-        OSAL_log("\t Err: Could not start the clock\n");
-        ret = false;
-    }
-
-    while((true == ret) && (0U == gclockp_clockfxn_got_execute))
-    {
-
-    }
-
-    /*test case for ClockP_stop*/
-    if(true == ret)
-    {
-        clockp_timerstatus = ClockP_stop(handle);
-        if (clockp_timerstatus != ClockP_OK)
-        {
-            OSAL_log("\t Err: Could not stop the clock \n");
-            ret = false;
-        }
-    }
-
-    /*test case for ClockP_delete*/
-    if (true == ret)
-    {
-      if (ClockP_delete(handle) != ClockP_OK)
-      {
-        OSAL_log("\t Err: Could not delete the clock \n");
-        ret = false;
-      }
-    }
-    OSAL_log("\n Test Case for ClockP safertos flow passed!!\n");
-
-}
-
-/*
- * Description  : Testing ClockP freertos by calling below mentioned APIs :
- *      1. ClockP_Params_init
- *      2. ClockP_create
- *      3. ClockP_start
- *      4. ClockP_stop
- *      5. ClockP_delete
- */
-void Clockp_freertos_Test()
-{
-    ClockP_Handle handle;
-    ClockP_Status clockp_timerstatus;
-    bool ret=true;
-    /*test case for ClockP_Params_init*/
-    ClockP_Params clockp_params;
-    ClockP_Params_init(&clockp_params);
-    clockp_params.period = 50;  /*to get 50msec period*/
-
-    /*test case for ClockP_create */
-    handle = ClockP_create(clockp_clockfxn,&clockp_params);
-    if(handle == NULL)
-    {
-        OSAL_log("\t Err : ClockP_create failed for freertos\n");
-    }
-
-    /*test case for ClockP_start*/
-    clockp_timerstatus = ClockP_start(handle);
-    if(clockp_timerstatus != ClockP_OK)
-    {
-        OSAL_log("\t Err: Could not start the clock\n");
-        ret = false;
-    }
-
-    while((true == ret) && (0U == gclockp_clockfxn_got_execute))
-    {
-
-    }
-
-    /*test case for ClockP_stop*/
-    if(true == ret)
-    {
-        clockp_timerstatus = ClockP_stop(handle);
-        if (clockp_timerstatus != ClockP_OK)
-        {
-            OSAL_log("\t Err: Could not stop the clock \n");
-            ret = false;
-        }
-    }
-
-    /*test case for ClockP_delete*/
-    if (true == ret)
-    {
-      if (ClockP_delete(handle) != ClockP_OK)
-      {
-        OSAL_log("\t Err: Could not delete the clock \n");
-        ret = false;
-      }
-    }
-
-    OSAL_log("\n Clockp_freertos_Test passed!!\n");
-}
-
-/*
- * Description  : Testing limit overflow condition for ClockP_create API in freertos
- */
-void ClockP_create_test_clocks_limit_freertos()
-{
-    uint32_t i = 0U;
-    /* having 2 clocks */
-    ClockP_Params clockp_params;
-    ClockP_Params_init(&clockp_params);
-    clockp_params.period = 50;  /*to get 50msec period*/
-    clockp_params.runMode = ClockP_RunMode_CONTINUOUS;
-    clockp_params.startMode = ClockP_StartMode_AUTO;
-
-    for(i = 0U; i <= (OSAL_FREERTOS_CONFIGNUM_CLOCK + 1U); i++)/*to overflow max clock limit*/
-    {
-        ClockP_create(clockp_clockfxn,&clockp_params);
-    }
-
-    OSAL_log("\n ClockP_create_test_clocks_limit_freertos passed!!\n");
-}
-
-/*
- * Description  : Testing negative scenarios of functions ClockP_Params_init,ClockP_start,
-                  ClockP_stop by passing NULL_PTR
- */
-void ClockP_init_start_stop_null_test()
-{
-    ClockP_Params *params = NULL_PTR;
-    ClockP_Status ret_start,ret_stop;
-    ClockP_Params_init(params);
-    ret_start = ClockP_start(NULL_PTR);
-    if(ret_start != ClockP_FAILURE)
-    {
-        OSAL_log("NULL Parameter test failed for ClockP_start\n" );
-    }
-    ret_stop = ClockP_stop(NULL_PTR);
-    if(ret_stop == ClockP_FAILURE)
-    {
-        OSAL_log("NULL Parameter test for ClockP_stop passed!!\n");
-    }
-    else
-    {
-        OSAL_log("NULL Parameter test failed for ClockP_stop\n" );
-    }    
-}
-
-/*
- * Description  : Testing what will happen if ptimer->used is negative i.e. zero in
-                  ClockP_start,ClockP_stop
- */
-void ClockP_start_stop_ptimer_used_false_test()
-{
-    ClockP_Handle handle;
-    ClockP_Status ret_start,ret_stop,ret_delete;
-    /*test case for ClockP_Params_init*/
-    ClockP_Params clockp_params;
-    ClockP_Params_init(&clockp_params);
-    clockp_params.period = 50;  /*to get 50msec period*/
-    uint32_t *addr;
-
-    /*test case for ClockP_create */
-    handle = ClockP_create(clockp_clockfxn,&clockp_params);
-    addr = handle;
-    /*to test branch pTimer->used = false in clockp start and stop*/
-    addr[0]=0U;
-    ret_start = ClockP_start(handle);
-    if(ret_start == ClockP_FAILURE)
-    {
-        OSAL_log("pTimer->used == 0 test Passed for ClockP_start\n" );
-    }
-    else
-    {
-        OSAL_log("pTimer->used == 0 test failed for ClockP_start\n" );
-    }
-    ret_stop = ClockP_stop(handle);
-    if(ret_stop == ClockP_FAILURE)
-    {
-        OSAL_log("pTimer->used == 0 test passed for ClockP_stop\n" );
-    }
-    else
-    {
-        OSAL_log("pTimer->used == 0 test failed for ClockP_stop\n" );
-    }
-    ret_delete = ClockP_delete(NULL_PTR);/*Testing it for NULL_PTR paramter input*/
-    if(ret_delete == ClockP_FAILURE)
-    {
-        OSAL_log("pTimer->used == 0 test for ClockP_delete passed !!\n" );
-    }
-    else
-    {
-        OSAL_log("pTimer->used == 0 test failed for ClockP_delete\n" );
-    }
-}
-
-/*
- * Description:Testing ClockP_timerCallbackFunction checking negative scenario when pTimer is NULL_PTR
- */
-void ClockP_timerCallbackFunction_NULL_test()
-{
-    ClockP_Params clockp_params;
-    ClockP_Handle ret_handle;
-    ClockP_Status ret_delete;
-    ClockP_Params_init(&clockp_params);
-    clockp_params.period = 50;  /*to get 50msec period*/
-    ret_handle = ClockP_create(NULL_PTR,&clockp_params);
-    ret_delete = ClockP_delete(ret_handle);
-    if(ret_delete == ClockP_FAILURE)
-    {
-        OSAL_log("NULL Parameter test for ClockP_delete passed !!\n" );
-    }
-    else
-    {
-        OSAL_log("NULL Parameter test failed for ClockP_delete\n" );
-    }
-}
-
-/*
  * Description  : Testing below mentioned DebugP APIs by passing required data :
  *      1. DebugP_log0
  *      2. DebugP_log1
@@ -643,29 +267,9 @@ void OSAL_tests(void *arg0, void *arg1)
 #if defined(BUILD_C7X_1)
     result += OsalApp_ArchutilsTests();
 #endif
-#if defined(BUILD_MCU)
-    ClockP_start_HwiP_Test();
-#endif
-    Clockp_safertos_Test();
-
-    ClockP_create_test_clocks_limit();
-
-    ClockP_Params_init_NullTest();
-
-    ClockP_delete_NullTest();
-
-    ClockP_create_callback_NullTest();
-
 #endif
 
 #if defined(FREERTOS)
-    Clockp_freertos_Test();
-
-    ClockP_create_test_clocks_limit_freertos();
-
-    ClockP_start_stop_ptimer_used_false_test();
-
-    ClockP_timerCallbackFunction_NULL_test();
 
     DebugP_log_Test();
 
@@ -696,12 +300,12 @@ void OSAL_tests(void *arg0, void *arg1)
     result += OsalApp_taskTests();
 
 #endif
-
-    ClockP_init_start_stop_null_test();
-    
+  
     result += OsalApp_mailboxTests();
 
     result += OsalApp_eventTests();
+    
+    result += OsalApp_clockTests(); 
 
 #endif
 

@@ -132,6 +132,9 @@ int32_t OsalApp_ArchutilsTests(void);
 /* Top level function for Register interrupt tests */
 int32_t OsalApp_registerIntrTests(void);
 
+/* Top level function for clock tests */
+int32_t OsalApp_clockTests(void);
+
 /* ========================================================================== */
 /*                       Static Function Definitions                          */
 /* ========================================================================== */
