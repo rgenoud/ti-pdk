@@ -116,14 +116,6 @@ int32_t main(void)
     {
         status = SciclientApp_getRevisionTestPol();
     }
-#if defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)
-    if (status == CSL_PASS)
-    {
-        SciApp_printf("Trying a Domain Reset...\n");
-        status = Sciclient_pmDomainReset(DOMGRP_01, SCICLIENT_SERVICE_WAIT_FOREVER);
-    }
-#endif
-
     if (status == CSL_PASS)
     {
         SciApp_printf("All tests have passed.\n");
