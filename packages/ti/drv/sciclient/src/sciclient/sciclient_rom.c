@@ -84,6 +84,9 @@ CSL_SecProxyCfg *pSciclient_secProxyCfg = &gSciclient_secProxyCfg;
 extern CSL_SecProxyCfg gSciclient_secProxyCfg_rom;
 #endif
 
+/* Maintain a global variable to track the ROM sequence number */
+uint32_t gRomSeqNum = 0;
+
 /* ========================================================================== */
 /*                          Function Definitions                              */
 /* ========================================================================== */
@@ -118,8 +121,9 @@ int32_t Sciclient_loadFirmware(const uint32_t *pSciclient_firmware)
 #else
     header.host = TISCI_HOST_ID_R5_1;
 #endif
-    /* ROM expects a sequence number of 0 */
-    header.seq  = 0U;
+    /* ROM expects an incremental sequence numbers starting from 0 */
+    header.seq  = gRomSeqNum;
+    gRomSeqNum = gRomSeqNum + 1;
     /* ROM doesn't check for flags */
     header.flags = 0U;
 
