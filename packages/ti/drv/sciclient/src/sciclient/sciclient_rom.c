@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Texas Instruments Incorporated
+ * Copyright (c) 2020-2024, Texas Instruments Incorporated
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -170,7 +170,9 @@ int32_t Sciclient_loadFirmware(const uint32_t *pSciclient_firmware)
             (void) Sciclient_readThread32(rxThread,
                             (uint8_t)((gSciclient_maxMsgSizeBytes/4U)-1U));
         }
-        status = Sciclient_bootNotification();
+        if (CSL_PASS == status) {
+            status = Sciclient_bootNotification();
+        }
     }
     else
     {
