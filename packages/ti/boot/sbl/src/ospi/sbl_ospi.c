@@ -107,8 +107,10 @@ extern uint8_t combinedBootmode;
 /** \brief Size (in bytes) of each ring entry (Size of pointer - 64-bit) */
 #define UDMA_TEST_APP_RING_ENTRY_SIZE   (sizeof(uint64_t))
 /** \brief Total ring memory */
+/* To align the ring memory size with the cache line size, we multiply it by 4.
+   This ensures that when invalidating gTxCompRingMem, no unintended data gets invalidated */
 #define UDMA_TEST_APP_RING_MEM_SIZE     (UDMA_TEST_APP_RING_ENTRIES * \
-                                         UDMA_TEST_APP_RING_ENTRY_SIZE)
+                                         UDMA_TEST_APP_RING_ENTRY_SIZE * 4)
 /**
  *  \brief UDMA TR packet descriptor memory.
  *  This contains the CSL_UdmapCppi5TRPD + Padding to sizeof(CSL_UdmapTR15) +
