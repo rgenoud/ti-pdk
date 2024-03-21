@@ -114,7 +114,7 @@ int32_t UdmaTestChPauseDruNeg(UdmaTestTaskObj *taskObj)
                 backUpChObj                = chObj;
                 chHandle->utcPrms.druOwner = CSL_DRU_OWNER_DIRECT_TR;
                 chHandle->extChNum         = CSL_DRU_NUM_CH;
-                retVal = Udma_chPause(chHandle);
+                retVal                     = Udma_chPause(chHandle);
                 if(UDMA_SOK == retVal)
                 {
                     GT_0trace(taskObj->traceMask, GT_ERR,
@@ -136,12 +136,12 @@ int32_t UdmaTestChPauseDruNeg(UdmaTestTaskObj *taskObj)
                     {
                         retVal = UDMA_SOK;
                         chObj  = backUpChObj;
-                        Udma_chDisable(chHandle, timeout);
-                        Udma_chClose(chHandle); 
                     }
                 }
+                Udma_chDisable(chHandle, timeout);
             }
         }
+        Udma_chClose(chHandle); 
     }
     taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0] = backUpDrvObj;
 
@@ -205,11 +205,11 @@ int32_t UdmaTestChPauseDruNeg(UdmaTestTaskObj *taskObj)
                         {
                             retVal = UDMA_SOK;
                             chObj  = backUpChObj;
-                            Udma_chClose(chHandle);
                         }
                     } 
                 }
             }
+            Udma_chClose(chHandle);
         }
         taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0] = backUpDrvObj;
     }
@@ -277,11 +277,11 @@ int32_t UdmaTestChDisableDruNeg(UdmaTestTaskObj *taskObj)
                 {
                     retVal             = UDMA_SOK;
                     chHandle->extChNum = bkupExtCh;
-                    Udma_chDisable(chHandle, timeout);
-                    Udma_chClose(chHandle);
                 }
+                Udma_chDisable(chHandle, timeout);
             }
         }
+        Udma_chClose(chHandle);
     }
     taskObj->testObj->drvObj[instID] = backUpDrvObj;
 
@@ -335,8 +335,8 @@ int32_t UdmaTestChConfigUtcDruTestNeg(UdmaTestTaskObj *taskObj)
         else
         {
             retVal = UDMA_SOK;
-            Udma_chClose(chHandle);
         }
+        Udma_chClose(chHandle);
     }
     taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0] = backUpDrvObj;
 
@@ -368,8 +368,8 @@ int32_t UdmaTestChConfigUtcDruTestNeg(UdmaTestTaskObj *taskObj)
             else
             {
                 retVal = UDMA_SOK;
-                Udma_chClose(chHandle);
             }
+            Udma_chClose(chHandle);
         }
     }
     taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0] = backUpDrvObj;
@@ -402,8 +402,8 @@ int32_t UdmaTestChConfigUtcDruTestNeg(UdmaTestTaskObj *taskObj)
             {
                 retVal             = UDMA_SOK;
                 chHandle->extChNum = bkupExtCh;
-                Udma_chClose(chHandle);
             }
+            Udma_chClose(chHandle);
         }
     }
     taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0] = backUpDrvObj;
@@ -961,13 +961,14 @@ int32_t UdmaTestChPauseDru(UdmaTestTaskObj *taskObj)
                         }
                         else
                         {
-                            Udma_chDisable(chHandle, timeout);
-                            Udma_chClose(chHandle); 
+                            retVal = UDMA_SOK;
                         } 
                     }
                 }
+                Udma_chDisable(chHandle, timeout);
             }
         }
+        Udma_chClose(chHandle); 
     }
     taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0] = backUpDrvObj;
 

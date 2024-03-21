@@ -777,6 +777,7 @@ int32_t UdmaRmAllocTxChTestNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaRmAllocRxChTestNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaRmAllocTestNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaRmTranslateCoreIntrInputTestNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaRmSetSharedResRmInitPrmsTestNeg(UdmaTestTaskObj *taskObj);
 
 /*
  * UDMA SOC specific functions
@@ -839,7 +840,7 @@ int32_t UdmaChEnableTestNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaChInitPrmsNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaChGetSwTriggerRegisterTestNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaChDequeueTdResponseTestNeg(UdmaTestTaskObj *taskObj);
-int32_t UdmaChDisableTestBcdmaInstNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaChBcdmaInstTestNeg(UdmaTestTaskObj *taskObj);
 
 /*
  * UDMA utc test functions

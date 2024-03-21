@@ -750,6 +750,7 @@ int32_t UdmaTestChCloseNeg(UdmaTestTaskObj *taskObj)
  * Test scenario 5: Check when drvInitDone is not UDMA_INIT_DONE
  * Test scenario 6: Check when chType is UDMA_CH_TYPE_TR_BLK_COPY 
  *                  and instType is UDMA_INST_TYPE_LCDMA_BCDMA
+ * Test scenario 7: Check when chType is not UDMA_CH_TYPE_TX 
  */
 int32_t UdmaTestChConfigTxNeg(UdmaTestTaskObj *taskObj)
 {
@@ -869,6 +870,25 @@ int32_t UdmaTestChConfigTxNeg(UdmaTestTaskObj *taskObj)
             GT_0trace(taskObj->traceMask, GT_ERR,
                       " |TEST INFO|:: FAIL:: UDMA:: chConfigTx:: Neg:: "
                       " when chType is UDMA_CH_TYPE_TR_BLK_COPY and instType is UDMA_INST_TYPE_LCDMA_BCDMA!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        else
+        {
+            retVal = UDMA_SOK;
+        }
+    }
+
+    /* Test scenario 7: Check when chType is not UDMA_CH_TYPE_TX */
+    if(UDMA_SOK == retVal)
+    {
+        chHandle->drvHandle = &taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0]; 
+        chHandle->chType    = UDMA_CH_TYPE_RX;
+        retVal              = Udma_chConfigTx(chHandle, &txPrms);
+        if(UDMA_SOK == retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: chConfigTx:: Neg:: "
+                      " Check when chType is not UDMA_CH_TYPE_TX!!\n");
             retVal = UDMA_EFAIL;
         }
         else
@@ -2503,7 +2523,9 @@ int32_t UdmaChGetStatsTestNeg(UdmaTestTaskObj *taskObj)
  * Test scenario 3: Null check for drvHandle
  * Test scenario 4: Check when drvInitDone is not UDMA_INIT_DONE
  * Test scenario 5: Check when instType is UDMA_TEST_INST_ID_MAIN_0, 
- *                  chType is UDMA_CH_TYPE_TX and channel is not enabled.
+ *                  chType is UDMA_CH_TYPE_TX and channel is not enabled
+ * Test scenario 6: Check when instType is UDMA_TEST_INST_ID_MAIN_0, 
+ *                  chType is UDMA_CH_TYPE_TR_BLK_COPY and channel is not enabled
  */ 
 int32_t UdmaChDisableTestNeg(UdmaTestTaskObj *taskObj)
 {
@@ -2629,9 +2651,52 @@ int32_t UdmaChDisableTestNeg(UdmaTestTaskObj *taskObj)
                     retVal = UDMA_SOK;
                     Udma_chEnable(chHandle);
                     Udma_chDisable(chHandle, timeout);
-                    Udma_chClose(chHandle);
                 }
             }
+            Udma_chClose(chHandle);
+        }
+        taskObj->testObj->drvObj[instID] = backUpDrvObj;
+    }
+
+    /* Test scenario 6: Check when instType is UDMA_TEST_INST_ID_MAIN_0, 
+    *                   chType is UDMA_CH_TYPE_TR_BLK_COPY and channel is not enabled
+    */
+    if(UDMA_SOK == retVal)
+    {
+        instID           = UDMA_TEST_DEFAULT_UDMA_INST;
+        chType           = UDMA_CH_TYPE_TR_BLK_COPY;
+        backUpDrvObj     = taskObj->testObj->drvObj[instID];
+        drvHandle        = &taskObj->testObj->drvObj[instID];
+        UdmaChPrms_init(&chPrms, chType);
+        chPrms.peerChNum = UDMA_PSIL_CH_MCU_CPSW0_TX;
+        retVal           = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
+        Udma_ChTxPrms txChPrms;
+        Udma_ChRxPrms rxPrms;
+        UdmaChTxPrms_init(&txChPrms, chType);
+        UdmaChRxPrms_init(&rxPrms, chType);
+        if(UDMA_SOK == retVal)
+        {
+            retVal = Udma_chConfigTx(chHandle, &txChPrms);
+            retVal = Udma_chConfigRx(chHandle, &rxPrms);
+            if(UDMA_SOK == retVal)
+            {
+                retVal = Udma_chDisable(chHandle, timeout);
+                if(UDMA_SOK == retVal)
+                {
+                    GT_0trace(taskObj->traceMask, GT_ERR,
+                              " |TEST INFO|:: FAIL:: UDMA:: Udma_chDisableBlkCpyChan:: Neg::"
+                              " Check when instType is UDMA_TEST_INST_ID_MAIN_0,"
+                              " chType is UDMA_CH_TYPE_TR_BLK_COPY and channel is not enabled!!\n");
+                    retVal = UDMA_EFAIL;
+                }
+                else
+                {
+                    retVal = UDMA_SOK;
+                    Udma_chEnable(chHandle);
+                    Udma_chDisable(chHandle, timeout);
+                }
+            }
+            Udma_chClose(chHandle);
         }
         taskObj->testObj->drvObj[instID] = backUpDrvObj;
     }
@@ -2640,11 +2705,17 @@ int32_t UdmaChDisableTestNeg(UdmaTestTaskObj *taskObj)
 }
 
 /* 
- * Test Case Description: Verifies the function Udma_chDisable when
+ * Test Case Description: Verifies the function Udma_chDisable and Udma_chConfigRx when
  * Test scenario 1: Check when instType is UDMA_INST_TYPE_LCDMA_BCDMA, 
- *                  chType is UDMA_CH_TYPE_TX and channel is not enabled.
+ *                  chType is UDMA_CH_TYPE_TX and channel is not enabled
+ * Test scenario 2: Check when chType is UDMA_CH_TYPE_PDMA_RX, instType is 
+ *                  UDMA_TEST_INST_ID_BCDMA_0 and configDefaultFlow is UFALSE 
+ * Test scenario 3: Check when chType is UDMA_CH_TYPE_RX, instType is 
+ *                  UDMA_TEST_INST_ID_BCDMA_0 and configDefaultFlow is UFALSE
+ * Test scenario 4: Check when chType is UDMA_CH_TYPE_PDMA_RX, instType is 
+ *                  UDMA_TEST_INST_ID_BCDMA_0 and configDefaultFlow is UTRUE
  */ 
-int32_t UdmaChDisableTestBcdmaInstNeg(UdmaTestTaskObj *taskObj)
+int32_t UdmaChBcdmaInstTestNeg(UdmaTestTaskObj *taskObj)
 {
     int32_t            retVal = UDMA_SOK;
     struct Udma_ChObj  chObj;
@@ -2656,6 +2727,8 @@ int32_t UdmaChDisableTestBcdmaInstNeg(UdmaTestTaskObj *taskObj)
     Udma_ChPrms        chPrms;
     uint32_t           chType;
     Udma_ChTxPrms      txChPrms;
+    struct Udma_ChObj  backupChObj;
+    Udma_ChRxPrms      rxPrms;
 
     GT_1trace(taskObj->traceMask, GT_INFO1,
               " |TEST INFO|:: Task:%d: UDMA ChDisable Negative Testcase ::\r\n",
@@ -2692,11 +2765,83 @@ int32_t UdmaChDisableTestBcdmaInstNeg(UdmaTestTaskObj *taskObj)
                 retVal = UDMA_SOK;
                 Udma_chEnable(chHandle);
                 Udma_chDisable(chHandle, timeout);
-                Udma_chClose(chHandle);
             }
         }
+        Udma_chClose(chHandle);
     }
     taskObj->testObj->drvObj[instID] = backUpDrvObj;
+
+    /* Test scenario 2: Check when chType is UDMA_CH_TYPE_PDMA_RX, instType is 
+     *                  UDMA_TEST_INST_ID_BCDMA_0 and configDefaultFlow is UFALSE */
+    instID = UDMA_TEST_INST_ID_BCDMA_0;
+    backupChObj = chObj;
+    if(UDMA_SOK == retVal)
+    {
+        chObj                    = backupChObj;
+        chHandle->chInitDone     = UDMA_INIT_DONE;
+        chHandle->drvHandle      = &taskObj->testObj->drvObj[instID];
+        chHandle->chType         = UDMA_CH_TYPE_PDMA_RX;
+        rxPrms.configDefaultFlow = UFALSE;
+        retVal                   = Udma_chConfigRx(chHandle, &rxPrms);
+        if(UDMA_SOK == retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: ChConfigRx:: Neg::"
+                      " Check when chType is UDMA_CH_TYPE_PDMA_RX, instType is"
+                      " UDMA_TEST_INST_ID_BCDMA_0 and configDefaultFlow is UFALSE!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        else
+        {
+            retVal = UDMA_SOK;
+        }
+    }
+
+    /* Test scenario 3: Check when chType is UDMA_CH_TYPE_RX, instType is 
+     *                  UDMA_TEST_INST_ID_BCDMA_0 and configDefaultFlow is UFALSE */
+    instID = UDMA_TEST_INST_ID_BCDMA_0;
+    if(UDMA_SOK == retVal)
+    {
+        chHandle->drvHandle      = &taskObj->testObj->drvObj[instID];
+        chHandle->chType         = UDMA_CH_TYPE_RX;
+        rxPrms.configDefaultFlow = UFALSE;
+        retVal                   = Udma_chConfigRx(chHandle, &rxPrms);
+        if(UDMA_SOK == retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: ChConfigRx:: Neg:: "
+                      " Check when chType is UDMA_CH_TYPE_RX, instType is"
+                      " UDMA_TEST_INST_ID_BCDMA_0 and configDefaultFlow is UFALSE!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        else
+        {
+            retVal = UDMA_SOK;
+        }
+    }
+
+    /* Test scenario 4: Check when chType is UDMA_CH_TYPE_PDMA_RX, instType is 
+     *                  UDMA_TEST_INST_ID_BCDMA_0 and configDefaultFlow is UTRUE */
+    instID = UDMA_TEST_INST_ID_BCDMA_0;
+    if(UDMA_SOK == retVal)
+    {
+        chHandle->drvHandle      = &taskObj->testObj->drvObj[instID];
+        chHandle->chType         = UDMA_CH_TYPE_PDMA_RX;
+        rxPrms.configDefaultFlow = UTRUE;
+        retVal                   = Udma_chConfigRx(chHandle, &rxPrms);
+        if(UDMA_SOK == retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: ChConfigRx:: Neg::"
+                      " Check when chType is UDMA_CH_TYPE_PDMA_RX, instType is"
+                      " UDMA_TEST_INST_ID_BCDMA_0 and configDefaultFlow is UTRUE!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        else
+        {
+            retVal = UDMA_SOK;
+        }
+    }
    
     return retVal;
 }
@@ -2941,7 +3086,11 @@ int32_t UdmaChConfigPdmaTestNeg(UdmaTestTaskObj *taskObj)
  * Test scenario 4: Check when drvHandle is Null
  * Test scenario 5: Check when drvInitDone is not UDMA_INIT_DONE
  * Test scenario 6: Check when instType is UDMA_INST_TYPE_NORMAL, chType is UDMA_CH_TYPE_PDMA_RX 
- *                  fqRing and cqRing are Null.
+ *                  fqRing and cqRing are Null
+ * Test scenario 7: Check when chType is UDMA_CH_TYPE_PDMA_RX, instType is 
+ *                   UDMA_TEST_INST_ID_MAIN_0 and configDefaultFlow is UFALSE
+ * Test scenario 8: Check when chType is UDMA_CH_TYPE_RX, instType is 
+ *                   UDMA_TEST_INST_ID_MAIN_0 and configDefaultFlow is UFALSE
  */ 
 int32_t UdmaChConfigRxTestNeg(UdmaTestTaskObj *taskObj)
 {
@@ -2973,7 +3122,7 @@ int32_t UdmaChConfigRxTestNeg(UdmaTestTaskObj *taskObj)
     }
 
     /* Test scenario 2: Check when chInitDone is not UDMA_INIT_DONE */
-    chHandle = &chObj;
+    chHandle    = &chObj;
     if(UDMA_SOK == retVal)
     {
         chHandle->chInitDone = UDMA_DEINIT_DONE;
@@ -3056,7 +3205,7 @@ int32_t UdmaChConfigRxTestNeg(UdmaTestTaskObj *taskObj)
     */
     if(UDMA_SOK == retVal)
     {
-        rxPrms.configDefaultFlow = TRUE;
+        rxPrms.configDefaultFlow = UTRUE;
         chHandle->chType         = UDMA_CH_TYPE_PDMA_RX;
         chHandle->fqRing         = (Udma_RingHandle) NULL_PTR;
         chHandle->cqRing         = (Udma_RingHandle) NULL_PTR;
@@ -3077,9 +3226,54 @@ int32_t UdmaChConfigRxTestNeg(UdmaTestTaskObj *taskObj)
         }
     }
 
+    /* Test scenario 7: Check when chType is UDMA_CH_TYPE_PDMA_RX, instType is 
+     *                   UDMA_TEST_INST_ID_MAIN_0 and configDefaultFlow is UFALSE */
+    instID = UDMA_TEST_INST_ID_MAIN_0;
+    if(UDMA_SOK == retVal)
+    {
+        chHandle->drvHandle      = &taskObj->testObj->drvObj[instID];
+        chHandle->chType         = UDMA_CH_TYPE_PDMA_RX;
+        rxPrms.configDefaultFlow = UFALSE;
+        retVal                   = Udma_chConfigRx(chHandle, &rxPrms);
+        if(UDMA_SOK == retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: ChConfigRx:: Neg::"
+                      " Check when chType is UDMA_CH_TYPE_PDMA_RX, instType is"
+                      " UDMA_TEST_INST_ID_MAIN_0 and configDefaultFlow is UFALSE!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        else
+        {
+            retVal = UDMA_SOK;
+        }
+    }
+
+    /* Test scenario 8: Check when chType is UDMA_CH_TYPE_RX, instType is 
+     *                   UDMA_TEST_INST_ID_MAIN_0 and configDefaultFlow is UFALSE */
+    instID = UDMA_TEST_INST_ID_MAIN_0;
+    if(UDMA_SOK == retVal)
+    {
+        chHandle->drvHandle      = &taskObj->testObj->drvObj[instID];
+        chHandle->chType         = UDMA_CH_TYPE_RX;
+        rxPrms.configDefaultFlow = UFALSE;
+        retVal                   = Udma_chConfigRx(chHandle, &rxPrms);
+        if(UDMA_SOK == retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: ChConfigRx:: Neg::"
+                      " Check when chType is UDMA_CH_TYPE_RX, instType is"
+                      " UDMA_TEST_INST_ID_MAIN_0 and configDefaultFlow is UFALSE!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        else
+        {
+            retVal = UDMA_SOK;
+        }
+    }
+
     return retVal;
 }
-
 
 /* 
  * Test Case Description: Verifies the function Udma_chEnable when
@@ -3301,12 +3495,15 @@ int32_t UdmaChGetSwTriggerRegisterTestNeg(UdmaTestTaskObj *taskObj)
 /* 
  * Test Case Description: Verifies the function Udma_chDequeueTdResponse when
  * Test scenario 1: Check when access size is greater than ring element size
+ * Test scenario 2: Check when tdResponse is NULL
+ * Test scenario 3: Check when ringNum is UDMA_RING_INVALID and tdResponse is NULL 
+ * Test scenario 4: Check when ringNum is UDMA_RING_INVALID
  */ 
 int32_t UdmaChDequeueTdResponseTestNeg(UdmaTestTaskObj *taskObj)
 {
-    int32_t           retVal = UDMA_SOK;
-    struct Udma_ChObj chObj;
-    Udma_ChHandle     chHandle;
+    int32_t             retVal = UDMA_SOK;
+    struct Udma_ChObj   chObj;
+    Udma_ChHandle       chHandle;
     CSL_UdmapTdResponse tdResponse;
     struct Udma_RingObj tdCqRingObj;
 
@@ -3324,6 +3521,50 @@ int32_t UdmaChDequeueTdResponseTestNeg(UdmaTestTaskObj *taskObj)
         GT_0trace(taskObj->traceMask, GT_ERR,
                   " |TEST INFO|:: FAIL:: UDMA:: ChDequeueTdResponse:: Neg::"
                   " Check when access size is greater than ring element size!!\n");
+        retVal = UDMA_EFAIL;
+    }
+    else
+    {
+        retVal = UDMA_SOK;
+    }
+
+    /* Test scenario 2: Check when tdResponse is NULL */
+    retVal = Udma_chDequeueTdResponse(chHandle, NULL);
+    if(UDMA_SOK == retVal)
+    {
+        GT_0trace(taskObj->traceMask, GT_ERR,
+                  " |TEST INFO|:: FAIL:: UDMA:: ChDequeueTdResponse:: Neg::"
+                  " Check when tdResponse is NULL!!\n");
+        retVal = UDMA_EFAIL;
+    }
+    else
+    {
+        retVal = UDMA_SOK;
+    }
+
+    /* Test scenario 3: Check when ringNum is UDMA_RING_INVALID and tdResponse is NULL */
+    chHandle->tdCqRing->ringNum = UDMA_RING_INVALID;
+    retVal = Udma_chDequeueTdResponse(chHandle, NULL);
+    if(UDMA_SOK == retVal)
+    {
+        GT_0trace(taskObj->traceMask, GT_ERR,
+                  " |TEST INFO|:: FAIL:: UDMA:: ChDequeueTdResponse:: Neg::"
+                  " Check when ringNum is UDMA_RING_INVALID and tdResponse is NULL!!\n");
+        retVal = UDMA_EFAIL;
+    }
+    else
+    {
+        retVal = UDMA_SOK;
+    }
+
+    /* Test scenario 4: Check when ringNum is UDMA_RING_INVALID */
+    chHandle->tdCqRing->ringNum = UDMA_RING_INVALID;
+    retVal = Udma_chDequeueTdResponse(chHandle, &tdResponse);
+    if(UDMA_SOK == retVal)
+    {
+        GT_0trace(taskObj->traceMask, GT_ERR,
+                  " |TEST INFO|:: FAIL:: UDMA:: ChDequeueTdResponse:: Neg::"
+                  " Check when ringNum is UDMA_RING_INVALID!!\n");
         retVal = UDMA_EFAIL;
     }
     else

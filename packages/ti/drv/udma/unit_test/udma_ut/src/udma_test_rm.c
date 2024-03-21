@@ -404,17 +404,23 @@ int32_t UdmaRmInitPrmsinitTestNeg(UdmaTestTaskObj *taskObj)
  *                  chNum is equal to and less than startBlkCopyCh
  * Test scenario 6: Check when chType is UDMA_CH_TYPE_TR_BLK_COPY and 
  *                  chNum is UDMA_DMA_CH_INVALID
+ * Test scenario 7: Check when chType is UDMA_CH_TYPE_TR_BLK_COPY and 
+ *                  numBlkCopyCh is 0U
+ * Test scenario 8: Check when chType is UDMA_CH_TYPE_TR_BLK_COPY_UHC
+ *                  and resource not available to allocate
  */
 int32_t UdmaRmAllocBlkCopyChTestNeg(UdmaTestTaskObj *taskObj)
 {
-    int32_t           retVal = UDMA_SOK;
-    Udma_ChHandle     chHandle;
-    struct Udma_ChObj chObj;
-    Udma_ChPrms       chPrms;
-    uint32_t          chType;
-    Udma_DrvHandle    drvHandle;
-    uint32_t          instID;
-    struct Udma_ChObj backUpChObj;
+    int32_t            retVal = UDMA_SOK;
+    Udma_ChHandle      chHandle;
+    struct Udma_ChObj  chObj;
+    Udma_ChPrms        chPrms;
+    uint32_t           chType;
+    Udma_DrvHandle     drvHandle;
+    uint32_t           instID;
+    struct Udma_ChObj  backUpChObj;
+    struct Udma_DrvObj backUpDrvObj;
+    uint32_t           i=0U;
 
     GT_1trace(taskObj->traceMask, GT_INFO1,
               " |TEST INFO|:: Task:%d: UDMA RmFreeBlkCopy Ch, HcCh and UhcCh Testcase ::\r\n"
@@ -591,6 +597,66 @@ int32_t UdmaRmAllocBlkCopyChTestNeg(UdmaTestTaskObj *taskObj)
         }
     }
 
+    /* Test scenario 7: Check when chType is UDMA_CH_TYPE_TR_BLK_COPY and 
+     *                  numBlkCopyCh is 0U */
+    if(UDMA_SOK == retVal)
+    {
+        chType       = UDMA_CH_TYPE_TR_BLK_COPY;
+        UdmaChPrms_init(&chPrms, chType);
+        chHandle     = &chObj;
+        backUpChObj  = chObj;
+        instID       = UDMA_TEST_INST_ID_MAIN_0;
+        drvHandle    = &taskObj->testObj->drvObj[instID];
+        backUpDrvObj = taskObj->testObj->drvObj[instID];
+        drvHandle->initPrms.rmInitPrms.numBlkCopyCh = 0U;
+        retVal       = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
+        if(UDMA_SOK == retVal)
+        {  
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Udma_rmAllocBlkCopyCh:: Neg::"
+                      " Check when chType is UDMA_CH_TYPE_TR_BLK_COPY"
+                      " and numBlkCopyCh is 0U!!\n");
+            retVal = UDMA_EFAIL;
+            Udma_chClose(chHandle);
+        }
+        else
+        {
+            retVal = UDMA_SOK;
+            chObj  = backUpChObj;
+        }
+        taskObj->testObj->drvObj[instID] = backUpDrvObj;
+    }
+
+    /* Test scenario 8: Check when chType is UDMA_CH_TYPE_TR_BLK_COPY_UHC, 
+     *                  and resource not available to allocate */
+    if(UDMA_SOK == retVal)
+    {
+        chType       = UDMA_CH_TYPE_TR_BLK_COPY_UHC;
+        drvHandle    = &taskObj->testObj->drvObj[instID];
+        backUpDrvObj = taskObj->testObj->drvObj[instID];
+        UdmaChPrms_init(&chPrms, chType);
+        drvHandle->initPrms.rmInitPrms.numBlkCopyUhcCh = 1U;
+        for(i=0U; i<drvHandle->initPrms.rmInitPrms.numBlkCopyUhcCh; i++)
+        {
+            drvHandle->blkCopyUhcChFlag[i]  = 0U; //make resource not available
+        }
+        retVal = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
+        if(UDMA_SOK == retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Udma_rmAllocBlkCopyUhcCh:: Pos::"
+                      " Check when chType is UDMA_CH_TYPE_TR_BLK_COPY_HC,"
+                      " and resource not available to allocate!!\n");
+            retVal = UDMA_EFAIL;
+            Udma_chClose(chHandle);
+        }
+        else
+        {
+            retVal = UDMA_SOK;
+        }
+        taskObj->testObj->drvObj[instID] = backUpDrvObj;
+    }
+
     return retVal;
 }
 
@@ -608,6 +674,13 @@ int32_t UdmaRmAllocBlkCopyChTestNeg(UdmaTestTaskObj *taskObj)
  *                  chNum is less than startTxUhcCh
  * Test scenario 6: Check when chType is UDMA_CH_TYPE_TX_UHC and 
  *                  chNum is UDMA_DMA_CH_INVALID
+ * Test scenario 7: Check when chType is UDMA_CH_TYPE_TX
+ *                  and resource not available to allocate
+ * Test scenario 8: Check when chType is UDMA_CH_TYPE_TX and numTxCh is 0U
+ * Test scenario 9: Check when chType is UDMA_CH_TYPE_TX_UHC, 
+ *                  and resource not available to allocate
+ * Test scenario 10: Check when chType is UDMA_CH_TYPE_TX_UHC, 
+ *                  chNum is equal to startTxUhcCh and txUhcChFlag[0] is 0U
  */
 int32_t UdmaRmAllocTxChTestNeg(UdmaTestTaskObj *taskObj)
 {
@@ -619,6 +692,8 @@ int32_t UdmaRmAllocTxChTestNeg(UdmaTestTaskObj *taskObj)
     Udma_DrvHandle     drvHandle;
     uint32_t           instID;
     struct Udma_ChObj  backUpChObj;
+    struct Udma_DrvObj backUpDrvObj;
+    uint32_t           i=0U;
 
     GT_1trace(taskObj->traceMask, GT_INFO1,
               " |TEST INFO|:: Task:%d: UDMA RmAllocTx Ch, HcCh and UhcCh Testcase ::\r\n"
@@ -795,6 +870,129 @@ int32_t UdmaRmAllocTxChTestNeg(UdmaTestTaskObj *taskObj)
         }
     }
 
+    /* Test scenario 7: Check when chType is UDMA_CH_TYPE_TX, 
+     *                  and resource not available to allocate */
+    if(UDMA_SOK == retVal)
+    {
+        chType           = UDMA_CH_TYPE_TX;
+        drvHandle        = &taskObj->testObj->drvObj[instID];
+        backUpDrvObj     = taskObj->testObj->drvObj[instID];
+        UdmaChPrms_init(&chPrms, chType);
+        backUpChObj                            = chObj;
+        chPrms.peerChNum                       = UDMA_PSIL_CH_MCU_CPSW0_TX;
+        drvHandle->initPrms.rmInitPrms.numTxCh = 1U;
+        for(i=0U; i<drvHandle->initPrms.rmInitPrms.numTxCh; i++)
+        {
+            drvHandle->txChFlag[i] = 0U; //make resource not available
+        }
+        retVal = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
+        if(UDMA_SOK == retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Udma_rmAllocTxUhcCh:: Neg::"
+                      " Check when chType is UDMA_CH_TYPE_TX,"
+                      " and resource not available to allocate!!\n");
+            retVal = UDMA_EFAIL;
+            Udma_chClose(chHandle);
+        }
+        else
+        {
+            retVal = UDMA_SOK;
+            chObj  = backUpChObj;
+        }
+        taskObj->testObj->drvObj[instID] = backUpDrvObj;
+    }
+
+    /* Test scenario 8: Check when chType is UDMA_CH_TYPE_TX and numTxCh is 0U */
+    if(UDMA_SOK == retVal)
+    {
+        chType           = UDMA_CH_TYPE_TX;
+        drvHandle        = &taskObj->testObj->drvObj[instID];
+        backUpDrvObj     = taskObj->testObj->drvObj[instID];
+        UdmaChPrms_init(&chPrms, chType);
+        backUpChObj                            = chObj;
+        chPrms.peerChNum                       = UDMA_PSIL_CH_MCU_CPSW0_TX;
+        drvHandle->initPrms.rmInitPrms.numTxCh = 0U;
+        retVal                                 = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
+        if(UDMA_SOK == retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Udma_rmAllocTxUhcCh:: Neg::"
+                      " Check when chType is UDMA_CH_TYPE_TX and numTxCh is 0U!!\n");
+            retVal = UDMA_EFAIL;
+            Udma_chClose(chHandle);
+        }
+        else
+        {
+            retVal = UDMA_SOK;
+            chObj  = backUpChObj;
+        }
+        taskObj->testObj->drvObj[instID] = backUpDrvObj;
+    }
+
+    /* Test scenario 9: Check when chType is UDMA_CH_TYPE_TX_UHC, 
+     *                  and resource not available to allocate */
+    if(UDMA_SOK == retVal)
+    {
+        chType           = UDMA_CH_TYPE_TX_UHC;
+        drvHandle        = &taskObj->testObj->drvObj[instID];
+        backUpDrvObj     = taskObj->testObj->drvObj[instID];
+        UdmaChPrms_init(&chPrms, chType);
+        backUpChObj                               = chObj;
+        chPrms.peerChNum                          = UDMA_PSIL_CH_MCU_CPSW0_TX;
+        drvHandle->initPrms.rmInitPrms.numTxUhcCh = 1U;
+        for(i=0U; i<drvHandle->initPrms.rmInitPrms.numTxUhcCh; i++)
+        {
+            drvHandle->txUhcChFlag[i] = 0U; //make resource not available
+        }
+        retVal                                    = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
+        if(UDMA_SOK == retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Udma_rmAllocTxUhcCh:: Neg::"
+                      " Check when chType is UDMA_CH_TYPE_TX_UHC"
+                      " and resource not available to allocate!!\n");
+            retVal = UDMA_EFAIL;
+            Udma_chClose(chHandle);
+        }
+        else
+        {
+            retVal = UDMA_SOK;
+            chObj  = backUpChObj;
+        }
+        taskObj->testObj->drvObj[instID] = backUpDrvObj;
+    }
+
+    /* Test scenario 10: Check when chType is UDMA_CH_TYPE_TX_UHC, 
+     *                  chNum is equal to startTxUhcCh and txUhcChFlag[0] is 0U */
+    if(UDMA_SOK == retVal)
+    {
+        chType           = UDMA_CH_TYPE_TX_UHC;
+        drvHandle        = &taskObj->testObj->drvObj[instID];
+        backUpDrvObj     = taskObj->testObj->drvObj[instID];
+        UdmaChPrms_init(&chPrms, chType);
+        backUpChObj               = chObj;
+        chPrms.peerChNum          = UDMA_PSIL_CH_MCU_CPSW0_TX;
+        chPrms.chNum              = drvHandle->initPrms.rmInitPrms.startTxUhcCh;
+        drvHandle->txUhcChFlag[0] = 0U;
+        retVal                    = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
+        if(UDMA_SOK == retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Udma_rmAllocTxUhcCh:: Neg::"
+                      " Check when chType is UDMA_CH_TYPE_TX_UHC,"
+                      " chNum is equal to startTxUhcCh and txUhcChFlag[0] is 0U!!\n");
+            retVal = UDMA_EFAIL;
+            Udma_chClose(chHandle);
+        }
+        else
+        {
+            retVal = UDMA_SOK;
+            chObj  = backUpChObj;
+        }
+        taskObj->testObj->drvObj[instID] = backUpDrvObj;
+    }
+
     return retVal;
 }
 
@@ -812,6 +1010,11 @@ int32_t UdmaRmAllocTxChTestNeg(UdmaTestTaskObj *taskObj)
  *                  chNum is less than startRxUhcCh
  * Test scenario 6: Check when chType is UDMA_CH_TYPE_RX_UHC and 
  *                  chNum is UDMA_DMA_CH_INVALID
+ * Test scenario 7: Check when chType is UDMA_CH_TYPE_RX_HC, 
+ *                  and resource not available to allocate
+ * Test scenario 8: Check when chType is UDMA_CH_TYPE_RX_HC and numRxHcCh is 0U 
+ * Test scenario 9: Check when chType is UDMA_CH_TYPE_RX_HC, 
+ *                  chNum is equal to startRxHcCh and rxHcChFlag[0] is 0U
  */
 int32_t UdmaRmAllocRxChTestNeg(UdmaTestTaskObj *taskObj)
 {
@@ -823,7 +1026,9 @@ int32_t UdmaRmAllocRxChTestNeg(UdmaTestTaskObj *taskObj)
     Udma_DrvHandle     drvHandle;
     uint32_t           instID;
     struct Udma_ChObj  backUpChObj;
-
+    struct Udma_DrvObj backUpDrvObj;
+    uint32_t           i=0U;
+    
     GT_1trace(taskObj->traceMask, GT_INFO1,
               " |TEST INFO|:: Task:%d: UDMA RmAllocRx CH, HcCh, UhcCh Testcase ::\r\n"
               , taskObj->taskId);
@@ -1001,13 +1206,103 @@ int32_t UdmaRmAllocRxChTestNeg(UdmaTestTaskObj *taskObj)
         }
     }
 
+    /* Test scenario 7: Check when chType is UDMA_CH_TYPE_RX_HC, 
+     *                  and resource not available to allocate */
+    if(UDMA_SOK == retVal)
+    {
+        chType           = UDMA_CH_TYPE_RX_HC;
+        drvHandle        = &taskObj->testObj->drvObj[instID];
+        backUpDrvObj     = taskObj->testObj->drvObj[instID];
+        UdmaChPrms_init(&chPrms, chType);
+        backUpChObj                              = chObj;
+        chPrms.peerChNum                         = UDMA_TEST_MAIN_PEER_CH_NUM_RX;
+        drvHandle->initPrms.rmInitPrms.numRxHcCh = 1U;
+        for(i=0U; i<drvHandle->initPrms.rmInitPrms.numRxHcCh; i++)
+        {
+            drvHandle->rxHcChFlag[i] = 0U; //make resource not available
+        }
+        retVal = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
+        if(UDMA_SOK == retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Udma_rmAllocRxHcCh:: Neg::"
+                      " Check when chType is UDMA_CH_TYPE_RX_HC,"
+                      " and resource not available to allocate!!\n");
+            retVal = UDMA_EFAIL;
+            Udma_chClose(chHandle);
+        }
+        else
+        {
+            retVal = UDMA_SOK;
+            chObj  = backUpChObj;
+        }
+        taskObj->testObj->drvObj[instID] = backUpDrvObj;
+    }
+
+    /* Test scenario 8: Check when chType is UDMA_CH_TYPE_RX_HC and numRxHcCh is 0U */
+    if(UDMA_SOK == retVal)
+    {
+        chType           = UDMA_CH_TYPE_RX_HC;
+        drvHandle        = &taskObj->testObj->drvObj[instID];
+        backUpDrvObj     = taskObj->testObj->drvObj[instID];
+        UdmaChPrms_init(&chPrms, chType);
+        backUpChObj                              = chObj;
+        chPrms.peerChNum                         = UDMA_TEST_MAIN_PEER_CH_NUM_RX;
+        drvHandle->initPrms.rmInitPrms.numRxHcCh = 0U;
+        retVal                                   = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
+        if(UDMA_SOK == retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Udma_rmAllocRxHcCh:: Neg::"
+                      " Check when chType is UDMA_CH_TYPE_RX_HC and numRxHcCh is 0U!!\n");
+            retVal = UDMA_EFAIL;
+            Udma_chClose(chHandle);
+        }
+        else
+        {
+            retVal = UDMA_SOK;
+            chObj  = backUpChObj;
+        }
+        taskObj->testObj->drvObj[instID] = backUpDrvObj;
+    }
+
+    /* Test scenario 9: Check when chType is UDMA_CH_TYPE_RX_HC, 
+     *                  chNum is equal to startRxHcCh and rxHcChFlag[0] is 0U */
+    if(UDMA_SOK == retVal)
+    {
+        chType           = UDMA_CH_TYPE_RX_HC;
+        drvHandle        = &taskObj->testObj->drvObj[instID];
+        backUpDrvObj     = taskObj->testObj->drvObj[instID];
+        UdmaChPrms_init(&chPrms, chType);
+        backUpChObj      = chObj;
+        chPrms.peerChNum = UDMA_TEST_MAIN_PEER_CH_NUM_RX;
+        chPrms.chNum     = drvHandle->initPrms.rmInitPrms.startRxHcCh;
+        drvHandle->rxHcChFlag[0] = 0U;
+        retVal           = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
+        if(UDMA_SOK == retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Udma_rmAllocRxHcCh:: Neg::"
+                      " Check when chType is UDMA_CH_TYPE_RX_HC,"
+                      " chNum is equal to startRxHcCh and rxHcChFlag[0] is 0U!!\n");
+            retVal = UDMA_EFAIL;
+            Udma_chClose(chHandle);
+        }
+        else
+        {
+            retVal = UDMA_SOK;
+            chObj  = backUpChObj;
+        }
+        taskObj->testObj->drvObj[instID] = backUpDrvObj;
+    }
+
     return retVal;
 }
 
 /*
  * Test Case Description: Verifies the rmAlloc functions when
- * Test scenario 1: Check when numFreeRing is 0 for the function Udma_rmAllocProxy
- * Test scenario 2: Check when numProxy is 0 for the function Udma_rmAllocFreeRing
+ * Test scenario 1: Check when numProxy is 0 for the function Udma_rmAllocProxy
+ * Test scenario 2: Check when numFreeRing is 0 for the function Udma_rmAllocFreeRing
  * Test scenario 3: Check when ringMonNum is less than startRingMon for 
  *                  the function Udma_rmFreeRingMon
  * Test scenario 4: Check when instType is not UDMA_INST_TYPE_NORMAL for
@@ -1021,25 +1316,27 @@ int32_t UdmaRmAllocRxChTestNeg(UdmaTestTaskObj *taskObj)
  */
 int32_t UdmaRmAllocTestNeg(UdmaTestTaskObj *taskObj)
 {
-    int32_t           retVal = UDMA_SOK;
-    uint32_t          instID;
-    uint32_t          preferredIrIntrNum;
-    Udma_ChHandle     chHandle;
-    struct Udma_ChObj backUpChObj;
-    struct Udma_ChObj chObj;
-    uint16_t          ringMonNum;
-    uint32_t          irIntrNum;
+    int32_t            retVal = UDMA_SOK;
+    uint32_t           instID;
+    uint32_t           preferredIrIntrNum;
+    Udma_ChHandle      chHandle;
+    struct Udma_ChObj  backUpChObj;
+    struct Udma_ChObj  chObj;
+    uint16_t           ringMonNum;
+    uint32_t           irIntrNum;
+    struct Udma_DrvObj backUpDrvObj;
 
     GT_1trace(taskObj->traceMask, GT_INFO1,
               " |TEST INFO|:: Task:%d: UDMA rmAlloc related negative testcase ::\r\n"
               , taskObj->taskId);
 
-    /* Test scenario 1: Check when numFreeRing is 0 */ 
+    /* Test scenario 1: Check when numProxy is 0 */ 
     chHandle                                             = &chObj;
     backUpChObj                                          = chObj;
     instID                                               = UDMA_TEST_INST_ID_MAIN_0;
+    backUpDrvObj                                         = taskObj->testObj->drvObj[instID];
     chHandle->drvHandle                                  = &taskObj->testObj->drvObj[instID];
-    chHandle->drvHandle->initPrms.rmInitPrms.numFreeRing = 0U;
+    chHandle->drvHandle->initPrms.rmInitPrms.numProxy    = 0U;
     retVal                                               = Udma_rmAllocProxy(chHandle->drvHandle);
     if(UDMA_SOK == retVal)
     {
@@ -1050,10 +1347,10 @@ int32_t UdmaRmAllocTestNeg(UdmaTestTaskObj *taskObj)
     }
     else
     {
-        /* Test scenario 2: Check when numProxy is 0 */ 
-        retVal                                            = UDMA_SOK;
-        chHandle->drvHandle->initPrms.rmInitPrms.numProxy = 0U;
-        retVal                                            = Udma_rmAllocFreeRing(chHandle->drvHandle);
+        /* Test scenario 2: Check when numFreeRing is 0 */ 
+        retVal                                               = UDMA_SOK;
+        chHandle->drvHandle->initPrms.rmInitPrms.numFreeRing = 0U;
+        retVal                                               = Udma_rmAllocFreeRing(chHandle->drvHandle);
         if(UDMA_SOK == retVal)
         {
             GT_0trace(taskObj->traceMask, GT_ERR,
@@ -1145,6 +1442,7 @@ int32_t UdmaRmAllocTestNeg(UdmaTestTaskObj *taskObj)
             retVal = UDMA_SOK;
         }
     }
+    taskObj->testObj->drvObj[instID] = backUpDrvObj;
 
     return retVal;
 }
@@ -1179,6 +1477,104 @@ int32_t UdmaRmTranslateCoreIntrInputTestNeg(UdmaTestTaskObj *taskObj)
     else 
     {
         retVal = UDMA_SOK;
+    }
+
+    return retVal;
+}
+
+/*
+ * Test Case Description: Verifies the function Udma_rmSetSharedResRmInitPrms
+ * Test scenario 1: Check when sumInstShare is greater than numUnresvRes
+ * Test scenario 2: Check when instId is invalid
+ * Test scenario 3: Check when minReq is 0U and numInst is greater than UDMA_RM_SHARED_RES_MAX_INST 
+ */
+int32_t UdmaRmSetSharedResRmInitPrmsTestNeg(UdmaTestTaskObj *taskObj)
+{
+    int32_t              retVal = UDMA_SOK;
+    uint32_t             instId;
+    int32_t              i;
+    Udma_RmInitPrms      rmInitPrms;
+    instId               = UDMA_TEST_INST_ID_MAIN_0;
+    Udma_RmSharedResPrms *rmSharedResPrms;
+
+    uint32_t shareRes[UDMA_TEST_NUM_RES_OVERWRITE] = {UDMA_RM_RES_ID_GLOBAL_EVENT, 
+                                                        UDMA_RM_RES_ID_VINTR,
+#if (UDMA_SOC_CFG_INTR_ROUTER_PRESENT == 1)
+                                                        UDMA_RM_RES_ID_IR_INTR
+#endif
+                                                        };
+
+    for(i = 0 ; i < UDMA_TEST_NUM_RES_OVERWRITE ; i++)
+    {
+        rmSharedResPrms = Udma_rmGetSharedResPrms(shareRes[i]);
+
+        if(NULL_PTR != rmSharedResPrms)
+        {
+            rmSharedResPrms->startResrvCnt = 0U;
+            rmSharedResPrms->endResrvCnt = 0U;
+#if (UDMA_SOC_CFG_UDMAP_PRESENT == 1)
+#if defined(BUILD_MCU1_0) || defined(BUILD_MCU1_0)
+            rmSharedResPrms->instShare[UDMA_INST_ID_MAIN_0] = UDMA_RM_SHARED_RES_CNT_MIN;
+            rmSharedResPrms->instShare[UDMA_INST_ID_MCU_0] = UDMA_RM_SHARED_RES_CNT_REST;
+#else
+            rmSharedResPrms->instShare[UDMA_INST_ID_MAIN_0] = UDMA_RM_SHARED_RES_CNT_REST;
+            rmSharedResPrms->instShare[UDMA_INST_ID_MCU_0] = UDMA_RM_SHARED_RES_CNT_MIN;
+#endif
+#endif
+        }
+    }
+
+    /* Test scenario 1: Check when sumInstShare is greater than numUnresvRes */
+    rmSharedResPrms->instShare[instId] = UDMA_RM_SHARED_RES_CNT_REST + 1U;
+    retVal                             = UdmaRmInitPrms_init(instId, &rmInitPrms);
+    if(UDMA_SOK == retVal)
+    {
+        GT_0trace(taskObj->traceMask, GT_ERR,
+                  " |TEST INFO|:: FAIL:: UDMA:: Udma_rmSetSharedResRmInitPrms::" 
+                  " Neg:: Check when sumInstShare is greater than numUnresvRes!!\n");
+        retVal = UDMA_EFAIL;
+    }
+    else 
+    {
+        retVal = UDMA_SOK;
+    }
+
+    /* Test scenario 2: Check when instId is invalid */
+    if(UDMA_SOK == retVal)
+    {  
+        instId = UDMA_CORE_ID_INVALID;
+        retVal = UdmaRmInitPrms_init(instId, &rmInitPrms);
+        if(UDMA_SOK == retVal)
+        {  
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: RmInitPrms_init:: Neg::"
+                      " Check when instId is invalid!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        else
+        {
+            retVal = UDMA_SOK;
+        }
+    }
+
+    /* Test scenario 3: Check when minReq is 0U and numInst is greater than UDMA_RM_SHARED_RES_MAX_INST */
+    if(UDMA_SOK == retVal)
+    {  
+        instId = UDMA_TEST_INST_ID_MAIN_0;
+        rmSharedResPrms->numInst = UDMA_RM_SHARED_RES_MAX_INST + 1U;
+        rmSharedResPrms->minReq  = 0U;
+        retVal = UdmaRmInitPrms_init(instId, &rmInitPrms);
+        if(UDMA_SOK == retVal)
+        {  
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: RmInitPrms_init:: Neg::"
+                      " Check when minReq is 0U and numInst is greater than UDMA_RM_SHARED_RES_MAX_INST!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        else
+        {
+            retVal = UDMA_SOK;
+        }
     }
 
     return retVal;
