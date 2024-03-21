@@ -3427,6 +3427,45 @@ static int32_t Udma_chDisableTxChan(Udma_ChHandle chHandle, uint32_t timeout)
                 currTimeout++;
             }
         }
+#if (UDMA_SOC_CFG_UDMAP_PRESENT == 1)
+        if(UDMA_INST_TYPE_NORMAL == drvHandle->instType)
+        {
+            /* Clear flush in peer */
+            CSL_FINS(peerRtEnable, PSILCFG_REG_RT_ENABLE_FLUSH, (uint32_t) 0U);
+            (void) CSL_udmapSetChanPeerReg(
+                &drvHandle->udmapRegs,
+                chHandle->txChNum,
+                CSL_UDMAP_CHAN_DIR_TX,
+                rtEnableRegOffset,
+                &peerRtEnable);
+        }
+#endif
+#if (UDMA_SOC_CFG_BCDMA_PRESENT == 1)
+        if(UDMA_INST_TYPE_LCDMA_BCDMA == drvHandle->instType)
+        {
+            /* Clear flush in peer */
+            CSL_FINS(peerRtEnable, PSILCFG_REG_RT_ENABLE_FLUSH, (uint32_t) 0U);
+            (void) CSL_bcdmaSetChanPeerReg(
+                &drvHandle->bcdmaRegs,
+                chHandle->txChNum + drvHandle->txChOffset,
+                CSL_BCDMA_CHAN_DIR_TX,
+                rtEnableRegOffset,
+                &peerRtEnable);
+        }
+#endif
+#if (UDMA_SOC_CFG_PKTDMA_PRESENT == 1)
+        if(UDMA_INST_TYPE_LCDMA_PKTDMA == drvHandle->instType)
+        {
+            /* Clear flush in peer */
+            CSL_FINS(peerRtEnable, PSILCFG_REG_RT_ENABLE_FLUSH, (uint32_t) 0U);
+            (void) CSL_pktdmaSetChanPeerReg(
+                &drvHandle->pktdmaRegs,
+                chHandle->txChNum,
+                CSL_PKTDMA_CHAN_DIR_TX,
+                rtEnableRegOffset,
+                &peerRtEnable);
+        }
+#endif
     }
 
     if(UDMA_SOK == retVal)
