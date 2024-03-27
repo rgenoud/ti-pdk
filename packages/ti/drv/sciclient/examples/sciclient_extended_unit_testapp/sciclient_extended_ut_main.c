@@ -53,10 +53,13 @@
 /* ========================================================================== */
 
 #if defined (SOC_J721E)
+#define TISCI_DEV_NAVSS0_MODSS_INTAGG     TISCI_DEV_NAVSS0_MODSS_INTAGGR_0
 #define TISCI_DEV_NAVSS0_INTR             TISCI_DEV_NAVSS0_INTR_ROUTER_0
 #elif defined (SOC_J7200)
+#define TISCI_DEV_NAVSS0_MODSS_INTAGG     TISCI_DEV_NAVSS0_MODSS_INTA_0
 #define TISCI_DEV_NAVSS0_INTR             TISCI_DEV_NAVSS0_INTR_ROUTER_0
 #elif defined (SOC_J721S2) || defined (SOC_J784S4)
+#define TISCI_DEV_NAVSS0_MODSS_INTAGG     TISCI_DEV_NAVSS0_MODSS_INTA_0
 #define TISCI_DEV_NAVSS0_INTR             TISCI_DEV_NAVSS0_INTR_0
 #endif
 
@@ -106,6 +109,7 @@ static int32_t SciclientApp_pmMessageTest(void);
 static int32_t SciclientApp_directNegTest(void);
 static int32_t SciclientApp_pmMessageNegTest(void);
 static int32_t SciclientApp_boardCfgNegTest(void);
+static int32_t SciclientApp_directFuncTest(void);
 #endif
 static int32_t SciclientApp_msmcQueryNegTest(void);
 static int32_t SciclientApp_otpProcessKeyCfgNegTest(void);
@@ -136,6 +140,8 @@ static int32_t SciclientApp_rmTranslateIrqInputTest(void);
 static void SciclientApp_getResoureRange(uint16_t src_id, uint16_t dst_dev_id, uint16_t dst_host_id, struct SciApp_RangeOfLines *range);
 static int32_t SciclientApp_rmClearInterruptRouteTest(void);
 static int32_t SciclientApp_rmProgramInterruptRouteTest(void);
+static int32_t SciclientApp_rmIrqUnmappedVintRouteDeleteNegTest(void);
+static int32_t SciclientApp_rmIrqFindRouteNegTest(void);
 
 /* ========================================================================== */
 /*                          Function Definitions                              */
@@ -259,6 +265,17 @@ int32_t SciApp_testMain(SciApp_TestParams_t *testParams)
         case 25:  
             testParams->testResult = SciclientApp_rmProgramInterruptRouteTest();
             break;    
+        case 26:
+            testParams->testResult =  SciclientApp_rmIrqUnmappedVintRouteDeleteNegTest();
+            break;
+        case 27:
+            testParams->testResult =  SciclientApp_rmIrqFindRouteNegTest();
+            break;
+#if defined (BUILD_MCU1_0)
+        case 28:
+            testParams->testResult =  SciclientApp_directFuncTest();
+            break;
+#endif
         default:
             break;
     }
@@ -3304,6 +3321,363 @@ static int32_t SciclientApp_rmProgramInterruptRouteTest(void)
 
     return rmProgramInterruptRouteTestStatus;
 }
+
+static int32_t SciclientApp_rmIrqUnmappedVintRouteDeleteNegTest(void)
+{
+    int32_t  status                                 = CSL_PASS;
+    int32_t  sciclientInitStatus                    = CSL_PASS;
+    int32_t  rmIrqUnmappedVintRouteDeleteTestStatus = CSL_PASS;
+    struct tisci_msg_rm_irq_release_resp sciclient_UnmappedVintRouteDeleteResp;
+    const struct tisci_msg_rm_irq_release_req sciclient_UnmappedVintRouteDeleteReqIa = 
+    {
+        .valid_params = TISCI_MSG_VALUE_RM_DST_ID_VALID | TISCI_MSG_VALUE_RM_DST_HOST_IRQ_VALID,
+        .src_id       = TISCI_DEV_NAVSS0_MODSS_INTAGG
+    };
+    const struct tisci_msg_rm_irq_release_req sciclient_UnmappedVintRouteDeleteReq   = 
+    {
+        .valid_params = TISCI_MSG_VALUE_RM_DST_ID_VALID | TISCI_MSG_VALUE_RM_DST_HOST_IRQ_VALID |
+                        TISCI_MSG_VALUE_RM_IA_ID_VALID | TISCI_MSG_VALUE_RM_VINT_VALID,
+        .src_id       = TISCI_DEV_NAVSS0_MAILBOX_0
+    };
+    Sciclient_ConfigPrms_t config                   =
+    {
+       SCICLIENT_SERVICE_OPERATION_MODE_INTERRUPT,
+       NULL,
+       0 /* isSecure = 0 un secured for all cores */
+    };
+
+     while (gSciclientHandle.initCount != 0)
+     {
+         status = Sciclient_deinit();
+     }
+     status = Sciclient_init(&config);
+     sciclientInitStatus = status;
+
+     if(status == CSL_PASS)
+     {
+        SciApp_printf("Sciclient_init PASSED.\n");
+        /* By passing src_id as TISCI_DEV_NAVSS0_MODSS_INTAGG, Sciclient_rmIaVintGetInfo function will return pass */
+        status = Sciclient_rmClearInterruptRoute(&sciclient_UnmappedVintRouteDeleteReqIa,
+                                                 &sciclient_UnmappedVintRouteDeleteResp,
+                                                 SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            rmIrqUnmappedVintRouteDeleteTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_rmClearInterruptRoute: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+            rmIrqUnmappedVintRouteDeleteTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_rmClearInterruptRoute: Negative Arg Test Failed.\n");
+        }
+
+        /* By passing src_id as TISCI_DEV_NAVSS0_MAILBOX_0, Sciclient_rmIaVintGetInfo function will return fail */
+        status = Sciclient_rmClearInterruptRoute(&sciclient_UnmappedVintRouteDeleteReq,
+                                                 &sciclient_UnmappedVintRouteDeleteResp,
+                                                 SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EBADARGS)
+        {
+            rmIrqUnmappedVintRouteDeleteTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_rmClearInterruptRoute: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+            rmIrqUnmappedVintRouteDeleteTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_rmClearInterruptRoute: Negative Arg Test Failed.\n");
+        }
+    }
+    else
+    {
+        rmIrqUnmappedVintRouteDeleteTestStatus += CSL_EFAIL;
+        SciApp_printf("Sciclient_init FAILED.\n");
+    }
+
+    if(sciclientInitStatus == CSL_PASS)
+    {
+        status = Sciclient_deinit();
+        if(status == CSL_PASS)
+        {
+            rmIrqUnmappedVintRouteDeleteTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_deinit PASSED.\n");
+        }
+        else
+        {
+            rmIrqUnmappedVintRouteDeleteTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_deinit FAILED.\n");
+        }
+    }
+
+  return rmIrqUnmappedVintRouteDeleteTestStatus;
+}
+
+static int32_t SciclientApp_rmIrqFindRouteNegTest(void)
+{
+    int32_t  status                                 = CSL_PASS;
+    int32_t  sciclientInitStatus                    = CSL_PASS;
+    int32_t  rmIrqFindRouteTestStatus               = CSL_PASS;
+    struct tisci_msg_rm_irq_set_req Sciclient_ReqSrcIr =
+    {
+        .valid_params = TISCI_MSG_VALUE_RM_DST_ID_VALID | TISCI_MSG_VALUE_RM_DST_HOST_IRQ_VALID,
+        .src_id       = TISCI_DEV_NAVSS0_INTR
+    };
+    struct tisci_msg_rm_irq_set_req Sciclient_ReqIa =
+    {
+        .valid_params = TISCI_MSG_VALUE_RM_DST_ID_VALID | TISCI_MSG_VALUE_RM_DST_HOST_IRQ_VALID |
+                        TISCI_MSG_VALUE_RM_IA_ID_VALID | TISCI_MSG_VALUE_RM_VINT_VALID |
+                        TISCI_MSG_VALUE_RM_GLOBAL_EVENT_VALID | TISCI_MSG_VALUE_RM_VINT_STATUS_BIT_INDEX_VALID,
+        .ia_id        = TISCI_DEV_NAVSS0_MODSS_INTAGG
+    };
+    struct tisci_msg_rm_irq_set_req Sciclient_ReqDstIr =
+    {
+        .valid_params = TISCI_MSG_VALUE_RM_DST_ID_VALID | TISCI_MSG_VALUE_RM_DST_HOST_IRQ_VALID,
+        .src_id       = TISCI_DEV_NAVSS0_MAILBOX_0,
+        .dst_id       = TISCI_DEV_NAVSS0_INTR
+    };
+    struct tisci_msg_rm_irq_set_resp Sciclient_Resp;
+    Sciclient_ConfigPrms_t config                   =
+    {
+       SCICLIENT_SERVICE_OPERATION_MODE_INTERRUPT,
+       NULL,
+       0 /* isSecure = 0 un secured for all cores */
+    };
+
+     while (gSciclientHandle.initCount != 0)
+     {
+         status = Sciclient_deinit();
+     }
+     status = Sciclient_init(&config);
+     sciclientInitStatus = status;
+
+     if(status == CSL_PASS)
+     {
+        SciApp_printf("Sciclient_init PASSED.\n");
+        /* Passing source_id as IR fails the source and destination node checks for Sciclient_rmIrqFindRoute function */
+        status = Sciclient_rmProgramInterruptRoute(&Sciclient_ReqSrcIr,
+                                                   &Sciclient_Resp,
+                                                   SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EBADARGS)
+        {
+            rmIrqFindRouteTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_rmProgramInterruptRoute: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+            rmIrqFindRouteTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_rmProgramInterruptRoute: Negative Arg Test Failed.\n");
+        }
+        
+        /* Passing device ID of interrupt aggregator will retrieve source device's node for Sciclient_rmIrqFindRoute function */
+        status = Sciclient_rmProgramInterruptRoute(&Sciclient_ReqIa,
+                                                   &Sciclient_Resp,
+                                                   SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            rmIrqFindRouteTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_rmProgramInterruptRoute: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+            rmIrqFindRouteTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_rmProgramInterruptRoute: Negative Arg Test Failed.\n");
+        }
+
+        /* Passing dest_id as IR fails the source and destination node checks for Sciclient_rmIrqFindRoute function */
+        status = Sciclient_rmProgramInterruptRoute(&Sciclient_ReqDstIr,
+                                                   &Sciclient_Resp,
+                                                   SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EBADARGS)
+        {
+            rmIrqFindRouteTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_rmProgramInterruptRoute: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+            rmIrqFindRouteTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_rmProgramInterruptRoute: Negative Arg Test Failed.\n");
+        }
+    }
+    else
+    {
+        rmIrqFindRouteTestStatus += CSL_EFAIL;
+        SciApp_printf("Sciclient_init FAILED.\n");
+    }
+
+    if(sciclientInitStatus == CSL_PASS)
+    {
+        status = Sciclient_deinit();
+        if(status == CSL_PASS)
+        {
+            rmIrqFindRouteTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_deinit PASSED.\n");
+        }
+        else
+        {
+            rmIrqFindRouteTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_deinit FAILED.\n");
+        }
+    }
+
+  return rmIrqFindRouteTestStatus;
+}
+
+/* This function covers the MC/DC coverage of sciclient_direct.c file */
+#if defined (BUILD_MCU1_0)
+static int32_t SciclientApp_directFuncTest(void)
+{
+    int32_t  status                    = CSL_PASS;
+    int32_t  sciclientInitStatus       = CSL_PASS;
+    int32_t  sciclientDirectTestStatus = CSL_PASS;
+    uint32_t msg                       = TISCI_MSG_BOARD_CONFIG_PM;
+    void     *messageType              = (uint32_t *)&msg;
+    uint8_t  boardCfgHeader;
+    uint8_t  commonHeader;
+    Sciclient_BoardCfgPrms_t SciclientApp_PmRmPrms;
+    Sciclient_ReqPrm_t SciclientApp_ReqPrm;
+    Sciclient_ConfigPrms_t config      =
+    {
+       SCICLIENT_SERVICE_OPERATION_MODE_INTERRUPT,
+       NULL,
+       0 /* isSecure = 0 un secured for all cores */
+    };
+
+     while (gSciclientHandle.initCount != 0)
+     {
+         status = Sciclient_deinit();
+     }
+     status = Sciclient_init(&config);
+     sciclientInitStatus = status;
+
+     if(status == CSL_PASS)
+     {
+          SciApp_printf ("Sciclient_init PASSED.\n");
+          /* Passing response parameter as NULL to cover BADARGS condition for MCDC */
+          status = Sciclient_service(&SciclientApp_ReqPrm, NULL);
+          if (status == CSL_EBADARGS)
+          {
+              sciclientDirectTestStatus += CSL_PASS;
+              SciApp_printf ("Sciclient_service: Negative Arg Test Passed.\n");
+          }
+          else
+          {
+             sciclientDirectTestStatus += CSL_EFAIL;
+             SciApp_printf ("Sciclient_service: Negative Arg Test Failed.\n");
+          }
+
+          /* Passing boardcfgheader parameter as NULL to cover BADARGS condition for MCDC */
+          status = Sciclient_boardCfgPrepHeader(&commonHeader, NULL, &SciclientApp_PmRmPrms, &SciclientApp_PmRmPrms);
+          if (status == CSL_EBADARGS)
+          {
+              sciclientDirectTestStatus += CSL_PASS;
+              SciApp_printf ("Sciclient_boardCfgPrepHeader: Negative Arg Test Passed.\n");
+          }
+          else
+          {
+             sciclientDirectTestStatus += CSL_EFAIL;
+             SciApp_printf ("Sciclient_boardCfgPrepHeader: Negative Arg Test Failed.\n");
+          }
+
+          /* Passing pm parameter as NULL to cover BADARGS condition for MCDC */
+          status = Sciclient_boardCfgPrepHeader(&commonHeader, &boardCfgHeader, NULL, &SciclientApp_PmRmPrms);
+          if (status == CSL_EBADARGS)
+          {
+              sciclientDirectTestStatus += CSL_PASS;
+              SciApp_printf ("Sciclient_boardCfgPrepHeader: Negative Arg Test Passed.\n");
+          }
+          else
+          {
+             sciclientDirectTestStatus += CSL_EFAIL;
+             SciApp_printf ("Sciclient_boardCfgPrepHeader: Negative Arg Test Failed.\n");
+          }
+
+          /* Passing rm parameter as NULL to cover BADARGS condition for MCDC */
+          status = Sciclient_boardCfgPrepHeader(&commonHeader, &boardCfgHeader, &SciclientApp_PmRmPrms, NULL);
+          if (status == CSL_EBADARGS)
+          {
+              sciclientDirectTestStatus += CSL_PASS;
+              SciApp_printf ("Sciclient_boardCfgPrepHeader: Negative Arg Test Passed.\n");
+          }
+          else
+          {
+             sciclientDirectTestStatus += CSL_EFAIL;
+             SciApp_printf ("Sciclient_boardCfgPrepHeader: Negative Arg Test Failed.\n");
+          }
+
+          /* Passing valid parameters to Sciclient_boardCfgPrepHeader function */
+          status = Sciclient_boardCfgPrepHeader(&commonHeader, &boardCfgHeader, &SciclientApp_PmRmPrms, &SciclientApp_PmRmPrms);
+          if (status == CSL_PASS)
+          {
+              sciclientDirectTestStatus += CSL_PASS;
+              SciApp_printf ("Sciclient_boardCfgPrepHeader: Valid Arg Test Passed.\n");
+          }
+          else
+          {
+             sciclientDirectTestStatus += CSL_EFAIL;
+             SciApp_printf ("Sciclient_boardCfgPrepHeader: Valid Arg Test Failed.\n");
+          }
+
+          /* Passing pm parameter as NULL to cover BADARGS condition for MCDC */
+          status = Sciclient_boardCfgParseHeader(&commonHeader, NULL, &SciclientApp_PmRmPrms);
+          if (status == CSL_EBADARGS)
+          {
+              sciclientDirectTestStatus += CSL_PASS;
+              SciApp_printf ("Sciclient_boardCfgParseHeader: Negative Arg Test Passed.\n");
+          }
+          else
+          {
+             sciclientDirectTestStatus += CSL_EFAIL;
+             SciApp_printf ("Sciclient_boardCfgParseHeader: Negative Arg Test Failed.\n");
+          }
+
+          /* Passing rm parameter as NULL to cover BADARGS condition for MCDC */
+          status = Sciclient_boardCfgParseHeader(&commonHeader, &SciclientApp_PmRmPrms, NULL);
+          if (status == CSL_EBADARGS)
+          {
+              sciclientDirectTestStatus += CSL_PASS;
+              SciApp_printf ("Sciclient_boardCfgParseHeader: Negative Arg Test Passed.\n");
+          }
+          else
+          {
+             sciclientDirectTestStatus += CSL_EFAIL;
+             SciApp_printf ("Sciclient_boardCfgParseHeader: Negative Arg Test Failed.\n");
+          }
+
+          /* Passing TISCI_MSG_BOARD_CONFIG_PM as message type will cover default switch condition in Sciclient_ProcessRmMessage */
+          status = Sciclient_ProcessRmMessage(messageType);
+          if (status == CSL_EFAIL)
+          {
+              sciclientDirectTestStatus += CSL_PASS;
+              SciApp_printf ("Sciclient_ProcessRmMessage: Negative Arg Test Passed.\n");
+          }
+          else
+          {
+             sciclientDirectTestStatus += CSL_EFAIL;
+             SciApp_printf ("Sciclient_ProcessRmMessage: Negative Arg Test Failed.\n");
+          }
+    }
+    else
+    {
+        sciclientDirectTestStatus += CSL_EFAIL;
+        SciApp_printf ("Sciclient_init FAILED.\n");
+    }
+
+    if(sciclientInitStatus == CSL_PASS)
+    {
+        status = Sciclient_deinit();
+        if(status == CSL_PASS)
+        {
+            sciclientDirectTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_deinit PASSED.\n");
+        }
+        else
+        {
+            sciclientDirectTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_deinit FAILED.\n");
+        }
+    }
+
+  return sciclientDirectTestStatus;
+}
+#endif
 
 #if defined(BUILD_MPU) || defined (BUILD_C7X)
 extern void Osal_initMmuDefault(void);

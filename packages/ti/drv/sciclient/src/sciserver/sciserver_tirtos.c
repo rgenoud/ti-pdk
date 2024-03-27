@@ -87,10 +87,7 @@ uint8_t hwiMasked = 1U;
 /*                        Function Declarations                               */
 /* ========================================================================== */
 
-void Sciserver_tirtosUserMsgHwiFxn(uintptr_t arg);
-void Sciserver_tirtosUnRegisterIntr(void);
-void Sciserver_tirtosDeinit(void);
-void Sciserver_tirtosUserMsgTask(void* arg0, void* arg1);
+/* None */
 
 /* ========================================================================== */
 /*                        Internal Function Declarations                      */

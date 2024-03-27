@@ -81,32 +81,63 @@ typedef struct {
 /*                          Function Declarations                             */
 /* ========================================================================== */
 
-/** \brief Sciserver TI-RTOS Application Init.
+/** \brief  Sciserver TI-RTOS Application Init.
  * 
- *         NOTE: If this function is called form a Task Context
- *         (i.e, not from main / after starting the Schedular),
- *         the callee Task should be of priority higher than  
- *         max of passed init param(pPrms) Task priorities
- *         i.e Sciserver_TirtosCfgPrms_t->taskPriority[x]
+ *          NOTE: If this function is called form a Task Context
+ *          (i.e, not from main / after starting the Schedular),
+ *          the callee Task should be of priority higher than  
+ *          max of passed init param(pPrms) Task priorities
+ *          i.e Sciserver_TirtosCfgPrms_t->taskPriority[x]
  * 
- *  \param pPrms Pointer to #Sciserver_TirtosCfgPrms_t
+ *  \param  pPrms Pointer to #Sciserver_TirtosCfgPrms_t
+ * 
  *  \return CSL_PASS if the init has happened correctly.
  *          CSL_EFAIL if otherwise.
  */
 int32_t Sciserver_tirtosInit(Sciserver_TirtosCfgPrms_t *pPrms);
 
-/** \brief Sciserver TI-RTOS Application Deinit.
+/** \brief  Sciserver TI-RTOS Application Deinit.
+ * 
+ *  \param  None
+ * 
  *  \return None
  */
 void Sciserver_tirtosDeinit(void);
+
+/** \brief  Sciserver TI-RTOS Application hardware interrupt function.
+ * 
+ *  \param  arg Pointer to data needed for Sciserver HWI operation
+ * 
+ *  \return None
+ */
+void Sciserver_tirtosUserMsgHwiFxn(uintptr_t arg);
+
+/** \brief  Sciserver TI-RTOS Application unregister interrupt.
+ * 
+ *  \param  None
+ * 
+ *  \return None
+ */
+void Sciserver_tirtosUnRegisterIntr(void);
+
+/** \brief  Sciserver TI-RTOS Application user message task.
+ * 
+ *  \param  arg0 Pointer to data needed for secure task operation.
+ *          arg1 Dummy argument
+ * 
+ *  \return None
+ */
+void Sciserver_tirtosUserMsgTask(void* arg0, void* arg1);
 
 /* ========================================================================== */
 /*                       Static Function Definitions                          */
 /* ========================================================================== */
 
-/** \brief Initialize the init params for SCISERVER.
- *  \param pPrms Pointer to the init parameters.
- *  \return CSL_PASS if init Params are initilized with some default.
+/** \brief  Initialize the init params for SCISERVER.
+ * 
+ *  \param  pPrms Pointer to the init parameters.
+ * 
+ *  \return CSL_PASS  if init Params are initialized with some default.
  *          CSL_EFAIL otherwise.
  */
 static int32_t Sciserver_tirtosInitPrms_Init(Sciserver_TirtosCfgPrms_t *pPrms)

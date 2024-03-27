@@ -45,6 +45,7 @@
 #include <string.h>
 #include <ti/drv/sciclient/src/sciclient/sciclient_priv.h>
 #include <ti/drv/sciclient/sciserver.h>
+#include <ti/drv/sciclient/sciserver_tirtos.h>
 #include <ti/drv/sciclient/src/sciserver/sciserver_secproxyTransfer.h>
 #include <ti/drv/sciclient/examples/common/sci_app_common.h>
 #include <ti/drv/sciclient/examples/sciserver_unit_testapp/sciserver_ut_tests.h>
@@ -53,7 +54,11 @@
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-/* None */
+#if defined(SOC_J784S4) || defined(SOC_J721S2) || defined(SOC_J721E)
+#define MAX_SEMAPHORE    360U
+#elif defined(SOC_J7200)
+#define MAX_SEMAPHORE    150U
+#endif
 
 /* ========================================================================== */
 /*                            Global Variables                                */
@@ -92,6 +97,7 @@ void mainTask(void* arg0, void* arg1);
 static int32_t SciserverApp_serverFuncNegTest(void);
 static int32_t SciserverApp_secProxyTransferNegTest(void);
 static int32_t SciserverApp_secproxyRoutingDescriptionNegTest(void);
+static int32_t SciserverApp_rtosNegTest(void);
 
 /* ========================================================================== */
 /*                          Function Definitions                              */
@@ -157,6 +163,9 @@ int32_t SciApp_testMain(SciApp_TestParams_t *testParams)
             break;
         case 3:
             testParams->testResult = SciserverApp_secproxyRoutingDescriptionNegTest();
+            break;
+        case 4:
+            testParams->testResult = SciserverApp_rtosNegTest();
             break;
         default:
             break;
@@ -457,5 +466,70 @@ static int32_t SciserverApp_secproxyRoutingDescriptionNegTest(void)
     }
 
   return routingDesTestStatus;
+}
+
+static int32_t SciserverApp_rtosNegTest(void)
+{
+    int32_t                   status           = CSL_PASS;
+    int32_t                   rtosTestStatus   = CSL_PASS;
+    uint32_t                  ptr              = 53U;
+    uint32_t                  index            = 0U;
+    uint32_t                  maxindex         = index;
+    extern   HwiP_Handle      gSciserverHwiHandles[SCISERVER_HWI_NUM];
+    gSciserverHwiHandles[0]                    = (void *)ptr;
+    Sciserver_TirtosCfgPrms_t pAppPrms;
+    SemaphoreP_Params         semParams;
+    SemaphoreP_Handle         semhandle[MAX_SEMAPHORE];
+
+    SemaphoreP_Params_init(&semParams);
+    
+    semParams.mode = SemaphoreP_Mode_COUNTING;
+    /* Creating the maximium number of semaphores */
+    for(index = 0U; index < MAX_SEMAPHORE; index++)
+    {
+        semhandle[index] = SemaphoreP_create(0, &semParams);
+        if(NULL_PTR == semhandle[index])
+        {
+            SciApp_printf ("Maximum semaphores created breaking the loop\n"); 
+            break;
+        }
+    }
+    maxindex = index;
+
+    /* Sciserver_tirtosInitSemaphores function should fail after creating maximum number of semaphores */
+    status = Sciserver_tirtosInit(&pAppPrms);
+    if (status != CSL_PASS)
+    {
+        rtosTestStatus += CSL_PASS;
+        SciApp_printf ("Sciserver_tirtosInit: Negative Arg Test Passed.\n");
+    }
+    else
+    {
+        rtosTestStatus += CSL_EFAIL;
+        SciApp_printf ("Sciserver_tirtosInit: Negative Arg Test Failed.\n");
+    }
+
+    for(index = 0U ; index < maxindex; index++)
+    {
+        if(CSL_PASS != SemaphoreP_delete(semhandle[index]))
+        {
+            rtosTestStatus = CSL_EFAIL;
+        }
+    }
+    Sciserver_tirtosDeinit();
+
+    /* Passing NULL parameter to tirtos init function */
+    status = Sciserver_tirtosInit(NULL);
+    if (status != CSL_PASS)
+    {
+        rtosTestStatus += CSL_PASS;
+        SciApp_printf ("Sciserver_tirtosInit: Negative Arg Test Passed.\n");
+    }
+    else
+    {
+        rtosTestStatus += CSL_EFAIL;
+        SciApp_printf ("Sciserver_tirtosInit: Negative Arg Test Failed.\n");
+    }
+  return rtosTestStatus;
 }
 

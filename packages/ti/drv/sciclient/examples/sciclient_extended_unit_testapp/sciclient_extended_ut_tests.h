@@ -867,7 +867,106 @@ SciApp_TestParams_t gSciApp_TestcaseParams[] =
 
         /** testType **/
         (SCI_APP_TEST_TYPE_SANITY)
-    } 
+    },
+    {
+        /** enableTest **/
+        SCI_APP_TEST_ENABLE,
+
+        /** testCaseId **/
+        26U,
+
+        /** *reqId **/
+        "PDK-14237",
+
+        /** *testCaseName **/
+        "Sciclient rmIrqUnmappedVintRouteDelete Negative Testcase",
+
+        /** *userInfo **/
+        "None",
+
+        /** *disableReason **/
+        "None",
+
+        /** *passFailCriteria **/
+        "sciclient rmIrqUnmappedVintRouteDelete functions should fail when \
+         called with invalid parameters",
+
+        /** cpuID **/
+        SCI_APP_CORE_TYPE_R5F,
+
+        /** printEnable **/
+        SCI_APP_PRINT_ENABLE,
+
+        /** testType **/
+        (SCI_APP_TEST_TYPE_NEGATIVE)
+    },
+    {
+        /** enableTest **/
+        SCI_APP_TEST_ENABLE,
+
+        /** testCaseId **/
+        27U,
+
+        /** *reqId **/
+        "PDK-14238",
+
+        /** *testCaseName **/
+        "Sciclient rmIrqFindRoute Negative Testcase",
+
+        /** *userInfo **/
+        "None",
+
+        /** *disableReason **/
+        "None",
+
+        /** *passFailCriteria **/
+        "sciclient rmIrqFindRoute functions should fail when \
+         called with invalid parameters",
+
+        /** cpuID **/
+        SCI_APP_CORE_TYPE_R5F,
+
+        /** printEnable **/
+        SCI_APP_PRINT_ENABLE,
+
+        /** testType **/
+        (SCI_APP_TEST_TYPE_NEGATIVE)
+    },
+#if defined (BUILD_MCU1_0)
+    {
+        /** enableTest **/
+        SCI_APP_TEST_ENABLE,
+
+        /** testCaseId **/
+        28U,
+
+        /** *reqId **/
+        "PDK-14226",
+
+        /** *testCaseName **/
+        "Sciclient direct functions Testcase",
+
+        /** *userInfo **/
+        "None",
+
+        /** *disableReason **/
+        "None",
+
+        /** *passFailCriteria **/
+        "sciclient direct functions should fail when \
+         called with invalid parameters and should pass when \
+         called with valid parameters",
+
+        /** cpuID **/
+        SCI_APP_CORE_TYPE_R5F,
+
+        /** printEnable **/
+        SCI_APP_PRINT_ENABLE,
+
+        /** testType **/
+        (SCI_APP_TEST_TYPE_SANITY)
+    }
+#endif
 };
 
 /* ========================================================================== */
