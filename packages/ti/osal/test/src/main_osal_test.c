@@ -86,9 +86,12 @@
 
 #include "OSAL_board.h"
 
+#if 0
 #if defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)
 #include <ti/drv/sciclient/sciclient.h>
 #endif
+#endif
+
 /**********************************************************************
  ************************** Internal functions ************************
  **********************************************************************/
@@ -97,7 +100,7 @@
 #define ENABLE_DEBUG_LOG_TEST	1
 #endif
 
-#define ENABLE_EXT_BLOCK_TEST   1
+#define ENABLE_EXT_BLOCK_TEST   0
 
 #include <ti/csl/soc.h>
 
@@ -284,7 +287,11 @@ static uint8_t  gAppTskStackMain[APP_TSK_STACK_MAIN] __attribute__(( aligned( 0x
  * Hence, can not test extended_system_pre_init for C7x or C66x cores.
  */
 #if defined(BUILD_MCU)
+#if 0
 __attribute__((noinit)) uint32_t gStartupHookTestProbeA;
+#else
+volatile uint32_t gStartupHookTestProbeA;
+#endif
 #endif
 uint32_t gStartupHookTestProbeB = 0XABABABABU;
 uint32_t gStartupHookTestResult = 2U;
@@ -322,6 +329,7 @@ void extended_system_post_cinit(void)
 /*
  *  ======== Board_initOSAL ========
  */
+#if 0
 void Board_initOSAL(void)
 {
     Board_initCfg boardCfg;
@@ -353,6 +361,7 @@ void Board_initOSAL(void)
 
     return;
 }
+#endif
 
 bool OSAL_startup_hook_test()
 {
@@ -462,6 +471,7 @@ bool OSAL_floating_point_test()
  */
 volatile   uint64_t gTestlocalTimeout = 0x300000U;
 
+#if 0
 #if (defined (SOC_AM65XX) || defined (SOC_AM64X) || defined(SOC_J721E) || defined(SOC_J7200) || defined (SOC_TPR12) || defined (SOC_AWR294X) || defined (SOC_J721S2) || defined(SOC_J784S4)) && (!defined(BUILD_C66X))&&(!defined(BUILD_C7X))
 #define INT_NUM_IRQ 32U
 #define LOOP_CNT    100
@@ -538,7 +548,9 @@ bool  OSAL_core_hwi_test()
     return test_pass;
 }
 #endif
+#endif
 
+#if 0
 bool OSAL_hwi_test()
 {
   bool pass = BTRUE;
@@ -547,6 +559,7 @@ bool OSAL_hwi_test()
 #endif
   return pass;
 }
+#endif
 
 typedef enum UT_Timer_Type_s {
     UT_Timer_DMTIMER = 0,
@@ -618,7 +631,7 @@ UT_Timer_Type_t  timer_type =             UT_Timer_TIMER64;
 
 #elif defined(SOC_AM65XX)
   UT_Timer_Type_t  timer_type    =          UT_Timer_DMTIMER;
-  #if (__ARM_ARCH == 7) && (__ARM_ARCH_PROFILE == 'R') 
+  #if (__ARM_ARCH_PROFILE == 'R') 
     #define OSAL_TEST_TIMER_ID                (1U)
     #define OSAL_TEST_TIMER_PERIOD            (5000U)
   #else
@@ -630,7 +643,7 @@ UT_Timer_Type_t  timer_type =             UT_Timer_TIMER64;
   #if defined (BUILD_MCU1_0)
     #define OSAL_TEST_TIMER_ID                (2U)
     #define OSAL_TEST_TIMER_PERIOD            (5000U)
-  #elif (__ARM_ARCH == 7) && (__ARM_ARCH_PROFILE == 'R') 
+  #elif (__ARM_ARCH_PROFILE == 'R') 
     #define OSAL_TEST_TIMER_ID                (1U)
     #define OSAL_TEST_TIMER_PERIOD            (5000U)
   #elif defined (BUILD_C66X_1)
@@ -651,7 +664,7 @@ UT_Timer_Type_t  timer_type =             UT_Timer_TIMER64;
   #if defined (BUILD_MCU1_0)
     #define OSAL_TEST_TIMER_ID                (2U)
     #define OSAL_TEST_TIMER_PERIOD            (5000U)
-  #elif (__ARM_ARCH == 7) && (__ARM_ARCH_PROFILE == 'R') 
+  #elif (__ARM_ARCH_PROFILE == 'R') 
     #define OSAL_TEST_TIMER_ID                (1U)
     #define OSAL_TEST_TIMER_PERIOD            (5000U)
   #elif defined (BUILD_C7X_1)
@@ -669,7 +682,7 @@ UT_Timer_Type_t  timer_type =             UT_Timer_TIMER64;
   #if defined (BUILD_MCU1_0)
     #define OSAL_TEST_TIMER_ID                (2U)
     #define OSAL_TEST_TIMER_PERIOD            (5000U)
-  #elif (__ARM_ARCH == 7) && (__ARM_ARCH_PROFILE == 'R') 
+  #elif (__ARM_ARCH_PROFILE == 'R') 
     #define OSAL_TEST_TIMER_ID                (1U)
     #define OSAL_TEST_TIMER_PERIOD            (5000U)
   #elif defined (BUILD_C7X_1)
@@ -693,7 +706,7 @@ UT_Timer_Type_t  timer_type =             UT_Timer_TIMER64;
   #if defined (BUILD_MCU1_0)
     #define OSAL_TEST_TIMER_ID                (2U)
     #define OSAL_TEST_TIMER_PERIOD            (5000U)
-  #elif (__ARM_ARCH == 7) && (__ARM_ARCH_PROFILE == 'R') 
+  #elif (__ARM_ARCH_PROFILE == 'R') 
     #define OSAL_TEST_TIMER_ID                (1U)
     #define OSAL_TEST_TIMER_PERIOD            (5000U)
   #else
@@ -1312,7 +1325,7 @@ bool OSAL_cache_test()
   __attribute__ ((aligned(64)));
 #endif
 
-
+#if 0
 static void myIsr(void)
 {
 }
@@ -1409,7 +1422,7 @@ bool OSAL_ExtBlock_test(void)
     return(BTRUE);
 
 }
-
+#endif
 
 /*
  *  ======== Semaphore test function ========
@@ -2289,8 +2302,14 @@ void osal_test(void *arg0, void *arg1)
 {
     bool testFail = BFALSE;
     Osal_StaticMemStatus pMemStats;
-
+#if 0
     Board_initOSAL();
+#endif
+    Setup_UART_Reg_Address();
+    Setup_UART();
+
+    OSAL_log ("\n OSAL Baremetal TestApp - Cortex-R52/R52+ \n");
+    OSAL_log ("\n");
 
     if (BTRUE == OSAL_startup_hook_test())
     {
@@ -2338,6 +2357,7 @@ void osal_test(void *arg0, void *arg1)
     }
 #endif
 
+#if 0
     if(BTRUE == OSAL_hwi_test())
     {
         OSAL_log("\n HWI tests have passed. \n");
@@ -2347,6 +2367,7 @@ void osal_test(void *arg0, void *arg1)
         OSAL_log("\n HWI tests have failed. \n");
         testFail = BTRUE;
     }
+#endif
 
 #ifdef ENABLE_TIMER_TEST
     if(BTRUE == OSAL_timer_test())
@@ -2409,7 +2430,7 @@ void osal_test(void *arg0, void *arg1)
         testFail = BTRUE;
     }
 
-#ifdef ENABLE_EXT_BLOCK_TEST
+#if ENABLE_EXT_BLOCK_TEST
 
     if(BTRUE == OSAL_ExtBlock_test())
     {
@@ -2437,7 +2458,7 @@ void osal_test(void *arg0, void *arg1)
                  pMemStats.peakSemObjs,       \
                  pMemStats.numMaxSemObjs,     \
                  pMemStats.numFreeSemObjs);
-
+#if 0
        OSAL_log("\n Hwi Statistics:           \
                  \n  PeakHwiObjs    = %u,     \
                  \n  numMaxHwiObjs  = %u,     \
@@ -2445,7 +2466,7 @@ void osal_test(void *arg0, void *arg1)
                  pMemStats.peakHwiObjs,       \
                  pMemStats.numMaxHwiObjs,     \
                  pMemStats.numFreeHwiObjs);
-
+#endif
        OSAL_log("\n Timer Statistics:           \
                  \n  PeakTimerObjs    = %u,     \
                  \n  numMaxTimerObjs  = %u,     \

@@ -33,8 +33,10 @@ ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4))
   CFLAGS_LOCAL_COMMON += -DENABLE_TIMER_TEST
 endif
 
-SRCS_COMMON += main_osal_test.c
+SRCS_COMMON += main_osal_test.c uart.c
+SRCS_SMALLS_COMMON += boot_armv8r.s
 
+LNKFLAGS_LOCAL_mcu1_0 += --entry common_entry_point
 LNKFLAGS_LOCAL_mpu1_0 += --entry Entry
 
 

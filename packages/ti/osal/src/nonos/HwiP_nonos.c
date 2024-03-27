@@ -166,9 +166,9 @@ void HwiP_Params_init(HwiP_Params *params)
     params->priority = HWIP_USE_DEFAULT_PRIORITY;
     params->evtId    = EventP_ID_NONE;
     params->enableIntr = UTRUE;
-#if defined (__ARM_ARCH_7A__) || defined(__aarch64__) || ((__ARM_ARCH == 7) && (__ARM_ARCH_PROFILE == 'R'))
+#if defined (__ARM_ARCH_7A__) || defined(__aarch64__) || (__ARM_ARCH_PROFILE == 'R')
     params->triggerSensitivity = OSAL_ARM_GIC_TRIG_TYPE_LEVEL;
-#if !defined(SOC_AM437x) && !defined(SOC_AM335x) && !((__ARM_ARCH == 7) && (__ARM_ARCH_PROFILE == 'R'))
+#if !defined(SOC_AM437x) && !defined(SOC_AM335x) && !(__ARM_ARCH_PROFILE == 'R')
     {
        Osal_HwAttrs hwAttrs;
 	   (void)Osal_getHwAttrs(&hwAttrs);

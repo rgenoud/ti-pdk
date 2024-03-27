@@ -46,8 +46,10 @@
 extern "C" {
 #endif
 
+#if 0
 /* Example/Board Header files */
 #include <ti/board/board.h>
+#endif
 
 #undef OSAL_TEST_CPU_FREQ_KHZ
 

@@ -94,7 +94,7 @@ libosal_safertos_j784s4_CORELIST   = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 m
 # The components included here are built and will be part of osal lib
 ############################
 osal_LIB_LIST = osal_nonos osal_nonos_indp
-osal_LIB_LIST += osal_freertos
+#osal_LIB_LIST += osal_freertos
 ifeq ($(SOC),$(filter $(SOC), $(libosal_safertos_SOCLIST)))
 ifneq ($(wildcard $(SAFERTOS_KERNEL_INSTALL_PATH)),)
 osal_LIB_LIST += osal_safertos
@@ -132,7 +132,7 @@ osal_nonos_INCLUDE = $(osal_nonos_PATH)
 export osal_nonos_SOCLIST = $(libosal_SOCLIST)
 osal_nonos_$(SOC)_CORELIST = $(libosal_$(SOC)_CORELIST)
 ifeq ($(SOC),$(filter $(SOC), j721e j721s2 j784s4))
-osal_nonos_$(SOC)_CORELIST += c7x-hostemu
+#osal_nonos_$(SOC)_CORELIST += c7x-hostemu
 endif
 export osal_nonos_$(SOC)_CORELIST
 

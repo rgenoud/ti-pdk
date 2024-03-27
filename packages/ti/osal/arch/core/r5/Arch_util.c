@@ -94,7 +94,9 @@ static bool gHwiInitialized = BFALSE;
 static CSL_vimRegs *gVimRegs;
 
 static TimeStamp_Struct gTimeStamp = {(uint32_t)NULL,(uint32_t)NULL};
+#if 0
 static HwiP_Handle      gHwiPHandle;
+#endif
 
 /* This function enables the interrupt for a given interrupt number */
 void OsalArch_enableInterrupt(uint32_t intNum)
@@ -275,10 +277,10 @@ HwiP_Handle OsalArch_HwiPCreate(uint32_t interruptNum, HwiP_Fxn hwiFxn,
 
         /* Setting the priority for the UART interrupt in INTC. */
         Intc_IntPrioritySet((uint16_t)interruptNum, priority, 0);
-
+#if 0
         /* Registering the Interrupt Service Routine(ISR). */
         Intc_IntRegister((uint16_t)interruptNum, (IntrFuncPtr) hwiFxn, (void *)params->arg);
-
+#endif
         /* Enabling the interrupt if configured */
         if (UTRUE == params->enableIntr)
         {
@@ -458,7 +460,9 @@ HwiP_Status OsalArch_HwiPDelete(HwiP_Handle handle)
     if (BTRUE == hwi_hnd->used)
     {
         hwi_hnd->used = BFALSE;
+#if 0
         Intc_IntUnregister((uint16_t)(hwi_hnd->hwi.intNum));
+#endif
         /* Disabling the interrupt in INTC. */
         Intc_IntDisable((uint16_t)(hwi_hnd->hwi.intNum));
     }

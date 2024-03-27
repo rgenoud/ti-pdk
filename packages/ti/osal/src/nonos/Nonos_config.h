@@ -71,7 +71,7 @@ extern "C" {
 #include <ti/csl/csl_armGic.h>
 #include <ti/csl/csl_armGicAux.h>
 
-#elif (__ARM_ARCH == 7) && (__ARM_ARCH_PROFILE == 'R') 
+#elif (__ARM_ARCH_PROFILE == 'R') 
 #include <ti/csl/arch/csl_arch.h>
 
 #elif (__ARM_ARCH == 7) && (__ARM_ARCH_PROFILE == 'M') && defined(__ARM_FEATURE_SIMD32)
@@ -104,7 +104,7 @@ typedef struct hwi_struct {
   CSL_ArmGicIntrParams_t        gicParams;
 } Hwi_Struct;
 
-#elif (__ARM_ARCH == 7) && (__ARM_ARCH_PROFILE == 'R')
+#elif (__ARM_ARCH_PROFILE == 'R')
 typedef struct hwi_struct {
     uint32_t                    intNum;
 } Hwi_Struct;

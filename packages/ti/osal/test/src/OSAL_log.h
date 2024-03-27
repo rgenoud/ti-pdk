@@ -47,7 +47,11 @@ extern "C" {
 #endif
 
 #include <stdio.h>
+#include "uart.h"
+
+#if 0
 #define UART_CONSOLE
+#endif
 
 #if defined(UART_CONSOLE)
         /* UART Header files */
