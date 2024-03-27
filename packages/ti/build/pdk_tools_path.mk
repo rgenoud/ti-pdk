@@ -30,7 +30,9 @@ else
 endif
   export GCC_ARCH64_BIN_PREFIX        ?= $(GCC_ARCH64_BIN_PREFIX_STR)
   export TOOLCHAIN_PATH_A72           ?= $(TOOLCHAIN_PATH_GCC_ARCH64)
-  export TOOLCHAIN_PATH_R5            ?= $(TOOLS_INSTALL_PATH)/ti-cgt-armllvm_$(CGT_ARMLLVM_VERSION)
+# export TOOLCHAIN_PATH_R5            ?= $(TOOLS_INSTALL_PATH)/ti-cgt-armllvm_$(CGT_ARMLLVM_VERSION)
+  export TOOLCHAIN_PATH_R5            ?= /opt/arm/ArmCompilerforEmbedded6.21
+# export TOOLCHAIN_PATH_R5            ?= $(TOOLS_INSTALL_PATH)/arm-gnu-toolchain-13.2.Rel1-x86_64-arm-none-eabi
   export PDK_INSTALL_PATH             ?= $(SDK_INSTALL_PATH)/pdk$(PDK_VERSION_STR)/packages
   export CG_XML_BIN_INSTALL_PATH      ?= $(SDK_INSTALL_PATH)/cg_xml_$(CG_XML_VERSION)/bin
   export FREERTOS_KERNEL_INSTALL_PATH ?= $(PDK_INSTALL_PATH)/ti/kernel/freertos/FreeRTOS-LTS

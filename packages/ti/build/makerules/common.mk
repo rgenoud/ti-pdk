@@ -180,11 +180,13 @@ $(PACKAGEDIR) :
 SRCS = $(SRCS_COMMON) $(SRCS_$(CORE)) $(SRCS_$(SOC))
 SRCS_CPP = $(SRCS_COMMON_CPP)
 SRCS_ASM = $(SRCS_ASM_COMMON) $(SRCS_ASM_$(CORE)) $(SRCS_ASM_$(SOC))
+SRCS_SMALLS = $(SRCS_SMALLS_COMMON) $(SRCS_SMALLS_$(CORE)) $(SRCS_SMALLS_$(SOC))
 SRCS_S = $(SRCS_S_COMMON) $(SRCS_S_$(CORE)) $(SRCS_S_$(SOC))
 
 ifneq ($(SOC),$(BOARD))
 SRCS += $(SRCS_$(BOARD))
 SRCS_ASM += $(SRCS_ASM_$(BOARD))
+SRCS_SMALLS += $(SRCS_SMALLS_$(BOARD))
 SRCS_S += $(SRCS_S_$(BOARD))
 endif #ifneq ($(SOC,$(BOARD))
 
@@ -225,6 +227,9 @@ OBJ_PATHS_CPP = $(patsubst %.cpp, $(OBJDIR)/%.$(OBJEXT), $(SRCS_CPP))
 
 # Change the extension from ASM to $(OBJEXT) and also add path
 OBJ_PATHS_ASM = $(patsubst %.asm, $(OBJDIR)/%.$(OBJEXT), $(SRCS_ASM))
+
+# Change the extension from Small-S to $(OBJEXT) and also add path
+OBJ_PATHS_SMALLS = $(patsubst %.s, $(OBJDIR)/%.$(OBJEXT), $(SRCS_SMALLS))
 
 # Change the extension from S to $(OBJEXT) and also add path
 OBJ_PATHS_S = $(patsubst %.S, $(OBJDIR)/%.$(OBJEXT), $(SRCS_S))

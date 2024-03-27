@@ -47,18 +47,22 @@ else
 CGT_ISA_PATH_PRFX = $(CGT_ISA)
 endif
 
-CODEGEN_INCLUDE = $(TOOLCHAIN_PATH_$(CGT_ISA_PATH_PRFX))/include/c
-CC = $(TOOLCHAIN_PATH_$(CGT_ISA_PATH_PRFX))/bin/tiarmclang
-AR = $(TOOLCHAIN_PATH_$(CGT_ISA_PATH_PRFX))/bin/tiarmar
-LNK = $(TOOLCHAIN_PATH_$(CGT_ISA_PATH_PRFX))/bin/tiarmclang
-STRP = $(TOOLCHAIN_PATH_$(CGT_ISA_PATH_PRFX))/bin/tiarmstrip
-SIZE = $(TOOLCHAIN_PATH_$(CGT_ISA_PATH_PRFX))/bin/tiarmsize
+#CODEGEN_INCLUDE = $(TOOLCHAIN_PATH_$(CGT_ISA_PATH_PRFX))/include/c
+CODEGEN_INCLUDE = $(TOOLCHAIN_PATH_$(CGT_ISA_PATH_PRFX))/include
+CC = $(TOOLCHAIN_PATH_$(CGT_ISA_PATH_PRFX))/bin/armclang
+ARMASM = $(TOOLCHAIN_PATH_$(CGT_ISA_PATH_PRFX))/bin/armasm
+AR = $(TOOLCHAIN_PATH_$(CGT_ISA_PATH_PRFX))/bin/armar
+LNK = $(TOOLCHAIN_PATH_$(CGT_ISA_PATH_PRFX))/bin/armlink
+STRP = ~/ti/workarea2/ti-cgt-armllvm_3.2.1.LTS/bin/tiarmstrip
+SIZE = ~/ti/workarea2/ti-cgt-armllvm_3.2.1.LTS/bin/tiarmsize
 
 # Derive a part of RTS Library name based on ENDIAN: little/big
 ifeq ($(ENDIAN),little)
+  #RTSLIB_ENDIAN = mlittle-endian
   RTSLIB_ENDIAN = EL
 
 else
+  #RTSLIB_ENDIAN = mbig-endian
   RTSLIB_ENDIAN = EB
 endif
 
@@ -84,7 +88,7 @@ endif
 
 LNKFLAGS_INTERNAL_COMMON +=
 
-SUPRESS_WARNINGS_FLAG = -Wno-extra -Wno-exceptions -ferror-limit=100 -Wno-unused-command-line-argument -Wno-gnu-variable-sized-type-not-at-end -Wno-unused-function -Wno-extern-initializer -Wno-excess-initializers -Wno-bitfield-constant-conversion -Wno-address-of-packed-member
+SUPRESS_WARNINGS_FLAG = -Wno-extra -Wno-exceptions -Wno-unused-command-line-argument -Wno-gnu-variable-sized-type-not-at-end -Wno-unused-function -Wno-extern-initializer -Wno-excess-initializers -Wno-bitfield-constant-conversion -Wno-address-of-packed-member
 
 ifeq ($(CPLUSPLUS_BUILD), yes)
   SUPRESS_WARNINGS_FLAG += -Wno-c99-designator -Wno-extern-c-compat -Wno-c++11-narrowing -Wno-reorder-init-list -Wno-deprecated-register -Wno-writable-strings -Wno-enum-compare -Wno-reserved-user-defined-literal -Wno-unused-const-variable -Wno-missing-braces
@@ -92,16 +96,17 @@ endif
 
 # Internal CFLAGS - normally doesn't change
 ifeq ($(CGT_ISA),$(filter $(CGT_ISA),M4 R5 M3))
-  CFLAGS_INTERNAL = -c -Wall -Werror $(SUPRESS_WARNINGS_FLAG) -fno-strict-aliasing -$(RTSLIB_ENDIAN) -eo.$(OBJEXT) -ea.$(ASMEXT) -g -mfloat-abi=hard
+  CFLAGS_INTERNAL = -c -Wall -Werror $(SUPRESS_WARNINGS_FLAG) -fno-strict-aliasing -$(RTSLIB_ENDIAN) -eo.$(OBJEXT) -ea.$(ASMEXT) -g
   ifeq ($(CGT_ISA),$(filter $(CGT_ISA), R5))
-    CFLAGS_INTERNAL += -mfpu=vfpv3-d16 -mcpu=cortex-r5
-    ifeq ($(COMPILE_MODE), thumb)
+    CFLAGS_INTERNAL += --target=arm-arm-none-eabi -mfpu=none -mcpu=cortex-r52
+    #CFLAGS_INTERNAL += -mfpu=none -mcpu=cortex-r5
+    #ifeq ($(COMPILE_MODE), thumb)
       # Enabling thumb2 mode
-      CFLAGS_INTERNAL += -mthumb -march=thumbv7r
+      #CFLAGS_INTERNAL += -mthumb -march=thumbv7r
     # else
     #   # Enabling arm mode
     #   CFLAGS_INTERNAL += -marm -march=armv7-r
-    endif
+    #endif
   else
     CFLAGS_INTERNAL += -mfpu=vfplib
   endif
@@ -117,7 +122,7 @@ endif
 
 ifeq ($(TREAT_WARNINGS_AS_ERROR), yes)
   CFLAGS_INTERNAL += -Werror
-  LNKFLAGS_INTERNAL_COMMON += -Werror
+  #LNKFLAGS_INTERNAL_COMMON += -Werror
 endif
 
 ifeq ($(CPLUSPLUS_BUILD), yes)
@@ -206,13 +211,19 @@ $(OBJ_PATHS_CPP): $(OBJDIR)/%.$(OBJEXT): %.cpp $(GEN_FILE) | $(OBJDIR) $(DEPDIR)
 	$(CC) $(_CFLAGS) $(INCLUDES) -c -x c++ $< -o $@
 
 #TODO: Check ASMFLAGS if really required
-ASMFLAGS = -me -g -mthumb --diag_warning=225
+#ASMFLAGS = -me -g -mthumb --diag_warning=225
+ASMFLAGS = -me -g --diag_warning=225
 
 # Object file creation
 $(OBJ_PATHS_ASM): $(OBJDIR)/%.$(OBJEXT): %.asm $(GEN_FILE) | $(OBJDIR) $(DEPDIR)
 	$(ECHO) \# Compiling $(PRINT_MESSAGE): $<
-	$(CC) -MMD $(_CFLAGS) $(INCLUDES) $(CFLAGS_DIROPTS) -x ti-asm $< -o $@
-	$(CC) $(_CFLAGS) $(INCLUDES) $(CFLAGS_DIROPTS) -x ti-asm $< -o $@
+	$(CC) -MMD $(_CFLAGS) $(INCLUDES) $(CFLAGS_DIROPTS) -x none $< -o $@
+	$(CC) $(_CFLAGS) $(INCLUDES) $(CFLAGS_DIROPTS) -x none $< -o $@
+
+# Object file creation
+$(OBJ_PATHS_SMALLS): $(OBJDIR)/%.$(OBJEXT): %.s $(GEN_FILE) | $(OBJDIR) $(DEPDIR)
+	$(ECHO) \# Compiling $(PRINT_MESSAGE): $<
+	$(ARMASM) -M --cpu=Cortex-R52.no_neon --arm $(INCLUDES) $< -o $@ --depend $(DEPFILE).d
 
 # Object file creation
 $(OBJ_PATHS_S): $(OBJDIR)/%.$(OBJEXT): %.S $(GEN_FILE) | $(OBJDIR) $(DEPDIR)
@@ -226,14 +237,15 @@ $(PACKAGE_PATHS): $(PACKAGEDIR)/%: %
 	$(CP) --parents -rf $< $(PACKAGE_ROOT)/$($(APP_NAME)$(MODULE_NAME)_RELPATH)
 
 # Archive flags - normally doesn't change
-ARFLAGS = rc
+ARFLAGS = -r -c
+#ARFLAGS = rc
 
 # Archive/library file creation
-$(LIBDIR)/$(LIBNAME).$(LIBEXT) : $(OBJ_PATHS_ASM) $(OBJ_PATHS_S) $(OBJ_PATHS) $(OBJ_PATHS_CPP) $(GEN_FILE) | $(LIBDIR)
+$(LIBDIR)/$(LIBNAME).$(LIBEXT) : $(OBJ_PATHS_ASM) $(OBJ_PATHS_SMALLS) $(OBJ_PATHS_S) $(OBJ_PATHS) $(OBJ_PATHS_CPP) $(GEN_FILE) | $(LIBDIR)
 	$(ECHO) \#
 	$(ECHO) \# Archiving $(PRINT_MESSAGE) into $@ ...
 	$(ECHO) \#
-	$(AR) $(ARFLAGS) $@ $(OBJ_PATHS_ASM) $(OBJ_PATHS_S) $(OBJ_PATHS) $(OBJ_PATHS_CPP)
+	$(AR) $(ARFLAGS) $@ $(OBJ_PATHS_ASM) $(OBJ_PATHS_SMALLS) $(OBJ_PATHS_S) $(OBJ_PATHS) $(OBJ_PATHS_CPP)
 
 $(LIBDIR)/$(LIBNAME).$(LIBEXT)_size: $(LIBDIR)/$(LIBNAME).$(LIBEXT)
 	$(ECHO) \#
@@ -244,25 +256,27 @@ $(LIBDIR)/$(LIBNAME).$(LIBEXT)_size: $(LIBDIR)/$(LIBNAME).$(LIBEXT)
 	$(RM)   $@temp
 
 # Linker options and rules
-LNKFLAGS_INTERNAL_COMMON += -Xlinker -q -Xlinker -u -Xlinker _c_int00 -Xlinker --display_error_number -Xlinker --use_memcpy=fast -Xlinker --use_memset=fast
+#LNKFLAGS_INTERNAL_COMMON += -Xlinker -q -Xlinker -u -Xlinker _c_int00 -Xlinker --display_error_number -Xlinker --use_memcpy=fast -Xlinker --use_memset=fast
+#LNKFLAGS_INTERNAL_COMMON += -Xlinker --undefined=_c_int00
 # Supress warning for "entry-point symbol other than "_c_int00" specified"
-LNKFLAGS_INTERNAL_COMMON += -Xlinker --diag_suppress=10063-D
+#LNKFLAGS_INTERNAL_COMMON += -Xlinker --diag_suppress=10063-D
 # Supress warning for "no matching section"
-LNKFLAGS_INTERNAL_COMMON += -Xlinker --diag_suppress=10068-D
+#LNKFLAGS_INTERNAL_COMMON += -Xlinker --diag_suppress=10068-D
 # Supress warning for " LOAD placement ignored for "":  object is uninitialized"
-LNKFLAGS_INTERNAL_COMMON += -Xlinker --diag_suppress=10083-D
+#LNKFLAGS_INTERNAL_COMMON += -Xlinker --diag_suppress=10083-D
 
 ifeq ($(BOARD),$(filter $(BOARD), qtJ7))
   LNKFLAGS_INTERNAL_COMMON += -Xlinker -cr -Xlinker --ram_model
 else
-  LNKFLAGS_INTERNAL_COMMON += -Xlinker -c
+  #LNKFLAGS_INTERNAL_COMMON += -Xlinker -c
 endif
 
 ifeq ($(CGT_ISA), R5)
-  LNKFLAGS_INTERNAL_COMMON += -mcpu=cortex-r5 -march=armv7-r
+  LNKFLAGS_INTERNAL_COMMON += --cpu=Cortex-R52.no_neon
+  #LNKFLAGS_INTERNAL_COMMON += -mcpu=cortex-r5 -march=armv7-r
   #--diag_suppress=10063 supresses 'warning: entry point other than _c_int00 specified'
   # Supress warning for " linking in section which does not contain program data"
-  LNKFLAGS_INTERNAL_COMMON += -Xlinker --diag_suppress=10230-D
+  #LNKFLAGS_INTERNAL_COMMON += -Xlinker --diag_suppress=10230-D
 else
 ifeq ($(CGT_ISA), M4F)
   LNKFLAGS_INTERNAL_COMMON += --mcpu=cortex-m4
@@ -282,8 +296,10 @@ _LNKFLAGS = $(LNKFLAGS_INTERNAL_COMMON) $(LNKFLAGS_INTERNAL_BUILD_PROFILE) $(LNK
 #Let the linker choose the required library
 RTSLIB_PATH = $(CGT_PATH)/lib/libc.a
 
-LNK_LIBS = $(addprefix -l,$(LIB_PATHS))
-LNK_LIBS += $(addprefix -l,$(EXT_LIB_PATHS))
+#LNK_LIBS = $(addprefix -l,$(LIB_PATHS))
+LNK_LIBS = $(LIB_PATHS)
+#LNK_LIBS += $(addprefix -l,$(EXT_LIB_PATHS))
+LNK_LIBS += $(EXT_LIB_PATHS)
 
 # Linker - to create executable file
 ifeq ($(LOCAL_APP_NAME),)
@@ -311,23 +327,23 @@ endif
 #	$(CGT_PATH)/lib/mklib --pattern=$(RTSLIB_NAME) --parallel=$(NUM_PROCS) --compiler_bin_dir=$(CGT_PATH)/bin
 #endif
 
-$(EXE_NAME) : $(OBJ_PATHS_ASM) $(OBJ_PATHS_S) $(OBJ_PATHS) $(OBJ_PATHS_CPP) $(LIB_PATHS) $(LNKCMD_FILE) $(BUILD_LIB_ONCE)
+$(EXE_NAME) : $(OBJ_PATHS_ASM) $(OBJ_PATHS_SMALLS) $(OBJ_PATHS_S) $(OBJ_PATHS) $(OBJ_PATHS_CPP) $(LIB_PATHS) $(LNKCMD_FILE) $(BUILD_LIB_ONCE)
 ifeq ($(BUILD_OS_TYPE), freertos)
 	$(CP) $(pdk_PATH)/ti/kernel/freertos/rov/syscfg_c.rov.xs $(BINDIR)
 endif
 
 	$(ECHO) \# Linking into $(EXE_NAME)...
 	$(ECHO) \#
-	$(LNK) $(_LNKFLAGS) $(OBJ_PATHS_ASM) $(OBJ_PATHS_S) $(OBJ_PATHS) $(OBJ_PATHS_CPP) -Xlinker $(LNKCMD_FILE) $(EXTERNAL_LNKCMD_FILE) $(APPEND_LNKCMD_FILE) -Xlinker --map_file=$@.map -Xlinker --output_file=$@ $(LNK_LIBS) $(RTSLIB_PATH)
+	$(LNK) $(_LNKFLAGS) --output $@ --predefine="-DCORE_ID=0" --scatter=$(EXTERNAL_LNKCMD_FILE) $(OBJ_PATHS_ASM) $(OBJ_PATHS_SMALLS) $(OBJ_PATHS_S) $(OBJ_PATHS) $(OBJ_PATHS_CPP) $(LNK_LIBS)
 	$(ECHO) \#
 	$(ECHO) \# $@ created.
 	$(ECHO) \#
-ifeq ($(BUILD_PROFILE_$(CORE)), release)
-	$(ECHO) \# Generating stripped image into $(EXE_STRIP_NAME)...
-	$(ECHO) \#
-	$(RM)  $(EXE_STRIP_NAME)
-	$(STRP) -p $(EXE_NAME) -o $(EXE_STRIP_NAME)
-endif
+#ifeq ($(BUILD_PROFILE_$(CORE)), release)
+#	$(ECHO) \# Generating stripped image into $(EXE_STRIP_NAME)...
+#	$(ECHO) \#
+#	$(RM)  $(EXE_STRIP_NAME)
+#	$(STRP) -p $(EXE_NAME) -o $(EXE_STRIP_NAME)
+#endif
 
 ifeq ($(OS),Windows_NT)
   EVERYONE = $(word 1,$(shell whoami -groups | findstr "S-1-1-0"))

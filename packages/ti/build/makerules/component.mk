@@ -933,11 +933,11 @@ ifeq ($(SOC),$(filter $(SOC), j7200))
 endif
 
 ifeq ($(SOC),$(filter $(SOC), j721s2 j784s4))
-  PDK_COMMON_COMP = csl uart board udma i2c gpio pm_lib
+  PDK_COMMON_COMP = csl
   ifeq ($(CORE),mcu1_0)
-    PDK_COMMON_COMP += sciclient_direct rm_pm_hal
+    PDK_COMMON_COMP +=
   else
-    PDK_COMMON_COMP += sciclient
+    PDK_COMMON_COMP +=
   endif
 endif
 
@@ -946,7 +946,7 @@ ifeq ($(ARCH),c66x)
   PDK_COMMON_BAREMETAL_COMP += csl_intc
 else
   ifneq ($(ARCH),c71)
-    PDK_COMMON_BAREMETAL_COMP += csl_init
+    PDK_COMMON_BAREMETAL_COMP +=
   endif
 endif
 
