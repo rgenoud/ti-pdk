@@ -22,7 +22,8 @@ else ifeq ($(BUILD_OS_TYPE),safertos)
 endif
 
 ifeq ($(BUILD_PROFILE_$(CORE)),release)
-  ENET_CFLAGS += -O3
+  ENET_CFLAGS += -O3 -flto
+  LNKFLAGS_LOCAL_COMMON += -flto
 endif
 
 # List all the external components/interfaces, whose interface header files
