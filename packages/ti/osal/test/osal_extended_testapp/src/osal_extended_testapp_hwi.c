@@ -48,8 +48,13 @@
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-#define OSAL_APP_IRQ_INT_NUM           (28U)
 #define OSAL_APP_IRQ_SECONDARY_INT_NUM (29U)
+/* C7x cores can serve only 64 interrupts, numbered 0 to 63. */
+#if defined (BUILD_C7X)
+#define INVALID_INT_NUM_C7X           (64U)
+#endif
+#define OSAL_APP_IRQ_INT_NUM           (28U)
+
 
 /* ========================================================================== */
 /*                            Global Variables                                */
@@ -75,6 +80,13 @@ static int32_t OsalApp_hwiCreateAllocOvrflwTest(void);
  * Description : Testing Negative test for API Hwi_delete
  */
 static int32_t OsalApp_hwiDeleteNegativeTest(void);
+
+/*
+ * Description : Testing Negative test for API HwiP_create
+ */
+#if defined(BUILD_C7X) 
+static int32_t OsalApp_hwiCreateNegativeTest(void);
+#endif
 
 /* ========================================================================== */
 /*                       Internal Function Definitions                        */
@@ -241,6 +253,40 @@ static int32_t OsalApp_hwiDeleteNegativeTest(void)
     return result;
 }
 
+#if defined(BUILD_C7X) 
+int32_t  OsalApp_hwiCreateNegativeTest()
+{
+    HwiP_Params hwiParams;
+    HwiP_Handle handle;
+    int32_t result = osal_OK;
+
+    HwiP_Params_init(&hwiParams); 
+    
+    hwiParams.priority  = 0U;
+    hwiParams.enableIntr  = 0U;
+    
+    /*when OSAL_APP_IRQ_INT_NUM 64 for c7x,Hwi_construct API will fails
+    and HwiP_create API will return NULL_PTR */
+    handle = HwiP_create(INVALID_INT_NUM_C7X, (HwiP_Fxn)OsalApp_hwiIRQ, &hwiParams);
+    
+    if (NULL_PTR != handle)
+    {
+       result = osal_FAILURE;
+    }
+    
+    if(osal_OK == result)
+    {
+        OSAL_log("\n Hwi Create negative test passed!\n");
+    }
+    else
+    {
+        OSAL_log("\n Hwi Create negative test failed!\n");
+    }
+    return result;
+  
+}
+#endif
+
 /* ========================================================================== */
 /*                          Function Definitions                              */
 /* ========================================================================== */
@@ -249,6 +295,9 @@ int32_t OsalApp_hwiTests(void)
 {
     int32_t result = osal_OK;
 
+    #if defined(BUILD_C7X) 
+    result += OsalApp_hwiCreateNegativeTest();
+    #endif
     result += OsalApp_hwiCreateAllocOvrflwTest();
     result += OsalApp_hwiNullTest();
     result += OsalApp_hwiDeleteNegativeTest();
