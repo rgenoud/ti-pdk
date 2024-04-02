@@ -357,6 +357,37 @@ int main()
     SBL_SocLateInit();
 #endif
 
+#if defined(SOC_J721S2) || defined(SOC_J784S4)
+
+    /* Change the GTC Parent to MAIN_PLL3_HSDIV1_CLKOUT 
+       Reason :
+        - for J721S2
+            - MAIN_PLL3 default frequency is 2 GHz
+            - MAIN_PLL3_HSDIV1_CLKOUT, MAIN_PLL3_HSDIV0_CLKOUT has the same divider value of 8
+        - for J784S4
+            - MAIN_PLL3 default frequency is 2.5 GHz
+            - MAIN_PLL3_HSDIV1_CLKOUT, MAIN_PLL3_HSDIV0_CLKOUT has the same divider value of 10
+        - By defalult MAIN_PLL3_HSDIV1_CLKOUT (first input parent of the GTC mux) is given as an input to the GTC
+        - MAIN_PLL3_HSDIV0_CLKOUT is given as input to the CPSW2G RGMI. CPSW2G RGMI needs 250MHz and GTC needs 200 MHz 
+        - It is not possible to have 250 MHz for MAIN_PLL3_HSDIV0_CLKOUT (divider of 8 in case of J721S2 and 10 incase of J784S4)
+          and 200 MHz for MAIN_PLL3_HSDIV1_CLKOUT (divider of 8 in case of J721S2 and 10 incase of J784S4) with the same MAIN_PLL3 frequency.
+        - So change the parent of GTC clock to MAIN_PLL0_HSDIV6_CLKOUT */
+    
+    SBL_log(SBL_LOG_MAX, "Setting GTC clock parent frequency.... \n");
+    retVal = Sciclient_pmSetModuleClkParent(TISCI_DEV_GTC0, 
+                                            TISCI_DEV_GTC0_GTC_CLK, 
+                                            TISCI_DEV_GTC0_GTC_CLK_PARENT_HSDIV4_16FFT_MAIN_3_HSDIVOUT1_CLK, 
+                                            SCICLIENT_SERVICE_WAIT_FOREVER);
+    if (CSL_PASS != retVal)
+    {
+        SBL_log(SBL_LOG_ERR, "Failed to set GTC clock parent \n");
+    }
+    else
+    {
+        SBL_log(SBL_LOG_MAX, "Setting GTC clock parent frequency....done \n");
+    }
+#endif
+
 #if defined(SBL_ENABLE_PLL) && !defined(SBL_SKIP_SYSFW_INIT)
     /* Profile point after Board init pinmux and before Board init PLL */
     SBL_ADD_PROFILE_POINT;
