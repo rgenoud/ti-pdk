@@ -95,7 +95,7 @@ void sys_unlock_tcpip_core(void);
 #endif /* !defined(NO_SYS) || !NO_SYS */
 
 #define LWIP_CHECK_CORE_LOCKING                       (1)
-#define LWIP_SYS_ARCH_PROTECT_USES_MUTEX              (1)
+#define LWIP_SYS_ARCH_PROTECT_USES_MUTEX              (0)
 #define LWIP_SAFERTOS_SYS_ARCH_PROTECT_SANITY_CHECK   (1)
 #define LWIP_SAFERTOS_CHECK_QUEUE_EMPTY_ON_FREE       (1)
 
