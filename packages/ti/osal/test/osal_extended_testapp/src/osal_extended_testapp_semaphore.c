@@ -101,12 +101,14 @@ static int32_t OsalApp_semaphorePendTest(void);
  */
 static int32_t OsalApp_semaphoreMaxTest(void);
 
+#if defined(SAFERTOS)
 /*
  * Description : Testing Negative condition for below APIs
  *                 1. SemaphoreP_getCount
  *                 2. SemaphoreP_delete
  */
 static int32_t OsalApp_semaphoreNegativeTest(void);
+#endif
 
 /* ========================================================================== */
 /*                    Internal Function Definitions                           */
@@ -309,6 +311,7 @@ static int32_t OsalApp_semaphoreMaxTest(void)
     return result;
 }
 
+#if defined(SAFERTOS)
 static int32_t OsalApp_semaphoreNegativeTest(void)
 {
     SemaphoreP_Params    semParams;
@@ -339,6 +342,7 @@ static int32_t OsalApp_semaphoreNegativeTest(void)
     }
     return result;
 }
+#endif
 
 /* ========================================================================== */
 /*                          Function Definitions                              */
@@ -352,8 +356,10 @@ int32_t OsalApp_semaphoreTests(void)
     result += OsalApp_semaphorePendTest();
     result += OsalApp_semaphoreMaxTest();
     result += OsalApp_isInISRsemaphoreTest();
+#if defined(SAFERTOS)
     result += OsalApp_semaphoreNegativeTest();
-    
+#endif
+
     if(osal_OK == result)
     {
         OSAL_log("\n All Semaphore test have passed!\n");
