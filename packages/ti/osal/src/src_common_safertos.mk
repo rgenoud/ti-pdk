@@ -52,6 +52,6 @@ endif
 
 ifeq ($(CORE),$(filter $(CORE), c7x_1 c7x_2 c7x_3 c7x_4))
   SRCDIR += arch/core/c7x
-  SRCS_COMMON += Arch_util.c HwiP_safertos_c7x.c CacheP_freertos_c7x.c SafeRTOS_config_c7x.c
-  PACKAGE_SRCS_COMMON += src/freertos/CacheP_freertos_c7x.c src/safertos/HwiP_safertos_c7x.c arch/core/c7x/Arch_util.c src/safertos/SafeRTOS_config_c7x.c
+  SRCS_COMMON += Arch_util.c CacheP_nonos.c HwiP_safertos_c7x.c SafeRTOS_config_c7x.c
+  PACKAGE_SRCS_COMMON += arch/core/c7x/CacheP_nonos.c src/safertos/HwiP_safertos_c7x.c arch/core/c7x/Arch_util.c src/safertos/SafeRTOS_config_c7x.c
 endif

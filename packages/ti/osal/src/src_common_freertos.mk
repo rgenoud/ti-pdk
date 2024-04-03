@@ -43,8 +43,9 @@ ifeq ($(CORE),$(filter $(CORE), c66x c66xdsp_1 c66xdsp_2 c674x))
 endif
 
 ifeq ($(CORE),$(filter $(CORE), c7x_1 c7x_2 c7x_3 c7x_4))
-  SRCS_COMMON += HwiP_freertos_c7x.c CacheP_freertos_c7x.c freertos_mmu.c
-  PACKAGE_SRCS_COMMON += src/freertos/CacheP_freertos_c7x.c
+  SRCDIR += arch/core/c7x
+  SRCS_COMMON += CacheP_nonos.c HwiP_freertos_c7x.c freertos_mmu.c
+  PACKAGE_SRCS_COMMON += arch/core/c7x
   PACKAGE_SRCS_COMMON += src/freertos/HwiP_freertos_c7x.c
 else
   SRCS_COMMON += HwiP_freertos.c

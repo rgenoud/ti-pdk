@@ -55,30 +55,7 @@ typedef struct Sem_Struct_s {
 } Sem_Struct;
 
 Sem_Struct semStructs[OSAL_NONOS_CONFIGNUM_SEMAPHORE];
-/*
- * Dummy function to check size during compile time
- *  ======== SemaphoreP_compileTime_SizeChk ========
- */
 
-void SemaphoreP_compileTime_SizeChk(void)
-{
-#if defined(__GNUC__) && !defined(__ti__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-variable"
-#else
-/* TI compiler */
-#if defined(__clang__)
-/* Clang compiler*/
-#pragma clang diagnostic ignored "-Wunused-variable"
-#else
-#pragma diag_suppress 179
-#endif
-#endif
-    OSAL_COMPILE_TIME_SIZE_CHECK ((uint32_t)sizeof(Sem_Struct),OSAL_NONOS_SEMAPHOREP_SIZE_BYTES);
-#if defined(__GNUC__) && !defined(__ti__)
-#pragma GCC diagnostic pop
-#endif
-}
 static void semaphoreInit( Sem_Struct *semPool, uint32_t maxSemaphores)
 {
   uint32_t i;

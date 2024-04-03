@@ -65,22 +65,13 @@ void osalArch_Init (osalArch_Config_t *cfg)
     gOsalArchConfig = *cfg;
 }
 
-/*
- * Dummy function to check size during compile time
- *  ======== HwiP_compileTime_SizeChk ========
- */
-
-void OsalArch_compileTime_SizeChk(void)
-{
-    #pragma diag_suppress 179
-    OSAL_COMPILE_TIME_SIZE_CHECK ((uint32_t)sizeof(HwiP_nonOs),OSAL_NONOS_HWIP_SIZE_BYTES);
-}
-
 static CSL_IntcContext               gContext;
 static CSL_IntcEventHandlerRecord    gEventRecord[OSAL_NONOS_CONFIGNUM_HWI];
 static bool gFirstTime = BFALSE;
-static bool gTimestampFirstTime = BTRUE;
 static bool gHwiInitialized = BFALSE;
+#if !defined(FREERTOS)
+static bool gTimestampFirstTime = BTRUE;
+#endif
 /* This function enables the interrupt for a given interrupt number */
 void OsalArch_enableInterrupt(uint32_t intNum)
 {

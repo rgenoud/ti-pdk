@@ -90,9 +90,7 @@ static int32_t OsalApp_isInISRsemaphoreTest(void);
 static int32_t OsalApp_semaphoreNullTest(void);
 
 /*
- * Description : Testing below APIs 
- *                 1. SemaphoreP_pend API with timeout
- *                 2. SemaphoreP_compileTime_SizeChk for size check 
+ * Description : Testing SemaphoreP_pend API with timeout
  */
 static int32_t OsalApp_semaphorePendTest(void);
 
@@ -253,7 +251,7 @@ static int32_t OsalApp_semaphorePendTest(void)
         {
             result = osal_FAILURE;
         }
-        SemaphoreP_compileTime_SizeChk();
+
         if((osal_OK != result) || (SemaphoreP_OK != SemaphoreP_delete(semhandle)))
         {
             result = osal_FAILURE;

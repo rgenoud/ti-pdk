@@ -39,56 +39,21 @@
 #include <stdlib.h>
 #include <ti/osal/CacheP.h>
 #include <ti/osal/src/nonos/Nonos_config.h>
+#include <ti/csl/arch/c7x/Cache.h>
 
 void CacheP_wb(const void * addr, uint32_t size)
 {
-  //TODO: Integrate to CSL once C7x arch is supported
-  //uint32_t alignedAddr = (uint32_t)addr & ~((uint32_t)0x3u);
-  //uint32_t alignedSize =   (uint32_t)size + (uint32_t)addr - (uint32_t)alignedAddr;
-  //uint32_t block_addr=alignedAddr;
-  //int32_t size_remaining=alignedSize;
-  //uint32_t bytes_count;
-  //
-  //while(size_remaining > 0) {
-  //  bytes_count = (size_remaining > CACHE_L2_LINESIZE )? CACHE_L2_LINESIZE:size_remaining;
-//	CACHE_wbL2((void *)block_addr,bytes_count,CACHE_WAIT);
-//	size_remaining-=CACHE_L2_LINESIZE;
-//	block_addr+=CACHE_L2_LINESIZE;
-  //}
+    Cache_wb((void *)addr, (size_t)size, (uint16_t)Cache_Type_ALL, BTRUE);
 }
 
 void CacheP_wbInv(const void * addr, uint32_t size)
 {
-  //TODO: Integrate to CSL once C7x arch is supported
-  //uint32_t alignedAddr = (uint32_t)addr & ~((uint32_t)0x3u);
-  //uint32_t alignedSize =   (uint32_t)size + (uint32_t)addr - (uint32_t)alignedAddr;
-  //uint32_t block_addr=alignedAddr;
-  //int32_t size_remaining=alignedSize;
-  //uint32_t bytes_count;
-  //
-  //while(size_remaining > 0) {
-  //  bytes_count = (size_remaining > CACHE_L2_LINESIZE )? CACHE_L2_LINESIZE:size_remaining;
-//	CACHE_wbInvL2((void *)block_addr,bytes_count,CACHE_WAIT);
-//	size_remaining-=CACHE_L2_LINESIZE;
-//	block_addr+=CACHE_L2_LINESIZE;
-  //}
+    Cache_wbInv((void *)addr, (size_t)size, (uint16_t)Cache_Type_ALL, BTRUE);
 }
 
 void CacheP_Inv(const void * addr, uint32_t size)
 {
-  //TODO: Integrate to CSL once C7x arch is supported
-  //uint32_t alignedAddr = (uint32_t)addr & ~((uint32_t)0x3u);
-  //uint32_t alignedSize =   (uint32_t)size + (uint32_t)addr - (uint32_t)alignedAddr;
-  //uint32_t block_addr=alignedAddr;
-  //int32_t size_remaining=alignedSize;
-  //uint32_t bytes_count;
-  //
-  //while(size_remaining > 0) {
-  //  bytes_count = (size_remaining > CACHE_L2_LINESIZE )? CACHE_L2_LINESIZE:size_remaining;
-  //  CACHE_invL2((void *)block_addr,bytes_count,CACHE_WAIT);
-  //  size_remaining-=CACHE_L2_LINESIZE;
-  //  block_addr+=CACHE_L2_LINESIZE;
-  //}
+    Cache_inv((void *)addr, (size_t)size, (uint16_t)Cache_Type_ALL, BTRUE);
 }
 
 

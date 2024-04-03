@@ -309,13 +309,6 @@ extern Osal_HwAttrs  gOsal_HwAttrs;
 #ifndef NULL_PTR
 #define NULL_PTR ((void *)0x0)
 #endif
-/*
- * Dummy function to check size during compile time
- *  ======== HwiP_compileTime_SizeChk ========
- */
-void OsalArch_compileTime_SizeChk(void);
-void SemaphoreP_compileTime_SizeChk(void);
-void HwiP_compileTime_SizeChk(void);
 
 void osalArch_Init (osalArch_Config_t *cfg);
 __attribute__((weak)) void vInitMmu( void );

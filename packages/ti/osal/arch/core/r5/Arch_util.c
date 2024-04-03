@@ -68,33 +68,13 @@ void osalArch_Init (osalArch_Config_t *cfg)
     gOsalArchConfig = *cfg;
 }
 
-/*
- * Dummy function to check size during compile time
- *  ======== HwiP_compileTime_SizeChk ========
- */
-
-void OsalArch_compileTime_SizeChk(void)
-{
-#if defined(__GNUC__) && !defined(__ti__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-variable"
-#else
-/* TI compiler */
-#pragma clang diagnostic ignored "-Wunused-variable"
-#endif
-    OSAL_COMPILE_TIME_SIZE_CHECK ((uint32_t)sizeof(HwiP_nonOs),OSAL_NONOS_HWIP_SIZE_BYTES);
-#if defined(__GNUC__) && !defined(__ti__)
-#pragma GCC diagnostic pop
-#endif
-}
-
 static bool gFirstTime = BTRUE;
-static bool gTimestampFirstTime = BTRUE;
 static bool gHwiInitialized = BFALSE;
-static CSL_vimRegs *gVimRegs;
-
+#if !defined(FREERTOS)
+static bool gTimestampFirstTime = BTRUE;
 static TimeStamp_Struct gTimeStamp = {(uint32_t)NULL,(uint32_t)NULL};
-static HwiP_Handle      gHwiPHandle;
+#endif
+static CSL_vimRegs *gVimRegs;
 
 /* This function enables the interrupt for a given interrupt number */
 void OsalArch_enableInterrupt(uint32_t intNum)

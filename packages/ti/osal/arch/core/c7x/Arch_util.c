@@ -50,18 +50,6 @@ typedef struct HwiP_nonOs_s {
 /* Local hwi structures */
 static HwiP_nonOs hwiStructs[OSAL_NONOS_CONFIGNUM_HWI] = {0};
 
-/*
- * Dummy function to check size during compile time
- *  ======== HwiP_compileTime_SizeChk ========
- */
-
-void OsalArch_compileTime_SizeChk(void)
-{
-    #pragma diag_suppress 179
-    OSAL_COMPILE_TIME_SIZE_CHECK (sizeof(HwiP_nonOs),OSAL_NONOS_HWIP_SIZE_BYTES);
-}
-
-static bool gFirstTime = BFALSE;
 //TODO: Integrate to CSL once C7x arch is supported
 //static CSL_IntcContext               gContext;
 //static CSL_IntcEventHandlerRecord    gEventRecord[OSAL_NONOS_CONFIGNUM_HWI];

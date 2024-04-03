@@ -235,13 +235,6 @@ extern SemaphoreP_Status SemaphoreP_postFromISR(SemaphoreP_Handle semPhandle);
 
 extern int32_t SemaphoreP_getCount(SemaphoreP_Handle semPhandle);
 
-/*!
- *  @brief  Function to check size during compile time.
- *
- */
- 
-void SemaphoreP_compileTime_SizeChk(void);
-
 #ifdef __cplusplus
 }
 #endif

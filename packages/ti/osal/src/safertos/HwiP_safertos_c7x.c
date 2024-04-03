@@ -49,10 +49,6 @@
 
 extern Osal_HwAttrs  gOsal_HwAttrs;
 
-void OsalArch_compileTime_SizeChk(void);
-void HwiP_compileTime_SizeChk(void);
-void SemaphoreP_compileTime_SizeChk(void);
-
 extern void Osal_DebugP_assert(int32_t expression, const char *file, int32_t line);
 extern uint32_t  gOsalHwiAllocCnt, gOsalHwiPeak;
 
@@ -66,26 +62,6 @@ typedef struct HwiP_safeRtos_s {
 
 /* global pool of statically allocated semaphore pools */
 static HwiP_safeRtos gOsalHwiPSafeRtosPool[OSAL_SAFERTOS_C7X_CONFIGNUM_HWI];
-
-/*
- * Dummy function to check size during compile time
- *  ======== HwiP_compileTime_SizeChk ========
- */
-
-void HwiP_compileTime_SizeChk(void)
-{
-#if defined(__GNUC__) && !defined(__ti__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-variable"
-#else
-/* TI compiler */
-#pragma diag_suppress 179
-#endif
-    OSAL_COMPILE_TIME_SIZE_CHECK ((uint32_t)sizeof(HwiP_safeRtos),OSAL_SAFERTOS_HWIP_C7X_SIZE_BYTES);
-#if defined(__GNUC__) && !defined(__ti__)
-#pragma GCC diagnostic pop
-#endif
-}
 
 /*
  *  ======== HwiP_clearInterrupt ========

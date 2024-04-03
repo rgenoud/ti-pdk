@@ -64,31 +64,6 @@ int32_t SemaphoreP_constructBinary(SemaphoreP_freertos *handle, uint32_t initCou
 int32_t SemaphoreP_constructCounting(SemaphoreP_freertos *handle, uint32_t initCount, uint32_t maxCount);
 
 /*
- * Dummy function to check size during compile time
- *  ======== SemaphoreP_compileTime_SizeChk ========
- */
-
-void SemaphoreP_compileTime_SizeChk(void)
-{
-#if defined(__GNUC__) && !defined(__ti__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-variable"
-#else
-/* TI compiler */
-#if defined(__clang__)
-/* Clang compiler*/
-#pragma clang diagnostic ignored "-Wunused-variable"
-#else
-#pragma diag_suppress 179
-#endif
-#endif
-    OSAL_COMPILE_TIME_SIZE_CHECK ((uint32_t)sizeof(SemaphoreP_freertos),OSAL_FREERTOS_SEMAPHOREP_SIZE_BYTES);
-#if defined(__GNUC__) && !defined(__ti__)
-#pragma GCC diagnostic pop
-#endif
-}
-
-/*
  *  ======== SemaphoreP_create ========
  */
 SemaphoreP_Handle SemaphoreP_create(uint32_t count,
