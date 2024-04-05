@@ -120,5 +120,12 @@ int main(void)
 #endif
 
     Ipc_echo_test();
+    
+    #if defined LDRA_DYN_COVERAGE_EXIT
+    UART_printf("\n LDRA ENTRY... \n");
+    upload_execution_history();
+    UART_printf("\n LDRA EXIT... \n");
+    #endif
+    
     return(0);
 }

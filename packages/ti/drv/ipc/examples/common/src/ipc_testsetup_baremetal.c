@@ -275,7 +275,13 @@ void rpmsg_responderFxn(uintptr_t arg0, uintptr_t arg1)
         pCntPing[i] = 0;
         pCntPong[i] = 0;
     }
-
+    
+    #if defined LDRA_DYN_COVERAGE_EXIT
+    UART_printf("\n LDRA ENTRY... \n");
+    upload_execution_history();
+    UART_printf("\n LDRA EXIT... \n");
+    #endif
+    
     while(!g_exitRespTsk)
     {
         /* Wait for messages to show up */

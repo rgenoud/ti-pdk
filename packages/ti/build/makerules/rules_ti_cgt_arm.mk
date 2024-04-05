@@ -92,7 +92,7 @@ endif
 
 # Internal CFLAGS - normally doesn't change
 ifeq ($(CGT_ISA),$(filter $(CGT_ISA),M4 R5 M3))
-  CFLAGS_INTERNAL = -c -Wall -Werror $(SUPRESS_WARNINGS_FLAG) -fno-strict-aliasing -$(RTSLIB_ENDIAN) -eo.$(OBJEXT) -ea.$(ASMEXT) -g -mfloat-abi=hard
+  CFLAGS_INTERNAL = -c -Wall $(SUPRESS_WARNINGS_FLAG) -fno-strict-aliasing -$(RTSLIB_ENDIAN) -eo.$(OBJEXT) -ea.$(ASMEXT) -g -mfloat-abi=hard
   ifeq ($(CGT_ISA),$(filter $(CGT_ISA), R5))
     CFLAGS_INTERNAL += -mfpu=vfpv3-d16 -mcpu=cortex-r5
     ifeq ($(COMPILE_MODE), thumb)
@@ -106,12 +106,12 @@ ifeq ($(CGT_ISA),$(filter $(CGT_ISA),M4 R5 M3))
     CFLAGS_INTERNAL += -mfpu=vfplib
   endif
 else ifeq ($(CGT_ISA), Arm9)
-  CFLAGS_INTERNAL = -c -Wall -Werror $(SUPRESS_WARNINGS_FLAG) --endian=$(ENDIAN) -mv5e --float_support=vfplib -eo.$(OBJEXT) -ea.$(ASMEXT) -g
+  CFLAGS_INTERNAL = -c -Wall $(SUPRESS_WARNINGS_FLAG) --endian=$(ENDIAN) -mv5e --float_support=vfplib -eo.$(OBJEXT) -ea.$(ASMEXT) -g
 endif
 
 # Reset the CFLAGS_INTERNAL flag for M4F
 ifeq ($(CGT_ISA), M4F)
-  CFLAGS_INTERNAL = -mcpu=cortex-m4 -c -Wall -Werror $(SUPRESS_WARNINGS_FLAG) --endian=$(ENDIAN) -mv7M4 -eo.$(OBJEXT) -ea.$(ASMEXT) -g
+  CFLAGS_INTERNAL = -mcpu=cortex-m4 -c -Wall $(SUPRESS_WARNINGS_FLAG) --endian=$(ENDIAN) -mv7M4 -eo.$(OBJEXT) -ea.$(ASMEXT) -g
   CFLAGS_INTERNAL += -mfpu=fpv4-sp-d16
 endif
 

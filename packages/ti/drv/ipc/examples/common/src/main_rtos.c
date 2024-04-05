@@ -300,10 +300,16 @@ static void taskFxn(void* a0, void* a1)
 
 #if defined IPC_NEGATIVE_TEST
     Ipc_echo_neg_test();
-#elif IPC_EXTENDED_TEST
+#elif defined IPC_EXTENDED_TEST
     IpcApp_echoExtTest();
 #else
     Ipc_echo_test();
+#endif
+
+#if defined LDRA_DYN_COVERAGE_EXIT
+    UART_printf("\n LDRA ENTRY... \n");
+    upload_execution_history();
+    UART_printf("\n LDRA EXIT... \n");
 #endif
 
 }

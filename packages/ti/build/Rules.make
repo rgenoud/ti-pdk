@@ -73,9 +73,17 @@ export BUILD_PROFILE ?= release
 # Supported Values: thumb
 export COMPILE_MODE ?= thumb
 
+# Default Instrumentation flag is false
+# Supported Values: false true
+export INSTRUMENTATION_FLAG ?= false
+
 # Treat compiler warning as error
 # Supported Values: yes | no
+ifeq ($(INSTRUMENTATION_FLAG),true)
+export TREAT_WARNINGS_AS_ERROR ?= no
+else
 export TREAT_WARNINGS_AS_ERROR ?= yes
+endif
 
 #Various boards support for J7 TDA family of devices
 BOARD_LIST_J7_TDA = j721e_hostemu j721e_evm

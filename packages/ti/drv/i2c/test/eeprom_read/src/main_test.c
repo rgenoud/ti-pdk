@@ -871,6 +871,13 @@ int main ()
     {
         I2C_log("\n Some tests have failed. \n");
     }
+
+    #if defined LDRA_DYN_COVERAGE_EXIT
+    I2C_log("\n LDRA ENTRY \n");
+    upload_execution_history();
+    I2C_log("\n LDRA EXIT \n");
+    #endif
+
     while (BTRUE)
     {
     }
