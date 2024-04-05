@@ -556,6 +556,21 @@ SBL_OBJ_COPY_OPTS := --gap-fill=0xff
 sbl_img_bin: $(EXE_NAME)
 	$(SBL_OBJ_COPY) $(SBL_OBJ_COPY_OPTS) -O binary $< $(SBL_BIN_PATH)
 
+keywr_imagegen: $(SBL_BIN_FILE)
+	$(SBL_OBJ_COPY) $(SBL_OBJ_COPY_OPTS) -O binary $(EXE_NAME) $(SBL_BIN_PATH)
+	$(ECHO) \# Appending certificate to keywriter binary file.
+	$(CAT) $(KEYWRITER_APP_DIR)/x509cert/final_certificate.bin >> $(SBL_BIN_PATH)
+ifeq ($(SOC),$(filter $(SOC), $(keywriter_SOCLIST)))
+ifneq ($(OS),Windows_NT)
+	$(CHMOD) a+x $(SBL_CERT_GEN)
+endif
+	$(SBL_CERT_GEN) -b $(SBL_BIN_PATH) -o $(SBL_TIIMAGE_PATH) -c R5 -l $(SBL_RUN_ADDRESS) -k $($(APP_NAME)_KEYWR_CERT_KEY) -d DEBUG -j DBG_FULL_ENABLE -m $(SBL_MCU_STARTUP_MODE)
+else
+	$(ECHO) $(SOC) "not yet supported"
+endif
+	$(ECHO) \# Signed Keywriter image $(SBL_TIIMAGE_PATH) created.
+	$(ECHO) \#
+
 
 $(SBL_IMAGE_PATH): $(SBL_BIN_FILE)
 ifeq ($(SOC),$(filter $(SOC),j721e j7200 j721s2 j784s4))
