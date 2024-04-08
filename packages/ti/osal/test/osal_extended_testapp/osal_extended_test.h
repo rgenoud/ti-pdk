@@ -129,6 +129,9 @@ int32_t OsalApp_freertosLoadTests(void);
 /* Top level function for c7x Arch utils tests */
 int32_t OsalApp_ArchutilsTests(void);
 
+/* Top level function for Register interrupt tests */
+int32_t OsalApp_registerIntrTests(void);
+
 /* ========================================================================== */
 /*                       Static Function Definitions                          */
 /* ========================================================================== */

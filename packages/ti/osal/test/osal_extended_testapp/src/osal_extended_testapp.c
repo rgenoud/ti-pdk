@@ -164,13 +164,6 @@ void clockp_start_isr(void *arg)
     ClockP_start(gclockp_handle);
 }
 
-/* ISR which is called to check whether the hardware ISR got executed in RegisterIntr_nonos, HwiP_nonos Tests */
-void Hwi_IRQ(uintptr_t arg)
-{
-    gFlagIRQ = true;
-    gTestlocalTimeout = 0x100000U;
-}
-
 /* ISR for SwiP_nonos Test */
 void SwiP_nonosIRQ(uintptr_t arg0, uintptr_t arg1)
 {
@@ -249,197 +242,7 @@ void SwiP_nonos_Test(void)
             OSAL_log("\n SwiP nonos Negative Test Failed!! \n");
     }
 }
-
-/*
- * Description: Testing Negative condition check for the below mentioned APIs :
- *      1. Osal_RegisterInterrupt_initParams
- *      2. Osal_RegisterInterrupt
- *      3. Osal_DeleteInterrupt
- */
-void RegisterIntr_nonos_NegTest(void)
-{
-     HwiP_Handle hwiHandle       = NULL;
-     OsalRegisterIntrParams_t    *intrPrms = NULL_PTR;
-     OsalInterruptRetCode_e      osalRetVal;
-     bool test_pass = false;
-
-     /* Osal_RegisterInterrupt_initParams Null check */
-     Osal_RegisterInterrupt_initParams(intrPrms);
-
-     /* Invalid parameters to the OsalRegisterIntrParams_t and Osal_RegisterInterrupt to check the Negative condition*/
-     intrPrms->corepacConfig.corepacEventNum = CSL_INVALID_EVENT_ID;
-     intrPrms->corepacConfig.isrRoutine      = NULL;
-     intrPrms->corepacConfig.intVecNum       = CSL_INVALID_VEC_ID;
-
-     /* Osal_RegisterInterrupt Negative condition check */
-     osalRetVal = Osal_RegisterInterrupt(intrPrms, &hwiHandle);
-     if(OSAL_INT_SUCCESS != osalRetVal)
-     {
-         OSAL_log("\n Osal_RegisterInterrupt Negative Test Passed!! \n");
-         test_pass = true;
-     }
-     else
-     {
-         OSAL_log("\n Osal_RegisterInterrupt Negative Test Failed!! \n");
-     }
-
-     if (true == test_pass)
-     {
-         /* Osal_DeleteInterrupt positive condition check */
-         osalRetVal = Osal_DeleteInterrupt(&hwiHandle, intrPrms->corepacConfig.corepacEventNum);
-         if(OSAL_INT_SUCCESS == osalRetVal)
-         {
-             OSAL_log("\n Osal_DeleteInterrupt Positive Testcase Passed!! \n");
-         }
-         else
-         {
-             OSAL_log("\n Osal_DeleteInterrupt Positive Testcase Failed!! \n");
-         }
-         /* Osal_DeleteInterrupt Negative condition check */
-         hwiHandle = NULL;
-         osalRetVal = Osal_DeleteInterrupt(&hwiHandle, intrPrms->corepacConfig.corepacEventNum);
-         if(OSAL_INT_SUCCESS != osalRetVal)
-         {
-             OSAL_log("\n Osal_DeleteInterrupt Negative Testcase Passed!! \n");
-         }
-         else
-         {
-             OSAL_log("\n Osal_DeleteInterrupt Negative Testcase Failed!! \n");
-         }
-     }
-     else
-     {
-         OSAL_log("\n RegisterIntr nonos Negative Test failed!! \n");
-     }
-}
 #endif
-
-/*
- * Description: Testing Negative condition for the Osal_RegisterInterruptDirect API
- */
-void RegisterIntrDirect_NegTest(void)
-{
-    HwiP_Handle hwiHandle       = NULL;
-    OsalRegisterIntrParams_t    intrPrms;
-    OsalInterruptRetCode_e      osalRetVal;
-    HwiP_DirectFxn              isrFxn = (HwiP_DirectFxn)Hwi_IRQ;
-
-    Osal_RegisterInterrupt_initParams(&intrPrms);
-
-    /* Populating invalid interrupt parameters to check the Negative condition */
-    intrPrms.corepacConfig.arg             = (uintptr_t) 0;
-    intrPrms.corepacConfig.priority        = 1U;
-    intrPrms.corepacConfig.corepacEventNum = CSL_INVALID_EVENT_ID;
-    intrPrms.corepacConfig.isrRoutine      = NULL;
-    intrPrms.corepacConfig.intVecNum       = 0U;
-
-    /* Register interrupt */
-    osalRetVal = Osal_RegisterInterruptDirect(&intrPrms, isrFxn, &hwiHandle);
-
-    if (OSAL_INT_SUCCESS == osalRetVal)
-    {
-        OSAL_log("\n Osal_RegisterInterruptDirect Negative Test failed!! \n");
-    }
-    else
-    {
-        Osal_DeleteInterrupt(&hwiHandle, intrPrms.corepacConfig.corepacEventNum);
-        OSAL_log("\n Osal_RegisterInterruptDirect Negative Test passed!! \n");
-    }
-}
-
-void RegisterIntr_pos_Test(void)
-{
-    HwiP_Handle                 hwiHandle;
-    OsalRegisterIntrParams_t    intrPrms;
-    OsalInterruptRetCode_e      osalRetVal;
-    HwiP_DirectFxn              isrFxn = (HwiP_DirectFxn)Hwi_IRQ;
-    bool                        test_pass = true;
-
-    Osal_RegisterInterrupt_initParams(&intrPrms);
-
-    /* Populating invalid interrupt parameters to check the Negative condition */
-    intrPrms.corepacConfig.priority        = 1U;
-    intrPrms.corepacConfig.corepacEventNum = EventP_ID_NONE;
-    intrPrms.corepacConfig.isrRoutine      = Hwi_IRQ;
-    intrPrms.corepacConfig.enableIntr      = 0U;
-
-    /* Register interrupt */
-    osalRetVal = Osal_RegisterInterruptDirect(&intrPrms, isrFxn, &hwiHandle);
-
-    if (OSAL_INT_SUCCESS != osalRetVal)
-    {
-        OSAL_log("\n Interrupt not register for the event!! \n");
-        test_pass = false;
-    }
-
-    Osal_DisableInterrupt(intrPrms.corepacConfig.corepacEventNum, 0U);
-
-    osalRetVal = Osal_DeleteInterrupt(&hwiHandle, intrPrms.corepacConfig.corepacEventNum);
-    if(OSAL_INT_SUCCESS != osalRetVal)
-    {
-        OSAL_log("\n Failed to delete Interrupt corresponding to an event \n");
-        test_pass = false;
-    }
-    if(true == test_pass)
-    {
-        OSAL_log("\n Register Interrupt positive Testcase Passed!! \n");
-    }
-    else
-    {
-        OSAL_log("\n Register Interrupt positive Testcase Failed!! \n");
-    }
-}
-
-void RegisterIntr_Neg_Test(void)
-{
-    HwiP_Handle                 hwiHandle = NULL;
-    OsalRegisterIntrParams_t    intrPrms;
-    OsalInterruptRetCode_e      osalRetVal;
-    HwiP_DirectFxn              isrFxn = NULL_PTR;  //(HwiP_DirectFxn)Hwi_IRQ;
-    bool                        test_pass = true;
-
-    Osal_RegisterInterrupt_initParams(&intrPrms);
-
-    /* Populating invalid interrupt parameters to check the Negative condition */
-    intrPrms.corepacConfig.arg             = (uintptr_t) 0;
-    intrPrms.corepacConfig.priority        = 1U;
-    intrPrms.corepacConfig.corepacEventNum = CSL_INVALID_EVENT_ID;
-    intrPrms.corepacConfig.isrRoutine      = NULL;
-    intrPrms.corepacConfig.intVecNum       = 0U;
-
-    /* Register interrupt */
-    osalRetVal = Osal_RegisterInterruptDirect(&intrPrms, isrFxn, &hwiHandle);
-
-    if (OSAL_INT_SUCCESS == osalRetVal)
-    {
-        OSAL_log("\n Interrupt not register for the event \n");
-        test_pass = false;
-    }
-
-    Osal_DisableInterrupt(intrPrms.corepacConfig.corepacEventNum, 0U);
-
-    osalRetVal = Osal_DeleteInterrupt(&hwiHandle, intrPrms.corepacConfig.corepacEventNum);
-    if(OSAL_INT_SUCCESS != osalRetVal)
-    {
-        test_pass = false;
-    }
-    if(true == test_pass)
-    {
-        OSAL_log("\n Register InterruptDirect Negative Testcase Passed!! \n");
-    }
-    else
-    {
-        OSAL_log("\n Register InterruptDirect Negative Testcase Failed!! \n");
-    }
-}
-
-/* RegisterIntr_nonos.c Testcases */
-void RegisterIntr_Test(void)
-{
-    RegisterIntrDirect_NegTest();
-    RegisterIntr_pos_Test();
-    RegisterIntr_Neg_Test();
-}
 
 /*
  * Description  : Testing null parameter check for ClockP_Params_init API
@@ -881,10 +684,6 @@ void OSAL_tests(void *arg0, void *arg1)
 
     SwiP_nonos_Test();
 
-    RegisterIntr_nonos_NegTest();
-
-    RegisterIntrDirect_NegTest();
-
     result += OsalApp_utilsNonosTests();
 
     result += OsalApp_cacheTests();
@@ -894,9 +693,9 @@ void OSAL_tests(void *arg0, void *arg1)
 #if !defined(BARE_METAL)
 
 #if defined(BUILD_MCU)
-    RegisterIntr_Test();
 
     result += OsalApp_taskTests();
+
 #endif
 
     ClockP_init_start_stop_null_test();
@@ -907,13 +706,13 @@ void OSAL_tests(void *arg0, void *arg1)
 
 #endif
 
-    result += OsalApp_cacheTests();
-
     result += OsalApp_mutexTests();
 
-    result += OsalApp_semaphoreTests();
+    result += OsalApp_registerIntrTests();
 
     result += OsalApp_hwiTests();
+
+    result += OsalApp_semaphoreTests();
 
     if(osal_OK == result)
     {
