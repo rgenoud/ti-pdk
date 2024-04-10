@@ -700,6 +700,7 @@ int32_t UdmaChConfigPdmaTest(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestChGetTdCqRingHandle(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestChGetFqRingNum(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestChSetSwTriggerRegister(UdmaTestTaskObj *taskObj);
+int32_t UdmaChGetStatsTest(UdmaTestTaskObj *taskObj);
 
 /*
  * UDMA Driver Negative test functions
@@ -830,6 +831,8 @@ int32_t UdmaChConfigRxTestNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaChEnableTestNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaChInitPrmsNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaChGetSwTriggerRegisterTestNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaChDequeueTdResponseTestNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaChDisableTestBcdmaInstNeg(UdmaTestTaskObj *taskObj);
 
 /*
  * UDMA utc test functions

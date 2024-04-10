@@ -74,6 +74,7 @@
 /*
  * Test Case Description: Verifies the function Udma_chPause
  * Test scenario 1: Check to fail DRU channel pause
+ * Test scenario 2: Check to fail channel enable and destination thread disable
  */
 int32_t UdmaTestChPauseDruNeg(UdmaTestTaskObj *taskObj)
 {
@@ -143,6 +144,61 @@ int32_t UdmaTestChPauseDruNeg(UdmaTestTaskObj *taskObj)
         }
     }
     taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0] = backUpDrvObj;
+
+    /* Test scenario 2: Check to fail channel enable when extChNum is CSL_DRU_NUM_CH
+    *                   and destination thread disable when peerThreadId is invalid
+    */
+    if(UDMA_SOK == retVal)
+    {
+        UdmaChPrms_init(&chPrms, chType);
+        chPrms.utcId     = UDMA_UTC_ID_MSMC_DRU0;
+        drvHandle        = &taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0];
+        retVal           = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
+        Udma_ChUtcPrms utcPrms;
+        UdmaChUtcPrms_init(&utcPrms);
+        if(UDMA_SOK == retVal)
+        {
+            retVal = Udma_chConfigUtc(chHandle, &utcPrms);
+            if(UDMA_SOK == retVal)
+            {
+                backUpChObj                = chObj;
+                chHandle->utcPrms.druOwner = CSL_DRU_OWNER_DIRECT_TR;
+                chHandle->extChNum         = CSL_DRU_NUM_CH;
+                retVal                     = Udma_chEnable(chHandle);
+                if(UDMA_SOK == retVal)
+                {
+                    GT_0trace(taskObj->traceMask, GT_ERR,
+                              " |TEST INFO|:: FAIL:: UDMA:: chEnable:: Neg::"
+                              " Check to fail channel enable when extChNum is CSL_DRU_NUM_CH!!\n");
+                    retVal = UDMA_EFAIL;
+                }
+                else
+                {
+                    retVal                     = UDMA_SOK;
+                    chObj                      = backUpChObj;
+                    chHandle->utcPrms.druOwner = CSL_DRU_OWNER_UDMAC_TR;
+                    chHandle->peerThreadId     = UDMA_THREAD_ID_INVALID;
+                    retVal                     = Udma_chEnable(chHandle); 
+                    if(UDMA_SOK == retVal)
+                    {
+                        GT_0trace(taskObj->traceMask, GT_ERR,
+                                  " |TEST INFO|:: FAIL:: UDMA:: chEnable:: Neg::"
+                                  " Check when peerThreadId is Invalid!!\n");
+                        retVal = UDMA_EFAIL;
+                    }
+                    else
+                    {
+                        retVal = UDMA_SOK;
+                        chObj  = backUpChObj;
+                        Udma_chEnable(chHandle); 
+                        Udma_chDisable(chHandle, timeout);
+                        Udma_chClose(chHandle);
+                    } 
+                }
+            }
+        }
+        taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0] = backUpDrvObj;
+    }
 
     return retVal;
 }
@@ -221,6 +277,10 @@ int32_t UdmaTestChDisableDruNeg(UdmaTestTaskObj *taskObj)
 /* 
  * Test Case Description: Verifies the function Udma_chConfigUtc 
  * Test scenario 1: Check when druOwner is CSL_DRU_OWNER_UDMAC_TR
+ * Test scenario 2: Check when druOwner is CSL_DRU_OWNER_UDMAC_TR 
+ *                  and druQueueId is CSL_DRU_NUM_QUEUE
+ * Test scenario 3: Check when druOwner is CSL_DRU_OWNER_DIRECT_TR 
+ *                  and extChNum is CSL_DRU_NUM_CH
  */ 
 int32_t UdmaTestChConfigUtcDruTestNeg(UdmaTestTaskObj *taskObj)
 {
@@ -232,6 +292,8 @@ int32_t UdmaTestChConfigUtcDruTestNeg(UdmaTestTaskObj *taskObj)
     Udma_DrvHandle     drvHandle;
     struct Udma_DrvObj backUpDrvObj;
     uint32_t           chType;
+    uint32_t           bkupExtCh;
+    uint32_t           instID;
 
     GT_1trace(taskObj->traceMask, GT_INFO1,
               " |TEST INFO|:: Task:%d: UDMA ChConfigUtcDru negative Testcase ::\r\n",
@@ -260,6 +322,74 @@ int32_t UdmaTestChConfigUtcDruTestNeg(UdmaTestTaskObj *taskObj)
         {
             retVal = UDMA_SOK;
             Udma_chClose(chHandle);
+        }
+    }
+    taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0] = backUpDrvObj;
+
+    /* Test scenario 2: Check when druOwner is CSL_DRU_OWNER_UDMAC_TR 
+    *                   and druQueueId is CSL_DRU_NUM_QUEUE
+    */
+    if(UDMA_SOK == retVal)
+    {
+        instID       = UDMA_TEST_INST_ID_MAIN_0;
+        chType       = UDMA_CH_TYPE_UTC;
+        UdmaChPrms_init(&chPrms, chType);
+        backUpDrvObj = taskObj->testObj->drvObj[instID];
+        chPrms.utcId = UDMA_UTC_ID_MSMC_DRU0;
+        drvHandle    = &taskObj->testObj->drvObj[instID];
+        retVal       = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
+        UdmaChUtcPrms_init(&utcPrms);
+        if(retVal == UDMA_SOK)
+        {
+            utcPrms.druQueueId = CSL_DRU_NUM_QUEUE;
+            retVal             = Udma_chConfigUtc(chHandle, &utcPrms);
+            if(UDMA_SOK == retVal)
+            {
+                GT_0trace(taskObj->traceMask, GT_ERR,
+                          " |TEST INFO|:: FAIL:: UDMA:: chConfigUtc:: Neg::"
+                          " Check when druOwner is CSL_DRU_OWNER_DIRECT_TR"
+                          " and druQueueId is CSL_DRU_NUM_QUEUE!!\n");
+                retVal = UDMA_EFAIL;
+            }
+            else
+            {
+                retVal = UDMA_SOK;
+                Udma_chClose(chHandle);
+            }
+        }
+    }
+    taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0] = backUpDrvObj;
+
+    /* Test scenario 3: Check when druOwner is CSL_DRU_OWNER_DIRECT_TR 
+    *                   and extChNum is CSL_DRU_NUM_CH
+    */
+    if(UDMA_SOK == retVal)
+    {
+        drvHandle       = &taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0];
+        UdmaChPrms_init(&chPrms, chType);
+        chPrms.utcId    = UDMA_UTC_ID_MSMC_DRU0;
+        retVal          = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
+        UdmaChUtcPrms_init(&utcPrms);
+        if(UDMA_SOK == retVal)
+        {
+            bkupExtCh          = chHandle->extChNum;
+            utcPrms.druOwner   = CSL_DRU_OWNER_DIRECT_TR;
+            chHandle->extChNum = CSL_DRU_NUM_CH;
+            retVal             = Udma_chConfigUtc(chHandle, &utcPrms);
+            if(UDMA_SOK == retVal)
+            {
+                GT_0trace(taskObj->traceMask, GT_ERR,
+                          " |TEST INFO|:: FAIL:: UDMA:: chConfigUtc:: Neg::"
+                          " Check when druOwner is CSL_DRU_OWNER_DIRECT_TR"
+                          " and extChNum is CSL_DRU_NUM_CH!!\n");
+                retVal = UDMA_EFAIL;
+            }
+            else
+            {
+                retVal             = UDMA_SOK;
+                chHandle->extChNum = bkupExtCh;
+                Udma_chClose(chHandle);
+            }
         }
     }
     taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0] = backUpDrvObj;
@@ -819,7 +949,7 @@ int32_t UdmaTestChPauseDru(UdmaTestTaskObj *taskObj)
                         {
                             Udma_chDisable(chHandle, timeout);
                             Udma_chClose(chHandle); 
-                        }
+                        } 
                     }
                 }
             }

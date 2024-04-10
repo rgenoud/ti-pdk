@@ -744,8 +744,8 @@ int32_t UdmaTestChPause(UdmaTestTaskObj *taskObj)
 }
 
 /* 
- * Test Case Description: Verifies the function Udma_chGetDefaultFlowHandle
- * Test scenario 1: Check for Valid args 
+ * Test Case Description: Verifies the function Udma_chGetDefaultFlowHandle and Udma_chGetStats
+ * Test scenario 1: Check when instType is UDMA_INST_TYPE_LCDMA_BCDMA and chType is UDMA_CH_TYPE_RX
  */
 int32_t UdmaTestChGetDefaultFlowHandle(UdmaTestTaskObj *taskObj)
 {
@@ -757,6 +757,8 @@ int32_t UdmaTestChGetDefaultFlowHandle(UdmaTestTaskObj *taskObj)
     Udma_DrvHandle     drvHandle;
     uint32_t           chType;
     uint32_t           instID;
+    Udma_ChRxPrms      rxChPrms;
+    Udma_ChStats       chStats;
 
     GT_1trace(taskObj->traceMask, GT_INFO1,
               " |TEST INFO|:: Task:%d: UDMA ChGetDefaultFlowHandle positive Testcase ::\r\n",
@@ -771,7 +773,7 @@ int32_t UdmaTestChGetDefaultFlowHandle(UdmaTestTaskObj *taskObj)
     drvHandle        = &taskObj->testObj->drvObj[instID];
     chPrms.peerChNum = UDMA_PSIL_CH_MCU_CPSW0_RX;
     retVal           = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
-    if(retVal == UDMA_SOK)
+    if(UDMA_SOK == retVal)
     {
         if(Udma_chGetDefaultFlowHandle(chHandle) == NULL_PTR)
         {
@@ -782,10 +784,26 @@ int32_t UdmaTestChGetDefaultFlowHandle(UdmaTestTaskObj *taskObj)
         }
         else
         {
-            retVal = UDMA_SOK;
-            Udma_chClose(chHandle);
+            UdmaChRxPrms_init(&rxChPrms, chType);
+            retVal = Udma_chConfigRx(chHandle, &rxChPrms); 
+            if(UDMA_SOK == retVal)
+            {
+                retVal = Udma_chGetStats(chHandle, &chStats);
+                if(UDMA_SOK != retVal)
+                {
+                    GT_0trace(taskObj->traceMask, GT_ERR,
+                              " |TEST INFO|:: FAIL:: UDMA:: chGetStats:: Pos:: when instType"
+                              " is UDMA_INST_TYPE_LCDMA_BCDMA and chType is UDMA_CH_TYPE_RX!!\n");
+                    retVal = UDMA_EFAIL;
+                }
+                else
+                {
+                    retVal = UDMA_SOK;
+                }
+            }
         }
     }
+    Udma_chClose(chHandle);
     taskObj->testObj->drvObj[instID] = backUpDrvObj;
     
     return retVal;
@@ -1022,7 +1040,7 @@ int32_t UdmaTestChGetFqRingNum(UdmaTestTaskObj *taskObj)
 }
 
 /*
- * Test Case Description: Verifies the function Udma_chPause 
+ * Test Case Description: Verifies the function Udma_chGetSwTriggerRegister and Udma_chGetStats
  * Test scenario 1: Check when instType is UDMA_INST_TYPE_LCDMA_BCDMA 
  *                  and chType is UDMA_CH_TYPE_TX
  */
@@ -1039,6 +1057,7 @@ int32_t UdmaTestChSetSwTriggerRegister(UdmaTestTaskObj *taskObj)
     uint32_t           timeout;
     uint32_t           instID; 
     uint32_t           trigger;
+    Udma_ChStats       chStats;
 
     GT_1trace(taskObj->traceMask, GT_INFO1,
               " |TEST INFO|:: Task:%d: UDMA ChSetSwTriggerRegister positive Testcase ::\r\n",
@@ -1064,22 +1083,33 @@ int32_t UdmaTestChSetSwTriggerRegister(UdmaTestTaskObj *taskObj)
         retVal = Udma_chConfigTx(chHandle, &txChPrms);
         if(UDMA_SOK == retVal)
         {
-            retVal = Udma_chEnable(chHandle);
-            if(UDMA_SOK == retVal)
+            retVal = Udma_chGetStats(chHandle, &chStats);
+            if(retVal != UDMA_SOK)
             {
-                retVal = Udma_chSetSwTrigger(chHandle, trigger);
-                if(UDMA_SOK != retVal)
-                {                
-                    GT_0trace(taskObj->traceMask, GT_ERR,
-                              " |TEST INFO|:: FAIL:: UDMA:: ChSetSwTriggerRegister::"
-                              " Pos:: Check when instType is UDMA_INST_TYPE_LCDMA_BCDMA "
-                              " and chType is UDMA_CH_TYPE_TX!!\n");
-                    retVal = UDMA_EFAIL;
-                }
-                else
+                GT_0trace(taskObj->traceMask, GT_ERR,
+                          " |TEST INFO|:: FAIL:: UDMA:: chGetStats:: Pos:: when instType"
+                          " is UDMA_INST_TYPE_LCDMA_BCDMA and chType is UDMA_CH_TYPE_TX!!\n");
+                retVal = UDMA_EFAIL;
+            }
+            else
+            {
+                retVal = Udma_chEnable(chHandle);
+                if(UDMA_SOK == retVal)
                 {
-                    Udma_chDisable(chHandle, timeout);
-                    Udma_chClose(chHandle);
+                    retVal = Udma_chSetSwTrigger(chHandle, trigger);
+                    if(UDMA_SOK != retVal)
+                    {                
+                        GT_0trace(taskObj->traceMask, GT_ERR,
+                                  " |TEST INFO|:: FAIL:: UDMA:: ChSetSwTriggerRegister::"
+                                  " Pos:: Check when instType is UDMA_INST_TYPE_LCDMA_BCDMA "
+                                  " and chType is UDMA_CH_TYPE_TX!!\n");
+                        retVal = UDMA_EFAIL;
+                    }
+                    else
+                    {
+                        Udma_chDisable(chHandle, timeout);
+                        Udma_chClose(chHandle);
+                    }
                 }
             }
         }
@@ -1087,6 +1117,89 @@ int32_t UdmaTestChSetSwTriggerRegister(UdmaTestTaskObj *taskObj)
     taskObj->testObj->drvObj[instID] = backUpDrvObj;
 #endif
 
+    return retVal;
+}
+
+/* 
+ * Test Case Description: Verifies the function Udma_chGetStats when
+ * Test scenario 1: Check when instType is UDMA_INST_TYPE_NORMAL and chType is UDMA_CH_TYPE_TX
+ * Test scenario 2: Check when instType is UDMA_INST_TYPE_NORMAL and chType is UDMA_CH_TYPE_RX
+ */
+int32_t UdmaChGetStatsTest(UdmaTestTaskObj *taskObj)
+{
+    int32_t            retVal = UDMA_SOK;
+    struct Udma_ChObj  chObj;
+    Udma_ChHandle      chHandle;
+    Udma_ChStats       chStats;
+    uint32_t           instID;
+    Udma_DrvHandle     drvHandle;
+    Udma_ChPrms        chPrms;
+    uint32_t           chType;
+    Udma_ChTxPrms      txChPrms;
+    Udma_ChRxPrms      rxChPrms;
+    struct Udma_DrvObj backUpDrvObj;
+
+    /* Test scenario 1: Check when instType is UDMA_INST_TYPE_NORMAL and chType is UDMA_CH_TYPE_TX */
+    chHandle         = &chObj;
+    chType           = UDMA_CH_TYPE_TX;
+    UdmaChPrms_init(&chPrms, chType);
+    instID           = UDMA_TEST_DEFAULT_UDMA_INST;
+    backUpDrvObj     = taskObj->testObj->drvObj[instID];
+    drvHandle        = &taskObj->testObj->drvObj[instID];
+    chPrms.peerChNum = UDMA_PSIL_CH_MCU_CPSW0_TX;
+    retVal           = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
+    UdmaChTxPrms_init(&txChPrms, chType);
+    if(UDMA_SOK == retVal)
+    {
+        retVal = Udma_chConfigTx(chHandle, &txChPrms);     
+        if(retVal == UDMA_SOK)
+        {
+            retVal = Udma_chGetStats(chHandle, &chStats);
+            if(retVal != UDMA_SOK)
+            {
+                GT_0trace(taskObj->traceMask, GT_ERR,
+                          " |TEST INFO|:: FAIL:: UDMA:: chGetStats:: Pos:: when instType"
+                          " is UDMA_INST_TYPE_NORMAL and chType is UDMA_CH_TYPE_TX!!\n");
+                retVal = UDMA_EFAIL;
+            }
+            else
+            {
+                retVal = UDMA_SOK;
+            }
+        }
+    }
+    Udma_chClose(chHandle);
+    taskObj->testObj->drvObj[instID] = backUpDrvObj;
+
+    /* Test scenario 2: Check when instType is UDMA_INST_TYPE_NORMAL and chType is UDMA_CH_TYPE_RX */
+    chType           = UDMA_CH_TYPE_RX;
+    UdmaChPrms_init(&chPrms, chType);
+    drvHandle        = &taskObj->testObj->drvObj[instID];
+    chPrms.peerChNum = UDMA_PSIL_CH_MCU_CPSW0_RX;
+    retVal           = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
+    UdmaChRxPrms_init(&rxChPrms, chType);
+    if(retVal == UDMA_SOK)
+    {
+        retVal = Udma_chConfigRx(chHandle, &rxChPrms); 
+        if(retVal == UDMA_SOK)
+        {
+            retVal = Udma_chGetStats(chHandle, &chStats);
+            if(retVal != UDMA_SOK)
+            {
+                GT_0trace(taskObj->traceMask, GT_ERR,
+                          " |TEST INFO|:: FAIL:: UDMA:: chGetStats:: Pos:: when instType"
+                          " is UDMA_INST_TYPE_NORMAL and chType is UDMA_CH_TYPE_RX!!\n");
+                retVal = UDMA_EFAIL;
+            }
+            else
+            {
+                retVal = UDMA_SOK;
+            }
+        }
+    }
+    Udma_chClose(chHandle);
+    taskObj->testObj->drvObj[instID] = backUpDrvObj;
+    
     return retVal;
 }
 
