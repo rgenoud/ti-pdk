@@ -12,7 +12,7 @@ endif
   GCC_ARCH64_BIN_PREFIX_STR=aarch64-none-elf
   CGT_VERSION=8.3.7
   CGT_C7X_VERSION=4.1.0.LTS
-  CGT_ARMLLVM_VERSION=3.2.1.LTS
+  CGT_ARMLLVM_VERSION=4.0.0-alpha.1.20240408
   CG_XML_VERSION=2.61.00
 
 ################################################################################
@@ -30,8 +30,8 @@ else
 endif
   export GCC_ARCH64_BIN_PREFIX        ?= $(GCC_ARCH64_BIN_PREFIX_STR)
   export TOOLCHAIN_PATH_A72           ?= $(TOOLCHAIN_PATH_GCC_ARCH64)
-# export TOOLCHAIN_PATH_R5            ?= $(TOOLS_INSTALL_PATH)/ti-cgt-armllvm_$(CGT_ARMLLVM_VERSION)
-  export TOOLCHAIN_PATH_R5            ?= /opt/arm/ArmCompilerforEmbedded6.21
+  export TOOLCHAIN_PATH_R5            ?= $(TOOLS_INSTALL_PATH)/ti-cgt-armllvm_$(CGT_ARMLLVM_VERSION)
+# export TOOLCHAIN_PATH_R5            ?= /opt/arm/ArmCompilerforEmbedded6.21
 # export TOOLCHAIN_PATH_R5            ?= $(TOOLS_INSTALL_PATH)/arm-gnu-toolchain-13.2.Rel1-x86_64-arm-none-eabi
   export PDK_INSTALL_PATH             ?= $(SDK_INSTALL_PATH)/pdk$(PDK_VERSION_STR)/packages
   export CG_XML_BIN_INSTALL_PATH      ?= $(SDK_INSTALL_PATH)/cg_xml_$(CG_XML_VERSION)/bin

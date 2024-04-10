@@ -75,8 +75,7 @@ CFLAGS_GLOBAL_j784s4         = -DSOC_J784S4
 # MCU Cores
 ifeq ($(CORE),$(filter $(CORE), mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mcu4_0 mcu4_1 m4f_0))
   CFLAGS_GLOBAL_$(CORE) = -g -DMAKEFILE_BUILD
-  #LNKFLAGS_GLOBAL_$(CORE) = -Xlinker -x -Xlinker --zero_init=on
-  LNKFLAGS_GLOBAL_$(CORE) =
+  LNKFLAGS_GLOBAL_$(CORE) = -Xlinker -x -Xlinker --zero_init=on
 endif
 
 # MPU Cores
