@@ -30,7 +30,7 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*
- *  ======== Arch_util.c ========
+ *  ======== Arch_util_r5.c ========
  */
 
 

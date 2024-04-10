@@ -30,7 +30,7 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*
- *  ======== CacheP_nonos.c ========
+ *  ======== CacheP_nonos_c6x.c ========
  */
 
 

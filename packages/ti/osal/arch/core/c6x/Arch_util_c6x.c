@@ -30,7 +30,7 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*
- *  ======== Arch_util.c ========
+ *  ======== Arch_util_c6x.c ========
  */
 
 #include <c6x.h>

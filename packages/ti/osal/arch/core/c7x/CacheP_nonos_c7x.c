@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2022, Texas Instruments Incorporated
+ * Copyright (c) 2015-2017, Texas Instruments Incorporated
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,33 +30,36 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*
- *  ======== CacheP_nonos.c ========
+ *  ======== CacheP_nonos_c7x.c ========
  */
 
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdlib.h>
-
 #include <ti/osal/CacheP.h>
 #include <ti/osal/src/nonos/Nonos_config.h>
-#include <ti/csl/soc.h>
-#include <ti/csl/arch/csl_arch.h>
+#include <ti/csl/arch/c7x/Cache.h>
 
 void CacheP_wb(const void * addr, uint32_t size)
 {
-    CSL_armR5CacheWb(addr, size, BTRUE);
-    return;
+    #if !defined(HOST_EMULATION)
+    Cache_wb((void *)addr, (size_t)size, (uint16_t)Cache_Type_ALL, BTRUE);
+    #endif
 }
+
 void CacheP_wbInv(const void * addr, uint32_t size)
 {
-    CSL_armR5CacheWbInv(addr, size, BTRUE);
-    return;
-
+    #if !defined(HOST_EMULATION)
+    Cache_wbInv((void *)addr, (size_t)size, (uint16_t)Cache_Type_ALL, BTRUE);
+    #endif
 }
+
 void CacheP_Inv(const void * addr, uint32_t size)
 {
-    CSL_armR5CacheInv(addr, size, BTRUE);
-    return;
+    #if !defined(HOST_EMULATION)
+    Cache_inv((void *)addr, (size_t)size, (uint16_t)Cache_Type_ALL, BTRUE);
+    #endif
 }
-/* Nothing past this point */
+
+

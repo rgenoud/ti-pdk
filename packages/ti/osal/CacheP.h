@@ -122,30 +122,6 @@ extern void CacheP_Inv(const void * addr, uint32_t size);
 extern void CacheP_wbInv(const void * addr, uint32_t size);
 
 /*!
- *  @brief  Function to call before handing over the memory buffer to DMA from CPU
- *
- *  @param  addr  Start address of the cache line/s
- *
- *  @param  size  size (in bytes) of the memory to be written back and invalidate
- *
- *  @param  isCoherent  if the cache is coherent on that CPU or not, see @ref Osal_CacheP_isCoherent
- *
- */
-void CacheP_fenceCpu2Dma(uintptr_t addr, uint32_t size, Osal_CacheP_isCoherent isCoherent);
-
-/*!
- *  @brief  Function to call before reading the memory to CPU after DMA operations 
- *
- *  @param  addr  Start address of the cache line/s
- *
- *  @param  size  size (in bytes) of the memory to be written back and invalidate
- *
- *  @param  isCoherent  if the cache is coherent on that CPU or not, see @ref Osal_CacheP_isCoherent
- *
- */
-void CacheP_fenceDma2Cpu(uintptr_t addr, uint32_t size, Osal_CacheP_isCoherent isCoherent);
-
-/*!
  *  @brief Set MAR attribute for a memory range
  *  
  *  [C66x Only] The API will set the MAR attribute for the range,
