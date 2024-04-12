@@ -176,7 +176,7 @@ int32_t UdmaTestOsalRegisterIntrNeg(UdmaTestTaskObj *taskObj)
      *                    function Udma_osalRegisterIntr
      */
     UdmaOsalPrms_init(&osalPrms);
-    if(osalPrms.registerIntr(NULL_PTR, 1, 1, NULL_PTR) == NULL_PTR)
+    if(osalPrms.registerIntr(NULL_PTR, UDMA_INTR_INVALID, 1, NULL_PTR) == NULL_PTR)
     {
         retVal = UDMA_SOK;
     }

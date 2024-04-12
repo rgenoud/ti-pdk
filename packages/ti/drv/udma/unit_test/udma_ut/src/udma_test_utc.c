@@ -132,7 +132,7 @@ int32_t UdmaTestChPauseDruNeg(UdmaTestTaskObj *taskObj)
                 backUpChObj                = chObj;
                 chHandle->utcPrms.druOwner = CSL_DRU_OWNER_DIRECT_TR;
                 chHandle->extChNum         = CSL_DRU_NUM_CH;
-                retVal                     = Udma_chPause(chHandle);
+                retVal = Udma_chPause(chHandle);
                 if(UDMA_SOK == retVal)
                 {
                     GT_0trace(taskObj->traceMask, GT_ERR,
@@ -154,18 +154,16 @@ int32_t UdmaTestChPauseDruNeg(UdmaTestTaskObj *taskObj)
                     {
                         retVal = UDMA_SOK;
                         chObj  = backUpChObj;
+                        Udma_chDisable(chHandle, timeout);
+                        Udma_chClose(chHandle); 
                     }
                 }
-                Udma_chDisable(chHandle, timeout);
             }
         }
-        Udma_chClose(chHandle); 
     }
     taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0] = backUpDrvObj;
 
-    /* Test scenario 2: Check to fail channel enable when extChNum is CSL_DRU_NUM_CH
-    *                   and destination thread disable when peerThreadId is invalid
-    */
+    /* Test scenario 2: Check to fail channel enable and destination thread disable*/
     if(UDMA_SOK == retVal)
     {
         UdmaChPrms_init(&chPrms, chType);
@@ -182,12 +180,12 @@ int32_t UdmaTestChPauseDruNeg(UdmaTestTaskObj *taskObj)
                 backUpChObj                = chObj;
                 chHandle->utcPrms.druOwner = CSL_DRU_OWNER_DIRECT_TR;
                 chHandle->extChNum         = CSL_DRU_NUM_CH;
-                retVal                     = Udma_chEnable(chHandle);
+                retVal = Udma_chEnable(chHandle);
                 if(UDMA_SOK == retVal)
                 {
                     GT_0trace(taskObj->traceMask, GT_ERR,
                               " |TEST INFO|:: FAIL:: UDMA:: chEnable:: Neg::"
-                              " Check to fail channel enable when extChNum is CSL_DRU_NUM_CH!!\n");
+                              " Check to fail channel enable!!\n");
                     retVal = UDMA_EFAIL;
                 }
                 else
@@ -223,11 +221,11 @@ int32_t UdmaTestChPauseDruNeg(UdmaTestTaskObj *taskObj)
                         {
                             retVal = UDMA_SOK;
                             chObj  = backUpChObj;
+                            Udma_chClose(chHandle);
                         }
                     } 
                 }
             }
-            Udma_chClose(chHandle);
         }
         taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0] = backUpDrvObj;
     }
@@ -295,11 +293,11 @@ int32_t UdmaTestChDisableDruNeg(UdmaTestTaskObj *taskObj)
                 {
                     retVal             = UDMA_SOK;
                     chHandle->extChNum = bkupExtCh;
+                    Udma_chDisable(chHandle, timeout);
+                    Udma_chClose(chHandle);
                 }
-                Udma_chDisable(chHandle, timeout);
             }
         }
-        Udma_chClose(chHandle);
     }
     taskObj->testObj->drvObj[instID] = backUpDrvObj;
 
@@ -353,8 +351,8 @@ int32_t UdmaTestChConfigUtcDruTestNeg(UdmaTestTaskObj *taskObj)
         else
         {
             retVal = UDMA_SOK;
+            Udma_chClose(chHandle);
         }
-        Udma_chClose(chHandle);
     }
     taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0] = backUpDrvObj;
 
@@ -374,7 +372,7 @@ int32_t UdmaTestChConfigUtcDruTestNeg(UdmaTestTaskObj *taskObj)
         if(UDMA_SOK == retVal)
         {
             utcPrms.druQueueId = CSL_DRU_NUM_QUEUE;
-            retVal             = Udma_chConfigUtc(chHandle, &utcPrms);
+            retVal = Udma_chConfigUtc(chHandle, &utcPrms);
             if(UDMA_SOK == retVal)
             {
                 GT_0trace(taskObj->traceMask, GT_ERR,
@@ -386,8 +384,8 @@ int32_t UdmaTestChConfigUtcDruTestNeg(UdmaTestTaskObj *taskObj)
             else
             {
                 retVal = UDMA_SOK;
+                Udma_chClose(chHandle);
             }
-            Udma_chClose(chHandle);
         }
     }
     taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0] = backUpDrvObj;
@@ -407,7 +405,7 @@ int32_t UdmaTestChConfigUtcDruTestNeg(UdmaTestTaskObj *taskObj)
             bkupExtCh          = chHandle->extChNum;
             utcPrms.druOwner   = CSL_DRU_OWNER_DIRECT_TR;
             chHandle->extChNum = CSL_DRU_NUM_CH;
-            retVal             = Udma_chConfigUtc(chHandle, &utcPrms);
+            retVal           = Udma_chConfigUtc(chHandle, &utcPrms);
             if(UDMA_SOK == retVal)
             {
                 GT_0trace(taskObj->traceMask, GT_ERR,
@@ -420,8 +418,8 @@ int32_t UdmaTestChConfigUtcDruTestNeg(UdmaTestTaskObj *taskObj)
             {
                 retVal             = UDMA_SOK;
                 chHandle->extChNum = bkupExtCh;
+                Udma_chClose(chHandle);
             }
-            Udma_chClose(chHandle);
         }
     }
     taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0] = backUpDrvObj;
@@ -979,14 +977,13 @@ int32_t UdmaTestChPauseDru(UdmaTestTaskObj *taskObj)
                         }
                         else
                         {
-                            retVal = UDMA_SOK;
+                            Udma_chDisable(chHandle, timeout);
+                            Udma_chClose(chHandle); 
                         } 
                     }
                 }
-                Udma_chDisable(chHandle, timeout);
             }
         }
-        Udma_chClose(chHandle); 
     }
     taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0] = backUpDrvObj;
 
@@ -1219,5 +1216,73 @@ static void udmaTestEventCb(Udma_EventHandle eventHandle,
     }
 
     return;
+}
+
+/* 
+ * Test Case Description: Verifies the function Udma_eventRegister
+ * Test scenario 1: Check Udma_eventProgramSteering when chType is UDMA_CH_TYPE_UTC 
+ *                  and extChNum is CSL_DRU_NUM_CH chType
+ */
+int32_t UdmaEventProgramSteeringTestNeg(UdmaTestTaskObj *taskObj)
+{
+    int32_t                retVal = UDMA_SOK;
+    Udma_DrvHandle         drvHandle;
+    struct Udma_EventObj   eventObj;
+    Udma_EventHandle       eventHandle;
+    Udma_EventPrms         eventPrms;
+    struct Udma_DrvObj     backUpDrvObj;
+    Udma_RingMonHandle     monHandle;
+    struct Udma_RingMonObj monObj;
+    Udma_ChHandle          chHandle;
+    struct Udma_ChObj      chObj;
+    Udma_ChPrms            chPrms;
+    uint32_t               chType;
+    uint32_t               bkupExtCh;
+
+    chHandle         = &chObj;
+    chType           = UDMA_CH_TYPE_UTC;
+    backUpDrvObj     = taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0];  
+    UdmaChPrms_init(&chPrms, chType);
+    chPrms.utcId     = UDMA_UTC_ID_MSMC_DRU0;
+    drvHandle        = &taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0];
+    retVal           = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
+    Udma_ChUtcPrms utcPrms;
+    UdmaChUtcPrms_init(&utcPrms);
+    if(UDMA_SOK == retVal)
+    {
+        retVal = Udma_chConfigUtc(chHandle, &utcPrms);
+        if(UDMA_SOK == retVal)
+        {
+            eventHandle                 = &eventObj;
+            monHandle                   = &monObj;
+            UdmaEventPrms_init(&eventPrms);
+            eventPrms.eventMode         = UDMA_EVENT_MODE_SHARED;
+            eventPrms.eventType         = UDMA_EVENT_TYPE_TR;
+            eventPrms.masterEventHandle = Udma_eventGetGlobalHandle(drvHandle);;
+            eventPrms.monHandle         = monHandle;
+            eventPrms.chHandle          = chHandle;
+            eventPrms.eventCb           = &udmaTestEventCb; 
+            bkupExtCh                   = chHandle->extChNum;
+            chHandle->extChNum          = CSL_DRU_NUM_CH;
+            retVal                      = Udma_eventRegister(drvHandle, eventHandle, &eventPrms);
+            if(UDMA_SOK == retVal)
+            {
+                GT_0trace(taskObj->traceMask, GT_ERR,
+                            " |TEST INFO|:: FAIL:: UDMA:: Udma_eventProgramSteering::Neg:: Check when" 
+                            " chType is UDMA_CH_TYPE_UTC and extChNum is CSL_DRU_NUM_CH chType!!\n");
+                retVal = UDMA_EFAIL;
+                Udma_eventUnRegister(eventHandle);
+            }
+            else 
+            {
+                retVal             = UDMA_SOK;
+                chHandle->extChNum = bkupExtCh;
+            }
+        }
+        Udma_chClose(chHandle);
+    }
+    taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0] = backUpDrvObj;
+
+    return retVal;
 }
 

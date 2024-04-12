@@ -59,13 +59,20 @@
 /*                          Function Declarations                             */
 /* ========================================================================== */
 
-/* None */
+static void udmaTestEventCb(Udma_EventHandle eventHandle,
+                            uint32_t eventType,
+                            void *appData);
+static void udmaTestEventDmaCb(Udma_EventHandle eventHandle,
+                            uint32_t eventType,
+                            void *appData);
 
 /* ========================================================================== */
 /*                            Global Variables                                */
 /* ========================================================================== */
 
-/* None */
+static volatile int32_t gUdmaTestEventResult = UDMA_SOK;
+static volatile int32_t gUdmaTestAppResult = UDMA_SOK;
+static SemaphoreP_Handle gUdmaTestAppDoneSem = NULL;
 
 /* ========================================================================== */
 /*                          Function Definitions                              */
@@ -840,5 +847,911 @@ int32_t UdmaTestEventUnRegisterBcdmaTestNeg(UdmaTestTaskObj *taskObj)
     }
 
     return retVal;
+}
+
+/* 
+ * Test Case Description: Verifies the function Udma_eventRegister
+ * Test scenario 1: Check Udma_eventCheckParams when eventMode is 
+ *                  UDMA_EVENT_MODE_EXCLUSIVE and masterEventHandle is not NULL 
+ * Test scenario 2: Check Udma_eventCheckParams when eventCb is NULL 
+ * Test scenario 3: Check Udma_eventCheckParams when eventCb for masterEventHandle is not NULL
+ * Test scenario 4: Check Udma_eventCheckParams when eventType is UDMA_EVENT_TYPE_RING 
+ *                  and ringHandle is NULL
+ * Test scenario 5: Check Udma_eventCheckParams when eventType is UDMA_EVENT_TYPE_RING_MON 
+ *                  and monHandle is NULL
+ * Test scenario 6: Check Udma_eventCheckParams when eventType is UDMA_EVENT_TYPE_MASTER 
+ *                  and eventMode is not UDMA_EVENT_MODE_SHARED
+ * Test scenario 7: Check when eventType is UDMA_EVENT_TYPE_MASTER and numVintr is 0U
+ * Test scenario 8: Check Udma_eventAllocResource when vintrBitAllocFlag bits are not available
+ * Test scenario 9: Check Udma_eventAllocResource when preferredCoreIntrNum is not valid 
+ * Test scenario 10: Check Udma_eventAllocResource when eventType is UDMA_EVENT_TYPE_TR 
+ *                   and chOesAllocDone is UTRUE
+ * Test scenario 11: Check Udma_eventCheckUnRegister to free-up master event when 
+ *                   shared events are still not yet unregistered 
+ * Test scenario 12: Check Udma_eventAllocResource when masterEventHandle is NULL 
+ *                   and irIntr is not available
+ * Test scenario 13: Check Udma_eventAllocResource when eventMode is neither 
+ *                   shared nor exclusive
+ */
+int32_t UdmaEventRegisterTestNeg(UdmaTestTaskObj *taskObj)
+{
+    int32_t                retVal = UDMA_SOK;
+    uint32_t               instID;
+    Udma_DrvHandle         drvHandle;
+    struct Udma_EventObj   eventObj;
+    Udma_EventHandle       eventHandle;
+    Udma_EventPrms         eventPrms;
+    struct Udma_DrvObj     backUpDrvObj;
+    struct Udma_ChObj      chObj;
+    Udma_ChHandle          chHandle;
+    Udma_ChPrms            chPrms;
+    uint32_t               chType;
+    UdmaTestChObj          *testChObj;
+    uint32_t               heapIdSrc = UTILS_MEM_HEAP_ID_MSMC;
+    uint32_t               elemCnt = 50U;
+    Udma_RingMonHandle     monHandle;
+    struct Udma_RingMonObj monObj;
+    int32_t                resArrIdx;
+    int32_t                resArrSize;
+
+    /* Test scenario 1: Check Udma_eventCheckParams when eventMode is 
+     *                  UDMA_EVENT_MODE_EXCLUSIVE and masterEventHandle is not NULL */
+    eventHandle                 = &eventObj;
+    instID                      = UDMA_TEST_DEFAULT_UDMA_INST;
+    drvHandle                   = &taskObj->testObj->drvObj[instID];
+    UdmaEventPrms_init(&eventPrms);
+    eventPrms.eventType         = UDMA_EVENT_TYPE_ERR_OUT_OF_RANGE_FLOW;
+    eventPrms.eventMode         = UDMA_EVENT_MODE_EXCLUSIVE;
+    eventPrms.masterEventHandle = Udma_eventGetGlobalHandle(drvHandle);
+    eventPrms.eventCb           = &udmaTestEventCb;
+    retVal                      = Udma_eventRegister(drvHandle, eventHandle, &eventPrms);
+    if(UDMA_SOK == retVal)
+    {
+        GT_0trace(taskObj->traceMask, GT_ERR,
+                  " |TEST INFO|:: FAIL:: UDMA:: Udma_eventCheckParams::Neg:: Check when" 
+                  " eventMode is UDMA_EVENT_MODE_EXCLUSIVE and masterEventHandle is not NULL!!\n");
+        retVal = UDMA_EFAIL;
+        Udma_eventUnRegister(eventHandle);
+    }
+    else 
+    {
+        retVal = UDMA_SOK;
+    }
+
+    /* Test scenario 2: Check Udma_eventCheckParams when eventCb is NULL */
+    if(UDMA_SOK == retVal)
+    {
+        UdmaEventPrms_init(&eventPrms);
+        eventPrms.eventCb                              = (Udma_EventCallback) NULL_PTR;
+        eventPrms.eventMode                            = UDMA_EVENT_MODE_SHARED;
+        eventPrms.masterEventHandle                    = Udma_eventGetGlobalHandle(drvHandle);
+        eventPrms.masterEventHandle->eventPrms.eventCb = &udmaTestEventCb;
+        retVal                                         = Udma_eventRegister(drvHandle, eventHandle, &eventPrms);
+        if(UDMA_SOK == retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Udma_eventCheckParams::" 
+                      " Neg:: Check when eventCb is NULL!!\n");
+            retVal = UDMA_EFAIL;
+            Udma_eventUnRegister(eventHandle);
+        }
+        else 
+        {
+            retVal = UDMA_SOK;
+        }
+    }   
+
+    /* Test scenario 3: Check Udma_eventCheckParams when eventCb for masterEventHandle is not NULL */
+    if(UDMA_SOK == retVal)
+    {
+        UdmaEventPrms_init(&eventPrms);
+        eventPrms.eventCb                              = &udmaTestEventCb;
+        eventPrms.eventMode                            = UDMA_EVENT_MODE_SHARED;
+        eventPrms.masterEventHandle                    = Udma_eventGetGlobalHandle(drvHandle);
+        eventPrms.masterEventHandle->eventPrms.eventCb = &udmaTestEventCb;
+        retVal                                         = Udma_eventRegister(drvHandle, eventHandle, &eventPrms);
+        if(UDMA_SOK == retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Udma_eventCheckParams::" 
+                      " Neg:: Check when eventCb for masterEventHandle is not NULL!!\n");
+            retVal = UDMA_EFAIL;
+            Udma_eventUnRegister(eventHandle);
+        }
+        else 
+        {
+            retVal = UDMA_SOK;
+        }
+    }  
+
+    /* Test scenario 4: Check Udma_eventCheckParams when eventType is UDMA_EVENT_TYPE_RING 
+     *                  and ringHandle is NULL */
+    if(UDMA_SOK == retVal)
+    {
+        UdmaEventPrms_init(&eventPrms);
+        eventPrms.eventCb           = &udmaTestEventCb;
+        eventPrms.eventMode         = UDMA_EVENT_MODE_SHARED;
+        eventPrms.eventType         = UDMA_EVENT_TYPE_RING;
+        eventPrms.masterEventHandle = NULL;
+        retVal                      = Udma_eventRegister(drvHandle, eventHandle, &eventPrms);
+        if(UDMA_SOK == retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Udma_eventCheckParams::Neg:: Check when" 
+                      " eventType is UDMA_EVENT_TYPE_RING and ringHandle is NULL!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        else 
+        {
+            retVal = UDMA_SOK;
+        }
+    }
+
+    /* Test scenario 5: Check Udma_eventCheckParams when eventType is UDMA_EVENT_TYPE_RING_MON 
+     *                  and monHandle is NULL */
+    if(UDMA_SOK == retVal)
+    {
+        UdmaEventPrms_init(&eventPrms);
+        eventPrms.eventCb           = &udmaTestEventCb;
+        eventPrms.eventMode         = UDMA_EVENT_MODE_SHARED;
+        eventPrms.eventType         = UDMA_EVENT_TYPE_RING_MON;
+        eventPrms.masterEventHandle = NULL;
+        retVal                      = Udma_eventRegister(drvHandle, eventHandle, &eventPrms);
+        if(UDMA_SOK == retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Udma_eventCheckParams::Neg:: Check when" 
+                      " eventType is UDMA_EVENT_TYPE_RING_MON and monHandle is NULL!!\n");
+            retVal = UDMA_EFAIL;
+            Udma_eventUnRegister(eventHandle);
+        }
+        else 
+        {
+            retVal = UDMA_SOK;
+        }
+    }
+
+    /* Test scenario 6: Check Udma_eventCheckParams when eventType is UDMA_EVENT_TYPE_MASTER 
+     *                  and eventMode is not UDMA_EVENT_MODE_SHARED */
+    if(UDMA_SOK == retVal)
+    {
+        UdmaEventPrms_init(&eventPrms);
+        eventPrms.eventCb           = &udmaTestEventCb;
+        eventPrms.eventMode         = UDMA_EVENT_MODE_EXCLUSIVE;
+        eventPrms.eventType         = UDMA_EVENT_TYPE_MASTER;
+        eventPrms.masterEventHandle = Udma_eventGetGlobalHandle(drvHandle);
+        retVal                      = Udma_eventRegister(drvHandle, eventHandle, &eventPrms);
+        if(UDMA_SOK == retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Udma_eventCheckParams::Neg:: Check when eventType" 
+                      " is UDMA_EVENT_TYPE_MASTER and eventMode is not UDMA_EVENT_MODE_SHARED!!\n");
+            retVal = UDMA_EFAIL;
+            Udma_eventUnRegister(eventHandle);
+        }
+        else 
+        {
+            retVal = UDMA_SOK;
+        }
+    }
+
+    /* Test scenario 7: Check when eventType is UDMA_EVENT_TYPE_MASTER and numVintr is 0U */
+    if(UDMA_SOK == retVal)
+    {
+        instID                                               = UDMA_TEST_INST_ID_MAIN_0;
+        eventHandle->drvHandle                               = &taskObj->testObj->drvObj[instID];
+        backUpDrvObj                                         = taskObj->testObj->drvObj[instID];
+        eventHandle->drvHandle->initPrms.rmInitPrms.numVintr = 0U;
+        UdmaEventPrms_init(&eventPrms);
+        eventPrms.eventCb           = &udmaTestEventCb;
+        eventPrms.eventMode         = UDMA_EVENT_MODE_SHARED;
+        eventPrms.eventType         = UDMA_EVENT_TYPE_MASTER;
+        eventPrms.masterEventHandle = NULL;
+        retVal                      = Udma_eventRegister(eventHandle->drvHandle, eventHandle, &eventPrms);
+        if(UDMA_SOK == retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Udma_eventAllocResource::Neg:: Check" 
+                      " when eventType is UDMA_EVENT_TYPE_MASTER and numVintr is 0U!!\n");
+            retVal = UDMA_EFAIL;
+            Udma_eventUnRegister(eventHandle);
+        }
+        else 
+        {
+            retVal = UDMA_SOK;
+        }
+        taskObj->testObj->drvObj[instID] = backUpDrvObj;
+    }
+
+    /* Test scenario 8: Check Udma_eventAllocResource when vintrBitAllocFlag bits are not available */
+    if(UDMA_SOK == retVal)
+    {
+        chHandle                      = &chObj;
+        chType                        = UDMA_CH_TYPE_TX;
+        instID                        = UDMA_TEST_DEFAULT_UDMA_INST;
+        drvHandle                     = &taskObj->testObj->drvObj[instID];
+        backUpDrvObj                  = taskObj->testObj->drvObj[instID];
+        UdmaChPrms_init(&chPrms, chType);
+        chPrms.peerChNum              = UDMA_PSIL_CH_MCU_CPSW0_TX;
+        retVal                        = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
+        Udma_ChTxPrms txChPrms;
+        UdmaChTxPrms_init(&txChPrms, chType);
+        if(UDMA_SOK == retVal)
+        {
+            retVal = Udma_chConfigTx(chHandle, &txChPrms);
+            if(UDMA_SOK == retVal)
+            {
+                UdmaEventPrms_init(&eventPrms);
+                eventPrms.chHandle                             = chHandle;
+                eventPrms.eventCb                              = &udmaTestEventCb;
+                eventPrms.eventMode                            = UDMA_EVENT_MODE_SHARED;
+                eventPrms.eventType                            = UDMA_EVENT_TYPE_TR;
+                eventPrms.masterEventHandle                    = Udma_eventGetGlobalHandle(drvHandle);
+                eventPrms.masterEventHandle->vintrBitAllocFlag = (uint64_t) 0xFFFFFFFFFFFFFFFFUL;
+                retVal                                         = Udma_eventRegister(drvHandle, eventHandle, &eventPrms);
+                if(UDMA_SOK == retVal)
+                {
+                    GT_0trace(taskObj->traceMask, GT_ERR,
+                              " |TEST INFO|:: FAIL:: UDMA:: Udma_eventAllocResource::Neg:: " 
+                              " Check when vintrBitAllocFlag bits are not available!!\n");
+                    retVal = UDMA_EFAIL;
+                    Udma_eventUnRegister(eventHandle);
+                }
+                else 
+                {
+                    retVal = UDMA_SOK;
+                }
+            }
+            Udma_chClose(chHandle);
+        }
+    }
+    taskObj->testObj->drvObj[instID] = backUpDrvObj;
+
+    /* Test scenario 9: Check Udma_eventAllocResource when preferredCoreIntrNum is not valid */
+    if(UDMA_SOK == retVal)
+    {
+        chHandle                      = &chObj;
+        chType                        = UDMA_CH_TYPE_TX;
+        instID                        = UDMA_TEST_DEFAULT_UDMA_INST;
+        drvHandle                     = &taskObj->testObj->drvObj[instID];
+        UdmaChPrms_init(&chPrms, chType);
+        chPrms.peerChNum              = UDMA_PSIL_CH_MCU_CPSW0_TX;
+        retVal                        = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
+        Udma_ChTxPrms txChPrms;
+        UdmaChTxPrms_init(&txChPrms, chType);
+        if(UDMA_SOK == retVal)
+        {
+            retVal = Udma_chConfigTx(chHandle, &txChPrms);
+            if(UDMA_SOK == retVal)
+            {
+                UdmaEventPrms_init(&eventPrms);
+                eventPrms.chHandle             = &chObj;
+                eventPrms.eventCb              = &udmaTestEventCb;
+                eventPrms.eventMode            = UDMA_EVENT_MODE_SHARED;
+                eventPrms.eventType            = UDMA_EVENT_TYPE_TR;
+                eventPrms.masterEventHandle    = NULL;
+                eventPrms.preferredCoreIntrNum = UDMA_CORE_INTR_ANY +1U;
+                retVal                         = Udma_eventRegister(drvHandle, eventHandle, &eventPrms);
+                if(UDMA_SOK == retVal)
+                {
+                    GT_0trace(taskObj->traceMask, GT_ERR,
+                              " |TEST INFO|:: FAIL:: UDMA:: Udma_eventAllocResource::Neg::" 
+                              " Check when preferredCoreIntrNum is not valid!!\n");
+                    retVal = UDMA_EFAIL;
+                    Udma_eventUnRegister(eventHandle);
+                }
+                else 
+                {
+                    retVal = UDMA_SOK;
+                }
+            }
+            Udma_chClose(chHandle);
+        }
+    }
+
+    /* Test scenario 10: Check Udma_eventAllocResource when eventType is UDMA_EVENT_TYPE_TR 
+     *                   and chOesAllocDone is UTRUE */
+    if(UDMA_SOK == retVal)
+    {
+        chHandle                      = &chObj;
+        chType                        = UDMA_CH_TYPE_TX;
+        instID                        = UDMA_TEST_DEFAULT_UDMA_INST;
+        drvHandle                     = &taskObj->testObj->drvObj[instID];
+        UdmaChPrms_init(&chPrms, chType);
+        chPrms.peerChNum              = UDMA_PSIL_CH_MCU_CPSW0_TX;
+        retVal                        = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
+        Udma_ChTxPrms txChPrms;
+        UdmaChTxPrms_init(&txChPrms, chType);
+        if(UDMA_SOK == retVal)
+        {
+            retVal = Udma_chConfigTx(chHandle, &txChPrms);
+            if(UDMA_SOK == retVal)
+            {
+                UdmaEventPrms_init(&eventPrms);
+                eventPrms.chHandle                 = &chObj;
+                eventPrms.eventCb                  = &udmaTestEventCb;
+                eventPrms.eventMode                = UDMA_EVENT_MODE_SHARED;
+                eventPrms.eventType                = UDMA_EVENT_TYPE_TR;
+                eventPrms.masterEventHandle        = NULL;
+                eventPrms.chHandle->chOesAllocDone = UTRUE;
+                retVal                             = Udma_eventRegister(drvHandle, eventHandle, &eventPrms);
+                if(UDMA_SOK == retVal)
+                {
+                    GT_0trace(taskObj->traceMask, GT_ERR,
+                              " |TEST INFO|:: FAIL:: UDMA:: Udma_eventAllocResource::Neg:: Check when" 
+                              " eventType is UDMA_EVENT_TYPE_TR and chOesAllocDone is UTRUE!!\n");
+                    retVal = UDMA_EFAIL;
+                    Udma_eventUnRegister(eventHandle);
+                }
+                else 
+                {
+                    retVal = UDMA_SOK;
+                }
+            }
+            Udma_chClose(chHandle);
+        }
+    }
+
+    /* Test scenario 11: Check Udma_eventCheckUnRegister to free-up master event when 
+     *                   shared events are still not yet unregistered */
+    chHandle                      = &chObj;
+    chType                        = UDMA_CH_TYPE_TX;
+    instID                        = UDMA_TEST_DEFAULT_UDMA_INST;
+    drvHandle                     = &taskObj->testObj->drvObj[instID];
+    UdmaChPrms_init(&chPrms, chType);
+    chPrms.peerChNum              = UDMA_PSIL_CH_MCU_CPSW0_TX;
+    chPrms.cqRingPrms.elemCnt     = elemCnt;
+    chPrms.cqRingPrms.ringMemSize = elemCnt * sizeof(uint64_t);
+    chPrms.cqRingPrms.ringMem     = Utils_memAlloc(heapIdSrc, chPrms.cqRingPrms.ringMemSize, UDMA_CACHELINE_ALIGNMENT);
+    retVal                        = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
+    Udma_ChTxPrms txChPrms;
+    UdmaChTxPrms_init(&txChPrms, chType);
+    if(UDMA_SOK == retVal)
+    {
+        retVal = Udma_chConfigTx(chHandle, &txChPrms);
+        if(UDMA_SOK == retVal)
+        {
+            testChObj                   = taskObj->chObj[0];
+            eventHandle                 = &eventObj;
+            instID                      = UDMA_TEST_INST_ID_MAIN_0;
+            monHandle                   = &monObj;
+            UdmaEventPrms_init(&eventPrms);
+            eventPrms.eventCb           = &udmaTestEventDmaCb;
+            eventPrms.eventMode         = UDMA_EVENT_MODE_SHARED;
+            eventPrms.eventType         = UDMA_EVENT_TYPE_DMA_COMPLETION;
+            eventPrms.masterEventHandle = Udma_eventGetGlobalHandle(drvHandle);
+            eventPrms.monHandle         = monHandle;
+            eventPrms.chHandle          = chHandle;
+            eventPrms.appData           = testChObj;
+            retVal                      = Udma_eventRegister(drvHandle, eventHandle, &eventPrms);
+            if(UDMA_SOK == retVal)
+            {
+                retVal = Udma_eventUnRegister(eventPrms.masterEventHandle);
+                if(UDMA_SOK == retVal)
+                {
+                    GT_0trace(taskObj->traceMask, GT_ERR,
+                                " |TEST INFO|:: FAIL:: UDMA:: Udma_eventCheckUnRegister::" 
+                                " Neg:: Check to free-up master event when shared"
+                                " events are still not yet unregistered!!\n");
+                    retVal = UDMA_EFAIL;
+                }
+                else 
+                {
+                    retVal = UDMA_SOK;
+                    Udma_eventUnRegister(eventHandle);
+                }
+            }
+            
+        }
+        Udma_chClose(chHandle);
+    }
+    if(NULL != chPrms.cqRingPrms.ringMem)
+    {
+        retVal = Utils_memFree(heapIdSrc, chPrms.cqRingPrms.ringMem, chPrms.cqRingPrms.ringMemSize);
+        if(UDMA_SOK != retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR, " Ring free failed!!\n");
+        }
+    }
+
+    /* Test scenario 12: Check Udma_eventAllocResource when masterEventHandle is NULL 
+     *                   and irIntr is not available. */
+    if(UDMA_SOK == retVal)
+    {
+        instID                      = UDMA_TEST_INST_ID_MAIN_0;
+        eventHandle->drvHandle      = &taskObj->testObj->drvObj[instID];
+        backUpDrvObj                = taskObj->testObj->drvObj[instID];
+        UdmaEventPrms_init(&eventPrms);
+        eventPrms.chHandle          = &chObj;
+        eventPrms.eventCb           = &udmaTestEventCb;
+        eventPrms.eventMode         = UDMA_EVENT_MODE_SHARED;
+        eventPrms.eventType         = UDMA_EVENT_TYPE_MASTER;
+        eventPrms.masterEventHandle = NULL;
+         /* Udma driver will utilize 1-bit per resource of 32-bit element size array to maintain availability status.
+              since each element is 32-bit, no.of elements required is:
+                         "numRes/32" if numRes is multiple of 32 else "numRes/32 + 1".               
+        */
+        resArrSize = eventHandle->drvHandle->initPrms.rmInitPrms.numIrIntr >> 5; 
+        if(eventHandle->drvHandle->initPrms.rmInitPrms.numIrIntr - (resArrSize << 5) != 0)
+        {
+            resArrSize += 1U;
+        }
+        for(resArrIdx = 0U; resArrIdx < resArrSize; resArrIdx++)
+        {
+            eventHandle->drvHandle->irIntrFlag[resArrIdx] = 0U;
+        }
+        retVal = Udma_eventRegister(eventHandle->drvHandle, eventHandle, &eventPrms);
+        if(UDMA_SOK == retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Udma_eventAllocResource::Neg:: " 
+                      " Check when masterEventHandle is NULL and irIntr is not available!!\n");
+            retVal = UDMA_EFAIL;
+            Udma_eventUnRegister(eventHandle);
+        }
+        else 
+        {
+            retVal = UDMA_SOK;
+        }
+        taskObj->testObj->drvObj[instID] = backUpDrvObj;
+    }
+
+    /* Test scenario 13: Check Udma_eventAllocResource when eventMode is neither 
+     *                   shared nor exclusive */
+    if(UDMA_SOK == retVal)
+    {
+        instID                      = UDMA_TEST_INST_ID_MAIN_0;
+        eventHandle->drvHandle      = &taskObj->testObj->drvObj[instID];
+        UdmaEventPrms_init(&eventPrms);
+        eventPrms.chHandle          = &chObj;
+        eventPrms.eventCb           = &udmaTestEventCb;
+        eventPrms.eventMode         = 0xFFFFFFFFU;
+        eventPrms.eventType         = UDMA_EVENT_TYPE_ERR_OUT_OF_RANGE_FLOW;
+        eventPrms.masterEventHandle = NULL;
+        retVal                      = Udma_eventRegister(eventHandle->drvHandle, eventHandle, &eventPrms);
+        if(UDMA_SOK == retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Udma_eventAllocResource::Neg:: " 
+                      " Check when eventMode is neither shared nor exclusive!!\n");
+            retVal = UDMA_EFAIL;
+            Udma_eventUnRegister(eventHandle);
+        }
+        else 
+        {
+            retVal = UDMA_SOK;
+        }
+    }
+
+    return retVal;
+}
+
+/* 
+ * Test Case Description: Verifies the function Udma_eventRegister
+ * Test scenario 1: Check Udma_eventCheckParams when eventType is UDMA_EVENT_TYPE_DMA_COMPLETION 
+ *                  and eventCb for masterEventHandle is NULL
+ */
+int32_t UdmaEventTypeDmaCompletionTestNeg(UdmaTestTaskObj *taskObj)
+{
+    int32_t                retVal = UDMA_SOK;
+    uint32_t               instID;
+    Udma_DrvHandle         drvHandle;
+    struct Udma_EventObj   eventObj;
+    Udma_EventHandle       eventHandle;
+    Udma_EventPrms         eventPrms;
+    struct Udma_DrvObj     backUpDrvObj;
+
+    /* Test scenario 1: Check Udma_eventCheckParams when eventType is UDMA_EVENT_TYPE_DMA_COMPLETION 
+     *                  and eventCb for masterEventHandle is NULL */
+
+    instID       = UDMA_TEST_DEFAULT_UDMA_INST;
+    drvHandle    = &taskObj->testObj->drvObj[instID];
+    backUpDrvObj = taskObj->testObj->drvObj[instID];
+    UdmaEventPrms_init(&eventPrms);
+    eventHandle                                      = &eventObj;
+    eventPrms.eventCb                                = &udmaTestEventDmaCb;
+    eventPrms.eventMode                              = UDMA_EVENT_MODE_SHARED;
+    eventPrms.masterEventHandle                      = Udma_eventGetGlobalHandle(drvHandle);
+    eventPrms.masterEventHandle->eventPrms.eventCb   = NULL_PTR;
+    eventPrms.masterEventHandle->eventPrms.eventType = UDMA_EVENT_TYPE_DMA_COMPLETION;
+    retVal                                           = Udma_eventRegister(drvHandle, eventHandle, &eventPrms);
+    if(UDMA_SOK == retVal)
+    {
+        GT_0trace(taskObj->traceMask, GT_ERR,
+                  " |TEST INFO|:: FAIL:: UDMA:: Udma_eventCheckParams::Neg:: Check when eventType is" 
+                  " UDMA_EVENT_TYPE_DMA_COMPLETION and eventCb for masterEventHandle is NULL!!\n");
+        retVal = UDMA_EFAIL;
+    }
+    else 
+    {
+        retVal = UDMA_SOK;
+    }
+    taskObj->testObj->drvObj[instID] = backUpDrvObj;
+
+    return retVal;
+}
+
+static void udmaTestEventDmaCb(Udma_EventHandle eventHandle,
+                            uint32_t eventType,
+                            void *appData)
+{
+    if(UDMA_EVENT_TYPE_DMA_COMPLETION == eventType)
+    {
+        SemaphoreP_post(gUdmaTestAppDoneSem);
+    }
+    else
+    {
+        gUdmaTestAppResult = UDMA_EFAIL;
+    }
+
+    return;
+}
+
+/* 
+ * Test Case Description: Verifies the function Udma_eventGetRxFlowIdFwStatus and Udma_eventRegister
+ * Test scenario 1: Check Udma_eventGetRxFlowIdFwStatus when instType is not UDMA_INST_TYPE_NORMAL
+ * Test scenario 2: Check Udma_eventConfig when eventType is UDMA_EVENT_TYPE_RING_MON 
+ *                  and instType is not UDMA_INST_TYPE_NORMAL
+ * Test scenario 3: Check Udma_eventConfig when eventType is UDMA_EVENT_TYPE_ERR_OUT_OF_RANGE_FLOW
+ *                  and instType is UDMA_INST_TYPE_LCDMA_BCDMA 
+ * Test scenario 4: Check Udma_eventCheckUnRegister to unregister the event when descriptors 
+ *                  are present in the ring 
+ * Test scenario 5: Check Udma_eventCheckUnRegister when eventInitDone is not UDMA_INIT_DONE 
+ */
+int32_t UdmaEventBcdmaInstTestNeg(UdmaTestTaskObj *taskObj)
+{
+    int32_t                    retVal = UDMA_SOK;
+    struct Udma_EventObj       eventObj;
+    Udma_EventHandle           eventHandle;
+    Udma_EventRxFlowIdFwStatus status;
+    Udma_RingMonHandle         monHandle;
+    struct Udma_RingMonObj     monObj;
+    Udma_DrvHandle             drvHandle;
+    Udma_EventPrms             eventPrms;
+    uint32_t                   instID;
+    uint32_t                   heapIdSrc = UTILS_MEM_HEAP_ID_MSMC;
+    uint32_t                   elemCnt = 50U;
+    UdmaTestChObj             *testChObj;
+    uint32_t                   timeout=0U;
+    uint32_t                   trpdSize = (sizeof(CSL_UdmapTR15) * 2U) + 4U;
+    uint8_t                   *trpdMem;
+    struct Udma_ChObj          chObj;
+    Udma_ChHandle              chHandle;
+    Udma_ChPrms                chPrms;
+    uint32_t                   chType;
+    uint64_t                   pDesc;
+
+    /* Test scenario 1: Check when instType is not UDMA_INST_TYPE_NORMAL */
+    eventHandle                = &eventObj;
+    instID                     = UDMA_TEST_INST_ID_BCDMA_0;
+    eventHandle->drvHandle     = &taskObj->testObj->drvObj[instID];
+    eventHandle->eventInitDone = UDMA_INIT_DONE;
+    retVal                     = Udma_eventGetRxFlowIdFwStatus(eventHandle, &status);
+    if(UDMA_SOK == retVal)
+    {
+        GT_0trace(taskObj->traceMask, GT_ERR,
+                    " |TEST INFO|:: FAIL:: UDMA:: Udma_eventGetRxFlowIdFwStatus::" 
+                    " Neg:: Check when instType is not UDMA_INST_TYPE_NORMAL!!\n");
+        retVal = UDMA_EFAIL;
+    }
+    else 
+    {
+        retVal = UDMA_SOK;
+    }
+
+    /* Test scenario 2: Check Udma_eventConfig when eventType is UDMA_EVENT_TYPE_RING_MON 
+     *                  and instType is not UDMA_INST_TYPE_NORMAL */
+    eventHandle                 = &eventObj;
+    drvHandle                   = &taskObj->testObj->drvObj[instID];
+    monHandle                   = &monObj;
+    UdmaEventPrms_init(&eventPrms);
+    eventPrms.eventCb           = &udmaTestEventCb;
+    eventPrms.eventMode         = UDMA_EVENT_MODE_EXCLUSIVE;
+    eventPrms.eventType         = UDMA_EVENT_TYPE_RING_MON;
+    eventPrms.masterEventHandle = NULL;
+    eventPrms.monHandle         = monHandle;
+    retVal                      = Udma_eventRegister(drvHandle, eventHandle, &eventPrms);
+    if(UDMA_SOK == retVal)
+    {
+        GT_0trace(taskObj->traceMask, GT_ERR,
+                  " |TEST INFO|:: FAIL:: UDMA:: Udma_eventConfig::Neg:: Check when eventType" 
+                  " is UDMA_EVENT_TYPE_RING_MON and instType is not UDMA_INST_TYPE_NORMAL!!\n");
+        retVal = UDMA_EFAIL;
+    }
+    else 
+    {
+        retVal                     = UDMA_SOK;
+        eventHandle->eventInitDone = UDMA_INIT_DONE;
+        retVal = Udma_eventUnRegister(eventHandle);
+        if(UDMA_SOK == retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Udma_eventReset::Neg:: Check when eventType" 
+                      " is UDMA_EVENT_TYPE_RING_MON and instType is not UDMA_INST_TYPE_NORMAL!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        else 
+        {
+            retVal = UDMA_SOK;
+        }
+    }
+
+    /* Test scenario 3: Check Udma_eventConfig when eventType is UDMA_EVENT_TYPE_ERR_OUT_OF_RANGE_FLOW
+     *                  and instType is UDMA_INST_TYPE_LCDMA_BCDMA */
+    if(UDMA_SOK == retVal)
+    {
+        drvHandle                   = &taskObj->testObj->drvObj[instID];
+        monHandle                   = &monObj;
+        UdmaEventPrms_init(&eventPrms);
+        eventPrms.eventCb           = &udmaTestEventCb;
+        eventPrms.eventMode         = UDMA_EVENT_MODE_EXCLUSIVE;
+        eventPrms.eventType         = UDMA_EVENT_TYPE_ERR_OUT_OF_RANGE_FLOW;
+        eventPrms.masterEventHandle = NULL;
+        eventPrms.monHandle         = monHandle;
+        retVal                      = Udma_eventRegister(drvHandle, eventHandle, &eventPrms);
+        if(UDMA_SOK == retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Udma_eventConfig::Neg:: Check when" 
+                      " eventType is UDMA_EVENT_TYPE_ERR_OUT_OF_RANGE_FLOW"
+                      " and instType is UDMA_INST_TYPE_LCDMA_BCDMA!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        else 
+        {
+            retVal                     = UDMA_SOK;
+            eventHandle->eventInitDone = UDMA_INIT_DONE;
+            retVal = Udma_eventUnRegister(eventHandle);
+            if(UDMA_SOK == retVal)
+            {
+                GT_0trace(taskObj->traceMask, GT_ERR,
+                          " |TEST INFO|:: FAIL:: UDMA:: Udma_eventReset::Neg:: Check when eventType" 
+                          " is UDMA_EVENT_TYPE_ERR_OUT_OF_RANGE_FLOW and instType is not UDMA_INST_TYPE_NORMAL!!\n");
+                retVal = UDMA_EFAIL;
+            }
+            else 
+            {
+                retVal = UDMA_SOK;
+            }
+        }
+    }
+
+    /* Test scenario 4: Check Udma_eventCheckUnRegister to unregister the event when descriptors are present in the ring */
+    if(UDMA_SOK == retVal)
+    {
+        chHandle                      = &chObj;
+        chType                        = UDMA_CH_TYPE_TX;
+        instID                        = UDMA_TEST_INST_ID_BCDMA_0;
+        drvHandle                     = &taskObj->testObj->drvObj[instID];
+        UdmaChPrms_init(&chPrms, chType);
+        chPrms.fqRingPrms.elemCnt     = elemCnt;
+        chPrms.fqRingPrms.ringMemSize = elemCnt * sizeof(uint64_t);
+        chPrms.fqRingPrms.ringMem     = Utils_memAlloc(heapIdSrc, chPrms.fqRingPrms.ringMemSize, UDMA_CACHELINE_ALIGNMENT);
+        chPrms.cqRingPrms.elemCnt     = elemCnt;
+        chPrms.cqRingPrms.ringMemSize = elemCnt * sizeof(uint64_t);
+        chPrms.cqRingPrms.ringMem     = Utils_memAlloc(heapIdSrc, chPrms.cqRingPrms.ringMemSize, UDMA_CACHELINE_ALIGNMENT);
+        chPrms.peerChNum              = UDMA_PSIL_CH_MCU_CPSW0_TX;
+        retVal                        = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
+        Udma_ChTxPrms txChPrms;
+        UdmaChTxPrms_init(&txChPrms, chType);
+        if(UDMA_SOK == retVal)
+        {
+            retVal = Udma_chConfigTx(chHandle, &txChPrms);
+            if(UDMA_SOK != retVal)
+            {
+                GT_0trace(taskObj->traceMask, GT_ERR, " Udma_chConfigTx failed!!\n");
+            }
+            retVal = Udma_chEnable(chHandle);
+            if(UDMA_SOK == retVal)
+            {
+                UdmaEventPrms_init(&eventPrms);
+                testChObj                   = taskObj->chObj[0];
+                eventPrms.chHandle          = chHandle;
+                eventPrms.eventCb           = &udmaTestEventDmaCb;
+                eventPrms.eventMode         = UDMA_EVENT_MODE_EXCLUSIVE;
+                eventPrms.eventType         = UDMA_EVENT_TYPE_DMA_COMPLETION;
+                eventPrms.masterEventHandle = NULL;
+                eventPrms.appData           = testChObj;
+                retVal                      = Udma_eventRegister(drvHandle, eventHandle, &eventPrms);
+                if(UDMA_SOK == retVal)
+                {
+                    trpdMem = Utils_memAlloc(UTILS_MEM_HEAP_ID_DDR, trpdSize, UDMA_CACHELINE_ALIGNMENT);
+                    memset(trpdMem, 0, trpdSize);
+
+                    /* Submit TRPD to channel */
+                    retVal = Udma_ringQueueRaw(
+                                Udma_chGetFqRingHandle(chHandle), (uint64_t) Udma_appVirtToPhyFxn(trpdMem, 0U, NULL));
+                }   
+                if(UDMA_SOK == retVal)
+                {
+                    retVal = Udma_eventUnRegister(eventHandle);
+                    if(UDMA_SOK == retVal)
+                    {
+                        GT_0trace(taskObj->traceMask, GT_ERR,
+                                " |TEST INFO|:: FAIL:: UDMA:: Udma_eventCheckUnRegister::Neg::" 
+                                " Check to unregister the event when descriptors are present in the ring!!\n");
+                        retVal = UDMA_EFAIL;
+                    }
+                    else
+                    {
+                        retVal = UDMA_SOK;
+                        pDesc  = Udma_appVirtToPhyFxn(trpdMem, 0U, NULL);
+                        retVal = Udma_ringDequeueRaw(Udma_chGetCqRingHandle(chHandle), &pDesc);
+                        if(UDMA_SOK == retVal)
+                        {
+                            Udma_eventUnRegister(eventHandle);
+                        }
+                    }
+                }
+                Udma_chDisable(chHandle, timeout);
+            }
+            Udma_chClose(chHandle);
+            if(NULL != chPrms.cqRingPrms.ringMem)
+            {        
+                retVal  = Utils_memFree(heapIdSrc, chPrms.fqRingPrms.ringMem, chPrms.fqRingPrms.ringMemSize);
+                retVal += Utils_memFree(heapIdSrc, chPrms.cqRingPrms.ringMem, chPrms.cqRingPrms.ringMemSize);
+                if(UDMA_SOK != retVal)
+                {
+                    GT_0trace(taskObj->traceMask, GT_ERR, " Ring free failed!!\n");
+                }
+            }
+        } 
+    }
+
+    /* Test scenario 5: Check Udma_eventCheckUnRegister when eventInitDone is not UDMA_INIT_DONE */
+    if(UDMA_SOK == retVal)
+    {
+        eventHandle->drvHandle = &taskObj->testObj->drvObj[instID];
+        retVal                 = Udma_eventUnRegister(eventHandle);
+        if(UDMA_SOK == retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                        " |TEST INFO|:: FAIL:: UDMA:: Udma_eventCheckUnRegister::Neg::" 
+                        " Check when eventInitDone is not UDMA_INIT_DONE!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        else 
+        {
+            retVal = UDMA_SOK;
+        }
+    }
+
+    return retVal;
+}
+
+static void * UdmaOsalRegIntDummy(Udma_OsalIsrFxn isrFxn,
+                                   uint32_t coreIntrNum,
+                                   uint32_t intrPriority,
+                                   void *arg)
+{
+    Udma_EventHandle    eventHandle = (Udma_EventHandle) arg;
+    Udma_eventUnRegister(eventHandle);
+    return NULL_PTR;
+}
+
+/* 
+ * Test Case Description: Verifies the function Udma_eventRegister
+ * Test scenario 1: Check Udma_eventConfig when osal interrupt registration fails
+ */
+int32_t UdmaEventConfigTestNeg(UdmaTestTaskObj *taskObj)
+{
+    int32_t                retVal = UDMA_SOK;
+    uint32_t               instID;
+    Udma_DrvHandle         drvHandle;
+    struct Udma_EventObj   eventObj;
+    Udma_EventHandle       eventHandle;
+    Udma_EventPrms         eventPrms;
+    struct Udma_DrvObj     backUpDrvObj;
+    struct Udma_ChObj      chObj;
+    Udma_ChHandle          chHandle;
+    Udma_ChPrms            chPrms;
+    uint32_t               chType;
+    uint32_t               heapIdSrc = UTILS_MEM_HEAP_ID_MSMC;
+    uint32_t               elemCnt = 50U;
+    UdmaTestChObj         *testChObj;
+    uint32_t               timeout=0U;
+
+    /* Test scenario 1: Check Udma_eventConfig when osal interrupt registration fails */
+    chHandle                      = &chObj;
+    chType                        = UDMA_CH_TYPE_TR_BLK_COPY;
+    instID                        = UDMA_TEST_INST_ID_MAIN_0;
+    backUpDrvObj                  = taskObj->testObj->drvObj[instID];
+    drvHandle                     = &taskObj->testObj->drvObj[instID];
+    UdmaChPrms_init(&chPrms, chType);
+    chPrms.fqRingPrms.elemCnt     = elemCnt;
+    chPrms.fqRingPrms.ringMemSize = elemCnt * sizeof(uint64_t);
+    chPrms.fqRingPrms.ringMem     = Utils_memAlloc(heapIdSrc, chPrms.fqRingPrms.ringMemSize, UDMA_CACHELINE_ALIGNMENT);
+    chPrms.cqRingPrms.elemCnt     = elemCnt;
+    chPrms.cqRingPrms.ringMemSize = elemCnt * sizeof(uint64_t);
+    chPrms.cqRingPrms.ringMem     = Utils_memAlloc(heapIdSrc, chPrms.cqRingPrms.ringMemSize, UDMA_CACHELINE_ALIGNMENT);
+    retVal                        = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
+    Udma_ChTxPrms txChPrms;
+    UdmaChTxPrms_init(&txChPrms, chType);
+    Udma_ChRxPrms rxChPrms;
+    UdmaChRxPrms_init(&rxChPrms, chType);
+    if(UDMA_SOK == retVal)
+    {
+        retVal  = Udma_chConfigTx(chHandle, &txChPrms);
+        if(UDMA_SOK != retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR, " Udma_chConfigTx failed!!\n");
+        }
+        retVal = Udma_chConfigRx(chHandle, &rxChPrms);
+        if(UDMA_SOK != retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR, " Udma_chConfigRx failed!!\n");
+        }
+        retVal = Udma_chEnable(chHandle);
+        if(UDMA_SOK != retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR, " Udma_chEnable failed!!\n");
+        }
+        if(UDMA_SOK == retVal)
+        {
+            drvHandle->initPrms.osalPrms.registerIntr = &UdmaOsalRegIntDummy;
+            UdmaEventPrms_init(&eventPrms);
+            eventHandle                 = &eventObj;
+            testChObj                   = taskObj->chObj[0];
+            eventPrms.appData           = testChObj;
+            eventPrms.chHandle          = chHandle;
+            eventPrms.eventCb           = &udmaTestEventDmaCb;
+            eventPrms.eventMode         = UDMA_EVENT_MODE_SHARED;
+            eventPrms.eventType         = UDMA_EVENT_TYPE_DMA_COMPLETION;
+            eventPrms.masterEventHandle = NULL;
+            eventPrms.coreIntrNum       = UDMA_CORE_INTR_ANY;
+            retVal                      = Udma_eventRegister(drvHandle, eventHandle, &eventPrms);
+            if(UDMA_SOK == retVal)
+            {
+                GT_0trace(taskObj->traceMask, GT_ERR,
+                            " |TEST INFO|:: FAIL:: UDMA:: Udma_eventConfig::Neg::" 
+                            " Check when osal interrupt registration fails!!\n");
+                retVal = UDMA_EFAIL;
+                Udma_eventUnRegister(eventHandle);
+            }
+            else
+            {
+                retVal = UDMA_SOK;
+            }
+            Udma_chDisable(chHandle, timeout);
+        }
+        Udma_chClose(chHandle);
+        if(NULL != chPrms.cqRingPrms.ringMem)
+        {
+            retVal  = Utils_memFree(heapIdSrc, chPrms.fqRingPrms.ringMem, chPrms.fqRingPrms.ringMemSize);
+            retVal += Utils_memFree(heapIdSrc, chPrms.cqRingPrms.ringMem, chPrms.cqRingPrms.ringMemSize);
+            if(UDMA_SOK != retVal)
+            {
+                GT_0trace(taskObj->traceMask, GT_ERR, " Ring free failed!!\n");
+            }
+        }
+        taskObj->testObj->drvObj[instID] = backUpDrvObj;
+    }
+
+    return retVal;
+}
+
+static void udmaTestEventCb(Udma_EventHandle eventHandle,
+                            uint32_t eventType,
+                            void *appData)
+{
+    SemaphoreP_Handle transferDoneSem = (SemaphoreP_Handle) appData;
+
+    if(transferDoneSem != NULL)
+    {
+        if(UDMA_EVENT_TYPE_ERR_OUT_OF_RANGE_FLOW == eventType)
+        {
+            SemaphoreP_post(transferDoneSem);
+        }
+        else
+        {
+            gUdmaTestEventResult = UDMA_EFAIL;
+        }
+    }
+    else
+    {
+        gUdmaTestEventResult = UDMA_EFAIL;
+    }
+
+    return;
 }
 

@@ -3373,34 +3373,6 @@ int32_t UdmaChEnableTestNeg(UdmaTestTaskObj *taskObj)
 }
 
 /* 
- * Test Case Description: Verifies the init functions when
- * Test scenario 1: Check when txPrms is Null
- * Test scenario 2: Check when rxPrms is Null
- * Test scenario 3: Check when utcPrms is Null
- * Test scenario 4: Check when chPrms is Null
- * Test scenario 5: Check when pdmaPrms is Null
- */ 
-int32_t UdmaChInitPrmsNeg(UdmaTestTaskObj *taskObj)
-{
-    int32_t  retVal = UDMA_SOK;
-    uint32_t chType = UDMA_CH_TYPE_TX;
-
-    /* Test scenario 1: Check when txPrms is Null */
-    UdmaChTxPrms_init(NULL, chType);
-    /* Test scenario 2: Check when rxPrms is Null */
-    UdmaChRxPrms_init(NULL, chType);
-    /* Test scenario 3: Check when utcPrms is Null */
-    UdmaChUtcPrms_init(NULL);
-    /* Test scenario 4: Check when chPrms is Null */
-    UdmaChPrms_init(NULL, chType);
-    /* Test scenario 5: Check when pdmaPrms is Null */
-    UdmaChPdmaPrms_init(NULL);
-
-    return retVal;
-
-}
-
-/* 
  * Test Case Description: Verifies the function Udma_chGetSwTriggerRegister when
  * Test scenario 1: Check when chHandle is Null
  * Test scenario 2: Check when chInitDone is not UDMA_INIT_DONE

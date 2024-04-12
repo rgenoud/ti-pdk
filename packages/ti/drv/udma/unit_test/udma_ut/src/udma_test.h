@@ -679,6 +679,7 @@ int32_t udmaTestFlowAllocTc(UdmaTestTaskObj *taskObj);
 int32_t udmaTestEventOutOfRangeFlow(UdmaTestTaskObj *taskObj);
 int32_t udmaTestEventDisableEnableSanity(UdmaTestTaskObj *taskObj);
 int32_t UdmaRmTranslateCoreIntrInputTest(UdmaTestTaskObj *taskObj);
+int32_t UdmaEventRegisterTest(UdmaTestTaskObj *taskObj);
 /*
  * UDMA misc test functions
  */
@@ -856,7 +857,7 @@ int32_t UdmaChResumeTestNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaChConfigPdmaTestNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaChConfigRxTestNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaChEnableTestNeg(UdmaTestTaskObj *taskObj);
-int32_t UdmaChInitPrmsNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaInitPrmsNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaChGetSwTriggerRegisterTestNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaChDequeueTdResponseTestNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaChBcdmaInstTestNeg(UdmaTestTaskObj *taskObj);
@@ -874,9 +875,10 @@ int32_t UdmaTestDruGetTriggerRegAddrNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestDruGetTriggerRegAddr(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestChPauseDru(UdmaTestTaskObj *taskObj);
 int32_t UdmaDruVhwaTestNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaEventProgramSteeringTestNeg(UdmaTestTaskObj *taskObj);
 
 /*
- * UDMA Event test functions
+ * UDMA Event negative test functions
  */
 int32_t UdmaTestEventRegisterNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestEventUnRegisterNeg(UdmaTestTaskObj *taskObj);
@@ -887,6 +889,10 @@ int32_t UdmaTestEventGetGlobalNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestEventGetRxFlowStatusNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestEventRegisterBcdmaTestNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestEventUnRegisterBcdmaTestNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaEventRegisterTestNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaEventBcdmaInstTestNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaEventConfigTestNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaEventTypeDmaCompletionTestNeg(UdmaTestTaskObj *taskObj);
 
 /*
  * UDMA Ring Negative Lcdma test functions

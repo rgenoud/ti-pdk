@@ -541,3 +541,33 @@ int32_t udmaTestUdmaInitSkipEventRegTc(UdmaTestTaskObj *taskObj)
     return (retVal);
 }
 
+/* 
+ * Test Case Description: Verifies the init functions when
+ * Test scenario 1: Check when txPrms is Null
+ * Test scenario 2: Check when rxPrms is Null
+ * Test scenario 3: Check when utcPrms is Null
+ * Test scenario 4: Check when chPrms is Null
+ * Test scenario 5: Check when pdmaPrms is Null
+ * Test scenario 6: Check when eventPrms is Null
+ */ 
+int32_t UdmaInitPrmsNeg(UdmaTestTaskObj *taskObj)
+{
+    int32_t  retVal = UDMA_SOK;
+    uint32_t chType = UDMA_CH_TYPE_TX;
+
+    /* Test scenario 1: Check when txPrms is Null */
+    UdmaChTxPrms_init(NULL, chType);
+    /* Test scenario 2: Check when rxPrms is Null */
+    UdmaChRxPrms_init(NULL, chType);
+    /* Test scenario 3: Check when utcPrms is Null */
+    UdmaChUtcPrms_init(NULL);
+    /* Test scenario 4: Check when chPrms is Null */
+    UdmaChPrms_init(NULL, chType);
+    /* Test scenario 5: Check when pdmaPrms is Null */
+    UdmaChPdmaPrms_init(NULL);
+    /* Test scenario 6: Check when eventPrms is Null */
+    UdmaEventPrms_init(NULL);
+
+    return retVal;
+}
+
