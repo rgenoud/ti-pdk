@@ -21,7 +21,7 @@ ifeq ($(BUILD_HS_FS),yes)
   HS_FS_SUFFIX=_hs_fs
 endif
 DMA_SUFFIX=
-ifeq ($(BOOTMODE), ospi)
+ifeq ($(BOOTMODE), $(filter $(BOOTMODE),ospi cust))
   ifeq ($(SBL_USE_DMA),no)
     DMA_SUFFIX=_nondma
   endif
@@ -98,7 +98,7 @@ CFLAGS_LOCAL_COMMON = $(PDK_CFLAGS) $(SBL_CFLAGS)
 # Check for custom flags
 ifeq ($(BOOTMODE), cust)
   SBL_CFLAGS = $(CUST_SBL_FLAGS)
-  COMP_LIST_COMMON += sbl_lib_$(BOOTMODE)$(HS_SUFFIX)
+  COMP_LIST_COMMON += sbl_lib_$(BOOTMODE)$(DMA_SUFFIX)$(HS_SUFFIX)
   ifeq ($(RAT), 1)
     SBL_CFLAGS += -DSBL_OCM_MAIN_DOMAIN_RAT
   endif
