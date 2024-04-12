@@ -21,7 +21,7 @@ ifeq ($(BUILD_HS_FS),yes)
   HS_FS_SUFFIX=_hs_fs
 endif
 DMA_SUFFIX=
-ifeq ($(BOOTMODE), $(filter $(BOOTMODE),ospi cust))
+ifeq ($(BOOTMODE), $(filter $(BOOTMODE),ospi cust xip))
   ifeq ($(SBL_USE_DMA),no)
     DMA_SUFFIX=_nondma
   endif
@@ -113,7 +113,7 @@ else ifeq ($(BOOTMODE), xip)
   else
     SBL_CFLAGS += -DOSPI_FREQ_166
   endif
-  COMP_LIST_COMMON += sbl_lib_cust$(HS_SUFFIX)
+  COMP_LIST_COMMON += sbl_lib_cust$(DMA_SUFFIX)$(HS_SUFFIX)
 else
   COMP_LIST_COMMON += sbl_lib_$(BOOTMODE)$(DMA_SUFFIX)$(HLOS_SUFFIX)$(HS_SUFFIX)
 endif # ifeq ($(BOOTMODE), cust)

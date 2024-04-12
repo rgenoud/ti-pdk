@@ -104,28 +104,16 @@ sbl_DISABLE_PARALLEL_MAKE = yes
 # sbl_cust_img_hs, sbl_xip_img_hs uses sbl_lib_cust
 # sbl_mmcsd_img_hlos_hs uses sbl_lib_mmcsd_hlos_hs
 # sbl_ospi_img_hlos_hs uses sbl_lib_ospi_hlos_hs
-
-ifeq ($(SOC),$(filter $(SOC), j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721s2 j784s4 j721e j7200))
   sbl_LIB_LIST = sbl_lib_mmcsd sbl_lib_ospi sbl_lib_uart sbl_lib_cust sbl_lib_emmc
   sbl_LIB_LIST += sbl_lib_mmcsd_hlos sbl_lib_ospi_hlos sbl_lib_ospi_hlos_hs
-  sbl_LIB_LIST += sbl_lib_ospi_nondma sbl_lib_ospi_nondma_hs
   sbl_LIB_LIST += sbl_lib_mmcsd_hs sbl_lib_ospi_hs sbl_lib_uart_hs sbl_lib_cust_hs
   sbl_LIB_LIST += sbl_lib_cust_nondma sbl_lib_cust_nondma_hs
-else ifeq ($(SOC),$(filter $(SOC), j721e))
-  sbl_LIB_LIST = sbl_lib_mmcsd sbl_lib_ospi sbl_lib_uart sbl_lib_hyperflash sbl_lib_cust
-  sbl_LIB_LIST += sbl_lib_mmcsd_hlos sbl_lib_ospi_hlos sbl_lib_hyperflash_hlos
-  sbl_LIB_LIST += sbl_lib_ospi_nondma sbl_lib_emmc
-  sbl_LIB_LIST += sbl_lib_mmcsd_hs sbl_lib_ospi_hs sbl_lib_uart_hs sbl_lib_hyperflash_hs sbl_lib_cust_hs
-  sbl_LIB_LIST += sbl_lib_mmcsd_hlos_hs sbl_lib_ospi_hlos_hs sbl_lib_hyperflash_hlos_hs
-  sbl_LIB_LIST += sbl_lib_ospi_nondma_hs sbl_lib_cust_nondma sbl_lib_cust_nondma_hs
-else
-  # for j7200
-  sbl_LIB_LIST = sbl_lib_mmcsd sbl_lib_ospi sbl_lib_uart sbl_lib_cust
-  sbl_LIB_LIST += sbl_lib_mmcsd_hlos sbl_lib_ospi_hlos
-  sbl_LIB_LIST += sbl_lib_ospi_nondma sbl_lib_emmc
-  sbl_LIB_LIST += sbl_lib_mmcsd_hs sbl_lib_ospi_hs sbl_lib_uart_hs sbl_lib_cust_hs
-  sbl_LIB_LIST += sbl_lib_mmcsd_hlos_hs sbl_lib_ospi_hlos_hs
-  sbl_LIB_LIST += sbl_lib_ospi_nondma_hs sbl_lib_cust_nondma sbl_lib_cust_nondma_hs
+endif
+
+ifeq ($(SOC), $(filter $(SOC), j721e))
+  sbl_LIB_LIST += sbl_lib_hyperflash sbl_lib_hyperflash_hlos
+  sbl_LIB_LIST += sbl_lib_hyperflash_hs sbl_lib_hyperflash_hlos_hs
 endif
 
 ############################
@@ -399,40 +387,6 @@ export sbl_lib_ospi_hlos_hs_SOCLIST
 export sbl_lib_ospi_hlos_hs_BOARDLIST
 sbl_lib_ospi_hlos_hs_$(SOC)_CORELIST = mcu1_0
 export sbl_lib_ospi_hlos_hs_$(SOC)_CORELIST
-
-# SBL OSPI LIB with NON-DMA
-export sbl_lib_ospi_nondma_COMP_LIST = sbl_lib_ospi_nondma
-sbl_lib_ospi_nondma_RELPATH = ti/boot/sbl
-export sbl_lib_ospi_nondma_OBJPATH = ti/boot/sbl/ospi_nondma
-sbl_lib_ospi_nondma_PATH = $(PDK_SBL_COMP_PATH)
-export sbl_lib_ospi_nondma_LIBNAME = sbl_lib_ospi_nondma
-export sbl_lib_ospi_nondma_LIBPATH = $(PDK_SBL_COMP_PATH)/lib/ospi
-export sbl_lib_ospi_nondma_MAKEFILE = -f$(PDK_SBL_COMP_PATH)/build/sbl_lib.mk BOOTMODE=ospi SBL_USE_DMA=no
-export sbl_lib_ospi_nondma_BOARD_DEPENDENCY = yes
-export sbl_lib_ospi_nondma_SOC_DEPENDENCY = yes
-export sbl_lib_ospi_nondma_CORE_DEPENDENCY = no
-sbl_lib_ospi_nondma_PKG_LIST = sbl_lib_ospi_nondma
-sbl_lib_ospi_nondma_INCLUDE = $(sbl_lib_ospi_nondma_PATH)
-export sbl_lib_ospi_nondma_SOCLIST = $(sbl_SOCLIST)
-export sbl_lib_ospi_nondma_BOARDLIST = $(sbl_BOARDLIST)
-export sbl_lib_ospi_nondma_$(SOC)_CORELIST = mcu1_0
-
-# SBL OSPI LIB with NON-DMA - HS build variant
-export sbl_lib_ospi_nondma_hs_COMP_LIST = sbl_lib_ospi_nondma_hs
-sbl_lib_ospi_nondma_hs_RELPATH = ti/boot/sbl
-export sbl_lib_ospi_nondma_hs_OBJPATH = ti/boot/sbl/ospi_nondma_hs
-sbl_lib_ospi_nondma_hs_PATH = $(PDK_SBL_COMP_PATH)
-export sbl_lib_ospi_nondma_hs_LIBNAME = sbl_lib_ospi_nondma_hs
-export sbl_lib_ospi_nondma_hs_LIBPATH = $(PDK_SBL_COMP_PATH)/lib/ospi_hs
-export sbl_lib_ospi_nondma_hs_MAKEFILE = -f$(PDK_SBL_COMP_PATH)/build/sbl_lib.mk BOOTMODE=ospi SBL_USE_DMA=no BUILD_HS=yes
-export sbl_lib_ospi_nondma_hs_BOARD_DEPENDENCY = yes
-export sbl_lib_ospi_nondma_hs_SOC_DEPENDENCY = yes
-export sbl_lib_ospi_nondma_hs_CORE_DEPENDENCY = no
-sbl_lib_ospi_nondma_hs_PKG_LIST = sbl_lib_ospi_nondma_hs
-sbl_lib_ospi_nondma_hs_INCLUDE = $(sbl_lib_ospi_nondma_hs_PATH)
-export sbl_lib_ospi_nondma_hs_SOCLIST = $(sbl_SOCLIST)
-export sbl_lib_ospi_nondma_hs_BOARDLIST = $(sbl_BOARDLIST)
-export sbl_lib_ospi_nondma_hs_$(SOC)_CORELIST = mcu1_0
 
 # SBL CUST LIB with NON-DMA
 export sbl_lib_cust_nondma_COMP_LIST = sbl_lib_cust_nondma
