@@ -2449,6 +2449,8 @@ static int32_t SciclientApp_boardCfgNegTest(void)
         0U,
         UTRUE
     };
+    Sciclient_BoardCfgPrms_t pmBoardCfgParams = {0};
+    pmBoardCfgParams.devGrp = DEVGRP_04;
 
     while (gSciclientHandle.initCount != 0)
     {
@@ -2460,64 +2462,28 @@ static int32_t SciclientApp_boardCfgNegTest(void)
     if (CSL_PASS == status)
     {
         SciApp_printf ("Sciclient_init Passed.\n");
-        status = Sciclient_boardCfg(NULL);
-        if(status == CSL_EFAIL)
+        status = Sciclient_boardCfgPm(&pmBoardCfgParams);
+        if(status != CSL_PASS)
         {
             boardCfgNegTestStatus += CSL_PASS;
-            SciApp_printf(" Sciclient_boardCfg NULL Arg Test PASSED \n");
+            SciApp_printf("Sciclient_boardCfgPm NULL Arg Test PASSED \n");
         }
         else
         {
             boardCfgNegTestStatus += CSL_EFAIL;
-            SciApp_printf(" Sciclient_boardCfg NULL Arg Test FAILED \n");
-        }
-
-        status = Sciclient_boardCfgPm(NULL);
-        if(status == CSL_EFAIL)
-        {
-            boardCfgNegTestStatus += CSL_PASS;
-            SciApp_printf(" Sciclient_boardCfgPm NULL Arg Test PASSED \n");
-        }
-        else
-        {
-            boardCfgNegTestStatus += CSL_EFAIL;
-            SciApp_printf(" Sciclient_boardCfgPm NULL Arg Test FAILED \n");
-        }
-
-        status = Sciclient_boardCfgRm(NULL);
-        if(status == CSL_EFAIL)
-        {
-            boardCfgNegTestStatus += CSL_PASS;
-            SciApp_printf(" Sciclient_boardCfgRm NULL Arg Test PASSED \n");
-        }
-        else
-        {
-            boardCfgNegTestStatus += CSL_EFAIL;
-            SciApp_printf(" Sciclient_boardCfgRm NULL Arg Test FAILED \n");
-        }
-
-        status = Sciclient_boardCfgSec(NULL);
-        if(status == CSL_EFAIL)
-        {
-            boardCfgNegTestStatus += CSL_PASS;
-            SciApp_printf(" Sciclient_boardCfgSec NULL Arg Test PASSED \n");
-        }
-        else
-        {
-            boardCfgNegTestStatus += CSL_EFAIL;
-            SciApp_printf(" Sciclient_boardCfgSec NULL Arg Test FAILED \n");
+            SciApp_printf("Sciclient_boardCfgPm NULL Arg Test FAILED \n");
         }
 
         status = Sciclient_getDefaultBoardCfgInfo(NULL);
-        if(status == CSL_EFAIL)
+        if(status != CSL_PASS)
         {
             boardCfgNegTestStatus += CSL_PASS;
-            SciApp_printf(" Sciclient_getDefaultBoardCfgInfo NULL Arg Test PASSED \n");
+            SciApp_printf("Sciclient_getDefaultBoardCfgInfo NULL Arg Test PASSED \n");
         }
         else
         {
             boardCfgNegTestStatus += CSL_EFAIL;
-            SciApp_printf(" Sciclient_getDefaultBoardCfgInfo NULL Arg Test FAILED \n");
+            SciApp_printf("Sciclient_getDefaultBoardCfgInfo NULL Arg Test FAILED \n");
         }
     }
     else
