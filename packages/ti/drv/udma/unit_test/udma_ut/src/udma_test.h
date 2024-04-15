@@ -870,6 +870,10 @@ int32_t UdmaTestRingGetReverseRingOccLcdmaNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestRingGetWrIdxLcdmaNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestRingGetRdIdxLcdmaNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestRingGetMemPtrLcdmaNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestRingSetCfgLcdmaNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestRingDequeueRawLcdmaNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestRingFlushRawLcdmaNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestRingPrimeReadLcdmaNeg(UdmaTestTaskObj *taskObj);
 
 /*
  * UDMA Ring Lcdma test functions
