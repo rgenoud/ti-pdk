@@ -422,6 +422,12 @@ int32_t Udma_ospiFlashTest(void)
         }
     }
 
+    #if defined LDRA_DYN_COVERAGE_EXIT
+    App_print("\nLDRA ENTRY: UDMA OSPI FLASH!!\n");
+    upload_execution_history();
+    App_print("\nLDRA EXIT: UDMA OSPI FLASH!!\n");
+    #endif
+    
     if(UDMA_SOK != gUdmaAppResult)
     {
         App_print("\n Some tests have failed. \n");

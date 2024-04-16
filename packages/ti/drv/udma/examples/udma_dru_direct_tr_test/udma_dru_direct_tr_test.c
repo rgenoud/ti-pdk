@@ -178,6 +178,12 @@ int32_t Udma_druDirectTrTest(void)
         App_print("[Error] UDMA App deinit failed!!\n");
     }
 
+    #if defined LDRA_DYN_COVERAGE_EXIT
+    App_print("\nLDRA ENTRY: UDMA DRU DIRECT TR!!\n");
+    upload_execution_history();
+    App_print("\nLDRA EXIT: UDMA DRU DIRECT TR!!\n");
+    #endif 
+    
     if((UDMA_SOK == retVal) && (UDMA_SOK == gUdmaAppResult))
     {
         App_print("UDMA DRU memcpy using Direct TR15 block copy Passed!!\n");

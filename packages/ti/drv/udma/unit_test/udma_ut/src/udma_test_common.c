@@ -197,6 +197,12 @@ void udmaTestPrintTestResult(const UdmaTestObj *testObj,
     GT_0trace(testObj->traceMask, GT_INFO,
               "\r\n *********************************************\r\n \r\n");
 
+    #if defined LDRA_DYN_COVERAGE_EXIT
+    GT_0trace(UdmaUtTrace, GT_INFO1, "LDRA ENTRY:UDMA UT!!!\n");
+    upload_execution_history();
+    GT_0trace(UdmaUtTrace, GT_INFO1, "LDRA EXIT: UDMA UT!!!\n");
+    #endif
+    
     if(gUdmaFailCounter > 0U)
     {
         GT_0trace(testObj->traceMask, GT_INFO,

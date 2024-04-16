@@ -229,6 +229,12 @@ int32_t Udma_crcTest(void)
         App_print("[Error] UDMA App deinit failed!!\n");
     }
 
+    #if defined LDRA_DYN_COVERAGE_EXIT
+    App_print("\nLDRA ENTRY: UDMA CRC!!\n");
+    upload_execution_history();
+    App_print("\nLDRA EXIT: UDMA CRC!!\n");
+    #endif
+    
     if(UDMA_SOK == retVal)
     {
         App_print("UDMA CRC Test Passed!!\n");

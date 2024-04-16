@@ -276,6 +276,12 @@ int32_t Udma_swTriggerTest(void)
         App_print("[Error] UDMA App deinit failed!!\n");
     }
 
+    #if defined LDRA_DYN_COVERAGE_EXIT
+    App_print("\nLDRA ENTRY: UDMA SW TRIGGER!!\n");
+    upload_execution_history();
+    App_print("\nLDRA EXIT: UDMA SW TRIGGER!!\n");
+    #endif
+    
     if((UDMA_SOK == retVal) && (UDMA_SOK == gUdmaAppResult))
     {
         App_print("UDMA SW trigger Passed!!\n");

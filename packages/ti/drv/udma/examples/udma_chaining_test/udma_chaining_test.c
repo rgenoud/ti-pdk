@@ -239,6 +239,12 @@ int32_t Udma_chainingTest(void)
         App_print("[Error] UDMA App deinit failed!!\n");
     }
 
+    #if defined LDRA_DYN_COVERAGE_EXIT
+    App_print("\nLDRA ENTRY: UDMA CHAINING!!\n");
+    upload_execution_history();
+    App_print("\nLDRA EXIT: UDMA CHAINING!!\n");
+    #endif
+    
     if((UDMA_SOK == retVal) && (UDMA_SOK == gUdmaAppResult))
     {
         App_print("UDMA chaining Passed!!\n");

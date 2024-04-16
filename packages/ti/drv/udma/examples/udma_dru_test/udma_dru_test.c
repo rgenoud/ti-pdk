@@ -201,6 +201,12 @@ int32_t Udma_druTest(void)
         App_print("[Error] UDMA App deinit failed!!\n");
     }
 
+    #if defined LDRA_DYN_COVERAGE_EXIT
+    App_print("\nLDRA ENTRY: UDMA DRU!!\n");
+    upload_execution_history();
+    App_print("\nLDRA EXIT: UDMA DRU!!\n");
+    #endif
+
     if(UDMA_SOK == retVal)
     {
         App_print("UDMA DRU memcpy using TR15 block copy Passed!!\n");
