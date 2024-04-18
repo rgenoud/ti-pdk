@@ -376,7 +376,7 @@ int main()
     SBL_log(SBL_LOG_MAX, "Setting GTC clock parent frequency.... \n");
     retVal = Sciclient_pmSetModuleClkParent(TISCI_DEV_GTC0, 
                                             TISCI_DEV_GTC0_GTC_CLK, 
-                                            TISCI_DEV_GTC0_GTC_CLK_PARENT_HSDIV4_16FFT_MAIN_3_HSDIVOUT1_CLK, 
+                                            TISCI_DEV_GTC0_GTC_CLK_PARENT_POSTDIV3_16FFT_MAIN_0_HSDIVOUT6_CLK,
                                             SCICLIENT_SERVICE_WAIT_FOREVER);
     if (CSL_PASS != retVal)
     {
