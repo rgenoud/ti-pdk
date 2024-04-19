@@ -336,7 +336,13 @@ static void mainTask(void *arg0, void* arg1)
             SciApp_printf("\nDRAM Tests have FAILED.\n");
         }
     }
-
+    
+    #if defined LDRA_DYN_COVERAGE_EXIT
+  	UART_printf("\n LDRA Entry... \n");
+  	upload_execution_history();
+  	UART_printf("\n LDRA Exit... \n");
+  	#endif
+    
     if (CSL_PASS == r)
     {
         SciApp_printf("\nAll tests have PASSED.\n");

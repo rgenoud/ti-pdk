@@ -462,6 +462,13 @@ static void SciclientApp_ccsSetBoardConfigHeader(void)
         &boardCfgPrms_pm, &boardCfgPrms_rm);
     CacheP_wbInv((void*)SCISERVER_COMMON_X509_HEADER_ADDR, 0x500);
     CacheP_wbInv((void*)SCISERVER_APP_BOARDCONFIG_HEADER_ADDR, 0x500);
+    
+    #if defined LDRA_DYN_COVERAGE_EXIT
+    UART_printf("\n LDRA Entry... \n");
+    upload_execution_history();
+    UART_printf("\n LDRA Exit... \n");
+    #endif
+    
     if (CSL_PASS == status)
     {
         printf("PASSED\n");

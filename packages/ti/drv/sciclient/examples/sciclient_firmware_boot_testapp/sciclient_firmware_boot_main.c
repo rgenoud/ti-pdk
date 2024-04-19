@@ -116,6 +116,13 @@ int32_t main(void)
     {
         status = SciclientApp_getRevisionTestPol();
     }
+    
+    #if defined LDRA_DYN_COVERAGE_EXIT
+    UART_printf("\n LDRA Entry... \n");
+    upload_execution_history();
+    UART_printf("\n LDRA Exit... \n");
+    #endif
+    
     if (status == CSL_PASS)
     {
         SciApp_printf("All tests have passed.\n");

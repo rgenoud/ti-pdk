@@ -131,6 +131,13 @@ int main(void)
     SciApp_printf("Sciserver Testapp Built On: %s %s\n", __DATE__, __TIME__);
     SciApp_printf("Sciserver Version: %s\n", versionStr);
     SciApp_printf("RM_PM_HAL Version: %s\n", rmpmhalVersionStr);
+    
+    #if defined LDRA_DYN_COVERAGE_EXIT
+    UART_printf("\n LDRA Entry... \n");
+    upload_execution_history();
+    UART_printf("\n LDRA Exit... \n");
+    #endif
+    
     if (ret == CSL_PASS)
     {
         SciApp_printf("Starting Sciserver..... PASSED\n");
@@ -140,6 +147,7 @@ int main(void)
     {
         SciApp_printf("Starting Sciserver..... FAILED\n");
     }
+
     return ret;
 }
 

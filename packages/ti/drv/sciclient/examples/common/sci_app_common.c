@@ -282,6 +282,13 @@ void SciApp_parser(void)
                 SciApp_printf("Unsupported Option. Please try again.\n");
                 break;
         }
+        
+        #if defined LDRA_DYN_COVERAGE_EXIT
+        UART_printf("\n LDRA Entry... \n");
+        upload_execution_history();
+        UART_printf("\n LDRA Exit... \n");
+        #endif
+     
         if (numTCFail == 0U)
         {
             SciApp_printf("\nAll tests have PASSED.\n");

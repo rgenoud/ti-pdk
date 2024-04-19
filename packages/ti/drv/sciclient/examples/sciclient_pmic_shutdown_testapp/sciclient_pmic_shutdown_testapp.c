@@ -111,6 +111,7 @@ int main(void)
     {
         OS_stop();
     }
+
     OS_start();    /* does not return */
 
     return(0);
@@ -145,7 +146,13 @@ static void SciclientApp_pmicPowerOff(void)
                                      SCICLIENT_SERVICE_WAIT_FOREVER);
     /* Incase of Success, following code should not be excuted */
     SciApp_printf("ERROR!!: Device is still powered ON\n");
-
+    
+    #if defined LDRA_DYN_COVERAGE_EXIT
+    UART_printf("\n LDRA Entry... \n");
+    upload_execution_history();
+    UART_printf("\n LDRA Exit... \n");
+    #endif
+   
     if(ret != CSL_PASS)
     {
         SciApp_printf("Sciclient function call to shutdown PMIC is failed\n");

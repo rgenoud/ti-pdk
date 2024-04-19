@@ -200,7 +200,13 @@ static void mainTsk(void* arg0, void* arg1)
 
     SemaphoreP_pend(gSemTest1, SemaphoreP_WAIT_FOREVER);
     SemaphoreP_pend(gSemTest2, SemaphoreP_WAIT_FOREVER);
-
+    
+    #if defined LDRA_DYN_COVERAGE_EXIT
+    UART_printf("\n LDRA Entry... \n");
+    upload_execution_history();
+    UART_printf("\n LDRA Exit... \n");
+    #endif
+     
     if ((gTsk1Pass == CSL_PASS) && (gTsk2Pass == CSL_PASS))
     {
         SciApp_printf("All tests have passed \n");
@@ -209,7 +215,7 @@ static void mainTsk(void* arg0, void* arg1)
     {
         SciApp_printf("Some Tests have failed \n");
     }
-
+  
 }
 
 static void SciclientApp_getRevisionTest1(void* arg0, void* arg1)
