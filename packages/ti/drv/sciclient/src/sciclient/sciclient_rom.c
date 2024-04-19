@@ -123,7 +123,7 @@ int32_t Sciclient_loadFirmware(const uint32_t *pSciclient_firmware)
 #endif
     /* ROM expects an incremental sequence numbers starting from 0 */
     header.seq  = gRomSeqNum;
-    gRomSeqNum = gRomSeqNum + 1;
+    gRomSeqNum = gRomSeqNum + 1U;
     /* ROM doesn't check for flags */
     header.flags = 0U;
 
