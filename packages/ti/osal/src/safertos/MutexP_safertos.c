@@ -148,7 +148,7 @@ MutexP_Status MutexP_delete(MutexP_Handle handle)
      * NOTE : Mutex delete is not supported in safertos.
      * We just memset and return success.
      */
-    if ((NULL_PTR != mutex) && (BTRUE == mutex->used))
+    if ((NULL != handle) && (NULL_PTR != mutex) && (BTRUE == mutex->used))
     {
         memset(&mutex->mutObj, 0, sizeof(mutex->mutObj));
         mutex->mutHndl = NULL;
@@ -179,7 +179,7 @@ MutexP_Status MutexP_lock(MutexP_Handle handle,
     portBaseType xCreateResult;
 
     /* TODO check why this mutex->isRecursiveMutex needed, may be removed */
-    if ((NULL_PTR != mutex) && (BTRUE == mutex->used) && (1U == mutex->isRecursiveMutex))
+    if ((NULL != handle) && (NULL_PTR != mutex) && (BTRUE == mutex->used) && (1U == mutex->isRecursiveMutex))
     {
         if ( 0 == Osal_isInISRContext() )
         {
@@ -223,7 +223,7 @@ MutexP_Status MutexP_unlock(MutexP_Handle handle)
     portBaseType xCreateResult;
     /* Note: timeout is not use */
 
-    if ((NULL_PTR != mutex) && (BTRUE == mutex->used) && (1U == mutex->isRecursiveMutex))
+    if ((NULL != handle) && (NULL_PTR != mutex) && (BTRUE == mutex->used) && (1U == mutex->isRecursiveMutex))
     {
         if ( 0 == Osal_isInISRContext() )
         {

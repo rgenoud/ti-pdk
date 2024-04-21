@@ -208,6 +208,7 @@ TaskP_Handle TaskP_create(TaskP_Fxn taskfxn, const TaskP_Params *params )
         }
         else
         {
+            handle->terminated = UFALSE;
             ret_handle = ( ( TaskP_Handle )handle );
         }
     }
@@ -227,7 +228,7 @@ TaskP_Status TaskP_delete( TaskP_Handle *hTaskPtr )
     portTaskHandleType currentTaskHndl;
     portBaseType xReturn;
 
-    if( ( NULL_PTR != task ) && ( BTRUE == task->used ) )
+    if( (NULL != hTaskPtr) && ( NULL_PTR != task ) && ( BTRUE == task->used ) )
     {
         currentTaskHndl = xTaskGetCurrentTaskHandle();
         if(currentTaskHndl == task->taskHndl)
@@ -239,6 +240,7 @@ TaskP_Status TaskP_delete( TaskP_Handle *hTaskPtr )
         }
 
         xReturn = xTaskDelete(task->taskHndl);
+        task->terminated = UTRUE;
         DebugP_assert( pdPASS == xReturn );
 
         key = HwiP_disable(  );
@@ -353,7 +355,7 @@ uint32_t TaskP_isTerminated( TaskP_Handle handle )
     TaskP_SafeRTOS *taskHandle = ( TaskP_SafeRTOS * )handle;
 
     DebugP_assert( NULL_PTR != handle );
-    if( NULL == taskHandle->taskHndl )
+    if(BFALSE == taskHandle->terminated)
     {
         isTaskTerminated = UFALSE;
     }

@@ -149,7 +149,7 @@ MutexP_Status MutexP_delete(MutexP_Handle handle)
     MutexP_Object *mutexObj = (MutexP_Object *)handle;
     MutexP_freertos *mutex = (MutexP_freertos *)mutexObj->object;
 
-    if ((NULL_PTR != mutex) && (BTRUE == mutex->used))
+    if ((NULL != mutexObj) && (NULL_PTR != mutex) && (BTRUE == mutex->used))
     {
         vSemaphoreDelete(mutex->semHndl);
 
@@ -177,7 +177,7 @@ MutexP_Status MutexP_lock(MutexP_Handle handle,
     MutexP_freertos *mutex = (MutexP_freertos *)mutexObj->object;
     uint32_t isTaken = 0;
 
-    if ((NULL_PTR != mutex) && (BTRUE == mutex->used) && (0U == mutex->isRecursiveMutex))
+    if ((NULL != mutexObj) && (NULL_PTR != mutex) && (BTRUE == mutex->used) && (0U == mutex->isRecursiveMutex))
     {
         if (0 == xPortInIsrContext() )
         {
@@ -217,7 +217,7 @@ MutexP_Status MutexP_unlock(MutexP_Handle handle)
     MutexP_freertos *mutex = (MutexP_freertos *)mutexObj->object;
     /* Note: timeout is not use */
 
-    if ( (NULL_PTR != mutex) && (BTRUE == mutex->used) && (0U == mutex->isRecursiveMutex) )
+    if ( (NULL != mutexObj) && (NULL_PTR != mutex) && (BTRUE == mutex->used) && (0U == mutex->isRecursiveMutex) )
     {
         if (0 == xPortInIsrContext())
         {

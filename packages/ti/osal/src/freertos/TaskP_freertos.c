@@ -234,7 +234,7 @@ TaskP_Status TaskP_delete(TaskP_Handle *hTaskPtr)
     TaskP_freertos *task = (TaskP_freertos *)hTask;
     TaskHandle_t currentTaskHndl;
 
-    if((NULL_PTR != task) && (BTRUE == task->used))
+    if( (NULL != hTaskPtr) && (NULL_PTR != task) && (BTRUE == task->used))
     {
         currentTaskHndl = xTaskGetCurrentTaskHandle();
         if(currentTaskHndl == task->taskHndl)
