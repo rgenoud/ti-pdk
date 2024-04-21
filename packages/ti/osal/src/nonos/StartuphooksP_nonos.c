@@ -33,38 +33,6 @@
 /*
  *  ======== StartuphooksP_nonos.c ========
  */
- 
-/*****************************************************************************/
-/* _SYSTEM_PRE_INIT() - _system_pre_init() is called in the C/C++ startup    */
-/* routine (_c_int00()) and provides a mechanism for the user to             */
-/* insert application specific low level initialization instructions prior   */
-/* to calling main().  The return value of _system_pre_init() is used to     */
-/* determine whether or not C/C++ global data initialization will be         */
-/* performed (return value of 0 to bypass C/C++ auto-initialization).        */
-/*                                                                           */
-/* PLEASE NOTE THAT BYPASSING THE C/C++ AUTO-INITIALIZATION ROUTINE MAY      */
-/* RESULT IN PROGRAM FAILURE.                                                */
-/*****************************************************************************/
-
-#include <ti/osal/StartuphooksP.h>
-
-int _system_pre_init(void);
-__attribute__((section(".startupCode"))) int _system_pre_init(void)
-{
-    extended_system_pre_init();
-    return 1;
-}
-
-/*****************************************************************************/
-/* _SYSTEM_POST_CINIT() - _system_post_cinit() is a hook function called in  */
-/* the C/C++ auto-initialization function after cinit() and before pinit().  */
-/*                                                                           */
-/*****************************************************************************/
-void _system_post_cinit(void);
-__attribute__((section(".startupCode"))) void _system_post_cinit(void)
-{
-    extended_system_post_cinit();
-}
 
 /* Empty definition for extended_system_post_cinit. Applications should define
  * its own extended_system_post_cinit should there be a need.

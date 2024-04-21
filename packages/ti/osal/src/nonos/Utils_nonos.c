@@ -38,6 +38,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ti/osal/src/nonos/Nonos_config.h>
+#include <ti/osal/StartuphooksP.h>
 
 /* External Clock should be defined under osal_soc.h
  * if SOC is not supporting it, set to -1
@@ -236,4 +237,36 @@ int32_t Osal_getStaticMemStatus(Osal_StaticMemStatus *pMemStat)
     return (retVal);
 }
 
+
+#if defined (BUILD_MCU)
+/*****************************************************************************/
+/* _SYSTEM_PRE_INIT() - _system_pre_init() is called in the C/C++ startup    */
+/* routine (_c_int00()) and provides a mechanism for the user to             */
+/* insert application specific low level initialization instructions prior   */
+/* to calling main().  The return value of _system_pre_init() is used to     */
+/* determine whether or not C/C++ global data initialization will be         */
+/* performed (return value of 0 to bypass C/C++ auto-initialization).        */
+/*                                                                           */
+/* PLEASE NOTE THAT BYPASSING THE C/C++ AUTO-INITIALIZATION ROUTINE MAY      */
+/* RESULT IN PROGRAM FAILURE.                                                */
+/*****************************************************************************/
+
+int _system_pre_init(void);
+__attribute__((section(".startupCode"))) __attribute__((weak)) int _system_pre_init(void)
+{
+    extended_system_pre_init();
+    return 1;
+}
+
+/*****************************************************************************/
+/* _SYSTEM_POST_CINIT() - _system_post_cinit() is a hook function called in  */
+/* the C/C++ auto-initialization function after cinit() and before pinit().  */
+/*                                                                           */
+/*****************************************************************************/
+void _system_post_cinit(void);
+__attribute__((section(".startupCode"))) __attribute__((weak)) void _system_post_cinit(void)
+{
+    extended_system_post_cinit();
+}
+#endif
 /* Nothing past this point */
