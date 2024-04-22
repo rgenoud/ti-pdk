@@ -43,12 +43,15 @@
 /* ========================================================================== */
 
 #include "osal_extended_test.h"
+#include "ti/osal/src/freertos/HeapP_freertos_internal.h"
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-#define OSAL_APP_HEAP_SIZE (2*1024U)
+#define OSAL_APP_HEAP_SIZE            (2*1024U)
+#define OSAL_APP_STATIC_HANDLE_OFFSET (0x1U)
+#define OSAL_APP_PVHEAP_HANDLE_OFFSET (0x8U)
 
 /* ========================================================================== */
 /*                            Global Variables                                */
@@ -81,11 +84,6 @@ static int32_t OsalApp_heapFreertosAllocTest(void);
 static int32_t OsalApp_heapFreertosIsUsedTest(void);
 
 /*
- * Description: Testing null parameter check for HeapP_Params_init API
- */
-static int32_t OsalApp_heapParamsInitNullTest(void);
-
-/*
  * Description: Testing Null paramter check for the below mentioned APIs :
  *      1. HeapP_alloc
  *      2. HeapP_free
@@ -98,6 +96,11 @@ static int32_t OsalApp_heapFreertosNullTest(void);
  * Description: Testing if HeapP_create can create the maximum number of heaps.
  */
 static int32_t OsalApp_heapFreertosMaxTest(void);
+
+/*
+ * Description: Testing Negative check for vheap APIs. 
+ */
+static int32_t OsalApp_vheapTest(void);
 
 /* ========================================================================== */
 /*                       Internal Function Definitions                        */
@@ -140,6 +143,13 @@ static int32_t OsalApp_heapFreertosAllocTest(void)
         {
             result = osal_FAILURE;
         }
+#if defined(BUILD_MCU)
+        if((0U == xHeapGetFreeHeapSize(handle+OSAL_APP_STATIC_HANDLE_OFFSET)) ||
+           (0U == xHeapGetMinimumEverFreeHeapSize(handle+OSAL_APP_STATIC_HANDLE_OFFSET)))
+        {
+            result = osal_FAILURE;
+        }
+#endif
     }
     
     if(osal_OK == result)
@@ -160,11 +170,7 @@ static int32_t OsalApp_heapFreertosAllocTest(void)
         }
     }
 
-    if(osal_OK == result)
-    {
-        OSAL_log("\n HeapP negative test passed! \n");
-    }
-    else
+    if(osal_OK != result)
     {
         OSAL_log("\n HeapP negative test failed! \n");
     }
@@ -262,26 +268,12 @@ static int32_t OsalApp_heapFreertosIsUsedTest(void)
         result = osal_FAILURE;
     }
     
-    if(osal_OK == result)
-    {
-        OSAL_log("\n HeapP test for used parameter passed! \n");
-    }
-    else
+    if(osal_OK != result)
     {
         OSAL_log("\n HeapP test for used parameter failed!! \n");
     }
 
     return result;
-}
-
-static int32_t OsalApp_heapParamsInitNullTest(void)
-{
-    HeapP_Params *params = (HeapP_Params*)NULL_PTR;
-
-    HeapP_Params_init(params);
-    OSAL_log("\n HeapP_Params_init Nullcheck done!! \n");
-
-    return osal_OK;
 }
 
 static int32_t OsalApp_heapFreertosNullTest(void)
@@ -296,6 +288,10 @@ static int32_t OsalApp_heapFreertosNullTest(void)
     HeapP_MemStats    memstats;
 
     memset(gOsalAppHeapPbuf, 0xFF, sizeof(gOsalAppHeapPbuf));
+    /* Null check for heap init */
+    HeapP_Params_init(NULL_PTR);
+
+    /* Initializing heap params */
     HeapP_Params_init(&params);
     
     params.buf = gOsalAppHeapPbuf;
@@ -353,10 +349,6 @@ static int32_t OsalApp_heapFreertosNullTest(void)
     {
         OSAL_log("\n HeapP Freertos Null test failed! \n");
     }
-    else
-    {
-        OSAL_log("\n HeapP Freertos Null test passed! \n");
-    }
 
     return osal_OK;
 }
@@ -407,19 +399,62 @@ static int32_t OsalApp_heapFreertosMaxTest(void)
             }
         }
     }
-    
+
     if(osal_OK != result)
     {
         OSAL_log("\n Multiple HeapP Freertos create test failed! \n");
-    }
-    else
-    {
-        OSAL_log("\n Multiple HeapP Freertos create test passed! \n");
     }
 
     return result;
 }
 
+static int32_t OsalApp_vheapTest(void)
+{
+    HeapP_Params      params;
+    HeapP_Status      status;
+    HeapP_Handle      handle = NULL;
+    HeapP_MemStats    memstatus;
+    HeapMemStats_t    memstats;
+    uint32_t          allocSize = 0x1U;
+    int32_t           result = osal_OK;
+
+    memset(gOsalAppHeapPbuf, 0xFF, sizeof(gOsalAppHeapPbuf));
+
+    HeapP_Params_init(&params);
+
+    /* Null checks */
+    vHeapFree(NULL_PTR, NULL_PTR);
+    vHeapGetHeapStats(NULL_PTR, &memstats);
+    
+    params.buf = gOsalAppHeapPbuf;
+    params.size = sizeof(gOsalAppHeapPbuf);
+
+    handle = HeapP_create(&params);
+    if(NULL_PTR == handle)
+    {
+        result = osal_FAILURE;
+    }
+    else
+    {
+        HeapP_alloc(handle, 0U);
+        status = HeapP_getHeapStats(handle, &memstatus);
+        if(HeapP_OK != status)
+        {
+            result = osal_FAILURE;
+        }
+        HeapP_alloc(handle, allocSize);
+        HeapP_alloc(handle, allocSize);
+        /* prvHeapInit API else condition check  */
+        vHeapCreateStatic(handle, NULL, 1U);
+    }
+
+    if(osal_OK != result)
+    {
+        OSAL_log("\n Heap internal tests have failed!! \n");
+    }
+
+    return result;
+}
 /* ========================================================================== */
 /*                          Function Definitions                              */
 /* ========================================================================== */
@@ -430,8 +465,8 @@ int32_t OsalApp_heapFreertosTest(void)
     
     result += OsalApp_heapFreertosAllocTest();
     result += OsalApp_heapFreertosIsUsedTest();
-    result += OsalApp_heapParamsInitNullTest();
     result += OsalApp_heapFreertosMaxTest();
+    result += OsalApp_vheapTest();
     result += OsalApp_heapFreertosNullTest();
 
     if(osal_OK != result)
