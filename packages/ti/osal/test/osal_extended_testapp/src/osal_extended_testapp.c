@@ -686,8 +686,6 @@ void OSAL_tests(void *arg0, void *arg1)
 
     result += OsalApp_utilsNonosTests();
 
-    result += OsalApp_cacheTests();
-
 #endif
 
 #if !defined(BARE_METAL)
@@ -706,13 +704,15 @@ void OSAL_tests(void *arg0, void *arg1)
 
 #endif
 
+    result += OsalApp_cacheTests();
+
     result += OsalApp_mutexTests();
 
     result += OsalApp_registerIntrTests();
 
-    result += OsalApp_hwiTests();
-
     result += OsalApp_semaphoreTests();
+
+    result += OsalApp_hwiTests();
 
     if(osal_OK == result)
     {

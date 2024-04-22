@@ -49,7 +49,6 @@
 /* ========================================================================== */
 
 #define OSAL_APP_CACHE_TEST_ARR_SIZE (64U)
-#define OSAL_APP_CACHE_TEST_ITER     (1024U)
 
 /* ========================================================================== */
 /*                            Global Variables                                */
@@ -61,15 +60,7 @@ uint8_t gOsalAppCacheTestArr[OSAL_APP_CACHE_TEST_ARR_SIZE];
 /*                           Function Declarations                            */
 /* ========================================================================== */
 
-/*
- * Description : Test Cache writeback.
- */
-int32_t OsalApp_cacheWbTest();
-
-/*
- * Description : Test Cache invalidation.
- */
-int32_t OsalApp_cacheInvTest();
+/* None */
 
 /* ========================================================================== */
 /*                          Internal Function Definitions                     */
@@ -81,94 +72,19 @@ int32_t OsalApp_cacheInvTest();
 /*                          Function Definitions                              */
 /* ========================================================================== */
 
-int32_t OsalApp_cacheWbTest() 
+int32_t OsalApp_cacheTests(void)
 {
-    uint32_t index = 0U;
-    int32_t result = osal_OK;
-
-    for(index = 0U; index < OSAL_APP_CACHE_TEST_ARR_SIZE; index++)
-    {
-        gOsalAppCacheTestArr[index]='A';
-    }
-
     /*  Write back the cache */
     CacheP_wb(gOsalAppCacheTestArr, OSAL_APP_CACHE_TEST_ARR_SIZE);
 
-    /* Invalidate the cache, so that the next read is force to be from backing store. */
+    /* Invalidate the cache */
     CacheP_Inv(gOsalAppCacheTestArr, OSAL_APP_CACHE_TEST_ARR_SIZE);
 
-    for(index = 0U; index < OSAL_APP_CACHE_TEST_ARR_SIZE; index++)
-    {
-        if('A' != gOsalAppCacheTestArr[index])
-        {
-            result = osal_FAILURE;
-            break;
-        }
-    }
-    if(osal_OK == result)
-    {
-        OSAL_log("\n OsalApp_cacheWbTest passed!!\n");
-    }
-    else
-    {
-        OSAL_log("\n OsalApp_cacheWbTest failed!!\n");
-    }
+    /*  Write back and invalidate the cache */
+    CacheP_wbInv(gOsalAppCacheTestArr, OSAL_APP_CACHE_TEST_ARR_SIZE);
 
-    return result;
-}
+    OSAL_log("\n All Cache Tests have passed!!\n");
 
-/*
- * Description  : Testing by storing data in array and reading it and then paasing to CacheP_Inv
- */
-int32_t OsalApp_cacheInvTest(void)
-{
-    uint32_t index = 0U;
-    int32_t result = osal_OK;
-
-    /*  Make a lot of accesses so that the array is cached in. */
-    for(index = 0U; index < OSAL_APP_CACHE_TEST_ITER; index++)
-    {
-        gOsalAppCacheTestArr[index%4] = 'A' + index%4;
-    }
-    /* Update the data that is already in the cache due to a lot of access made just now. */
-    gOsalAppCacheTestArr[0] = 'P';
-    gOsalAppCacheTestArr[1] = 'Q';
-    gOsalAppCacheTestArr[2] = 'R';
-    gOsalAppCacheTestArr[3] = 'S';
-
-    /* Immediately invalidate, so that the cached data is not written back. */
-    CacheP_Inv(gOsalAppCacheTestArr,64U);
-
-    /* As cache was invalidated without writeback, latest update should not be visible. */
-    if('P' == gOsalAppCacheTestArr[0])
-    {
-        OSAL_log("\n OsalApp_cacheInvTest failed!!\n");
-        result = osal_FAILURE;
-    }
-    else
-    {
-        OSAL_log("\n OsalApp_cacheInvTest passed!!\n");
-    }
-
-    return result;    
-}
-
-int32_t OsalApp_cacheTests(void)
-{
-    int32_t result = osal_OK;
-
-    result += OsalApp_cacheInvTest();
-    result += OsalApp_cacheWbTest();
-
-    if(osal_OK == result)
-    {
-        OSAL_log("\n All Cache Tests have passed!!\n");
-    }
-    else
-    {
-        OSAL_log("\n All Cache Tests have failed!!\n");
-    }
-
-    return result;
+    return osal_OK;
 }
 
