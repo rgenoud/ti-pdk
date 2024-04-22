@@ -643,8 +643,9 @@ void OSAL_tests(void *arg0, void *arg1)
 #if defined(BUILD_C7X_1)
     result += OsalApp_ArchutilsTests();
 #endif
+#if defined(BUILD_MCU)
     ClockP_start_HwiP_Test();
-
+#endif
     Clockp_safertos_Test();
 
     ClockP_create_test_clocks_limit();

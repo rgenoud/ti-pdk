@@ -56,7 +56,11 @@
 #define OSAL_APP_MAX_SEMAPHORE    OSAL_SAFERTOS_CONFIGNUM_SEMAPHORE
 #endif
 #define OSAL_APP_INT_NUM_IRQ       (30U)
+#if defined(BUILD_MCU)
 #define OSAL_APP_ISUSED_OFFSET     (0x25U)
+#elif defined(BUILD_C7X)
+#define OSAL_APP_ISUSED_OFFSET     (0x4AU)
+#endif
 
 /* ========================================================================== */
 /*                            Global Variables                                */
@@ -107,6 +111,11 @@ static int32_t OsalApp_semaphoreMaxTest(void);
  */
 static int32_t OsalApp_semaphoreNegativeTest(void);
 #endif
+
+/*
+ * Description : Testing semaphore contruct APIs
+ */
+static int32_t OsalApp_semaphoreConstructTest(void);
 
 /* ========================================================================== */
 /*                    Internal Function Definitions                           */
@@ -342,6 +351,49 @@ static int32_t OsalApp_semaphoreNegativeTest(void)
 }
 #endif
 
+static int32_t OsalApp_semaphoreConstructTest(void)
+{
+    SemaphoreP_Params    semParams;
+    SemaphoreP_Handle    semhandle;
+    int32_t              result = osal_OK;
+
+    SemaphoreP_Params_init(&semParams);
+  
+    semParams.mode = SemaphoreP_Mode_BINARY;
+    semhandle = SemaphoreP_create(0U, &semParams);
+    if(NULL_PTR != semhandle)
+    {
+        if(SemaphoreP_OK != SemaphoreP_post(semhandle))
+        {
+            result = osal_FAILURE;
+        }
+        if((osal_OK != result) || (SemaphoreP_OK != SemaphoreP_pend(semhandle, SemaphoreP_WAIT_FOREVER)))
+        {
+            result = osal_FAILURE;
+        }
+        if((osal_OK != result) || (SemaphoreP_OK != SemaphoreP_delete(semhandle)))
+        {
+            result = osal_FAILURE;
+        }
+    }
+#if defined(SAFERTOS)
+    semParams.mode = SemaphoreP_Mode_COUNTING;
+    semhandle = SemaphoreP_create(OSAL_APP_MAX_SEMAPHORE, &semParams);
+    if(NULL_PTR != semhandle)
+    {
+        if(SemaphoreP_OK != SemaphoreP_delete(semhandle))
+        {
+            result = osal_FAILURE;
+        }
+    }
+#endif
+    if(osal_OK != result)
+    {
+        OSAL_log("\n Semaphore construct create test failed!! \n");
+    }
+    return result;
+}
+
 /* ========================================================================== */
 /*                          Function Definitions                              */
 /* ========================================================================== */
@@ -354,6 +406,7 @@ int32_t OsalApp_semaphoreTests(void)
     result += OsalApp_semaphorePendTest();
     result += OsalApp_semaphoreMaxTest();
     result += OsalApp_isInISRsemaphoreTest();
+    result += OsalApp_semaphoreConstructTest();
 #if defined(SAFERTOS)
     result += OsalApp_semaphoreNegativeTest();
 #endif

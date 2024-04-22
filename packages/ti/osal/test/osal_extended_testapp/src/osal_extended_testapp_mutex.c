@@ -344,6 +344,12 @@ static int32_t OsalApp_isUsedMutexTest(void)
      * and passing to the driver to test how the driver reacts
      */
     **(handleAddr) = 1U;
+#if defined(SAFERTOS)
+    if((osal_OK != result) || (MutexP_OK == MutexP_lock(mutexHandle, MutexP_NO_WAIT)))
+    {
+        result = osal_FAILURE;
+    }
+#endif
     if((osal_OK != result) || (MutexP_OK != MutexP_delete(mutexHandle)))
     {
        result = osal_FAILURE;
@@ -351,7 +357,7 @@ static int32_t OsalApp_isUsedMutexTest(void)
 
     if(osal_OK != result)
     {
-        OSAL_log("\n Mutex general test failed! \n");
+        OSAL_log("\n Mutex isUsed negative test failed! \n");
     }
 
     return result;

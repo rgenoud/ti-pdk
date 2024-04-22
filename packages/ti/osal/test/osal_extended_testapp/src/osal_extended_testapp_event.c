@@ -50,7 +50,11 @@
 
 #define OSAL_APP_INT_NUM_IRQ      (29U)
 /* Offset for uxEventMirror of EventP safertos object structure */
+#if defined(BUILD_MCU)
 #define OSAL_APP_EVTMIRROR_OFFSET (0x0EU)
+#elif defined(BUILD_C7X)
+#define OSAL_APP_EVTMIRROR_OFFSET (0x0EU*2U)
+#endif
 #define OSAL_APP_EVTHANDLE_OFFSET (0x0FU)
 #if defined (FREERTOS)
 #define OSAL_APP_MAX_EVENT        (OSAL_FREERTOS_CONFIGNUM_EVENT)
@@ -230,7 +234,10 @@ static int32_t OsalApp_eventisUsedTest(void)
     /* Here handleAddr is used to get the memory location of the handle and uxEventMirror */
     handleAddr = (uint32_t *)eventHandle;
 #if defined(SAFERTOS)
-    uint32_t evtMirrorAddr = *(handleAddr + OSAL_APP_EVTMIRROR_OFFSET);
+    uint32_t evtMirrorLAddr = (*(handleAddr + OSAL_APP_EVTMIRROR_OFFSET));
+#if defined(BUILD_C7X)
+    uint32_t evtMirrorHAddr = (*(handleAddr + OSAL_APP_EVTMIRROR_OFFSET+1U));
+#endif
 #endif
     if((NULL_PTR == eventHandle) || (EventP_OK != EventP_delete(&eventHandle)))
     {
@@ -250,7 +257,10 @@ static int32_t OsalApp_eventisUsedTest(void)
     /* restoring the EventMirror of Structure EventP_safertos->eventGroupType->uxEventMirror,
      * to get the return value of xEventGroupDelete as passed to check the gOsalEventAllocCnt
      * value whether 0 or not */
-    *(handleAddr + OSAL_APP_EVTMIRROR_OFFSET) = evtMirrorAddr;
+    *(handleAddr + OSAL_APP_EVTMIRROR_OFFSET) = evtMirrorLAddr;
+#if defined(BUILD_C7X)
+    *(handleAddr + OSAL_APP_EVTMIRROR_OFFSET+1U) = evtMirrorHAddr;
+#endif
     if(EventP_OK != EventP_delete(&eventHandle))
 #endif
     {
