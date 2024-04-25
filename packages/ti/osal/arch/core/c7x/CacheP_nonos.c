@@ -43,17 +43,23 @@
 
 void CacheP_wb(const void * addr, uint32_t size)
 {
+    #if !defined(HOST_EMULATION)
     Cache_wb((void *)addr, (size_t)size, (uint16_t)Cache_Type_ALL, BTRUE);
+    #endif
 }
 
 void CacheP_wbInv(const void * addr, uint32_t size)
 {
+    #if !defined(HOST_EMULATION)
     Cache_wbInv((void *)addr, (size_t)size, (uint16_t)Cache_Type_ALL, BTRUE);
+    #endif
 }
 
 void CacheP_Inv(const void * addr, uint32_t size)
 {
+    #if !defined(HOST_EMULATION)
     Cache_inv((void *)addr, (size_t)size, (uint16_t)Cache_Type_ALL, BTRUE);
+    #endif
 }
 
 
