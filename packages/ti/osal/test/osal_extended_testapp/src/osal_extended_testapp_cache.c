@@ -76,12 +76,22 @@ int32_t OsalApp_cacheTests(void)
 {
     /*  Write back the cache */
     CacheP_wb(gOsalAppCacheTestArr, OSAL_APP_CACHE_TEST_ARR_SIZE);
+#if defined (BUILD_MCU)
+    CSL_armR5CacheWb(gOsalAppCacheTestArr, OSAL_APP_CACHE_TEST_ARR_SIZE, false);
+#endif
 
     /* Invalidate the cache */
     CacheP_Inv(gOsalAppCacheTestArr, OSAL_APP_CACHE_TEST_ARR_SIZE);
+#if defined (BUILD_MCU)
+    CSL_armR5CacheInv(gOsalAppCacheTestArr, OSAL_APP_CACHE_TEST_ARR_SIZE, false);
+#endif
 
     /*  Write back and invalidate the cache */
     CacheP_wbInv(gOsalAppCacheTestArr, OSAL_APP_CACHE_TEST_ARR_SIZE);
+#if defined (BUILD_MCU)
+    CSL_armR5CacheWbInv(gOsalAppCacheTestArr, OSAL_APP_CACHE_TEST_ARR_SIZE, false);
+    CSL_armR5CacheWait();
+#endif
 
     OSAL_log("\n All Cache Tests have passed!!\n");
 
