@@ -472,27 +472,49 @@ static int32_t Sciclient_pmSetMsgProxy(uint32_t *msg_recv, uint32_t reqFlags, ui
      */
     struct tisci_msg_set_device_req *req =
         (struct tisci_msg_set_device_req *) msg_recv;
+    struct tisci_header *hdr;
+    uint8_t host;
     uint8_t state = req->state;
+    hdr = (struct tisci_header *) msg_recv;
+    host = hdr->host;
 
-    switch (state) {
-        case TISCI_MSG_VALUE_DEVICE_SW_STATE_AUTO_OFF:
-            ret = Sciclient_procBootSetSequenceCtrl((uint8_t)procId,
-                                              0,
-                                              TISCI_MSG_VAL_PROC_BOOT_CTRL_FLAG_R5_LPSC,
-                                              reqFlags,
-                                              SCICLIENT_SERVICE_WAIT_FOREVER);
-            break;
-        case TISCI_MSG_VALUE_DEVICE_SW_STATE_ON:
-            ret = Sciclient_procBootSetSequenceCtrl((uint8_t)procId,
-                                              TISCI_MSG_VAL_PROC_BOOT_CTRL_FLAG_R5_LPSC,
-                                              0,
-                                              reqFlags,
-                                              SCICLIENT_SERVICE_WAIT_FOREVER);
-            break;
-        default:
-            ret = -EINVAL;
-            break;
+    /* Request the control of the core if the request is not from MCU R5 */
+    if(host != TISCI_HOST_ID_MCU_0_R5_0)
+    {
+        /* Request the processor */
+        ret = Sciclient_procBootRequestProcessor(procId, SCICLIENT_SERVICE_WAIT_FOREVER);
     }
+
+    if(ret == CSL_PASS)
+    {
+        switch (state) {
+            case TISCI_MSG_VALUE_DEVICE_SW_STATE_AUTO_OFF:
+                ret = Sciclient_procBootSetSequenceCtrl((uint8_t)procId,
+                                                  0,
+                                                  TISCI_MSG_VAL_PROC_BOOT_CTRL_FLAG_R5_LPSC,
+                                                  reqFlags,
+                                                  SCICLIENT_SERVICE_WAIT_FOREVER);
+                break;
+            case TISCI_MSG_VALUE_DEVICE_SW_STATE_ON:
+                ret = Sciclient_procBootSetSequenceCtrl((uint8_t)procId,
+                                                  TISCI_MSG_VAL_PROC_BOOT_CTRL_FLAG_R5_LPSC,
+                                                  0,
+                                                  reqFlags,
+                                                  SCICLIENT_SERVICE_WAIT_FOREVER);
+                break;
+            default:
+                ret = -EINVAL;
+                break;
+        }
+    }
+
+    /* Release the control of the core if the request is not from MCU R5 */
+    if((ret == CSL_PASS)&& (host != TISCI_HOST_ID_MCU_0_R5_0))
+    {
+        /* Release the processor */
+        ret =  Sciclient_procBootReleaseProcessor(procId, TISCI_MSG_FLAG_AOP, SCICLIENT_SERVICE_WAIT_FOREVER);
+    }
+
     return ret;
 }
 
@@ -504,27 +526,48 @@ static int32_t Sciclient_pmSetCpuResetMsgProxy(uint32_t *msg_recv, uint32_t proc
      */
     struct tisci_msg_set_device_resets_req *req =
         (struct tisci_msg_set_device_resets_req *) msg_recv;
+    struct tisci_header *hdr;
+    uint8_t host;
     uint32_t reset = req->resets;
+    hdr = (struct tisci_header *) msg_recv;
+    host = hdr->host;
 
-    switch (reset) {
-        case 0: /* Take CPU out of RESET */
-            ret = Sciclient_procBootSetSequenceCtrl((uint8_t)procId,
-                                              0,
-                                              TISCI_MSG_VAL_PROC_BOOT_CTRL_FLAG_R5_RESET,
-                                              0,
-                                              SCICLIENT_SERVICE_WAIT_FOREVER);
-            break;
-        case 1: /* Put CPU into RESET */
-            ret = Sciclient_procBootSetSequenceCtrl((uint8_t)procId,
-                                              TISCI_MSG_VAL_PROC_BOOT_CTRL_FLAG_R5_RESET,
-                                              0,
-                                              0,
-                                              SCICLIENT_SERVICE_WAIT_FOREVER);
-            break;
-        default:
-            ret = -EINVAL;
-            break;
+    /* Request the control of the core if the request is not from MCU R5 */
+    if (host != TISCI_HOST_ID_MCU_0_R5_0)
+    {
+        /* Request the processor */
+        ret = Sciclient_procBootRequestProcessor(procId, SCICLIENT_SERVICE_WAIT_FOREVER);
     }
+
+    if (ret == CSL_PASS) {
+        switch (reset) {
+            case 0: /* Take CPU out of RESET */
+                ret = Sciclient_procBootSetSequenceCtrl((uint8_t)procId,
+                                                  0,
+                                                  TISCI_MSG_VAL_PROC_BOOT_CTRL_FLAG_R5_RESET,
+                                                  0,
+                                                  SCICLIENT_SERVICE_WAIT_FOREVER);
+                break;
+            case 1: /* Put CPU into RESET */
+                ret = Sciclient_procBootSetSequenceCtrl((uint8_t)procId,
+                                                  TISCI_MSG_VAL_PROC_BOOT_CTRL_FLAG_R5_RESET,
+                                                  0,
+                                                  0,
+                                                  SCICLIENT_SERVICE_WAIT_FOREVER);
+                break;
+            default:
+                ret = -EINVAL;
+                break;
+        }
+    }
+
+    /* Release the control of the core if the request is not from MCU R5 */
+    if((ret == CSL_PASS) && (host != TISCI_HOST_ID_MCU_0_R5_0))
+    {
+        /* Release the processor */
+        ret =  Sciclient_procBootReleaseProcessor(procId, TISCI_MSG_FLAG_AOP, SCICLIENT_SERVICE_WAIT_FOREVER);
+    }
+
     return ret;
 }
 
