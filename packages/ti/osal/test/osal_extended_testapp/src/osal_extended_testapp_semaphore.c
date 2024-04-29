@@ -103,14 +103,10 @@ static int32_t OsalApp_semaphorePendTest(void);
  */
 static int32_t OsalApp_semaphoreMaxTest(void);
 
-#if defined(SAFERTOS)
 /*
- * Description : Testing Negative condition for below APIs
- *                 1. SemaphoreP_getCount
- *                 2. SemaphoreP_delete
+ * Description : Testing Negative condition check for SemaphoreP_delete API
  */
 static int32_t OsalApp_semaphoreNegativeTest(void);
-#endif
 
 /*
  * Description : Testing semaphore contruct APIs
@@ -318,12 +314,12 @@ static int32_t OsalApp_semaphoreMaxTest(void)
     return result;
 }
 
-#if defined(SAFERTOS)
 static int32_t OsalApp_semaphoreNegativeTest(void)
 {
     SemaphoreP_Params    semParams;
     SemaphoreP_Handle    semhandle;
     int32_t              result = osal_OK;
+    uint32_t             count = 0U, maxcnt = 2U;
 
     SemaphoreP_Params_init(&semParams);
     semhandle = SemaphoreP_create(0, &semParams);
@@ -335,11 +331,19 @@ static int32_t OsalApp_semaphoreNegativeTest(void)
     else
     {
         /* This handle is already deleted, but we are setting the 
-         * isUsed parameter of offset  to 1(forced corruption), to see how the driver reacts. */
-        *(handleAddr + OSAL_APP_ISUSED_OFFSET) = 1U;
-        if(SemaphoreP_OK != SemaphoreP_delete(semhandle))
+         * isUsed parameter of offset to 1(forced corruption) and trying to delete twice
+         * to check the allocation count and to see how the driver reacts. */
+        for(count = 0U; count < maxcnt; count ++)
         {
-            result = osal_FAILURE;
+#if defined(SAFERTOS)
+            *(handleAddr+OSAL_APP_ISUSED_OFFSET) = 1U;
+#else
+            *handleAddr = 1U;
+#endif
+            if(SemaphoreP_OK != SemaphoreP_delete(semhandle))
+            {
+                result = osal_FAILURE;
+            }
         }
     }
 
@@ -349,7 +353,6 @@ static int32_t OsalApp_semaphoreNegativeTest(void)
     }
     return result;
 }
-#endif
 
 static int32_t OsalApp_semaphoreConstructTest(void)
 {
@@ -407,9 +410,7 @@ int32_t OsalApp_semaphoreTests(void)
     result += OsalApp_semaphoreMaxTest();
     result += OsalApp_isInISRsemaphoreTest();
     result += OsalApp_semaphoreConstructTest();
-#if defined(SAFERTOS)
     result += OsalApp_semaphoreNegativeTest();
-#endif
 
     if(osal_OK == result)
     {

@@ -68,6 +68,7 @@
 /* ========================================================================== */
 
 volatile uint32_t gOsalAppFlagHwiTest = UFALSE;
+volatile uintptr_t gOsalAppHwiKey;
 
 /* ========================================================================== */
 /*                           Function Declarations                            */
@@ -157,6 +158,9 @@ static void OsalApp_hwiIRQ(uintptr_t arg)
     CSL_vimAckIntr(pVimRegs, CSL_VIM_INTR_MAP_FIQ);
     CSL_vimAckIntr(NULL, CSL_VIM_INTR_MAP_FIQ);
 #endif
+    /* Testing the APIs called from interrupt context */
+    gOsalAppHwiKey = HwiP_disable();
+    HwiP_restore(gOsalAppHwiKey);
 }
 
 static int32_t OsalApp_hwiNullTest(void)
