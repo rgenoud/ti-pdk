@@ -340,3 +340,54 @@ int32_t udmaTestRingGetRdIdxNormal(UdmaTestTaskObj *taskObj)
 
     return retVal;
 }
+
+/*
+ * Test Case Description: Verifies the function Udma_ringPrimeReadLcdma
+ * 1)Test scenario 1: Check to get physical descriptor memory pointer value as 0.
+ */
+int32_t UdmaTestRingPrimeReadNormalNeg(UdmaTestTaskObj *taskObj)
+{
+    int32_t             retVal     = UDMA_SOK;
+    uint32_t            heapId     = UTILS_MEM_HEAP_ID_MSMC;
+    uint32_t            elemCnt    = 50U;
+    void               *ringMem    = NULL;
+    uint64_t            phyDescMem = 0UL;
+    uint32_t            ringMode,ringMemSize;
+    Udma_DrvHandle      drvHandle;
+    Udma_RingPrms       ringPrms;
+    struct Udma_RingObj ringObj;
+    Udma_RingHandle     ringHandle;
+
+
+    ringMemSize = elemCnt * sizeof (uint64_t);
+    ringMem     = Utils_memAlloc(heapId, ringMemSize, UDMA_CACHELINE_ALIGNMENT);
+    if(NULL == ringMem)
+    {
+        retVal = UDMA_EALLOC;
+        GT_0trace(taskObj->traceMask, GT_ERR, " Ring memory allocation failure\r\n");
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        ringHandle = &ringObj;
+        ringMode   = TISCI_MSG_VALUE_RM_RING_MODE_RING;
+        drvHandle  = &taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0];
+
+        UdmaRingPrms_init(&ringPrms);
+        ringPrms.ringMem     = ringMem;
+        ringPrms.ringMemSize = ringMemSize;
+        ringPrms.mode        = ringMode;
+        ringPrms.elemCnt     = elemCnt;
+
+        /* Allocate a free ring */
+        retVal = Udma_ringAlloc(drvHandle, ringHandle, UDMA_RING_ANY, &ringPrms);
+        if(UDMA_SOK == retVal)
+        {
+            Udma_ringPrimeReadNormal(ringHandle, &phyDescMem);
+        }
+        Udma_ringFree(ringHandle);
+    }
+
+    return retVal;
+}
+

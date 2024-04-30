@@ -1814,3 +1814,124 @@ static void udmaTestRingEventCb(Udma_EventHandle eventHandle,
 
     return;
 }
+
+/*
+ * Test Case Description: Verifies Udma_ringGetRdIdxNormal
+ * 1)Test scenario 1: Check to get RdIdx value of ring.
+ */
+int32_t UdmaTestRingGetRdIdxNormal(UdmaTestTaskObj *taskObj)
+{
+    int32_t             retVal  = UDMA_SOK;
+    uint32_t            elemCnt = 50U;
+    uint32_t            heapId  = UTILS_MEM_HEAP_ID_MSMC;
+    void               *ringMem = NULL;
+    uint32_t            ringMode, ringMemSize;
+    Udma_DrvHandle      drvHandle;
+    Udma_RingPrms       ringPrms;
+    struct Udma_RingObj ringObj;
+    Udma_RingHandle     ringHandle;
+    uint32_t            ringRdIdx;
+
+    ringMemSize = elemCnt * sizeof (uint64_t);
+    ringMem     = Utils_memAlloc(heapId, ringMemSize, UDMA_CACHELINE_ALIGNMENT);
+    if(NULL == ringMem)
+    {
+        retVal = UDMA_EALLOC;
+        GT_0trace(taskObj->traceMask, GT_ERR, " Ring memory allocation failure\r\n");
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        ringHandle = &ringObj;
+        ringMode   = TISCI_MSG_VALUE_RM_RING_MODE_RING;
+        drvHandle  = &taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0];
+
+        UdmaRingPrms_init(&ringPrms);
+        ringPrms.ringMem     = ringMem;
+        ringPrms.ringMemSize = ringMemSize;
+        ringPrms.mode        = ringMode;
+        ringPrms.elemCnt     = elemCnt;
+
+        /* Allocate a free ring */
+        retVal = Udma_ringAlloc(drvHandle, ringHandle, UDMA_RING_ANY, &ringPrms);
+        if(UDMA_SOK == retVal)
+        {
+            /* Test scenario 1: Check to get RdIdx value of ring */
+            ringRdIdx = Udma_ringGetRdIdxNormal(ringHandle);
+            if(0U == ringRdIdx)
+            {
+                retVal = UDMA_SOK;
+            }
+            else
+            {
+                GT_0trace(taskObj->traceMask, GT_ERR,
+                          " |TEST INFO|::FAIL:: UDMA:: Udma_ringGetRdIdxNormal :: pos::"
+                          " Check to get RdIdx value of ring!!\n");
+                retVal = UDMA_EFAIL;
+            }
+        }
+        Udma_ringFree(ringHandle);
+    }
+
+    return retVal;
+}
+
+/*
+ * Test Case Description: Verifies Udma_ringGetRdIdx
+ * 1)Test scenario 1: Check to get RdIdx value of ring.
+ */
+int32_t UdmaTestRingGetRdIdx(UdmaTestTaskObj *taskObj)
+{
+    int32_t             retVal  = UDMA_SOK;
+    uint32_t            elemCnt = 50U;
+    uint32_t            heapId  = UTILS_MEM_HEAP_ID_MSMC;
+    void               *ringMem = NULL;
+    uint32_t            ringMode, ringMemSize;
+    Udma_DrvHandle      drvHandle;
+    Udma_RingPrms       ringPrms;
+    struct Udma_RingObj ringObj;
+    Udma_RingHandle     ringHandle;
+    uint32_t            ringRdIdx;
+
+    ringMemSize = elemCnt * sizeof (uint64_t);
+    ringMem = Utils_memAlloc(heapId, ringMemSize, UDMA_CACHELINE_ALIGNMENT);
+    if(NULL == ringMem)
+    {
+        retVal = UDMA_EALLOC;
+        GT_0trace(taskObj->traceMask, GT_ERR, " Ring memory allocation failure\r\n");
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        ringHandle = &ringObj;
+        ringMode   = TISCI_MSG_VALUE_RM_RING_MODE_RING;
+        drvHandle  = &taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0];
+
+        UdmaRingPrms_init(&ringPrms);
+        ringPrms.ringMem     = ringMem;
+        ringPrms.ringMemSize = ringMemSize;
+        ringPrms.mode        = ringMode;
+        ringPrms.elemCnt     = elemCnt;
+
+        /* Allocate a free ring */
+        retVal = Udma_ringAlloc(drvHandle, ringHandle, UDMA_RING_ANY, &ringPrms);
+        if(UDMA_SOK == retVal)
+        {
+            ringRdIdx = Udma_ringGetRdIdx(ringHandle);
+            if(0U == ringRdIdx)
+            {
+                retVal = UDMA_SOK;
+            }
+            else
+            {
+                GT_0trace(taskObj->traceMask, GT_ERR,
+                          " |TEST INFO|::FAIL:: UDMA:: Udma_ringGetRdIdx :: pos::"
+                          " Check to get RdIdx value of ring!!\n");
+            }
+        }
+        Udma_ringFree(ringHandle);
+    }
+
+    return retVal;
+}
+

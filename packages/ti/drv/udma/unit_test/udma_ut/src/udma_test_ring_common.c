@@ -582,6 +582,7 @@ int32_t UdmaTestRingQueueRawNeg(UdmaTestTaskObj *taskObj)
  * 2)Test scenario 2: Check when ringInitDone is UDMA_DEINIT_DONE.
  * 3)Test scenario 3: Check when driverHandle is NULL.
  * 4)Test scenario 4: Check when drvInitDone is UDMA_DEINIT_DONE.
+ * 5)Test scenario 5: Check when mappedRingGrp is not UDMA_MAPPED_GROUP_INVALID.
  */
 int32_t UdmaTestRingFreeNeg(UdmaTestTaskObj *taskObj)
 {
@@ -668,6 +669,25 @@ int32_t UdmaTestRingFreeNeg(UdmaTestTaskObj *taskObj)
         ringHandle->drvHandle->drvInitDone = UDMA_INIT_DONE;
     }
 
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 5: Check when mappedRingGrp is not UDMA_MAPPED_GROUP_INVALID */
+        instId                    = UDMA_TEST_INST_ID_MAIN_0;
+        ringHandle->drvHandle     = &taskObj->testObj->drvObj[instId];
+        ringHandle->mappedRingGrp = UDMA_UTC_ID_INVALID;
+        retVal                    = Udma_ringFree(ringHandle);
+        if(UDMA_SOK == retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: ringFree :: Neg::"
+                      " Check when mappedRingGrp is not UDMA_MAPPED_GROUP_INVALID!!\n");
+        }
+    }
+
     return retVal;
 }
 
@@ -684,6 +704,8 @@ int32_t UdmaTestRingFreeNeg(UdmaTestTaskObj *taskObj)
  * 9)Test scenario 9: Check to get ringNum as UDMA_RING_INVALID from Udma_rmAllocFreeRing.
  * 10)Test scenario 10: To get error print message [Error] Out of range
  *                      ring index.
+ * 11)Test scenario 11: To get error print message [Error] Ring config failed!.
+ * 12)Test scenario 12: Check when mappedRingGrp is not UDMA_MAPPED_GROUP_INVALID.
  */
 int32_t udmaTestRingAllocNeg(UdmaTestTaskObj *taskObj)
 {
@@ -699,6 +721,7 @@ int32_t udmaTestRingAllocNeg(UdmaTestTaskObj *taskObj)
     uint32_t            backUpDrvInitDone;
     uint32_t            ringMemSize;
     uint32_t            instId;
+    struct Udma_DrvObj  backUpDrvObj;
 
     GT_1trace(taskObj->traceMask, GT_INFO1,
               " |TEST INFO|:: Task:%d: Udma ringAlloc Testcase ::\r\n",
@@ -908,6 +931,53 @@ int32_t udmaTestRingAllocNeg(UdmaTestTaskObj *taskObj)
                       " To get error print message [Error] Out of range ring index!!\n");
             retVal = UDMA_EFAIL;
         }
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 11: To get error print message [Error] Ring config failed! */
+        instId              = UDMA_TEST_INST_ID_MAIN_0;
+        backUpDrvObj        = taskObj->testObj->drvObj[instId];
+        drvHandle           = &taskObj->testObj->drvObj[instId];
+        ringNum             = UDMA_RING_ANY;
+        ringHandle->ringNum = UDMA_RING_INVALID;
+        ringPrmsinit.virtId = UDMA_RING_VIRTID_INVALID - 1U;
+        retVal              = Udma_ringAlloc(drvHandle, ringHandle, ringNum, &ringPrmsinit);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: ringAlloc :: Neg::"
+                      " To get error print message [Error] Ring config failed!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        taskObj->testObj->drvObj[instId] = backUpDrvObj;
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 12: Check when mappedRingGrp is not UDMA_MAPPED_GROUP_INVALID */
+        instId                     = UDMA_TEST_INST_ID_MAIN_0;
+        backUpDrvObj               = taskObj->testObj->drvObj[instId];
+        drvHandle                  = &taskObj->testObj->drvObj[instId];
+        ringNum                    = UDMA_RING_ANY;
+        ringPrmsinit.mappedRingGrp = UDMA_UTC_ID_INVALID;
+        retVal                     = Udma_ringAlloc(drvHandle, ringHandle, ringNum, &ringPrmsinit);
+        if(UDMA_SOK != retVal)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: ringFree :: Neg::"
+                      " Check when mappedRingGrp is not UDMA_MAPPED_GROUP_INVALID!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        taskObj->testObj->drvObj[instId] = backUpDrvObj;
     }
 
     return retVal;
@@ -1127,6 +1197,41 @@ int32_t UdmaTestRingProxyDequeueRawNeg(UdmaTestTaskObj *taskObj)
         GT_0trace(taskObj->traceMask, GT_ERR,
                   " |TEST INFO|:: FAIL:: UDMA:: ringProxyDequeueRaw:: Neg::"
                   " Check when instType is not UDMA_INST_TYPE_NORMAL!!\n");
+        retVal = UDMA_EFAIL;
+    }
+
+    return retVal;
+}
+
+/*
+ * Test Case Description: Verifies the function Udma_ringCheckParams when
+ * 1) Test scenario 1: Check to get [Error] Ring orderId out of range (%u)!!
+ */
+int32_t UdmaTestRingCheckParamsNeg(UdmaTestTaskObj *taskObj)
+{
+    int32_t         retVal = UDMA_SOK;
+    Udma_DrvHandle  drvHandle;
+    Udma_RingPrms   ringPrms;
+
+    GT_1trace(taskObj->traceMask, GT_INFO1,
+              " |TEST INFO|:: Task:%d: UDMA ringCheckParams negative Testcase ::\r\n",
+              taskObj->taskId);
+
+    /* Test scenario 1: Check to get [Error] Ring orderId out of range (%u)!! */
+
+    drvHandle        = &taskObj->testObj->drvObj[UDMA_TEST_INST_ID_BCDMA_0];
+    ringPrms.mode    = TISCI_MSG_VALUE_RM_RING_MODE_MESSAGE;
+    ringPrms.orderId = UDMA_RING_ORDERID_MAX + 1U;
+    retVal           = Udma_ringCheckParams(drvHandle, &ringPrms);
+    if(UDMA_SOK != retVal)
+    {
+        retVal = UDMA_SOK;
+    }
+    else
+    {
+        GT_0trace(taskObj->traceMask, GT_ERR,
+                  " |TEST INFO|:: FAIL:: UDMA:: ringCheckParams:: Neg::"
+                  " Check to get [Error] Ring orderId out of range (%u)!!\n");
         retVal = UDMA_EFAIL;
     }
 

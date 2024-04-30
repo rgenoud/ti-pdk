@@ -819,6 +819,47 @@ static void udmaTestRingMonEventCb(Udma_EventHandle eventHandle,
 }
 
 /*
+ * Test Case Description: Verifies the function Udma_ringMonAlloc
+ * 1) Test scenario 1: Check when ringMonNum is less maxRingMon.
+ */
+int32_t UdmaTestRingMonAlloc(UdmaTestTaskObj *taskObj)
+{
+    int32_t                retVal = UDMA_SOK;
+    uint32_t               ringMonNum, instId;
+    struct Udma_RingMonObj ringMonObj;
+    Udma_DrvHandle         drvHandle;
+    Udma_RingMonHandle     monHandle;
+    uint32_t               BackupMaxRingMon;
+
+    GT_1trace(taskObj->traceMask, GT_INFO1,
+              " |TEST INFO|:: Task:%d: UDMA ringMonAlloc Testcase ::\r\n",
+              taskObj->taskId);
+
+    /* Test scenario 1: Check when ringMonNum is less maxRingMon */
+    monHandle             = &ringMonObj;
+    instId                = UDMA_TEST_INST_ID_MAIN_0;
+    drvHandle             = &taskObj->testObj->drvObj[instId];
+    BackupMaxRingMon      = drvHandle->maxRingMon;
+    ringMonNum            = UDMA_RING_MON_INVALID;
+    drvHandle->maxRingMon = ringMonNum + 1U;
+    retVal                = Udma_ringMonAlloc(drvHandle, monHandle, ringMonNum);
+    if(UDMA_SOK == retVal)
+    {
+        retVal = UDMA_SOK;
+    }
+    else
+    {
+        GT_0trace(taskObj->traceMask, GT_ERR,
+                  " |TEST INFO|:: FAIL:: UDMA:: RingMonAlloc:: Neg::"
+                  " Check when ringMonNum is less maxRingMon!!\n");
+        retVal = UDMA_EFAIL;
+    }
+    drvHandle->maxRingMon = BackupMaxRingMon;
+
+    return retVal;
+}
+
+/*
  * Test Case Description: Verifies the function Udma_ringMonGetNum
  * 1) Test scenario 1: Check when ringMonInitDone is UDMA_INIT_DONE.
  */
