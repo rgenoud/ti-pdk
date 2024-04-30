@@ -52,13 +52,26 @@
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-/* None */
+#define APP_TSK_STACK_MAIN                  (32U * 1024U)
+#define APP_SCISERVER_INIT_TSK_STACK        (32U * 1024U)
+
+#define SCISERVER_INIT_TASK_PRI             (4)
+#define SCISERVER_SETUP_TASK_PRI_HIGH       (3)
+#define SCISERVER_SETUP_TASK_PRI_LOW        (2)
 
 /* ========================================================================== */
 /*                            Global Variables                                */
 /* ========================================================================== */
 
-/* None */
+/* Test application stack */
+/* For SafeRTOS on R5F with FFI Support, task stack should be aligned to the stack size */
+#if defined(SAFERTOS)
+static uint8_t  gAppTskStackMain[APP_TSK_STACK_MAIN]
+__attribute__ ((aligned(APP_TSK_STACK_MAIN)));
+#else
+static uint8_t  gAppTskStackMain[APP_TSK_STACK_MAIN]
+__attribute__ ((aligned(8192)));
+#endif
 
 /* ========================================================================== */
 /*                            Structure Declarations                          */
@@ -76,8 +89,7 @@
 /*                            Internal Function Declarations                  */
 /* ========================================================================== */
 
-/* None */
-
+static void taskFxn(void* a0, void* a1);
 
 /* ========================================================================== */
 /*                            Function Definitions                            */
@@ -85,13 +97,40 @@
 
 int main(void)
 {
+    TaskP_Handle task;
+    TaskP_Params taskParams;
+
+    /*  This should be called before any other OS calls (like Task creation, OS_start, etc..) */
+    OS_init();
+
+    /* Initialize the task params */
+    TaskP_Params_init(&taskParams);
+    /* Set the task priority higher than the default priority (1) */
+    taskParams.priority     = SCISERVER_INIT_TASK_PRI;
+    taskParams.stack        = gAppTskStackMain;
+    taskParams.stacksize    = sizeof (gAppTskStackMain);
+
+    task = TaskP_create(&taskFxn, &taskParams);
+    if(NULL == task)
+    {
+        OS_stop();
+    }
+    OS_start();    /* does not return */
+
+    return(0);
+}
+
+/* ========================================================================== */
+/*                 Internal Function Definitions                              */
+/* ========================================================================== */
+
+static void taskFxn(void* a0, void* a1)
+{
     int32_t ret                = CSL_PASS;
-    char    *versionStr        = NULL;
-    char    *rmpmhalVersionStr = NULL;
     Sciclient_ConfigPrms_t clientPrms;
     Sciserver_TirtosCfgPrms_t appPrms;
-
-    OS_init();
+    char    *versionStr        = NULL;
+    char    *rmpmhalVersionStr = NULL;
 
     /* Sciclient needs to be initialized before Sciserver. Sciserver depends on
      * Sciclient API to execute message forwarding */
@@ -109,9 +148,17 @@ int main(void)
         ret = Sciclient_init(&clientPrms);
     }
 
+    /* Enable UART console print*/
+    if (ret == CSL_PASS)
+    {
+        SciApp_consoleInit();
+    }
+
     if (ret == CSL_PASS)
     {
         ret = Sciserver_tirtosInitPrms_Init(&appPrms);
+        appPrms.taskPriority[SCISERVER_TASK_USER_LO] = SCISERVER_SETUP_TASK_PRI_LOW;
+        appPrms.taskPriority[SCISERVER_TASK_USER_HI] = SCISERVER_SETUP_TASK_PRI_HIGH;        
     }
 
     if (ret == CSL_PASS)
@@ -119,41 +166,29 @@ int main(void)
         ret = Sciserver_tirtosInit(&appPrms);
     }
 
-    /* Enable UART console print*/
     if (ret == CSL_PASS)
     {
-        SciApp_consoleInit();
+        versionStr = Sciserver_getVersionStr();
+        rmpmhalVersionStr = Sciserver_getRmPmHalVersionStr();
+        SciApp_printf("Sciserver Testapp Built On: %s %s\n", __DATE__, __TIME__);
+        SciApp_printf("Sciserver Version: %s\n", versionStr);
+        SciApp_printf("RM_PM_HAL Version: %s\n", rmpmhalVersionStr);
     }
 
-    versionStr = Sciserver_getVersionStr();
-    rmpmhalVersionStr = Sciserver_getRmPmHalVersionStr();
-
-    SciApp_printf("Sciserver Testapp Built On: %s %s\n", __DATE__, __TIME__);
-    SciApp_printf("Sciserver Version: %s\n", versionStr);
-    SciApp_printf("RM_PM_HAL Version: %s\n", rmpmhalVersionStr);
-    
     #if defined LDRA_DYN_COVERAGE_EXIT
     UART_printf("\n LDRA Entry... \n");
     upload_execution_history();
     UART_printf("\n LDRA Exit... \n");
     #endif
-    
+
     if (ret == CSL_PASS)
     {
         SciApp_printf("Starting Sciserver..... PASSED\n");
-        OS_start();
     }
     else
     {
         SciApp_printf("Starting Sciserver..... FAILED\n");
     }
-
-    return ret;
 }
 
-/* ========================================================================== */
-/*                 Internal Function Definitions                              */
-/* ========================================================================== */
-
-/* None */
 
