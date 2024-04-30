@@ -62,7 +62,7 @@
 
 #include <stdint.h>
 
-#include <ti/csl/csl_dru.h>
+#include <ti/drv/udma/src/dru/csl_dru.h>
 
 #include <ti/drv/udma/dmautils/udma_standalone/include/udma_types.h>
 #include <ti/drv/udma/dmautils/udma_standalone/include/udma_ch.h>

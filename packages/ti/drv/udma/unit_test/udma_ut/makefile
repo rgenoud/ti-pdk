@@ -41,7 +41,6 @@ endif
 # List all the specific components required by the application
 COMP_LIST_COMMON += udma_apputils
 
-XDC_CFG_UPDATE_$(CORE) = udma_ut.cfg
 
 # Common source files and CFLAGS across all platforms and cores
 PACKAGE_SRCS_COMMON = . ./src ../udma_ut_component.mk

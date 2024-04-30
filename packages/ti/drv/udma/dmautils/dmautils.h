@@ -50,7 +50,6 @@
 #include <stdint.h>
 
 #include "ti/csl/cslr.h"
-#include "ti/csl/src/ip/udmap/V0/csl_udmap_tr.h"
 #include <ti/drv/udma/dmautils/include/dmautils_autoincrement_3d.h>
 
 

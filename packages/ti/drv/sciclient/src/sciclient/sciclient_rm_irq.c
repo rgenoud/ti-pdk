@@ -48,7 +48,7 @@
 #include <ti/drv/sciclient/src/sciclient/sciclient_rm_priv.h>
 
 #include <ti/csl/soc.h>
-#include <ti/csl/csl_intaggr.h>
+#include <ti/drv/udma/src/intaggr/csl_intaggr.h>
 #include <ti/csl/csl_intr_router.h>
 
 #ifdef QNX_OS

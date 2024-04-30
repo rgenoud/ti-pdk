@@ -1,20 +1,5 @@
-#ifndef UDMAVER_H
-#define UDMAVER_H
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-/* ============================================================= */
-/**
- *   @file  udmaver.h
- *
- *   path  ti/drv/udma/udmaver.h
- *
- *   @brief  UDMA Driver Version Definitions
- *
- *  ============================================================
- *  Copyright (c) Texas Instruments Incorporated 2019
+/*
+ *  Copyright (C) 2024 Texas Instruments Incorporated.
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -45,24 +30,9 @@ extern "C" {
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
 */
+#ifndef CSLR_LCDMA_RINGACC_TOP_H_
+#define CSLR_LCDMA_RINGACC_TOP_H_
 
-/**
- * @brief   This is the UDMA Driver Version. Versions numbers are encoded in the following
- * format:
- *  0xAABBCCDD -> Arch (AA); API Changes (BB); Major (CC); Minor (DD)
- */
-#define UDMA_DRV_VERSION_ID                     (0x01000004)
+#include <ti/drv/udma/src/lcdma_ringacc/V0/cslr_lcdma_ringacc.h>
 
-/**
- * @brief   This is the version string which describes the UDMA driver along with the
- * date and build information.
- */
-#define UDMA_DRV_VERSION_STR                    "UDMA Driver Revision: 01.00.00.03"
-
-
-#ifdef __cplusplus
-}
 #endif
-
-
-#endif  /* UDMAVER_H */

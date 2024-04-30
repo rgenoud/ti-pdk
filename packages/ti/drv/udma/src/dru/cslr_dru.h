@@ -1,52 +1,5 @@
-%%{
-/*!
- *  This template implements the udmaver.h
- */
-  /* Versioning */
-  var ver = this;
-  var ver1 = [00,00,00,00];
-  var ver2 = [00,00,00,00];
-
-  for each(i=0;i<ver.length;i++)
-  {
-      if(String(ver[i]).length < 2)
-      {
-        ver1[i]="0"+ver[i];
-      }
-      else
-      {
-        ver1[i] = ver[i];
-      }
-
-      ver2[i] = Number(ver[i]).toString(16).toUpperCase();
-
-      if(String(ver2[i]).length < 2)
-      {
-        ver2[i]="0"+ver2[i];
-      }
-  }
-
-  var versionStr = "\""+"UDMA Driver Revision: "+ver1[0]+"."+ver1[1]+"."+ver1[2]+"."+ver1[3]+"\"";
-  var versionID = "(0x"+ver2[0]+ver2[1]+ver2[2]+ver2[3]+")";
-
-%%}
-#ifndef UDMAVER_H
-#define UDMAVER_H
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-/* ============================================================= */
-/**
- *   @file  udmaver.h
- *
- *   path  ti/drv/udma/udmaver.h
- *
- *   @brief  UDMA Driver Version Definitions
- *
- *  ============================================================
- *  Copyright (c) Texas Instruments Incorporated 2019
+/*
+ *  Copyright (c) Texas Instruments Incorporated 2024
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -76,25 +29,17 @@ extern "C" {
  *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
-*/
-
-/**
- * @brief   This is the UDMA Driver Version. Versions numbers are encoded in the following
- * format:
- *  0xAABBCCDD -> Arch (AA); API Changes (BB); Major (CC); Minor (DD)
  */
-#define UDMA_DRV_VERSION_ID                     `versionID`
+#ifndef CSLR_DRU_TOP_H_
+#define CSLR_DRU_TOP_H_
 
-/**
- * @brief   This is the version string which describes the UDMA driver along with the
- * date and build information.
- */
-#define UDMA_DRV_VERSION_STR                    `versionStr`
+#include <ti/csl/cslr.h>
+#include <ti/csl/tistdtypes.h>
 
-
-#ifdef __cplusplus
-}
+#if defined (SOC_J721E)
+#include <ti/drv/udma/src/dru/V0/V0_1/cslr_dru.h>
+#elif defined(SOC_J721S2) || defined (SOC_J784S4)
+#include <ti/drv/udma/src/dru/V0/V0_2/cslr_dru.h>
 #endif
 
-
-#endif  /* UDMAVER_H */
+#endif

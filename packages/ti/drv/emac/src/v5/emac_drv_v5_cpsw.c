@@ -44,7 +44,7 @@
  **************************************************************************/
 /* CSL Headers */
 #include <ti/csl/soc.h>
-#include <ti/csl/csl_udmap.h>
+#include <ti/drv/udma/src/udmap/csl_udmap.h>
 
 #include <ti/csl/cslr_mdio.h>
 #include <ti/csl/cslr_ale.h>

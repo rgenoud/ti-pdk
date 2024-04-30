@@ -16,12 +16,6 @@ INCDIR =
 #  need to be included for this component
 INCLUDE_EXTERNAL_INTERFACES = pdk
 
-ifeq ($(BUILD_OS_TYPE), tirtos)
-  # List all the components required by the application
-  COMP_LIST_COMMON = $(PDK_COMMON_TIRTOS_COMP) 
-  INCLUDE_EXTERNAL_INTERFACES += xdc bios
-  XDC_CFG_FILE_$(CORE) = $(PDK_INSTALL_PATH)/ti/build/$(SOC)/sysbios_$(ISA).cfg
-endif
 ifeq ($(BUILD_OS_TYPE), freertos)
   COMP_LIST_COMMON = $(PDK_COMMON_FREERTOS_COMP)
   INCLUDE_EXTERNAL_INTERFACES += freertos

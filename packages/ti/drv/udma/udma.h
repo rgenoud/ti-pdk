@@ -70,28 +70,28 @@
 #include <ti/csl/soc.h>
 #include <ti/csl/csl_psilcfg.h>
 #if (UDMA_SOC_CFG_RA_NORMAL_PRESENT == 1)
-#include <ti/csl/csl_ringacc.h>
+#include <ti/drv/udma/src/ringacc/csl_ringacc.h>
 #endif 
 #if (UDMA_SOC_CFG_RA_LCDMA_PRESENT == 1)
-#include <ti/csl/csl_lcdma_ringacc.h>
+#include <ti/drv/udma/src/lcdma_ringacc/csl_lcdma_ringacc.h>
 #endif
 #if (UDMA_SOC_CFG_UDMAP_PRESENT == 1)
-#include <ti/csl/csl_udmap.h>
+#include <ti/drv/udma/src/udmap/csl_udmap.h>
 #endif
 #if (UDMA_SOC_CFG_BCDMA_PRESENT == 1)
-#include <ti/csl/csl_bcdma.h>
+#include <ti/drv/udma/src/bcdma/csl_bcdma.h>
 #if (UDMA_SOC_CFG_PKTDMA_PRESENT == 1)
-#include <ti/csl/csl_pktdma.h>
-#include <ti/csl/src/ip/udmap/V0/csl_udmap_cppi5.h>
+#include <ti/drv/udma/csl_pktdma.h>
+#include <ti/drv/udma/src/ip/udmap/V0/csl_udmap_cppi5.h>
 #endif
 #endif
-#include <ti/csl/csl_intaggr.h>
+#include <ti/drv/udma/src/intaggr/csl_intaggr.h>
 #include <ti/csl/csl_intr_router.h>
 #if (UDMA_NUM_UTC_INSTANCE > 0)
-#include <ti/csl/csl_dru.h>
+#include <ti/drv/udma/src/dru/csl_dru.h>
 #endif
 #if (UDMA_SOC_CFG_PROXY_PRESENT == 1)
-#include <ti/csl/csl_proxy.h>
+#include <ti/drv/udma/src/proxy/csl_proxy.h>
 #endif
 #if (UDMA_SOC_CFG_CLEC_PRESENT == 1)
 #include <ti/csl/csl_clec.h>

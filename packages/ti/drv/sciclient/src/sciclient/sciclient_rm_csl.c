@@ -47,9 +47,9 @@
 
 #include <ti/csl/soc.h>
 #include <ti/csl/csl_psilcfg.h>
-#include <ti/csl/csl_ringacc.h>
-#include <ti/csl/csl_udmap.h>
-#include <ti/csl/csl_intaggr.h>
+#include <ti/drv/udma/src/ringacc/csl_ringacc.h>
+#include <ti/drv/udma/src/udmap/csl_udmap.h>
+#include <ti/drv/udma/src/intaggr/csl_intaggr.h>
 #include <ti/csl/csl_intr_router.h>
 
 /* ========================================================================== */

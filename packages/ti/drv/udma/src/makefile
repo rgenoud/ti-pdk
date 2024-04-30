@@ -17,7 +17,7 @@ INCDIR =
 # need to be included for this component
 INCLUDE_EXTERNAL_INTERFACES = pdk
 
-PACKAGE_SRCS_COMMON = udma.h udma_component.mk makefile .gitignore docs $(SRCDIR)
+PACKAGE_SRCS_COMMON = udma.h src/udma_priv.h udma_component.mk makefile src/makefile .gitignore docs soc/$(SOC) 
 PACKAGE_SRCS_COMMON += include/udma_cfg.h
 PACKAGE_SRCS_COMMON += include/udma_ch.h
 PACKAGE_SRCS_COMMON += include/udma_event.h
@@ -29,8 +29,6 @@ PACKAGE_SRCS_COMMON += include/udma_rm.h
 PACKAGE_SRCS_COMMON += include/udma_types.h
 PACKAGE_SRCS_COMMON += include/udma_utils.h
 PACKAGE_SRCS_COMMON += soc/udma_soc.h
-PACKAGE_SRCS_COMMON += config_mk.bld package.bld package.xdc package.xs
-PACKAGE_SRCS_COMMON += Settings.xdc.xdt udmaver.h udmaver.h.xdt
 
 # Common source files and CFLAGS across all platforms and cores
 SRCS_COMMON += udma.c
@@ -39,19 +37,34 @@ SRCS_COMMON += udma_ch.c
 SRCS_COMMON += udma_ring_common.c udma_proxy.c udma_flow.c udma_event.c
 SRCS_COMMON += udma_osal.c udma_utils.c
 SRCS_COMMON += udma_soc.c
-#DRU is not present in all SOC
-ifeq ($(SOC),$(filter $(SOC), am65xx j721e j721s2 j784s4))
-SRCS_COMMON += udma_dru.c
-PACKAGE_SRCS_COMMON += include/udma_dru.h
-endif
-#Normal RA is not present in all SOC
-ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200 j721s2 j784s4))
 SRCS_COMMON += udma_ring_normal.c
+PACKAGE_SRCS_COMMON += src/udma.c
+PACKAGE_SRCS_COMMON += src/udma_rm.c udma_rmcfg.c
+PACKAGE_SRCS_COMMON += src/udma_ch.c
+PACKAGE_SRCS_COMMON += src/udma_ring_common.c src/udma_proxy.c src/udma_flow.c src/udma_event.c
+PACKAGE_SRCS_COMMON += src/udma_osal.c src/udma_utils.c
+PACKAGE_SRCS_COMMON += udma_soc.c
+PACKAGE_SRCS_COMMON += src/udma_ring_normal.c
+
+#DRU is not present in all SOC
+ifeq ($(SOC),$(filter $(SOC), j721e j721s2 j784s4))
+SRCS_COMMON += udma_dru.c
+PACKAGE_SRCS_COMMON += src/udma_dru.c 
+PACKAGE_SRCS_COMMON += include/udma_dru.h
+include $(PDK_INSTALL_PATH)/ti/drv/udma/src/dru/makefile
 endif
-#LCDMA RA is not present in all SOC
-ifeq ($(SOC),$(filter $(SOC), am64x j721s2 j784s4))
-SRCS_COMMON += udma_ring_lcdma.c
+
+ifeq ($(SOC),$(filter $(SOC), j721s2 j784s4))
+include $(PDK_INSTALL_PATH)/ti/drv/udma/src/bcdma/makefile
+include $(PDK_INSTALL_PATH)/ti/drv/udma/src/lcdma_ringacc/makefile
+SRCS_COMMON += udma_ring_lcdma.c 
+PACKAGE_SRCS_COMMON += src/udma_ring_lcdma.c 
 endif
+
+include $(PDK_INSTALL_PATH)/ti/drv/udma/src/ringacc/makefile
+include $(PDK_INSTALL_PATH)/ti/drv/udma/src/udmap/makefile
+include $(PDK_INSTALL_PATH)/ti/drv/udma/src/proxy/makefile
+include $(PDK_INSTALL_PATH)/ti/drv/udma/src/intaggr/makefile
 
 CFLAGS_LOCAL_COMMON = $(PDK_CFLAGS) $(UDMA_CFLAGS)
 
