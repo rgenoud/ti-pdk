@@ -610,8 +610,13 @@ int32_t IpcApp_echoExtTest(void)
       Virtio_enableCallback(vq);
       
       Virtio_disableCallback (vq);
-
-      /* Test rpmessage deinitialization */
+      
+      RPMessage_deInit();
+      
+      Ipc_lateVirtioCreate(IPC_MCU1_0);
+     
+      RPMessage_lateInit(IPC_MCU1_0);
+     
       RPMessage_deInit();
 
       Ipc_deinit();
