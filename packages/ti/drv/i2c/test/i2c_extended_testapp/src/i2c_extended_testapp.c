@@ -187,6 +187,13 @@ int I2C_test()
             break;
         }
     }
+
+    #if defined LDRA_DYN_COVERAGE_EXIT
+    I2C_log("\n LDRA ENTRY \n");
+    upload_execution_history();
+    I2C_log("\n LDRA EXIT \n");
+    #endif
+
     if(BTRUE == testResult)
     {
         UART_printf("\n All tests have passed. \n");
@@ -195,12 +202,6 @@ int I2C_test()
     {
         UART_printf("\n Some tests have failed. \n");
     }
-
-#if defined LDRA_DYN_COVERAGE_EXIT
-    UART_printf("\n LDRA ENTRY \n");
-    upload_execution_history();
-    UART_printf("\n LDRA EXIT \n");
-#endif
 
     return 0;
 }
