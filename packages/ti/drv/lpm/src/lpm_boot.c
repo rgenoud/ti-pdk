@@ -668,10 +668,10 @@ int32_t Lpm_bootApp()
 #endif
     uint64_t       time_boot_core_finish[DSP2_C7X_ID];
 
-#    if defined(PROFILE_OSPI_READS_ENABLED)
+#if defined(PROFILE_OSPI_READS_ENABLED)
     uint64_t stage_memcpy_time[NUM_BOOT_STAGES];
     uint64_t stage_memcpy_size[NUM_BOOT_STAGES];
-#    endif
+#endif
 
     time_boot_app_start = TimerP_getTimeInUsecs();
 
@@ -685,13 +685,13 @@ int32_t Lpm_bootApp()
     for (j = 0; j < NUM_BOOT_STAGES; j++)
     {
 #if defined(GATHER_STAGE_DETAILS)
-        time_request_all_cores_start[j] = get_usec_timestamp();
+        time_request_all_cores_start[j] = TimerP_getTimeInUsecs();
 #endif
 
         retVal = Lpm_requestStageCores(j);
 
 #if defined(GATHER_STAGE_DETAILS)
-        time_request_all_cores_end[j] = get_usec_timestamp();
+        time_request_all_cores_end[j] = TimerP_getTimeInUsecs();
 #endif
 
         if (retVal != CSL_PASS)
@@ -709,7 +709,7 @@ int32_t Lpm_bootApp()
                    "Loading BootImage\n");
 #endif
 #if defined(GATHER_STAGE_DETAILS)
-            time_boot_image_late_start[j] = get_usec_timestamp();
+            time_boot_image_late_start[j] = TimerP_getTimeInUsecs();
 #endif
 
 #    if defined(PROFILE_OSPI_READS_ENABLED)
@@ -728,7 +728,7 @@ int32_t Lpm_bootApp()
             stage_memcpy_size[j] = total_memcpy_size;
 #    endif
 #if defined(GATHER_STAGE_DETAILS)
-            time_boot_image_late_end[j] = get_usec_timestamp();
+            time_boot_image_late_end[j] = TimerP_getTimeInUsecs();
 #endif
 #if defined(UART_PRINT_DEBUG)
             AppUtils_Printf(MSG_NORMAL,
@@ -780,14 +780,14 @@ int32_t Lpm_bootApp()
                 }
             }
 #if defined(GATHER_STAGE_DETAILS)
-            time_boot_stage_finish[j] = get_usec_timestamp();
+            time_boot_stage_finish[j] = TimerP_getTimeInUsecs();
 #endif
         } /* if (retVal == CSL_PASS) */        
         if(j == NUM_BOOT_STAGES-1)
         {
             AppUtils_Printf(MSG_NORMAL,
-                        "Sleeping for 30 seconds after each stage\n");
-            TaskP_sleep(30*1000);
+                        "Sleeping for 20 seconds after the last stage\n");
+            TaskP_sleep(20*1000);
         }
         else
         {
@@ -811,16 +811,16 @@ int32_t Lpm_bootApp()
         {
             AppUtils_Printf(MSG_NORMAL,
                             "Boot App: Stage %d - Started requesting all cores at %d usec\n",
-                            j, (uint32)time_request_all_cores_start[j]);
+                            j, (uint32_t)time_request_all_cores_start[j]);
             AppUtils_Printf(MSG_NORMAL,
                             "Boot App: Stage %d - Completed requesting all cores at %d usec\n",
-                            j, (uint32)time_request_all_cores_end[j]);
+                            j, (uint32_t)time_request_all_cores_end[j]);
             AppUtils_Printf(MSG_NORMAL,
                             "Boot App: Stage %d - Started copying and image parsing at %d usec\n",
-                            j, (uint32)time_boot_image_late_start[j]);
+                            j, (uint32_t)time_boot_image_late_start[j]);
             AppUtils_Printf(MSG_NORMAL,
                             "Boot App: Stage %d - Completed copying and image parsing at %d usec\n",
-                            j, (uint32)time_boot_image_late_end[j]);
+                            j, (uint32_t)time_boot_image_late_end[j]);
 #    if defined(PROFILE_OSPI_READS_ENABLED)
             AppUtils_Printf(MSG_NORMAL,
                             "Boot App: Stage %d - stage_memcpy_time = %ju, stage_memcpy_size = %ju\n",
@@ -829,7 +829,7 @@ int32_t Lpm_bootApp()
             AppUtils_Printf(MSG_NORMAL,
                             "Boot App: Stage %d finished at %d usecs\n",
                             j,
-                            (uint32)time_boot_stage_finish[j]);
+                            (uint32_t)time_boot_stage_finish[j]);
         }
 #endif
         AppUtils_Printf(MSG_NORMAL,

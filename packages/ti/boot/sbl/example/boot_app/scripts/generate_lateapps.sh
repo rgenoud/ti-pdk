@@ -274,6 +274,7 @@ generate_lateapps()
         for BOARD_NAME in ${BOARD_LIST}
         do
             # Generate output arguments for Stage 1 appimage
+            output_args1=()
             core_ids_list=core_ids_stage1_${BOARD_NAME}[@]
             core_ids_list=(${!core_ids_list})
             rprc_file_list=rprc_file_list_stage1_${BOARD_NAME}[@]
@@ -285,6 +286,7 @@ generate_lateapps()
             done
 
             # Generate output arguments for Stage 2 appimage
+            output_args2=()
             core_ids_list=core_ids_stage2_${BOARD_NAME}[@]
             core_ids_list=(${!core_ids_list})
             rprc_file_list=rprc_file_list_stage2_${BOARD_NAME}[@]
@@ -298,6 +300,7 @@ generate_lateapps()
             if [ ${BOARD_NAME} != "j7200_evm" ]
             then
                 # Generate output arguments for Stage 3 appimage
+                output_args3=()
                 core_ids_list=core_ids_stage3_${BOARD_NAME}[@]
                 core_ids_list=(${!core_ids_list})
                 rprc_file_list=rprc_file_list_stage3_${BOARD_NAME}[@]

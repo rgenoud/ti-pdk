@@ -143,9 +143,11 @@ int main(void)
 
 static void MainApp_TaskFxn(void* a0, void* a1)
 {
+#if defined(UART_PRINT_DEBUG)
     uint64_t timeIPCStart, timeIPCFinish;
     uint64_t timeBootAppStart, timeBootAppFinish;
     uint64_t timeMcuOnlyAppStart, timeMcuOnlyAppFinish;
+#endif
     uint32_t i, numBoots=5;
     int32_t ret = CSL_PASS;
 
@@ -167,37 +169,52 @@ static void MainApp_TaskFxn(void* a0, void* a1)
 
     for(i=0; i<numBoots; i++)
     {
+#if defined(UART_PRINT_DEBUG)
+        AppUtils_Printf(MSG_NORMAL, "\nLoop %d starts!\n",i);
         timeIPCStart = TimerP_getTimeInUsecs();
-        Lpm_ipcEchoApp();
-        timeIPCFinish = TimerP_getTimeInUsecs();
+#endif
 
+        Lpm_ipcEchoApp();
+
+#if defined(UART_PRINT_DEBUG)
+        timeIPCFinish = TimerP_getTimeInUsecs();
         AppUtils_Printf(MSG_NORMAL, "\nIPC Task started at %d usecs and finished at %d usecs\r\n",
                         (uint32_t)timeIPCStart,
                         (uint32_t)timeIPCFinish);
-
-        TaskP_sleep(5*1000);
-
+        AppUtils_Printf(MSG_NORMAL, "************* Sleeping for 1 sec after IPC Task ***********\n");
+        TaskP_sleep(1000);
         timeBootAppStart = TimerP_getTimeInUsecs();
+#endif
+        
         Lpm_bootApp();
+        
+#if defined(UART_PRINT_DEBUG)
         timeBootAppFinish = TimerP_getTimeInUsecs();
-
-        AppUtils_Printf(MSG_NORMAL, "\nMCU Boot Task started at %d usecs and finished at %d usecs\r\n",
+        AppUtils_Printf(MSG_NORMAL, "\nBootApp Task started at %d usecs and finished at %d usecs\r\n",
                         (uint32_t)timeBootAppStart,
                         (uint32_t)timeBootAppFinish);
-
+        AppUtils_Printf(MSG_NORMAL, "************* Sleeping for 1 sec after MCU Boot Task***********\n");
         TaskP_sleep(1000);
-        AppUtils_Printf(MSG_NORMAL, "Calling rpmsg_exit_responseTask\n");
+        AppUtils_Printf(MSG_NORMAL, "De-initializing the IPC driver and deleting the tasks\n");
+#endif
+
         Lpm_ipcExitResponseTask();
         TaskP_sleep(1000);
-        AppUtils_Printf(MSG_NORMAL, "responder task should have exited\n");
-
+        
+#if defined(UART_PRINT_DEBUG)
+        AppUtils_Printf(MSG_NORMAL, "************* Slept for 1 sec after IPC de-initializing Task. IPC should have deinitialized now. ***********\n");
         timeMcuOnlyAppStart = TimerP_getTimeInUsecs();
-        Lpm_pmicApp();
-        timeMcuOnlyAppFinish = TimerP_getTimeInUsecs();
+#endif
 
+        Lpm_pmicApp();
+
+#if defined(UART_PRINT_DEBUG)
+        timeMcuOnlyAppFinish = TimerP_getTimeInUsecs();
         AppUtils_Printf(MSG_NORMAL, "\nMCU Only Task started at %d usecs and finished at %d usecs\r\n",
                         (uint32_t)timeMcuOnlyAppStart,
                         (uint32_t)timeMcuOnlyAppFinish);
+        AppUtils_Printf(MSG_NORMAL, "\nLoop %d ends!\n",i);
+#endif
     }
 
     Lpm_bootAppDeInit();

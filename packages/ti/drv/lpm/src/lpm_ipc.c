@@ -146,7 +146,7 @@ __attribute((section(".tracebuf"))) char Ipc_traceBuffer[IPC_TRACE_BUFFER_MAX_SI
 uint8_t gOcmcShadowRscTable[0x8C];
 uint8_t *pOcmcShadowRscTable = gOcmcShadowRscTable;
 
-#if !defined(BUILD_MPU1_0) && defined(A72_LINUX_OS) && defined(A72_LINUX_OS_IPC_ATTACH)
+#if defined(A72_LINUX_OS) && defined(A72_LINUX_OS_IPC_ATTACH)
 static uint32_t		RecvEndPt = 0;
 RPMessage_Handle  g_ResponderHandleLinux;
 #endif
@@ -167,9 +167,9 @@ void Lpm_ipcExitResponseTask()
     UART_printf("Calling Ipc de inits!\n");
 #endif
     RPMessage_delete(&g_ResponderHandleRTOS);
-    #if !defined(BUILD_MPU1_0) && defined(A72_LINUX_OS) && defined(A72_LINUX_OS_IPC_ATTACH)
+#if defined(A72_LINUX_OS) && defined(A72_LINUX_OS_IPC_ATTACH)
     RPMessage_delete(&g_ResponderHandleLinux);
-    #endif
+#endif
     RPMessage_deInit();
     Ipc_deinit();
     memcpy(pOcmcShadowRscTable, (const void*)0xa0100000, 0x8c);
@@ -224,9 +224,9 @@ void Lpm_ipcResponderFxn(void *arg0, void *arg1)
     }
     else
     {
-    #ifdef DEBUG_PRINT
+#ifdef DEBUG_PRINT
         UART_printf("RecvTask: Success to create endpoint\n");
-    #endif
+#endif
     }
 
     if (requestedEpt == ENDPT_PING)
@@ -235,12 +235,12 @@ void Lpm_ipcResponderFxn(void *arg0, void *arg1)
     }
     else
     {
-        #if !defined(BUILD_MPU1_0) && defined(A72_LINUX_OS) && defined(A72_LINUX_OS_IPC_ATTACH)
+#if defined(A72_LINUX_OS) && defined(A72_LINUX_OS_IPC_ATTACH)
         g_ResponderHandleLinux = g_ResponderHandle;
-        #endif
+#endif
     }
 
-#if !defined(BUILD_MPU1_0) && defined(A72_LINUX_OS) && defined(A72_LINUX_OS_IPC_ATTACH)
+#if defined(A72_LINUX_OS) && defined(A72_LINUX_OS_IPC_ATTACH)
     if (requestedEpt == ENDPT_PING)
     {
         RecvEndPt = myEndPt;
@@ -255,9 +255,9 @@ void Lpm_ipcResponderFxn(void *arg0, void *arg1)
     }
     else
     {
-    #ifdef DEBUG_PRINT
+#ifdef DEBUG_PRINT
         UART_printf("RecvTask: RPMessage_announce() for %s success\n", name);
-    #endif
+#endif
     }
 
     while(g_exitRespTsk == 0x0U)
@@ -358,10 +358,10 @@ void Lpm_ipcSenderFxn(void *arg0, void *arg1)
     }
     else
     {
-    #ifdef DEBUG_PRINT
+#ifdef DEBUG_PRINT
         UART_printf("SendTask%d: Success to create message endpoint\n",
                 dstProc);
-    #endif
+#endif
     }
 
     status = RPMessage_getRemoteEndPt(dstProc, SERVICE_PING, &remoteProcId,
@@ -374,10 +374,10 @@ void Lpm_ipcSenderFxn(void *arg0, void *arg1)
     }
     else
     {
-    #ifdef DEBUG_PRINT
+#ifdef DEBUG_PRINT
         UART_printf("SendTask%d: RPMessage_getRemoteEndPt() passed, status %d\n",
                 dstProc, status);
-    #endif
+#endif
     }
 
     for (i = 0; i < NUMMSGS; i++) 
@@ -459,7 +459,7 @@ void Lpm_ipcSenderFxn(void *arg0, void *arg1)
  * This "Task" waits for Linux vdev ready, and late create the vrings
  *
  */
-#if !defined(BUILD_MPU1_0) && defined(A72_LINUX_OS) && defined(A72_LINUX_OS_IPC_ATTACH)
+#if defined(A72_LINUX_OS) && defined(A72_LINUX_OS_IPC_ATTACH)
 void Lpm_ipcVdevMonitorFxn(void* arg0, void* arg1)
 {
     int32_t status;
@@ -488,9 +488,9 @@ void Lpm_ipcVdevMonitorFxn(void* arg0, void* arg1)
     }
     else
     {
-    #ifdef DEBUG_PRINT
+#ifdef DEBUG_PRINT
         UART_printf("%s: Ipc_lateVirtioCreate passed\n", __func__);
-    #endif
+#endif
     }
 
     status = RPMessage_lateInit(IPC_MPU1_0);
@@ -501,9 +501,9 @@ void Lpm_ipcVdevMonitorFxn(void* arg0, void* arg1)
     }
     else
     {
-    #ifdef DEBUG_PRINT
+#ifdef DEBUG_PRINT
         UART_printf("%s: RPMessage_lateInit passed\n", __func__);
-    #endif
+#endif
     }
 
     status = RPMessage_announce(IPC_MPU1_0, RecvEndPt, SERVICE_PING);
@@ -513,14 +513,14 @@ void Lpm_ipcVdevMonitorFxn(void* arg0, void* arg1)
     }
     else
     {
-    #ifdef DEBUG_PRINT
+#ifdef DEBUG_PRINT
         UART_printf("rpmsg_vdevMonitorFxn: RPMessage_announce() passed\n");
-    #endif
+#endif
     }
 
     return;
 }
-#endif /* !defined(BUILD_MPU1_0) && defined(A72_LINUX_OS) && defined(A72_LINUX_OS_IPC_ATTACH)*/
+#endif /* defined(A72_LINUX_OS) && defined(A72_LINUX_OS_IPC_ATTACH)*/
 
 static void Lpm_ipcAppPrintf(const char *str)
 {
@@ -548,7 +548,9 @@ int32_t Lpm_ipcEchoApp(void)
         memset(pSendTaskBuf, 0, RPMSG_DATA_SIZE * CORE_IN_TEST);
         memset(pRecvTaskBuf, 0, RPMSG_DATA_SIZE * 2);
         memset(pSysVqBuf, 0, VQ_BUF_SIZE);
+#if defined(A72_LINUX_OS) && defined(A72_LINUX_OS_IPC_ATTACH)
         RecvEndPt = 0;
+#endif
         gRecvTaskBufIdx = 0;
         memset(&gSendTaskBufIdx, 0, IPC_MAX_PROCS);
         memcpy((void*)0xa0100000, pOcmcShadowRscTable, 0x8c);
@@ -578,12 +580,12 @@ int32_t Lpm_ipcEchoApp(void)
         }
         else
         {
-        #ifdef DEBUG_PRINT
+#ifdef DEBUG_PRINT
             UART_printf("Required Local memory for Virtio_Object = %d\r\n",
             numProc * Ipc_getVqObjMemoryRequiredPerCore());
-        #endif
+#endif
 
-        #if !defined(BUILD_MPU1_0) && defined(A72_LINUX_OS)
+#if defined(A72_LINUX_OS)
             /* If A72 remote core is running Linux OS, then
             * load resource table
             */
@@ -594,7 +596,7 @@ int32_t Lpm_ipcEchoApp(void)
             }
             else
             {
-            #if !defined(A72_LINUX_OS_IPC_ATTACH)
+#if !defined(A72_LINUX_OS_IPC_ATTACH)
                 /* Wait for Linux VDev ready... */
                 for(t = 0; t < numProc; t++)
                 {
@@ -604,8 +606,8 @@ int32_t Lpm_ipcEchoApp(void)
                     }
                 }
                 //UART_printf("Linux VDEV ready now .....\n");
-            #endif
-        #endif
+#endif
+#endif
                 /* Step2 : Initialize Virtio */
                 vqParam.vqObjBaseAddr = (void*)pSysVqBuf;
                 vqParam.vqBufSize     = numProc * Ipc_getVqObjMemoryRequiredPerCore();
@@ -622,10 +624,10 @@ int32_t Lpm_ipcEchoApp(void)
                     /* Step 3: Initialize RPMessage */
                     RPMessage_Params cntrlParam;
 
-                #ifdef DEBUG_PRINT
+#ifdef DEBUG_PRINT
                     UART_printf("Required Local memory for RPMessage Object = %d\n",
                        RPMessage_getObjMemRequired());
-                #endif
+#endif
 
                     /* Initialize the param */
                     RPMessageParams_init(&cntrlParam);
@@ -642,9 +644,9 @@ int32_t Lpm_ipcEchoApp(void)
                     }
                     else
                     {
-                    #ifdef DEBUG_PRINT
+#ifdef DEBUG_PRINT
                         UART_printf("RPMessage_init successful!\n");
-                    #endif
+#endif
                         /* Respond to messages coming in to endPt ENDPT_PING */
                         TaskP_Params_init(&params);
                         params.priority   = IPC_SETUP_TASK_PRI;
@@ -654,12 +656,12 @@ int32_t Lpm_ipcEchoApp(void)
                         params.arg1       = (void *)&service_ping.name[0];
                         TaskP_create(&Lpm_ipcResponderFxn, &params);
 
-                    #ifdef DEBUG_PRINT
+#ifdef DEBUG_PRINT
                         UART_printf("Lpm_ipcResponderFxn for ENDPT_PING created!\n");
-                    #endif
+#endif
                         TaskP_sleep(1000);
 
-                    #if !defined(BUILD_MPU1_0) && defined(A72_LINUX_OS)
+#if defined(A72_LINUX_OS)
                         /* Respond to messages coming in to endPt ENDPT_CHRDEV (for testing rpmsg_chrdev) */
                         TaskP_Params_init(&params);
                         params.priority   = IPC_SETUP_TASK_PRI;
@@ -668,21 +670,21 @@ int32_t Lpm_ipcEchoApp(void)
                         params.arg0       = (void *)&service_chrdev.endPt;
                         params.arg1       = (void *)&service_chrdev.name[0];
                         TaskP_create(&Lpm_ipcResponderFxn, &params);
-                    #ifdef DEBUG_PRINT
+#ifdef DEBUG_PRINT
                         UART_printf("Lpm_ipcResponderFxn for ENDPT_CHRDEV created!\n");
-                    #endif
+#endif
                         TaskP_sleep(1000);
-                    #endif
+#endif
 
                         for(t = 0; t < numProc; t++)
                         {
-                    #if !defined(BUILD_MPU1_0) && defined(A72_LINUX_OS)
+#if defined(A72_LINUX_OS)
                             /* Linux does not have a responder func running */
                             if(pRemoteProcArray[t] == IPC_MPU1_0)
                             {
                                 continue;
                             }
-                    #endif
+#endif
                             /* Store index in global array.
                             * the pointer of which is to be passed as argument to sender task */
                             gSendTaskBufIdx[t] = t;
@@ -697,7 +699,7 @@ int32_t Lpm_ipcEchoApp(void)
 
                         }
 
-                    #if !defined(BUILD_MPU1_0) && defined(A72_LINUX_OS) && defined(A72_LINUX_OS_IPC_ATTACH)
+#if defined(A72_LINUX_OS) && defined(A72_LINUX_OS_IPC_ATTACH)
                         /* Respond to messages coming in to endPt ENDPT_PING */
                         TaskP_Params_init(&params);
                         params.priority  = 7;
@@ -705,13 +707,13 @@ int32_t Lpm_ipcEchoApp(void)
                         params.stacksize = IPC_TASK_STACKSIZE;
                         params.arg0 = 0;
                         TaskP_create(&Lpm_ipcVdevMonitorFxn, &params);
-                    #endif /* !defined(BUILD_MPU1_0) && defined(A72_LINUX_OS) && defined(A72_LINUX_OS_IPC_ATTACH) */
+#endif /* defined(A72_LINUX_OS) && defined(A72_LINUX_OS_IPC_ATTACH) */
                     }
                 }
             }
-        #if !defined(BUILD_MPU1_0) && defined(A72_LINUX_OS)
+#if defined(A72_LINUX_OS)
         }
-        #endif
+#endif
     }
 
     //loop_ipcEcho = 0xDEADBEEF;

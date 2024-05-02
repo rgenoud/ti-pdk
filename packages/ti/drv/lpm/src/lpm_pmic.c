@@ -1974,8 +1974,14 @@ static void Lpm_swResetMainDomain(void)
 
     while(loopSwResetMainDomain == 0xDEADBEEF);
 
+    AppUtils_Printf(MSG_NORMAL, MSG_APP_NAME
+                        "Entering into SW Reset using Sciclient call\n");
+
     int32_t retVal;
     retVal = Sciclient_service(&reqParam, &respParam);
+
+    AppUtils_Printf(MSG_NORMAL, MSG_APP_NAME
+                        "Performed SW Reset using Sciclient call\n");
 
     if ((respParam.flags & TISCI_MSG_FLAG_ACK) == 0) {
             AppUtils_Printf(MSG_NORMAL, MSG_APP_NAME
@@ -2547,6 +2553,7 @@ uint32_t Lpm_pmicInit()
 uint32_t Lpm_pmicApp()
 {
     uint32_t status = 0;
+    uint8_t input=0;
     AppUtils_Printf(MSG_NORMAL, MSG_APP_NAME "Inside MCU ONLY task!\n");
 
     /* Before entering MCU_ONLY mode we need to disable all VTM temp sensors in
@@ -2558,55 +2565,69 @@ uint32_t Lpm_pmicApp()
                     "STATE INFO :: CURRENTLY IN ACTIVE MODE!\n");
     AppUtils_Printf(MSG_NORMAL, MSG_APP_NAME "LED LD5 should be ON\n");
     AppUtils_Printf(MSG_NORMAL, MSG_APP_NAME
-                    "Sleeping for 10s, please measure TP133 and TP134!\n");
-    AppUtils_Printf(MSG_NORMAL, MSG_APP_NAME
-                    "Expected values in ACTIVE mode:\nTP133: HIGH\nTP134: HIGH\n");
-    TaskP_sleep(10000);
-
-    /* Change state from ACTIVE to MCU ONLY */
-    if (0 == status)
-    {
-        AppUtils_Printf(MSG_NORMAL, MSG_APP_NAME
-                        "############################ACTIVE -> MCU ONLY MODE############################\n");
-        /* The status is dummy currently */
-        status = Lpm_activeToMcuSwitch();
-        AppUtils_Printf(MSG_NORMAL, MSG_APP_NAME
-                        "#########################ACTIVE -> MCU ONLY MODE DONE##########################\n");
-    }
-    else
-    {
-        AppUtils_Printf(MSG_NORMAL, MSG_APP_NAME">> ERROR :: Status not correct!!!\n");
-    }
-
-    AppUtils_Printf(MSG_NORMAL, MSG_APP_NAME 
-                    "STATE INFO :: NOW IN MCU ONLY MODE!\n");
-    AppUtils_Printf(MSG_NORMAL, MSG_APP_NAME "LED LD5 should be OFF\n");
-    AppUtils_Printf(MSG_NORMAL, MSG_APP_NAME
-                    "Sleeping for 10s, please measure TP133 and TP134!\n");
-    AppUtils_Printf(MSG_NORMAL, MSG_APP_NAME
-                    "Expected values in MCU ONLY mode:\nTP133: HIGH\nTP134: LOW\n");
-    TaskP_sleep(10000);
-
-    /* Change state from MCU ONLY to ACTIVE */
-    if (0 == status)
-    {
-        AppUtils_Printf(MSG_NORMAL, MSG_APP_NAME
-                        "############################MCU ONLY -> ACTIVE MODE############################\n");
-        /* The status is dummy currently */
-        status = Lpm_mcuToActiveSwitch();
-        AppUtils_Printf(MSG_NORMAL, MSG_APP_NAME
-                        "#########################MCU ONLY -> ACTIVE MODE DONE##########################\n");
-    }
-    else
-    {
-        AppUtils_Printf(MSG_NORMAL, MSG_APP_NAME">> ERROR :: Status not correct!!!\n");
-    }
-
-    AppUtils_Printf(MSG_NORMAL, MSG_APP_NAME
-                    "STATE INFO :: CURRENTLY IN ACTIVE MODE!\n");
-    AppUtils_Printf(MSG_NORMAL, MSG_APP_NAME "LED LD5 should be ON\n");
+                    "Please measure TP133 and TP134!\n");
     AppUtils_Printf(MSG_NORMAL, MSG_APP_NAME
                     "Expected values in ACTIVE mode:\nTP133: HIGH\nTP134: HIGH\n");
 
+    while(1)
+    {
+        AppUtils_Printf(MSG_NORMAL, MSG_APP_NAME
+                        "Kindly unload Remoteproc modules from Linux. Type these commands in Linux CMD:\n   modprobe -r ti_k3_r5_remoteproc\n   modprobe -r ti_k3_dsp_remoteproc\n");
+        AppUtils_Printf(MSG_NORMAL, MSG_APP_NAME "After modules have been removed, press 1 and enter\n");
+        UART_scanFmt("%d", &input);
+        if (1U == input)
+        {
+            /* Change state from ACTIVE to MCU ONLY */
+            if (0 == status)
+            {
+                AppUtils_Printf(MSG_NORMAL, MSG_APP_NAME
+                                "############################ ACTIVE -> MCU ONLY MODE ############################\n");
+                /* The status is dummy currently */
+                status = Lpm_activeToMcuSwitch();
+                AppUtils_Printf(MSG_NORMAL, MSG_APP_NAME
+                                "######################### ACTIVE -> MCU ONLY MODE DONE ##########################\n");
+            }
+            else
+            {
+                AppUtils_Printf(MSG_NORMAL, MSG_APP_NAME">> ERROR :: Status not correct!!!\n");
+            }
+
+            AppUtils_Printf(MSG_NORMAL, MSG_APP_NAME 
+                            "STATE INFO :: NOW IN MCU ONLY MODE!\n");
+            AppUtils_Printf(MSG_NORMAL, MSG_APP_NAME "LED LD5 should be OFF\n");
+            AppUtils_Printf(MSG_NORMAL, MSG_APP_NAME
+                            "Sleeping for 10s, please measure TP133 and TP134!\n");
+            AppUtils_Printf(MSG_NORMAL, MSG_APP_NAME
+                            "Expected values in MCU ONLY mode:\nTP133: HIGH\nTP134: LOW\n");
+            TaskP_sleep(10000);
+
+            /* Change state from MCU ONLY to ACTIVE */
+            if (0 == status)
+            {
+                AppUtils_Printf(MSG_NORMAL, MSG_APP_NAME
+                                "############################ MCU ONLY -> ACTIVE MODE ############################\n");
+                /* The status is dummy currently */
+                status = Lpm_mcuToActiveSwitch();
+                AppUtils_Printf(MSG_NORMAL, MSG_APP_NAME
+                                "######################### MCU ONLY -> ACTIVE MODE DONE ##########################\n");
+            }
+            else
+            {
+                AppUtils_Printf(MSG_NORMAL, MSG_APP_NAME">> ERROR :: Status not correct!!!\n");
+            }
+
+            AppUtils_Printf(MSG_NORMAL, MSG_APP_NAME
+                            "STATE INFO :: CURRENTLY IN ACTIVE MODE!\n");
+            AppUtils_Printf(MSG_NORMAL, MSG_APP_NAME "LED LD5 should be ON\n");
+            AppUtils_Printf(MSG_NORMAL, MSG_APP_NAME
+                            "Expected values in ACTIVE mode:\nTP133: HIGH\nTP134: HIGH\n");
+            break;
+    
+        }
+        else 
+        {
+            AppUtils_Printf(MSG_NORMAL, "Invalid input: ");
+        }
+    }
     return status;
 }
