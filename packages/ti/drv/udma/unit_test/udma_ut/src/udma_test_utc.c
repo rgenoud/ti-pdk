@@ -47,7 +47,18 @@
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-/* None */
+/*
+ * Ring parameters
+ */
+/** \brief Number of ring entries - we can prime this much memcpy operations */
+#define UDMA_TEST_APP_RING_ENTRIES      (1U)
+/** \brief Size (in bytes) of each ring entry (Size of pointer - 64-bit) */
+#define UDMA_TEST_APP_RING_ENTRY_SIZE   (sizeof(uint64_t))
+/** \brief Total ring memory */
+#define UDMA_TEST_APP_RING_MEM_SIZE     (UDMA_TEST_APP_RING_ENTRIES * \
+                                         UDMA_TEST_APP_RING_ENTRY_SIZE)
+/** \brief This ensures every channel memory is aligned */
+#define UDMA_TEST_APP_RING_MEM_SIZE_ALIGN ((UDMA_TEST_APP_RING_MEM_SIZE + UDMA_CACHELINE_ALIGNMENT) & ~(UDMA_CACHELINE_ALIGNMENT - 1U))
 
 /* ========================================================================== */
 /*                         Structure Declarations                             */
@@ -59,13 +70,20 @@
 /*                          Function Declarations                             */
 /* ========================================================================== */
 
-/* None */
+static void udmaTestEventCb(Udma_EventHandle eventHandle,
+                            uint32_t eventType,
+                            void *appData);
 
 /* ========================================================================== */
 /*                            Global Variables                                */
 /* ========================================================================== */
 
-/* None */
+/* Global test pass/fail flag */
+static volatile int32_t gUdmaTestEventResult = UDMA_SOK;
+/* UDMA memories */
+static uint8_t gUdmaTestDruRingMem[UDMA_TEST_APP_RING_MEM_SIZE_ALIGN] __attribute__((aligned(UDMA_CACHELINE_ALIGNMENT)));
+static uint8_t gUdmaTestDruCompRingMem[UDMA_TEST_APP_RING_MEM_SIZE_ALIGN] __attribute__((aligned(UDMA_CACHELINE_ALIGNMENT)));
+static uint8_t gUdmaTestDruTdCompRingMem[UDMA_TEST_APP_RING_MEM_SIZE_ALIGN] __attribute__((aligned(UDMA_CACHELINE_ALIGNMENT)));
 
 /* ========================================================================== */
 /*                          Function Definitions                              */
@@ -973,5 +991,233 @@ int32_t UdmaTestChPauseDru(UdmaTestTaskObj *taskObj)
     taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0] = backUpDrvObj;
 
     return retVal;
+}
+
+/* 
+ * Test Case Description: Verifies the function Udma_chConfigUtc and Udma_chSetSwTrigger
+ * Test scenario 1: Check Udma_chConfigUtc when utcPrms are not initialized and utcId is UDMA_UTC_ID_VPAC_TC0
+ * Test scenario 2: Check Udma_chSetSwTrigger when utcId is not UDMA_UTC_ID_MSMC_DRU0 
+ * Test scenario 3: Check Udma_chDisable when utcId is not UDMA_UTC_ID_MSMC_DRU0 
+ * Test scenario 4: Check Udma_druGetTriggerRegAddr when utcId is not UDMA_UTC_ID_MSMC_DRU0 
+ * Test scenario 5: Check Udma_eventProgramSteering when utcId is not UDMA_UTC_ID_MSMC_DRU0 
+ */ 
+int32_t UdmaDruVhwaTestNeg(UdmaTestTaskObj *taskObj)
+{
+    int32_t                retVal = UDMA_SOK;
+    struct Udma_ChObj      chObj;
+    Udma_ChHandle          chHandle;
+    Udma_ChUtcPrms         utcPrms;
+    Udma_ChPrms            chPrms;
+    Udma_DrvHandle         drvHandle;
+    struct Udma_DrvObj     backUpDrvObj;
+    uint32_t               chType;
+    uint32_t               trigger;
+    uint32_t               timeout = 0U;
+    uint16_t               backUpDevIdPsil;
+    uint32_t               backUpUtcId;
+    volatile uint64_t     *pSwTrigReg = (volatile uint64_t *) NULL_PTR;
+    struct Udma_EventObj   eventObj;
+    Udma_EventHandle       eventHandle;
+    Udma_EventPrms         eventPrms;
+
+    GT_1trace(taskObj->traceMask, GT_INFO1,
+              " |TEST INFO|:: Task:%d: UDMA ChConfigUtc Dru Vhwa negative Testcase ::\r\n",
+              taskObj->taskId);
+
+    retVal = Sciclient_pmSetModuleState(TISCI_DEV_VPAC0,
+                               TISCI_MSG_VALUE_DEVICE_SW_STATE_ON,
+                               TISCI_MSG_FLAG_AOP,
+                               SCICLIENT_SERVICE_WAIT_FOREVER); 
+    if(UDMA_SOK != retVal)
+    {
+        GT_0trace(taskObj->traceMask, GT_ERR,
+                  " |TEST INFO|:: FAIL:: Sciclient_pmSetModuleState failed"
+                  " to power ON VPAC0!!\n");
+        retVal = UDMA_EFAIL;
+    }
+
+    /* Test scenario 1: Check Udma_chConfigUtc when utcPrms are not initialized and utcId is UDMA_UTC_ID_VPAC_TC0 */
+    chHandle        = &chObj;
+    backUpDrvObj    = taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0];
+    chType          = UDMA_CH_TYPE_UTC;
+    drvHandle       = &taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0];
+    UdmaChPrms_init(&chPrms, chType);
+    backUpUtcId     = chPrms.utcId;    
+    chPrms.utcId    = UDMA_UTC_ID_VPAC_TC0;
+    retVal          = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
+    if(UDMA_SOK == retVal)
+    {
+        retVal = Udma_chConfigUtc(chHandle, &utcPrms);
+        if(UDMA_SOK == retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: chConfigUtc:: Neg::"
+                      " Check when utcPrms are not initialized and utcId is UDMA_UTC_ID_VPAC_TC0!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        else
+        {
+            retVal       = UDMA_SOK;
+            chPrms.utcId = backUpUtcId;
+        }
+        Udma_chClose(chHandle);
+    }
+    taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0] = backUpDrvObj;
+
+    /* Test scenario 2: Check Udma_chSetSwTrigger when utcId is not UDMA_UTC_ID_MSMC_DRU0 */
+    if(UDMA_SOK == retVal)
+    {
+        trigger   = CSL_UDMAP_TR_FLAGS_TRIGGER_GLOBAL1;
+        drvHandle = &taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0];
+        UdmaChPrms_init(&chPrms, chType);
+        chPrms.utcId                    = UDMA_UTC_ID_VPAC_TC0;
+        chPrms.fqRingPrms.ringMem       = &gUdmaTestDruRingMem[0U];
+        chPrms.cqRingPrms.ringMem       = &gUdmaTestDruCompRingMem[0U];
+        chPrms.tdCqRingPrms.ringMem     = &gUdmaTestDruTdCompRingMem[0U];
+        chPrms.fqRingPrms.ringMemSize   = UDMA_TEST_APP_RING_MEM_SIZE;
+        chPrms.cqRingPrms.ringMemSize   = UDMA_TEST_APP_RING_MEM_SIZE;
+        chPrms.tdCqRingPrms.ringMemSize = UDMA_TEST_APP_RING_MEM_SIZE;
+        chPrms.fqRingPrms.elemCnt       = UDMA_TEST_APP_RING_ENTRIES;
+        chPrms.cqRingPrms.elemCnt       = UDMA_TEST_APP_RING_ENTRIES;
+        chPrms.tdCqRingPrms.elemCnt     = UDMA_TEST_APP_RING_ENTRIES;
+        retVal                          = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
+        UdmaChUtcPrms_init(&utcPrms);
+        if(UDMA_SOK == retVal)
+        {
+            retVal = Udma_chConfigUtc(chHandle, &utcPrms);
+            if(UDMA_SOK == retVal)
+            {
+                retVal = Udma_chSetSwTrigger(chHandle, trigger);
+                if(UDMA_SOK == retVal)
+                {
+                    GT_0trace(taskObj->traceMask, GT_ERR,
+                              " |TEST INFO|:: FAIL:: UDMA:: ChGetSwTriggerRegister:: Neg::"
+                              " Check when utcId is not UDMA_UTC_ID_MSMC_DRU0!!\n");
+                    retVal = UDMA_EFAIL;
+                }
+                else
+                {
+                    retVal = UDMA_SOK;
+                    retVal = Udma_chEnable(chHandle);
+                    /* Test scenario 3: Check Udma_chDisable when utcId is not UDMA_UTC_ID_MSMC_DRU0 */
+                    if(UDMA_SOK == retVal)
+                    {
+                        backUpDevIdPsil                = chHandle->drvHandle->devIdPsil;
+                        chHandle->drvHandle->devIdPsil = TISCI_DEV_NAVSS0 - 1U;
+                        retVal                         = Udma_chDisable(chHandle, timeout);
+                        if(UDMA_SOK == retVal)
+                        {
+                            GT_0trace(taskObj->traceMask, GT_ERR,
+                                      " |TEST INFO|:: FAIL:: UDMA:: chDisableExtChan:: Neg::"
+                                      " Check when utcId is not UDMA_UTC_ID_MSMC_DRU0!!\n");
+                            retVal = UDMA_EFAIL;
+                        }
+                        else
+                        {
+                            retVal = UDMA_SOK;
+                            chHandle->drvHandle->devIdPsil = backUpDevIdPsil;
+                        }
+                        Udma_chDisable(chHandle, timeout);
+                    }
+                }
+            }
+            Udma_chClose(chHandle);
+        }
+        taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0] = backUpDrvObj;
+    }
+
+    /* Test scenario 4: Check Udma_druGetTriggerRegAddr when utcId is not UDMA_UTC_ID_MSMC_DRU0 */
+    if(UDMA_SOK == retVal)
+    {
+        drvHandle    = &taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0];
+        UdmaChPrms_init(&chPrms, chType);
+        chPrms.utcId = UDMA_UTC_ID_VPAC_TC0;
+        retVal       = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
+        UdmaChUtcPrms_init(&utcPrms);
+        if(UDMA_SOK == retVal)
+        {
+            retVal = Udma_chConfigUtc(chHandle, &utcPrms);
+            if(UDMA_SOK == retVal)
+            {
+                pSwTrigReg = Udma_druGetTriggerRegAddr(chHandle);
+                if(NULL_PTR != pSwTrigReg)
+                {
+                    GT_0trace(taskObj->traceMask, GT_ERR,
+                              " |TEST INFO|::FAIL:: UDMA:: Udma_druGetTriggerRegAddr :: Neg::"
+                              " Check when utcId is not UDMA_UTC_ID_MSMC_DRU0!!\n");
+                    retVal = UDMA_EFAIL;
+                }
+                else
+                {
+                    retVal = UDMA_SOK;
+                }
+            }
+            Udma_chClose(chHandle);
+        }
+    }
+
+    /* Test scenario 5: Check Udma_eventRegister when eventType is UDMA_EVENT_TYPE_TR and utcId is not UDMA_UTC_ID_MSMC_DRU0 */
+    if(UDMA_SOK == retVal)
+    {
+        drvHandle    = &taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0];
+        UdmaChPrms_init(&chPrms, chType);
+        chPrms.utcId = UDMA_UTC_ID_VPAC_TC0;
+        retVal       = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
+        UdmaChUtcPrms_init(&utcPrms);
+        if(UDMA_SOK == retVal)
+        {
+            retVal = Udma_chConfigUtc(chHandle, &utcPrms);
+            if(UDMA_SOK == retVal)
+            {
+                eventHandle = &eventObj;
+                UdmaEventPrms_init(&eventPrms);
+                eventPrms.eventMode         = UDMA_EVENT_MODE_EXCLUSIVE;
+                eventPrms.eventType         = UDMA_EVENT_TYPE_TR;
+                eventPrms.masterEventHandle = NULL_PTR;;
+                eventPrms.chHandle          = chHandle;
+                eventPrms.eventCb           = &udmaTestEventCb; 
+                retVal = Udma_eventRegister(drvHandle, eventHandle, &eventPrms);
+                if(UDMA_SOK == retVal)
+                {
+                    GT_0trace(taskObj->traceMask, GT_ERR,
+                              " |TEST INFO|::FAIL:: UDMA:: Udma_eventProgramSteering :: Neg:: "
+                              " Check when utcId is not UDMA_UTC_ID_MSMC_DRU0!!\n");
+                    retVal = UDMA_EFAIL;
+                }
+                else
+                {
+                    retVal = UDMA_SOK;
+                }
+            }
+            Udma_chClose(chHandle);
+        }
+    }
+
+    return retVal;
+}
+
+static void udmaTestEventCb(Udma_EventHandle eventHandle,
+                            uint32_t eventType,
+                            void *appData)
+{
+    SemaphoreP_Handle   transferDoneSem = (SemaphoreP_Handle) appData;
+
+    if(transferDoneSem != NULL)
+    {
+        if(UDMA_EVENT_TYPE_ERR_OUT_OF_RANGE_FLOW == eventType)
+        {
+            SemaphoreP_post(transferDoneSem);
+        }
+        else
+        {
+            gUdmaTestEventResult = UDMA_EFAIL;
+        }
+    }
+    else
+    {
+        gUdmaTestEventResult = UDMA_EFAIL;
+    }
+
+    return;
 }
 

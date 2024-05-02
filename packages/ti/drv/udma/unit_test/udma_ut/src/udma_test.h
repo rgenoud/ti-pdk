@@ -866,6 +866,7 @@ int32_t UdmaTestDruQueueConfigNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestDruGetTriggerRegAddrNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestDruGetTriggerRegAddr(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestChPauseDru(UdmaTestTaskObj *taskObj);
+int32_t UdmaDruVhwaTestNeg(UdmaTestTaskObj *taskObj);
 
 /*
  * UDMA Event test functions
