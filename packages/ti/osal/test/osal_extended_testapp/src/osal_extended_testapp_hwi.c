@@ -61,6 +61,7 @@
 #define INVALID_R5F_INT_NUM            (513U)
 #endif
 #define OSAL_APP_IRQ_INT_NUM           (28U)
+#define OSAL_APP_HWI_MAX_NUM           (64U)
 
 /* ========================================================================== */
 /*                            Global Variables                                */
@@ -99,6 +100,11 @@ static int32_t OsalApp_hwiCreatePulseIntrTest(void);
  */
 #if defined(BUILD_C7X) 
 static int32_t OsalApp_hwiCreateNegativeTest(void);
+
+/*
+ * Description : Testing Maximum Hwi creation
+ */
+static int32_t OsalApp_hwiCreateMaxTest(void);
 #endif
 
 /* ========================================================================== */
@@ -200,16 +206,12 @@ static int32_t OsalApp_hwiNullTest(void)
     {
         OSAL_log("\n HwiP Null test failed!\n");
     }
-    else
-    {
-        OSAL_log("\n HwiP Null test passed!\n");
-    }
 
     return result;
 }
 
 #if defined (BUILD_MCU)
-static int32_t OsalApp_hwiCreatePulseIntrTest()
+static int32_t OsalApp_hwiCreatePulseIntrTest(void)
 {
     HwiP_Params hwiParams;
     HwiP_Handle handle;
@@ -266,7 +268,7 @@ static int32_t OsalApp_hwiCreatePulseIntrTest()
 }
 #endif
 
-static int32_t OsalApp_hwiCreateAllocOvrflwTest()
+static int32_t OsalApp_hwiCreateAllocOvrflwTest(void)
 {
     HwiP_Params hwiParams;
     HwiP_Handle handle1, handle2;
@@ -355,11 +357,7 @@ static int32_t OsalApp_hwiDeleteNegativeTest(void)
         }
     }
 
-    if(osal_OK == result)
-    {
-        OSAL_log("\n Hwi Delete negative test passed!\n");
-    }
-    else
+    if(osal_OK != result)
     {
         OSAL_log("\n Hwi Delete negative test failed!\n");
     }
@@ -368,7 +366,7 @@ static int32_t OsalApp_hwiDeleteNegativeTest(void)
 }
 
 #if defined(BUILD_C7X) 
-int32_t  OsalApp_hwiCreateNegativeTest()
+static int32_t  OsalApp_hwiCreateNegativeTest(void)
 {
     HwiP_Params hwiParams;
     HwiP_Handle handle;
@@ -399,6 +397,47 @@ int32_t  OsalApp_hwiCreateNegativeTest()
     return result;
   
 }
+
+static int32_t OsalApp_hwiCreateMaxTest(void)
+{
+    HwiP_Params     hwiParams;
+    HwiP_Handle     handle[OSAL_APP_HWI_MAX_NUM];
+    int32_t         result = osal_OK;
+    uint32_t        hwiIndex = 0U, maxHwi;
+
+    HwiP_Params_init(&hwiParams);
+
+    /* Testing Maximum Hwi creation */
+    for(hwiIndex = 0U; hwiIndex <= OSAL_APP_HWI_MAX_NUM; hwiIndex++)
+    {
+        handle[hwiIndex] = HwiP_create(hwiIndex, (HwiP_Fxn)OsalApp_hwiIRQ, &hwiParams);
+        if(NULL_PTR == handle[hwiIndex])
+        {
+            if(14U != hwiIndex)
+            {
+                break;
+            }
+        }
+    }
+    maxHwi = hwiIndex;
+    for(hwiIndex = 0U; hwiIndex < maxHwi; hwiIndex++)
+    {
+        if(HwiP_OK != HwiP_delete(handle[hwiIndex]))
+        {
+            if(14U != hwiIndex)
+            {
+                result = osal_FAILURE;
+            }
+        }
+    }
+
+    if(osal_OK != result)
+    {
+        OSAL_log("\n Multiple Hwi create test failed! \n");
+    }
+    
+    return result;
+}
 #endif
 
 /* ========================================================================== */
@@ -417,6 +456,7 @@ int32_t OsalApp_hwiTests(void)
 
     #if defined(BUILD_C7X) 
     result += OsalApp_hwiCreateNegativeTest();
+    result += OsalApp_hwiCreateMaxTest();
     #endif
     result += OsalApp_hwiCreateAllocOvrflwTest();
     result += OsalApp_hwiNullTest();

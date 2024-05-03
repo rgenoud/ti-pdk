@@ -173,6 +173,7 @@ HwiP_Handle HwiP_create(uint32_t interruptNum, HwiP_Fxn hwiFxn,
             {
                 /* Free the allocated memory and return null */
                 handle->used = BFALSE;
+                gOsalHwiAllocCnt--;
                 handle = (HwiP_safeRtos *) NULL_PTR;
             }
         }
