@@ -1238,3 +1238,135 @@ int32_t UdmaTestRingCheckParamsNeg(UdmaTestTaskObj *taskObj)
     return retVal;
 }
 
+/*
+ * Test Case Description: Verifies the function Udma_ringProxyQueueRaw
+ * 1)Test scenario 1: Check to get error from CSL_proxyCfgThread when proxy target is invalid.
+ * 2)Test scenario 2: Check to get error from CSL_ringaccGetRingHwOcc when ring is full.
+ */
+int32_t UdmaTestRingProxyQueueRawNormalNeg(UdmaTestTaskObj *taskObj)
+{
+    int32_t              retVal  = UDMA_SOK;
+    uint32_t             elemCnt = 1U;
+    uint32_t             heapId  = UTILS_MEM_HEAP_ID_MSMC;
+    void                *ringMem = NULL;
+    uint32_t             ringMode,qCnt;
+    uint32_t             ringMemSize;
+    Udma_DrvHandle       drvHandle;
+    Udma_RingPrms        ringPrms;
+    struct Udma_RingObj  ringObj;
+    struct Udma_ProxyObj queueProxyObj;
+    Udma_RingHandle      ringHandle;
+    Udma_ProxyHandle     queueProxyHandle;
+    Udma_ProxyCfg        proxyCfg;
+    uint64_t             ringData;
+    uint32_t             backupproxyTargetNumRing;
+
+    ringMemSize = elemCnt * sizeof (uint64_t);
+    ringMem = Utils_memAlloc(heapId, ringMemSize, UDMA_CACHELINE_ALIGNMENT);
+    if(NULL == ringMem)
+    {
+        retVal = UDMA_EALLOC;
+        GT_0trace(taskObj->traceMask, GT_ERR, " Ring memory allocation failure\r\n");
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        ringHandle = &ringObj;
+        ringMode   = TISCI_MSG_VALUE_RM_RING_MODE_RING;
+        drvHandle  = &taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0];
+
+        UdmaRingPrms_init(&ringPrms);
+        ringPrms.ringMem     = ringMem;
+        ringPrms.ringMemSize = ringMemSize;
+        ringPrms.mode        = ringMode;
+        ringPrms.elemCnt     = elemCnt;
+
+        /* Allocate a free ring */
+        retVal = Udma_ringAlloc(drvHandle, ringHandle, UDMA_RING_ANY, &ringPrms);
+        if(UDMA_SOK != retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR, " Ring alloc failed!!\n");
+        }
+        else
+        {
+            /* Allocate a proxy for queue operation */
+            queueProxyHandle = &queueProxyObj;
+            retVal           = Udma_proxyAlloc(drvHandle, queueProxyHandle, UDMA_PROXY_ANY);
+            if(UDMA_SOK != retVal)
+            {
+                GT_0trace(taskObj->traceMask, GT_ERR, " Proxy alloc failed!!\n");
+            }
+            else
+            {
+                /* Config proxy for queue operation */
+                proxyCfg.proxyMode = CSL_PROXY_QUEUE_ACCESS_MODE_TAIL;
+                proxyCfg.elemSize  = UDMA_RING_ES_8BYTES;
+                proxyCfg.ringNum   = Udma_ringGetNum(ringHandle);
+                retVal             = Udma_proxyConfig(queueProxyHandle, &proxyCfg);
+                if(UDMA_SOK != retVal)
+                {
+                    GT_0trace(taskObj->traceMask, GT_ERR, " Proxy config failed!!\n");
+                }
+                else
+                {
+
+                    for(qCnt = 0U; qCnt < elemCnt; qCnt++)
+                    {
+                        /* Test scenario 1: Check to get error from CSL_proxyCfgThread when proxy
+                         * target is invalid
+                         */
+                        backupproxyTargetNumRing      = drvHandle->proxyTargetNumRing;
+                        drvHandle->proxyTargetNumRing = UDMA_RING_INVALID;
+                        ringData                      = ((uint64_t) qCnt
+                                                         | (uint64_t) 0xDEADBEEF00000000UL);
+                        retVal                        = Udma_ringProxyQueueRaw(ringHandle,
+                                                                               drvHandle, ringData);
+                        if(UDMA_SOK != retVal)
+                        {
+                            retVal = UDMA_SOK;
+                        }
+                        else
+                        {
+                            GT_0trace(taskObj->traceMask, GT_ERR,
+                                      " |TEST INFO|:: Test:: Check to get error from "
+                                      " CSL_proxyCfgThread Failed when proxy target is "
+                                      " invalid!!\n");
+                            retVal = UDMA_EFAIL;
+                        }
+                        drvHandle->proxyTargetNumRing = backupproxyTargetNumRing;
+                    }
+
+                    if(UDMA_SOK == retVal)
+                    {
+                        /* Test scenario 2: Check to get error from CSL_ringaccGetRingHwOcc when
+                         *                  ring is full
+                         */
+                        for(qCnt = 0U; qCnt < elemCnt; qCnt++)
+                        {
+                            ringData = ((uint64_t) qCnt | (uint64_t) 0xDEADBEEF00000000UL);
+                            retVal   = Udma_ringProxyQueueRaw(ringHandle, drvHandle, ringData);
+                        }
+                        ringData = ((uint64_t) qCnt | (uint64_t) 0xDEADBEEF00000000UL);
+                        retVal   = Udma_ringProxyQueueRaw(ringHandle, drvHandle, ringData);
+                        if(UDMA_SOK != retVal)
+                        {
+                            retVal = UDMA_SOK;
+                        }
+                        else
+                        {
+                            GT_0trace(taskObj->traceMask, GT_ERR,
+                                      " |TEST INFO|:: Test:: Check to get error from "
+                                      " CSL_ringaccGetRingHwOcc when ring is full!!\n");
+                            retVal = UDMA_EFAIL;
+                        }
+                    }
+                }
+            }
+            Udma_proxyFree( queueProxyHandle);
+        }
+        Udma_ringFree(ringHandle);
+    }
+
+    return retVal;
+}
+
