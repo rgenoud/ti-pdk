@@ -49,12 +49,12 @@
 /* ========================================================================== */
 
 #define OSAL_APP_IRQ_INT_NUM           (28U)
-
+#define OSAL_APP_HWIP_BLOCK_SIZE (1U * OSAL_NONOS_HWIP_SIZE_BYTES)
 /* ========================================================================== */
 /*                            Global Variables                                */
 /* ========================================================================== */
 
-/* None */
+uint8_t gOsalApphwiPMemBlock[OSAL_APP_HWIP_BLOCK_SIZE];
 
 /* ========================================================================== */
 /*                           Function Declarations                            */
@@ -65,6 +65,15 @@
  */
 static int32_t OsalApp_archUtilsGeneralTest(void);
 
+/*
+ * Description: Testing External block test for c7x
+ */
+static int32_t OsalApp_archUtilsExtBlockTest(void);
+
+/*
+ * Description: Testing Max creation test for c7x
+ */
+static int32_t OsalApp_archUtilsMaxTest(void);
 /* ========================================================================== */
 /*                    Internal Function Definitions                           */
 /* ========================================================================== */
@@ -119,6 +128,119 @@ static int32_t OsalApp_archUtilsGeneralTest(void)
     {
         result = osal_FAILURE;
     }
+    /* handle is deleted already, called to check the negative condition for used parameter of the handle */
+    if(HwiP_OK == OsalArch_HwiPDelete(hwiHandle))
+    {
+        result = osal_FAILURE;
+    }
+
+    if(osal_OK != result)
+    {
+        OSAL_log("\n Arch utils general test for c7x have failed!\n");
+    }
+
+    return result;
+}
+
+static int32_t OsalApp_archUtilsExtBlockTest(void)
+{
+    HwiP_Params       hwiParams;
+    Osal_HwAttrs      hwAttrs;
+    uint32_t          ctrlBitMap = OSAL_HWATTR_SET_HWIP_EXT_BASE;
+    HwiP_Handle       hwiHandle;
+    int32_t           result = osal_OK;
+
+    /* set the extended block base and size */
+    hwAttrs.extHwiPBlock.size       = OSAL_APP_HWIP_BLOCK_SIZE;
+    hwAttrs.extHwiPBlock.base       = (uintptr_t) &gOsalApphwiPMemBlock[0];
+    if(osal_OK != Osal_setHwAttrs(ctrlBitMap, &hwAttrs))
+    {
+        result = osal_FAILURE;
+    }
+    else
+    {
+        /* Default parameter initialization */
+        HwiP_Params_init(&hwiParams);
+
+        /* create the hwi block */
+        hwiHandle = OsalArch_HwiPCreate(OSAL_APP_IRQ_INT_NUM, (HwiP_Fxn)OsalApp_hwiIRQ, &hwiParams);
+        if(NULL_PTR == hwiHandle)
+        {
+            result = osal_FAILURE;
+        }
+        /* Verify the block created is in the extended memory block range */
+        if((osal_OK == result) && (hwiHandle != (HwiP_Handle) &gOsalApphwiPMemBlock[0]))
+        {
+            result = osal_FAILURE;
+        }
+        if((osal_OK == result) && (HwiP_OK != OsalArch_HwiPDelete(hwiHandle)))
+        {
+            result = osal_FAILURE;
+        }
+        if(osal_OK == result)
+        {
+            /* Clear the extended block base for next tests */
+            hwAttrs.extHwiPBlock.size       = 0U;
+            hwAttrs.extHwiPBlock.base       = (uintptr_t) NULL_PTR;
+            if (osal_OK != Osal_setHwAttrs(ctrlBitMap, &hwAttrs))
+            {
+                result = osal_FAILURE;
+            }
+        }
+    }
+
+    if(osal_OK != result)
+    {
+        OSAL_log("\n Extended block test for c7x have failed!\n");
+    }
+
+    return result;
+}
+
+static int32_t OsalApp_archUtilsMaxTest(void)
+{
+    HwiP_Params     hwiParams;
+    HwiP_Handle     hwiHandle[OSAL_NONOS_CONFIGNUM_HWI];
+    uint32_t        hwiIndex = 0U;
+    int32_t         result = osal_OK;
+
+    HwiP_Params_init(&hwiParams);
+
+    /* Testing Maximum Heap creation */
+    for(hwiIndex = 0U; hwiIndex < OSAL_NONOS_CONFIGNUM_HWI; hwiIndex++)
+    {
+        hwiHandle[hwiIndex] = OsalArch_HwiPCreate(hwiIndex, OsalApp_hwiIRQ, &hwiParams);
+        if(NULL_PTR == hwiHandle[hwiIndex])
+        {
+            result = osal_FAILURE;
+            break;
+        }
+    }
+
+    if(osal_OK == result)
+    {
+        if(NULL_PTR != OsalArch_HwiPCreate(hwiIndex, OsalApp_hwiIRQ, &hwiParams))
+        {
+            result = osal_FAILURE;
+        }
+    }
+
+    if(osal_OK == result)
+    {
+        for(hwiIndex = 0U; hwiIndex < OSAL_NONOS_CONFIGNUM_HWI; hwiIndex++)
+        {
+            if(HwiP_OK != OsalArch_HwiPDelete(hwiHandle[hwiIndex]))
+            {
+                result = osal_FAILURE;
+                break;
+            }
+        }
+    }
+
+    if(osal_OK != result)
+    {
+        OSAL_log("\n Multiple hwi create for c7x test failed! \n");
+    }
 
     return result;
 }
@@ -132,14 +254,16 @@ int32_t OsalApp_ArchutilsTests(void)
     int32_t result = osal_OK;
     
     result += OsalApp_archUtilsGeneralTest();
+    result += OsalApp_archUtilsExtBlockTest();
+    result += OsalApp_archUtilsMaxTest();
     
     if(osal_OK == result)
     {
-        OSAL_log("\n All Arch utils tests for c7x have passed!\n");
+        OSAL_log("\n All Arch utils tests for c7x have passed!!\n");
     }
     else
     {
-        OSAL_log("\n Some or All Arch utils tests for c7x have failed!\n");
+        OSAL_log("\n Some or All Arch utils tests for c7x have failed!!\n");
     }
     
     return result;
