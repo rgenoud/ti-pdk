@@ -322,6 +322,13 @@ int main()
     OSAL_write_through_checker();
     Osal_delay(2000);
     OSAL_write_back_checker();
+
+#if defined LDRA_DYN_COVERAGE_EXIT
+    OSAL_log("\n LDRA ENTRY... \n");
+    upload_execution_history();
+    OSAL_log("\n LDRA EXIT... \n");
+#endif
+
     if ((1U == (*interCoreWriteThroughAckBase)) &&
         (1U == (*interCoreWriteBackAckBase)) &&
         (1U == (*interCoreWriteBackPhase2AckBase)))

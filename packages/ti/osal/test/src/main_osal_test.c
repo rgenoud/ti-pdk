@@ -2554,6 +2554,12 @@ void osal_test(void *arg0, void *arg1)
     }
 #endif
 
+#if defined LDRA_DYN_COVERAGE_EXIT
+    OSAL_log("\n LDRA ENTRY... \n");
+    upload_execution_history();
+    OSAL_log("\n LDRA EXIT... \n");
+#endif
+
     if(BTRUE == testFail)
     {
         OSAL_log("\n Some tests have failed. \n");

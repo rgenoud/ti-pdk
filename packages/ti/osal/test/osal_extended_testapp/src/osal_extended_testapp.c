@@ -715,6 +715,12 @@ void OSAL_tests(void *arg0, void *arg1)
 
     result += OsalApp_hwiTests();
 
+#if defined LDRA_DYN_COVERAGE_EXIT
+    OSAL_log("\n LDRA ENTRY... \n");
+    upload_execution_history();
+    OSAL_log("\n LDRA EXIT... \n");
+#endif
+
     if(osal_OK == result)
     {
         OSAL_log("\n All tests have passed. \n");

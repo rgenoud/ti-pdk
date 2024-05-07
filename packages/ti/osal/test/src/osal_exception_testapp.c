@@ -231,6 +231,11 @@ int main(void)
     if(CSL_PASS == status)
     {
         DebugP_registerExcptnLogFxn(OSAL_log);
+#if defined LDRA_DYN_COVERAGE_EXIT
+        OSAL_log("\n LDRA ENTRY... \n");
+        upload_execution_history();
+        OSAL_log("\n LDRA EXIT... \n");
+#endif
         OsalApp_generateException();
     }
 
