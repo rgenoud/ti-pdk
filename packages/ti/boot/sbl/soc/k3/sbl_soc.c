@@ -40,8 +40,8 @@
 #include "sbl_err_trap.h"
 #include "sbl_qos.h"
 #include <strings.h>
-#include <ti/drv/i2c/I2C.h>
-#include <ti/drv/i2c/soc/I2C_soc.h>
+#include <ti/drv/i2c/i2c.h>
+#include <ti/drv/i2c/soc/i2c_soc.h>
 #include <ti/board/board.h>
 #include <ti/board/src/devices/board_devices.h>
 #if defined(SOC_J721E)

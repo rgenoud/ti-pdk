@@ -43,7 +43,7 @@
 #include <string.h>
 
 #include <ti/csl/soc.h>
-#include <ti/drv/i2c/I2C.h>
+#include <ti/drv/i2c/i2c.h>
 #include <ti/drv/pmic/pmic.h>
 #include <ti/drv/uart/UART_stdio.h>
 

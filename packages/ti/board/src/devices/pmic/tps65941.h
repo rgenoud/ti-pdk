@@ -61,7 +61,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <ti/drv/i2c/I2C.h>
+#include <ti/drv/i2c/i2c.h>
 
 #include <ti/board/board.h>
 

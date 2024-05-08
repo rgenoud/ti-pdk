@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016, Texas Instruments Incorporated
+# Copyright (c) 2016-2024, Texas Instruments Incorporated
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -31,34 +31,16 @@
 #
 
 
-PACKAGE_SRCS_COMMON = makefile I2C.h i2c_component.mk \
-                      docs/I2C_LLD_SDS.pdf docs/I2C_LLD_SoftwareManifest.html \
-                      docs/ReleaseNotes_I2C_LLD.pdf firmware/icss_i2c/docs/I2C_FW_DESIGN_GUIDE.pdf \
-                      src/I2C_drv.c src/I2C_drv_log.h src/I2C_osal.h \
-                      build src/src_files_common.mk src/Module.xs \
-                      config_mk.bld I2Cver.h I2Cver.h.xdt package.bld package.xdc package.xs Settings.xdc.xdt
+PACKAGE_SRCS_COMMON = makefile i2c.h i2c_component.mk \
+                      src/i2c_drv.c src/i2c_drv_log.h src/i2c_osal.h \
+                      build src/src_files_common.mk \
 
-# For TPR12,awr294x the following v0 files are all that is shipped
-ifeq ($(SOC),$(filter $(SOC), tpr12 awr294x))
-  SRCDIR = . src src/v0
-  INCDIR = . src src/v0
-  SRCS_COMMON += I2C_drv.c I2C_v0.c
-  PACKAGE_SRCS_COMMON += src/v0 soc/I2C_v0.h
-else
 # The following v1 files are all that is shipped with TDA devices
   SRCDIR = . src src/v1
   INCDIR = . src src/v1
-  SRCS_COMMON += I2C_drv.c I2C_v1.c
-  PACKAGE_SRCS_COMMON += src/v1 soc/I2C_v1.h
+  SRCS_COMMON += i2c_drv.c i2c_api.c
+  PACKAGE_SRCS_COMMON += src/v1 soc/i2c_api.h
 
-# For all non-TDA devices, component contains all source files in library and package
-ifneq ($(SOC),$(filter $(SOC), tda2xx tda2px dra75x tda2ex tda3xx dra78x j721e j7200 j721s2 j784s4 am65xx am64x))
-  SRCDIR += src/v0
-  INCDIR += src/v0
-  SRCS_COMMON += I2C_v0.c
-  PACKAGE_SRCS_COMMON += src/v0 soc/I2C_v0.h
-endif
-endif
 # List all the external components/interfaces, whose interface header files
 #  need to be included for this component
 INCLUDE_EXTERNAL_INTERFACES = pdk

@@ -1,20 +1,5 @@
-/**
- *  \file   main_test.c
- *
- *  \brief  Example application main file. This application will read the data
- *          from eeprom and compares it with the known data.
- *
- *          On J7200 - The EEPROM is connected to the i2c which is in wakeup
- *                      domain. The I2C driver, by default supports all
- *                      all instances in MCU and Main Domain only.
- *
- *                      This test demonstrates steps required to add support for
- *                      an instance that's not natively supported by the driver.
- *
- */
-
 /*
- * Copyright (C) 2014 - 2020 Texas Instruments Incorporated - http://www.ti.com/
+ * Copyright (C) 2014 - 2024 Texas Instruments Incorporated - http://www.ti.com/
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -46,25 +31,36 @@
  *
  */
 
+/**
+ *  \file   main_test.c
+ *
+ *  \brief  Example application main file. This application will read the data
+ *          from eeprom and compares it with the known data.
+ *
+ *          On J7200 - The EEPROM is connected to the i2c which is in wakeup
+ *                      domain. The I2C driver, by default supports all
+ *                      all instances in MCU and Main Domain only.
+ *
+ *                      This test demonstrates steps required to add support for
+ *                      an instance that's not natively supported by the driver.
+ *
+ */
+
+/* ========================================================================== */
+/*                             Include Files                                  */
+/* ========================================================================== */
+
 #include <ti/osal/osal.h>
 
 #include <stdio.h>
 #include <string.h>
 
-/* TI-RTOS Header files */
-#include <ti/drv/i2c/I2C.h>
-#include <ti/drv/i2c/soc/I2C_soc.h>
-#include "I2C_log.h"
-#include "I2C_board.h"
-#ifdef SOC_AM65XX
+#include <ti/drv/i2c/i2c.h>
+#include <ti/drv/i2c/soc/i2c_soc.h>
+#include "i2c_log.h"
+#include "i2c_board.h"
 #include <ti/csl/soc.h>
 #include <ti/drv/sciclient/sciclient.h>
-#endif
-
-#if defined (SOC_J721E) || defined(SOC_J7200) || defined(SOC_AM65XX) || defined(SOC_AM64X) || defined (SOC_J721S2) || defined (SOC_J784S4)
-#include <ti/csl/soc.h>
-#include <ti/drv/sciclient/sciclient.h>
-#endif
 
 #if defined (BUILD_C7X)
 #include <ti/csl/csl_clec.h>
@@ -76,11 +72,14 @@
 #include <ti/csl/arch/csl_arch.h>
 #endif
 
-#if defined(UNITY_INCLUDE_CONFIG_H) && (defined(SOC_J721E) || defined (SOC_J784S4) || defined(SOC_J7200) || defined(SOC_AM65XX) || defined(SOC_AM64X) || defined (SOC_J721S2))
+#if defined(UNITY_INCLUDE_CONFIG_H)
 #include <ti/build/unit-test/Unity/src/unity.h>
 #include <ti/build/unit-test/config/unity_config.h>
 #endif
 
+/* ========================================================================== */
+/*                           Macros & Typedefs                                */
+/* ========================================================================== */
 
 /* Define the I2C test interface */
 typedef struct I2C_Tests_s
@@ -100,16 +99,6 @@ typedef struct I2C_Tests_s
 #define I2C_TEST_ID_PROBE_BUS_FREQ    1   /* I2C probe bus frequency Test in interrupt mode  */
 #define I2C_TEST_ID_TIMEOUT_INT       2   /* I2C timeout test in interrupt mode */
 #define I2C_TEST_ID_TIMEOUT_POLLING   3   /* I2C timeout test in polling mode */
-
-
-#if defined (SOC_AM335X) || defined (SOC_AM437x)
-/* EEPROM data -Board specific */
-extern char eepromData[I2C_EEPROM_RX_LENGTH];
-#endif
-
-/**********************************************************************
- ************************** Macros ************************************
- **********************************************************************/
 
 #define I2C_TRANSACTION_TIMEOUT         (10000U)
 
@@ -136,58 +125,32 @@ extern char eepromData[I2C_EEPROM_RX_LENGTH];
 /* No interrupt router, its directly connected */
 #define I2C_INST_WKUP_I2C0_INT_OFFSET   (0U)
 #endif /* J7200 Specific */
-/**********************************************************************
- ************************** Internal functions ************************
- **********************************************************************/
 
-/**********************************************************************
- ************************** Global Variables **************************
- **********************************************************************/
+/* ========================================================================== */
+/*                            Global Variables                                */
+/* ========================================================================== */
 
-#if defined (idkAM572x)
-char eepromData[I2C_EEPROM_TEST_LENGTH] = {0x55, 0x33, 0xEE, 0x41, 0x4D, 0x35, 0x37, 0x32,
-                              0x49, 0x44};
-#elif defined (idkAM574x)
-char eepromData[I2C_EEPROM_TEST_LENGTH] = {0x55, 0x33, 0xEE, 0x41, 0x4D, 0x35, 0x37, 0x34,
-                              0x49, 0x44};
-#elif defined (idkAM571x)
-char eepromData[I2C_EEPROM_TEST_LENGTH] = {0x55, 0x33, 0xEE, 0x41, 0x4D, 0x35, 0x37, 0x31,
-                              0x49, 0x44};
-#elif defined (evmAM572x)
-char eepromData[I2C_EEPROM_TEST_LENGTH] = {0x55, 0x33, 0xEE, 0x41, 0x4d, 0x35, 0x37, 0x32,
-                              0x50, 0x4d};
-#elif defined (evmK2H) || defined (evmK2K) || defined (evmK2E) || defined (evmK2L) || defined (evmK2G) || defined (iceK2G) || defined (EVM_OMAPL137)
-char eepromData[I2C_EEPROM_TEST_LENGTH] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
-                              0x09, 0x10};
-#elif defined (evmC6678) || defined (evmC6657) || defined (am65xx_evm) || defined (am65xx_idk) || defined (j721e_sim) || defined (j721e_evm) || defined(j7200_evm) || defined (am64x_evm) || defined (j721s2_evm) || defined (j784s4_evm)
 char eepromData[I2C_EEPROM_TEST_LENGTH] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                               0x00, 0x00};
-#else
-#endif
 
-/*
- *  ======== Board_initI2C ========
- */
+/* ========================================================================== */
+/*                  Internal/Private Function Declarations                    */
+/* ========================================================================== */
+
+/* None */
+
+/* ========================================================================== */
+/*                          Function Definitions                              */
+/* ========================================================================== */
+
 bool Board_initI2C(void)
 {
     Board_initCfg boardCfg;
     Board_STATUS  boardStatus;
-#if defined (idkAM571x)
-    Board_IDInfo  id;
-#endif
     I2C_HwAttrs   i2c_cfg;
-#if defined (evmK2G)
-    Board_SoCInfo socInfo;
-#endif
-
-#if defined(evmK2E) || defined(evmC6678)
-    boardCfg = BOARD_INIT_MODULE_CLOCK |
-        BOARD_INIT_UART_STDIO;
-#else
     boardCfg = BOARD_INIT_PINMUX_CONFIG |
         BOARD_INIT_MODULE_CLOCK |
         BOARD_INIT_UART_STDIO;
-#endif
     boardStatus = Board_init(boardCfg);
     if (BOARD_SOK != boardStatus)
     {
@@ -200,16 +163,6 @@ bool Board_initI2C(void)
     I2C_socGetInitCfg(I2C_EEPROM_INSTANCE, &i2c_cfg);
 
     /* Modify the default I2C configurations if necessary */
-#if defined(SOC_AM65XX)
-    /* No I2C instanced connected to eeprom in main domain, use i2c instance in wakeup domain */
-    i2c_cfg.baseAddr = CSL_WKUP_I2C0_CFG_BASE;
-#if defined (__aarch64__)
-    i2c_cfg.intNum = CSL_GIC0_INTR_WKUP_I2C0_BUS_POINTRPEND;
-#else
-    i2c_cfg.intNum = CSL_MCU0_INTR_I2C0_POINTRPEND;
-#endif
-#endif
-
 #if defined (SOC_J721E) || defined(SOC_J7200) || defined (SOC_J784S4)
     /* No I2C instanced connected to eeprom in main domain, use i2c instance in wakeup domain */
     i2c_cfg.baseAddr = CSL_WKUP_I2C0_CFG_BASE;
@@ -252,41 +205,10 @@ bool Board_initI2C(void)
     /* Set the default I2C init configurations */
     I2C_socSetInitCfg(I2C_EEPROM_INSTANCE, &i2c_cfg);
 
-#if defined (idkAM571x)
-    boardStatus = Board_getIDInfo(&id);
-    if (BOARD_SOK != boardStatus)
-    {
-        return (BFALSE);
-    }
-    memcpy(eepromData, &id.header[I2C_EEPROM_TEST_ADDR],
-           BOARD_EEPROM_HEADER_LENGTH - I2C_EEPROM_TEST_ADDR);
-    memcpy(&eepromData[BOARD_EEPROM_HEADER_LENGTH - I2C_EEPROM_TEST_ADDR],
-           id.boardName,
-           I2C_EEPROM_TEST_LENGTH - BOARD_EEPROM_HEADER_LENGTH + I2C_EEPROM_TEST_ADDR);
-#endif
-
-#if defined (evmK2G)
-    /* Read the SoC info to get the System clock value */
-    Board_getSoCInfo(&socInfo);
-    if(BOARD_SYS_CLK_DEFAULT != socInfo.sysClock)
-    {
-        /* Get the default I2C init configurations */
-        I2C_socGetInitCfg(I2C_EEPROM_INSTANCE, &i2c_cfg);
-        /* Update the I2C functional clock based on CPU clock - 1G or 600MHz */
-        i2c_cfg.funcClk = socInfo.sysClock/6;
-        /* Set the default I2C init configurations */
-        I2C_socSetInitCfg(I2C_EEPROM_INSTANCE, &i2c_cfg);
-    }
-#endif
-
-
     I2C_log("\n I2C Test: Using Instance %d", I2C_EEPROM_INSTANCE);
     return (BTRUE);
 }
 
-/*
- *  ======== I2C init config ========
- */
 static void I2C_initConfig(uint32_t instance, I2C_Tests *test)
 {
     I2C_HwAttrs   i2c_cfg;
@@ -313,9 +235,6 @@ static void I2C_initConfig(uint32_t instance, I2C_Tests *test)
     I2C_socSetInitCfg(instance, &i2c_cfg);
 }
 
-/*
- *  ======== CompareData ========
- */
 static bool CompareData(char *expData, char *rxData, uint32_t length)
 {
     uint32_t idx = 0U;
@@ -382,15 +301,10 @@ static bool i2c_bitrate_test (I2C_BitRate bitRate, I2C_Tests *test)
         testStatus = BFALSE;
         goto Err;
     }
-
-#if defined (evmK2H) || defined (evmK2K) || defined (evmK2E) || defined (evmK2L) || defined (evmK2G) || defined (iceK2G) || defined (am65xx_evm) || defined (am65xx_idk) || defined (j721e_sim) || defined (j721e_evm) || defined (j7200_evm) || defined (am64x_evm) || defined (j721s2_evm) || defined (j784s4_evm)
     BOARD_delay(I2C_EEPROM_TEST_DELAY);
-#endif
 #else
-#if defined (evmK2H) || defined (evmK2K) || defined (evmK2E) || defined (evmK2L) || defined (evmK2G) || defined (iceK2G) || defined (EVM_OMAPL137) || defined (am65xx_evm) || defined (am65xx_idk) || defined (j721e_sim) || defined (j721e_evm) || defined(j7200) || defined (am64x_evm) || defined (j721s2_evm) || defined (j784s4_evm)
     /* EEPROM write disabled on K2, need copy data */
     copyData = BTRUE;
-#endif
 #endif
     memset(rxBuf, 0, I2C_EEPROM_TEST_LENGTH);
     I2C_transactionInit(&i2cTransaction);
@@ -412,9 +326,7 @@ static bool i2c_bitrate_test (I2C_BitRate bitRate, I2C_Tests *test)
     }
     else
     {
-#if defined (evmC6678) || defined (evmC6657) || defined (am65xx_evm) || defined (am65xx_idk) || defined (j721e_sim) || defined (j721e_evm) || defined (j7200_evm) || defined (am64x_evm) || defined (j721s2_evm) || defined (j784s4_evm)
         copyData = BTRUE;
-#endif
 
         /* read only test, copy data from rx buffer to eepromData to pass the test */
         if (copyData)
@@ -456,7 +368,7 @@ static bool I2C_bitrate_test(void *arg)
 }
 
 
-#if defined (SOC_AM335X) || defined (SOC_AM437x) || defined (SOC_AM571x) || defined (SOC_AM572x) || defined (SOC_AM574x) || defined (SOC_AM65XX) || defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_AM64X) || defined (SOC_J784S4)
+#if defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J784S4)
 static bool I2C_Probe_BusFrequency_test(void *arg)
 {
     I2C_Handle      handle;
@@ -685,10 +597,7 @@ I2C_Tests I2c_tests[] =
 {
     /* testFunc                   testID                       dma     intr    cbMode  timeout                  testDesc */
     {I2C_bitrate_test,            I2C_TEST_ID_BIT_RATE,        BFALSE, BTRUE,  BFALSE, SemaphoreP_WAIT_FOREVER, "\r\n I2C bit rate test in interrupt mode"},
-#if defined (SOC_AM335X) || defined (SOC_AM437x) || defined (SOC_AM571x) || defined (SOC_AM572x) || defined (SOC_AM574x) || defined (SOC_AM65XX) || defined (SOC_AM64X)
-    {I2C_Probe_BusFrequency_test, I2C_TEST_ID_PROBE_BUS_FREQ,  false, true,  false, SemaphoreP_WAIT_FOREVER, "\r\n I2C probe bus freq test in interrupt mode"},
-    {I2C_timeout_test,            I2C_TEST_ID_TIMEOUT_INT,     false, true,  false, 1,                       "\r\n I2C timeout test in interrupt mode"},
-#elif defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J784S4)
+#if defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J784S4)
     {I2C_Probe_BusFrequency_test, I2C_TEST_ID_PROBE_BUS_FREQ,  BFALSE, BTRUE,  BFALSE, SemaphoreP_WAIT_FOREVER, "\r\n I2C probe bus freq test in interrupt mode"},
     {I2C_timeout_test,            I2C_TEST_ID_TIMEOUT_INT,     BFALSE, BTRUE,  BFALSE, 1,                       "\r\n I2C timeout test in interrupt mode"},
 #endif
@@ -696,7 +605,7 @@ I2C_Tests I2c_tests[] =
 };
 
 
-#if defined(UNITY_INCLUDE_CONFIG_H) && (defined(SOC_J721E) || defined (SOC_J784S4) || defined(SOC_J7200) || defined (SOC_AM65XX) || defined (SOC_AM64X))
+#if defined(UNITY_INCLUDE_CONFIG_H) && (defined(SOC_J721E) || defined (SOC_J784S4) || defined(SOC_J7200))
 /*
  *  ======== Unity set up and tear down ========
  */
@@ -828,7 +737,7 @@ void i2c_test(void *arg0, void *arg1)
 int main ()
 #endif
 {
-#if defined(UNITY_INCLUDE_CONFIG_H) && (defined(SOC_J721E) || defined (SOC_J784S4) || defined(SOC_J7200) || defined (SOC_AM65XX) || defined (SOC_AM64X))
+#if defined(UNITY_INCLUDE_CONFIG_H) && (defined(SOC_J721E) || defined (SOC_J784S4) || defined(SOC_J7200))
     test_I2C_Eeprom_TestApp_runner();
 #else
     bool       testResult = BTRUE;
@@ -863,13 +772,6 @@ int main ()
             break;
         }
     }
-
-   #if defined LDRA_DYN_COVERAGE_EXIT
-   I2C_log("\n LDRA ENTRY \n");
-   upload_execution_history();
-   I2C_log("\n LDRA EXIT \n");
-   #endif
-
     if(BTRUE == testResult)
     {
         I2C_log("\n All tests have passed. \n");
@@ -878,6 +780,12 @@ int main ()
     {
         I2C_log("\n Some tests have failed. \n");
     }
+
+    #if defined LDRA_DYN_COVERAGE_EXIT
+    I2C_log("\n LDRA ENTRY \n");
+    upload_execution_history();
+    I2C_log("\n LDRA EXIT \n");
+    #endif
 
     while (BTRUE)
     {

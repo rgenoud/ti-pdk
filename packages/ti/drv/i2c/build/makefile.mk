@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016 - 2018, Texas Instruments Incorporated
+# Copyright (c) 2016 - 2024, Texas Instruments Incorporated
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -33,44 +33,25 @@
 include $(PDK_INSTALL_PATH)/ti/build/Rules.make
 
 MODULE_NAME = i2c
-ifeq ($(ICSS0_FW), yes)
-    MODULE_NAME = i2c_icss0
-endif
 
 include $(PDK_I2C_COMP_PATH)/src/src_files_common.mk
 
-ifeq ($(SOC),$(filter $(SOC), tda2xx tda2px dra72x dra75x tda2ex am571x am572x am574x tda3xx dra78x k2h k2k k2l k2e k2g c6678 c6657 am437x am335x omapl137 omapl138 am65xx j721e j7200 am64x tpr12 awr294x j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4))
 SRCDIR += soc/$(SOC)
 INCDIR += soc
 # Common source files across all platforms and cores
-SRCS_COMMON += I2C_soc.c
+SRCS_COMMON += i2c_soc.c
 endif
 
 # List all the external components/interfaces, whose interface header files
-#  need to be included for this component
+# need to be included for this component
 INCLUDE_EXTERNAL_INTERFACES = pdk
 
-ifeq ($(SOC),$(filter $(SOC), tda2xx tda2px dra72x dra75x tda2ex am571x am572x am574x tda3xx dra78x k2h k2k k2l k2e k2g c6678 c6657 am437x am335x omapl137 omapl138 am65xx j721e j7200 am64x tpr12 awr294x j721s2 j784s4))
-PACKAGE_SRCS_COMMON += soc/$(SOC) soc/I2C_soc.h
+ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4))
+PACKAGE_SRCS_COMMON += soc/$(SOC) soc/i2c_soc.h
 endif
 
 CFLAGS_LOCAL_COMMON = $(PDK_CFLAGS)
-
-# For all FW supporting devices source files in library and package
-ifeq ($(SOC),$(filter $(SOC), am574x am572x am335x am437x))
-  SRCDIR += src/v2
-  INCDIR += src/v2
-  SRCS_COMMON += I2C_v2.c
-  PACKAGE_SRCS_COMMON += src/v2 soc/I2C_v2.h
-  CFLAGS_LOCAL_COMMON += -DPRU_ICSS_FW
-endif
-
-ifeq ($(SOC),$(filter $(SOC), am437x))
-  ifeq ($(ICSS0_FW), yes)
-    # For ICSS0
-    CFLAGS_LOCAL_COMMON += -DAM437X_ICSS0
-  endif
-endif
 
 # Include common make files
 ifeq ($(MAKERULEDIR), )

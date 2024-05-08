@@ -53,8 +53,8 @@ extern "C" {
 #include <ti/csl/cslr_device.h>
 #include <ti/csl/csl_bootcfgAux.h>
 
-#include <ti/drv/i2c/I2C.h>
-#include <ti/drv/i2c/soc/I2C_soc.h>
+#include <ti/drv/i2c/i2c.h>
+#include <ti/drv/i2c/soc/i2c_soc.h>
 
 #include <ti/drv/spi/SPI.h>
 

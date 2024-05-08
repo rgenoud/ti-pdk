@@ -40,7 +40,7 @@
 
 #include <xdc/std.h>
 #ifndef iceAMIC11x
-#include <ti/drv/i2c/I2C.h>
+#include <ti/drv/i2c/i2c.h>
 
 
 I2C_Handle i2cLedhandle = NULL;

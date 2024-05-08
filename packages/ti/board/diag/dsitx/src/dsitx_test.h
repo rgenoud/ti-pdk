@@ -56,7 +56,7 @@ extern "C" {
 #include <ti/board/src/devices/board_devices.h>
 
 #include <ti/drv/uart/UART_stdio.h>
-#include <ti/drv/i2c/I2C.h>
+#include <ti/drv/i2c/i2c.h>
 #include <ti/drv/dss/dss.h>
 #include <ti/drv/pm/pmlib.h>
 #include <ti/drv/sciclient/sciclient.h>

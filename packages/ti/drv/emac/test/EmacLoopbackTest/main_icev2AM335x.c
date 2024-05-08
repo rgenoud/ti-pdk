@@ -66,8 +66,8 @@
 #include <ti/board/board.h>
 
 /* TI-RTOS Header files */
-#include <ti/drv/i2c/I2C.h>
-#include <ti/drv/i2c/soc/I2C_v1.h>
+#include <ti/drv/i2c/i2c.h>
+#include <ti/drv/i2c/soc/i2c_api.h>
 
 /* UART Header files */
 #include <ti/drv/uart/UART.h>

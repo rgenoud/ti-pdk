@@ -43,8 +43,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <ti/drv/i2c/I2C.h>
-#include <ti/drv/i2c/soc/I2C_soc.h>
+#include <ti/drv/i2c/i2c.h>
+#include <ti/drv/i2c/soc/i2c_soc.h>
 #include <ti/drv/uart/UART_stdio.h>
 
 #if defined(SOC_K2G) || defined(SOC_J721E) || defined(SOC_J7200)

@@ -59,8 +59,8 @@
 #include <ti/drv/mcasp/soc/mcasp_soc.h>
 
 /* I2C Driver Header Files */
-#include <ti/drv/i2c/I2C.h>
-#include <ti/drv/i2c/soc/I2C_soc.h>
+#include <ti/drv/i2c/i2c.h>
+#include <ti/drv/i2c/soc/i2c_soc.h>
 
 /*============================================================================*/
 /*                          MACRO DEFINITIONS                                 */

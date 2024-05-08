@@ -62,8 +62,8 @@
 #endif
 
 #if ((defined(SOC_AM65XX) && defined(AM65XX_BETA_BOARD)) || defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_AM64X) || defined(SOC_J721S2) || defined(SOC_J784S4))
-#include <ti/drv/i2c/I2C.h>
-#include <ti/drv/i2c/soc/I2C_soc.h>
+#include <ti/drv/i2c/i2c.h>
+#include <ti/drv/i2c/soc/i2c_soc.h>
 #include "board_i2c_io_exp.h"
 #endif
 #ifdef __cplusplus

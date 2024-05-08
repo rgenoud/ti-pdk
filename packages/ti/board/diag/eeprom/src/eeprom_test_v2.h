@@ -42,8 +42,8 @@
 #ifndef _EEPROM_TEST_V2_H_
 #define _EEPROM_TEST_V2_H_
 
-#include <ti/drv/i2c/I2C.h>
-#include <ti/drv/i2c/soc/I2C_soc.h>
+#include <ti/drv/i2c/i2c.h>
+#include <ti/drv/i2c/soc/i2c_soc.h>
 
 #include <ti/drv/uart/UART.h>
 #include <ti/drv/uart/UART_stdio.h>

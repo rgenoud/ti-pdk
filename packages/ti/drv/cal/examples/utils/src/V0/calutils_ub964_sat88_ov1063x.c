@@ -44,8 +44,8 @@
 
 #include <ti/csl/soc.h>
 #include <calutils_ub964_sat88_ov1063x.h>
-#include <ti/drv/i2c/I2C.h>
-#include <ti/drv/i2c/soc/I2C_soc.h>
+#include <ti/drv/i2c/i2c.h>
+#include <ti/drv/i2c/soc/i2c_soc.h>
 
 
 /* ========================================================================== */

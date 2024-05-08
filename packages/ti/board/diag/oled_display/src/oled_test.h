@@ -52,8 +52,8 @@
 #include <ti/drv/gpio/soc/GPIO_soc.h>
 #endif
 
-#include <ti/drv/i2c/I2C.h>
-#include <ti/drv/i2c/soc/I2C_soc.h>
+#include <ti/drv/i2c/i2c.h>
+#include <ti/drv/i2c/soc/i2c_soc.h>
 #include <ti/drv/uart/UART_stdio.h>
 
 #if defined(SOC_K2G) || defined(SOC_AM64X)
@@ -65,8 +65,8 @@
 #include "oled_display.h"
 
 #if defined(SOC_AM64X)
-#include <ti/drv/i2c/I2C.h>
-#include <ti/drv/i2c/soc/I2C_soc.h>
+#include <ti/drv/i2c/i2c.h>
+#include <ti/drv/i2c/soc/i2c_soc.h>
 #include "board_internal.h"
 #include "board_i2c_io_exp.h"
 

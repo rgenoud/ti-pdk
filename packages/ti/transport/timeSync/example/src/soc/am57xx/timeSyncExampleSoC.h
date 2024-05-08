@@ -35,7 +35,7 @@
 #ifndef TIMESYNC_EXAMPLE_SOC_DEFINES_AM57XX_H
 #define TIMESYNC_EXAMPLE_SOC_DEFINES_AM57XX_H
 
-#include <ti/drv/i2c/I2C.h>
+#include <ti/drv/i2c/i2c.h>
 #include <ti/board/board_cfg.h>
 
 #if defined(__ARM_ARCH_7A__)

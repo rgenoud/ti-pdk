@@ -88,8 +88,8 @@
 #include <ti/csl/csl_mmcsd.h>
 #include <ti/drv/mmcsd/MMCSD.h>
 #include <ti/drv/mmcsd/soc/MMCSD_soc.h>
-#include <ti/drv/i2c/I2C.h>
-#include <ti/drv/i2c/soc/I2C_soc.h>
+#include <ti/drv/i2c/i2c.h>
+#include <ti/drv/i2c/soc/i2c_soc.h>
 #include <ti/drv/pm/include/pm_types.h>
 #include <ti/drv/pm/include/prcm/pmhal_pmic.h>
 #include <ti/drv/pm/include/pmic/pmhal_tps659039.h>

@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016 - 2022, Texas Instruments Incorporated
+# Copyright (c) 2016 - 2024, Texas Instruments Incorporated
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -66,59 +66,24 @@
 #
 ifeq ($(i2c_component_make_include), )
 
-drvi2c_BOARDLIST       = am65xx_evm am65xx_idk j721e_sim j721e_evm j7200_evm am64x_evm j721s2_evm j784s4_evm
-drvi2c_BOARDLISTLIM    = am65xx_evm am65xx_idk am64x_evm
-drvi2c_SOCLIST         = am574x am572x am571x tda2xx tda2px tda2ex tda3xx dra78x dra72x dra75x k2h k2k k2l k2e k2g c6678 c6657 am437x am335x omapl137 omapl138 am65xx j721e j7200 j721s2 j784s4 am64x tpr12 awr294x
-drvi2c_SOCLISTLIM      = am574x am572x am571x tda2xx tda2px tda2ex tda3xx dra78x dra72x dra75x k2h k2k k2l k2e k2g c6678 c6657 am437x am335x omapl137 omapl138 am65xx am64x
-drvi2c_tda2xx_CORELIST = ipu1_0
-drvi2c_tda2px_CORELIST = ipu1_0
-drvi2c_tda2ex_CORELIST = ipu1_0
-drvi2c_tda3xx_CORELIST = ipu1_0
-drvi2c_dra72x_CORELIST = c66x a15_0 ipu1_0
-drvi2c_dra75x_CORELIST = c66x a15_0 ipu1_0
-drvi2c_dra78x_CORELIST = c66x ipu1_0
-drvi2c_am574x_CORELIST = c66x a15_0 ipu1_0 pru_0 pru_1
-drvi2c_am572x_CORELIST = c66x a15_0 ipu1_0 pru_0 pru_1
-drvi2c_am571x_CORELIST = c66x a15_0 ipu1_0 pru_0 pru_1
-drvi2c_k2h_CORELIST    = c66x a15_0
-drvi2c_k2k_CORELIST    = c66x a15_0
-drvi2c_k2l_CORELIST    = c66x a15_0
-drvi2c_k2e_CORELIST    = c66x a15_0
-drvi2c_k2g_CORELIST    = c66x a15_0 pru_0 pru_1
-drvi2c_omapl137_CORELIST    = c674x arm9_0
-drvi2c_omapl138_CORELIST    = c674x arm9_0
-drvi2c_c6678_CORELIST  = c66x
-drvi2c_c6657_CORELIST  = c66x
-drvi2c_am437x_CORELIST = a9host pru_0 pru_1
-drvi2c_am335x_CORELIST = a8host pru_0 pru_1
-drvi2c_am65xx_CORELIST   = mpu1_0 mcu1_0 mcu1_1
-drvi2c_j721e_CORELIST   = $(DEFAULT_j721e_CORELIST)
-drvi2c_j721e_CORELISTARM = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1
-drvi2c_j721s2_CORELIST  = mpu1_0 mcu1_0 mcu2_0 mcu3_0 c7x_1
+drvi2c_BOARDLIST           = j721e_evm j7200_evm j721s2_evm j784s4_evm
+drvi2c_SOCLIST             = j721e j7200 j721s2 j784s4
+drvi2c_j721e_CORELIST      = $(DEFAULT_j721e_CORELIST)
+drvi2c_j721e_CORELISTARM   = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1
+drvi2c_j721s2_CORELIST     = mpu1_0 mcu1_0 mcu2_0 mcu3_0 c7x_1
 drvi2c_j721s2_CORELISTARM  = mcu1_0 mcu2_0 mcu3_0
-drvi2c_j784s4_CORELIST  = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mcu4_0 mcu4_1 c7x_1
+drvi2c_j784s4_CORELIST     = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mcu4_0 mcu4_1 c7x_1
 drvi2c_j784s4_CORELISTARM  = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mcu4_0 mcu4_1
-drvi2c_j7200_CORELIST  = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1
-drvi2c_am64x_CORELIST  = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 m4f_0
-drvi2c_tpr12_CORELIST  = mcu1_0 c66xdsp_1
-drvi2c_awr294x_CORELIST  = mcu1_0
-drvi2c_RTOS_LIST         = $(DEFAULT_RTOS_LIST)
+drvi2c_j7200_CORELIST      = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1
+drvi2c_RTOS_LIST           = $(DEFAULT_RTOS_LIST)
 
 ############################
 # i2c package
 # List of components included under i2c lib
 # The components included here are built and will be part of i2c lib
 ############################
-i2c_LIB_LIST = i2c i2c_indp i2c_profile i2c_profile_indp i2c_icss0
+i2c_LIB_LIST = i2c
 drvi2c_LIB_LIST = $(i2c_LIB_LIST)
-
-############################
-# i2c Firmwares
-# All the firmware mentioned in list are built when build target is called
-# List below all firmware for allowed values
-############################
-i2c_FIRM_LIST = icss_i2c icss_i2c_icss0
-drvi2c_FIRM_LIST = $(i2c_FIRM_LIST)
 
 ############################
 # i2c examples
@@ -126,11 +91,7 @@ drvi2c_FIRM_LIST = $(i2c_FIRM_LIST)
 # All the tests mentioned in list are built when test target is called
 # List below all examples for allowed values
 ############################
-ifeq ($(SOC),$(filter $(SOC), j784s4))
-i2c_EXAMPLE_LIST = drv_i2c_utility I2C_Baremetal_Eeprom_TestApp i2c_extended_testapp
-else
-i2c_EXAMPLE_LIST = drv_i2c_led_blink_test I2C_Baremetal_Eeprom_TestApp drv_i2c_utility I2C_Master_TestApp  I2C_Slave_TestApp i2c_extended_testapp
-endif
+i2c_EXAMPLE_LIST = 
 
 #
 # I2C Modules
@@ -172,222 +133,35 @@ i2c_$(SOC)_CORELIST += mcu4_0
 endif
 export i2c_$(SOC)_CORELIST
 
-# I2C LIB, AM437x ICSS0
-i2c_icss0_COMP_LIST = i2c_icss0
-i2c_icss0_RELPATH = ti/drv/i2c
-i2c_icss0_PATH = $(PDK_I2C_COMP_PATH)
-i2c_icss0_LIBNAME = ti.drv.i2c_icss0
-export i2c_icss0_LIBNAME
-i2c_icss0_LIBPATH = $(i2c_icss0_PATH)/lib
-export i2c_icss0_LIBPATH
-i2c_icss0_OBJPATH = $(i2c_icss0_RELPATH)/i2c_icss0
-export i2c_icss0_OBJPATH
-i2c_icss0_MAKEFILE = -f build/makefile.mk ICSS0_FW=yes
-export i2c_icss0_MAKEFILE
-i2c_icss0_BOARD_DEPENDENCY = no
-i2c_icss0_CORE_DEPENDENCY = no
-i2c_icss0_SOC_DEPENDENCY = yes
-export i2c_icss0_COMP_LIST
-export i2c_icss0_BOARD_DEPENDENCY
-export i2c_icss0_CORE_DEPENDENCY
-export i2c_icss0_SOC_DEPENDENCY
-i2c_icss0_PKG_LIST = i2c
-export i2c_icss0_PKG_LIST
-i2c_icss0_INCLUDE = $(i2c_icss0_PATH)
-i2c_icss0_SOCLIST = am437x
-export i2c_icss0_SOCLIST
-i2c_icss0_$(SOC)_CORELIST = $(drvi2c_$(SOC)_CORELIST)
-export i2c_icss0_$(SOC)_CORELIST
-
-# I2C INDEPENDENT LIB
-i2c_indp_COMP_LIST = i2c_indp
-i2c_indp_RELPATH = ti/drv/i2c
-i2c_indp_PATH = $(PDK_I2C_COMP_PATH)
-i2c_indp_LIBNAME = ti.drv.i2c
-export i2c_indp_LIBNAME
-i2c_indp_LIBPATH = $(i2c_indp_PATH)/lib
-export i2c_indp_LIBPATH
-i2c_indp_OBJPATH = $(i2c_indp_RELPATH)/i2c_indp
-export i2c_indp_OBJPATH
-i2c_indp_MAKEFILE = -f build/makefile_indp.mk
-export i2c_indp_MAKEFILE
-i2c_indp_BOARD_DEPENDENCY = no
-i2c_indp_CORE_DEPENDENCY = no
-i2c_indp_SOC_DEPENDENCY = no
-export i2c_indp_COMP_LIST
-export i2c_indp_BOARD_DEPENDENCY
-export i2c_indp_CORE_DEPENDENCY
-export i2c_indp_SOC_DEPENDENCY
-i2c_indp_PKG_LIST = i2c_indp
-export i2c_indp_PKG_LIST
-i2c_indp_INCLUDE = $(i2c_indp_PATH)
-i2c_indp_SOCLIST = am574x am572x am571x tda2xx tda2px tda2ex tda3xx dra78x dra72x dra75x k2h k2k k2l k2e k2g c6678 c6657 am437x am335x omapl137 omapl138
-export i2c_indp_SOCLIST
-i2c_indp_$(SOC)_CORELIST = $(drvi2c_$(SOC)_CORELIST)
-export i2c_indp_$(SOC)_CORELIST
-
-# I2C PROFILE LIB
-i2c_profile_COMP_LIST = i2c_profile
-i2c_profile_RELPATH = ti/drv/i2c
-i2c_profile_PATH = $(PDK_I2C_COMP_PATH)
-i2c_profile_LIBNAME = ti.drv.i2c.profiling
-export i2c_profile_LIBNAME
-i2c_profile_LIBPATH = $(i2c_profile_PATH)/lib
-export i2c_profile_LIBPATH
-i2c_profile_OBJPATH = $(i2c_profile_RELPATH)/i2c_profile
-export i2c_profile_OBJPATH
-i2c_profile_MAKEFILE = -f build/makefile_profile.mk
-export i2c_profile_MAKEFILE
-i2c_profile_BOARD_DEPENDENCY = no
-i2c_profile_CORE_DEPENDENCY = no
-i2c_profile_SOC_DEPENDENCY = yes
-export i2c_profile_COMP_LIST
-export i2c_profile_BOARD_DEPENDENCY
-export i2c_profile_CORE_DEPENDENCY
-export i2c_profile_SOC_DEPENDENCY
-i2c_profile_PKG_LIST = i2c_profile
-export i2c_profile_PKG_LIST
-i2c_profile_INCLUDE = $(i2c_profile_PATH)
-i2c_profile_SOCLIST = am574x am572x am571x tda2xx tda2px tda2ex tda3xx dra78x dra72x dra75x k2h k2k k2l k2e k2g c6678 c6657 am437x am335x omapl137 omapl138
-export i2c_profile_SOCLIST
-i2c_profile_$(SOC)_CORELIST = $(drvi2c_$(SOC)_CORELIST)
-export i2c_profile_$(SOC)_CORELIST
-
-# I2C PROFILE INDEPENDENT LIB
-i2c_profile_indp_COMP_LIST = i2c_profile_indp
-i2c_profile_indp_RELPATH = ti/drv/i2c
-i2c_profile_indp_PATH = $(PDK_I2C_COMP_PATH)
-i2c_profile_indp_LIBNAME = ti.drv.i2c.profiling
-export i2c_profile_indp_LIBNAME
-i2c_profile_indp_LIBPATH = $(i2c_profile_indp_PATH)/lib
-export i2c_profile_indp_LIBPATH
-i2c_profile_indp_OBJPATH = $(i2c_profile_indp_RELPATH)/i2c_profile_indp
-export i2c_profile_indp_OBJPATH
-i2c_profile_indp_MAKEFILE = -f build/makefile_profile_indp.mk
-export i2c_profile_indp_MAKEFILE
-i2c_profile_indp_BOARD_DEPENDENCY = no
-i2c_profile_indp_CORE_DEPENDENCY = no
-i2c_profile_indp_SOC_DEPENDENCY = no
-export i2c_profile_indp_COMP_LIST
-export i2c_profile_indp_BOARD_DEPENDENCY
-export i2c_profile_indp_CORE_DEPENDENCY
-export i2c_profile_indp_SOC_DEPENDENCY
-i2c_profile_indp_PKG_LIST = i2c_profile_indp
-export i2c_profile_indp_PKG_LIST
-i2c_profile_indp_INCLUDE = $(i2c_profile_indp_PATH)
-i2c_profile_indp_SOCLIST = am574x am572x am571x tda2xx tda2px tda2ex tda3xx dra78x dra72x dra75x k2h k2k k2l k2e k2g c6678 c6657 am437x am335x omapl137 omapl138
-export i2c_profile_indp_SOCLIST
-i2c_profile_indp_$(SOC)_CORELIST = $(drvi2c_$(SOC)_CORELIST)
-export i2c_profile_indp_$(SOC)_CORELIST
-
-#
-# I2C Firmwares
-#
-icss_i2c_COMP_LIST = icss_i2c
-# temporary fix for nightly build
-# icss_i2c_RELPATH = ti/drv/i2c/firmware/icss_i2c
-icss_i2c_RELPATH = icss_i2c
-icss_i2c_PATH = $(PDK_I2C_COMP_PATH)/firmware/icss_i2c
-icss_i2c_HEADERNAME = icss_i2c
-export icss_i2c_HEADERNAME
-icss_i2c_HEADERPATH = $(icss_i2c_PATH)/bin
-export icss_i2c_HEADERPATH
-icss_i2c_OBJPATH = $(icss_i2c_RELPATH)
-export icss_i2c_OBJPATH
-icss_i2c_MAKEFILE = -f ../../build/makefile_icss_i2c.mk
-export icss_i2c_MAKEFILE
-icss_i2c_BOARD_DEPENDENCY = no
-icss_i2c_CORE_DEPENDENCY = yes
-icss_i2c_SOC_DEPENDENCY = yes
-export icss_i2c_COMP_LIST
-export icss_i2c_BOARD_DEPENDENCY
-export icss_i2c_CORE_DEPENDENCY
-export icss_i2c_SOC_DEPENDENCY
-icss_i2c_PKG_LIST = icss_i2c
-export icss_i2c_PKG_LIST
-icss_i2c_INCLUDE = $(icss_i2c_PATH)
-icss_i2c_SOCLIST = am437x am574x am572x am571x am335x k2g
-export icss_i2c_SOCLIST
-icss_i2c_$(SOC)_CORELIST = $(drvi2c_$(SOC)_CORELIST)
-export icss_i2c_$(SOC)_CORELIST
-
-#
-# I2C Firmwares, AM437x ICSS0
-#
-icss_i2c_icss0_COMP_LIST = icss_i2c_icss0
-icss_i2c_icss0_RELPATH = icss_i2c_icss0
-icss_i2c_icss0_PATH = $(PDK_I2C_COMP_PATH)/firmware/icss_i2c
-icss_i2c_icss0_HEADERNAME = icss_i2c_icss0
-export icss_i2c_icss0_HEADERNAME
-icss_i2c_icss0_HEADERPATH = $(icss_i2c_icss0_PATH)/bin
-export icss_i2c_icss0_HEADERPATH
-icss_i2c_icss0_OBJPATH = $(icss_i2c_icss0_RELPATH)
-export icss_i2c_icss0_OBJPATH
-icss_i2c_icss0_MAKEFILE = -f ../../build/makefile_icss_i2c.mk ICSS0_FW=yes
-export icss_i2c_icss0_MAKEFILE
-icss_i2c_icss0_BOARD_DEPENDENCY = no
-icss_i2c_icss0_CORE_DEPENDENCY = yes
-icss_i2c_icss0_SOC_DEPENDENCY = yes
-export icss_i2c_icss0_COMP_LIST
-export icss_i2c_icss0_BOARD_DEPENDENCY
-export icss_i2c_icss0_CORE_DEPENDENCY
-export icss_i2c_icss0_SOC_DEPENDENCY
-icss_i2c_icss0_PKG_LIST = icss_i2c
-export icss_i2c_icss0_PKG_LIST
-icss_i2c_icss0_INCLUDE = $(icss_i2c_icss0_PATH)
-icss_i2c_icss0_SOCLIST = am437x
-export icss_i2c_icss0_SOCLIST
-icss_i2c_icss0_$(SOC)_CORELIST = $(drvi2c_$(SOC)_CORELIST)
-export icss_i2c_icss0_$(SOC)_CORELIST
-
 #
 # I2C Examples
 #
 
-# I2C Example led blink
-drv_i2c_led_blink_test_COMP_LIST = drv_i2c_led_blink_test
-drv_i2c_led_blink_test_RELPATH = ti/drv/i2c/example/tdaxx/led_blink
-drv_i2c_led_blink_test_PATH = $(PDK_I2C_COMP_PATH)/example/tdaxx/led_blink
-drv_i2c_led_blink_test_BOARD_DEPENDENCY = yes
-drv_i2c_led_blink_test_CORE_DEPENDENCY = no
-drv_i2c_led_blink_test_XDC_CONFIGURO = yes
-export drv_i2c_led_blink_test_COMP_LIST
-export drv_i2c_led_blink_test_BOARD_DEPENDENCY
-export drv_i2c_led_blink_test_CORE_DEPENDENCY
-export drv_i2c_led_blink_test_XDC_CONFIGURO
-drv_i2c_led_blink_test_PKG_LIST = drv_i2c_led_blink_test
-drv_i2c_led_blink_test_INCLUDE = $(drv_i2c_led_blink_test_PATH)
-drv_i2c_led_blink_test_BOARDLIST = tda2xx-evm tda2px-evm tda2ex-evm tda3xx-evm evmDRA78x
-export drv_i2c_led_blink_test_BOARDLIST
-drv_i2c_led_blink_test_$(SOC)_CORELIST = $(i2c_$(SOC)_CORELIST)
-export drv_i2c_led_blink_test_$(SOC)_CORELIST
-
 # I2C baremetal EEPROM test
-I2C_Baremetal_Eeprom_TestApp_COMP_LIST = I2C_Baremetal_Eeprom_TestApp
-I2C_Baremetal_Eeprom_TestApp_RELPATH = ti/drv/i2c/test/eeprom_read
-I2C_Baremetal_Eeprom_TestApp_PATH = $(PDK_I2C_COMP_PATH)/test/eeprom_read
-I2C_Baremetal_Eeprom_TestApp_BOARD_DEPENDENCY = yes
-I2C_Baremetal_Eeprom_TestApp_CORE_DEPENDENCY = no
-I2C_Baremetal_Eeprom_TestApp_MAKEFILE = -f makefile BUILD_OS_TYPE=baremetal
-export I2C_Baremetal_Eeprom_TestApp_COMP_LIST
-export I2C_Baremetal_Eeprom_TestApp_BOARD_DEPENDENCY
-export I2C_Baremetal_Eeprom_TestApp_CORE_DEPENDENCY
-export I2C_Baremetal_Eeprom_TestApp_MAKEFILE
-I2C_Baremetal_Eeprom_TestApp_PKG_LIST = I2C_Baremetal_Eeprom_TestApp
-I2C_Baremetal_Eeprom_TestApp_INCLUDE = $(I2C_Baremetal_Eeprom_TestApp_PATH)
-I2C_Baremetal_Eeprom_TestApp_BOARDLIST = am65xx_evm am65xx_idk j721e_evm j784s4_evm j7200_evm am64x_evm
-export I2C_Baremetal_Eeprom_TestApp_BOARDLIST
+i2c_baremetal_eeprom_testApp_COMP_LIST = i2c_baremetal_eeprom_testApp
+i2c_baremetal_eeprom_testApp_RELPATH = ti/drv/i2c/test/eeprom_read
+i2c_baremetal_eeprom_testApp_PATH = $(PDK_I2C_COMP_PATH)/test/eeprom_read
+i2c_baremetal_eeprom_testApp_BOARD_DEPENDENCY = yes
+i2c_baremetal_eeprom_testApp_CORE_DEPENDENCY = no
+i2c_baremetal_eeprom_testApp_MAKEFILE = -f makefile BUILD_OS_TYPE=baremetal
+export i2c_baremetal_eeprom_testApp_COMP_LIST
+export i2c_baremetal_eeprom_testApp_BOARD_DEPENDENCY
+export i2c_baremetal_eeprom_testApp_CORE_DEPENDENCY
+export i2c_baremetal_eeprom_testApp_MAKEFILE
+i2c_baremetal_eeprom_testApp_PKG_LIST = i2c_baremetal_eeprom_testApp
+i2c_baremetal_eeprom_testApp_INCLUDE = $(i2c_baremetal_eeprom_testApp_PATH)
+i2c_baremetal_eeprom_testApp_BOARDLIST = j721e_evm j784s4_evm j7200_evm
+export i2c_baremetal_eeprom_testApp_BOARDLIST
 ifeq ($(SOC),$(filter $(SOC), j721e))
-I2C_Baremetal_Eeprom_TestApp_$(SOC)_CORELIST = $(drvi2c_j721e_CORELISTARM)
+i2c_baremetal_eeprom_testApp_$(SOC)_CORELIST = $(drvi2c_j721e_CORELISTARM)
 else ifeq ($(SOC),$(filter $(SOC), j784s4))
-I2C_Baremetal_Eeprom_TestApp_$(SOC)_CORELIST = $(drvi2c_j784s4_CORELISTARM)
-else ifeq ($(SOC),$(filter $(SOC), am64x))
-I2C_Baremetal_Eeprom_TestApp_$(SOC)_CORELIST = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1
+i2c_baremetal_eeprom_testApp_$(SOC)_CORELIST = $(drvi2c_j784s4_CORELISTARM)
 else
-I2C_Baremetal_Eeprom_TestApp_$(SOC)_CORELIST = $(drvi2c_$(SOC)_CORELIST)
+i2c_baremetal_eeprom_testApp_$(SOC)_CORELIST = $(drvi2c_$(SOC)_CORELIST)
 endif
-export I2C_Baremetal_Eeprom_TestApp_$(SOC)_CORELIST
-export I2C_Baremetal_Eeprom_TestApp_SBL_APPIMAGEGEN = yes
+export i2c_baremetal_eeprom_testApp_$(SOC)_CORELIST
+i2c_EXAMPLE_LIST += i2c_baremetal_eeprom_testApp
+export i2c_baremetal_eeprom_testApp_SBL_APPIMAGEGEN = yes
 
 # I2C extended testapp
 i2c_extended_testapp_COMP_LIST = i2c_extended_testapp
@@ -410,50 +184,43 @@ else
 i2c_extended_testapp_$(SOC)_CORELIST = $(drvi2c_$(SOC)_CORELIST)
 endif
 export i2c_extended_testapp_$(SOC)_CORELIST
+i2c_EXAMPLE_LIST += i2c_extended_testapp
 export i2c_extended_testapp_SBL_APPIMAGEGEN = yes
 
 # I2C rtos EEPROM test
-define I2C_Eeprom_TestApp_RULE
+define i2c_eeprom_testApp_RULE
 
-I2C_Eeprom_TestApp_$(1)_COMP_LIST = I2C_Eeprom_TestApp_$(1)
-I2C_Eeprom_TestApp_$(1)_RELPATH = ti/drv/i2c/test/eeprom_read
-I2C_Eeprom_TestApp_$(1)_PATH = $(PDK_I2C_COMP_PATH)/test/eeprom_read
-I2C_Eeprom_TestApp_$(1)_BOARD_DEPENDENCY = yes
-I2C_Eeprom_TestApp_$(1)_CORE_DEPENDENCY = yes
-I2C_Eeprom_TestApp_$(1)_MAKEFILE = -f makefile BUILD_OS_TYPE=$(1)
-I2C_Eeprom_TestApp_$(1)_XDC_CONFIGURO = $(if $(findstring tirtos,$(1)),yes,no)
-export I2C_Eeprom_TestApp_$(1)_COMP_LIST
-export I2C_Eeprom_TestApp_$(1)_BOARD_DEPENDENCY
-export I2C_Eeprom_TestApp_$(1)_CORE_DEPENDENCY
-export I2C_Eeprom_TestApp_$(1)_XDC_CONFIGURO
-export I2C_Eeprom_TestApp_$(1)_MAKEFILE
-I2C_Eeprom_TestApp_$(1)_PKG_LIST = I2C_Eeprom_TestApp_$(1)
-I2C_Eeprom_TestApp_$(1)_INCLUDE = $(I2C_Eeprom_TestApp_$(1)_PATH)
-I2C_Eeprom_TestApp_$(1)_BOARDLIST = $(filter $(DEFAULT_BOARDLIST_$(1)), $(drvi2c_BOARDLIST))
-export I2C_Eeprom_TestApp_$(1)_BOARDLIST
-
-ifeq ($(SOC),$(filter $(SOC), am64x))
-    I2C_Eeprom_TestApp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1)
+i2c_eeprom_testApp_$(1)_COMP_LIST = i2c_eeprom_testApp_$(1)
+i2c_eeprom_testApp_$(1)_RELPATH = ti/drv/i2c/test/eeprom_read
+i2c_eeprom_testApp_$(1)_PATH = $(PDK_I2C_COMP_PATH)/test/eeprom_read
+i2c_eeprom_testApp_$(1)_BOARD_DEPENDENCY = yes
+i2c_eeprom_testApp_$(1)_CORE_DEPENDENCY = yes
+i2c_eeprom_testApp_$(1)_MAKEFILE = -f makefile BUILD_OS_TYPE=$(1)
+export i2c_eeprom_testApp_$(1)_COMP_LIST
+export i2c_eeprom_testApp_$(1)_BOARD_DEPENDENCY
+export i2c_eeprom_testApp_$(1)_CORE_DEPENDENCY
+export i2c_eeprom_testApp_$(1)_MAKEFILE
+i2c_eeprom_testApp_$(1)_PKG_LIST = i2c_eeprom_testApp_$(1)
+i2c_eeprom_testApp_$(1)_INCLUDE = $(i2c_eeprom_testApp_$(1)_PATH)
+i2c_eeprom_testApp_$(1)_BOARDLIST = $(filter $(DEFAULT_BOARDLIST_$(1)), $(drvi2c_BOARDLIST))
+export i2c_eeprom_testApp_$(1)_BOARDLIST
+i2c_eeprom_testApp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), $(i2c_$(SOC)_CORELIST))
+ifneq ($(1),$(filter $(1), safertos))
+    i2c_EXAMPLE_LIST += i2c_eeprom_testApp_$(1)
 else
-    I2C_Eeprom_TestApp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), $(i2c_$(SOC)_CORELIST))
+    ifneq ($(wildcard $(SAFERTOS_KERNEL_INSTALL_PATH)),)
+        i2c_EXAMPLE_LIST += i2c_eeprom_testApp_$(1)
+    endif
 endif
 
-    ifneq ($(1),$(filter $(1), safertos))
-        i2c_EXAMPLE_LIST += I2C_Eeprom_TestApp_$(1)
-    else
-        ifneq ($(wildcard $(SAFERTOS_KERNEL_INSTALL_PATH)),)
-            i2c_EXAMPLE_LIST += I2C_Eeprom_TestApp_$(1)
-        endif
-    endif
-
-export I2C_Eeprom_TestApp_$(1)_$(SOC)_CORELIST
-export I2C_Eeprom_TestApp_$(1)_SBL_APPIMAGEGEN = yes
+export i2c_eeprom_testApp_$(1)_$(SOC)_CORELIST
+export i2c_eeprom_testApp_$(1)_SBL_APPIMAGEGEN = yes
 
 endef
 #i2c_EXAMPLE_LIST is exported at the end of the file
 
-I2C_Eeprom_TestApp_MACRO_LIST := $(foreach curos,$(drvi2c_RTOS_LIST),$(call I2C_Eeprom_TestApp_RULE,$(curos)))
-$(eval ${I2C_Eeprom_TestApp_MACRO_LIST})
+i2c_eeprom_testApp_MACRO_LIST := $(foreach curos,$(drvi2c_RTOS_LIST),$(call i2c_eeprom_testApp_RULE,$(curos)))
+$(eval ${i2c_eeprom_testApp_MACRO_LIST})
 
 # I2C Utility
 drv_i2c_utility_COMP_LIST = drv_i2c_utility
@@ -462,20 +229,15 @@ drv_i2c_utility_PATH = $(PDK_I2C_COMP_PATH)/example/i2c_utility
 drv_i2c_utility_BOARD_DEPENDENCY = yes
 drv_i2c_utility_CORE_DEPENDENCY = no
 drv_i2c_utility_MAKEFILE = -f makefile
-drv_i2c_utility_XDC_CONFIGURO = yes
 export drv_i2c_utility_COMP_LIST
 export drv_i2c_utility_BOARD_DEPENDENCY
 export drv_i2c_utility_CORE_DEPENDENCY
-export drv_i2c_utility_XDC_CONFIGURO
 export drv_i2c_utility_MAKEFILE
 drv_i2c_utility_PKG_LIST = drv_i2c_utility
 drv_i2c_utility_INCLUDE = $(drv_i2c_utility_PATH)
 drv_i2c_utility_BOARDLIST = j721e_evm j7200_evm j721s2_evm j784s4_evm
 export drv_i2c_utility_BOARDLIST
-ifeq ($(SOC),$(filter $(SOC), am65xx))
-drv_i2c_utility_$(SOC)_CORELIST = mcu1_0 mpu1_0
-endif
-ifeq ($(SOC),$(filter $(SOC), j721e am77x))
+ifeq ($(SOC),$(filter $(SOC), j721e))
 drv_i2c_utility_$(SOC)_CORELIST = $(drvi2c_j721e_CORELISTARM)
 endif
 ifeq ($(SOC),$(filter $(SOC), j7200))
@@ -488,48 +250,7 @@ ifeq ($(SOC),$(filter $(SOC), j784s4))
 drv_i2c_utility_$(SOC)_CORELIST = $(drvi2c_j784s4_CORELISTARM)
 endif
 export drv_i2c_utility_$(SOC)_CORELIST
-
-# I2C rtos Master test
-I2C_Master_TestApp_COMP_LIST = I2C_Master_TestApp
-I2C_Master_TestApp_RELPATH = ti/drv/i2c/test/master_slave
-I2C_Master_TestApp_PATH = $(PDK_I2C_COMP_PATH)/test/master_slave
-I2C_Master_TestApp_BOARD_DEPENDENCY = yes
-I2C_Master_TestApp_CORE_DEPENDENCY = no
-I2C_Master_TestApp_MAKEFILE = -f makefile IS_MASTER=yes
-I2C_Master_TestApp_XDC_CONFIGURO = yes
-export I2C_Master_TestApp_COMP_LIST
-export I2C_Master_TestApp_BOARD_DEPENDENCY
-export I2C_Master_TestApp_CORE_DEPENDENCY
-export I2C_Master_TestApp_XDC_CONFIGURO
-export I2C_Master_TestApp_MAKEFILE
-I2C_Master_TestApp_PKG_LIST = I2C_Master_TestApp
-I2C_Master_TestApp_INCLUDE = $(I2C_Master_TestApp_PATH)
-I2C_Master_TestApp_BOARDLIST = tpr12_evm tpr12_qt awr294x_evm
-export I2C_Master_TestApp_BOARDLIST
-I2C_Master_TestApp_$(SOC)_CORELIST = $(i2c_$(SOC)_CORELIST)
-export I2C_Master_TestApp_$(SOC)_CORELIST
-export I2C_Master_TestApp_SBL_APPIMAGEGEN = yes
-
-# I2C rtos Slave test
-I2C_Slave_TestApp_COMP_LIST = I2C_Slave_TestApp
-I2C_Slave_TestApp_RELPATH = ti/drv/i2c/test/master_slave
-I2C_Slave_TestApp_PATH = $(PDK_I2C_COMP_PATH)/test/master_slave
-I2C_Slave_TestApp_BOARD_DEPENDENCY = yes
-I2C_Slave_TestApp_CORE_DEPENDENCY = no
-I2C_Slave_TestApp_MAKEFILE = -f makefile
-I2C_Slave_TestApp_XDC_CONFIGURO = yes
-export I2C_Slave_TestApp_COMP_LIST
-export I2C_Slave_TestApp_BOARD_DEPENDENCY
-export I2C_Slave_TestApp_CORE_DEPENDENCY
-export I2C_Slave_TestApp_XDC_CONFIGURO
-export I2C_Slave_TestApp_MAKEFILE
-I2C_Slave_TestApp_PKG_LIST = I2C_Slave_TestApp
-I2C_Slave_TestApp_INCLUDE = $(I2C_Slave_TestApp_PATH)
-I2C_Slave_TestApp_BOARDLIST = tpr12_evm tpr12_qt awr294x_evm
-export I2C_Slave_TestApp_BOARDLIST
-I2C_Slave_TestApp_$(SOC)_CORELIST = $(i2c_$(SOC)_CORELIST)
-export I2C_Slave_TestApp_$(SOC)_CORELIST
-export I2C_Slave_TestApp_SBL_APPIMAGEGEN = yes
+i2c_EXAMPLE_LIST += drv_i2c_utility
 
 # Export all supported examples
 drvi2c_EXAMPLE_LIST = $(i2c_EXAMPLE_LIST)

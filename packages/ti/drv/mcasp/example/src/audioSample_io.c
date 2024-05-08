@@ -79,8 +79,8 @@
 #endif
 
 #include <ti/board/src/devices/audio/pcm3168A.h>
-#include <ti/drv/i2c/I2C.h>
-#include <ti/drv/i2c/soc/I2C_soc.h>
+#include <ti/drv/i2c/i2c.h>
+#include <ti/drv/i2c/soc/i2c_soc.h>
 
 #if defined(MCASP_EDMA_ENABLED)
  #include <ti/sdo/edma3/drv/edma3_drv.h>

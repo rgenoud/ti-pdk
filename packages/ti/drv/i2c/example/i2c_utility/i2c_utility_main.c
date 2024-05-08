@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) Texas Instruments Incorporated 2019 - 2020
+ *   Copyright (c) Texas Instruments Incorporated 2019 - 2024
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -52,44 +52,39 @@
 #include <ti/csl/hw_types.h>
 #include <ti/csl/csl_timer.h>
 #include <ti/csl/example/utils/uart_console/inc/uartConfig.h>
-#include <ti/drv/i2c/I2C.h>
-#include <ti/drv/i2c/soc/I2C_soc.h>
 #include <ti/board/src/devices/common/common.h>
 #include <ti/board/board.h>
+#include <ti/drv/i2c/i2c.h>
+#include <ti/drv/i2c/soc/i2c_soc.h>
+
 /* ========================================================================== */
 /*                                Macros                                      */
 /* ========================================================================== */
-/**< Set '1' to UART console for giving inputs.
-     Set '0' to for getting input from CIO Console */
-#define APP_USE_UART_CONSOLE                                (0U)
 
-#if defined (SOC_AM65XX)
-/**< Number of I2C channels */
-#define APP_I2C_INST_MAX                                    ((uint32_t)4U)
-#endif
-#if defined (SOC_J721E) || defined (SOC_AM77X) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)
-/**< Number of I2C channels */
+/* Set '1' to UART console for giving inputs.
+ * Set '0' to for getting input from CIO Console */
+#define APP_USE_UART_CONSOLE                                (0U)
+/* Number of I2C channels */
 #define APP_I2C_INST_MAX                                    ((uint32_t)7U)
-#endif
-/**< Number of addressing and data modes */
+/* Number of addressing and data modes */
 #define APP_I2C_MODES_MAX                                   ((uint32_t)4U)
-/**< Maximum number of register read/write support in one go */
+/* Maximum number of register read/write support in one go */
 #define APP_I2C_MAX_REG_RD_WR                               ((uint32_t)0x100)
-/**< Maximum length of imput string */
+/* Maximum length of imput string */
 #define APP_I2C_MAX_IN_STRING                               (1024U)
-/**< Number of byte ordering modes */
+/* Number of byte ordering modes */
 #define APP_BYTE_ORDER_MODES_MAX                            ((uint32_t)2U)
-/**< File reading modes */
+/* File reading modes */
 #define APP_FILE_READ_MODES_MAX                             ((uint32_t)2U)
 /* Print buffer character limit for prints- UART or CCS Console */
 #define APP_PRINT_BUFFER_SIZE                               ((uint32_t)4000)
-
-/**< I2C transaction timeout */
+/* I2C transaction timeout */
 #define APP_I2C_TRANSACTION_TIMEOUT                         ((uint32_t)2000U)
 
 /* ========================================================================== */
 /*                            Global Variables                                */
 /* ========================================================================== */
+
 static const char gAppMainMenu[] =
 {
     " \r\n"
@@ -137,13 +132,6 @@ static const char gAppSettingSubMenu[] =
 
 static const char gAppI2cInstNames[APP_I2C_INST_MAX][50U] =
 {
-#if defined (SOC_AM65XX)
-    {" \r\n 0: Main Domain Inst0"},
-    {" \r\n 1: Main Domain Inst1"},
-    {" \r\n 2: MCU Domain Inst0"},
-    {" \r\n 3: MCU Domain Inst1"},
-#endif
-#if defined (SOC_J721E) || defined (SOC_AM77X) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)
     {" \r\n 0: MCU Domain Inst0"},
     {" \r\n 1: MCU Domain Inst1"},
     {" \r\n 2: Main Domain Inst0"},
@@ -151,18 +139,10 @@ static const char gAppI2cInstNames[APP_I2C_INST_MAX][50U] =
     {" \r\n 4: Main Domain Inst2"},
     {" \r\n 5: Main Domain Inst3"},
     {" \r\n 6: Main Domain Inst4"},
-#endif
 };
 
 static const uint32_t gAppI2cInstIds[APP_I2C_INST_MAX] =
 {
-#if defined (SOC_AM65XX)
-    0U,
-    1U,
-    0U,
-    1U,
-#endif
-#if defined (SOC_J721E) || defined (SOC_AM77X) || (SOC_J7200) || (SOC_J721S2) || defined (SOC_J784S4)
     0U,
     1U,
     2U,
@@ -170,7 +150,6 @@ static const uint32_t gAppI2cInstIds[APP_I2C_INST_MAX] =
     4U,
     5U,
     6U,
-#endif
 };
 
 static const char gAppI2cSetting[APP_I2C_MODES_MAX][50U] =
@@ -195,12 +174,7 @@ static const char gAppFileReadSetting[APP_FILE_READ_MODES_MAX][50U] =
 
 /* Default mode is 8 bit addressing and 8 bit data */
 uint32_t gAddrDataMode = 0U;
-#if defined (SOC_AM65XX)
-uint32_t gCurrInst = 1U;
-#endif
-#if defined (SOC_J721E) || defined (SOC_J7200) || (SOC_J721S2) || defined (SOC_J784S4)
 uint32_t gCurrInst = 6U;
-#endif
 char gInputStr[APP_I2C_MAX_IN_STRING];
 char *gInputArgs[128];
 uint32_t gNumArgs;
@@ -210,42 +184,45 @@ uint8_t gByteOrder = BOARD_I2C_REG_ADDR_MSB_FIRST;
 uint8_t gFileReadLoc = 0U;
 char gFileName[256];
 char gLine[1024];
+
 /* ========================================================================== */
 /*                 Internal Function Declarations                             */
 /* ========================================================================== */
 
-static int32_t App_i2cPreInt(void);
+static int32_t  App_i2cPreInt(void);
 
-static int32_t App_showMenu(void);
-static int32_t App_showSetting(void);
-static int32_t App_changeSetting(void);
-static Bool App_exeCmd(Bool echoCmd);
+static int32_t  App_showMenu(void);
+static int32_t  App_showSetting(void);
+static int32_t  App_changeSetting(void);
+static Bool     App_exeCmd(Bool echoCmd);
 static uint32_t App_tokenizeInput(char *inStr, char *argv[]);
-static int32_t App_readRegs(void);
-static int32_t App_writeReg(void);
-static int32_t App_delay(void);
-static int32_t App_file(void);
-static int32_t App_writeRegN(void);
-static int32_t App_readRegRaw(void);
-static int32_t App_deviceI2cProbeAll(uint32_t inst);
-static int32_t xstrtoi(char *hex);
-static int32_t HextoDec(char *hex, int32_t l);
-static char xtod(char c);
-static int32_t App_setupI2CInst(void);
-int32_t App_deviceRawRead8(uint32_t i2cInstId,
-                           uint32_t i2cDevAddr,
-                           uint8_t *regValue,
-                           uint32_t numRegs);
-int32_t App_deviceRawWrite8(uint32_t i2cInstId,
-                            uint32_t i2cDevAddr,
-                            uint8_t *regValue,
-                            uint32_t numRegs);
-static void App_consolePrintf(const char *pcString, ...);
-static int32_t App_getNum(uint32_t *num);
-static int32_t App_gets(char *str);
+static int32_t  App_readRegs(void);
+static int32_t  App_writeReg(void);
+static int32_t  App_delay(void);
+static int32_t  App_file(void);
+static int32_t  App_writeRegN(void);
+static int32_t  App_readRegRaw(void);
+static int32_t  App_deviceI2cProbeAll(uint32_t inst);
+static int32_t  xstrtoi(char *hex);
+static int32_t  HextoDec(char *hex, int32_t l);
+static char     xtod(char c);
+static int32_t  App_setupI2CInst(void);
+int32_t         App_deviceRawRead8(uint32_t i2cInstId,
+                                   uint32_t i2cDevAddr,
+                                   uint8_t *regValue,
+                                   uint32_t numRegs);
+int32_t         App_deviceRawWrite8(uint32_t i2cInstId,
+                                    uint32_t i2cDevAddr,
+                                    uint8_t *regValue,
+                                    uint32_t numRegs);
+static void     App_consolePrintf(const char *pcString, ...);
+static int32_t  App_getNum(uint32_t *num);
+static int32_t  App_gets(char *str);
+
 /* ========================================================================== */
 /*                          Function Definitions                              */
 /* ========================================================================== */
+
 int32_t main(void)
 {
     Bool done = UFALSE;
@@ -296,6 +273,7 @@ int32_t main(void)
 /* ========================================================================== */
 /*                 Internal Function Definitions                              */
 /* ========================================================================== */
+
 static int32_t App_showMenu(void)
 {
     int32_t retVal = CSL_SOK;

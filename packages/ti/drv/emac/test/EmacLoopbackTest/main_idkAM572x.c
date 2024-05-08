@@ -58,8 +58,8 @@
 #include <ti/csl/soc.h>
 
 /* I2C Driver Header Files */
-#include <ti/drv/i2c/I2C.h>
-#include <ti/drv/i2c/soc/I2C_v1.h>
+#include <ti/drv/i2c/i2c.h>
+#include <ti/drv/i2c/soc/i2c_api.h>
 /* EMAC Driver Header File. */
 #include <ti/drv/emac/emac_drv.h>
 #include <ti/drv/emac/src/v4/emac_drv_v4.h>

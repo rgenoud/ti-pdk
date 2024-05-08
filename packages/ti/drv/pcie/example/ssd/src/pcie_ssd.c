@@ -69,8 +69,8 @@
 
 #include <ti/drv/pcie/soc/pcie_soc.h>
 
-#include <ti/drv/i2c/I2C.h>
-#include <ti/drv/i2c/soc/I2C_soc.h>
+#include <ti/drv/i2c/i2c.h>
+#include <ti/drv/i2c/soc/i2c_soc.h>
 #include <ti/csl/csl_gpio.h>
 #include <ti/board/board.h>
 #include <ti/board/src/am65xx_idk/include/board_cfg.h>

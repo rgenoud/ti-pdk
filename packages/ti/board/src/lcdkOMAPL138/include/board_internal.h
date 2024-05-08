@@ -59,8 +59,8 @@ extern "C"
 #include <ti/csl/csl_emif4f.h>
 #include <ti/csl/cslr_ddr2_mddr.h>
 
-#include <ti/drv/i2c/I2C.h>
-#include <ti/drv/i2c/soc/I2C_soc.h>
+#include <ti/drv/i2c/i2c.h>
+#include <ti/drv/i2c/soc/i2c_soc.h>
 
 #include <ti/drv/uart/UART.h>
 #include <ti/drv/uart/UART_stdio.h>

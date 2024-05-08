@@ -38,7 +38,7 @@
  *
  */
 
-#include <ti/drv/i2c/I2C.h>
+#include <ti/drv/i2c/i2c.h>
 #include <ti/starterware/include/am43xx/chipdb_defs.h>
 
 static I2C_Handle i2cLedhandle = NULL;
