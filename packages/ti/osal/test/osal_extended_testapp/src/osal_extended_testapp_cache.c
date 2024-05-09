@@ -43,6 +43,9 @@
 /* ========================================================================== */
 
 #include "osal_extended_test.h"
+#if defined (BUILD_C7X)
+#include "Cache.h"
+#endif
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
@@ -74,27 +77,58 @@ uint8_t gOsalAppCacheTestArr[OSAL_APP_CACHE_TEST_ARR_SIZE];
 
 int32_t OsalApp_cacheTests(void)
 {
+    int32_t result = osal_OK;
+#if defined (BUILD_C7X)
+    Cache_Size size;
+
+    Cache_getSize(&size);
+
+    if(size.l1pSize != Cache_initSize.l1pSize ||
+       size.l1dSize != Cache_initSize.l1dSize ||
+       size.l2Size != Cache_initSize.l2Size) 
+    {
+        result = osal_FAILURE;
+    }
+
+    Cache_disable(Cache_Type_L1D);
+    Cache_disable(Cache_Type_L2);
+    Cache_disable(0xABCD);
+    Cache_enable(Cache_Type_L1D);
+    Cache_enable(Cache_Type_L2);
+    Cache_enable(0xABCD);
+    Cache_wbAll();
+    Cache_wbL1dAll();
+    Cache_wbInvAll();
+    Cache_wbInvL1dAll();
+#endif
     /*  Write back the cache */
     CacheP_wb(gOsalAppCacheTestArr, OSAL_APP_CACHE_TEST_ARR_SIZE);
 #if defined (BUILD_MCU)
     CSL_armR5CacheWb(gOsalAppCacheTestArr, OSAL_APP_CACHE_TEST_ARR_SIZE, false);
+#elif defined (BUILD_C7X)
+    Cache_wb((void *)gOsalAppCacheTestArr, OSAL_APP_CACHE_TEST_ARR_SIZE, BFALSE);
 #endif
 
     /* Invalidate the cache */
     CacheP_Inv(gOsalAppCacheTestArr, OSAL_APP_CACHE_TEST_ARR_SIZE);
 #if defined (BUILD_MCU)
     CSL_armR5CacheInv(gOsalAppCacheTestArr, OSAL_APP_CACHE_TEST_ARR_SIZE, false);
+#elif defined (BUILD_C7X)
+    Cache_inv((void *)gOsalAppCacheTestArr, OSAL_APP_CACHE_TEST_ARR_SIZE, BFALSE);
 #endif
 
     /*  Write back and invalidate the cache */
     CacheP_wbInv(gOsalAppCacheTestArr, OSAL_APP_CACHE_TEST_ARR_SIZE);
+    Cache_wbinv((void *)gOsalAppCacheTestArr, OSAL_APP_CACHE_TEST_ARR_SIZE, BFALSE);
 #if defined (BUILD_MCU)
     CSL_armR5CacheWbInv(gOsalAppCacheTestArr, OSAL_APP_CACHE_TEST_ARR_SIZE, false);
     CSL_armR5CacheWait();
+#elif defined (BUILD_C7X)
+    Cache_wbInv((void *)gOsalAppCacheTestArr, OSAL_APP_CACHE_TEST_ARR_SIZE, BFALSE);
 #endif
 
     OSAL_log("\n All Cache Tests have passed!!\n");
 
-    return osal_OK;
+    return result;
 }
 

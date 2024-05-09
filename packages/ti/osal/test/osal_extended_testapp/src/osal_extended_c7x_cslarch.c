@@ -32,119 +32,85 @@
  */
 
 /**
- *  \file   osal_extended_test.h
+ *  \file   osal_extended_testapp_cache.c
  *
- *  \brief  Osal extended test header file.
+ *  \brief  OSAL Cache Sub Module testcases file.
  *
  */
-
-#ifndef _OSAL_EXTENDED_TEST_H_
-#define _OSAL_EXTENDED_TEST_H_
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
 
-#include <stdio.h>
-#include <string.h>
-#include <ti/csl/soc.h>
-#include <ti/csl/tistdtypes.h>
-#include <ti/csl/arch/csl_arch.h>
-#include <ti/osal/osal.h>
-#include <ti/osal/SwiP.h>
-#include <ti/osal/soc/osal_soc.h>
-#include <ti/osal/src/nonos/Nonos_config.h>
-#include "OSAL_log.h"
-#include "OSAL_board.h"
-
-#if defined(SAFERTOS)
-#include <SafeRTOS_API.h>
+#include "osal_extended_test.h"
+#if defined(BUILD_C7X)
+#include "Mmu.h"
+#include "Hwi.h"
 #endif
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-/* None */
+#define OSAL_APP_HWI_MAX_NUM (64U)
 
 /* ========================================================================== */
-/*                         Structure Declarations                             */
-/* ========================================================================== */
-
-/* None */
-
-/* ========================================================================== */
-/*                  Internal/Private Function Declarations                    */
+/*                            Global Variables                                */
 /* ========================================================================== */
 
 /* None */
 
 /* ========================================================================== */
-/*                          Function Declarations                             */
-/* ========================================================================== */
-
-/* Top level function for Heap tests */
-int32_t OsalApp_heapFreertosTest(void);
-
-/* Top level function for Hwi tests */
-int32_t OsalApp_hwiTests(void);
-
-/* Top level function for Mutex tests */
-int32_t OsalApp_mutexTests(void);
-
-/* Top level function for Queue tests */
-int32_t OsalApp_queueTests(void);
-
-/* Top level function for Cache tests */
-int32_t OsalApp_cacheTests(void);
-
-/* Top level function for Mailbox tests */
-int32_t OsalApp_mailboxTests(void);
-
-/* Top level function for Task tests */
-int32_t OsalApp_taskTests(void);
-
-/* Top level function for Memory tests */
-int32_t OsalApp_memoryTests(void);
-
-/* Top level function for Event tests */
-int32_t OsalApp_eventTests(void);
-
-/* Top level function for Semaphore tests */
-int32_t OsalApp_semaphoreTests(void);
-
-/* Top level function for utils tests */
-int32_t OsalApp_utilsNonosTests(void);
-
-/* Top level function for Cycleprofiler test */
-int32_t OsalApp_cycleProfilerTest(void);
-
-/* Top level function for load tests */
-int32_t OsalApp_freertosLoadTests(void);
-
-/* Top level function for c7x Arch utils tests */
-int32_t OsalApp_ArchutilsTests(void);
-
-/* Top level function for Register interrupt tests */
-int32_t OsalApp_registerIntrTests(void);
-
-/* Top level function for clock tests */
-int32_t OsalApp_clockTests(void);
-
-/* Tests for CSL Arch for C7X */
-int32_t OsalApp_c7xArchTests(void);
-
-/* ========================================================================== */
-/*                       Static Function Definitions                          */
+/*                           Function Declarations                            */
 /* ========================================================================== */
 
 /* None */
 
-#ifdef __cplusplus
-}
+/* ========================================================================== */
+/*                          Internal Function Definitions                     */
+/* ========================================================================== */
+
+static int32_t OsalApp_mmuTests(void){
+
+    int32_t result = osal_OK;
+#if defined (BUILD_C7X)
+    /* Disable and then enable the MMU. Below APIs dont return anything. */
+    Mmu_enable();
+    Mmu_disable();
+    Mmu_enable();
 #endif
-#endif /* _OSAL_EXTENDED_TEST_H_ */
+    return osal_OK;
+}
+
+int32_t OsalApp_c7xHwiTests(void){
+    Hwi_StackInfo stkInfo;
+#if defined (BUILD_C7X)
+    /* Pass invalid interrupt number to event map. It should return abruptly.
+     * Does not return any value, hence nothing to check it against.
+     */
+    Hwi_eventMap( OSAL_APP_HWI_MAX_NUM, 0);
+#endif
+
+    Hwi_getStackInfo(&stkInfo, false);
+    if(0 == stkInfo->hwiStackPeak)
+    {
+        result = osal_FAILURE;
+    }
+    
+    return result;
+}
+
+/* ========================================================================== */
+/*                          Function Definitions                              */
+/* ========================================================================== */
+
+int32_t OsalApp_c7xArchTests(void)
+{
+    int32_t result = osal_OK;
+#if defined (BUILD_C7X)
+    result += OsalApp_mmuTests();
+    result += OsalApp_c7xHwiTests();
+#endif
+    return result;
+}
+

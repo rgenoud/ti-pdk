@@ -18,7 +18,7 @@ INCDIR = . ../src ../../src/safertos
 SRCS_COMMON += osal_extended_testapp.c
 SRCS_COMMON += osal_extended_testapp_hwi.c osal_extended_testapp_mutex.c osal_extended_testapp_cache.c
 SRCS_COMMON += osal_extended_testapp_mailbox.c osal_extended_testapp_task.c osal_extended_testapp_semaphore.c
-SRCS_COMMON += osal_extended_testapp_event.c osal_extended_testapp_registerinterrupt.c osal_extended_testapp_clock.c
+SRCS_COMMON += osal_extended_testapp_event.c osal_extended_testapp_registerinterrupt.c osal_extended_testapp_clock.c osal_extended_c7x_cslarch.c
 
 ifeq ($(BUILD_OS_TYPE),freertos)
 CFLAGS_OS_DEFINES = -DFREERTOS
