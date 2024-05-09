@@ -75,25 +75,36 @@ extern "C"
 #include "lwipopts_common.h"
 #include "lwipopts_os.h"
 
-/* ---------- pbuf options ---------- */
-/*
- * PBUF_POOL_SIZE: the number of buffers in the pbuf pool.
- *
- * The buffer pool size should taken into account the following requirements:
- * - TX channel requires LWIP2ENET_TX_PACKETS pbufs
- * - Each RX channel/flows requires (2 x LWIP2ENET_RX_PACKETS) to avoid running out of
- *   free pbufs to new packets
- *
- * PBUF_POOL_SIZE = tx + ((2 * rx) * n)
- *
- * For 64 packets per channel and considering 2 RX channels (i.e. j721e):
- *   PBUF_POOL_SIZE = 64 + ((2 * 64) * 2)
- *   PBUF_POOL_SIZE = 320
- */
-#define PBUF_POOL_SIZE                  (320U)
+/* Overwriting the existing macros from lwipopts_common.h */
 
-/* PBUF_POOL_BUFSIZE: the size of each pbuf in the pbuf pool */
-#define PBUF_POOL_BUFSIZE               (1536U)
+/* ---------- Memory options ---------- */
+/* MEMP_NUM_TCP_SEG: the number of simultaneously queued TCP segments
+ * Num of TCP segments you can allocate if using internal memory pools
+ * MEMP_NUM_TCP_SEG should at least be >= TCP_SND_QUEUELEN */
+#if defined(MEMP_NUM_TCP_SEG)
+#undef MEMP_NUM_TCP_SEG
+#define MEMP_NUM_TCP_SEG                (128)
+#endif
+
+/* ---------- pbuf options ---------- */
+#if defined(PBUF_POOL_SIZE)
+#undef PBUF_POOL_SIZE
+#define PBUF_POOL_SIZE                  (320U)
+#endif
+
+/* ---------- TCP options ---------- */
+/* TCP sender buffer space (bytes) */
+#if defined(TCP_SND_BUF)
+#undef TCP_SND_BUF
+#define TCP_SND_BUF                     (16 * TCP_MSS)
+#endif
+
+/* TCP sender buffer space (pbufs). This must be at least = 2 * TCP_SND_BUF/TCP_MSS
+ * for things to work. It limits the number of pbufs in send buffer */
+#if defined(TCP_SND_QUEUELEN)
+#undef TCP_SND_QUEUELEN
+#define TCP_SND_QUEUELEN                (8 * TCP_SND_BUF/TCP_MSS)
+#endif
 
 #endif /* LWIP_OPTTEST_FILE */
 

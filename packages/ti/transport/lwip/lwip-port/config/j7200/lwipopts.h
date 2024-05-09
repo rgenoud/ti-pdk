@@ -75,26 +75,6 @@ extern "C"
 #include "lwipopts_common.h"
 #include "lwipopts_os.h"
 
-/* ---------- pbuf options ---------- */
-/*
- * PBUF_POOL_SIZE: the number of buffers in the pbuf pool.
- *
- * The buffer pool size should taken into account the following requirements:
- * - TX channel requires LWIP2ENET_TX_PACKETS pbufs
- * - Each RX channel/flows requires (2 x LWIP2ENET_RX_PACKETS) to avoid running out of
- *   free pbufs to new packets
- *
- * PBUF_POOL_SIZE = tx + ((2 * rx) * n)
- *
- * For 64 packets per channel and considering 2 RX channels (i.e. j721e):
- *   PBUF_POOL_SIZE = 64 + ((2 * 64) * 2)
- *   PBUF_POOL_SIZE = 320
- */
-#define PBUF_POOL_SIZE                  (320U)
-
-/* PBUF_POOL_BUFSIZE: the size of each pbuf in the pbuf pool */
-#define PBUF_POOL_BUFSIZE               (1536U)
-
 #endif /* LWIP_OPTTEST_FILE */
 
 #ifdef __cplusplus

@@ -84,6 +84,12 @@ extern "C"
 #define LWIP_IGMP                       (LWIP_IPV4)
 #define LWIP_ICMP                       (LWIP_IPV4)
 
+/* ---------- UDP options ---------- */
+#define LWIP_UDP                        (1)
+#define LWIP_UDPLITE                    (LWIP_UDP)
+#define UDP_TTL                         (255)
+#define DEFAULT_UDP_RECVMBOX_SIZE       (320)
+
 #define LWIP_DNS                        (LWIP_UDP)
 #define LWIP_MDNS_RESPONDER             (LWIP_UDP)
 
@@ -161,8 +167,8 @@ extern "C"
 #define MEM_OVERFLOW_CHECK              (0)
 #define MEM_SANITY_CHECK                (0)
 
-/* MEMP_NUM_PBUF: the number of memp struct pbufs. If the application sends a lot of
- * data out of ROM (or other static memory), this should be set high */
+/* MEMP_NUM_PBUF: the number of memp struct pbufs (used for PBUF_ROM and PBUF_REF). 
+ * If the application sends a lot of data out of ROM (or other static memory), this should be set high */
 #define MEMP_NUM_PBUF                   (128)
 
 /* MEMP_NUM_RAW_PCB: the number of UDP protocol control blocks. One per active RAW "connection" */
@@ -177,8 +183,10 @@ extern "C"
 /* MEMP_NUM_TCP_PCB_LISTEN: the number of listening TCP connections */
 #define MEMP_NUM_TCP_PCB_LISTEN         (8)
 
-/* MEMP_NUM_TCP_SEG: the number of simultaneously queued TCP segments */
-#define MEMP_NUM_TCP_SEG                (128)
+/* MEMP_NUM_TCP_SEG: the number of simultaneously queued TCP segments
+ * Num of TCP segments you can allocate if using internal memory pools
+ * MEMP_NUM_TCP_SEG should at least be >= TCP_SND_QUEUELEN */
+#define MEMP_NUM_TCP_SEG                (256)
 
 /* MEMP_NUM_SYS_TIMEOUT: the number of simulateously active timeouts */
 #define MEMP_NUM_SYS_TIMEOUT            (17)
@@ -212,11 +220,11 @@ extern "C"
  *
  * PBUF_POOL_SIZE = tx + ((2 * rx) * n)
  *
- * For 64 packets per channel and considering 2 RX channels (i.e. j721e):
- *   PBUF_POOL_SIZE = 64 + ((2 * 64) * 2)
- *   PBUF_POOL_SIZE = 320
+ * For 128 packets per channel and considering 2 RX channels (i.e. j721e):
+ *   PBUF_POOL_SIZE = 128 + ((2 * 128) * 2)
+ *   PBUF_POOL_SIZE = 640
  */
-#define PBUF_POOL_SIZE                  (320U)
+#define PBUF_POOL_SIZE                  (640U)
 
 /* PBUF_POOL_BUFSIZE: the size of each pbuf in the pbuf pool */
 #define PBUF_POOL_BUFSIZE               (1536U)
@@ -248,11 +256,11 @@ extern "C"
 #define TCP_MSS                         (1460)
 
 /* TCP sender buffer space (bytes) */
-#define TCP_SND_BUF                     (16 * TCP_MSS)
+#define TCP_SND_BUF                     ((1<<16) - 1U)
 
 /* TCP sender buffer space (pbufs). This must be at least = 2 * TCP_SND_BUF/TCP_MSS
- * for things to work */
-#define TCP_SND_QUEUELEN                (8 * TCP_SND_BUF/TCP_MSS)
+ * for things to work. It limits the number of pbufs in send buffer */
+#define TCP_SND_QUEUELEN                (5 * TCP_SND_BUF/TCP_MSS)
 
 /* TCP writable space (bytes). This must be less than or equal to TCP_SND_BUF.
  * It is the amount of space which must be available in the tcp snd_buf for
@@ -303,12 +311,6 @@ extern "C"
 /* ---------- AUTOIP options ------- */
 #define LWIP_AUTOIP                     (0)
 #define LWIP_DHCP_AUTOIP_COOP           (LWIP_DHCP && LWIP_AUTOIP)
-
-/* ---------- UDP options ---------- */
-#define LWIP_UDP                        (1)
-#define LWIP_UDPLITE                    (LWIP_UDP)
-#define UDP_TTL                         (255)
-#define DEFAULT_UDP_RECVMBOX_SIZE       (320)
 
 /* ---------- RAW options ---------- */
 #define LWIP_RAW                        (1)
