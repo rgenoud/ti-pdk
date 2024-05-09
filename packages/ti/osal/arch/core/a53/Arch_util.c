@@ -57,26 +57,6 @@ static HwiP_nonOs hwiStructs[OSAL_NONOS_CONFIGNUM_HWI];
 static bool gTimestampFirstTime = BTRUE;
 static bool gHwiInitialized = BFALSE;
 
-/*
- * Dummy function to check size during compile time
- *  ======== HwiP_compileTime_SizeChk ========
- */
-
-void OsalArch_compileTime_SizeChk(void)
-{
-#if defined(__GNUC__) && !defined(__ti__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-variable"
-#else
-/* TI compiler */
-#pragma diag_suppress 179
-#endif
-    OSAL_COMPILE_TIME_SIZE_CHECK ((uint32_t)sizeof(HwiP_nonOs), OSAL_NONOS_HWIP_SIZE_BYTES);
-#if defined(__GNUC__) && !defined(__ti__)
-#pragma GCC diagnostic pop
-#endif
-}
-
 #if defined (SOC_AM65XX)
 #define GIC_BASE_ADDR               (CSL_GIC0_DISTRIBUTOR_BASE)
 #elif defined (SOC_AM64X)

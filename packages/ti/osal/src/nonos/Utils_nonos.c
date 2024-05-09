@@ -251,8 +251,8 @@ int32_t Osal_getStaticMemStatus(Osal_StaticMemStatus *pMemStat)
 /* RESULT IN PROGRAM FAILURE.                                                */
 /*****************************************************************************/
 
-int _system_pre_init(void);
-__attribute__((section(".startupCode"))) __attribute__((weak)) int _system_pre_init(void)
+int32_t _system_pre_init(void);
+__attribute__((section(".startupCode"))) __attribute__((weak)) int32_t _system_pre_init(void)
 {
     extended_system_pre_init();
     return 1;

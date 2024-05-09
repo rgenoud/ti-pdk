@@ -208,7 +208,7 @@ TaskP_Handle TaskP_create(TaskP_Fxn taskfxn, const TaskP_Params *params )
         }
         else
         {
-            handle->terminated = UFALSE;
+            handle->terminated = BFALSE;
             ret_handle = ( ( TaskP_Handle )handle );
         }
     }
@@ -240,7 +240,7 @@ TaskP_Status TaskP_delete( TaskP_Handle *hTaskPtr )
         }
 
         xReturn = xTaskDelete(task->taskHndl);
-        task->terminated = UTRUE;
+        task->terminated = BTRUE;
         DebugP_assert( pdPASS == xReturn );
 
         key = HwiP_disable(  );
