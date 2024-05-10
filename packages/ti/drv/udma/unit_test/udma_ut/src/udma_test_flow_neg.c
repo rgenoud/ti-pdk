@@ -946,7 +946,8 @@ int32_t UdmaTestFlowConfigNeg(UdmaTestTaskObj *taskObj)
     if(UDMA_SOK == retVal)
     {
         /* Test scenario 8: To get error print message as [Error] Invalid flow index */
-        retVal = Udma_flowConfig(flowHandle, flowIdx, &flowPrms);
+        flowIdx = flowHandle->flowCnt + 1U;
+        retVal  = Udma_flowConfig(flowHandle, flowIdx, &flowPrms);
         if(UDMA_SOK != retVal)
         {
             retVal = UDMA_SOK;
