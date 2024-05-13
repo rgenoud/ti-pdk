@@ -98,8 +98,6 @@ int32_t Sciserver_tirtosInit(Sciserver_TirtosCfgPrms_t *pPrms);
 
 /** \brief  Sciserver TI-RTOS Application Deinit.
  * 
- *  \param  None
- * 
  *  \return None
  */
 void Sciserver_tirtosDeinit(void);
@@ -114,8 +112,6 @@ void Sciserver_tirtosUserMsgHwiFxn(uintptr_t arg);
 
 /** \brief  Sciserver TI-RTOS Application unregister interrupt.
  * 
- *  \param  None
- * 
  *  \return None
  */
 void Sciserver_tirtosUnRegisterIntr(void);
@@ -123,7 +119,7 @@ void Sciserver_tirtosUnRegisterIntr(void);
 /** \brief  Sciserver TI-RTOS Application user message task.
  * 
  *  \param  arg0 Pointer to data needed for secure task operation.
- *          arg1 Dummy argument
+ *  \param  arg1 Dummy argument
  * 
  *  \return None
  */
