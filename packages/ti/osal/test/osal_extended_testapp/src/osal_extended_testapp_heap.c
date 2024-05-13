@@ -445,7 +445,9 @@ static int32_t OsalApp_vheapTest(void)
         HeapP_alloc(handle, allocSize);
         HeapP_alloc(handle, allocSize);
         /* prvHeapInit API else condition check  */
-        vHeapCreateStatic(handle, NULL, 1U);
+        vHeapCreateStatic(handle, 
+                          (void *)(((uintptr_t)gOsalAppHeapPbuf + 2U*HeapP_BYTE_ALIGNMENT)&(~(HeapP_BYTE_ALIGNMENT - 1))),
+                          1U); 
     }
 
     if(osal_OK != result)
@@ -455,6 +457,7 @@ static int32_t OsalApp_vheapTest(void)
 
     return result;
 }
+
 /* ========================================================================== */
 /*                          Function Definitions                              */
 /* ========================================================================== */
