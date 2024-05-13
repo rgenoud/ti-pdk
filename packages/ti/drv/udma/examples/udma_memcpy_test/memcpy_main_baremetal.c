@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) Texas Instruments Incorporated 2018-2021
+ *  Copyright (c) Texas Instruments Incorporated 2018
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -31,32 +31,23 @@
  */
 
 /**
- *  \file main_rtos.c
+ *  \file memcpy_main_baremetal.c
  *
- *  \brief Main file for RTOS build
+ *  \brief Main file for baremetal build
  */
 
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
 
-#include <ti/osal/osal.h>
-#include <ti/osal/TaskP.h>
+#include <stdint.h>
 #include <ti/board/board.h>
-#include <udma_test.h>
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-/* Test application stack size */
-#if defined (BUILD_C7X)
-/* Temp workaround to avoid assertion failure: A_stackSizeTooSmall : Task stack size must be >= 16KB.
-  * until the Bug PDK-7605 is resolved */
-#define APP_TSK_STACK_MAIN              (32U * 1024U)
-#else
-#define APP_TSK_STACK_MAIN              (16U * 1024U)
-#endif
+/* None */
 
 /* ========================================================================== */
 /*                         Structure Declarations                             */
@@ -68,51 +59,28 @@
 /*                          Function Declarations                             */
 /* ========================================================================== */
 
-void taskFxn(void *a0, void *a1);
+extern int32_t Udma_memcpyTest(void);
 
 /* ========================================================================== */
 /*                            Global Variables                                */
 /* ========================================================================== */
 
-/* Test application stack */
-/* For SafeRTOS on R5F with FFI Support, task stack should be aligned to the stack size */
-#if defined(SAFERTOS)
-static uint8_t  gAppTskStackMain[APP_TSK_STACK_MAIN] __attribute__((aligned(APP_TSK_STACK_MAIN)));
-#else
-static uint8_t  gAppTskStackMain[APP_TSK_STACK_MAIN] __attribute__((aligned(64)));;
-#endif
+/* None */
+
 /* ========================================================================== */
 /*                          Function Definitions                              */
 /* ========================================================================== */
 
 int main(void)
 {
-    TaskP_Handle task;
-    TaskP_Params taskParams;
+    Board_initCfg           boardCfg;
 
-    OS_init();
+    boardCfg = BOARD_INIT_MODULE_CLOCK  |
+               BOARD_INIT_PINMUX_CONFIG |
+               BOARD_INIT_UART_STDIO;
+    Board_init(boardCfg);
 
-    /* Initialize the task params */
-    TaskP_Params_init(&taskParams);
-    /* Set the task priority higher than the default priority (1) */
-    taskParams.priority = 2;
-    taskParams.stack        = gAppTskStackMain;
-    taskParams.stacksize    = sizeof (gAppTskStackMain);
-
-    task = TaskP_create(&taskFxn, &taskParams);
-    if(NULL == task)
-    {
-        OS_stop();
-    }
-    OS_start();    /* does not return */
+    Udma_memcpyTest();
 
     return(0);
 }
-
-#if defined(BUILD_MPU) || defined (BUILD_C7X)
-extern void Osal_initMmuDefault(void);
-void InitMmu(void)
-{
-    Osal_initMmuDefault();
-}
-#endif

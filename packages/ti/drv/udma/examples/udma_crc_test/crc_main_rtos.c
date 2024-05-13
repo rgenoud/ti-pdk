@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) Texas Instruments Incorporated 2018
+ *  Copyright (c) Texas Instruments Incorporated 2018-2021
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -31,23 +31,28 @@
  */
 
 /**
- *  \file main_baremetal.c
+ *  \file crc_main_rtos.c
  *
- *  \brief Main file for baremetal build
+ *  \brief Main file for RTOS build
  */
 
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
 
-#include <stdint.h>
+#include <ti/osal/osal.h>
+#include <ti/osal/TaskP.h>
 #include <ti/board/board.h>
+
+#include <ti/drv/udma/examples/udma_apputils/udma_apputils.h>
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-/* None */
+/* Test application stack size */
+#define APP_TSK_STACK_MAIN              (16U * 1024U)
+
 
 /* ========================================================================== */
 /*                         Structure Declarations                             */
@@ -59,13 +64,15 @@
 /*                          Function Declarations                             */
 /* ========================================================================== */
 
-extern int32_t Udma_memcpyTest(void);
+static void taskFxn(void* a0, void* a1);
+extern int32_t Udma_crcTest(void);
 
 /* ========================================================================== */
 /*                            Global Variables                                */
 /* ========================================================================== */
 
-/* None */
+/* Test application stack */
+static uint8_t  gAppTskStackMain[APP_TSK_STACK_MAIN] __attribute__((aligned(32)));;
 
 /* ========================================================================== */
 /*                          Function Definitions                              */
@@ -73,14 +80,45 @@ extern int32_t Udma_memcpyTest(void);
 
 int main(void)
 {
-    Board_initCfg           boardCfg;
+    TaskP_Handle task;
+    TaskP_Params taskParams;
 
-    boardCfg = BOARD_INIT_MODULE_CLOCK  |
-               BOARD_INIT_PINMUX_CONFIG |
-               BOARD_INIT_UART_STDIO;
-    Board_init(boardCfg);
+    OS_init();
 
-    Udma_memcpyTest();
+    /* Initialize the task params */
+    TaskP_Params_init(&taskParams);
+    /* Set the task priority higher than the default priority (1) */
+    taskParams.priority     = 2;
+    taskParams.stack        = gAppTskStackMain;
+    taskParams.stacksize    = sizeof (gAppTskStackMain);
+
+    task = TaskP_create(&taskFxn, &taskParams);
+    if(NULL == task)
+    {
+        OS_stop();
+    }
+    OS_start();    /* does not return */
 
     return(0);
 }
+
+static void taskFxn(void* a0, void* a1)
+{
+    Board_initCfg boardCfg;
+
+    boardCfg = BOARD_INIT_PINMUX_CONFIG |
+               BOARD_INIT_UART_STDIO;
+    Board_init(boardCfg);
+
+    Udma_crcTest();
+
+    return;
+}
+
+#if defined(BUILD_MPU) || defined (BUILD_C7X)
+extern void Osal_initMmuDefault(void);
+void InitMmu(void)
+{
+    Osal_initMmuDefault();
+}
+#endif

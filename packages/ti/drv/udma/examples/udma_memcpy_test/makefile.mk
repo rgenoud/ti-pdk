@@ -10,7 +10,7 @@ INCLUDE_EXTERNAL_INTERFACES = pdk
 
 ifeq ($(BUILD_OS_TYPE), baremetal)
   COMP_LIST_COMMON = $(PDK_COMMON_BAREMETAL_COMP)
-  SRCS_COMMON = main_baremetal.c
+  SRCS_COMMON = memcpy_main_baremetal.c
   ifeq ($(ISA),$(filter $(ISA), a53 a72))
     LNKFLAGS_LOCAL_$(CORE) += --entry Entry
   endif
@@ -18,20 +18,20 @@ endif
 ifeq ($(BUILD_OS_TYPE), tirtos)
   COMP_LIST_COMMON = $(PDK_COMMON_TIRTOS_COMP)
   INCLUDE_EXTERNAL_INTERFACES += xdc bios
-  SRCS_COMMON = main_rtos.c
+  SRCS_COMMON = memcpy_main_rtos.c
   XDC_CFG_FILE_$(CORE) = $(PDK_INSTALL_PATH)/ti/build/$(SOC)/sysbios_$(ISA).cfg
 endif
 ifeq ($(BUILD_OS_TYPE), freertos)
   COMP_LIST_COMMON = $(PDK_COMMON_FREERTOS_COMP)
   INCLUDE_EXTERNAL_INTERFACES += freertos
-  SRCS_COMMON = main_rtos.c
+  SRCS_COMMON = memcpy_main_rtos.c
 endif
 
 ifeq ($(BUILD_OS_TYPE), safertos)
   CFLAGS_OS_DEFINES = -DSAFERTOS
   COMP_LIST_COMMON = $(PDK_COMMON_SAFERTOS_COMP)
   INCLUDE_EXTERNAL_INTERFACES += safertos
-  SRCS_COMMON = main_rtos.c
+  SRCS_COMMON = memcpy_main_rtos.c
 endif
 
 # List all the specific components required by the application

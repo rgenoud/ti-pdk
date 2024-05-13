@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) Texas Instruments Incorporated 2023
+ *  Copyright (c) Texas Instruments Incorporated 2018-2021
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -31,7 +31,7 @@
  */
 
 /**
- *  \file main_rtos.c
+ *  \file adc_main_rtos.c
  *
  *  \brief Main file for RTOS build
  */
@@ -42,8 +42,13 @@
 
 #include <ti/osal/osal.h>
 #include <ti/osal/TaskP.h>
-#include <ti/csl/soc.h>
 #include <ti/board/board.h>
+
+#if defined RUN_TIME_RELOCATION_DEMO
+/** Required for runtime relocation of .text area from loaded area */
+#include <cpy_tbl.h>
+/* Refer Compiler User Guide for details */
+#endif /* RUN_TIME_RELOCATION_DEMO */
 
 #include <ti/drv/udma/examples/udma_apputils/udma_apputils.h>
 
@@ -52,14 +57,8 @@
 /* ========================================================================== */
 
 /* Test application stack size */
-#if defined (BUILD_C7X)
-/* Temp workaround to avoid assertion failure: A_stackSizeTooSmall : Task stack size must be >= 16KB.
-  * until the Bug PDK-7605 is resolved */
-#define APP_TSK_STACK_MAIN              (32U * 1024U)
-#else
 #define APP_TSK_STACK_MAIN              (16U * 1024U)
 
-#endif
 
 /* ========================================================================== */
 /*                         Structure Declarations                             */
@@ -72,31 +71,40 @@
 /* ========================================================================== */
 
 static void taskFxn(void* a0, void* a1);
-extern int32_t Udma_ocmcDdrMemcpyTest(void);
+extern int32_t Udma_adcTest(void);
+
 
 /* ========================================================================== */
 /*                            Global Variables                                */
 /* ========================================================================== */
 
 /* Test application stack */
-/* For SafeRTOS on R5F with FFI Support, task stack should be aligned to the stack size */
-#if defined(SAFERTOS) && defined (BUILD_MCU)
-static uint8_t  gAppTskStackMain[APP_TSK_STACK_MAIN] __attribute__((aligned(APP_TSK_STACK_MAIN))) = { 0 };
-#else
-static uint8_t  gAppTskStackMain[APP_TSK_STACK_MAIN] __attribute__((aligned(64)));
-#endif
+static uint8_t  gAppTskStackMain[APP_TSK_STACK_MAIN] __attribute__((aligned(32)));;
+
+#if defined RUN_TIME_RELOCATION_DEMO
+/** Required for runtime relocation of .text area from loaded area */
+extern COPY_TABLE _text_run_time_load_section;
+/**< Text Section that requires to be copied */
+extern COPY_TABLE _data_run_time_load_section;
+/**< Data Section that requires to be copied */
+
+#endif /* RUN_TIME_RELOCATION_DEMO */
 
 /* ========================================================================== */
 /*                          Function Definitions                              */
 /* ========================================================================== */
-
 
 int main(void)
 {
     TaskP_Handle task;
     TaskP_Params taskParams;
 
-    /*  This should be called before any other OS calls (like Task creation, OS_start, etc..) */
+#if defined RUN_TIME_RELOCATION_DEMO
+    /** Required for runtime relocation of .text area from loaded area */
+    copy_in(&_text_run_time_load_section);
+    copy_in(&_data_run_time_load_section);
+#endif /* RUN_TIME_RELOCATION_DEMO */
+
     OS_init();
 
     /* Initialize the task params */
@@ -118,15 +126,13 @@ int main(void)
 
 static void taskFxn(void* a0, void* a1)
 {
-    Board_initCfg           boardCfg;
+    Board_initCfg boardCfg;
 
     boardCfg = BOARD_INIT_PINMUX_CONFIG |
                BOARD_INIT_UART_STDIO;
     Board_init(boardCfg);
 
-    Udma_appMainOcmRatCfg();
-
-    Udma_ocmcDdrMemcpyTest();
+    Udma_adcTest();
 
     return;
 }

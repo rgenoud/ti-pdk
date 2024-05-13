@@ -31,7 +31,7 @@
  */
 
 /**
- *  \file main_rtos.c
+ *  \file ut_main_rtos.c
  *
  *  \brief Main file for RTOS build
  */
@@ -43,16 +43,20 @@
 #include <ti/osal/osal.h>
 #include <ti/osal/TaskP.h>
 #include <ti/board/board.h>
-
-#include <ti/drv/udma/examples/udma_apputils/udma_apputils.h>
+#include <udma_test.h>
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
 /* Test application stack size */
+#if defined (BUILD_C7X)
+/* Temp workaround to avoid assertion failure: A_stackSizeTooSmall : Task stack size must be >= 16KB.
+  * until the Bug PDK-7605 is resolved */
+#define APP_TSK_STACK_MAIN              (32U * 1024U)
+#else
 #define APP_TSK_STACK_MAIN              (16U * 1024U)
-
+#endif
 
 /* ========================================================================== */
 /*                         Structure Declarations                             */
@@ -64,16 +68,19 @@
 /*                          Function Declarations                             */
 /* ========================================================================== */
 
-static void taskFxn(void* a0, void* a1);
-extern int32_t Udma_chainingTest(void);
+void taskFxn(void *a0, void *a1);
 
 /* ========================================================================== */
 /*                            Global Variables                                */
 /* ========================================================================== */
 
 /* Test application stack */
-static uint8_t  gAppTskStackMain[APP_TSK_STACK_MAIN] __attribute__((aligned(32)));;
-
+/* For SafeRTOS on R5F with FFI Support, task stack should be aligned to the stack size */
+#if defined(SAFERTOS)
+static uint8_t  gAppTskStackMain[APP_TSK_STACK_MAIN] __attribute__((aligned(APP_TSK_STACK_MAIN)));
+#else
+static uint8_t  gAppTskStackMain[APP_TSK_STACK_MAIN] __attribute__((aligned(64)));;
+#endif
 /* ========================================================================== */
 /*                          Function Definitions                              */
 /* ========================================================================== */
@@ -88,7 +95,7 @@ int main(void)
     /* Initialize the task params */
     TaskP_Params_init(&taskParams);
     /* Set the task priority higher than the default priority (1) */
-    taskParams.priority     = 2;
+    taskParams.priority = 2;
     taskParams.stack        = gAppTskStackMain;
     taskParams.stacksize    = sizeof (gAppTskStackMain);
 
@@ -100,19 +107,6 @@ int main(void)
     OS_start();    /* does not return */
 
     return(0);
-}
-
-static void taskFxn(void* a0, void* a1)
-{
-    Board_initCfg boardCfg;
-
-    boardCfg = BOARD_INIT_PINMUX_CONFIG |
-               BOARD_INIT_UART_STDIO;
-    Board_init(boardCfg);
-
-    Udma_chainingTest();
-
-    return;
 }
 
 #if defined(BUILD_MPU) || defined (BUILD_C7X)

@@ -31,7 +31,7 @@
  */
 
 /**
- *  \file main_rtos.c
+ *  \file dru_main_rtos.c
  *
  *  \brief Main file for RTOS build
  */

@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) Texas Instruments Incorporated 2020
+ *  Copyright (c) Texas Instruments Incorporated 2018-2021
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -31,30 +31,28 @@
  */
 
 /**
- *  \file main_baremetal.c
+ *  \file chaining_main_rtos.c
  *
- *  \brief Main file for baremetal build
+ *  \brief Main file for RTOS build
  */
 
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
 
-#include <stdint.h>
+#include <ti/osal/osal.h>
+#include <ti/osal/TaskP.h>
 #include <ti/board/board.h>
-#include <ti/csl/example/ospi/ospi_flash/common/ospi_flash_common.h>
 
-#if defined (SOC_AM65XX)
-/** Required for runtime relocation of .udma_critical_fxns / .udma_buffer_r5_tcm to TCM from loaded area */
-#include <cpy_tbl.h>
-/* Refer Compiler User Guide for details */
-#endif /* SOC_AM65XX */
+#include <ti/drv/udma/examples/udma_apputils/udma_apputils.h>
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-/* None */
+/* Test application stack size */
+#define APP_TSK_STACK_MAIN              (16U * 1024U)
+
 
 /* ========================================================================== */
 /*                         Structure Declarations                             */
@@ -66,20 +64,15 @@
 /*                          Function Declarations                             */
 /* ========================================================================== */
 
-extern int32_t Udma_ospiFlashTest(void);
-extern void App_print(const char *str);
-extern int32_t App_setGTCClk(uint32_t moduleId,
-                             uint32_t clkId,
-                             uint64_t clkRateHz);
+static void taskFxn(void* a0, void* a1);
+extern int32_t Udma_chainingTest(void);
 
 /* ========================================================================== */
 /*                            Global Variables                                */
 /* ========================================================================== */
 
-#if defined (SOC_AM65XX)
-/** Required for runtime relocation of .udma_critical_fxns / .udma_buffer_r5_tcm to TCM from loaded area */
-extern COPY_TABLE _r5tcm_run_time_load_section;
-#endif /* SOC_AM65XX */
+/* Test application stack */
+static uint8_t  gAppTskStackMain[APP_TSK_STACK_MAIN] __attribute__((aligned(32)));;
 
 /* ========================================================================== */
 /*                          Function Definitions                              */
@@ -87,29 +80,45 @@ extern COPY_TABLE _r5tcm_run_time_load_section;
 
 int main(void)
 {
-    Board_initCfg boardCfg;
-    int32_t       status;
+    TaskP_Handle task;
+    TaskP_Params taskParams;
 
-#if defined (SOC_AM65XX)
-    /** Required for runtime relocation of .udma_critical_fxns / .udma_buffer_r5_tcm to TCM from loaded area */
-    copy_in(&_r5tcm_run_time_load_section);
-#endif /* SOC_AM65XX */
+    OS_init();
 
-    boardCfg = BOARD_INIT_PINMUX_CONFIG |
-               BOARD_INIT_MODULE_CLOCK |
-               BOARD_INIT_UART_STDIO;
-    Board_init(boardCfg);
+    /* Initialize the task params */
+    TaskP_Params_init(&taskParams);
+    /* Set the task priority higher than the default priority (1) */
+    taskParams.priority     = 2;
+    taskParams.stack        = gAppTskStackMain;
+    taskParams.stacksize    = sizeof (gAppTskStackMain);
 
-    /* Configure GTC Timer for profiling */
-    status = App_setGTCClk(OSPI_FLASH_GTC_MOD_ID,
-                           OSPI_FLASH_GTC_CLK_ID,
-                           OSPI_FLASH_GTC_CLK_FREQ);
-    if (CSL_PASS != status)
+    task = TaskP_create(&taskFxn, &taskParams);
+    if(NULL == task)
     {
-        App_print("[Error] Configure GTC Timer failed!!\n");
+        OS_stop();
     }
-
-    Udma_ospiFlashTest();
+    OS_start();    /* does not return */
 
     return(0);
 }
+
+static void taskFxn(void* a0, void* a1)
+{
+    Board_initCfg boardCfg;
+
+    boardCfg = BOARD_INIT_PINMUX_CONFIG |
+               BOARD_INIT_UART_STDIO;
+    Board_init(boardCfg);
+
+    Udma_chainingTest();
+
+    return;
+}
+
+#if defined(BUILD_MPU) || defined (BUILD_C7X)
+extern void Osal_initMmuDefault(void);
+void InitMmu(void)
+{
+    Osal_initMmuDefault();
+}
+#endif

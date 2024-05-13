@@ -31,7 +31,7 @@ COMP_LIST_COMMON += udma_apputils
 
 # Common source files and CFLAGS across all platforms and cores
 PACKAGE_SRCS_COMMON = .
-SRCS_COMMON = main_rtos.c udma_dru_test.c
+SRCS_COMMON = dru_main_rtos.c udma_dru_test.c
 CFLAGS_LOCAL_COMMON = $(PDK_CFLAGS)
 
 # Core/SoC/platform specific source files and CFLAGS

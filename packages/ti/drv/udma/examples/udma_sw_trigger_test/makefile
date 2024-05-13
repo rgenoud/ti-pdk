@@ -33,7 +33,7 @@ APPEND_LNKCMD_FILE = linker_append.cmd
 
 # Common source files and CFLAGS across all platforms and cores
 PACKAGE_SRCS_COMMON = .
-SRCS_COMMON = main_rtos.c udma_sw_trigger_test.c
+SRCS_COMMON = sw_trigger_main_rtos.c udma_sw_trigger_test.c
 CFLAGS_LOCAL_COMMON = $(PDK_CFLAGS)
 
 # Core/SoC/platform specific source files and CFLAGS

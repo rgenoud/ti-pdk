@@ -31,7 +31,7 @@
  */
 
 /**
- *  \file main_rtos.c
+ *  \file sw_trigger_main_rtos.c
  *
  *  \brief Main file for RTOS build
  */
@@ -42,7 +42,6 @@
 
 #include <ti/osal/osal.h>
 #include <ti/osal/TaskP.h>
-#include <ti/csl/soc.h>
 #include <ti/board/board.h>
 
 #include <ti/drv/udma/examples/udma_apputils/udma_apputils.h>
@@ -52,13 +51,8 @@
 /* ========================================================================== */
 
 /* Test application stack size */
-#if defined (BUILD_C7X)
-/* Temp workaround to avoid assertion failure: A_stackSizeTooSmall : Task stack size must be >= 16KB.
-  * until the Bug PDK-7605 is resolved */
-#define APP_TSK_STACK_MAIN              (32U * 1024U)
-#else
 #define APP_TSK_STACK_MAIN              (16U * 1024U)
-#endif
+
 
 /* ========================================================================== */
 /*                         Structure Declarations                             */
@@ -71,19 +65,14 @@
 /* ========================================================================== */
 
 static void taskFxn(void* a0, void* a1);
-extern int32_t Udma_memcpyTest(void);
+extern int32_t Udma_swTriggerTest(void);
 
 /* ========================================================================== */
 /*                            Global Variables                                */
 /* ========================================================================== */
 
 /* Test application stack */
-/* For SafeRTOS on R5F with FFI Support, task stack should be aligned to the stack size */
-#if defined(SAFERTOS) && defined (BUILD_MCU)
-static uint8_t  gAppTskStackMain[APP_TSK_STACK_MAIN] __attribute__((aligned(APP_TSK_STACK_MAIN))) = { 0 };
-#else
-static uint8_t  gAppTskStackMain[APP_TSK_STACK_MAIN] __attribute__((aligned(0x2000)));
-#endif
+static uint8_t  gAppTskStackMain[APP_TSK_STACK_MAIN] __attribute__((aligned(32)));;
 
 /* ========================================================================== */
 /*                          Function Definitions                              */
@@ -94,7 +83,6 @@ int main(void)
     TaskP_Handle task;
     TaskP_Params taskParams;
 
-    /*  This should be called before any other OS calls (like Task creation, OS_start, etc..) */
     OS_init();
 
     /* Initialize the task params */
@@ -116,13 +104,13 @@ int main(void)
 
 static void taskFxn(void* a0, void* a1)
 {
-    Board_initCfg           boardCfg;
+    Board_initCfg boardCfg;
 
     boardCfg = BOARD_INIT_PINMUX_CONFIG |
                BOARD_INIT_UART_STDIO;
     Board_init(boardCfg);
-    
-    Udma_memcpyTest();
+
+    Udma_swTriggerTest();
 
     return;
 }

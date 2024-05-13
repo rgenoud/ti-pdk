@@ -11,7 +11,7 @@ INCLUDE_EXTERNAL_INTERFACES = pdk
 ifeq ($(BUILD_OS_TYPE), freertos)
   COMP_LIST_COMMON = $(PDK_COMMON_FREERTOS_COMP)
   INCLUDE_EXTERNAL_INTERFACES += freertos
-  SRCS_COMMON = main_rtos.c
+  SRCS_COMMON = ocmc_main_rtos.c
 endif
 
 # List all the specific components required by the application
