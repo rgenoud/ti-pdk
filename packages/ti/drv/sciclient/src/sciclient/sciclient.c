@@ -124,8 +124,7 @@ static int32_t Sciclient_C66xRatMap(uint32_t ratRegion);
 /**
  *   \brief Handle used by #Sciclient_service function
  */
-Sciclient_ServiceHandle_t gSciclientHandle =
-    (Sciclient_ServiceHandle_t){{0}};
+Sciclient_ServiceHandle_t gSciclientHandle = {{0}};
 
 /**
  *   \brief Size of secure header.This is initialized when the context is
