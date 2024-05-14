@@ -48,6 +48,7 @@
 #elif defined(BOOT_OSPI)
 #include "boot_app_ospi.h"
 #if defined(CAN_RESP_TASK_ENABLED)
+#include <ti/boot/sbl/soc/k3/sbl_qos.h>
 #include "boot_app_can.h"
 #endif
 #endif
@@ -173,6 +174,15 @@ static void BootApp_bootTaskFxn(void* a0, void* a1);
  * \return None
  */
 static void BootApp_canTaskFxn(void* a0, void* a1);
+
+/**
+ * \brief  Function to initialize Board Cfgs, PLLs, Module Clock for Main Domain and DDR 
+ *
+ * \param  None
+ *
+ * \return None
+ */
+static void BootApp_mainDomainSetup(void);
 #endif
 
 /* Function Pointer used while reading data from the storage. */
@@ -327,6 +337,77 @@ static void BootApp_canTaskFxn(void* a0, void* a1)
     BootApp_canResponseTest();
     return;
 }
+
+static void BootApp_mainDomainSetup()
+{
+    uint32_t       retVal;
+    Sciclient_DefaultBoardCfgInfo_t boardCfgInfo;
+    Board_initCfg  boardCfg;
+
+    /* Sciclient Board Cfg set up for Main Domain */
+    retVal = Sciclient_getDefaultBoardCfgInfo(&boardCfgInfo);
+    if(CSL_PASS != retVal)
+    {
+        UART_printf("Sciclient get default Board Cfg... FAILED\r\n");
+    }
+
+    Sciclient_BoardCfgPrms_t bootAppBoardCfgPrms    = {
+                                                       .boardConfigLow = (uint32_t)boardCfgInfo.boardCfgLow,
+                                                       .boardConfigHigh = 0,
+                                                       .boardConfigSize = boardCfgInfo.boardCfgLowSize,
+                                                       .devGrp = DEVGRP_01
+                                                      };
+    Sciclient_BoardCfgPrms_t bootAppBoardCfgPmPrms  = {
+                                                       .boardConfigLow = (uint32_t)boardCfgInfo.boardCfgLowPm,
+                                                       .boardConfigHigh = 0,
+                                                       .boardConfigSize = boardCfgInfo.boardCfgLowPmSize,
+                                                       .devGrp = DEVGRP_01
+                                                      };
+    Sciclient_BoardCfgPrms_t bootAppBoardCfgRmPrms  = {
+                                                       .boardConfigLow = (uint32_t)boardCfgInfo.boardCfgLowRm,
+                                                       .boardConfigHigh = 0,
+                                                       .boardConfigSize = boardCfgInfo.boardCfgLowRmSize,
+                                                       .devGrp = DEVGRP_01
+                                                      };
+    Sciclient_BoardCfgPrms_t bootAppBoardCfgSecPrms = {
+                                                       .boardConfigLow = (uint32_t)boardCfgInfo.boardCfgLowSec,
+                                                       .boardConfigHigh = 0,
+                                                       .boardConfigSize = boardCfgInfo.boardCfgLowSecSize,
+                                                       .devGrp = DEVGRP_01
+                                                      };
+
+    retVal = Sciclient_boardCfg(&bootAppBoardCfgPrms);
+    if (retVal != CSL_PASS)
+    {
+         UART_printf("Sciclient_boardCfg() failed.\r\n");
+    }
+    retVal = Sciclient_boardCfgPm(&bootAppBoardCfgPmPrms);
+    if (retVal != CSL_PASS)
+    {
+         UART_printf( "Sciclient_boardCfgPm() failed.\r\n");
+    }
+    retVal = Sciclient_boardCfgRm(&bootAppBoardCfgRmPrms);
+    if (retVal != CSL_PASS)
+    {
+         UART_printf("Sciclient_boardCfgRm() failed.\r\n");
+    }
+    retVal = Sciclient_boardCfgSec(&bootAppBoardCfgSecPrms);
+    if (retVal != CSL_PASS)
+    {
+         UART_printf("Sciclient_boardCfgSec() failed.\r\n");
+    }
+
+    /* Initialize PLLs, Clock for Main Domain and DDR */
+    boardCfg = BOARD_INIT_PLL_MAIN | BOARD_INIT_MODULE_CLOCK_MAIN | BOARD_INIT_DDR;
+    Board_init(boardCfg);
+
+    /* SBL implements the SBL_SetQoS only for J721S2, J721E, J784S4. */
+    #if !defined (SOC_J7200)
+    SBL_SetQoS();
+    #endif
+
+    return;
+}
 #endif
 
 static void BootApp_bootTaskFxn(void* a0, void* a1)
@@ -352,16 +433,14 @@ static uint32_t BootApp_loadImg(void)
     uint8_t        num_cores_to_boot;
     uint8_t        num_booted_cores = 0;
     uint64_t       time_boot_core_finish[DSP2_C7X_ID];
-    
-#if defined(CAN_RESP_TASK_ENABLED)
-    /* To measure CAN Response, sbl_boot_perf_cust_img is used which doesn't initialize DDR, so initializing here
-     * Otherwise, sbl_cust_img is used which carries out initialization of DDR */
-    Board_initCfg  boardCfg;
-    boardCfg = BOARD_INIT_PLL_MAIN | BOARD_INIT_MODULE_CLOCK_MAIN | BOARD_INIT_DDR;
-    Board_init(boardCfg);
-#endif
 
 #if defined(BOOT_OSPI)
+#if defined(CAN_RESP_TASK_ENABLED)
+    /* To measure CAN response, sbl_boot_perf_cust_img is used which doesn't setup the Main Domain
+     * and doesn't inialtize DDR for faster Boot time. 
+     * So, initializing Board Cfgs, PLLs and Module Clock for Main Domain and DDR */
+    BootApp_mainDomainSetup();
+#endif
     SBL_SPI_init();
     SBL_ospiInit(&boardHandle);
 #endif
