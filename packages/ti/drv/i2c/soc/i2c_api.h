@@ -65,7 +65,7 @@ extern "C" {
 
 #define I2C_MAX_NUM_OWN_SLAVE_ADDR    (4U)
 
-/*!
+/**
  *  @brief Function to set interrupt path
  *
  *  This function will configure the interrupt path to the destination CPU
@@ -74,41 +74,41 @@ extern "C" {
  */
 typedef int32_t (*I2C_socCfgIntrPathFxn)(const void *pHwAttrs, bool setIntrPath);
 
-/*!
+/**
  *  @brief  I2C V1 Hardware attributes
  */
 typedef struct I2C_HwAttrs_s {
-    /*! I2C Peripheral base address */
+    /** I2C Peripheral base address */
     uint32_t baseAddr;
-    /*! I2C Peripheral interrupt vector */
+    /** I2C Peripheral interrupt vector */
     uint32_t intNum;
-    /*! I2C Peripheral interrupt vector */
+    /** I2C Peripheral interrupt vector */
     uint32_t eventId;
-    /*! I2C input functional clock */
+    /** I2C input functional clock */
     uint32_t funcClk;
-    /*! enable Interrupt */
+    /** enable Interrupt */
     bool enableIntr;
     /**< I2C own slave addresses for multi-slave channels,
          if only one slave channel is supported, set the
          slave address to ownSlaveAddr[0] */
     uint32_t ownSlaveAddr[I2C_MAX_NUM_OWN_SLAVE_ADDR];
-    /*! Function pointer to set interrupt router path */
+    /** Function pointer to set interrupt router path */
     I2C_socCfgIntrPathFxn configSocIntrPath;
 } I2C_HwAttrs;
 
-/*!
+/**
  *  @brief  I2C operating modes
  */
 typedef enum I2C_operMode_e {
-    /*! Interrupt blocking mode */
+    /** Interrupt blocking mode */
     I2C_OPER_MODE_BLOCKING,
-    /*! Interrupt callback mode */
+    /** Interrupt callback mode */
     I2C_OPER_MODE_CALLBACK,
-    /*! Polling based blocking mode */
+    /** Polling based blocking mode */
     I2C_OPER_MODE_POLLING
 } I2C_operMode;
 
-/*!
+/**
  *  @brief  I2C mode
  *
  *  This enum defines the state of the I2C driver's state-machine. Do not

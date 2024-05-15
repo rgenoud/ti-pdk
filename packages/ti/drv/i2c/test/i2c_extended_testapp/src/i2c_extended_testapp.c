@@ -46,7 +46,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <ti/csl/soc.h>
-#include <ti/csl/csl_i2c.h>
+#include <ti/drv/i2c/i2c.h>
 #include <ti/drv/i2c/soc/i2c_soc.h>
 #include <ti/drv/uart/UART_stdio.h>
 #include <ti/board/board.h>
@@ -418,7 +418,7 @@ static bool I2CApp_bitrateTestTxnInvdParams(void *arg)
     }
 
     /* check the buffer status */
-    retVal = I2CBufferStatus(hwAttrs->baseAddr, I2C_RX_BUFFER_STATUS);
+    retVal = I2CBufferStatus(hwAttrs->baseAddr, CSL_I2C_RX_BUFFER_STATUS);
     if(0U != retVal)
     {
         UART_printf("I2C Test:RX buffer Status :%d \n", retVal);
@@ -435,7 +435,7 @@ static bool I2CApp_bitrateTestTxnInvdParams(void *arg)
 
     /* clear and check the interrupt status */
     I2CMasterIntRawStatusClearEx(hwAttrs->baseAddr, 0U);
-    I2CMasterIntClearEx(hwAttrs->baseAddr, I2C_INT_ALL);
+    I2CMasterIntClearEx(hwAttrs->baseAddr, CSL_I2C_INT_ALL);
     retVal = I2CMasterIntRawStatus(hwAttrs->baseAddr);
     if(0U != retVal)
     {
@@ -961,8 +961,8 @@ static bool I2CApp_negativeTest(void *arg)
 
     /* Set Rx and Tx FIFO threshold value */
     i2cCfg = (I2C_HwAttrs const *)handle->hwAttrs;
-    I2CFIFOThresholdConfig(i2cCfg->baseAddr, 0U, I2C_TX_MODE);
-    I2CFIFOThresholdConfig(i2cCfg->baseAddr, 0U, I2C_RX_MODE);
+    I2CFIFOThresholdConfig(i2cCfg->baseAddr, 0U, CSL_I2C_TX_MODE);
+    I2CFIFOThresholdConfig(i2cCfg->baseAddr, 0U, CSL_I2C_RX_MODE);
 
     memset(rxBuf, 0, I2C_APP_EEPROM_TEST_LENGTH);
     I2C_transactionInit(&i2cTransaction);

@@ -147,12 +147,13 @@ extern "C" {
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <ti/drv/i2c/src/csl/csl_i2c.h>
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-/*!
+/**
  * Common I2C_control command code reservation offset.
  * I2C driver implementations should offset command codes with I2C_CMD_RESERVED
  * growing positively
@@ -165,14 +166,14 @@ extern "C" {
  */
 #define I2C_CMD_RESERVED             32
 
-/*!
+/**
  * I2C probe IOCTL. This IOCTL returns I2C_STATUS_SUCCESS if the device
  * is present. Returns I2C_STATUS_ERROR otherwise.
  * The argument to this IOCTL is the uint32_t * of the device address.
  */
 #define I2C_CMD_PROBE               (0U)
 
-/*!
+/**
  * This command sets the i2c bus speed dynamically.
  * This command returns I2C_STATUS_SUCCESS if the device
  * is present. Returns I2C_STATUS_ERROR otherwise.
@@ -180,7 +181,7 @@ extern "C" {
  */
 #define I2C_CMD_SET_BUS_FREQUENCY   (1U)
 
-/*!
+/**
  * This command performs bus recovery in case of timeout error.
  * This command returns I2C_STATUS_SUCCESS if the device
  * is present. Returns I2C_STATUS_ERROR otherwise.
@@ -188,7 +189,7 @@ extern "C" {
  */
 #define I2C_CMD_RECOVER_BUS         (2U)
 
-/*!
+/**
  * This command performs SMBUS command and code setup.
  * This command returns I2C_STATUS_SUCCESS if a valid
  * smbus cmd is passed. Returns I2C_STATUS_ERROR otherwise.
@@ -197,7 +198,7 @@ extern "C" {
  */
 #define I2C_CMD_SMBUS_TYPE          (3U)
 
-/*!
+/**
  * Common I2C_control status code reservation offset.
  * I2C driver implementations should offset status codes with
  * I2C_STATUS_RESERVED growing negatively.
@@ -211,7 +212,7 @@ extern "C" {
  */
 #define I2C_STATUS_RESERVED         (-((int32_t)32))
 
-/*!
+/**
  * \brief   Successful status code returned by I2C_control().
  *
  * I2C_control() returns I2C_STATUS_SUCCESS if the control code was executed
@@ -219,7 +220,7 @@ extern "C" {
  */
 #define I2C_STATUS_SUCCESS          ((int32_t)(0))
 
-/*!
+/**
  * \brief   Generic error status code returned by I2C_control().
  *
  * I2C_control() returns I2C_STATUS_ERROR if the control code was not executed
@@ -227,7 +228,7 @@ extern "C" {
  */
 #define I2C_STATUS_ERROR           (-((int32_t)1))
 
-/*!
+/**
  * \brief   An error status code returned by I2C_control() for undefined
  * command codes.
  *
@@ -237,14 +238,14 @@ extern "C" {
 #define I2C_STATUS_UNDEFINEDCMD    (-((int32_t)2))
 
 
-/*!
+/**
  * \brief   A status code returned by I2C_transfer().
  *
  * I2C_transfer() returns I2C_STS_SUCCESS if the transfer is succesful.
  */
 #define I2C_STS_SUCCESS           ((int16_t)(1))
 
-/*!
+/**
  * \brief   A restart status code returned by I2C transfer callback
  *
  * I2C transfer callback function returns I2C_STS_RESTART if the restart
@@ -252,51 +253,51 @@ extern "C" {
  */
 #define I2C_STS_RESTART           ((int16_t)(2))
 
-/*!
+/**
  * \brief   A error status code returned by I2C_transfer().
  *
  * I2C_transfer() returns I2C_STS_ERR if the transfer is failed.
  */
 #define I2C_STS_ERR               ((int16_t)(0))
 
-/*!
+/**
  * \brief   A error status code returned by I2C_transfer().
  *
  * I2C_transfer() returns I2C_STS_ERR_TIMEOUT if the timeout error is occured
  * during the transfer.
  */
 #define I2C_STS_ERR_TIMEOUT          (-(int16_t)(1))
-/*!
+/**
  * \brief   I2C bus busy error 
  */
 #define I2C_STS_ERR_BUS_BUSY         (-(int16_t)(2))
-/*!
+/**
  * \brief   I2C no ack error when no acknowledgement is received 
  */
 #define I2C_STS_ERR_NO_ACK           (-(int16_t)(3))
-/*!
+/**
  * \brief   I2C Arbitration lost error
  */
 #define I2C_STS_ERR_ARBITRATION_LOST (-(int16_t)(4))
-/*!
+/**
  * \brief   I2C Bus Access error
  */
 #define I2C_STS_ERR_ACCESS_ERROR     (-(int16_t)(5))
-/*!
+/**
  * \brief   I2C FW Command Access Failure
  */
 #define I2C_STS_ERR_COMMAND_FAILURE  (-(int16_t)(6))
-/*!
+/**
  * \brief   I2C FW Invalid Command passed
  */
 #define I2C_STS_ERR_INVALID_COMMAND  (-(int16_t)(7))
 
-/*!
+/**
  *  @brief      A handle that is returned from a I2C_open() call.
  */
 typedef struct I2C_Config_s      *I2C_Handle;
 
- /*!
+ /**
   * \brief   I2C_TRANSACTION valid parameter bit fields.
   *
   * Valid bit fields supported
@@ -356,16 +357,16 @@ typedef struct I2C_Transaction_s {
                                                  of a slave channel when multi-slave channels are supported,
                                                  if only one channel is supported, this field is ignored */
 
-    void                *arg;               /*!< argument to be passed to the callback function */
-    void                *nextPtr;           /*!< used for queuing in I2C_MODE_CALLBACK mode */
-    uint32_t            timeout;            /*!< Timeout value for i2c transaction */
+    void                *arg;               /**< argument to be passed to the callback function */
+    void                *nextPtr;           /**< used for queuing in I2C_MODE_CALLBACK mode */
+    uint32_t            timeout;            /**< Timeout value for i2c transaction */
 
     bool                masterMode;         /**< I2C master or slave mode */
     bool                expandSA;           /**< Expand slave address:
                                                  BTRUE: 10-bit address mode, BFALSE: 7-bit address mode */
 } I2C_Transaction;
 
-/*!
+/**
  *  @brief  I2C transfer mode
  *
  *  I2C_MODE_BLOCKING block task execution while a I2C transfer is in progress
@@ -373,11 +374,11 @@ typedef struct I2C_Transaction_s {
  *  function when the I2C transfer has completed
  */
 typedef enum I2C_TransferMode_e {
-    I2C_MODE_BLOCKING,  /*!< I2C_transfer blocks execution*/
-    I2C_MODE_CALLBACK   /*!< I2C_transfer queues transactions and does not block */
+    I2C_MODE_BLOCKING,  /**< I2C_transfer blocks execution*/
+    I2C_MODE_CALLBACK   /**< I2C_transfer queues transactions and does not block */
 } I2C_TransferMode;
 
-/*!
+/**
  *  @brief  I2C callback function
  *
  *  User definable callback function prototype. The I2C driver will call the
@@ -397,7 +398,7 @@ typedef enum I2C_TransferMode_e {
  */
 typedef void (*I2C_CallbackFxn)(I2C_Handle handle, I2C_Transaction * msg, int16_t transferStatus);
 
-/*!
+/**
  *  @brief  I2C bitRate
  *
  *  Specify one of the standardized I2C bus bit rates for I2C communications.
@@ -410,7 +411,7 @@ typedef enum I2C_BitRate_e {
     I2C_3P4Mhz = 3
 } I2C_BitRate;
 
-/*!
+/**
  *  @brief  I2C Parameters
  *
  *  I2C parameters are used to with the I2C_open() call. Default values for
@@ -431,13 +432,13 @@ typedef enum I2C_BitRate_e {
  *  @sa     I2C_Params_init()
  */
 typedef struct I2C_Params_s {
-    I2C_TransferMode    transferMode; /*!< Blocking or Callback mode */
+    I2C_TransferMode    transferMode; /**< Blocking or Callback mode */
 
     /* done to get rid of misra warning MISRA.CAST.FUNC_PTR, it complains later where the function address is assigned */
     void (*transferCallbackFxn)(I2C_Handle i2cHnd, I2C_Transaction * msg, int16_t transferStatus);
     /* I2C_CallbackFxn     transferCallbackFxn; !< Callback function pointer */
-    I2C_BitRate         bitRate; /*!< I2C bus bit rate */
-    void               *custom;  /*!< Custom argument used by driver
+    I2C_BitRate         bitRate; /**< I2C bus bit rate */
+    void               *custom;  /**< Custom argument used by driver
                                       implementation */
 } I2C_Params;
 
@@ -446,13 +447,13 @@ typedef struct I2C_Params_s {
  */
 #define I2C_WAIT_FOREVER   (~((uint32_t)0U))
 
-/*!
+/**
  *  @brief      A function pointer to a driver specific implementation of
  *              I2C_close().
  */
 typedef void        (*I2C_CloseFxn)    (I2C_Handle handle);
 
-/*!
+/**
  *  @brief      A function pointer to a driver specific implementation of
  *              I2C_control().
  */
@@ -460,49 +461,49 @@ typedef int32_t         (*I2C_ControlFxn)  (I2C_Handle handle,
                                         uint32_t cmd,
                                         void *arg);
 
-/*!
+/**
  *  @brief      A function pointer to a driver specific implementation of
  *              I2C_init().
  */
 typedef void        (*I2C_InitFxn)     (I2C_Handle handle);
 
-/*!
+/**
  *  @brief      A function pointer to a driver specific implementation of
  *              I2C_open().
  */
 typedef I2C_Handle  (*I2C_OpenFxn)     (I2C_Handle handle,
                                         const I2C_Params *params);
 
-/*!
+/**
  *  @brief      A function pointer to a driver specific implementation of
  *              I2C_transfer().
  */
 typedef int16_t        (*I2C_TransferFxn) (I2C_Handle handle,
                                         I2C_Transaction *transaction);
 
-/*!
+/**
  *  @brief      The definition of a I2C function table that contains the
  *              required set of functions to control a specific I2C driver
  *              implementation.
  */
 typedef struct I2C_FxnTable_s {
-    /*! Function to close the specified peripheral */
+    /** Function to close the specified peripheral */
     I2C_CloseFxn        closeFxn;
 
-    /*! Function to implementation specific control function */
+    /** Function to implementation specific control function */
     I2C_ControlFxn      controlFxn;
 
-    /*! Function to initialize the given data object */
+    /** Function to initialize the given data object */
     I2C_InitFxn         initFxn;
 
-    /*! Function to open the specified peripheral */
+    /** Function to open the specified peripheral */
     I2C_OpenFxn         openFxn;
 
-    /*! Function to initiate a I2C data transfer */
+    /** Function to initiate a I2C data transfer */
     I2C_TransferFxn     transferFxn;
 } I2C_FxnTable;
 
-/*!
+/**
  *  @brief  I2C Global configuration
  *
  *  The I2C_Config structure contains a set of pointers used to characterize
@@ -514,13 +515,13 @@ typedef struct I2C_FxnTable_s {
  *  @sa     I2C_init()
  */
 typedef struct I2C_Config_s {
-    /*! Pointer to a table of driver-specific implementations of I2C APIs */
+    /** Pointer to a table of driver-specific implementations of I2C APIs */
     I2C_FxnTable const *fxnTablePtr;
 
-    /*! Pointer to a driver specific data object */
+    /** Pointer to a driver specific data object */
     void               *object;
 
-    /*! Pointer to a driver specific hardware attributes structure */
+    /** Pointer to a driver specific hardware attributes structure */
     void         const *hwAttrs;
 } I2C_Config;
 
@@ -531,7 +532,7 @@ typedef I2C_Config I2C_config_list[I2C_MAX_CONFIG_CNT];
 /*                          Function Declarations                             */
 /* ========================================================================== */
 
-/*!
+/**
  *  @brief  Function to close a I2C peripheral specified by the I2C handle
  *
  *  @pre    I2C_open() had to be called first.
@@ -542,7 +543,7 @@ typedef I2C_Config I2C_config_list[I2C_MAX_CONFIG_CNT];
  */
 extern void I2C_close(I2C_Handle i2cHnd);
 
-/*!
+/**
  *  @brief  Function performs implementation specific features on a given
  *          I2C_Handle.
  *
@@ -563,7 +564,7 @@ extern void I2C_close(I2C_Handle i2cHnd);
  */
 extern int32_t I2C_control(I2C_Handle i2cHnd, uint32_t cmd, void *arg);
 
-/*!
+/**
  *  @brief  Function to initializes the I2C module
  *
  *  @pre    The I2C_config structure must exist and be persistent before this
@@ -573,7 +574,7 @@ extern int32_t I2C_control(I2C_Handle i2cHnd, uint32_t cmd, void *arg);
  */
 extern void I2C_init(void);
 
-/*!
+/**
  *  @brief  Function to initialize a given I2C peripheral specified by the
  *          particular index value. The parameter specifies which mode the I2C
  *          will operate.
@@ -595,7 +596,7 @@ extern void I2C_init(void);
  */
 extern I2C_Handle I2C_open(uint32_t idx, I2C_Params *params);
 
-/*!
+/**
  *  @brief  Function to initialize the I2C_Params struct to its defaults
  *
  *  @param  params      An pointer to I2C_Params structure for
@@ -608,7 +609,7 @@ extern I2C_Handle I2C_open(uint32_t idx, I2C_Params *params);
  */
 extern void I2C_Params_init(I2C_Params *params);
 
-/*!
+/**
  *  @brief  Function that handles the I2C transfer for SYS/BIOS
  *
  *  This function will start a I2C transfer and can only be called from a Task
