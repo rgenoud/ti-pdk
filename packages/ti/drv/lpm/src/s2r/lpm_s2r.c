@@ -46,7 +46,7 @@
 #include <stdint.h>
 #include <stdarg.h>
 #include <ti/csl/soc.h>
-#include <ti/csl/csl_i2c.h>
+#include <ti/drv/i2c/i2c.h>
 #include <ti/csl/cslr_pmmc.h>
 #if defined(SOC_J7200)
 #include <ti/board/src/j7200_evm/include/board_cfg.h>

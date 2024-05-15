@@ -147,6 +147,7 @@ extern "C" {
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <ti/drv/i2c/src/csl_i2c.h>
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */

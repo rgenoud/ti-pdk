@@ -36,10 +36,10 @@ PACKAGE_SRCS_COMMON = makefile i2c.h i2c_component.mk \
                       build src/src_files_common.mk \
 
 # The following v1 files are all that is shipped with TDA devices
-  SRCDIR = . src src/v1
+  SRCDIR = . src src/v1 src/v1/priv
   INCDIR = . src src/v1
-  SRCS_COMMON += i2c_drv.c i2c_api.c
-  PACKAGE_SRCS_COMMON += src/v1 soc/i2c_api.h
+  SRCS_COMMON += i2c_drv.c i2c_api.c csl_i2c.c 
+  PACKAGE_SRCS_COMMON += src/v1 src/v1/priv soc/i2c_api.h src/v1/csl_i2c.h src/v1/cslr_i2c.h src/csl_i2c.h src/cslr_i2c.h
 
 # List all the external components/interfaces, whose interface header files
 #  need to be included for this component
