@@ -261,7 +261,9 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
         pUdmapRegs->pRxChanRtRegs   = ((CSL_udmap_rxcrtRegs *) UDMA_NAVSS0_UDMASS_UDMAP0_CFG_RCHANRT_BASE);
         drvHandle->trigGemOffset    = CSL_NAVSS_GEM_MAIN_UDMA_TRIGGER_OFFSET;
     }
+#if (UDMA_SOC_CFG_CLEC_PRESENT == 1)
     drvHandle->clecRegs = (CSL_CLEC_EVTRegs *) UDMA_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
+#endif
 /* UDMA not present in CC QT build. Only DRU is present */
 #ifndef CC_QT_BUILD
     /* Fill other SOC specific parameters by reading from UDMA config
@@ -353,8 +355,10 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
 
     drvHandle->devIdIa      = TISCI_DEV_NAVSS0_UDMASS_INTAGGR_0;
     drvHandle->devIdIr      = TISCI_DEV_NAVSS0_INTR_ROUTER_0;
+#if (UDMA_SOC_CFG_CLEC_PRESENT == 1)
     drvHandle->clecRtMap    = CSL_CLEC_RTMAP_DISABLE;
     drvHandle->clecOffset   = 0U;
+#endif
 #if defined (BUILD_MPU1_0)
     drvHandle->druCoreId    = UDMA_DRU_CORE_ID_MPU1_0;
 #endif

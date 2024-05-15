@@ -49,7 +49,6 @@
 #include <ti/csl/arch/csl_arch.h>
 #include <ti/drv/gpio/soc/GPIO_soc.h>
 #include <ti/drv/sciclient/sciclient.h>
-#include <ti/csl/csl_clec.h>
 
 /** \brief Number of gpio pins for each port */
 #define GPIO_NUM_PINS_PER_PORT           (128U)

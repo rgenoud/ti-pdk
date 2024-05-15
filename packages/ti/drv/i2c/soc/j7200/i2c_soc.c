@@ -55,9 +55,8 @@
 /* ========================================================================== */
 
 #include <string.h>
-#include <ti/csl/arch/r5/csl_arm_r5.h>
+#include <ti/csl/arch/csl_arch.h>
 #include <ti/csl/soc.h>
-#include <ti/csl/csl_clec.h>
 #include <ti/drv/i2c/i2c.h>
 #include <ti/drv/i2c/soc/i2c_soc.h>
 #include <ti/drv/sciclient/sciclient.h>

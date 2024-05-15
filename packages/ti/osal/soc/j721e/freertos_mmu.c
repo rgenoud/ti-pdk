@@ -51,7 +51,6 @@
 #include <ti/osal/soc/j721e/osal_soc.h>
 
 #if defined (BUILD_C7X)
-#include <ti/csl/csl_clec.h>
 #include <ti/csl/arch/csl_arch.h>
 #include "Mmu.h"
 #endif

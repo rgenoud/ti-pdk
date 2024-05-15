@@ -45,7 +45,6 @@
 #include <string.h>
 #include <ti/csl/csl_types.h>
 #if defined (BUILD_C7X)
-#include <ti/csl/csl_clec.h>
 #include <ti/csl/arch/csl_arch.h>
 #endif
 #include <ti/board/board.h>

@@ -57,7 +57,7 @@
 #include <stdint.h>
 #include "ti/drv/udma/dmautils/src/dmautils_autoincrement_3d_priv.h"
 #include "ti/drv/udma/dmautils/include/dmautils_autoincrement_3d.h"
-#include <ti/csl/csl_clec.h>
+#include <ti/csl/arch/csl_arch.h>
 #include <ti/csl/arch/c7x/cslr_C7X_CPU.h>
 
 #if defined (BUILD_C7X)

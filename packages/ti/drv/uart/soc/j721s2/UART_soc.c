@@ -40,7 +40,7 @@
 #include <ti/csl/csl_utils.h>
 #include <ti/csl/arch/r5/csl_arm_r5.h>
 #include <ti/csl/soc.h>
-#include <ti/csl/csl_clec.h>
+#include <ti/csl/arch/csl_arch.h>
 #include <ti/drv/uart/UART.h>
 #include <ti/drv/uart/soc/UART_soc.h>
 #include <ti/drv/sciclient/sciclient.h>

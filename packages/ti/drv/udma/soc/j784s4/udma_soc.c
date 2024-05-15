@@ -341,7 +341,9 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
         pBcdmaRegs = &drvHandle->bcdmaRegs;
         memset(pBcdmaRegs, 0, sizeof(*pBcdmaRegs));
     }
+#if (UDMA_SOC_CFG_CLEC_PRESENT == 1)
     drvHandle->clecRegs = (CSL_CLEC_EVTRegs *) UDMA_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
+#endif
 
     /*
      * RA config init
@@ -468,8 +470,10 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
 
     drvHandle->devIdIa      = TISCI_DEV_NAVSS0_UDMASS_INTA_0;
     drvHandle->devIdIr      = TISCI_DEV_NAVSS0_INTR_0;
+#if (UDMA_SOC_CFG_CLEC_PRESENT == 1)
     drvHandle->clecRtMap    = CSL_CLEC_RTMAP_DISABLE;
     drvHandle->clecOffset   = 0U;
+#endif
 #if defined (BUILD_MPU1_0)
     drvHandle->druCoreId    = UDMA_DRU_CORE_ID_MPU1_0;
 #endif

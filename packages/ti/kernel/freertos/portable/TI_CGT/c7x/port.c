@@ -68,7 +68,7 @@
 #include "TaskSupport.h"
 #include "Cache.h"
 #include <ti/csl/soc.h>
-#include <ti/csl/csl_clec.h>
+#include <ti/csl/arch/csl_arch.h>
 #include <ti/osal/src/nonos/Nonos_config.h>
 
 /* Let the user override the pre-loading of the initial LR with the address of

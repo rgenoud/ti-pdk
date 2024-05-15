@@ -434,7 +434,7 @@ void task_switch_main(void *args)
 
 #if defined (BUILD_C7X)
 extern void Osal_initMmuDefault(void);
-#include <ti/csl/csl_clec.h>
+#include <ti/csl/arch/csl_arch.h>
 
 void InitMmu(void)
 {

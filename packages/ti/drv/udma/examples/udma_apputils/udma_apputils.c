@@ -46,7 +46,6 @@
 #include <ti/drv/sciclient/sciclient.h>
 #include <ti/drv/udma/examples/udma_apputils/udma_apputils.h>
 #if defined (BUILD_C7X)
-#include <ti/csl/csl_clec.h>
 #include <ti/csl/arch/csl_arch.h>
 #endif
 

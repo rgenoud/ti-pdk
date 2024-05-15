@@ -41,7 +41,7 @@
 
 #include "Mmu.h"
 
-#include <ti/csl/csl_clec.h>
+#include <ti/csl/arch/csl_arch.h>
 #include <ti/osal/src/nonos/Nonos_config.h>
 #include <ti/osal/DebugP.h>
 

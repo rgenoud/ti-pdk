@@ -45,9 +45,8 @@
 /* ========================================================================== */
 
 #include <string.h>
-#include <ti/csl/arch/r5/csl_arm_r5.h>
+#include <ti/csl/arch/csl_arch.h>
 #include <ti/csl/soc.h>
-#include <ti/csl/csl_clec.h>
 #if defined (BUILD_C66X)
 #include <ti/csl/csl_chipAux.h>
 #endif

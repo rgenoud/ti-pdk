@@ -40,7 +40,7 @@
 #include <ti/osal/CycleprofilerP.h>
 
 #if defined (BUILD_C7X)
-#include <ti/csl/csl_clec.h>
+#include <ti/csl/arch/csl_arch.h>
 #include <ti/osal/src/nonos/Nonos_config.h>
 #endif
 

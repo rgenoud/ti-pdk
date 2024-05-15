@@ -54,7 +54,6 @@
 #include <ti/csl/csl_types.h>
 #if defined (BUILD_C7X)
 #include <ti/csl/soc.h>
-#include <ti/csl/csl_clec.h>
 #include <ti/csl/arch/csl_arch.h>
 
 #include <ti/osal/soc/osal_soc.h>

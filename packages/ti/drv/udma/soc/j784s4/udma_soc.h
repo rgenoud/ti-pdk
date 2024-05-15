@@ -116,7 +116,11 @@ extern "C" {
 #define UDMA_SOC_CFG_INTR_ROUTER_PRESENT         (1U)
 
 /** \brief Flag to indicate Clec is present or not in the SOC*/
-#define UDMA_SOC_CFG_CLEC_PRESENT                (1U)
+#if defined (BUILD_C7X)
+#define UDMA_SOC_CFG_CLEC_PRESENT                (1U) 
+#else
+#define UDMA_SOC_CFG_CLEC_PRESENT                (0U)
+#endif
 
 /** \brief Flag to indicate Normal RA is present or not in the SOC*/
 #define UDMA_SOC_CFG_RA_NORMAL_PRESENT           (1U)

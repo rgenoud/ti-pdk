@@ -94,7 +94,7 @@
 #include <ti/drv/udma/src/proxy/csl_proxy.h>
 #endif
 #if (UDMA_SOC_CFG_CLEC_PRESENT == 1)
-#include <ti/csl/csl_clec.h>
+#include <ti/csl/arch/c7x/src/clec/csl_clec.h>
 #endif
 
 #include <ti/osal/osal.h>

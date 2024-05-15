@@ -64,7 +64,7 @@
 #endif
 
 #if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4)
-#include <ti/csl/csl_clec.h>
+#include <ti/csl/arch/csl_arch.h>
 #endif
 
 #if defined (BUILD_C7X)

@@ -50,9 +50,6 @@
 #if ((defined (SOC_J721S2) || defined (SOC_J784S4)) && defined(BUILD_MCU2_0))
 #include <ti/csl/cslr_pvu.h>
 #endif
-#if defined (BUILD_C7X)
-#include <ti/csl/csl_clec.h>
-#endif
 #include <ti/osal/osal.h>
 #include <ti/osal/TimerP.h>
 #include <ti/osal/TaskP.h>

@@ -49,7 +49,7 @@
 
 #include <ti/csl/csl_navss_main.h>
 #include <ti/csl/csl_intr_router.h>
-#include <ti/csl/csl_clec.h>
+#include <ti/csl/arch/csl_arch.h>
 #include <ti/drv/sciclient/sciclient.h>
 //#include <ti/drv/sciclient/soc/V1/sciclient_fmwMsgParams.h>
 

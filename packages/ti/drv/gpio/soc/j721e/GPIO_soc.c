@@ -49,7 +49,6 @@
 #include <ti/csl/arch/csl_arch.h>
 #include <ti/drv/gpio/soc/GPIO_soc.h>
 #include <ti/drv/sciclient/sciclient.h>
-#include <ti/csl/csl_clec.h>
 #if defined (BUILD_C66X)
 #include <ti/csl/csl_chipAux.h>
 #endif

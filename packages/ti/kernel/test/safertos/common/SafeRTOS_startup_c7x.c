@@ -39,7 +39,7 @@
 #include "SafeRTOSConfig.h"
 
 #include <ti/csl/soc.h>
-#include <ti/csl/csl_clec.h>
+#include <ti/csl/arch/csl_arch.h>
 #include "Mmu.h"
 
 

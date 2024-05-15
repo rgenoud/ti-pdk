@@ -51,7 +51,7 @@
 #if defined(HOST_EMULATION)
 #include <malloc.h>
 #else
-#include <ti/csl/csl_clec.h>
+#include <ti/csl/arch/csl_arch.h>
 #include <ti/csl/arch/c7x/cslr_C7X_CPU.h>
 #endif
 

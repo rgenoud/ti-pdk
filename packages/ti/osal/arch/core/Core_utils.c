@@ -40,11 +40,8 @@
 #include <ti/osal/osal.h>
 #include <ti/osal/soc/osal_soc.h>
 
-#if defined(BUILD_MCU)
-#include <ti/csl/arch/r5/csl_arm_r5.h>
-#elif defined(BUILD_C7X)
-#include <ti/csl/csl_clec.h>
-#elif defined (_TMS320C6X)
+#include <ti/csl/arch/csl_arch.h>
+#if defined (_TMS320C6X)
 #include <ti/csl/csl_chipAux.h>
 #endif
 

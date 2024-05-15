@@ -101,10 +101,6 @@
 
 #include <ti/csl/soc.h>
 
-#if defined (BUILD_C7X)
-#include <ti/csl/csl_clec.h>
-#include <ti/csl/arch/csl_arch.h>
-#endif
 #include <ti/csl/tistdtypes.h>
 #if defined (BARE_METAL)
 #if !defined(SOC_TPR12) && !defined (SOC_AWR294X)
@@ -2583,7 +2579,7 @@ void sysIdleLoop(void)
    __asm(" IDLE");
 }
 
-#include <ti/csl/csl_clec.h>
+#include <ti/csl/arch/csl_arch.h>
 
 void C7x_ConfigureTimerOutput()
 {

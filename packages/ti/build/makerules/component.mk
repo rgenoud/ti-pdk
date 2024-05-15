@@ -956,10 +956,8 @@ ifeq ($(ARCH),c66x)
   PDK_COMMON_FREERTOS_COMP += csl_intc
   PDK_COMMON_SAFERTOS_COMP += csl_intc
 else
-  ifneq ($(ARCH),c71)
-    PDK_COMMON_FREERTOS_COMP += csl_init
-    PDK_COMMON_SAFERTOS_COMP += csl_init
-  endif
+  PDK_COMMON_FREERTOS_COMP += csl_init
+  PDK_COMMON_SAFERTOS_COMP += csl_init
 endif
 endif
 

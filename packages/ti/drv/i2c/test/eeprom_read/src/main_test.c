@@ -63,10 +63,9 @@
 #include <ti/drv/sciclient/sciclient.h>
 
 #if defined (BUILD_C7X)
-#include <ti/csl/csl_clec.h>
 #endif
 
-#include <ti/csl/arch/r5/csl_arm_r5.h>
+#include <ti/csl/arch/csl_arch.h>
 
 #if defined (BUILD_C7X)
 #include <ti/csl/arch/csl_arch.h>

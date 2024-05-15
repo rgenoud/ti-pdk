@@ -44,7 +44,7 @@
 #include <ti/osal/TimerP.h>
 #include <ti/osal/src/nonos/Nonos_config.h>
 #if defined(BUILD_C7X)
-#include <ti/csl/csl_clec.h>
+#include <ti/csl/arch/csl_arch.h>
 #endif
 
 #include "SafeRTOS_priv.h"

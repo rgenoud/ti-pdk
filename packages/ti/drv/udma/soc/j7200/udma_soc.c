@@ -158,7 +158,6 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
         pUdmapRegs->pRxChanRtRegs   = ((CSL_udmap_rxcrtRegs *) UDMA_NAVSS0_UDMASS_UDMAP0_CFG_RCHANRT_BASE);
         drvHandle->trigGemOffset    = CSL_NAVSS_GEM_MAIN_UDMA_TRIGGER_OFFSET;
     }
-    drvHandle->clecRegs = NULL;
     /* Fill other SOC specific parameters by reading from UDMA config
      * registers */
     CSL_udmapGetCfg(pUdmapRegs);
@@ -239,8 +238,10 @@ void Udma_initDrvHandle(Udma_DrvHandle drvHandle)
 
     drvHandle->devIdIa      = TISCI_DEV_NAVSS0_UDMASS_INTA_0;
     drvHandle->devIdIr      = TISCI_DEV_NAVSS0_INTR_ROUTER_0;
+#if (UDMA_SOC_CFG_CLEC_PRESENT == 1)
     drvHandle->clecRtMap    = CSL_CLEC_RTMAP_DISABLE;
     drvHandle->clecOffset   = 0U;
+#endif
 #endif
 
     drvHandle->devIdCore    = Udma_getCoreSciDevId();
