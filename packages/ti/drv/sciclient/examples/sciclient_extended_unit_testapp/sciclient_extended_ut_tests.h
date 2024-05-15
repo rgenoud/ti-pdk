@@ -965,6 +965,70 @@ SciApp_TestParams_t gSciApp_TestcaseParams[] =
 
         /** testType **/
         (SCI_APP_TEST_TYPE_SANITY)
+    },
+    {
+        /** enableTest **/
+        SCI_APP_TEST_ENABLE,
+
+        /** testCaseId **/
+        29U,
+
+        /** *reqId **/
+        "PDK-14244",
+
+        /** *testCaseName **/
+        "SCICLIENT RM Postive Testcase",
+
+        /** *userInfo **/
+        "None",
+
+        /** *disableReason **/
+        "None",
+
+        /** *passFailCriteria **/
+        "SCICLIENT RM functions should pass when called \
+         with valid parameters",
+
+        /** cpuID **/
+        SCI_APP_CORE_TYPE_R5F,
+
+        /** printEnable **/
+        SCI_APP_PRINT_ENABLE,
+
+        /** testType **/
+        (SCI_APP_TEST_TYPE_SANITY)
+    },
+    {
+        /** enableTest **/
+        SCI_APP_TEST_ENABLE,
+
+        /** testCaseId **/
+        30U,
+
+        /** *reqId **/
+        "PDK-14275",
+
+        /** *testCaseName **/
+        "Sciclient rmUnmappedVintRouteCreate positive Testcase",
+
+        /** *userInfo **/
+        "None",
+
+        /** *disableReason **/
+        "None",
+
+        /** *passFailCriteria **/
+        "sciclient rmUnmappedVintRouteCreate function should pass when \
+         called with valid parameters",
+
+        /** cpuID **/
+        SCI_APP_CORE_TYPE_R5F,
+
+        /** printEnable **/
+        SCI_APP_PRINT_ENABLE,
+
+        /** testType **/
+        (SCI_APP_TEST_TYPE_SANITY)
     }
 #endif
 };

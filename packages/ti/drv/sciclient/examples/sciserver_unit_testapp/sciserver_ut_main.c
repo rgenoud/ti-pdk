@@ -65,17 +65,19 @@
 /* ========================================================================== */
 
 /* For SafeRTOS on R5F with FFI Support, task stack should be aligned to the stack size */
-#if defined(SAFERTOS) && defined (BUILD_MCU)
-static uint8_t  gSciserverApp_TskStackMain[32*1024] __attribute__((aligned(32*1024))) = { 0 };
-#else
-static uint8_t  gSciserverApp_TskStackMain[32*1024] __attribute__((aligned(8192)));
-#endif
 /* IMPORTANT NOTE: For C7x,
  * - stack size and stack ptr MUST be 8KB aligned
  * - AND min stack size MUST be 32KB
  * - AND stack assigned for task context is "size - 8KB"
  *       - 8KB chunk for the stack area is used for interrupt handling in this task context
  */
+#if defined(SAFERTOS) && defined (BUILD_MCU)
+static uint8_t  gSciserverApp_TskStackMain[32*1024] __attribute__((aligned(32*1024))) = { 0 };
+#else
+static uint8_t  gSciserverApp_TskStackMain[32*1024] __attribute__((aligned(8192)));
+#endif
+
+extern SemaphoreP_Handle gSciserverUserSemHandles[];
 
 /* ========================================================================== */
 /*                         Structure Declarations                             */
@@ -98,6 +100,7 @@ static int32_t SciserverApp_serverFuncNegTest(void);
 static int32_t SciserverApp_secProxyTransferNegTest(void);
 static int32_t SciserverApp_secproxyRoutingDescriptionNegTest(void);
 static int32_t SciserverApp_rtosNegTest(void);
+static int32_t SciserverApp_processtaskTest(void);
 
 /* ========================================================================== */
 /*                          Function Definitions                              */
@@ -187,12 +190,12 @@ static int32_t SciserverApp_serverFuncNegTest(void)
     if(status == CSL_EFAIL)
     {
         sciserverFuncTestStatus += CSL_PASS;
-        SciApp_printf(" Sciserver was not init \n");
+        SciApp_printf("Sciserver was not initialized \n");
     }
     else
     {
         sciserverFuncTestStatus += CSL_EFAIL;
-        SciApp_printf(" Sciserver_deinit \n");
+        SciApp_printf("Sciserver_deinit \n");
     }
 
     /* Passing NULL parameter to Sciserver_init*/
@@ -200,12 +203,12 @@ static int32_t SciserverApp_serverFuncNegTest(void)
     if(status == CSL_EBADARGS)
     {
         sciserverFuncTestStatus += CSL_PASS;
-        SciApp_printf(" Sciserver_init NULL Arg Test PASSED \n");
+        SciApp_printf("Sciserver_init NULL Arg Test PASSED \n");
     }
     else
     {
         sciserverFuncTestStatus += CSL_EFAIL;
-        SciApp_printf(" Sciserver_init NULL Arg Test FAILED \n");
+        SciApp_printf("Sciserver_init NULL Arg Test FAILED \n");
     }
 
     /* Passing valid parameters to Sciserver_init */
@@ -213,12 +216,12 @@ static int32_t SciserverApp_serverFuncNegTest(void)
     if(status == CSL_PASS)
     {
         sciserverFuncTestStatus += CSL_PASS;
-        SciApp_printf(" Sciserver_init PASSED \n");
+        SciApp_printf("Sciserver_init PASSED \n");
     }
     else
     {
         sciserverFuncTestStatus += CSL_EFAIL;
-        SciApp_printf(" Sciserver_init FAILED \n");
+        SciApp_printf("Sciserver_init FAILED \n");
     }
 
     /* Sciserver_init already done, trying to initialize it again to achieve fail condition */
@@ -226,12 +229,12 @@ static int32_t SciserverApp_serverFuncNegTest(void)
     if(status == CSL_EFAIL)
     {
         sciserverFuncTestStatus += CSL_PASS;
-        SciApp_printf(" Sciserver_init Already Done \n");
+        SciApp_printf("Sciserver_init Already Done \n");
     }
     else
     {
         sciserverFuncTestStatus += CSL_EFAIL;
-        SciApp_printf(" Sciserver_init Done \n");
+        SciApp_printf("Sciserver_init Done \n");
     }
 
     Sciserver_setProcessState(setProcessState);
@@ -239,36 +242,38 @@ static int32_t SciserverApp_serverFuncNegTest(void)
     if(getProcessState == setProcessState)
     {
         sciserverFuncTestStatus += CSL_PASS;
-        SciApp_printf(" Sciserver_setProcessState, Sciserver_getProcessState Tests PASSED \n");
+        SciApp_printf("Sciserver_setProcessState, Sciserver_getProcessState Tests PASSED \n");
     }
     else
     {
         sciserverFuncTestStatus += CSL_EFAIL;
-        SciApp_printf(" Sciserver_setProcessState, Sciserver_getProcessState Tests FAILED \n");
-    }
-
-    status = Sciserver_deinit();
-    if(status == CSL_PASS)
-    {
-        sciserverFuncTestStatus += CSL_PASS;
-        SciApp_printf(" Sciserver_deinit PASSED \n");
-    }
-    else
-    {
-        sciserverFuncTestStatus += CSL_EFAIL;
-        SciApp_printf(" Sciserver_deinit FAILED \n");
+        SciApp_printf("Sciserver_setProcessState, Sciserver_getProcessState Tests FAILED \n");
     }
 
     status = Sciserver_interruptHandler(NULL, NULL);
     if(status == CSL_EFAIL)
     {
         sciserverFuncTestStatus += CSL_PASS;
-        SciApp_printf(" Sciserver_interruptHandler Null Arg Test PASSED \n");
+        SciApp_printf("Sciserver_interruptHandler Null Arg Test PASSED \n");
     }
     else
     {
         sciserverFuncTestStatus += CSL_EFAIL;
-        SciApp_printf(" Sciserver_interruptHandler Null Arg Test FAILED \n");
+        SciApp_printf("Sciserver_interruptHandler Null Arg Test FAILED \n");
+    }
+
+    status += SciserverApp_processtaskTest();
+        
+    status = Sciserver_deinit();
+    if(status == CSL_PASS)
+    {
+        sciserverFuncTestStatus += CSL_PASS;
+        SciApp_printf("Sciserver_deinit PASSED \n");
+    }
+    else
+    {
+        sciserverFuncTestStatus += CSL_EFAIL;
+        SciApp_printf("Sciserver_deinit FAILED \n");
     }
 
     return sciserverFuncTestStatus;
@@ -533,3 +538,64 @@ static int32_t SciserverApp_rtosNegTest(void)
   return rtosTestStatus;
 }
 
+static int32_t SciserverApp_processtaskTest(void)
+{
+    int32_t   status                = CSL_PASS;
+    int32_t   processtaskTestStatus = CSL_PASS;
+    Sciserver_taskData utdTest      =
+    {
+          .task_id                  = SCISERVER_TASK_USER_HI,
+          .hw_msg_buffer_list       = 0U,
+          .hw_msg_buffer_count      = SCISERVER_SECPROXY_INSTANCE_COUNT,
+          .hw_msg_buffer_sz         = SCISERVER_HW_QUEUE_SIZE,
+          .semaphore_id             = SCISERVER_SEMAPHORE_USER_HI,
+          .state                    = 0U,
+          .user_msg_data            = 0U,
+          .stack                    = 0U
+    };
+    
+    /* To cover fail condition for Sciserver_processtask */
+    utdTest.state->state = SCISERVER_TASK_PENDING;
+    status = Sciserver_processtask(&utdTest);
+    if(status == CSL_EFAIL)
+    {
+        processtaskTestStatus += CSL_PASS;
+        SciApp_printf("Sciserver_processtask Negative Arg Test PASSED \n");
+    }
+    else
+    {
+        processtaskTestStatus += CSL_EFAIL;
+        SciApp_printf("Sciserver_processtask Negative Arg Test FAILED \n");
+    }
+
+    /* To cover Sciserver_SetMsgHostId API */
+    utdTest.user_msg_data[utdTest.state->current_buffer_idx]->host       = TISCI_HOST_ID_DMSC2DM;
+    utdTest.user_msg_data[utdTest.state->current_buffer_idx]->is_pending = true;
+    status = Sciserver_processtask(&utdTest);
+    if(status == CSL_PASS)
+    {
+        processtaskTestStatus += CSL_PASS;
+        SciApp_printf("Sciserver_SetMsgHostId test PASSED \n");
+    }
+    else
+    {
+        processtaskTestStatus += CSL_EFAIL;
+        SciApp_printf("Sciserver_SetMsgHostId test FAILED \n");
+    }
+    
+    /* Covers default test for Sciserver_UserProcessMsg */
+    utdTest.state->state = SCISERVER_TASK_PROCESSING_USER_MSG;
+    status = Sciserver_processtask(&utdTest);
+    if (status != CSL_EFAIL)
+    {
+        processtaskTestStatus = CSL_PASS;
+        SciApp_printf ("Sciserver_SproxyConfLookup: Negative Arg Test Passed.\n");
+    }
+    else
+    {
+       processtaskTestStatus = CSL_EFAIL;
+       SciApp_printf ("Sciserver_SproxyConfLookup: Negative Arg Test Failed.\n");
+    }  
+  
+    return processtaskTestStatus;
+}

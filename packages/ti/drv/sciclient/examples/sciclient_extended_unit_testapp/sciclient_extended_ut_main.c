@@ -43,6 +43,7 @@
 /* ========================================================================== */
 
 #include <string.h>
+#include <ti/csl/csl_psilcfg.h>
 #include <ti/drv/sciclient/src/sciclient/sciclient_priv.h>
 #include <ti/drv/sciclient/src/sciclient/sciclient_rm_priv.h>
 #include <ti/drv/sciclient/examples/common/sci_app_common.h>
@@ -55,12 +56,15 @@
 #if defined (SOC_J721E)
 #define TISCI_DEV_NAVSS0_MODSS_INTAGG     TISCI_DEV_NAVSS0_MODSS_INTAGGR_0
 #define TISCI_DEV_NAVSS0_INTR             TISCI_DEV_NAVSS0_INTR_ROUTER_0
+#define TISCI_DEV_MCU_NAVSS0_INTR         TISCI_DEV_MCU_NAVSS0_INTR_0
 #elif defined (SOC_J7200)
 #define TISCI_DEV_NAVSS0_MODSS_INTAGG     TISCI_DEV_NAVSS0_MODSS_INTA_0
 #define TISCI_DEV_NAVSS0_INTR             TISCI_DEV_NAVSS0_INTR_ROUTER_0
+#define TISCI_DEV_MCU_NAVSS0_INTR         TISCI_DEV_MCU_NAVSS0_INTR_0
 #elif defined (SOC_J721S2) || defined (SOC_J784S4)
 #define TISCI_DEV_NAVSS0_MODSS_INTAGG     TISCI_DEV_NAVSS0_MODSS_INTA_0
 #define TISCI_DEV_NAVSS0_INTR             TISCI_DEV_NAVSS0_INTR_0
+#define TISCI_DEV_MCU_NAVSS0_INTR         TISCI_DEV_MCU_NAVSS0_INTR_ROUTER_0
 #endif
 
 /* ========================================================================== */
@@ -70,18 +74,18 @@
 extern Sciclient_ServiceHandle_t gSciclientHandle;
 
 /* For SafeRTOS on R5F with FFI Support, task stack should be aligned to the stack size */
-#if defined(SAFERTOS) && defined (BUILD_MCU)
-static uint8_t  gSciclientAppTskStackMain[32*1024] __attribute__((aligned(32*1024))) = { 0 };
-#else
-static uint8_t  gSciclientAppTskStackMain[32*1024] __attribute__((aligned(8192)));
-#endif
 /* IMPORTANT NOTE: For C7x,
  * - stack size and stack ptr MUST be 8KB aligned
  * - AND min stack size MUST be 32KB
  * - AND stack assigned for task context is "size - 8KB"
  *       - 8KB chunk for the stack area is used for interrupt handling in this task context
  */
- 
+#if defined(SAFERTOS) && defined (BUILD_MCU)
+static uint8_t  gSciclientAppTskStackMain[32*1024] __attribute__((aligned(32*1024))) = { 0 };
+#else
+static uint8_t  gSciclientAppTskStackMain[32*1024] __attribute__((aligned(8192)));
+#endif
+
 /* ========================================================================== */
 /*                         Structure Declarations                             */
 /* ========================================================================== */
@@ -110,6 +114,8 @@ static int32_t SciclientApp_directNegTest(void);
 static int32_t SciclientApp_pmMessageNegTest(void);
 static int32_t SciclientApp_boardCfgNegTest(void);
 static int32_t SciclientApp_directFuncTest(void);
+static int32_t SciclientApp_rmUdmapRingPsilProxyPositiveTest(void);
+static int32_t SciclientApp_rmUnmappedVintRouteCreatePositiveTest(void);
 #endif
 static int32_t SciclientApp_msmcQueryNegTest(void);
 static int32_t SciclientApp_otpProcessKeyCfgNegTest(void);
@@ -274,6 +280,12 @@ int32_t SciApp_testMain(SciApp_TestParams_t *testParams)
 #if defined (BUILD_MCU1_0)
         case 28:
             testParams->testResult =  SciclientApp_directFuncTest();
+            break;
+        case 29:
+            testParams->testResult =  SciclientApp_rmUdmapRingPsilProxyPositiveTest();
+            break;
+        case 30:
+            testParams->testResult =  SciclientApp_rmUnmappedVintRouteCreatePositiveTest();
             break;
 #endif
         default:
@@ -3204,7 +3216,7 @@ static int32_t SciclientApp_rmClearInterruptRouteTest(void)
                 rmClearInterruptRouteTestStatus += CSL_EFAIL;
                 SciApp_printf("Sciclient_rmClearInterruptRoute: Negative Arg Test Failed.\n");
             }  
-        }  
+        }
     }
     else
     {
@@ -3520,8 +3532,8 @@ static int32_t SciclientApp_rmIrqFindRouteNegTest(void)
   return rmIrqFindRouteTestStatus;
 }
 
-/* This function covers the MC/DC coverage of sciclient_direct.c file */
 #if defined (BUILD_MCU1_0)
+/* This function covers the MC/DC coverage of sciclient_direct.c file */
 static int32_t SciclientApp_directFuncTest(void)
 {
     int32_t  status                    = CSL_PASS;
@@ -3676,6 +3688,489 @@ static int32_t SciclientApp_directFuncTest(void)
     }
 
   return sciclientDirectTestStatus;
+}
+
+/* This function covers the positive testcases for sciclient_rm.c file */
+static int32_t SciclientApp_rmUdmapRingPsilProxyPositiveTest(void)
+{
+    int32_t  rmUdmapRingPsilProxyPositiveTestStatus                                = 0;
+    int32_t  status                                                                = 0;
+    int32_t  sciclientInitStatus                                                   = CSL_PASS;
+    struct tisci_msg_rm_get_resource_range_req rmGetResourceRangeReq               = {0};
+    struct tisci_msg_rm_udmap_gcfg_cfg_req rmUdmapGcfgReq                          = {0};
+    struct tisci_msg_rm_psil_pair_req rmPsilPairReq                                = {0};
+    struct tisci_msg_rm_psil_read_req rmPsilReadReq                                = {0};
+    struct tisci_msg_rm_psil_write_req rmPsilWriteReq                              = {0};
+    struct tisci_msg_rm_ring_cfg_req rmRingCfgReq                                  = {0};
+    struct tisci_msg_rm_ring_mon_cfg_req rmRingMonCfgReq                           = {0};
+    struct tisci_msg_rm_udmap_tx_ch_cfg_req rmUdmapTxChCfgReq                      = {0};
+    struct tisci_msg_rm_udmap_rx_ch_cfg_req rmUdmapRxChCfgReq                      = {0};
+    struct tisci_msg_rm_udmap_flow_cfg_req rmUdmapFlowCfgReq                       = {0};
+    struct tisci_msg_rm_udmap_flow_size_thresh_cfg_req rmUdmapFlowSizeThreshCfgReq = {0};
+    struct tisci_msg_rm_proxy_cfg_req rmProxyCfgReq                                = {0};
+    struct tisci_msg_rm_get_resource_range_resp rmGetResourceRangeResp;
+    struct tisci_msg_rm_udmap_gcfg_cfg_resp rmUdmapGcfgResp;
+    struct tisci_msg_rm_psil_unpair_req rmPsilUnpairReq;
+    struct tisci_msg_rm_psil_read_resp rmPsilReadResp;
+    struct tisci_msg_rm_ring_cfg_resp rmRingCfgResp;
+    struct tisci_msg_rm_ring_mon_cfg_resp rmRingMonCfgResp;
+    struct tisci_msg_rm_udmap_tx_ch_cfg_resp rmUdmapTxChCfgResp;
+    struct tisci_msg_rm_udmap_rx_ch_cfg_resp rmUdmapRxChCfgResp;
+    struct tisci_msg_rm_udmap_flow_cfg_resp rmUdmapFlowCfgResp;
+    struct tisci_msg_rm_udmap_flow_size_thresh_cfg_resp rmUdmapFlowSizeThreshCfgResp;
+    Sciclient_ConfigPrms_t SciApp_Config =
+    {
+       SCICLIENT_SERVICE_OPERATION_MODE_POLLED,
+       NULL,
+       0 /* isSecure = 0 un secured for all cores */
+    };
+
+    while (gSciclientHandle.initCount != 0)
+    {
+        status = Sciclient_deinit();
+    }
+    status = Sciclient_init(&SciApp_Config);
+    sciclientInitStatus = status;
+
+    if(sciclientInitStatus == CSL_PASS)
+    {
+        rmGetResourceRangeReq.type           = TISCI_DEV_NAVSS0_INTR;
+        rmGetResourceRangeReq.secondary_host = TISCI_HOST_ID_MAIN_0_R5_0;
+        status = Sciclient_rmGetResourceRange(&rmGetResourceRangeReq, &rmGetResourceRangeResp, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if(status == CSL_PASS)
+        {
+            rmUdmapRingPsilProxyPositiveTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_rmGetResourceRange Test Passed.\n");
+        }
+        else
+        {
+            rmUdmapRingPsilProxyPositiveTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_rmGetResourceRange Test Failed.\n");
+        }
+        
+        rmGetResourceRangeReq.type           = TISCI_DEV_MCU_NAVSS0_RINGACC0;
+        rmGetResourceRangeReq.subtype        = TISCI_RESASG_SUBTYPE_RA_UDMAP_TX;
+        rmGetResourceRangeReq.secondary_host = TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST;
+        status = Sciclient_rmGetResourceRange(&rmGetResourceRangeReq, &rmGetResourceRangeResp, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if(status == CSL_PASS)
+        {
+            rmRingCfgReq.nav_id = TISCI_DEV_MCU_NAVSS0_RINGACC0;
+            rmRingCfgReq.index  = rmGetResourceRangeResp.range_start;
+            status              = Sciclient_rmRingCfg(&rmRingCfgReq, &rmRingCfgResp, SCICLIENT_SERVICE_WAIT_FOREVER);
+            if(status == CSL_PASS)
+            {
+                rmUdmapRingPsilProxyPositiveTestStatus += CSL_PASS;
+                SciApp_printf ("Sciclient_rmRingCfg Test Passed.\n");
+            }
+            else
+            {
+                rmUdmapRingPsilProxyPositiveTestStatus += CSL_EFAIL;
+                SciApp_printf ("Sciclient_rmRingCfg Test Failed.\n");
+            }
+        }
+        else
+        {
+            SciApp_printf ("Sciclient_rmGetResourceRange() Failed.\n");
+        }
+
+        rmGetResourceRangeReq.type           = TISCI_DEV_MCU_NAVSS0_RINGACC0;
+        rmGetResourceRangeReq.subtype        = TISCI_RESASG_SUBTYPE_RA_MONITORS;
+        rmGetResourceRangeReq.secondary_host = TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST;
+        status = Sciclient_rmGetResourceRange(&rmGetResourceRangeReq, &rmGetResourceRangeResp, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if(status == CSL_PASS)
+        {
+            rmRingMonCfgReq.nav_id  = TISCI_DEV_MCU_NAVSS0_RINGACC0;
+            rmRingMonCfgReq.index   = rmGetResourceRangeResp.range_start;
+            status                  = Sciclient_rmRingMonCfg(&rmRingMonCfgReq, &rmRingMonCfgResp, SCICLIENT_SERVICE_WAIT_FOREVER);
+            if(status == CSL_PASS)
+            {
+                rmUdmapRingPsilProxyPositiveTestStatus += CSL_PASS;
+                SciApp_printf ("Sciclient_rmRingMonCfg Test Passed.\n");
+            }
+            else
+            {
+                rmUdmapRingPsilProxyPositiveTestStatus += CSL_EFAIL;
+                SciApp_printf ("Sciclient_rmRingMonCfg Test Failed.\n");
+            }
+        }
+        else
+        {
+            SciApp_printf ("Sciclient_rmGetResourceRange() Failed.\n");
+        }
+
+        rmGetResourceRangeReq.type           = TISCI_DEV_MCU_NAVSS0_UDMAP_0;
+        rmGetResourceRangeReq.subtype        = TISCI_RESASG_SUBTYPE_UDMAP_TX_CHAN;
+        rmGetResourceRangeReq.secondary_host = TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST;
+        status = Sciclient_rmGetResourceRange(&rmGetResourceRangeReq, &rmGetResourceRangeResp, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if(status == CSL_PASS)
+        {
+            rmUdmapTxChCfgReq.nav_id = TISCI_DEV_MCU_NAVSS0_UDMAP_0;
+            rmUdmapTxChCfgReq.index  = rmGetResourceRangeResp.range_start;
+            status                   = Sciclient_rmUdmapTxChCfg(&rmUdmapTxChCfgReq, &rmUdmapTxChCfgResp, SCICLIENT_SERVICE_WAIT_FOREVER);
+            if(status == CSL_PASS)
+            {
+                rmUdmapRingPsilProxyPositiveTestStatus += CSL_PASS;
+                SciApp_printf ("Sciclient_rmUdmapTxChCfg Test Passed.\n");
+            }
+            else
+            {
+                rmUdmapRingPsilProxyPositiveTestStatus += CSL_EFAIL;
+                SciApp_printf ("Sciclient_rmUdmapTxChCfg Test Failed.\n");
+            }
+        }
+        else
+        {
+            SciApp_printf ("Sciclient_rmGetResourceRange() Failed.\n");
+        }
+
+        rmGetResourceRangeReq.type           = TISCI_DEV_MCU_NAVSS0_UDMAP_0;
+        rmGetResourceRangeReq.subtype        = TISCI_RESASG_SUBTYPE_UDMAP_RX_CHAN;
+        rmGetResourceRangeReq.secondary_host = TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST;
+        status = Sciclient_rmGetResourceRange(&rmGetResourceRangeReq, &rmGetResourceRangeResp, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if(status == CSL_PASS)
+        {
+            rmUdmapRxChCfgReq.nav_id = TISCI_DEV_MCU_NAVSS0_UDMAP_0;
+            rmUdmapRxChCfgReq.index  = rmGetResourceRangeResp.range_start;
+            status                   = Sciclient_rmUdmapRxChCfg(&rmUdmapRxChCfgReq, &rmUdmapRxChCfgResp, SCICLIENT_SERVICE_WAIT_FOREVER);
+            if(status == CSL_PASS)
+            {
+                rmUdmapRingPsilProxyPositiveTestStatus += CSL_PASS;
+                SciApp_printf ("Sciclient_rmUdmapRxChCfg Test Passed.\n");
+            }
+            else
+            {
+                rmUdmapRingPsilProxyPositiveTestStatus += CSL_EFAIL;
+                SciApp_printf ("Sciclient_rmUdmapRxChCfg Test Failed.\n");
+            }
+        }
+        else
+        {
+            SciApp_printf ("Sciclient_rmGetResourceRange() Failed.\n");  
+        }
+
+        rmGetResourceRangeReq.type           = TISCI_DEV_MCU_NAVSS0_UDMAP_0;
+        rmGetResourceRangeReq.subtype        = TISCI_RESASG_SUBTYPE_UDMAP_RX_FLOW_COMMON;
+        rmGetResourceRangeReq.secondary_host = TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST;
+        status = Sciclient_rmGetResourceRange(&rmGetResourceRangeReq, &rmGetResourceRangeResp, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if(status == CSL_PASS)
+        {
+            rmUdmapFlowCfgReq.nav_id      = TISCI_DEV_MCU_NAVSS0_UDMAP_0;
+            rmUdmapFlowCfgReq.flow_index  = rmGetResourceRangeResp.range_start;
+            status                        = Sciclient_rmUdmapFlowCfg(&rmUdmapFlowCfgReq, &rmUdmapFlowCfgResp, SCICLIENT_SERVICE_WAIT_FOREVER);
+            if(status == CSL_PASS)
+            {
+                rmUdmapRingPsilProxyPositiveTestStatus += CSL_PASS;
+                SciApp_printf ("Sciclient_rmUdmapFlowCfg Test Passed.\n");
+            }
+            else
+            {
+                rmUdmapRingPsilProxyPositiveTestStatus += CSL_EFAIL;
+                SciApp_printf ("Sciclient_rmUdmapFlowCfg Test Failed.\n");
+            }
+        }
+        else
+        {
+            SciApp_printf ("Sciclient_rmGetResourceRange() Failed.\n");
+        }
+
+        rmGetResourceRangeReq.type              = TISCI_DEV_MCU_NAVSS0_UDMAP_0;
+        rmGetResourceRangeReq.subtype           = TISCI_RESASG_SUBTYPE_UDMAP_RX_FLOW_COMMON;
+        rmGetResourceRangeReq.secondary_host    = TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST;
+        status = Sciclient_rmGetResourceRange(&rmGetResourceRangeReq, &rmGetResourceRangeResp, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if(status == CSL_PASS)
+        {
+            rmUdmapFlowSizeThreshCfgReq.nav_id      = TISCI_DEV_MCU_NAVSS0_UDMAP_0;
+            rmUdmapFlowSizeThreshCfgReq.flow_index  = rmGetResourceRangeResp.range_start;
+            status                                  = Sciclient_rmUdmapFlowSizeThreshCfg(&rmUdmapFlowSizeThreshCfgReq, &rmUdmapFlowSizeThreshCfgResp, SCICLIENT_SERVICE_WAIT_FOREVER);
+            if(status == CSL_PASS)
+            {
+                rmUdmapRingPsilProxyPositiveTestStatus += CSL_PASS;
+                SciApp_printf ("Sciclient_rmUdmapFlowSizeThreshCfg Test Passed.\n");
+            }
+            else
+            {
+                rmUdmapRingPsilProxyPositiveTestStatus += CSL_EFAIL;
+                SciApp_printf ("Sciclient_rmUdmapFlowSizeThreshCfg Test Failed.\n");
+            }
+        }
+        else
+        {
+            SciApp_printf ("Sciclient_rmGetResourceRange() Failed.\n");
+        }
+
+        rmGetResourceRangeReq.type           = TISCI_DEV_MCU_NAVSS0_UDMAP_0;
+        rmGetResourceRangeReq.subtype        = TISCI_RESASG_SUBTYPE_UDMAP_TX_CHAN;
+        rmGetResourceRangeReq.secondary_host = TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST;
+        status = Sciclient_rmGetResourceRange(&rmGetResourceRangeReq, &rmGetResourceRangeResp, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if(status == CSL_PASS)
+        {
+            rmPsilPairReq.nav_id     = TISCI_DEV_MCU_NAVSS0;
+            rmPsilPairReq.src_thread = CSL_PSILCFG_NAVSS_MCU_UDMAP0_STRM_PSILS_THREAD_OFFSET + rmGetResourceRangeResp.range_start;
+            rmPsilPairReq.dst_thread = CSL_PSILCFG_NAVSS_MCU_UDMAP0_STRM_PSILD_THREAD_OFFSET + rmGetResourceRangeResp.range_start;
+            status                   = Sciclient_rmPsilPair(&rmPsilPairReq, SCICLIENT_SERVICE_WAIT_FOREVER);
+            if(status == CSL_PASS)
+            {
+                rmUdmapRingPsilProxyPositiveTestStatus += CSL_PASS;
+                SciApp_printf("Sciclient_rmPsilPair Test Passed.\n");
+            }
+            else
+            {
+                rmUdmapRingPsilProxyPositiveTestStatus += CSL_EFAIL;
+                SciApp_printf("Sciclient_rmPsilPair Test Failed.\n");
+            }
+        }
+        else
+        {
+            SciApp_printf ("Sciclient_rmGetResourceRange() Failed.\n");
+        }
+
+        rmPsilUnpairReq.nav_id     = TISCI_DEV_MCU_NAVSS0;
+        rmPsilUnpairReq.src_thread = CSL_PSILCFG_NAVSS_MCU_UDMAP0_STRM_PSILS_THREAD_OFFSET + rmGetResourceRangeResp.range_start;
+        rmPsilUnpairReq.dst_thread = CSL_PSILCFG_NAVSS_MCU_UDMAP0_STRM_PSILD_THREAD_OFFSET + rmGetResourceRangeResp.range_start;
+        status                     = Sciclient_rmPsilUnpair(&rmPsilUnpairReq, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if(status == CSL_PASS)
+        {
+            rmUdmapRingPsilProxyPositiveTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_rmPsilUnpair Test Passed.\n");
+        }
+        else
+        {
+            rmUdmapRingPsilProxyPositiveTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_rmPsilUnpair Test Failed.\n");
+        }
+
+        rmPsilReadReq.nav_id = TISCI_DEV_MCU_NAVSS0;
+        rmPsilReadReq.thread = CSL_PSILCFG_NAVSS_MCU_UDMAP0_STRM_PSILS_THREAD_OFFSET + rmGetResourceRangeResp.range_start;
+        rmPsilReadReq.taddr  = CSL_PSILCFG_REG_ENABLE;
+        status               = Sciclient_rmPsilRead(&rmPsilReadReq, &rmPsilReadResp, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if(status == CSL_PASS)
+        {
+            rmUdmapRingPsilProxyPositiveTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_rmPsilRead Test Passed.\n");
+        }
+        else
+        {
+            rmUdmapRingPsilProxyPositiveTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_rmPsilRead Test Failed.\n");
+        }
+
+        rmPsilWriteReq.nav_id = TISCI_DEV_MCU_NAVSS0;
+        rmPsilWriteReq.thread = CSL_PSILCFG_NAVSS_MCU_UDMAP0_STRM_PSILS_THREAD_OFFSET + rmGetResourceRangeResp.range_start;
+        rmPsilWriteReq.taddr  = CSL_PSILCFG_REG_ENABLE;
+        rmPsilWriteReq.data   = 1;
+        status                = Sciclient_rmPsilWrite(&rmPsilWriteReq, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if(status == CSL_PASS)
+        {
+            rmUdmapRingPsilProxyPositiveTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_rmPsilWrite Test Passed.\n");
+        }
+        else
+        {
+            rmUdmapRingPsilProxyPositiveTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_rmPsilWrite Test Failed.\n");
+        }
+
+        rmUdmapGcfgReq.nav_id = TISCI_DEV_MCU_NAVSS0_UDMAP_0;
+        status                = Sciclient_rmUdmapGcfgCfg(&rmUdmapGcfgReq, &rmUdmapGcfgResp, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if(status == CSL_PASS)
+        {
+            rmUdmapRingPsilProxyPositiveTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_rmUdmapGcfgCfg Test Passed.\n");
+        }
+        else
+        {
+            rmUdmapRingPsilProxyPositiveTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_rmUdmapGcfgCfg Test Failed.\n");
+        }
+
+        rmGetResourceRangeReq.type           = TISCI_DEV_MCU_NAVSS0_PROXY0;
+        rmGetResourceRangeReq.subtype        = TISCI_RESASG_SUBTYPE_PROXY_PROXIES;
+        rmGetResourceRangeReq.secondary_host = TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST;
+        status = Sciclient_rmGetResourceRange(&rmGetResourceRangeReq, &rmGetResourceRangeResp, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if(status == CSL_PASS)
+        {
+            rmProxyCfgReq.nav_id = TISCI_DEV_MCU_NAVSS0_PROXY0;
+            rmProxyCfgReq.index  = rmGetResourceRangeResp.range_start;
+            status               = Sciclient_rmSetProxyCfg(&rmProxyCfgReq, SCICLIENT_SERVICE_WAIT_FOREVER);
+            if(status == CSL_PASS)
+            {
+                rmUdmapRingPsilProxyPositiveTestStatus += CSL_PASS;
+                SciApp_printf ("Sciclient_rmSetProxyCfg Test Passed.\n");
+            }
+            else
+            {
+                rmUdmapRingPsilProxyPositiveTestStatus += CSL_EFAIL;
+                SciApp_printf ("Sciclient_rmSetProxyCfg Test Failed.\n");
+            }
+        }
+        else
+        {
+            SciApp_printf ("Sciclient_rmGetResourceRange() Failed.\n");
+        }
+    }
+    else
+    {
+        rmUdmapRingPsilProxyPositiveTestStatus += CSL_EFAIL;
+        SciApp_printf ("Sciclient_init Failed.\n");
+    }
+
+    if(sciclientInitStatus == CSL_PASS)
+    {
+        status = Sciclient_deinit();
+        if(status == CSL_PASS)
+        {
+            rmUdmapRingPsilProxyPositiveTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_deinit Passed.\n");
+        }
+        else
+        {
+            rmUdmapRingPsilProxyPositiveTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_deinit Failed.\n");
+        }
+    }
+
+    return rmUdmapRingPsilProxyPositiveTestStatus;
+}
+
+/* This function covers the positive testcase for UnmappedVintRouteCreate() */
+static int32_t SciclientApp_rmUnmappedVintRouteCreatePositiveTest(void)
+{
+    int32_t  status                                                        = CSL_PASS;
+    int32_t  sciclientInitStatus                                           = CSL_PASS;
+    uint16_t intNum                                                        = 0U;
+    int32_t  rmUnmappedVintRouteCreatePositiveTestStatus                   = CSL_PASS;
+    const struct tisci_msg_rm_irq_set_resp Sciclient_Resp                  = {0};
+    struct tisci_msg_rm_get_resource_range_req rmGetResourceRangeReqVint   = {0};
+    struct tisci_msg_rm_get_resource_range_req rmGetResourceRangeReqGlobal = {0};
+    struct tisci_msg_rm_get_resource_range_req rmGetResourceRangeReqIrq    = {0};
+    struct tisci_msg_rm_get_resource_range_resp rmGetResourceRangeRespVint;
+    struct tisci_msg_rm_get_resource_range_resp rmGetResourceRangeRespGlobal;
+    struct tisci_msg_rm_get_resource_range_resp rmGetResourceRangeRespIrq;
+    Sciclient_ConfigPrms_t config =
+    {
+       SCICLIENT_SERVICE_OPERATION_MODE_POLLED,
+       NULL,
+       0 /* isSecure = 0 un secured for all cores */
+    };
+
+    while (gSciclientHandle.initCount != 0)
+    {
+        status = Sciclient_deinit();
+    }
+    status = Sciclient_init(&config);
+    sciclientInitStatus = status;
+
+    if(status == CSL_PASS)
+    {
+        SciApp_printf("Sciclient_init PASSED.\n");
+        rmGetResourceRangeReqVint.type           = TISCI_DEV_MCU_NAVSS0_UDMASS_INTA_0;
+        rmGetResourceRangeReqVint.subtype        = TISCI_RESASG_SUBTYPE_IA_VINT;
+        rmGetResourceRangeReqVint.secondary_host = TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST;
+        status  = Sciclient_rmGetResourceRange(&rmGetResourceRangeReqVint,
+                                               &rmGetResourceRangeRespVint,
+                                               SCICLIENT_SERVICE_WAIT_FOREVER);
+        if(status == CSL_PASS)
+        {
+            rmUnmappedVintRouteCreatePositiveTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_rmGetResourceRange() execution is successful for vint\n");
+        }
+        else
+        {
+            rmUnmappedVintRouteCreatePositiveTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_rmGetResourceRange() execution is failed for vint\n");
+        }
+        
+        rmGetResourceRangeReqGlobal.type           = TISCI_DEV_MCU_NAVSS0_UDMASS_INTA_0;
+        rmGetResourceRangeReqGlobal.subtype        = TISCI_RESASG_SUBTYPE_GLOBAL_EVENT_SEVT;
+        rmGetResourceRangeReqGlobal.secondary_host = TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST;
+        status  = Sciclient_rmGetResourceRange(&rmGetResourceRangeReqGlobal,
+                                               &rmGetResourceRangeRespGlobal,
+                                               SCICLIENT_SERVICE_WAIT_FOREVER);    
+        if(status == CSL_PASS)
+        {
+            rmUnmappedVintRouteCreatePositiveTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_rmGetResourceRange() execution is successful for globalevent\n");
+        }
+        else
+        {
+            rmUnmappedVintRouteCreatePositiveTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_rmGetResourceRange() execution is failed for globalevent\n");
+        } 
+
+        rmGetResourceRangeReqIrq.type           = TISCI_DEV_MCU_NAVSS0_INTR;
+        rmGetResourceRangeReqIrq.subtype        = TISCI_RESASG_SUBTYPE_IR_OUTPUT;
+        rmGetResourceRangeReqIrq.secondary_host = TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST;
+        status  = Sciclient_rmGetResourceRange(&rmGetResourceRangeReqIrq,
+                                               &rmGetResourceRangeRespIrq,
+                                               SCICLIENT_SERVICE_WAIT_FOREVER);  
+
+        if(status == CSL_PASS)
+        {
+            SciApp_printf("Sciclient_rmGetResourceRange() execution is successful\n");
+            status = Sciclient_rmIrqTranslateIrOutput(rmGetResourceRangeReqIrq.type,
+                                                      rmGetResourceRangeRespIrq.range_start,
+                                                      TISCI_DEV_MCU_R5FSS0_CORE0,
+                                                      &intNum);
+            if(status == CSL_PASS)
+            {
+                SciApp_printf("Sciclient_rmIrqTranslateIrOutput() execution is successful and host interrupt number is %d\n", intNum);
+                const struct tisci_msg_rm_irq_set_req Sciclient_Req =
+                {
+                    .valid_params          = TISCI_MSG_VALUE_RM_DST_ID_VALID | TISCI_MSG_VALUE_RM_DST_HOST_IRQ_VALID |
+                                             TISCI_MSG_VALUE_RM_IA_ID_VALID  | TISCI_MSG_VALUE_RM_VINT_VALID,
+                    .src_id                = TISCI_DEV_MCU_NAVSS0_MCRC_0,
+                    .src_index             = 0U,
+                    .dst_id                = TISCI_DEV_MCU_R5FSS0_CORE0,
+                    .dst_host_irq          = intNum,
+                    .global_event          = rmGetResourceRangeRespGlobal.range_start,
+                    .ia_id                 = TISCI_DEV_MCU_NAVSS0_UDMASS_INTA_0,
+                    .vint                  = rmGetResourceRangeRespVint.range_start,
+                    .vint_status_bit_index = 0U
+                };
+                status = Sciclient_rmProgramInterruptRoute(&Sciclient_Req, &Sciclient_Resp, SCICLIENT_SERVICE_WAIT_FOREVER);
+                if (status == CSL_PASS)
+                {
+                    rmUnmappedVintRouteCreatePositiveTestStatus += CSL_PASS;
+                    SciApp_printf("Sciclient_rmProgramInterruptRoute: Valid Arg Test Passed.\n");
+                }
+                else
+                {
+                    rmUnmappedVintRouteCreatePositiveTestStatus += CSL_EFAIL;
+                    SciApp_printf("Sciclient_rmProgramInterruptRoute: Valid Arg Test Failed.\n");
+                }
+            }
+            else
+            {
+                SciApp_printf("Sciclient_rmIrqTranslateIrOutput() has failed\n");
+            }
+        }
+        else
+        {
+            SciApp_printf("Sciclient_rmGetResourceRange() has failed\n");
+        }
+    }
+    else
+    {
+        rmUnmappedVintRouteCreatePositiveTestStatus += CSL_EFAIL;
+        SciApp_printf("Sciclient_init FAILED.\n");
+    }
+
+    if(sciclientInitStatus == CSL_PASS)
+    {
+        status = Sciclient_deinit();
+        if(status == CSL_PASS)
+        {
+            rmUnmappedVintRouteCreatePositiveTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_deinit PASSED.\n");
+        }
+        else
+        {
+            rmUnmappedVintRouteCreatePositiveTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_deinit FAILED.\n");
+        }
+    }
+
+  return rmUnmappedVintRouteCreatePositiveTestStatus;
 }
 #endif
 
