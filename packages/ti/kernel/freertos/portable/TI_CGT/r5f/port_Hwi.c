@@ -184,7 +184,7 @@ void __attribute__((section(".text.hwi"))) HwiP_irq_handler_c(void)
     }
 }
 
-void __attribute__((interrupt("FIQ"), section(".text.hwi"))) HwiP_fiq_handler(void)
+void __attribute__((section(".text.hwi"))) HwiP_fiq_handler_c(void)
 {
     int32_t status;
     uint32_t intNum;

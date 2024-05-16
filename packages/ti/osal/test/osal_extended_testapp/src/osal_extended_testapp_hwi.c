@@ -43,8 +43,9 @@
 /* ========================================================================== */
 
 #include "osal_extended_test.h"
-#if defined(BUILD_MCU)
+#if defined (BUILD_MCU) && defined (FREERTOS)
 #include <ti/csl/arch/r5/csl_vim.h>
+#include <ti/kernel/freertos/portable/TI_CGT/r5f/port_Hwi_priv.h>
 #endif
 
 /* ========================================================================== */
@@ -61,18 +62,28 @@
 #define INVALID_R5F_INT_NUM            (513U)
 #endif
 #define OSAL_APP_IRQ_INT_NUM           (28U)
+#define OSAL_APP_FIQ_INT_NUM           (29U)
 #define OSAL_APP_HWI_MAX_NUM           (64U)
 
 /* ========================================================================== */
 /*                            Global Variables                                */
 /* ========================================================================== */
 
-volatile uint32_t gOsalAppFlagHwiTest = UFALSE;
+volatile uint32_t gOsalAppFlagHwiTest = UFALSE, gOsalAllFIQFlag = UFALSE;
 volatile uintptr_t gOsalAppHwiKey;
 
 /* ========================================================================== */
 /*                           Function Declarations                            */
 /* ========================================================================== */
+
+#if defined (BUILD_MCU) && defined (FREERTOS)
+extern void HwiP_fiq_handler(void);
+
+/*
+ * Description : Testing FIQ interrupts
+ */
+static int32_t OsalApp_hwiCreateFIQTest(CSL_VimIntrType leveltype);
+#endif
 
 /*
  * Description : Testing Null check for Hwi API
@@ -111,6 +122,13 @@ static int32_t OsalApp_hwiCreateMaxTest(void);
 /* ========================================================================== */
 /*                       Internal Function Definitions                        */
 /* ========================================================================== */
+
+#if defined (BUILD_MCU) && defined (FREERTOS)
+static void OsalApp_hwiFIQ(uintptr_t arg)
+{
+    gOsalAllFIQFlag = UTRUE;
+}
+#endif
 
 static void OsalApp_hwiIRQ(uintptr_t arg)
 {
@@ -233,12 +251,17 @@ static int32_t OsalApp_hwiCreatePulseIntrTest(void)
         result = osal_FAILURE;
     }
 
+    /* Test Register and deregister CSL_VIM_INTR_MAP_FIQ */
+    Intc_IntPrioritySet(OSAL_APP_FIQ_INT_NUM, 0U, 1U); 
+    Intc_IntRegister(OSAL_APP_FIQ_INT_NUM, NULL, NULL);
+    Intc_IntUnregister( OSAL_APP_FIQ_INT_NUM );
+
     /* Test IntC APIs with Negative conditions. */
     Intc_IntSetSrcType(INVALID_R5F_INT_NUM, 0);
     Intc_IntPrioritySet(INVALID_R5F_INT_NUM, 0, 0);
     Intc_IntEnable(INVALID_R5F_INT_NUM);
     Intc_IntDisable(INVALID_R5F_INT_NUM);
-    Intc_IntRegister( INVALID_R5F_INT_NUM, NULL, NULL );
+    Intc_IntRegister(INVALID_R5F_INT_NUM, NULL, NULL);
     Intc_IntUnregister( INVALID_R5F_INT_NUM );
 
     handle = HwiP_create(OSAL_APP_IRQ_INT_NUM, (HwiP_Fxn)OsalApp_hwiIRQ, &hwiParams);
@@ -271,6 +294,74 @@ static int32_t OsalApp_hwiCreatePulseIntrTest(void)
     return result;
 }
 #endif
+
+#if defined (BUILD_MCU) && defined (FREERTOS)
+static int32_t OsalApp_hwiCreateFIQTest(CSL_VimIntrType leveltype)
+{
+    HwiP_Params      hwiParams;
+    HwiP_Handle      handle;
+    int32_t          result = osal_OK;
+    CSL_ArmR5CPUInfo info;
+    CSL_vimRegs      *pVimRegs;
+
+    /* Call into CSL Arch VIM APIs to test them */
+    CSL_armR5GetCpuID(&info);
+    if (CSL_ARM_R5_CLUSTER_GROUP_ID_0 == info.grpId)
+    {
+        /* MCU SS Pulsar R5 SS */
+        pVimRegs = (CSL_vimRegs *)CSL_MCU_DOMAIN_VIM_BASE_ADDR;
+    }
+    else
+    {
+        /* MAIN SS Pulsar R5 SS */
+        pVimRegs = (CSL_vimRegs *)CSL_MAIN_DOMAIN_VIM_BASE_ADDR;
+    }
+
+    HwiP_Params_init(&hwiParams);
+    handle = HwiP_create(OSAL_APP_FIQ_INT_NUM, (HwiP_Fxn)OsalApp_hwiFIQ, &hwiParams);
+
+    if(0 != CSL_vimCfgIntr(pVimRegs,
+                    OSAL_APP_FIQ_INT_NUM,
+                    0U,
+                    CSL_VIM_INTR_MAP_FIQ,
+                    leveltype,
+                    ((uint32_t)HwiP_fiq_handler) & (~0x3U)))
+    {
+        result = osal_FAILURE;
+    }
+    if(osal_OK == result)
+    {
+        if( 0 != CSL_vimVerifyCfgIntr(pVimRegs,
+                    OSAL_APP_FIQ_INT_NUM,
+                    0U,
+                    CSL_VIM_INTR_MAP_FIQ,
+                    leveltype,
+                    ((uint32_t)HwiP_fiq_handler) & (~0x3U)))
+        {
+            result = osal_FAILURE;
+        }
+    }
+
+    HwiP_post(OSAL_APP_FIQ_INT_NUM);
+
+    if(osal_OK == result)
+    {
+        /* Wait till FIQ is hit */
+        while(UFALSE == gOsalAllFIQFlag)
+        {
+            /* Do nothing */
+        }
+    }
+
+    HwiP_delete(handle);
+    if(osal_OK != result)
+    {
+        OSAL_log("\n FIQ test has failed!\n");
+    }
+
+    return result;
+}
+#endif /* #if defined (FREERTOS) */
 
 static int32_t OsalApp_hwiCreateAllocOvrflwTest(void)
 {
@@ -458,16 +549,20 @@ int32_t OsalApp_hwiTests(void)
     Intc_RegisterExptnHandlers(&handlers);
 #endif
 
-    #if defined(BUILD_C7X) 
+#if defined(BUILD_C7X) 
     result += OsalApp_hwiCreateNegativeTest();
     result += OsalApp_hwiCreateMaxTest();
-    #endif
+#endif
     result += OsalApp_hwiCreateAllocOvrflwTest();
     result += OsalApp_hwiNullTest();
     result += OsalApp_hwiDeleteNegativeTest();
-    #if defined (BUILD_MCU)
+#if defined (BUILD_MCU)
     result += OsalApp_hwiCreatePulseIntrTest();
-    #endif
+#endif
+#if defined (BUILD_MCU) && defined (FREERTOS)
+    result += OsalApp_hwiCreateFIQTest(CSL_VIM_INTR_TYPE_LEVEL);
+    result += OsalApp_hwiCreateFIQTest(CSL_VIM_INTR_TYPE_PULSE);
+#endif
 
     if(osal_OK == result)
     {

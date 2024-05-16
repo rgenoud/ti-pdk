@@ -69,6 +69,7 @@
     .ref FaultySP
     .ref FaultyLR
     .ref FaultyGPR
+    .ref HwiP_fiq_handler_c
 
 SYS_MODE   .set     0x1F
 SVC_MODE   .set     0x13 
@@ -386,6 +387,34 @@ HwiP_prefetch_abort_handler:
     POP	{r0-r4, r12}
     MOVS	PC, LR
 
+    .global HwiP_fiq_handler
+    .sect ".text.hwi"
+    .arm
+HwiP_fiq_handler:
+    ; Return to the interrupted instruction
+    SUB lr, lr, #4
+
+    ; Push the LR
+    PUSH	{lr}
+    ; Push the SPSR.
+    MRS	lr, SPSR
+    PUSH	{lr}
+
+    ; Push used registers.
+    PUSH	{r0-r4, r12}
+
+    ; Call the FIQ interrupt handler
+    LDR r1, HwiP_fiq_handlerConst
+    BLX r1
+
+    ; Restore used registers and SPSR and LRbefore returning
+    POP {r0-r4, r12}
+    POP {LR}
+    MSR SPSR_cxsf, LR
+    POP {LR}
+
+    MOVS    PC, LR
+
 ; FUNCTION DEF: void HwiP_undefined_handler(void)
     .global HwiP_undefined_handler
     .sect ".text.hwi"
@@ -423,6 +452,7 @@ ulCriticalNestingConst: .word ulCriticalNesting
 ulPortTaskHasFPUContextConst: .word ulPortTaskHasFPUContext
 vTaskSwitchContextConst: .word vTaskSwitchContext
 ulPortInterruptNestingConst: .word ulPortInterruptNesting
+HwiP_fiq_handlerConst: .word HwiP_fiq_handler_c
 vApplicationIRQHandlerConst: .word HwiP_irq_handler_c
 vApplicationDataAbortHandlerConst: .word HwiP_data_abort_handler_c
 vApplicationPrefetchAbortHandlerConst: .word HwiP_prefetch_abort_handler_c
