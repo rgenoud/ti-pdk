@@ -41,6 +41,7 @@ MEMORY
     VECTORS (X)                 : ORIGIN = 0x00000000 , LENGTH = 0x00000100
     R5F_TCMA0(RWIX)             : ORIGIN = 0x00000100 , LENGTH = 0x00007F00
     R5F_TCMB0(RWIX)             : ORIGIN = 0x41010100 , LENGTH = 0x00007F00
+    SBL_USED_OCMC_RAM           : ORIGIN = 0x41C00000 , LENGTH = 0x80000
     OCMC_RAM_BOARD_CFG (RWIX)   : ORIGIN = 0x41c80000 , LENGTH = 0x2000
     /* Sciserver App Space */
     OCMC_RAM_SCISERVER (RWIX)   : ORIGIN = 0x41C82000 , LENGTH = 0x61100
@@ -99,12 +100,15 @@ SECTIONS
     {
         .far                                                    : {} align( 4 )
         .sysmem                                                 : {}
-        .bss                                                    : {} align( 4 ) 
         .data                                                   : {} palign( 128 ) 
         .const.devgroup                                         : {*(.const.devgroup*)} align( 4 )
         .bss.devgroup                                           : {*(.bss.devgroup*)} align( 4 )
 
     } > OCMC_RAM_SCISERVER
+
+    /* Due to creation of new task, size of OCMC_RAM_SCISERVER is not sufficient for Data sections
+     * Since .bss is a no init section, move .bss section from OCMC_RAM_SCISERVER to SBL_USED_OCMC_RAM  */
+    .bss                                                    : {} align( 4 )  > SBL_USED_OCMC_RAM
 
     /* Stack sections. */
     .stack  RUN_START( lnkStacksStartAddr ) : {} align(4) > R5F_TCMA0
