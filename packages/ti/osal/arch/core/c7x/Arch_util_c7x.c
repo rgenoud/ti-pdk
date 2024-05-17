@@ -91,7 +91,7 @@ void OsalArch_globalRestoreInterrupt (uintptr_t restoreValue)
 HwiP_Handle OsalArch_HwiPCreate(uint32_t interruptNum, HwiP_Fxn hwiFxn,
                           const HwiP_Params *params)
 {
-    Hwi_Struct                   *hwi_handle = (Hwi_Struct *) NULL_PTR;
+    Hwi_Struct                   *hwi_handle = (Hwi_Struct *) NULL;
     //CSL_IntcParam                 vectId;
 
     uint32_t          i;
@@ -221,7 +221,7 @@ HwiP_Status OsalArch_HwiPDelete(HwiP_Handle handle)
   */
 HwiP_Handle OsalArch_getHandle(uint32_t interruptNum)
 {
-   Hwi_Struct *handle = (Hwi_Struct *) NULL_PTR;
+   Hwi_Struct *handle = (Hwi_Struct *) NULL;
    return((HwiP_Handle)handle);
 }
 /*

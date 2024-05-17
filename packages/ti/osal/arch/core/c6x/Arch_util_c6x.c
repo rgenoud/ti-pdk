@@ -142,7 +142,7 @@ void OsalArch_oneTimeInit(void)
 HwiP_Handle OsalArch_HwiPCreate(uint32_t interruptNum, HwiP_Fxn hwiFxn,
                           const HwiP_Params *params)
 {
-    Hwi_Struct        *hwi_handle = (Hwi_Struct *) NULL_PTR;
+    Hwi_Struct        *hwi_handle = (Hwi_Struct *) NULL;
     CSL_IntcParam     vectId;
     uint32_t          i;
     uintptr_t         key;
@@ -208,11 +208,11 @@ HwiP_Handle OsalArch_HwiPCreate(uint32_t interruptNum, HwiP_Fxn hwiFxn,
          (void)CSL_intcGlobalNmiEnable();
          if (BFALSE == gOsalArchConfig.disableIrqOnInit)
          {
-            (void)CSL_intcGlobalEnable((CSL_IntcGlobalEnableState *)NULL_PTR);
+            (void)CSL_intcGlobalEnable((CSL_IntcGlobalEnableState *)NULL);
          }
 
          vectId = (CSL_IntcParam)interruptNum;
-         hwi_handle->handle = CSL_intcOpen (&hwi_handle->intcObj, (CSL_IntcEventId)params->evtId, &vectId, (CSL_Status *) NULL_PTR);
+         hwi_handle->handle = CSL_intcOpen (&hwi_handle->intcObj, (CSL_IntcEventId)params->evtId, &vectId, (CSL_Status *) NULL);
      
          if(NULL_PTR != hwi_handle->handle)
          {
@@ -259,7 +259,10 @@ HwiP_Status OsalArch_HwiPDelete(HwiP_Handle handle)
     if (BTRUE == hwi_hnd->used)
     {
         hwi_hnd->used = BFALSE;
-        CSL_intcUnplugEventHandler(hwi_hnd->hwi.handle);
+        if(CSL_SOK != CSL_intcUnplugEventHandler(hwi_hnd->hwi.handle))
+        {
+            ret_val = (HwiP_FAILURE);
+        }
         status = CSL_intcClose(hwi_hnd->hwi.handle);
 
         if (CSL_SOK == status)
@@ -282,7 +285,7 @@ HwiP_Status OsalArch_HwiPDelete(HwiP_Handle handle)
 HwiP_Handle OsalArch_getHandle(uint32_t interruptNum)
 {
    uint32_t i;
-   Hwi_Struct *handle= (Hwi_Struct *) NULL_PTR, *handle_temp;
+   Hwi_Struct *handle= (Hwi_Struct *) NULL, *handle_temp;
    uintptr_t         temp;
    HwiP_nonOs       *hwiPool;
    uint32_t          maxHwi = 0U;

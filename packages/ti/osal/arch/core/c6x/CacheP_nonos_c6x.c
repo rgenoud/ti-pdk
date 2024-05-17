@@ -105,7 +105,7 @@ void CacheP_setMar(void *baseAddr, uint32_t size, uint32_t value)
     uint32_t maxAddr;
     uint32_t firstMar, lastMar;
     uint32_t marNum;
-    volatile uint32_t *marBase = MAR;
+    volatile uint32_t *marBase = (volatile uint32_t *)MAR;
 
     /* calculate the maximum address */
     maxAddr = ((uint32_t) baseAddr) + (size - 1U);
@@ -128,7 +128,7 @@ void CacheP_setMar(void *baseAddr, uint32_t size, uint32_t value)
 uint32_t CacheP_getMar(void *baseAddr)
 {
     uint32_t marNum;
-    volatile uint32_t *marBase = MAR;
+    volatile uint32_t *marBase = (volatile uint32_t *)MAR;
 
     /* MAR register number can be obtained by right shifting the
      * base address by 24 bits (upper 8 bits correspond to the MAR number) */

@@ -145,7 +145,7 @@ void CacheP_setMar(void *baseAddr, uint32_t size, uint32_t value);
  *
  *  @return MAR attribute for this 16MB region
  */
-uint32_t CacheP_getMar(void *baseAddr);
+uint32_t CacheP_getMar(uintptr_t baseAddr);
 
 #ifdef __cplusplus
 }

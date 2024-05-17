@@ -163,7 +163,7 @@ HwiP_Handle HwiP_create(uint32_t interruptNum, HwiP_Fxn hwiFxn,
             {
                /* A priority of 0 is invalid for many targets. -1 forces 
                   sysbios to assign a default priority */
-               hwiParams.priority       = -1;
+               hwiParams.priority       = (int32_t)(-1);
             }
             else
             {

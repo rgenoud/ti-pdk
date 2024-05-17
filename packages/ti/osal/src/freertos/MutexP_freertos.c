@@ -71,7 +71,7 @@ MutexP_Handle MutexP_create(MutexP_Object *mutexObj)
     uintptr_t key;
     uint32_t maxMutex;
 
-    if (NULL == mutexObj)
+    if(NULL == mutexObj)
     {
          ret_handle = NULL;
     }
@@ -88,14 +88,14 @@ MutexP_Handle MutexP_create(MutexP_Object *mutexObj)
 
       key = HwiP_disable();
 
-      for (i = 0; i < maxMutex; i++)
+      for(i = 0U; i < maxMutex; i++)
       {
-          if (BFALSE == mutexPool[i].used)
+          if(BFALSE == mutexPool[i].used)
           {
               mutexPool[i].used = BTRUE;
               /* Update statistics */
               gOsalMutexAllocCnt++;
-              if (gOsalMutexAllocCnt > gOsalMutexPeak)
+              if(gOsalMutexAllocCnt > gOsalMutexPeak)
               {
                   gOsalMutexPeak = gOsalMutexAllocCnt;
               }
@@ -104,13 +104,13 @@ MutexP_Handle MutexP_create(MutexP_Object *mutexObj)
       }
       HwiP_restore(key);
 
-      if (i < maxMutex)
+      if(i < maxMutex)
       {
           /* Grab the memory */
           handle = (MutexP_freertos *) &mutexPool[i];
       }
 
-      if (NULL_PTR == handle) {
+      if(NULL_PTR == handle) {
           ret_handle = NULL_PTR;
       }
       else
@@ -118,13 +118,13 @@ MutexP_Handle MutexP_create(MutexP_Object *mutexObj)
           handle->isRecursiveMutex = 0U;
           handle->semHndl = xSemaphoreCreateMutexStatic(&handle->semObj);
 
-          if (NULL == handle->semHndl)
+          if(NULL == handle->semHndl)
           {
               /* If there was an error reset the mutex object and return NULL. */
               key = HwiP_disable();
               handle->used = BFALSE;
               /* Found the osal task object to delete */
-              if (0U < gOsalMutexAllocCnt)
+              if(0U < gOsalMutexAllocCnt)
               {
                   gOsalMutexAllocCnt--;
               }
@@ -134,7 +134,7 @@ MutexP_Handle MutexP_create(MutexP_Object *mutexObj)
           else
           {
               mutexObj->object = (void *)handle;
-              mutexObj->key = 0;
+              mutexObj->key = 0U;
               ret_handle = (MutexP_Handle)mutexObj;
           }
       }
@@ -147,24 +147,31 @@ MutexP_Status MutexP_delete(MutexP_Handle handle)
     uintptr_t   key;
     MutexP_Status ret = MutexP_OK;
     MutexP_Object *mutexObj = (MutexP_Object *)handle;
-    MutexP_freertos *mutex = (MutexP_freertos *)mutexObj->object;
-
-    if ((NULL != mutexObj) && (NULL_PTR != mutex) && (BTRUE == mutex->used))
+    
+    if(NULL == mutexObj)
     {
-        vSemaphoreDelete(mutex->semHndl);
-
-        key = HwiP_disable();
-        mutex->used = BFALSE;
-        if (0U < gOsalMutexAllocCnt)
-        {
-            gOsalMutexAllocCnt--;
-        }
-        HwiP_restore(key);
-        ret = MutexP_OK;
+        ret = MutexP_FAILURE;
     }
     else
     {
-        ret = MutexP_FAILURE;
+        MutexP_freertos *mutex = (MutexP_freertos *)mutexObj->object;
+        if((NULL_PTR != mutex) && (BTRUE == mutex->used))
+        {
+            vSemaphoreDelete(mutex->semHndl);
+
+            key = HwiP_disable();
+            mutex->used = BFALSE;
+            if(0U < gOsalMutexAllocCnt)
+            {
+              gOsalMutexAllocCnt--;
+            }
+            HwiP_restore(key);
+            ret = MutexP_OK;
+        }
+        else
+        {
+            ret = MutexP_FAILURE;
+        }
     }
     return ret;
 }
@@ -174,38 +181,41 @@ MutexP_Status MutexP_lock(MutexP_Handle handle,
 {
     MutexP_Status ret = MutexP_OK;
     MutexP_Object *mutexObj = (MutexP_Object *)handle;
-    MutexP_freertos *mutex = (MutexP_freertos *)mutexObj->object;
-    uint32_t isTaken = 0;
+    uint32_t isTaken = 0U;
 
-    if ((NULL != mutexObj) && (NULL_PTR != mutex) && (BTRUE == mutex->used) && (0U == mutex->isRecursiveMutex))
+    if(NULL == mutexObj)
     {
-        if (0 == xPortInIsrContext() )
+        ret = MutexP_FAILURE;
+    }
+    else
+    {
+        MutexP_freertos *mutex = (MutexP_freertos *)mutexObj->object;
+        if((NULL_PTR != mutex) && (BTRUE == mutex->used) && (0U == mutex->isRecursiveMutex))
         {
-            if (MutexP_WAIT_FOREVER == timeout)
+            if(0 == xPortInIsrContext())
             {
-                isTaken = (uint32_t )xSemaphoreTake(mutex->semHndl, portMAX_DELAY);
-            }
-            else
-            {
-                isTaken = (uint32_t )xSemaphoreTake(mutex->semHndl, timeout);
-            }
-            if(0U != isTaken)
-            {
-                ret = MutexP_OK;
-            }
-            else
-            {
-                ret = MutexP_TIMEOUT;
+                if(MutexP_WAIT_FOREVER == timeout)
+                {
+                    isTaken = (uint32_t)xSemaphoreTake(mutex->semHndl, portMAX_DELAY);
+                }
+                else
+                {
+                    isTaken = (uint32_t)xSemaphoreTake(mutex->semHndl, timeout);
+                }
+                if(0U != isTaken)
+                {
+                    ret = MutexP_OK;
+                }
+                else
+                {
+                    ret = MutexP_TIMEOUT;
+                }
             }
         }
         else
         {
             ret = MutexP_FAILURE;
         }
-    }
-    else
-    {
-       ret = MutexP_FAILURE;
     }
     return ret;
 }
@@ -214,27 +224,29 @@ MutexP_Status MutexP_unlock(MutexP_Handle handle)
 {
     MutexP_Status ret = MutexP_OK;
     MutexP_Object *mutexObj = (MutexP_Object *)handle;
-    MutexP_freertos *mutex = (MutexP_freertos *)mutexObj->object;
     /* Note: timeout is not use */
 
-    if ( (NULL != mutexObj) && (NULL_PTR != mutex) && (BTRUE == mutex->used) && (0U == mutex->isRecursiveMutex) )
+    if(NULL == mutexObj)
     {
-        if (0 == xPortInIsrContext())
-        {
-            (void)xSemaphoreGive(mutex->semHndl);
-            ret = MutexP_OK;
-        }
-        else
-        {
-            ret = MutexP_FAILURE;
-        }
+        ret = MutexP_FAILURE;
     }
     else
     {
-       ret = MutexP_FAILURE;
+        MutexP_freertos *mutex = (MutexP_freertos *)mutexObj->object;
+        if((NULL_PTR != mutex) && (BTRUE == mutex->used) && (0U == mutex->isRecursiveMutex))
+        {
+            if(0 == xPortInIsrContext())
+            {
+                (void)xSemaphoreGive(mutex->semHndl);
+                ret = MutexP_OK;
+            }
+            else
+            {
+                ret = MutexP_FAILURE;
+            }
+        }
     }
     return ret;
 }
-
 
 /* Nothing past this point */

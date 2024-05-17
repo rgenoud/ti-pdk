@@ -33,6 +33,7 @@
 /*
  *  ======== StartuphooksP_nonos.c ========
  */
+#include <ti/osal/StartuphooksP.h>
 
 /* Empty definition for extended_system_post_cinit. Applications should define
  * its own extended_system_post_cinit should there be a need.

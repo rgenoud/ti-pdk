@@ -219,53 +219,60 @@ TaskP_Handle TaskP_create(TaskP_Fxn taskfxn, const TaskP_Params *params )
 /*
  *  ======== TaskP_delete ========
  */
-TaskP_Status TaskP_delete( TaskP_Handle *hTaskPtr )
+TaskP_Status TaskP_delete(TaskP_Handle *hTaskPtr)
 {
-    uintptr_t   key;
-    TaskP_Status ret = TaskP_OK;
-    TaskP_Handle hTask = *hTaskPtr;
-    TaskP_SafeRTOS *task = ( TaskP_SafeRTOS * )hTask;
+    uintptr_t          key;
+    TaskP_Status       ret = TaskP_OK;
+    TaskP_Handle       hTask = *hTaskPtr;
+    TaskP_SafeRTOS     *task = ( TaskP_SafeRTOS * )hTask;
     portTaskHandleType currentTaskHndl;
-    portBaseType xReturn;
+    portBaseType       xReturn;
 
-    if( (NULL != hTaskPtr) && ( NULL_PTR != task ) && ( BTRUE == task->used ) )
+    if(NULL == hTaskPtr)
     {
-        currentTaskHndl = xTaskGetCurrentTaskHandle();
-        if(currentTaskHndl == task->taskHndl)
-        {
-            /* This is task deleting itself. */
-            DebugP_log0("Warning: xTaskDelete will not return when the task is deleting itself.\n"
-                        "Resource freeing should be handled in deleteHookcallback which is not done currently\n"
-                        "So there will be resource leak\n");
-        }
-
-        xReturn = xTaskDelete(task->taskHndl);
-        task->terminated = BTRUE;
-        DebugP_assert( pdPASS == xReturn );
-
-        key = HwiP_disable(  );
-        task->used      = BFALSE;
-        task->taskHndl  = NULL;
-        task->taskfxn   = NULL;
-        task->arg0      = NULL;
-        task->arg1      = NULL;
-
-        (void)memset( ( void *)&task->taskObj, 0, sizeof(task->taskObj));
-
-        /* Found the osal task object to delete */
-        if ( 0U < gOsalTaskAllocCnt )
-        {
-            gOsalTaskAllocCnt--;
-        }
-        HwiP_restore( key );
-
-        ret = TaskP_OK;
+        ret = TaskP_FAILURE;
     }
     else
     {
-       ret = TaskP_FAILURE;
+        if((NULL_PTR != task) && (BTRUE == task->used))
+        {
+            currentTaskHndl = xTaskGetCurrentTaskHandle();
+            if(currentTaskHndl == task->taskHndl)
+            {
+                /* This is task deleting itself. */
+                DebugP_log0("Warning: xTaskDelete will not return when the task is deleting itself.\n"
+                          "Resource freeing should be handled in deleteHookcallback which is not done currently\n"
+                          "So there will be resource leak\n");
+            }
+
+            xReturn = xTaskDelete(task->taskHndl);
+            task->terminated = BTRUE;
+            DebugP_assert( pdPASS == xReturn );
+
+            key = HwiP_disable(  );
+            task->used      = BFALSE;
+            task->taskHndl  = NULL;
+            task->taskfxn   = NULL;
+            task->arg0      = NULL;
+            task->arg1      = NULL;
+
+            (void)memset( ( void *)&task->taskObj, 0, sizeof(task->taskObj));
+
+            /* Found the osal task object to delete */
+            if(0U < gOsalTaskAllocCnt)
+            {
+                gOsalTaskAllocCnt--;
+            }
+            HwiP_restore( key );
+
+            ret = TaskP_OK;
+        }
+        else
+        {
+            ret = TaskP_FAILURE;
+        }
     }
-    return ( ret );
+    return (ret);
 }
 
 /*
@@ -274,7 +281,7 @@ TaskP_Status TaskP_delete( TaskP_Handle *hTaskPtr )
 void TaskP_Params_init( TaskP_Params *params )
 {
     params->name = ( const char * )"SafeRTOS_TASK";
-    params->stacksize = 0;
+    params->stacksize = 0U;
     params->stack = NULL;
     params->priority = ( TaskP_PRIORITY_HIGHEST - TaskP_PRIORITY_LOWEST ) / 2;
     params->arg0 = NULL;
