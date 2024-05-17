@@ -357,6 +357,7 @@ int main()
     SBL_SocLateInit();
 #endif
 
+#if !defined(SBL_USE_MCU_DOMAIN_ONLY)
 #if defined(SOC_J721S2) || defined(SOC_J784S4)
 
     /* Change the GTC Parent to MAIN_PLL3_HSDIV1_CLKOUT 
@@ -386,6 +387,7 @@ int main()
     {
         SBL_log(SBL_LOG_MAX, "Setting GTC clock parent frequency....done \n");
     }
+#endif
 #endif
 
 #if defined(SBL_ENABLE_PLL) && !defined(SBL_SKIP_SYSFW_INIT)
