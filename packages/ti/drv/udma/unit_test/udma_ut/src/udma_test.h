@@ -742,6 +742,7 @@ int32_t UdmaTestRingFlushRawNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestRingProxyQueueRawNormalNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestRingPrimeReadNormalNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestRingCheckParamsNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestRingProxyDequeueRawNormalNeg(UdmaTestTaskObj *taskObj);
 
 /*
  * UDMA Ring Monitor Negative test case functions
@@ -916,6 +917,7 @@ int32_t UdmaTestRingLcdma(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestRingLcdmaDoorBell(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestRingGetForwardRingOccLcdma(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestQueueDequeueLcdma(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestRingFlushRawLcdma(UdmaTestTaskObj *taskObj);
 
 /* ========================================================================== */
 /*      Internal Function Declarations (Needed for other static inlines)      */

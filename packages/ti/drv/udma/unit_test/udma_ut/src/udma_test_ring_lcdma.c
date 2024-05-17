@@ -520,3 +520,99 @@ int32_t UdmaTestQueueDequeueLcdma(UdmaTestTaskObj *taskObj)
      return retVal;
 }
 
+/*
+ * Test Case Description: Verifies the function Udma_ringFlushRawLcdma
+ * 1)Test scenario 1: Dequeue the descriptors from a ring
+ */
+int32_t UdmaTestRingFlushRawLcdma(UdmaTestTaskObj *taskObj)
+{
+    int32_t           retVal  = UDMA_SOK;
+    uint32_t          elemCnt = 5U;
+    uint32_t          heapId  = UTILS_MEM_HEAP_ID_MSMC;
+    void             *ringMem = NULL;
+    uint32_t          ringMemSize,qCnt;
+    Udma_ChHandle     chHandle;
+    struct Udma_ChObj chObj;
+    Udma_ChPrms       chPrms;
+    uint32_t          chType;
+    uint32_t          ringMode;
+    Udma_ChTxPrms     txChPrms;
+    uint64_t          ringData;
+    int32_t           status;
+    Udma_DrvHandle    drvHandle;
+
+    ringMode    = TISCI_MSG_VALUE_RM_RING_MODE_RING;
+    ringMemSize = elemCnt * sizeof (uint64_t);
+    ringMem     = Utils_memAlloc(heapId, ringMemSize, UDMA_CACHELINE_ALIGNMENT);
+    if(NULL == ringMem)
+    {
+        retVal = UDMA_EALLOC;
+        GT_0trace(taskObj->traceMask, GT_ERR, " Ring memory allocation failure\r\n");
+    }
+    chHandle                      = &chObj;
+    chType                        = UDMA_CH_TYPE_TX;
+    UdmaChPrms_init(&chPrms, chType);
+    drvHandle                     = &taskObj->testObj->drvObj[UDMA_TEST_INST_ID_BCDMA_0];
+    chPrms.peerChNum              = UDMA_PSIL_CH_MAIN_CSI_TX;
+    chPrms.fqRingPrms.ringMem     = ringMem;
+    chPrms.fqRingPrms.ringMemSize = ringMemSize;
+    chPrms.fqRingPrms.elemCnt     = elemCnt;
+    chPrms.fqRingPrms.mode        = ringMode;
+    retVal                        = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
+    if(UDMA_SOK == retVal)
+    {
+        UdmaChTxPrms_init(&txChPrms, chType);
+        retVal = Udma_chConfigTx(chHandle, &txChPrms);
+        if(UDMA_SOK == retVal)
+        {
+            retVal = Udma_chEnable(chHandle);
+        }
+        if(UDMA_SOK == retVal)
+        {
+            GT_1trace(taskObj->traceMask, GT_INFO1,
+                      " |TEST INFO|:: Task:%d: Udma Udma_ringFlushRawLcdma positive Testcase ::\r\n",
+                      taskObj->taskId);
+
+            for(qCnt = 0U; qCnt < elemCnt; qCnt++)
+            {
+                /* Queue the descriptors to the ring */
+                ringData = ((uint64_t) qCnt | (uint64_t) 0xDEADBEEF00000000UL);
+                status   = Udma_ringQueueRawLcdma(drvHandle, chHandle->fqRing, ringData);
+                if(UDMA_SOK == status)
+                {
+                    retVal = UDMA_SOK;
+                }
+                else
+                {
+                    GT_0trace(taskObj->traceMask, GT_ERR,
+                              " |TEST INFO|::FAIL:: UDMA:: Udma_ringQueueRawLcdma :: pos::"
+                              " Fail to queue the descriptors!!\n");
+                     retVal = UDMA_EFAIL;
+                }
+            }
+
+            /* Test scenario 1: Dequeue the descriptors from the ring */
+            for(qCnt = 0U; qCnt < elemCnt; qCnt++)
+            {
+                ringData  = ((uint64_t) qCnt | (uint64_t) 0xDEADBEEF00000000UL);
+                status    = Udma_ringFlushRawLcdma(drvHandle, chHandle->fqRing, &ringData);
+                if(UDMA_SOK == status)
+                {
+                    retVal = UDMA_SOK;
+                }
+                else
+                {
+                    GT_0trace(taskObj->traceMask, GT_ERR,
+                              " |TEST INFO|::FAIL:: UDMA:: Udma_ringFlushRawLcdma :: pos::"
+                              " Dequeue the descriptors from the ring!!\n");
+                    retVal = UDMA_EFAIL;
+                }
+            }
+        }
+        Udma_chDisable(chHandle, 0);
+    }
+    Udma_chClose(chHandle);
+
+    return retVal;
+}
+
