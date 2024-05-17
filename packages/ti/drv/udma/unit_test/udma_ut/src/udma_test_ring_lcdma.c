@@ -89,6 +89,7 @@ int32_t UdmaTestRingLcdma(UdmaTestTaskObj *taskObj)
     uint32_t          elemCnt        = 50U;
     uint32_t          heapId         = UTILS_MEM_HEAP_ID_MSMC;
     void             *ringMem        = NULL;
+    uint32_t          timeOut        = 100;
     uint32_t          ringMemSize;
     Udma_DrvHandle    drvHandle;
     Udma_ChHandle     chHandle;
@@ -207,20 +208,25 @@ int32_t UdmaTestRingLcdma(UdmaTestTaskObj *taskObj)
         Udma_appUtilsCacheWb(ringMem, ringMemSize);
         Udma_ringSetDoorBellLcdma(chHandle->fqRing, elemCnt);
 
+        /* Test scenario 5: Check to get the reverse ring occupancy count */
         if(UDMA_SOK == retVal)
         {
-            /* Test scenario 5: Check to get the reverse ring occupancy count */
-            RevOcc = Udma_ringGetReverseRingOccLcdma(chHandle->fqRing);
-            if(0U != RevOcc)
+            while(timeOut > 0U)
             {
-                retVal = UDMA_SOK;
-            }
-            else
-            {
-                GT_0trace(taskObj->traceMask, GT_ERR,
-                          " |TEST INFO|::FAIL:: UDMA:: Udma_ringGetReverseRingOccLcdma :: pos::"
-                          " Check to get reverse ring occupancy count!!\n");
-                retVal = UDMA_EFAIL;
+                RevOcc = Udma_ringGetReverseRingOccLcdma(chHandle->fqRing);
+                if(0U != RevOcc)
+                {
+                    retVal = UDMA_SOK;
+                    break;
+                }
+                else
+                {
+                    GT_0trace(taskObj->traceMask, GT_ERR,
+                              " |TEST INFO|::FAIL:: UDMA:: Udma_ringGetReverseRingOccLcdma :: pos::"
+                              " Check to get reverse ring occupancy count!!\n");
+                    retVal = UDMA_EFAIL;
+                }
+                timeOut--;
             }
         }
 
