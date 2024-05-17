@@ -95,8 +95,7 @@ int32_t Sciclient_procBootRequestProcessor(uint8_t processorId,
     respParam.respPayloadSize = (uint32_t) 0;
 
     retVal = Sciclient_service(&reqParam, &respParam);
-    if((retVal != CSL_PASS) ||
-        ((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK))
+    if((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)
     {
         retVal = CSL_EFAIL;
     }
@@ -135,9 +134,8 @@ int32_t Sciclient_procBootReleaseProcessor(uint8_t  processorId,
     {
         retVal = Sciclient_service(&reqParam, &respParam);
     }
-    if((retVal != CSL_PASS) ||
-        ((reqFlag != 0U) &&
-        ((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)))
+    if((reqFlag != 0U) &&
+        ((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK))
     {
         retVal = CSL_EFAIL;
     }
@@ -168,8 +166,7 @@ int32_t Sciclient_procBootHandoverProcessor(uint8_t  processorId,
     respParam.respPayloadSize = (uint32_t) 0;
 
     retVal = Sciclient_service(&reqParam, &respParam);
-    if((retVal != CSL_PASS) ||
-        ((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK))
+    if((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)
     {
         retVal = CSL_EFAIL;
     }
@@ -195,8 +192,7 @@ int32_t Sciclient_procBootSetProcessorCfg (
     respParam.respPayloadSize = (uint32_t) 0;
 
     retVal = Sciclient_service(&reqParam, &respParam);
-    if((retVal != CSL_PASS) ||
-        ((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK))
+    if((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)
     {
         retVal = CSL_EFAIL;
     }
@@ -238,9 +234,8 @@ int32_t Sciclient_procBootSetSequenceCtrl(uint8_t  processorId,
     {
         retVal = Sciclient_service(&reqParam, &respParam);
     }
-    if((retVal != CSL_PASS) ||
-        ((reqFlag != 0U) &&
-        ((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)))
+    if((reqFlag != 0U) &&
+        ((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK))
     {
         retVal = CSL_EFAIL;
     }
@@ -269,8 +264,7 @@ int32_t Sciclient_procBootAuthAndStart(
     respParam.respPayloadSize = (uint32_t) sizeof (response);
 
     retVal = Sciclient_service(&reqParam, &respParam);
-    if((retVal != CSL_PASS) ||
-        ((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK))
+    if((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)
     {
         retVal = CSL_EFAIL;
     }
@@ -299,8 +293,7 @@ int32_t Sciclient_procBootGetProcessorState(
     respParam.respPayloadSize = (uint32_t) sizeof (struct tisci_msg_proc_get_status_resp);
 
     retVal = Sciclient_service(&reqParam, &respParam);
-    if((retVal != CSL_PASS) ||
-        ((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK))
+    if((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)
     {
         retVal = CSL_EFAIL;
     }
@@ -349,9 +342,8 @@ int32_t Sciclient_procBootWaitProcessorState(uint8_t  processorId,
     {
         retVal = Sciclient_service(&reqParam, &respParam);
     }
-    if((retVal != CSL_PASS) ||
-        ((reqFlag != 0U) &&
-        ((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)))
+    if((reqFlag != 0U) &&
+        ((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK))
     {
         retVal = CSL_EFAIL;
     }

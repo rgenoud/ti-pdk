@@ -94,9 +94,8 @@ int32_t Sciclient_boardCfg(const Sciclient_BoardCfgPrms_t * pInPrms)
         .respPayloadSize = (uint32_t) 0
     };
     CacheP_wbInv((const void*) request.tisci_boardcfgp_low, request.tisci_boardcfg_size);
-    if((CSL_PASS != Sciclient_service(&reqParam, &respParam))
-        || ((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK))
-    {
+    retVal = Sciclient_service(&reqParam, &respParam);
+    if ((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK) {
         retVal = CSL_EFAIL;
     }
 
@@ -137,11 +136,11 @@ int32_t Sciclient_boardCfgPm(const Sciclient_BoardCfgPrms_t * pInPrms)
         .respPayloadSize = (uint32_t) 0
     };
     CacheP_wbInv((const void*) request.tisci_boardcfg_pmp_low, request.tisci_boardcfg_pm_size);
-    if((CSL_PASS != Sciclient_service(&reqParam, &respParam))
-        || ((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK))
-    {
+    retVal = Sciclient_service(&reqParam, &respParam);
+    if ((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK) {
         retVal = CSL_EFAIL;
     }
+
     return retVal;
 }
 
@@ -178,11 +177,11 @@ int32_t Sciclient_boardCfgRm(const Sciclient_BoardCfgPrms_t * pInPrms)
         .respPayloadSize = (uint32_t) 0
     };
     CacheP_wbInv((const void*) request.tisci_boardcfg_rmp_low, request.tisci_boardcfg_rm_size);
-    if((CSL_PASS != Sciclient_service(&reqParam, &respParam))
-        || ((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK))
-    {
+    retVal = Sciclient_service(&reqParam, &respParam);
+    if ((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK) {
         retVal = CSL_EFAIL;
     }
+
     return retVal;
 }
 
@@ -218,11 +217,11 @@ int32_t Sciclient_boardCfgSec(const Sciclient_BoardCfgPrms_t * pInPrms)
         .respPayloadSize = (uint32_t) 0
     };
     CacheP_wbInv((const void*) request.tisci_boardcfg_securityp_low, request.tisci_boardcfg_security_size);
-    if((CSL_PASS != Sciclient_service(&reqParam, &respParam))
-        || ((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK))
-    {
+    retVal = Sciclient_service(&reqParam, &respParam);
+    if ((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK) {
         retVal = CSL_EFAIL;
     }
+
     return retVal;
 }
 

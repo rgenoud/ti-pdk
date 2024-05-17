@@ -75,7 +75,7 @@ int32_t Sciclient_msmcQuery(const struct tisci_query_msmc_req *req,
                             struct tisci_query_msmc_resp *resp,
                             uint32_t timeout)
 {
-    int32_t r;
+    int32_t r = CSL_PASS;
     Sciclient_ReqPrm_t sciReq = {0};
     sciReq.messageType    = TISCI_MSG_QUERY_MSMC;
     sciReq.flags          = TISCI_MSG_FLAG_AOP;
@@ -89,8 +89,7 @@ int32_t Sciclient_msmcQuery(const struct tisci_query_msmc_req *req,
     sciResp.respPayloadSize = (uint32_t) sizeof(*resp);
 
     r = Sciclient_service(&sciReq, &sciResp);
-    if ((r != CSL_PASS) ||
-        ((sciResp.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)) {
+    if ((sciResp.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK) {
         r = CSL_EFAIL;
     }
 

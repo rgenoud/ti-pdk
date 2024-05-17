@@ -84,7 +84,7 @@ int32_t Sciclient_setDKEK(
     struct tisci_msg_sa2ul_set_dkek_resp *resp,
     uint32_t timeout)
 {
-    int32_t r;
+    int32_t r = CSL_PASS;
     Sciclient_ReqPrm_t sciReq = {0};
     sciReq.messageType    = TISCI_MSG_SA2UL_SET_DKEK;
     sciReq.flags          = TISCI_MSG_FLAG_AOP;
@@ -98,8 +98,7 @@ int32_t Sciclient_setDKEK(
     sciResp.respPayloadSize = (uint32_t) sizeof(*resp);
 
     r = Sciclient_service(&sciReq, &sciResp);
-    if ((r != CSL_PASS) ||
-        ((sciResp.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)) {
+    if ((sciResp.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK) {
         r = CSL_EFAIL;
     }
 
@@ -111,7 +110,7 @@ int32_t Sciclient_releaseDKEK(
     struct tisci_msg_sa2ul_release_dkek_resp *resp,
     uint32_t timeout)
 {
-    int32_t r;
+    int32_t r = CSL_PASS;
     Sciclient_ReqPrm_t sciReq = {0};
     sciReq.messageType    = TISCI_MSG_SA2UL_RELEASE_DKEK;
     sciReq.flags          = TISCI_MSG_FLAG_AOP;
@@ -125,8 +124,7 @@ int32_t Sciclient_releaseDKEK(
     sciResp.respPayloadSize = (uint32_t) sizeof(*resp);
 
     r = Sciclient_service(&sciReq, &sciResp);
-    if ((r != CSL_PASS) ||
-        ((sciResp.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)) {
+    if ((sciResp.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK) {
         r = CSL_EFAIL;
     }
 
@@ -138,7 +136,7 @@ int32_t Sciclient_getDKEK(
     struct tisci_msg_sa2ul_get_dkek_resp *resp,
     uint32_t timeout)
 {
-    int32_t r;
+    int32_t r = CSL_PASS;
     Sciclient_ReqPrm_t sciReq = {0};
     sciReq.messageType    = TISCI_MSG_SA2UL_GET_DKEK;
     sciReq.flags          = TISCI_MSG_FLAG_AOP;
@@ -152,8 +150,7 @@ int32_t Sciclient_getDKEK(
     sciResp.respPayloadSize = (uint32_t) sizeof(*resp);
 
     r = Sciclient_service(&sciReq, &sciResp);
-    if ((r != CSL_PASS) ||
-        ((sciResp.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)) {
+    if ((sciResp.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK) {
         r = CSL_EFAIL;
     }
 

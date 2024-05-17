@@ -110,9 +110,7 @@ int32_t Sciclient_pmSetModuleState(uint32_t moduleId,
     {
         retVal = Sciclient_service(&reqParam, &respParam);
     }
-    if((retVal != CSL_PASS) ||
-        ((reqFlag != 0U) &&
-        ((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)))
+    if((reqFlag != 0U) && ((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK))
     {
         retVal = CSL_EFAIL;
     }
@@ -149,8 +147,7 @@ int32_t Sciclient_pmGetModuleState(uint32_t  moduleId,
     respParam.respPayloadSize = (uint32_t) sizeof (response);
 
     retVal = Sciclient_service(&reqParam, &respParam);
-    if((retVal != CSL_PASS) ||
-        ((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK))
+    if((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)
     {
         retVal = CSL_EFAIL;
     }
@@ -187,8 +184,7 @@ int32_t Sciclient_pmSetModuleRst(uint32_t moduleId,
 
     retVal = Sciclient_service(&reqParam, &respParam);
 
-    if((retVal != CSL_PASS) ||
-        ((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK))
+    if((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)
     {
         retVal = CSL_EFAIL;
     }
@@ -219,8 +215,7 @@ int32_t Sciclient_pmSetModuleRst_flags(uint32_t moduleId,
 
     retVal = Sciclient_service(&reqParam, &respParam);
 
-    if((retVal != CSL_PASS) ||
-        ((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK))
+    if((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)
     {
         retVal = CSL_EFAIL;
     }
@@ -262,8 +257,7 @@ int32_t Sciclient_pmModuleClkRequest(uint32_t moduleId,
     respParam.respPayloadSize = (uint32_t) 0;
 
     retVal = Sciclient_service(&reqParam, &respParam);
-    if((retVal != CSL_PASS) ||
-        ((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK))
+    if((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)
     {
         retVal = CSL_EFAIL;
     }
@@ -307,8 +301,7 @@ int32_t Sciclient_pmModuleGetClkStatus(uint32_t  moduleId,
     respParam.respPayloadSize = (uint32_t) sizeof (response);
 
     retVal = Sciclient_service(&reqParam, &respParam);
-    if((retVal != CSL_PASS) ||
-        ((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK))
+    if((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)
     {
         retVal = CSL_EFAIL;
     }
@@ -368,8 +361,7 @@ int32_t Sciclient_pmSetModuleClkParent(uint32_t moduleId,
 
 
     retVal = Sciclient_service(&reqParam, &respParam);
-    if((retVal != CSL_PASS) ||
-        ((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK))
+    if((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)
     {
         retVal = CSL_EFAIL;
     }
@@ -414,8 +406,7 @@ int32_t Sciclient_pmGetModuleClkParent(uint32_t  moduleId,
 
 
     retVal = Sciclient_service(&reqParam, &respParam);
-    if((retVal != CSL_PASS) ||
-        ((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK))
+    if((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)
     {
         retVal = CSL_EFAIL;
     }
@@ -462,8 +453,7 @@ int32_t Sciclient_pmGetModuleClkNumParent(uint32_t  moduleId,
     respParam.respPayloadSize = (uint32_t) sizeof (response);
 
     retVal = Sciclient_service(&reqParam, &respParam);
-    if((retVal != CSL_PASS) ||
-        ((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK))
+    if((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)
     {
         retVal = CSL_EFAIL;
     }
@@ -520,8 +510,7 @@ int32_t Sciclient_pmSetModuleClkFreq(uint32_t moduleId,
     respParam.respPayloadSize = (uint32_t) 0;
 
     retVal = Sciclient_service(&reqParam, &respParam);
-    if((retVal != CSL_PASS) ||
-        ((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK))
+    if((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)
     {
         retVal = CSL_EFAIL;
     }
@@ -577,8 +566,7 @@ int32_t Sciclient_pmQueryModuleClkFreq(uint32_t moduleId,
 
 
     retVal = Sciclient_service(&reqParam, &respParam);
-    if((retVal != CSL_PASS) ||
-        ((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK))
+    if((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)
     {
         retVal = CSL_EFAIL;
     }
@@ -627,8 +615,7 @@ int32_t Sciclient_pmGetModuleClkFreq(uint32_t  moduleId,
     respParam.respPayloadSize = (uint32_t) sizeof (response);
 
     retVal = Sciclient_service(&reqParam, &respParam);
-    if((retVal != CSL_PASS) ||
-        ((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK))
+    if((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)
     {
         retVal = CSL_EFAIL;
     }
@@ -657,8 +644,7 @@ int32_t Sciclient_pmEnableWdt(uint32_t timeout)
     respParam.respPayloadSize = (uint32_t) sizeof(response);
 
     retVal = Sciclient_service(&reqParam, &respParam);
-    if((retVal != CSL_PASS) ||
-        ((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK))
+    if((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)
     {
         retVal = CSL_EFAIL;
     }
@@ -684,8 +670,7 @@ int32_t Sciclient_pmDisableWakeup(uint32_t timeout)
     respParam.respPayloadSize = (uint32_t) sizeof(response);
 
     retVal = Sciclient_service(&reqParam, &respParam);
-    if((retVal != CSL_PASS) ||
-        ((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK))
+    if((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)
     {
         retVal = CSL_EFAIL;
     }
@@ -712,8 +697,7 @@ int32_t Sciclient_pmDeviceReset(uint32_t timeout)
     respParam.respPayloadSize = (uint32_t) sizeof(response);
 
     retVal = Sciclient_service(&reqParam, &respParam);
-    if((retVal != CSL_PASS) ||
-        ((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK))
+    if((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)
     {
         retVal = CSL_EFAIL;
     }
@@ -741,8 +725,7 @@ int32_t Sciclient_pmDomainReset(domgrp_t domGrp, uint32_t timeout)
     respParam.respPayloadSize = (uint32_t) sizeof(response);
 
     retVal = Sciclient_service(&reqParam, &respParam);
-    if((retVal != CSL_PASS) ||
-        ((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK))
+    if((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)
     {
         retVal = CSL_EFAIL;
     }
@@ -777,8 +760,7 @@ int32_t Sciclient_pmPrepareSleep(uint32_t timeout)
     respParam.respPayloadSize = (uint32_t) sizeof(response);
 
     retVal = Sciclient_service(&reqParam, &respParam);
-    if((retVal != CSL_PASS) ||
-        ((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK))
+    if((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)
     {
         retVal = CSL_EFAIL;
     }
@@ -805,8 +787,7 @@ int32_t Sciclient_pmEnterSleep(uint32_t timeout)
     respParam.respPayloadSize = (uint32_t) sizeof(response);
 
     retVal = Sciclient_service(&reqParam, &respParam);
-    if((retVal != CSL_PASS) ||
-        ((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK))
+    if((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)
     {
         retVal = CSL_EFAIL;
     }

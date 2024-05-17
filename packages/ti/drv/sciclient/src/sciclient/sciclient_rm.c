@@ -104,8 +104,7 @@ int32_t Sciclient_rmGetResourceRange(
     {
         r = Sciclient_service(&sciReq, &sciResp);
     }
-    if ((r != CSL_PASS) ||
-        ((sciResp.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)) {
+    if ((sciResp.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK) {
         r = CSL_EFAIL;
     }
 
@@ -165,7 +164,7 @@ int32_t Sciclient_rmIrqSetRaw(const struct tisci_msg_rm_irq_set_req *req,
                               const struct tisci_msg_rm_irq_set_resp *resp,
                               uint32_t timeout)
 {
-    int32_t r;
+    int32_t r = CSL_PASS;
     Sciclient_ReqPrm_t sciReq = {0};
     sciReq.messageType    = TISCI_MSG_RM_IRQ_SET;
     sciReq.flags          = TISCI_MSG_FLAG_AOP;
@@ -178,10 +177,8 @@ int32_t Sciclient_rmIrqSetRaw(const struct tisci_msg_rm_irq_set_req *req,
     sciResp.pRespPayload    = (uint8_t *) resp;
     sciResp.respPayloadSize = (uint32_t) sizeof(*resp);
 
-
     r = Sciclient_service(&sciReq, &sciResp);
-    if ((r != CSL_PASS) ||
-        ((sciResp.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)) {
+    if ((sciResp.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK) {
         r = CSL_EFAIL;
     }
 
@@ -191,7 +188,7 @@ int32_t Sciclient_rmIrqSetRaw(const struct tisci_msg_rm_irq_set_req *req,
 int32_t Sciclient_rmIrqReleaseRaw(const struct tisci_msg_rm_irq_release_req *req,
                                   uint32_t timeout)
 {
-    int32_t r;
+    int32_t r = CSL_PASS;
 
     Sciclient_ReqPrm_t sciReq = {0};
     sciReq.messageType    = TISCI_MSG_RM_IRQ_RELEASE;
@@ -207,8 +204,7 @@ int32_t Sciclient_rmIrqReleaseRaw(const struct tisci_msg_rm_irq_release_req *req
     sciResp.respPayloadSize = (uint32_t)sizeof(resp);
 
     r = Sciclient_service(&sciReq, &sciResp);
-    if ((r != CSL_PASS) ||
-        ((sciResp.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)) {
+    if ((sciResp.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK) {
         r = CSL_EFAIL;
     }
 
@@ -219,7 +215,7 @@ int32_t Sciclient_rmRingCfg(const struct tisci_msg_rm_ring_cfg_req *req,
                             const struct tisci_msg_rm_ring_cfg_resp *resp,
                             uint32_t timeout)
 {
-    int32_t r;
+    int32_t r = CSL_PASS;
     Sciclient_ReqPrm_t sciReq = {0};
     sciReq.messageType    = TISCI_MSG_RM_RING_CFG;
     sciReq.flags          = TISCI_MSG_FLAG_AOP;
@@ -233,8 +229,7 @@ int32_t Sciclient_rmRingCfg(const struct tisci_msg_rm_ring_cfg_req *req,
     sciResp.respPayloadSize = (uint32_t) sizeof(*resp);
 
     r = Sciclient_service(&sciReq, &sciResp);
-    if ((r != CSL_PASS) ||
-        ((sciResp.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)) {
+    if ((sciResp.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK) {
         r = CSL_EFAIL;
     }
 
@@ -245,7 +240,7 @@ int32_t Sciclient_rmRingMonCfg(const struct tisci_msg_rm_ring_mon_cfg_req *req,
                                const struct tisci_msg_rm_ring_mon_cfg_resp *resp,
                                uint32_t timeout)
 {
-    int32_t r;
+    int32_t r = CSL_PASS;
     Sciclient_ReqPrm_t sciReq = {0};
     sciReq.messageType    = TISCI_MSG_RM_RING_MON_CFG;
     sciReq.flags          = TISCI_MSG_FLAG_AOP;
@@ -259,8 +254,7 @@ int32_t Sciclient_rmRingMonCfg(const struct tisci_msg_rm_ring_mon_cfg_req *req,
     sciResp.respPayloadSize = (uint32_t) sizeof(*resp);
 
     r = Sciclient_service(&sciReq, &sciResp);
-    if ((r != CSL_PASS) ||
-        ((sciResp.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)) {
+    if ((sciResp.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK) {
         r = CSL_EFAIL;
     }
 
@@ -272,7 +266,7 @@ int32_t Sciclient_rmUdmapGcfgCfg(
             const struct tisci_msg_rm_udmap_gcfg_cfg_resp *resp,
             uint32_t timeout)
 {
-    int32_t r;
+    int32_t r = CSL_PASS;
     Sciclient_ReqPrm_t sciReq = {0};
     sciReq.messageType    = TISCI_MSG_RM_UDMAP_GCFG_CFG;
     sciReq.flags          = TISCI_MSG_FLAG_AOP;
@@ -285,11 +279,8 @@ int32_t Sciclient_rmUdmapGcfgCfg(
     sciResp.pRespPayload    = (uint8_t *) resp;
     sciResp.respPayloadSize = (uint32_t) sizeof(*resp);
 
-
-
     r = Sciclient_service(&sciReq, &sciResp);
-    if ((r != CSL_PASS) ||
-        ((sciResp.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)) {
+    if ((sciResp.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK) {
         r = CSL_EFAIL;
     }
 
@@ -301,7 +292,7 @@ int32_t Sciclient_rmUdmapTxChCfg(
             const struct tisci_msg_rm_udmap_tx_ch_cfg_resp *resp,
             uint32_t timeout)
 {
-    int32_t r;
+    int32_t r = CSL_PASS;
     Sciclient_ReqPrm_t sciReq = {0};
     sciReq.messageType    = TISCI_MSG_RM_UDMAP_TX_CH_CFG;
     sciReq.flags          = TISCI_MSG_FLAG_AOP;
@@ -314,10 +305,8 @@ int32_t Sciclient_rmUdmapTxChCfg(
     sciResp.pRespPayload    = (uint8_t *) resp;
     sciResp.respPayloadSize = (uint32_t) sizeof(*resp);
 
-
     r = Sciclient_service(&sciReq, &sciResp);
-    if ((r != CSL_PASS) ||
-        ((sciResp.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)) {
+    if ((sciResp.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK) {
         r = CSL_EFAIL;
     }
 
@@ -329,7 +318,7 @@ int32_t Sciclient_rmUdmapRxChCfg(
             const struct tisci_msg_rm_udmap_rx_ch_cfg_resp *resp,
             uint32_t timeout)
 {
-    int32_t r;
+    int32_t r = CSL_PASS;
     Sciclient_ReqPrm_t sciReq = {0};
     sciReq.messageType    = TISCI_MSG_RM_UDMAP_RX_CH_CFG;
     sciReq.flags          = TISCI_MSG_FLAG_AOP;
@@ -342,11 +331,8 @@ int32_t Sciclient_rmUdmapRxChCfg(
     sciResp.pRespPayload    = (uint8_t *) resp;
     sciResp.respPayloadSize = (uint32_t) sizeof(*resp);
 
-
-
     r = Sciclient_service(&sciReq, &sciResp);
-    if ((r != CSL_PASS) ||
-        ((sciResp.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)) {
+    if ((sciResp.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK) {
         r = CSL_EFAIL;
     }
 
@@ -358,7 +344,7 @@ int32_t Sciclient_rmUdmapFlowCfg(
             const struct tisci_msg_rm_udmap_flow_cfg_resp *resp,
             uint32_t timeout)
 {
-    int32_t r;
+    int32_t r = CSL_PASS;
     Sciclient_ReqPrm_t sciReq = {0};
     sciReq.messageType    = TISCI_MSG_RM_UDMAP_FLOW_CFG;
     sciReq.flags          = TISCI_MSG_FLAG_AOP;
@@ -371,11 +357,8 @@ int32_t Sciclient_rmUdmapFlowCfg(
     sciResp.pRespPayload    = (uint8_t *) resp;
     sciResp.respPayloadSize = (uint32_t) sizeof(*resp);
 
-
-
     r = Sciclient_service(&sciReq, &sciResp);
-    if ((r != CSL_PASS) ||
-        ((sciResp.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)) {
+    if ((sciResp.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK) {
         r = CSL_EFAIL;
     }
 
@@ -387,7 +370,7 @@ int32_t Sciclient_rmUdmapFlowSizeThreshCfg(
             const struct tisci_msg_rm_udmap_flow_size_thresh_cfg_resp *resp,
             uint32_t timeout)
 {
-    int32_t r;
+    int32_t r = CSL_PASS;
     Sciclient_ReqPrm_t sciReq = {0};
     sciReq.messageType    = TISCI_MSG_RM_UDMAP_FLOW_SIZE_THRESH_CFG;
     sciReq.flags          = TISCI_MSG_FLAG_AOP;
@@ -403,8 +386,7 @@ int32_t Sciclient_rmUdmapFlowSizeThreshCfg(
 
 
     r = Sciclient_service(&sciReq, &sciResp);
-    if ((r != CSL_PASS) ||
-        ((sciResp.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)) {
+    if ((sciResp.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK) {
         r = CSL_EFAIL;
     }
 
@@ -414,7 +396,7 @@ int32_t Sciclient_rmUdmapFlowSizeThreshCfg(
 int32_t Sciclient_rmPsilPair(const struct tisci_msg_rm_psil_pair_req *req,
                              uint32_t timeout)
 {
-    int32_t r;
+    int32_t r = CSL_PASS;
     Sciclient_ReqPrm_t sciReq = {0};
     sciReq.messageType    = TISCI_MSG_RM_PSIL_PAIR;
     sciReq.flags          = TISCI_MSG_FLAG_AOP;
@@ -429,8 +411,7 @@ int32_t Sciclient_rmPsilPair(const struct tisci_msg_rm_psil_pair_req *req,
     sciResp.respPayloadSize = (uint32_t)sizeof(resp);
 
     r = Sciclient_service(&sciReq, &sciResp);
-    if ((r != CSL_PASS) ||
-        ((sciResp.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)) {
+    if ((sciResp.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK) {
         r = CSL_EFAIL;
     }
 
@@ -440,7 +421,7 @@ int32_t Sciclient_rmPsilPair(const struct tisci_msg_rm_psil_pair_req *req,
 int32_t Sciclient_rmPsilUnpair(const struct tisci_msg_rm_psil_unpair_req *req,
                                uint32_t timeout)
 {
-    int32_t r;
+    int32_t r = CSL_PASS;
     Sciclient_ReqPrm_t sciReq = {0};
     sciReq.messageType    = TISCI_MSG_RM_PSIL_UNPAIR;
     sciReq.flags          = TISCI_MSG_FLAG_AOP;
@@ -455,8 +436,7 @@ int32_t Sciclient_rmPsilUnpair(const struct tisci_msg_rm_psil_unpair_req *req,
     sciResp.respPayloadSize = (uint32_t)sizeof(resp);
 
     r = Sciclient_service(&sciReq, &sciResp);
-    if ((r != CSL_PASS) ||
-        ((sciResp.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)) {
+    if ((sciResp.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK) {
         r = CSL_EFAIL;
     }
 
@@ -467,7 +447,7 @@ int32_t Sciclient_rmPsilRead(const struct tisci_msg_rm_psil_read_req *req,
                              struct tisci_msg_rm_psil_read_resp *resp,
                              uint32_t timeout)
 {
-    int32_t r;
+    int32_t r = CSL_PASS;
     Sciclient_ReqPrm_t sciReq = {0};
     sciReq.messageType    = TISCI_MSG_RM_PSIL_READ;
     sciReq.flags          = TISCI_MSG_FLAG_AOP;
@@ -481,8 +461,7 @@ int32_t Sciclient_rmPsilRead(const struct tisci_msg_rm_psil_read_req *req,
     sciResp.respPayloadSize = (uint32_t) sizeof(*resp);
 
     r = Sciclient_service(&sciReq, &sciResp);
-    if ((r != CSL_PASS) ||
-        ((sciResp.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)) {
+    if ((sciResp.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK) {
         r = CSL_EFAIL;
     }
 
@@ -492,7 +471,7 @@ int32_t Sciclient_rmPsilRead(const struct tisci_msg_rm_psil_read_req *req,
 int32_t Sciclient_rmPsilWrite(const struct tisci_msg_rm_psil_write_req *req,
                               uint32_t timeout)
 {
-    int32_t r;
+    int32_t r = CSL_PASS;
     Sciclient_ReqPrm_t sciReq = {0};
     sciReq.messageType    = TISCI_MSG_RM_PSIL_WRITE;
     sciReq.flags          = TISCI_MSG_FLAG_AOP;
@@ -507,8 +486,7 @@ int32_t Sciclient_rmPsilWrite(const struct tisci_msg_rm_psil_write_req *req,
     sciResp.respPayloadSize = (uint32_t)sizeof(resp);
 
     r = Sciclient_service(&sciReq, &sciResp);
-    if ((r != CSL_PASS) ||
-        ((sciResp.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)) {
+    if ((sciResp.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK) {
         r = CSL_EFAIL;
     }
 
@@ -517,7 +495,7 @@ int32_t Sciclient_rmPsilWrite(const struct tisci_msg_rm_psil_write_req *req,
 
 int32_t Sciclient_rmSetProxyCfg(const struct tisci_msg_rm_proxy_cfg_req *req, uint32_t timeout)
 {
-    int32_t r;
+    int32_t r = CSL_PASS;
     Sciclient_ReqPrm_t sciReq = {0};
     sciReq.messageType = TISCI_MSG_RM_PROXY_CFG;
     sciReq.flags       = TISCI_MSG_FLAG_AOP;
@@ -532,8 +510,7 @@ int32_t Sciclient_rmSetProxyCfg(const struct tisci_msg_rm_proxy_cfg_req *req, ui
     sciResp.respPayloadSize = (uint32_t)sizeof(resp);
 
     r = Sciclient_service(&sciReq, &sciResp);
-    if ((r != CSL_PASS) ||
-        ((sciResp.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)) {
+    if ((sciResp.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK) {
         r = CSL_EFAIL;
     }
 

@@ -84,7 +84,7 @@ int32_t Sciclient_firewallChangeOwnerInfo(
     struct tisci_msg_fwl_change_owner_info_resp *resp,
     uint32_t timeout)
 {
-    int32_t r;
+    int32_t r = CSL_PASS;
     Sciclient_ReqPrm_t sciReq = {0};
     sciReq.messageType    = TISCI_MSG_CHANGE_FWL_OWNER;
     sciReq.flags          = TISCI_MSG_FLAG_AOP;
@@ -97,10 +97,8 @@ int32_t Sciclient_firewallChangeOwnerInfo(
     sciResp.pRespPayload    = (uint8_t *) resp;
     sciResp.respPayloadSize = (uint32_t) sizeof(*resp);
 
-
     r = Sciclient_service(&sciReq, &sciResp);
-    if ((r != CSL_PASS) ||
-        ((sciResp.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)) {
+    if ((sciResp.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK) {
         r = CSL_EFAIL;
     }
 
@@ -112,7 +110,7 @@ int32_t Sciclient_firewallSetRegion(
     struct tisci_msg_fwl_set_firewall_region_resp *resp,
     uint32_t timeout)
 {
-    int32_t r;
+    int32_t r = CSL_PASS;
     Sciclient_ReqPrm_t sciReq = {0};
     sciReq.messageType    = TISCI_MSG_SET_FWL_REGION;
     sciReq.flags          = TISCI_MSG_FLAG_AOP;
@@ -125,10 +123,8 @@ int32_t Sciclient_firewallSetRegion(
     sciResp.pRespPayload    = (uint8_t *) resp;
     sciResp.respPayloadSize = (uint32_t) sizeof(*resp);
 
-
     r = Sciclient_service(&sciReq, &sciResp);
-    if ((r != CSL_PASS) ||
-        ((sciResp.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)) {
+    if ((sciResp.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK) {
         r = CSL_EFAIL;
     }
 
@@ -140,7 +136,7 @@ int32_t Sciclient_firewallGetRegion(
     struct tisci_msg_fwl_get_firewall_region_resp *resp,
     uint32_t timeout)
 {
-    int32_t r;
+    int32_t r = CSL_PASS;
     Sciclient_ReqPrm_t sciReq = {0};
     sciReq.messageType    = TISCI_MSG_GET_FWL_REGION;
     sciReq.flags          = TISCI_MSG_FLAG_AOP;
@@ -153,10 +149,8 @@ int32_t Sciclient_firewallGetRegion(
     sciResp.pRespPayload    = (uint8_t *) resp;
     sciResp.respPayloadSize = (uint32_t) sizeof(*resp);
 
-
     r = Sciclient_service(&sciReq, &sciResp);
-    if ((r != CSL_PASS) ||
-        ((sciResp.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)) {
+    if ((sciResp.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK) {
         r = CSL_EFAIL;
     }
 

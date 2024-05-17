@@ -97,8 +97,7 @@ int32_t Sciclient_otpProcessKeyCfg(uint32_t *otpKeyCfgAddr,
 
     retVal = Sciclient_service(&reqParam, &respParam);
 	*debug_response = response.debug_response;
-    if((retVal != CSL_PASS) ||
-        ((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK))
+    if((respParam.flags & TISCI_MSG_FLAG_ACK) != TISCI_MSG_FLAG_ACK)
     {
         retVal = CSL_EFAIL;
     }
