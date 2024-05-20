@@ -39,6 +39,7 @@
         <link rel="search" title="Search" href="../search.html"/>
     <link rel="top" title="TISCI User Guide" href="../index.html"/>
         <link rel="up" title="Chapter 6: Topic User Guides" href="index.html"/>
+        <link rel="next" title="Firewall Data Access to Safety Core" href="fwl_safety_core.html"/>
         <link rel="prev" title="Run time read/write to KEYREV and SWREV" href="otp_revision.html"/> 
 
   
@@ -78,7 +79,7 @@
             
             
               <div class="version">
-                09.02.04
+                09.02.09
               </div>
             
           
@@ -129,9 +130,11 @@
 <li class="toctree-l4"><a class="reference internal" href="#keyring-import">Keyring Import</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#user-flow">User flow</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#references">References</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="fwl_safety_core.html">Firewall Data Access to Safety Core</a></li>
 </ul>
 </li>
 </ul>
@@ -191,7 +194,8 @@
 <li><a class="reference internal" href="#keyring-import" id="id7">Keyring Import</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#references" id="id8">References</a></li>
+<li><a class="reference internal" href="#user-flow" id="id8">User flow</a></li>
+<li><a class="reference internal" href="#references" id="id9">References</a></li>
 </ul>
 </div>
 <div class="section" id="introduction">
@@ -211,6 +215,7 @@ document.</p>
 after validation.</li>
 <li>The imported keys’ hash can be used to authenticate the signed firmware or data blobs
 presented to System Firmware.</li>
+<li>The imported keys’ hash can be used for debug certificate authentication.</li>
 </ul>
 </div>
 <div class="section" id="functional-goals">
@@ -220,7 +225,7 @@ presented to System Firmware.</li>
 <li>APIs to import the entire keyring in to TIFS internal memory.</li>
 <li><dl class="first docutils">
 <dt>System Firmware can use the keys imported from the extended key ring,</dt>
-<dd>during the signed firmware or data blob authentication.</dd>
+<dd>during the signed firmware, debug certificate authentication or data blob authentication.</dd>
 </dl>
 </li>
 </ol>
@@ -265,7 +270,23 @@ The descriptors for the key slots specify:</li>
 <td>flag to indicate if key can be used for debug certificate authentication</td>
 </tr>
 <tr class="row-even"><td>reserved</td>
-<td>for internal use</td>
+<td><dl class="first docutils">
+<dt>reserved[0] is used to denote the sha algorithm used to generate the auxiliary public key’s hash.</dt>
+<dd><ul class="first last simple">
+<li>reserved[0] = 0 denotes sha512</li>
+<li>reserved[0] = 1 denotes sha384</li>
+<li>reserved[0] = 2 denotes sha256</li>
+</ul>
+</dd>
+<dt>reserved[1] is used to denote the auxiliary public key’s length.</dt>
+<dd><ul class="first last simple">
+<li>reserved[1] = 0 denotes RSA4096</li>
+<li>reserved[1] = 1 denotes RSA3072</li>
+</ul>
+</dd>
+</dl>
+<p class="last">reserved[3] and reserved[4] remains 0 and is reserved for internal/future use.</p>
+</td>
 </tr>
 <tr class="row-odd"><td>esmpkh</td>
 <td>esmpk hash for authentication</td>
@@ -297,10 +318,11 @@ contents have not yet been populated and it is up to the system software owner
 to provision an initial set of keys.  This is achieved through a bulk import of
 the keyring contents which have been appended to an x509 certificate signed with the
 active customer MPK, similar to how one signs an encrypted binary for secure boot.
-Validation of the certificate ensures that the keyring contents are trustworthy and
+The keyring blob can be optionally encrypted with the active customer MEK. Validation
+of the certificate ensures that the keyring contents are trustworthy and
 can hence be stored into the reserved memory. If the certificate check fails then
-provisioning will not be successful and the keyring will remain unitialized.</p>
-<p>The host is responsibile for ensuring that the keyring data is properly
+provisioning will not be successful and the keyring will remain uninitialized.</p>
+<p>The host is responsible for ensuring that the keyring data is properly
 formatted when creating the payload for the keyring import API. If not, the data
 will be interpreted differently between the host and System Firmware which can cause
 unpredictable values for the various fields in the structure. The data
@@ -315,14 +337,60 @@ will fail.</li>
 <ul class="simple">
 <li>The number of keys in the certificate extension must match the number of keys
 present in the keyring.</li>
-<li>Without a certificate extension, keyring import will fail.</li>
+<li>Without a keyring info certificate extension, keyring import will fail.</li>
 <li>The number of asymmetric keys should be between and including values 1-6.</li>
+<li>The number of symmetric keys should be 0.</li>
 <li>Keyring can only be imported once, and any further attempts will fail.</li>
+</ul>
+<p>Proc auth boot operation requires following constraints:</p>
+<ul class="simple">
+<li>Without a key info certificate extension for the certificate signed by one of
+the keys from the keyring, the corresponding processor auth boot will fail.</li>
+<li>In a certificate signed by one of the keys from the keyring, the auth_key_id in
+the key info certificate extension must match the key id of the key from the
+keyring that was used to sign the certificate.</li>
 </ul>
 </div>
 </div>
+<div class="section" id="user-flow">
+<span id="dref-sec-keyring-ref"></span><h2><a class="toc-backref" href="#id8">User flow</a><a class="headerlink" href="#user-flow" title="Permalink to this headline">¶</a></h2>
+<div class="figure">
+<img alt="../_images/user_guide_flow.png" src="../_images/user_guide_flow.png" />
+</div>
+<p>RSA key generation:</p>
+<ul class="simple">
+<li>The RSA key par can be generated using openssl</li>
+<li>For example, Generate a 4096 bit RSA Key
+openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:4096 -out rsa_privkey.pem -outform pem</li>
+<li>Extract the public key
+openssl rsa -inform pem -in rsa_privkey.pem -pubout -outform der &gt; rsa_pubkey.der</li>
+</ul>
+<p>Keyring blob generation:</p>
+<ul class="simple">
+<li>Create an array of keyring_asymm structure instances.</li>
+<li>Fill in the key metadata and the public key hash.</li>
+<li>The gen_keyring.py given as reference takes the keyring.json file as input and
+generates keyring_data.c as output.</li>
+</ul>
+<p>Sign the generated keyring blob:</p>
+<ul class="simple">
+<li>Compile the c file created in the previous step.</li>
+<li>Take the data section of the compiled object file and put it in a bin file.</li>
+<li>Sign this binary with the appropriate X509 extensions required.</li>
+<li>Create a keyring header file and hex dump the certificate and the bin file in it.</li>
+<li>Place the header files data in an array and send it to System Firmware using the
+<a class="reference internal" href="../2_tisci_msgs/security/keyring.html#keyring-import"><span class="std std-ref">TISCI_MSG_KEYRING_IMPORT</span></a> API.</li>
+</ul>
+<p>Sign a firmware image using the keys from the imported keyring:</p>
+<ul class="simple">
+<li>Sign the binary with the appropriate X509 extensions required.</li>
+<li>Create a binary header file and hex dump the certificate and the binary file in it.</li>
+<li>Place the header files data in an array and send it to System Firmware using the
+<a class="reference internal" href="../2_tisci_msgs/security/PROC_BOOT.html#proc-boot-authenticate-image-and-configure-processor"><span class="std std-ref">TISCI_MSG_PROC_AUTH_BOOT</span></a> API.</li>
+</ul>
+</div>
 <div class="section" id="references">
-<span id="dref-sec-keyring-ref"></span><h2><a class="toc-backref" href="#id8">References</a><a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<span id="dref-sec-keyring-user-flow"></span><h2><a class="toc-backref" href="#id9">References</a><a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic simple">
 <li><a class="reference external" href="https://en.wikipedia.org/wiki/Public_key_infrastructure">https://en.wikipedia.org/wiki/Public_key_infrastructure</a></li>
 <li>Internet X.509 Public Key Infrastructure Certificate and Certificate
@@ -337,6 +405,8 @@ Revocation List (CRL) Profile <a class="reference external" href="https://tools.
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="fwl_safety_core.html" class="btn btn-neutral float-right" title="Firewall Data Access to Safety Core" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="otp_revision.html" class="btn btn-neutral" title="Run time read/write to KEYREV and SWREV" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -370,7 +440,7 @@ Revocation List (CRL) Profile <a class="reference external" href="https://tools.
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'09.02.04',
+            VERSION:'09.02.09',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

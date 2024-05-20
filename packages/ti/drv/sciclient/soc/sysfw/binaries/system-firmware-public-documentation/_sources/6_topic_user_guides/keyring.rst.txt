@@ -27,6 +27,7 @@ document.
   after validation.
 * The imported keys' hash can be used to authenticate the signed firmware or data blobs
   presented to |sysfw|.
+* The imported keys' hash can be used for debug certificate authentication.
 
 .. _dref_sec_keyring_func-goals:
 
@@ -37,7 +38,7 @@ Keyring provides the following functionality:
 
 1.  APIs to import the entire keyring in to TIFS internal memory.
 2. |sysfw| can use the keys imported from the extended key ring,
-	during the signed firmware or data blob authentication.
+	during the signed firmware, debug certificate authentication or data blob authentication.
 
 .. _dref_sec_keyring_design:
 
@@ -82,7 +83,16 @@ information:
      - flag to indicate if key can be used for debug certificate authentication
    
    * - reserved
-     - for internal use   
+     - reserved[0] is used to denote the sha algorithm used to generate the auxiliary public key's hash.
+        - reserved[0] = 0 denotes sha512
+        - reserved[0] = 1 denotes sha384   
+        - reserved[0] = 2 denotes sha256
+      
+       reserved[1] is used to denote the auxiliary public key's length.
+        - reserved[1] = 0 denotes RSA4096
+        - reserved[1] = 1 denotes RSA3072
+       
+       reserved[3] and reserved[4] remains 0 and is reserved for internal/future use.
 
    * - esmpkh  
      - esmpk hash for authentication  
@@ -117,12 +127,13 @@ transition the device from HS-FS state to HS-SE. At this point, the keyring
 contents have not yet been populated and it is up to the system software owner
 to provision an initial set of keys.  This is achieved through a bulk import of
 the keyring contents which have been appended to an x509 certificate signed with the 
-active customer MPK, similar to how one signs an encrypted binary for secure boot. 
-Validation of the certificate ensures that the keyring contents are trustworthy and 
+active customer MPK, similar to how one signs an encrypted binary for secure boot.
+The keyring blob can be optionally encrypted with the active customer MEK. Validation 
+of the certificate ensures that the keyring contents are trustworthy and 
 can hence be stored into the reserved memory. If the certificate check fails then
-provisioning will not be successful and the keyring will remain unitialized.
+provisioning will not be successful and the keyring will remain uninitialized.
 
-The host is responsibile for ensuring that the keyring data is properly
+The host is responsible for ensuring that the keyring data is properly
 formatted when creating the payload for the keyring import API. If not, the data
 will be interpreted differently between the host and |sysfw| which can cause
 unpredictable values for the various fields in the structure. The data
@@ -137,11 +148,59 @@ Keyring import operation requires following constraints:
 
 * The number of keys in the certificate extension must match the number of keys
   present in the keyring.
-* Without a certificate extension, keyring import will fail. 
+* Without a keyring info certificate extension, keyring import will fail.
 * The number of asymmetric keys should be between and including values 1-6.
-* Keyring can only be imported once, and any further attempts will fail. 
+* The number of symmetric keys should be 0.
+* Keyring can only be imported once, and any further attempts will fail.
+
+Proc auth boot operation requires following constraints:
+
+* Without a key info certificate extension for the certificate signed by one of 
+  the keys from the keyring, the corresponding processor auth boot will fail.
+* In a certificate signed by one of the keys from the keyring, the auth_key_id in
+  the key info certificate extension must match the key id of the key from the 
+  keyring that was used to sign the certificate.
 
 .. _dref_sec_keyring_ref:
+
+User flow
+=========
+
+.. figure:: ../img/sec/keyring/user_guide_flow.png
+
+RSA key generation:
+
+* The RSA key par can be generated using openssl
+* For example, Generate a 4096 bit RSA Key
+  openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:4096 \
+  -out rsa_privkey.pem -outform pem
+* Extract the public key
+  openssl rsa -inform pem -in rsa_privkey.pem -pubout -outform der > rsa_pubkey.der
+
+Keyring blob generation:
+
+* Create an array of keyring_asymm structure instances.
+* Fill in the key metadata and the public key hash.
+* The gen_keyring.py given as reference takes the keyring.json file as input and 
+  generates keyring_data.c as output. 
+
+Sign the generated keyring blob:
+
+* Compile the c file created in the previous step.
+* Take the data section of the compiled object file and put it in a bin file.
+* Sign this binary with the appropriate X509 extensions required.
+* Create a keyring header file and hex dump the certificate and the bin file in it.
+* Place the header files data in an array and send it to |sysfw| using the 
+  :ref:`TISCI_MSG_KEYRING_IMPORT <keyring-import>` API.
+
+Sign a firmware image using the keys from the imported keyring:
+
+* Sign the binary with the appropriate X509 extensions required.
+* Create a binary header file and hex dump the certificate and the binary file in it.
+* Place the header files data in an array and send it to |sysfw| using the 
+  :ref:`TISCI_MSG_PROC_AUTH_BOOT <proc-boot-authenticate-image-and-configure-processor>` API.
+
+.. _dref_sec_keyring_user_flow:
 
 References
 ==========

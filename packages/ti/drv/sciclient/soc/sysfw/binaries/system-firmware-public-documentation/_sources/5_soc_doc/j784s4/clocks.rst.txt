@@ -235,7 +235,7 @@ Following is a mapping of Clocks IDs to function:
 +------------+-----------------------------------------------------------------------+---------------------------------------------------------+
 |          1 | DEV_ACSPCIE_BUFFER0_CLKIN0_PARENT_WIZ16B8M4CT3_MAIN_0_REF_DER_OUT_CLK | Parent input clock option to DEV_ACSPCIE_BUFFER0_CLKIN0 |
 +------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|          2 | DEV_ACSPCIE_BUFFER0_CLKIN0_PARENT_HSDIV4_16FFT_MCU_2_HSDIVOUT4_CLK    | Parent input clock option to DEV_ACSPCIE_BUFFER0_CLKIN0 |
+|          2 | DEV_ACSPCIE_BUFFER0_CLKIN0_PARENT_HSDIV4_16FFT_MAIN_2_HSDIVOUT4_CLK   | Parent input clock option to DEV_ACSPCIE_BUFFER0_CLKIN0 |
 +------------+-----------------------------------------------------------------------+---------------------------------------------------------+
 |          3 | DEV_ACSPCIE_BUFFER0_CLKIN0_PARENT_WIZ16B8M4CT3_MAIN_0_REF_OUT_CLK     | Parent input clock option to DEV_ACSPCIE_BUFFER0_CLKIN0 |
 +------------+-----------------------------------------------------------------------+---------------------------------------------------------+
@@ -245,7 +245,7 @@ Following is a mapping of Clocks IDs to function:
 +------------+-----------------------------------------------------------------------+---------------------------------------------------------+
 |          6 | DEV_ACSPCIE_BUFFER0_CLKIN1_PARENT_WIZ16B8M4CT3_MAIN_0_REF_DER_OUT_CLK | Parent input clock option to DEV_ACSPCIE_BUFFER0_CLKIN1 |
 +------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|          7 | DEV_ACSPCIE_BUFFER0_CLKIN1_PARENT_HSDIV4_16FFT_MCU_2_HSDIVOUT4_CLK    | Parent input clock option to DEV_ACSPCIE_BUFFER0_CLKIN1 |
+|          7 | DEV_ACSPCIE_BUFFER0_CLKIN1_PARENT_HSDIV4_16FFT_MAIN_2_HSDIVOUT4_CLK   | Parent input clock option to DEV_ACSPCIE_BUFFER0_CLKIN1 |
 +------------+-----------------------------------------------------------------------+---------------------------------------------------------+
 |          8 | DEV_ACSPCIE_BUFFER0_CLKIN1_PARENT_WIZ16B8M4CT3_MAIN_0_REF_OUT_CLK     | Parent input clock option to DEV_ACSPCIE_BUFFER0_CLKIN1 |
 +------------+-----------------------------------------------------------------------+---------------------------------------------------------+
@@ -277,7 +277,7 @@ Following is a mapping of Clocks IDs to function:
 +------------+-----------------------------------------------------------------------+---------------------------------------------------------+
 |          1 | DEV_ACSPCIE_BUFFER1_CLKIN0_PARENT_WIZ16B8M4CT3_MAIN_1_REF_DER_OUT_CLK | Parent input clock option to DEV_ACSPCIE_BUFFER1_CLKIN0 |
 +------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|          2 | DEV_ACSPCIE_BUFFER1_CLKIN0_PARENT_HSDIV4_16FFT_MCU_2_HSDIVOUT4_CLK    | Parent input clock option to DEV_ACSPCIE_BUFFER1_CLKIN0 |
+|          2 | DEV_ACSPCIE_BUFFER1_CLKIN0_PARENT_HSDIV4_16FFT_MAIN_2_HSDIVOUT4_CLK   | Parent input clock option to DEV_ACSPCIE_BUFFER1_CLKIN0 |
 +------------+-----------------------------------------------------------------------+---------------------------------------------------------+
 |          3 | DEV_ACSPCIE_BUFFER1_CLKIN0_PARENT_WIZ16B8M4CT3_MAIN_1_REF_OUT_CLK     | Parent input clock option to DEV_ACSPCIE_BUFFER1_CLKIN0 |
 +------------+-----------------------------------------------------------------------+---------------------------------------------------------+
@@ -285,7 +285,7 @@ Following is a mapping of Clocks IDs to function:
 +------------+-----------------------------------------------------------------------+---------------------------------------------------------+
 |          6 | DEV_ACSPCIE_BUFFER1_CLKIN1_PARENT_WIZ16B8M4CT3_MAIN_1_REF_DER_OUT_CLK | Parent input clock option to DEV_ACSPCIE_BUFFER1_CLKIN1 |
 +------------+-----------------------------------------------------------------------+---------------------------------------------------------+
-|          7 | DEV_ACSPCIE_BUFFER1_CLKIN1_PARENT_HSDIV4_16FFT_MCU_2_HSDIVOUT4_CLK    | Parent input clock option to DEV_ACSPCIE_BUFFER1_CLKIN1 |
+|          7 | DEV_ACSPCIE_BUFFER1_CLKIN1_PARENT_HSDIV4_16FFT_MAIN_2_HSDIVOUT4_CLK   | Parent input clock option to DEV_ACSPCIE_BUFFER1_CLKIN1 |
 +------------+-----------------------------------------------------------------------+---------------------------------------------------------+
 |          8 | DEV_ACSPCIE_BUFFER1_CLKIN1_PARENT_WIZ16B8M4CT3_MAIN_1_REF_OUT_CLK     | Parent input clock option to DEV_ACSPCIE_BUFFER1_CLKIN1 |
 +------------+-----------------------------------------------------------------------+---------------------------------------------------------+

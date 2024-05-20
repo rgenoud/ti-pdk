@@ -649,7 +649,9 @@ Populating the certificate fields
 
 2. ``enc_key_id``
 
-   - Keyid for decryption using symmetric keys.
+   - Keyid for decryption using symmetric keys. (*enc_key_id*
+     should be set to 0. The support for symmetric keys will be 
+     added in the future releases.)
 
 .. _sysfw_keyring_info_ext:
 
@@ -678,13 +680,15 @@ The encryption extension is decoded into the following data structure.
 Populating the certificate fields
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1. ``num_symm_keys``
-
-   - Number of symmetric keys in the keyring.
-
-2. ``num_asymm_keys``
+1. ``num_asymm_keys``
 
    - Number of asymmetric keys in the keyring.
+
+2. ``num_symm_keys``
+
+   - Number of symmetric keys in the keyring. (*num_symm_keys* 
+     should be set to 0. The support for symmetric keys will be 
+     added in the future releases.)
    
 .. _sysfw_encryption_extended_ext:
 

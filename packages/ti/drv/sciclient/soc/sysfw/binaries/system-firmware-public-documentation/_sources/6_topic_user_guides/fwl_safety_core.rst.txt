@@ -1,0 +1,97 @@
+===================================
+Firewall Data Access to Safety Core
+===================================
+
+.. contents:: Table of Contents
+   :depth: 2
+   :local:
+
+.. _dref_fwl_access_safety_core_design:
+
+Design
+======
+
+Firewall data region is opened up for the safety core to read, in order to monitor the firewall configuration in the registers.
+
+The Safety Application shall 
+
+* Include the safety host information in the board configuration. 
+* Call a TISCI API to TIFS, to open up the firewall read access to it.
+* Read the firewall data region via the Safety Checker API (running in the Safety Core)
+  for generating the golden reference and for periodic validation.
+* Call a TISCI API to TIFS, to forbid the firewall read access to itself, when the monitoring of the firewall data is no longer required.
+
+.. note::
+
+	Note: Security firewalls (firewall IDs 512-1023) are not allowed read access through this API.
+
+.. _dref_fwl_access_safety_core_steps:
+
+Steps for firewall read access enablement in safety core
+========================================================
+
+Update TIFS board configuration to enable Firewall config read access.
+----------------------------------------------------------------------
+
+Board configuration must be updated with the safety host information in the safety_host_info field of the 
+
+SAUL / Safety configuration.
+
+This entry controls the SAUL / Safety configuration on the SOC. 
+
+
+.. table:: SA2UL / Safety Configuration
+
+   +----------------------------------+--------------------------------+---------------------------------------------------+
+   | Element                          | Type                           | Description                                       |
+   +==================================+================================+===================================================+
+   | subhdr                           | boardcfg substructure header   | Magic and size for integrity check                |
+   +----------------------------------+--------------------------------+---------------------------------------------------+
+   | boardcfg substructure header     | u8                             | ID of the host allowed to acquire/release the     |
+   |                                  |                                | authentication resources. This feature is not     |
+   |                                  |                                | currently supported                               |
+   +----------------------------------+--------------------------------+---------------------------------------------------+
+   | Magic and size for               |                                | Flag for allowing pairing requests from PSIL.     |
+   | integrity check                  | ftbool                         | Set to 0x5A to enable                             |
+   +----------------------------------+--------------------------------+---------------------------------------------------+
+   | safety_host_info                 | u8[2]                          | {0x5AU, host id of Safety core}. For ex:          |
+   |                                  |                                | Host ID of R5 (pulsar_0) in J784S4 = 0x3          |
+   |                                  |                                | Host ID of WKUP R5 in AM62x      = 0x23           |
+   +----------------------------------+--------------------------------+---------------------------------------------------+
+
+Call TISCI API - TISCI_MSG_ALLOW_FWL_CTRL_READ 
+----------------------------------------------
+
+Call the TISCI API - TISCI_MSG_ALLOW_FWL_CTRL_READ to request the read access of the firewall configuration region to the safety core.
+
+Read firewall configuration data using the Safety Checker library API
+---------------------------------------------------------------------
+
+Once the read access to the firewall configuration region is granted to the safety core, the firewall configuration data can be read 
+in the safety core (via API call to the Safety Checker library API - implemented using the formula explained in the section - 
+:ref:`dref_secfwl_access_safety_core_func-reading`
+
+Call TISCI API - TISCI_MSG_FORBID_FWL_CTRL_READ 
+-----------------------------------------------
+
+Call the TISCI API -  TISCI_MSG_FORBID_FWL_CTRL_READ to disable the read access of the firewall configuration region to the safety core.
+
+.. _dref_secfwl_access_safety_core_func-reading:
+
+Reading the firewall data in the Safety core
+============================================
+
+Firewall Data of a particular firewall ID and region can be then read directly from the safety core.
+Firewall data of a given ID and contains 32 bytes for each region.
+
+For getting the firewall data of a given Firewall ID and a given region, the safety checker needs to read 32 bytes from the firewall region offset.
+
+The firewall region offset can be calculated using the below formula:
+
+Firewall base address + (ID x 1024) + (Region#  x 32)
+
+For eg:
+
+In J784S4, to calculate the firewall region offset of firewall Id 10, region 2,  read 32 bytes from below address - 
+
+0x45000000 + (10 x 1024) + (2 x 32) = 0x45002840

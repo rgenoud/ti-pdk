@@ -79,7 +79,7 @@
             
             
               <div class="version">
-                09.02.04
+                09.02.09
               </div>
             
           
@@ -126,6 +126,7 @@
 <li class="toctree-l3"><a class="reference internal" href="keywriter.html">OTP Keywriter TISCI Description</a></li>
 <li class="toctree-l3"><a class="reference internal" href="otp_revision.html">OTP Revision Read/Write Message Description</a></li>
 <li class="toctree-l3"><a class="reference internal" href="keyring.html">KEYRING TISCI Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="fwl_safety_core.html">FIREWALL READ ACCESS SAFETY CORE TISCI Description</a></li>
 </ul>
 </li>
 </ul>
@@ -912,7 +913,9 @@ Adding firewall extension without a host ID would lead to API failure.</p>
 </ul>
 </li>
 <li><code class="docutils literal"><span class="pre">enc_key_id</span></code><ul>
-<li>Keyid for decryption using symmetric keys.</li>
+<li>Keyid for decryption using symmetric keys. (<em>enc_key_id</em>
+should be set to 0. The support for symmetric keys will be
+added in the future releases.)</li>
 </ul>
 </li>
 </ol>
@@ -938,12 +941,14 @@ Adding firewall extension without a host ID would lead to API failure.</p>
 <div class="section" id="id14">
 <h4>Populating the certificate fields<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h4>
 <ol class="arabic simple">
-<li><code class="docutils literal"><span class="pre">num_symm_keys</span></code><ul>
-<li>Number of symmetric keys in the keyring.</li>
-</ul>
-</li>
 <li><code class="docutils literal"><span class="pre">num_asymm_keys</span></code><ul>
 <li>Number of asymmetric keys in the keyring.</li>
+</ul>
+</li>
+<li><code class="docutils literal"><span class="pre">num_symm_keys</span></code><ul>
+<li>Number of symmetric keys in the keyring. (<em>num_symm_keys</em>
+should be set to 0. The support for symmetric keys will be
+added in the future releases.)</li>
 </ul>
 </li>
 </ol>
@@ -1808,7 +1813,7 @@ Image integrity (<code class="docutils literal"><span class="pre">sysfw_image_in
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'09.02.04',
+            VERSION:'09.02.09',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

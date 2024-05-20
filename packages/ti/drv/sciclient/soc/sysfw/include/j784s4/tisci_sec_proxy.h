@@ -49,7 +49,7 @@
  *
  * Secure Proxy indices for J784S4 device
  *
- * Data version: 230112_095811
+ * Data version: 240306_111346
  *
  */
 #ifndef J784S4_TISCI_SEC_PROXY_H

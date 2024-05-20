@@ -1,0 +1,78 @@
+==================================================
+FIREWALL READ ACCESS SAFETY CORE TISCI Description
+==================================================
+
+.. _fwl_read_access_safety_core_desc:
+
+
+This chapter provides information on  |sysfw| firewall read access safety core API for . The 2 APIs are added to allow / disable 
+the read access of the firewall configuration region to the safety core. The available API are listed below.
+
++------------------+-----------------------------------------------------------------------+-----------------+--------------------+
+| TISCI Message ID |                        Message Name                                   | Available in GP | Available in HS-FS |
++==================+=======================================================================+=================+====================+
+| 0x902C           | :ref:`TISCI_MSG_ALLOW_FWL_CTRL_READ <fwl_allow_read_safety_core>`     | NO*             | Yes                |
++------------------+-----------------------------------------------------------------------+-----------------+--------------------+
+| 0x902D           | :ref:`TISCI_MSG_FORBID_FWL_CTRL_READ <fwl_forbid_read_safety_core>`   | NO*             | Yes                |
++------------------+-----------------------------------------------------------------------+-----------------+--------------------+
+
+API Description
+===============
+
+.. _fwl_allow_read_safety_core:
+
+TISCI_MSG_ALLOW_FWL_CTRL_READ - Allow fwl read access to safety core
+--------------------------------------------------------------------
+
+**Usage**:
+
++------------------------+--------+
+| **Message Type**       | Normal |
++------------------------+--------+
+| **Secure Queue Only?** | Yes    |
++------------------------+--------+
+
+TISCI Message ID
+----------------
+
+.. sysfwapimacro:: TISCI_MSG_ALLOW_FWL_CTRL_READ
+
+.. sysfwapistruct:: tisci_fwl_req
+
++------------------+-----------------------+---------------------------------------------------------------------------+
+| Parameter        |           Type        |                         Description                                       |
++==================+=======================+===========================================================================+
+| hdr              | struct tisci_header   |Generic TISCI message header. ACK response indicates that allowing the     |
+|                  |                       |read  access of firewall configuration region to safety core is successful.|
+|                  |                       |NACK response indicates that the configuration was not performed.          |
++------------------+-----------------------+---------------------------------------------------------------------------+
+
+.. _fwl_forbid_read_safety_core:
+
+TISCI_MSG_FORBID_FWL_CTRL_READ - forbid fwl read access to safety core
+----------------------------------------------------------------------
+
+**Usage**:
+
++------------------------+--------+
+| **Message Type**       | Normal |
++------------------------+--------+
+| **Secure Queue Only?** | Yes    |
++------------------------+--------+
+
+TISCI Message ID
+----------------
+
+.. sysfwapimacro:: TISCI_MSG_FORBID_FWL_CTRL_READ
+
+.. sysfwapistruct:: tisci_fwl_req
+
++-----------+--------------------+---------------------------------------------------------------------------+
+| Parameter |          Type      |                         Description                                       |
++===========+====================+===========================================================================+
+| hdr       |struct tisci_header |Generic TISCI message header. ACK response indicates that forbidding the   |
+|           |                    |read  access of firewall configuration region to safety core is successful.|
+|           |                    |NACK response indicates that the configuration was not performed.          |
++-----------+--------------------+---------------------------------------------------------------------------+
+
+
