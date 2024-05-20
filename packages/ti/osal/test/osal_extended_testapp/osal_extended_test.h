@@ -135,9 +135,6 @@ int32_t OsalApp_registerIntrTests(void);
 /* Top level function for clock tests */
 int32_t OsalApp_clockTests(void);
 
-/* Tests for CSL Arch for C7X */
-int32_t OsalApp_c7xArchTests(void);
-
 /* ========================================================================== */
 /*                       Static Function Definitions                          */
 /* ========================================================================== */

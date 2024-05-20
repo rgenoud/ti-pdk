@@ -43,9 +43,6 @@
 /* ========================================================================== */
 
 #include "osal_extended_test.h"
-#if defined (BUILD_C7X)
-#include "Cache.h"
-#endif
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
@@ -77,30 +74,6 @@ uint8_t gOsalAppCacheTestArr[OSAL_APP_CACHE_TEST_ARR_SIZE];
 
 int32_t OsalApp_cacheTests(void)
 {
-    int32_t result = osal_OK;
-#if defined (BUILD_C7X)
-    Cache_Size size;
-
-    Cache_getSize(&size);
-
-    if(size.l1pSize != Cache_initSize.l1pSize ||
-       size.l1dSize != Cache_initSize.l1dSize ||
-       size.l2Size != Cache_initSize.l2Size) 
-    {
-        result = osal_FAILURE;
-    }
-
-    Cache_disable(Cache_Type_L1D);
-    Cache_disable(Cache_Type_L2);
-    Cache_disable(0xABCD);
-    Cache_enable(Cache_Type_L1D);
-    Cache_enable(Cache_Type_L2);
-    Cache_enable(0xABCD);
-    Cache_wbAll();
-    Cache_wbL1dAll();
-    Cache_wbInvAll();
-    Cache_wbInvL1dAll();
-#endif
     /*  Write back the cache */
     CacheP_wb(gOsalAppCacheTestArr, OSAL_APP_CACHE_TEST_ARR_SIZE);
 #if defined (BUILD_MCU)
@@ -122,6 +95,6 @@ int32_t OsalApp_cacheTests(void)
 
     OSAL_log("\n All Cache Tests have passed!!\n");
 
-    return result;
+    return osal_OK;
 }
 

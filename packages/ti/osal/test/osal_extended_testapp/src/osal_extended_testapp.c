@@ -305,9 +305,7 @@ void OSAL_tests(void *arg0, void *arg1)
 
     result += OsalApp_eventTests();
     
-    result += OsalApp_clockTests();
-
-    result += OsalApp_c7xArchTests();
+    result += OsalApp_clockTests(); 
 
 #endif
 

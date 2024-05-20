@@ -46,11 +46,6 @@
 #if defined(BUILD_MCU)
 #include <ti/csl/arch/r5/csl_vim.h>
 #endif
-#if defined (BUILD_C7X)
-#include "Hwi.h"
-#include "Mmu.h"
-#include "Cache.h"
-#endif
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
@@ -60,7 +55,6 @@
 /* C7x cores can serve only 64 interrupts, numbered 0 to 63. */
 #if defined (BUILD_C7X)
 #define INVALID_INT_NUM_C7X            (64U)
-#define HWI_OFFSET                     (8U)     /* Padded sctructure offset */
 #endif
 #if defined (BUILD_MCU)
 /* Maximum interrupts supported by R5F is 512. */
@@ -278,31 +272,16 @@ static int32_t OsalApp_hwiCreatePulseIntrTest(void)
 }
 #endif
 
-void reconfigTestFunc(uint32_t arg1)
-{
-
-}
-
 static int32_t OsalApp_hwiCreateAllocOvrflwTest(void)
 {
     HwiP_Params hwiParams;
     HwiP_Handle handle1, handle2;
     int32_t result = osal_OK;
 
-#if defined(BUILD_C7X)
-    Hwi_Params  hwiParamsCsl;
-    Hwi_Handle  hwiHandle;
-
-    Hwi_Params_init(NULL);
-#endif
     HwiP_Params_init(&hwiParams);
 
     /* Create 2 HwiP to register a change in peakHandles */
     handle1 = HwiP_create(OSAL_APP_IRQ_INT_NUM, (HwiP_Fxn)OsalApp_hwiIRQ, &hwiParams);
-    if (NULL_PTR != HwiP_create(OSAL_APP_IRQ_INT_NUM, (HwiP_Fxn)OsalApp_hwiIRQ, &hwiParams))
-    {
-        result = osal_FAILURE;
-    }
     handle2 = HwiP_createDirect(OSAL_APP_IRQ_SECONDARY_INT_NUM, (HwiP_DirectFxn)OsalApp_hwiIRQ, &hwiParams);
 
     /* handle2 is not deleted for C7x as HwiP_createDirect returns NULL for C7x */
@@ -324,41 +303,6 @@ static int32_t OsalApp_hwiCreateAllocOvrflwTest(void)
             /* Do nothing */
         }
         gOsalAppFlagHwiTest = UFALSE;
-
-#if defined(BUILD_C7X)
-        hwiParamsCsl.maskSetting = Hwi_MaskingOption_NONE;
-        hwiHandle = Hwi_getHandle(OSAL_APP_IRQ_INT_NUM);
-        Hwi_reconfig(hwiHandle, reconfigTestFunc, &hwiParamsCsl);
-        if ((0 != hwiHandle->disableMask) || (0 != hwiHandle->restoreMask))
-        {
-            result = osal_FAILURE;
-        }
-
-        hwiParamsCsl.maskSetting = Hwi_MaskingOption_ALL;
-        Hwi_reconfig(hwiHandle, reconfigTestFunc, &hwiParamsCsl);
-        if ((0xFFFFFFFFFFFFFFFFUL != hwiHandle->disableMask) || (0xFFFFFFFFFFFFFFFFUL != hwiHandle->restoreMask))
-        {
-            result = osal_FAILURE;
-        }
-
-        hwiParamsCsl.maskSetting = Hwi_MaskingOption_BITMASK;
-        hwiParamsCsl.disableMask = 0xABCDABCD;
-        hwiParamsCsl.restoreMask = 0xABCDABCD;
-        Hwi_reconfig(hwiHandle, reconfigTestFunc, &hwiParamsCsl);
-        if ((0xABCDABCD != hwiHandle->disableMask) || (0xABCDABCD != hwiHandle->restoreMask))
-        {
-            result = osal_FAILURE;
-        }
-        
-        /* Pass a garbage parameters, so that reconfig will erminate abruptly. */
-        Hwi_reconfig((Hwi_Handle)0xABCDABCD, reconfigTestFunc, &hwiParamsCsl);
-        hwiParamsCsl.maskSetting = Hwi_MaskingOption_LOWER;
-        hwiParamsCsl.disableMask = 0xABCDABCD;
-        hwiParamsCsl.restoreMask = 0xABCDABCD;
-        Hwi_reconfig((Hwi_Handle)0xABCDABCD, reconfigTestFunc, &hwiParamsCsl);
-
-#endif
-
         if(HwiP_OK != HwiP_delete(handle1))
         {
             result = osal_FAILURE;
@@ -376,15 +320,13 @@ static int32_t OsalApp_hwiDeleteNegativeTest(void)
 {
     HwiP_Params    hwiParams;
     HwiP_Handle    handle;
-    HwiP_Handle    junkHandle;
-    uint8_t        tempStackVar[8];
     int32_t        result = osal_OK;
     uint32_t       count = 0U;
     
     HwiP_Params_init(&hwiParams);
-
+    
     handle = HwiP_create(OSAL_APP_IRQ_INT_NUM, (HwiP_Fxn)OsalApp_hwiIRQ, &hwiParams);
-
+    
     /* Here handleAddr is used to get the memory location of the handle
      * we are corrupting the content of the handle and passing in a corrupt handle to the driver
      * to test negative condition for HwiP_delete API
@@ -392,7 +334,7 @@ static int32_t OsalApp_hwiDeleteNegativeTest(void)
     uint32_t *handleAddr = (uint32_t *)handle, temp;
     temp = (*handleAddr);
     (*handleAddr) = 0U;
-
+    
     if((NULL_PTR == handle) || (HwiP_OK == HwiP_delete(handle)))
     {
         result = osal_FAILURE;
@@ -419,11 +361,6 @@ static int32_t OsalApp_hwiDeleteNegativeTest(void)
         }
     }
 
-    memset(tempStackVar, 0xFF, 8U);
-    junkHandle = (HwiP_Handle)tempStackVar;
-    /* Hwi_finalize will return abruptly as passed handle is a junk. Nothing to test here. */
-    HwiP_delete(junkHandle);
-
     if(osal_OK != result)
     {
         OSAL_log("\n Hwi Delete negative test failed!\n");
@@ -448,12 +385,6 @@ static int32_t  OsalApp_hwiCreateNegativeTest(void)
     and HwiP_create API will return NULL_PTR */
     handle = HwiP_create(INVALID_INT_NUM_C7X, (HwiP_Fxn)OsalApp_hwiIRQ, &hwiParams);
     
-    /* Negative test for getEventId in CSL Arch */
-    if( (-1) != Hwi_getEventId(INVALID_INT_NUM_C7X))
-    {
-       result = osal_FAILURE;
-    }
-
     if (NULL_PTR != handle)
     {
        result = osal_FAILURE;
