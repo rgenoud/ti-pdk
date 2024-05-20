@@ -566,6 +566,12 @@ int32_t Ipc_echo_neg_test(void)
 
     ipc_neg_test(i);
 
+    #if defined LDRA_DYN_COVERAGE_EXIT
+        UART_printf("\n LDRA ENTRY... \n");
+        upload_execution_history();
+        UART_printf("\n LDRA EXIT... \n");
+    #endif
+    
     UART_printf("Tests finished\n");
     UART_printf("Total tests: %d Passed: %d Failed %d\n", gTotalTests, gTotalTestsPassed, gTotalTestsFailed);
     if (gTotalTests == gTotalTestsPassed)

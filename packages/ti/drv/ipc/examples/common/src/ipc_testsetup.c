@@ -676,6 +676,13 @@ static void ipc_checker_task(void *arg0, void *arg1)
     }
 
     retEventMask = EventP_wait(gEventhandle, eventMask, EventP_WaitMode_ALL, EventP_WAIT_FOREVER);
+    
+    #if defined LDRA_DYN_COVERAGE_EXIT
+        UART_printf("\n LDRA ENTRY... \n");
+        upload_execution_history();
+        UART_printf("\n LDRA EXIT... \n");
+    #endif
+    
     if((retEventMask & eventMask) == eventMask)
     {
         App_printf("All tests have passed\n");
