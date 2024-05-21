@@ -84,6 +84,7 @@
 #include <ti/drv/ipc/examples/rtos/ipc_extended_test/ipc_extended_setup.h>
 #endif
 
+#include "ti/debug_qnr.c"
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
@@ -116,6 +117,19 @@
 /* ========================================================================== */
 /*                          Function Declarations                             */
 /* ========================================================================== */
+
+#ifdef BUILD_MCU1_0
+const char mcu_str[] = "MCU1_0";
+#endif
+#ifdef BUILD_MCU1_1
+const char mcu_str[] = "MCU1_1";
+#endif
+#ifdef BUILD_MCU2_0
+const char mcu_str[] = "MCU2_0";
+#endif
+#ifdef BUILD_MCU2_1
+const char mcu_str[] = "MCU2_1";
+#endif
 
 static void taskFxn(void* a0, void* a1);
 
@@ -290,7 +304,7 @@ static void taskFxn(void* a0, void* a1)
         OS_stop();
     }
 #endif
-
+    Lpm_debugFullPrintf("TRACE TEST2 : %s\n", mcu_str);
 #if defined (_TMS320C6X)
 #if defined (FREERTOS) || defined (SAFERTOS)
     ipc_cacheMarInit();
