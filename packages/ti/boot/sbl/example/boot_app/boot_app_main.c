@@ -176,7 +176,10 @@ static void BootApp_bootTaskFxn(void* a0, void* a1);
 static void BootApp_canTaskFxn(void* a0, void* a1);
 
 /**
- * \brief  Function to initialize Board Cfgs, PLLs, Module Clock for Main Domain and DDR 
+ * \brief  Function to configure Main Domain if SBL_USE_MCU_DOMAIN_ONLY is enabled.
+ *         - Initialize Board Cfgs, PLLs, Module Clock for Main Domain and DDR
+ *         - QoS settings
+ *         - Change GTC Parent
  *
  * \param  None
  *
@@ -406,6 +409,36 @@ static void BootApp_mainDomainSetup()
     SBL_SetQoS();
     #endif
 
+    #if defined(SOC_J721S2) || defined(SOC_J784S4)
+    /* Change the GTC Parent to MAIN_PLL3_HSDIV1_CLKOUT
+       Reason :
+        - for J721S2
+            - MAIN_PLL3 default frequency is 2 GHz
+            - MAIN_PLL3_HSDIV1_CLKOUT, MAIN_PLL3_HSDIV0_CLKOUT has the same divider value of 8
+        - for J784S4
+            - MAIN_PLL3 default frequency is 2.5 GHz
+            - MAIN_PLL3_HSDIV1_CLKOUT, MAIN_PLL3_HSDIV0_CLKOUT has the same divider value of 10
+        - By defalult MAIN_PLL3_HSDIV1_CLKOUT (first input parent of the GTC mux) is given as an input to the GTC
+        - MAIN_PLL3_HSDIV0_CLKOUT is given as input to the CPSW2G RGMI. CPSW2G RGMI needs 250MHz and GTC needs 200 MHz
+        - It is not possible to have 250 MHz for MAIN_PLL3_HSDIV0_CLKOUT (divider of 8 in case of J721S2 and 10 incase of J784S4)
+          and 200 MHz for MAIN_PLL3_HSDIV1_CLKOUT (divider of 8 in case of J721S2 and 10 incase of J784S4) with the same MAIN_PLL3 frequency.
+        - So change the parent of GTC clock to MAIN_PLL0_HSDIV6_CLKOUT */
+
+    UART_printf("Setting GTC clock parent frequency.... \r\n");
+    retVal = Sciclient_pmSetModuleClkParent(TISCI_DEV_GTC0,
+                                            TISCI_DEV_GTC0_GTC_CLK,
+                                            TISCI_DEV_GTC0_GTC_CLK_PARENT_POSTDIV3_16FFT_MAIN_0_HSDIVOUT6_CLK,
+                                            SCICLIENT_SERVICE_WAIT_FOREVER);
+    if (CSL_PASS != retVal)
+    {
+        UART_printf("Failed to set GTC clock parent \r\n");
+    }
+    else
+    {
+        UART_printf("Setting GTC clock parent frequency....done \r\n");
+    }
+    #endif
+
     return;
 }
 #endif
@@ -437,8 +470,8 @@ static uint32_t BootApp_loadImg(void)
 #if defined(BOOT_OSPI)
 #if defined(CAN_RESP_TASK_ENABLED)
     /* To measure CAN response, sbl_boot_perf_cust_img is used which doesn't setup the Main Domain
-     * and doesn't inialtize DDR for faster Boot time. 
-     * So, initializing Board Cfgs, PLLs and Module Clock for Main Domain and DDR */
+     * and doesn't initialize DDR for faster Boot time.
+     * Setting up Main Domain and initializing DDR before Booting cores */
     BootApp_mainDomainSetup();
 #endif
     SBL_SPI_init();
