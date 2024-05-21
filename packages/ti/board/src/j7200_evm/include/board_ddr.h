@@ -45,7 +45,7 @@
 #include <ti/csl/csl_emif.h>
 #include <ti/drv/sciclient/sciclient.h>
 
-#include "board.h"
+#include "ti/board/board.h"
 #include "board_pll.h"
 #include "board_utils.h"
 #include "board_internal.h"
