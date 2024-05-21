@@ -447,6 +447,34 @@ endef
 IPC_RTOS_MULTICORE_ECHO_TEST_MACRO_LIST := $(foreach curos, $(drvipc_RTOS_LIST) safertos, $(call IPC_RTOS_MULTICORE_ECHO_TEST_RULE,$(curos)))
 $(eval ${IPC_RTOS_MULTICORE_ECHO_TEST_MACRO_LIST})
 
+# Test Configuration: Dual core echo test for RTOS, uses ipc_rtos_echo_test
+define IPC_RTOS_DUALCORE_ECHO_TEST_RULE
+
+export ipc_rtos_dualcore_echo_test_$(1)_COMP_LIST = ipc_rtos_dualcore_echo_test_$(1)
+ipc_rtos_dualcore_echo_test_$(1)_RELPATH = ti/drv/ipc/examples/rtos/ipc_rtos_echo_test
+ipc_rtos_dualcore_echo_test_$(1)_BINPATH = $(PDK_INSTALL_PATH)/ti/binary/ipc_rtos_echo_test_$(1)/bin
+ipc_rtos_dualcore_echo_test_$(1)_PATH = $(PDK_IPC_COMP_PATH)/examples/rtos/ipc_rtos_echo_test
+export ipc_rtos_dualcore_echo_test_$(1)_BOARD_DEPENDENCY = yes
+export ipc_rtos_dualcore_echo_test_$(1)_CORE_DEPENDENCY = yes
+export ipc_rtos_dualcore_echo_test_$(1)_XDC_CONFIGURO = $(if $(findstring tirtos, $(1)), yes, no)
+export ipc_rtos_dualcore_echo_test_$(1)_MAKEFILE =  -f$(PDK_IPC_COMP_PATH)/examples/rtos/ipc_rtos_echo_test/ipc_rtos_dualcore_echo_test.mk BUILD_OS_TYPE=$(1)
+export ipc_rtos_dualcore_echo_test_$(1)_DEPENDS_ON=ipc_rtos_echo_test_$(1)
+ipc_rtos_dualcore_echo_test_$(1)_PKG_LIST = ipc_rtos_dualcore_echo_test_$(1)
+ipc_rtos_dualcore_echo_test_$(1)_INCLUDE = $(ipc_rtos_dualcore_echo_test_$(1)_PATH)
+export ipc_rtos_dualcore_echo_test_$(1)_BOARDLIST = $(filter $(DEFAULT_BOARDLIST_$(1)), $(drvipc_BOARDLIST))
+export ipc_rtos_dualcore_echo_test_$(1)_$(SOC)_CORELIST := mcu2_0
+export ipc_rtos_dualcore_echo_test_SBL_APPIMAGEGEN = no
+ifneq ($(1),$(filter $(1), safertos))
+ipc_DUP_EXAMPLE_LIST += ipc_rtos_dualcore_echo_test_$(1)
+else
+ifneq ($(wildcard $(SAFERTOS_KERNEL_INSTALL_PATH)),)
+ipc_DUP_EXAMPLE_LIST += ipc_rtos_dualcore_echo_test_$(1)
+endif
+endif
+endef
+IPC_RTOS_DUALCORE_ECHO_TEST_MACRO_LIST := $(foreach curos, $(drvipc_RTOS_LIST) safertos, $(call IPC_RTOS_DUALCORE_ECHO_TEST_RULE,$(curos)))
+$(eval ${IPC_RTOS_DUALCORE_ECHO_TEST_MACRO_LIST})
+
 # Test Configuration: Multicore echo test for baremetal, uses ipc_baremetal_echo_test
 export ipc_baremetal_multicore_echo_test_COMP_LIST = ipc_baremetal_multicore_echo_test
 ipc_baremetal_multicore_echo_test_RELPATH = ti/drv/ipc/examples/baremetal
@@ -463,6 +491,23 @@ export ipc_baremetal_multicore_echo_test_BOARDLIST = $(drvipc_BOARDLIST)
 export ipc_baremetal_multicore_echo_test_$(SOC)_CORELIST:= $(drvipc_$(SOC)_LASTCORE)
 export ipc_baremetal_multicore_echo_test_SBL_APPIMAGEGEN = no
 ipc_DUP_EXAMPLE_LIST += ipc_baremetal_multicore_echo_test
+
+# Test Configuration: Dual core echo test for baremetal, uses ipc_baremetal_echo_test
+export ipc_baremetal_dualcore_echo_test_COMP_LIST = ipc_baremetal_dualcore_echo_test
+ipc_baremetal_dualcore_echo_test_RELPATH = ti/drv/ipc/examples/baremetal
+ipc_baremetal_dualcore_echo_test_BINPATH = $(PDK_INSTALL_PATH)/ti/binary/ipc_baremetal_echo_test/bin
+ipc_baremetal_dualcore_echo_test_PATH = $(PDK_IPC_COMP_PATH)/examples/baremetal
+export ipc_baremetal_dualcore_echo_test_BOARD_DEPENDENCY = yes
+export ipc_baremetal_dualcore_echo_test_CORE_DEPENDENCY = yes
+export ipc_baremetal_dualcore_echo_test_XDC_CONFIGURO = $(if $(findstring tirtos, $(1)), yes, no)
+export ipc_baremetal_dualcore_echo_test_MAKEFILE = -f$(PDK_IPC_COMP_PATH)/examples/baremetal/ipc_baremetal_dualcore_echo_test.mk
+export ipc_baremetal_dualcore_echo_test_DEPENDS_ON = ipc_baremetal_echo_test ipc_rtos_echo_test_freertos
+ipc_baremetal_dualcore_echo_test_PKG_LIST = ipc_baremetal_dualcore_echo_test
+ipc_baremetal_dualcore_echo_test_INCLUDE = $(ipc_baremetal_dualcore_echo_test_PATH)
+export ipc_baremetal_dualcore_echo_test_BOARDLIST = $(drvipc_BOARDLIST)
+export ipc_baremetal_dualcore_echo_test_$(SOC)_CORELIST:= mcu2_0
+export ipc_baremetal_dualcore_echo_test_SBL_APPIMAGEGEN = no
+ipc_DUP_EXAMPLE_LIST += ipc_baremetal_dualcore_echo_test
 
 # Test Configuration: Multicore echo test for echo_testb, uses ipc_rtos_echo_testb
 define IPC_RTOS_MULTICORE_ECHO_TESTB_RULE
