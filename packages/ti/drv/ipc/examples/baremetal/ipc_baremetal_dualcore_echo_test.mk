@@ -4,18 +4,18 @@
 #
 include $(PDK_INSTALL_PATH)/ti/build/Rules.make
 
-APP_NAME = ipc_baremetal_multicore_echo_test
+APP_NAME = ipc_baremetal_dualcore_echo_test
 
 SRCDIR += $(PDK_IPC_COMP_PATH)/examples/ipc_baremetal_echo_test
 
 # Local name of IPC test app
 RPRC_PREFIX_BAREMETAL = ipc_baremetal_echo_test
 RPRC_PREFIX_RTOS = ipc_rtos_echo_test_freertos
+RPRC_OUT_NAME = ipc_baremetal_dualcore_test
 
 define BIN_PATH_PREFIX_RULE
 # baremetal ipc is supported for only mcu cores
 # Instead of baremetal mcu1_0, FREERTOS mcu1_0 binary has been used for multicore app because of sciserver dependency
-# For c66x and c7x cores FREERTOS binary has been used because baremetal ipc not supported on non-r5f cores.
 
 BIN_PATH_PREFIX_$(1) = $(if $(findstring $(1), $(filter-out mcu1_0, $(drvipc_$(SOC)_BAREMETAL_CORELIST))),\
 							$(pdk_PATH)/ti/binary/$(RPRC_PREFIX_BAREMETAL)/bin/$(BOARD)/$(RPRC_PREFIX_BAREMETAL),\
@@ -46,16 +46,16 @@ force_multi_core_img_gen.c:
 	$(ECHO) "# Combining RPRC images to generate multicore image...."
 	$(ECHO) "# BINDIR is $(BINDIR) CORELIST is $(filter-out mpu1_0, $(drvipc_$(SOC)_CORELIST))"
 	$(ECHO) "# MULTICORE_IMG_PARAMS are $(MULTICORE_IMG_PARAMS)"
-	$(SBL_IMAGE_GEN) LE $(SBL_DEV_ID) $(BINDIR)/$(RPRC_PREFIX_BAREMETAL)_all_cores_$(BUILD_PROFILE_$(CORE)).appimage $(MULTICORE_IMG_PARAMS)
+	$(SBL_IMAGE_GEN) LE $(SBL_DEV_ID) $(BINDIR)/$(RPRC_OUT_NAME)_all_cores_$(BUILD_PROFILE_$(CORE)).appimage $(MULTICORE_IMG_PARAMS)
 	$(ECHO) "#"
-	$(ECHO) "# Multicore IPC App image $(BINDIR)/$(RPRC_PREFIX_BAREMETAL)_all_cores_$(BUILD_PROFILE_$(CORE)).appimage created."
+	$(ECHO) "# Multicore IPC App image $(BINDIR)/$(RPRC_OUT_NAME)_all_cores_$(BUILD_PROFILE_$(CORE)).appimage created."
 	$(ECHO) "#"
 	$(ECHO) "# Signing the multicore image...."
 ifneq ($(OS),Windows_NT)
 	$(CHMOD) a+x $(SBL_CERT_GEN)
 endif
-	$(SBL_CERT_GEN) -b $(BINDIR)/$(RPRC_PREFIX_BAREMETAL)_all_cores_$(BUILD_PROFILE_$(CORE)).appimage -o $(BINDIR)/$(RPRC_PREFIX_BAREMETAL)_all_cores_$(BUILD_PROFILE_$(CORE)).appimage.signed -c R5 -l $(SBL_RUN_ADDRESS) -k $(SBL_CERT_KEY_HS)
-	$(SBL_CERT_GEN) -b $(BINDIR)/$(RPRC_PREFIX_BAREMETAL)_all_cores_$(BUILD_PROFILE_$(CORE)).appimage -o $(BINDIR)/$(RPRC_PREFIX_BAREMETAL)_all_cores_$(BUILD_PROFILE_$(CORE)).appimage.hs_fs -c R5 -l $(SBL_RUN_ADDRESS) -k $(SBL_CERT_KEY)
+	$(SBL_CERT_GEN) -b $(BINDIR)/$(RPRC_OUT_NAME)_all_cores_$(BUILD_PROFILE_$(CORE)).appimage -o $(BINDIR)/$(RPRC_OUT_NAME)_all_cores_$(BUILD_PROFILE_$(CORE)).appimage.signed -c R5 -l $(SBL_RUN_ADDRESS) -k $(SBL_CERT_KEY_HS)
+	$(SBL_CERT_GEN) -b $(BINDIR)/$(RPRC_OUT_NAME)_all_cores_$(BUILD_PROFILE_$(CORE)).appimage -o $(BINDIR)/$(RPRC_OUT_NAME)_all_cores_$(BUILD_PROFILE_$(CORE)).appimage.hs_fs -c R5 -l $(SBL_RUN_ADDRESS) -k $(SBL_CERT_KEY)
 
 # Core/SoC/platform specific source files and CFLAGS
 # Example:

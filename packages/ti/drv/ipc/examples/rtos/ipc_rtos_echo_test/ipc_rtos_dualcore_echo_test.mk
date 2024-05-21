@@ -4,12 +4,13 @@
 #
 include $(PDK_INSTALL_PATH)/ti/build/Rules.make
 
-APP_NAME = ipc_rtos_multicore_echo_test_$(BUILD_OS_TYPE)
+APP_NAME = ipc_rtos_dualcore_echo_test_$(BUILD_OS_TYPE)
 
 SRCDIR      += $(PDK_IPC_COMP_PATH)/examples/ipc_rtos_echo_test
 
 # Local name of IPC test app
 RPRC_PREFIX = ipc_rtos_echo_test
+RPRC_OUT_NAME = ipc_rtos_dualcore_test
 
 define BIN_PATH_PREFIX_RULE
 
@@ -39,16 +40,16 @@ force_multi_core_img_gen.c:
 	$(ECHO) "# Combining RPRC images to generate multicore image...."
 	$(ECHO) "# BINDIR is $(BINDIR) CORELIST is $(drvipc_$(SOC)_RTOS_CORELIST)"
 	$(ECHO) "# MULTICORE_IMG_PARAMS are $(MULTICORE_IMG_PARAMS)"
-	$(SBL_IMAGE_GEN) LE $(SBL_DEV_ID) $(BINDIR)/$(RPRC_PREFIX)_$(BUILD_OS_TYPE)_all_cores_$(BUILD_PROFILE_$(CORE)).appimage $(MULTICORE_IMG_PARAMS)
+	$(SBL_IMAGE_GEN) LE $(SBL_DEV_ID) $(BINDIR)/$(RPRC_OUT_NAME)_$(BUILD_OS_TYPE)_all_cores_$(BUILD_PROFILE_$(CORE)).appimage $(MULTICORE_IMG_PARAMS)
 	$(ECHO) "#"
-	$(ECHO) "# Multicore IPC App image $(BINDIR)/$(RPRC_PREFIX)_$(BUILD_OS_TYPE)_all_cores_$(BUILD_PROFILE_$(CORE)).appimage created."
+	$(ECHO) "# Multicore IPC App image $(BINDIR)/$(RPRC_OUT_NAME)_$(BUILD_OS_TYPE)_all_cores_$(BUILD_PROFILE_$(CORE)).appimage created."
 	$(ECHO) "#"
 	$(ECHO) "# Signing the multicore image...."
 ifneq ($(OS),Windows_NT)
 	$(CHMOD) a+x $(SBL_CERT_GEN)
 endif
-	$(SBL_CERT_GEN) -b $(BINDIR)/$(RPRC_PREFIX)_$(BUILD_OS_TYPE)_all_cores_$(BUILD_PROFILE_$(CORE)).appimage -o $(BINDIR)/$(RPRC_PREFIX)_$(BUILD_OS_TYPE)_all_cores_$(BUILD_PROFILE_$(CORE)).appimage.signed -c R5 -l $(SBL_RUN_ADDRESS) -k $(SBL_CERT_KEY_HS)
-	$(SBL_CERT_GEN) -b $(BINDIR)/$(RPRC_PREFIX)_$(BUILD_OS_TYPE)_all_cores_$(BUILD_PROFILE_$(CORE)).appimage -o $(BINDIR)/$(RPRC_PREFIX)_$(BUILD_OS_TYPE)_all_cores_$(BUILD_PROFILE_$(CORE)).appimage.hs_fs -c R5 -l $(SBL_RUN_ADDRESS) -k $(SBL_CERT_KEY)
+	$(SBL_CERT_GEN) -b $(BINDIR)/$(RPRC_OUT_NAME)_$(BUILD_OS_TYPE)_all_cores_$(BUILD_PROFILE_$(CORE)).appimage -o $(BINDIR)/$(RPRC_OUT_NAME)_$(BUILD_OS_TYPE)_all_cores_$(BUILD_PROFILE_$(CORE)).appimage.signed -c R5 -l $(SBL_RUN_ADDRESS) -k $(SBL_CERT_KEY_HS)
+	$(SBL_CERT_GEN) -b $(BINDIR)/$(RPRC_OUT_NAME)_$(BUILD_OS_TYPE)_all_cores_$(BUILD_PROFILE_$(CORE)).appimage -o $(BINDIR)/$(RPRC_OUT_NAME)_$(BUILD_OS_TYPE)_all_cores_$(BUILD_PROFILE_$(CORE)).appimage.hs_fs -c R5 -l $(SBL_RUN_ADDRESS) -k $(SBL_CERT_KEY)
 
 # Core/SoC/platform specific source files and CFLAGS
 # Example:
