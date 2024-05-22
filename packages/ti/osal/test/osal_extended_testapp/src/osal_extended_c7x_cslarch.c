@@ -79,11 +79,13 @@ static int32_t OsalApp_mmuTests(void){
     Mmu_disable();
     Mmu_enable();
 #endif
-    return osal_OK;
+    return result;
 }
 
 int32_t OsalApp_c7xHwiTests(void){
     Hwi_StackInfo stkInfo;
+    int32_t result = osal_OK;
+
 #if defined (BUILD_C7X)
     /* Pass invalid interrupt number to event map. It should return abruptly.
      * Does not return any value, hence nothing to check it against.
@@ -92,7 +94,7 @@ int32_t OsalApp_c7xHwiTests(void){
 #endif
 
     Hwi_getStackInfo(&stkInfo, false);
-    if(0 == stkInfo->hwiStackPeak)
+    if(0 == stkInfo.hwiStackPeak)
     {
         result = osal_FAILURE;
     }
