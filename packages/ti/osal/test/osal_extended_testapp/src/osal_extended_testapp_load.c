@@ -49,13 +49,15 @@
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-/* None */
+#define OSAL_APP_TASK_STACK_SIZE  (1*1024U)
 
 /* ========================================================================== */
 /*                            Global Variables                                */
 /* ========================================================================== */
 
-/* None */
+uint8_t gOsalAppTskStack[OSAL_APP_TASK_STACK_SIZE] __attribute__((aligned(OSAL_APP_TASK_STACK_SIZE)));
+extern void LoadP_removeTask(uint32_t tskId);
+extern uint32_t TaskP_getTaskId(TaskP_Handle handle);
 
 /* ========================================================================== */
 /*                           Function Declarations                            */
@@ -70,6 +72,11 @@ static int32_t OsalApp_freertosLoadNullTest(void);
  * Description: Testing Negative condition for LoadP_calcCounterDiff API
  */
 static int32_t OsalApp_freertosLoadCounterDiffTest(void);
+
+/*
+ * Description: Testing Negative condition for LoadP_getTaskLoad API
+ */
+static int32_t OsalApp_taskLoadNegativeTest(void);
 
 /* ========================================================================== */
 /*                    Internal Function Definitions                           */
@@ -109,6 +116,50 @@ static int32_t OsalApp_freertosLoadCounterDiffTest(void)
     return result;
 }
 
+static void OsalApp_dummytaskFxn(void *arg)
+{
+    /* Do Nothing */
+}
+
+static int32_t OsalApp_taskLoadNegativeTest(void)
+{
+    TaskP_Params    params;
+    TaskP_Handle    tskHandle;
+    LoadP_Stats     stats;
+    int32_t         result = osal_OK;
+
+    TaskP_Params_init(&params);
+    params.priority = 1;
+    memset(gOsalAppTskStack, 0, sizeof(gOsalAppTskStack));
+    params.stack    = gOsalAppTskStack;
+    params.stacksize = sizeof(gOsalAppTskStack);
+
+    tskHandle = TaskP_create((TaskP_Fxn)OsalApp_dummytaskFxn, &params);
+    if(NULL == tskHandle)
+    {
+        result = osal_FAILURE;
+    }
+    else
+    {
+        LoadP_removeTask(TaskP_getTaskId(tskHandle));
+        if(LoadP_OK == LoadP_getTaskLoad(tskHandle, &stats))
+        {
+            result = osal_FAILURE;
+        }
+        if(TaskP_OK != TaskP_delete(&tskHandle))
+        {
+            result = osal_FAILURE;
+        }
+    }
+    
+    if(osal_OK != result)
+    {
+        OSAL_log("Negative test for task Load has failed!!\n");
+    }
+
+    return result;
+}
+
 /* ========================================================================== */
 /*                          Function Definitions                              */
 /* ========================================================================== */
@@ -119,6 +170,7 @@ int32_t OsalApp_freertosLoadTests(void)
     
     result += OsalApp_freertosLoadNullTest();
     result += OsalApp_freertosLoadCounterDiffTest();
+    result += OsalApp_taskLoadNegativeTest();
     
     if(osal_OK == result)
     {

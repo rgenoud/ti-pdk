@@ -125,6 +125,7 @@ static int32_t OsalApp_mailboxPostPendNegativeTest(void);
 #endif
 
 #if defined(FREERTOS)
+
 /* 
  * Description: Test the mailbox Delete by making handle as NULL_PTR..
  */
@@ -134,6 +135,12 @@ static int32_t OsalApp_mailboxDeleteNegativeTest(void);
  * Description  : Tests MailboxP create when the used parameter of mailbox is 0.
  */
 static int32_t OsalApp_mailboxUsedTest(void);
+
+/* 
+ * Description: Test the mailbox pend negative condition
+ */
+static int32_t OsalApp_mailboxPendNegativeTest(void);
+
 #endif
 
 /* ================================================================================== */
@@ -487,6 +494,7 @@ static int32_t OsalApp_mailboxPostPendNegativeTest(void)
 #endif
 
 #if defined(FREERTOS)
+
 static int32_t OsalApp_mailboxUsedTest(void)
 {
     MailboxP_Params params;
@@ -576,6 +584,53 @@ static int32_t OsalApp_mailboxDeleteNegativeTest(void)
     return result;
   
 }
+
+static int32_t OsalApp_mailboxPendNegativeTest(void)
+{
+    MailboxP_Params    params;
+    MailboxP_Handle    handle;
+    int32_t            result = osal_OK;
+
+    MailboxP_Params_init(&params);
+    params.count = strlen((char *)gOsalAppStrToSend);
+    params.size  = sizeof(uint8_t);
+    memset(gOsalAppMbQueueBuf, 0U, sizeof(gOsalAppMbQueueBuf)/sizeof(gOsalAppMbQueueBuf[0]));
+    params.buf = gOsalAppMbQueueBuf;
+    params.bufsize = (params.count * params.size) + OSAL_APP_MAILBOX_OVERHEAD;
+
+    handle = MailboxP_create(&params);
+    if(NULL_PTR == handle)
+    {
+        result = osal_FAILURE;
+    }
+    else
+    {
+        /* Trying to pend without having the mailbox posted, to check the negative condition
+         * This is acceptable, as we are not blocking. The timeout being used is 0U.
+         */
+        if(MailboxP_OK == MailboxP_pend(handle, gOsalApprecvBuf, 0U))
+        {
+            result = osal_FAILURE;
+        }
+#if defined(SAFERTOS)
+        MailboxP_delete(handle);
+#elif defined(FREERTOS)
+        /* MainlboxP_delete is a dummy call for SafeRTOS. */
+        if(MailboxP_OK != MailboxP_delete(handle))
+        {
+            result = osal_FAILURE;
+        }
+#endif
+    }
+
+    if(osal_OK != result)
+    {
+        OSAL_log("\n Mailbox Pend Negative has failed!!\n");
+    }
+
+    return result;
+}
+
 #endif
 
 int32_t OsalApp_mailboxTests(void)
@@ -589,6 +644,7 @@ int32_t OsalApp_mailboxTests(void)
     #if defined(FREERTOS)
     result += OsalApp_mailboxDeleteNegativeTest();
     result += OsalApp_mailboxUsedTest();
+    result += OsalApp_mailboxPendNegativeTest(); 
     #endif
     result += OsalApp_mailboxPendPostTest(OSAL_APP_MB_TIMEOUT);
     result += OsalApp_mailboxPendPostTest(0);
@@ -596,8 +652,8 @@ int32_t OsalApp_mailboxTests(void)
     #if defined(BUILD_MCU)
     result += OsalApp_mailboxISRTest();
     #endif
-    result += OsalApp_mailboxCreateMultipleTest();
-        
+    result += OsalApp_mailboxCreateMultipleTest(); 
+  
     if(osal_OK == result)
     {
         OSAL_log("\n All Mailbox tests have passed!!\n");

@@ -196,10 +196,7 @@ ClockP_Handle ClockP_create(ClockP_FxnCallback clockfxn,
                     key = HwiP_disable();
                     pTimer->used      = BFALSE;
                     /* Found the osal clock object to delete */
-                    if (0U < gOsalClockAllocCnt)
-                    {
-                        gOsalClockAllocCnt--;
-                    }
+                    gOsalClockAllocCnt--;
                     HwiP_restore(key);
                     ret_handle = NULL_PTR;
                 }

@@ -389,7 +389,7 @@ static int32_t OsalApp_hwiCreateAllocOvrflwTest(void)
 
     /* Create 2 HwiP to register a change in peakHandles */
     handle1 = HwiP_create(OSAL_APP_IRQ_INT_NUM, (HwiP_Fxn)OsalApp_hwiIRQ, &hwiParams);
-    if (NULL_PTR != HwiP_create(OSAL_APP_IRQ_INT_NUM, (HwiP_Fxn)OsalApp_hwiIRQ, &hwiParams))
+    if (NULL_PTR == HwiP_create(OSAL_APP_IRQ_INT_NUM, (HwiP_Fxn)OsalApp_hwiIRQ, &hwiParams))
     {
         result = osal_FAILURE;
     }

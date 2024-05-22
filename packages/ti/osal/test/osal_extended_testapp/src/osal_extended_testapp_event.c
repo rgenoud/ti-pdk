@@ -322,6 +322,7 @@ static int32_t OsalApp_maxEventTest(void)
 }
 
 #if defined(SAFERTOS) 
+
 static int32_t OsalApp_eventSafeNegPostTest(void)
 {
     EventP_Params   params;
@@ -359,6 +360,85 @@ static int32_t OsalApp_eventSafeNegPostTest(void)
 
     return result;
 }
+
+static int32_t OsalApp_isInISRCNegEventTest(void)
+{
+    uint32_t      interruptNum = OSAL_APP_INT_NUM_IRQ, timeout = 0x10000U;
+    int32_t       result = osal_OK;
+    HwiP_Params   hwipParams;
+    HwiP_Handle   handle;
+    EventP_Params eventParams;
+
+    EventP_Params_init(&eventParams);
+    HwiP_Params_init(&hwipParams);
+    handle = HwiP_create(interruptNum, (HwiP_Fxn)OsalApp_eventIRQ, &hwipParams);
+    gOsalAppISRCtxEventHandle = EventP_create(&eventParams);
+
+    /* Storing the handle, Eventhandler in the temp which will be corrupted later */
+    uint32_t * handleAddr = (uint32_t *)gOsalAppISRCtxEventHandle;
+    uint32_t temp = *(handleAddr + OSAL_APP_EVTHANDLE_OFFSET);
+    if((NULL_PTR == handle) || (NULL_PTR == gOsalAppISRCtxEventHandle))
+    {
+        result = osal_FAILURE;
+    }
+
+    if(osal_OK == result)
+    {
+        HwiP_enableInterrupt(interruptNum);
+
+        /* Corrupting the eventHandler with zero value*/
+        *(handleAddr + OSAL_APP_EVTHANDLE_OFFSET) = 0U;
+        if(HwiP_OK != HwiP_post(interruptNum))
+        {
+            result = osal_FAILURE;
+        }
+    }
+
+    if(osal_OK == result)
+    {
+        /* Wait for software timeout, ISR should hit
+        * otherwise return the test as failed */
+        while(timeout--)
+        {
+            if(1U == gOsalAppISRisExecuted)
+            {
+                break;
+            }
+        }
+        /* Wait is over - did not get any interrupts posted/received
+        * declare the test as fail
+        */
+        if(0U == timeout)
+        {
+            result = osal_FAILURE;
+        }
+    }
+
+    if(NULL_PTR != handle)
+    {
+        if(HwiP_OK != HwiP_delete(handle))
+        {
+            result = osal_FAILURE;
+        }
+    }
+    /* Restoring eventHandler value and deleting the event */
+    *(handleAddr + OSAL_APP_EVTHANDLE_OFFSET) = temp;
+    if(NULL_PTR != gOsalAppISRCtxEventHandle)
+    {
+        if(EventP_OK != EventP_delete((EventP_Handle)&gOsalAppISRCtxEventHandle))
+        {
+            result = osal_FAILURE;
+        }
+    }
+
+    if(result != osal_OK)
+    {
+        OSAL_log("\t ISR context Negative test for Event has failed!! \n");
+    }
+    
+    return result;
+}
+
 #endif
 
 /* ========================================================================== */
@@ -375,8 +455,9 @@ int32_t OsalApp_eventTests(void)
     result += OsalApp_maxEventTest();
 #if defined(SAFERTOS)
     result += OsalApp_eventSafeNegPostTest();
+    result += OsalApp_isInISRCNegEventTest();
 #endif
-    
+
     if(osal_OK == result)
     {
         OSAL_log("\n All Event tests have passed! \n");
