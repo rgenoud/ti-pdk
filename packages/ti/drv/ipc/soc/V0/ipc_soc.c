@@ -349,8 +349,6 @@ int32_t Ipc_main2mcu_intRouter(Ipc_MbConfig *cfg)
     return retVal;
 }
 
-#ifdef IPC_SUPPORT_SCICLIENT
-
 /* Indexed list of req type */
 static const uint16_t req_type[] =
 {
@@ -494,8 +492,6 @@ int32_t Ipc_getIntNumRange(uint32_t coreIndex,
 
     return retVal;
 }
-
-#endif
 
 uint32_t Ipc_getCoreId(void)
 {

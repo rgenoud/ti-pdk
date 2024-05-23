@@ -78,33 +78,6 @@ extern "C" {
 #define    MAIN_NAVSS_MAILBOX_INPUTINTR_MAX    (440U)
 #define    MAIN_NAVSS_MAILBOX_OUTPUTINTR_MAX   (512U)
 
-/* Refer to J721S2 interrupt mapping table and BoardCfg Resource allocation */
-/* Note: In case of IPC_SUPPORT_SCICLIENT this is not actually used, since
- * the range is returned from the BoardCfg */
-#ifndef QNX_OS
-#define    NAVSS512_MPU1_0_INPUT_MAILBOX_OFFSET             (105U)
-#define    NAVSS512_MPU1_0_INPUT_MAILBOX_VIM_OFFSET         (457U)
-#else
-#define    NAVSS512_MPU1_0_INPUT_MAILBOX_OFFSET             (112U)
-#define    NAVSS512_MPU1_0_INPUT_MAILBOX_VIM_OFFSET         (464U)
-#endif
-#define    NAVSS512_MCU1R5F0_INPUT_MAILBOX_OFFSET           (400U)
-#define    NAVSS512_MCU1R5F0_INPUT_MAILBOX_VIM_OFFSET       (376U)
-#define    NAVSS512_MCU1R5F1_INPUT_MAILBOX_OFFSET           (404U)
-#define    NAVSS512_MCU1R5F1_INPUT_MAILBOX_VIM_OFFSET       (380U)
-#define    NAVSS512_MCU2R5F0_INPUT_MAILBOX_OFFSET           (219U)
-#define    NAVSS512_MCU2R5F0_INPUT_MAILBOX_VIM_OFFSET       (251U)
-#define    NAVSS512_MCU2R5F1_INPUT_MAILBOX_OFFSET           (251U)
-#define    NAVSS512_MCU2R5F1_INPUT_MAILBOX_VIM_OFFSET       (251U)
-#define    NAVSS512_MCU3R5F0_INPUT_MAILBOX_OFFSET           (283U)
-#define    NAVSS512_MCU3R5F0_INPUT_MAILBOX_VIM_OFFSET       (251U)
-#define    NAVSS512_MCU3R5F1_INPUT_MAILBOX_OFFSET           (315U)
-#define    NAVSS512_MCU3R5F1_INPUT_MAILBOX_VIM_OFFSET       (251U)
-#define    NAVSS512_C7X1_INPUT_MAILBOX_OFFSET               (158U)
-#define    NAVSS512_C7X1_INPUT_MAILBOX_VIM_OFFSET           (702U)
-#define    NAVSS512_C7X2_INPUT_MAILBOX_OFFSET               (179U)
-#define    NAVSS512_C7X2_INPUT_MAILBOX_VIM_OFFSET           (723U)
-
 #define IPC_MCU_NAVSS0_INTR0_CFG_BASE    (CSL_NAVSS0_INTR0_INTR_ROUTER_CFG_BASE)
 
 /* For C7x, DMSC does not configure or map CLEC router
@@ -157,14 +130,12 @@ extern "C" {
 uint32_t Ipc_configClecRouter(uint32_t coreEvent, uint32_t coreEventBase);
 #endif
 
-#ifdef IPC_SUPPORT_SCICLIENT
 int32_t Ipc_sciclientIrqRelease(uint16_t remoteId, uint32_t clusterId,
         uint32_t userId, uint32_t intNumber);
 int32_t Ipc_sciclientIrqSet(uint16_t remoteId, uint32_t clusterId,
         uint32_t userId, uint32_t intNumber);
 int32_t Ipc_getIntNumRange(uint32_t coreIndex, uint16_t *rangeStartP,
         uint16_t *rangeNumP);
-#endif
 
 /* ========================================================================== */
 /*                       Static Function Definitions                          */

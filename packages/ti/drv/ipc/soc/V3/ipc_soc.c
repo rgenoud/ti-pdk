@@ -346,7 +346,6 @@ int32_t Ipc_setCoreEventId(uint32_t selfId, Ipc_MbConfig* cfg, uint32_t intrCnt)
     static uint16_t   range    = 0;
     uint16_t   offset   = 0;
 
-#ifdef IPC_SUPPORT_SCICLIENT
     /* Get available CorePack IRQ number from DMSC */
     if( (start == 0U) && (range == 0U))
     {
@@ -385,53 +384,7 @@ int32_t Ipc_setCoreEventId(uint32_t selfId, Ipc_MbConfig* cfg, uint32_t intrCnt)
     {
         retVal = IPC_EFAIL;
     }
-#endif
 
-#ifndef IPC_SUPPORT_SCICLIENT
-    /* In case of IPC_SUPPORT_SCICLIENT, 'outIntrBaseNum' is derived from the range returned
-     * from BoardCfg and 'vimEventBaseNum' is decoded from 'outIntrBaseNum'*/
-    switch(selfId)
-    {
-        case IPC_MPU1_0:
-            outIntrBaseNum  = NAVSS512_MPU1_0_INPUT_MAILBOX_OFFSET;
-            vimEventBaseNum = NAVSS512_MPU1_0_INPUT_MAILBOX_VIM_OFFSET;
-            break;
-        case IPC_MCU1_0:
-            outIntrBaseNum  = NAVSS512_MCU1R5F0_INPUT_MAILBOX_OFFSET;
-            vimEventBaseNum = NAVSS512_MCU1R5F0_INPUT_MAILBOX_VIM_OFFSET;
-            break;
-        case IPC_MCU1_1:
-            outIntrBaseNum  = NAVSS512_MCU1R5F1_INPUT_MAILBOX_OFFSET;
-            vimEventBaseNum = NAVSS512_MCU1R5F1_INPUT_MAILBOX_VIM_OFFSET;
-            break;
-        case IPC_MCU2_0:
-            outIntrBaseNum  = NAVSS512_MCU2R5F0_INPUT_MAILBOX_OFFSET;
-            vimEventBaseNum = NAVSS512_MCU2R5F0_INPUT_MAILBOX_VIM_OFFSET;
-            break;
-        case IPC_MCU2_1:
-            outIntrBaseNum  = NAVSS512_MCU2R5F1_INPUT_MAILBOX_OFFSET;
-            vimEventBaseNum = NAVSS512_MCU2R5F1_INPUT_MAILBOX_VIM_OFFSET;
-            break;
-        case IPC_MCU3_0:
-            outIntrBaseNum  = NAVSS512_MCU3R5F0_INPUT_MAILBOX_OFFSET;
-            vimEventBaseNum = NAVSS512_MCU3R5F0_INPUT_MAILBOX_VIM_OFFSET;
-            break;
-        case IPC_MCU3_1:
-            outIntrBaseNum  = NAVSS512_MCU3R5F1_INPUT_MAILBOX_OFFSET;
-            vimEventBaseNum = NAVSS512_MCU3R5F1_INPUT_MAILBOX_VIM_OFFSET;
-            break;
-        case IPC_C7X_1:
-            outIntrBaseNum  = NAVSS512_C7X1_INPUT_MAILBOX_OFFSET;
-            vimEventBaseNum = NAVSS512_C7X1_INPUT_MAILBOX_VIM_OFFSET;
-            break;
-        case IPC_C7X_2:
-            outIntrBaseNum  = NAVSS512_C7X2_INPUT_MAILBOX_OFFSET;
-            vimEventBaseNum = NAVSS512_C7X2_INPUT_MAILBOX_VIM_OFFSET;
-            break;
-        default:
-            break;
-    }
-#endif
     cfg->outputIntrNum = outIntrBaseNum + intrCnt;
     cfg->eventId       = vimEventBaseNum + intrCnt;
     cfg->eventIdBase   = vimEventBaseNum;
@@ -501,8 +454,6 @@ uint32_t Ipc_configClecRouter(uint32_t corePackEvent, uint32_t corePackEventBase
     return corepackIrq;
 }
 #endif
-
-#ifdef IPC_SUPPORT_SCICLIENT
 
 /* Indexed list of dst ids */
 static const uint16_t map_dst_id[] =
@@ -664,8 +615,6 @@ int32_t Ipc_getIntNumRange(uint32_t coreIndex,
     }
     return retVal;
 }
-
-#endif
 
 uint32_t Ipc_getCoreId(void)
 {

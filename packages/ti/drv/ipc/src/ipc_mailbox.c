@@ -554,9 +554,6 @@ void *Mailbox_plugInterrupt(Ipc_MbConfig *cfg, Ipc_OsalIsrFxn func, uintptr_t ar
     OsalInterruptRetCode_e      osalRetVal;
     HwiP_Handle                 hwiHandle = NULL;
     uint32_t                    coreIntrNum = 0U;
-#ifndef IPC_SUPPORT_SCICLIENT
-    CSL_IntrRouterCfg           irRegs;
-#endif
 
 #ifdef DEBUG_PRINT
     SystemP_printf("Navss Rtr: input %d, output %d%d\n",
@@ -568,39 +565,6 @@ void *Mailbox_plugInterrupt(Ipc_MbConfig *cfg, Ipc_OsalIsrFxn func, uintptr_t ar
         cfg->inputIntrNum, cfg->outputIntrNum);
 #endif
 #endif
-#ifndef IPC_SUPPORT_SCICLIENT
-    /* Configure Main NavSS512 interrupt router */
-    #ifdef QNX_OS
-    if(g_navssIntRtrBaseVirtAddr == 0)
-    {
-        g_navssIntRtrBaseVirtAddr = IpcUtils_getMemoryAddress(IPC_MCU_NAVSS0_INTR0_CFG_BASE,
-                NVSS_INTRTR_SIZE );
-    }
-    irRegs.pIntrRouterRegs = (CSL_intr_router_cfgRegs *)g_navssIntRtrBaseVirtAddr;
-    irRegs.pIntdRegs       = (CSL_intr_router_intd_cfgRegs *) NULL;
-    irRegs.numInputIntrs   = MAIN_NAVSS_MAILBOX_INPUTINTR_MAX;
-    irRegs.numOutputIntrs  = MAIN_NAVSS_MAILBOX_OUTPUTINTR_MAX;
-    CSL_intrRouterCfgMux(&irRegs, cfg->inputIntrNum, cfg->outputIntrNum);
-    #else
-    irRegs.pIntrRouterRegs = (CSL_intr_router_cfgRegs *)IPC_MCU_NAVSS0_INTR0_CFG_BASE;
-    irRegs.pIntdRegs       = (CSL_intr_router_intd_cfgRegs *) NULL;
-    irRegs.numInputIntrs   = MAIN_NAVSS_MAILBOX_INPUTINTR_MAX;
-    irRegs.numOutputIntrs  = MAIN_NAVSS_MAILBOX_OUTPUTINTR_MAX;
-    CSL_intrRouterCfgMux(&irRegs, cfg->inputIntrNum, cfg->outputIntrNum);
-    #endif
-
-#if defined (SOC_AM65XX)
-#if defined(BUILD_MCU1_0) || defined(BUILD_MCU1_1)
-    Ipc_main2mcu_intRouter(cfg);
-#endif
-#endif
-
-    /* Configure C66x Interrupt Router now */
-#if defined(BUILD_C66X)
-    Ipc_configC66xIntrRouter(cfg->eventId );
-#endif
-
-#endif  /* IPC_SUPPORT_SCICLIENT */
 
     /*
      * CLEC needs to be configured for all modes - CSL and Sciclient

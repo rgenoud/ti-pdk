@@ -27,7 +27,7 @@ SRCS_COMMON += ipc_osal.c
 
 PACKAGE_SRCS_COMMON = ipc.h ipc_component.mk makefile .gitignore include $(SRCDIR)
 PACKAGE_SRCS_COMMON += soc/ipc_soc.h src/mailbox src/mailbox/csl_mailbox.h  src/mailbox/cslr_mailbox.h
-CFLAGS_LOCAL_COMMON += $(PDK_CFLAGS) $(IPC_CFLAGS) -DIPC_SUPPORT_SCICLIENT -DIPC_EXCLUDE_POLLED_RX -DMAILBOX_INTERRUPT_MODE
+CFLAGS_LOCAL_COMMON += $(PDK_CFLAGS) $(IPC_CFLAGS) -DIPC_EXCLUDE_POLLED_RX -DMAILBOX_INTERRUPT_MODE
 
 # Core/SoC/platform specific source files and CFLAGS
 # Example:

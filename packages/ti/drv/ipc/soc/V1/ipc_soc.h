@@ -94,35 +94,6 @@ extern "C" {
 #define    MAIN_NAVSS_MAILBOX_INPUTINTR_MAX    (440U)
 #define    MAIN_NAVSS_MAILBOX_OUTPUTINTR_MAX   (512U)
 
-/* Refer to J7ES interrupt mapping table and BoardCfg Resource allocation */
-/* Note: In case of IPC_SUPPORT_SCICLIENT this is not actually used, since
- * the range is returned from the BoardCfg */
-#ifndef QNX_OS
-#define    NAVSS512_MPU1_0_INPUT_MAILBOX_OFFSET             (182U)
-#define    NAVSS512_MPU1_0_INPUT_MAILBOX_VIM_OFFSET         (726U)
-#else
-#define    NAVSS512_MPU1_0_INPUT_MAILBOX_OFFSET             (112U)
-#define    NAVSS512_MPU1_0_INPUT_MAILBOX_VIM_OFFSET         (496U)
-#endif
-#define    NAVSS512_MCU1R5F0_INPUT_MAILBOX_OFFSET           (400U)
-#define    NAVSS512_MCU1R5F0_INPUT_MAILBOX_VIM_OFFSET       (376U)
-#define    NAVSS512_MCU1R5F1_INPUT_MAILBOX_OFFSET           (404U)
-#define    NAVSS512_MCU1R5F1_INPUT_MAILBOX_VIM_OFFSET       (380U)
-#define    NAVSS512_MCU2R5F0_INPUT_MAILBOX_OFFSET           (216U)
-#define    NAVSS512_MCU2R5F0_INPUT_MAILBOX_VIM_OFFSET       (248U)
-#define    NAVSS512_MCU2R5F1_INPUT_MAILBOX_OFFSET           (248U)
-#define    NAVSS512_MCU2R5F1_INPUT_MAILBOX_VIM_OFFSET       (248U)
-#define    NAVSS512_MCU3R5F0_INPUT_MAILBOX_OFFSET           (280U)
-#define    NAVSS512_MCU3R5F0_INPUT_MAILBOX_VIM_OFFSET       (248U)
-#define    NAVSS512_MCU3R5F1_INPUT_MAILBOX_OFFSET           (312U)
-#define    NAVSS512_MCU3R5F1_INPUT_MAILBOX_VIM_OFFSET       (248U)
-#define    NAVSS512_C66X1_INPUT_MAILBOX_OFFSET              (344U)
-#define    NAVSS512_C66X1_INPUT_MAILBOX_VIM_OFFSET          (97U)  /* C66x_intrRouter_0 */
-#define    NAVSS512_C66X2_INPUT_MAILBOX_OFFSET              (376U)
-#define    NAVSS512_C66X2_INPUT_MAILBOX_VIM_OFFSET          (97U)  /* C66x_intrRouter_1 */
-#define    NAVSS512_C7X1_INPUT_MAILBOX_OFFSET               (188U)
-#define    NAVSS512_C7X1_INPUT_MAILBOX_VIM_OFFSET           (732U)
-
 #define IPC_MCU_NAVSS0_INTR0_CFG_BASE    (CSL_NAVSS_MAIN_INTR_ROUTER_CFG_REGS_0_BASE)
 
 /* Could not find the RAT address in CSL */
@@ -191,14 +162,12 @@ void Ipc_configC66xIntrRouter(uint32_t input);
 uint32_t Ipc_configClecRouter(uint32_t coreEvent, uint32_t coreEventBase);
 #endif
 
-#ifdef IPC_SUPPORT_SCICLIENT
 int32_t Ipc_sciclientIrqRelease(uint16_t remoteId, uint32_t clusterId,
         uint32_t userId, uint32_t intNumber);
 int32_t Ipc_sciclientIrqSet(uint16_t remoteId, uint32_t clusterId,
         uint32_t userId, uint32_t intNumber);
 int32_t Ipc_getIntNumRange(uint32_t coreIndex, uint16_t *rangeStartP,
         uint16_t *rangeNumP);
-#endif
 
 /* ========================================================================== */
 /*                       Static Function Definitions                          */

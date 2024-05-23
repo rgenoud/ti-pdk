@@ -56,12 +56,6 @@
 #include <ti/drv/ipc/soc/ipc_soc.h>
 #include <ti/drv/ipc/include/ipc_types.h>
 
-#ifndef IPC_SUPPORT_SCICLIENT
-#include <ti/drv/ipc/src/ipc_utils.h>
-#define NVSS_INTRTR_SIZE    0x1000
-uintptr_t g_navssIntRtrBaseVirtAddr = 0;
-#endif
-
 static int32_t Ipc_qnxIsrCreate(Ipc_OsalHIsrHandle *handle,
                                     Ipc_OsalHIsrFxn fxn, void *arg)
 {
