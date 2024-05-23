@@ -12,3 +12,5 @@ docs/doxygen/html/
 package/*
 Settings.h
 Settings.xdc
+src/version/rmpmhal_version.h
+src/version/sciserver_version.h
