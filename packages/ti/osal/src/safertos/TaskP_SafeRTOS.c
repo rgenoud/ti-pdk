@@ -223,8 +223,6 @@ TaskP_Status TaskP_delete(TaskP_Handle *hTaskPtr)
 {
     uintptr_t          key;
     TaskP_Status       ret = TaskP_OK;
-    TaskP_Handle       hTask = *hTaskPtr;
-    TaskP_SafeRTOS     *task = ( TaskP_SafeRTOS * )hTask;
     portTaskHandleType currentTaskHndl;
     portBaseType       xReturn;
 
@@ -234,6 +232,9 @@ TaskP_Status TaskP_delete(TaskP_Handle *hTaskPtr)
     }
     else
     {
+        TaskP_Handle       hTask = *hTaskPtr;
+        TaskP_SafeRTOS     *task = ( TaskP_SafeRTOS * )hTask;
+
         if((NULL_PTR != task) && (BTRUE == task->used))
         {
             currentTaskHndl = xTaskGetCurrentTaskHandle();

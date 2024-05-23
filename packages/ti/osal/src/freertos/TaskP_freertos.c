@@ -230,8 +230,6 @@ TaskP_Status TaskP_delete(TaskP_Handle *hTaskPtr)
 {
     uintptr_t       key;
     TaskP_Status    ret = TaskP_OK;
-    TaskP_Handle    hTask = *hTaskPtr;
-    TaskP_freertos  *task = (TaskP_freertos *)hTask;
     TaskHandle_t    currentTaskHndl;
 
     if(NULL == hTaskPtr)
@@ -240,6 +238,9 @@ TaskP_Status TaskP_delete(TaskP_Handle *hTaskPtr)
     }
     else
     {
+        TaskP_Handle    hTask = *hTaskPtr;
+        TaskP_freertos  *task = (TaskP_freertos *)hTask;
+
         if((NULL_PTR != task) && (BTRUE == task->used))
         {
             currentTaskHndl = xTaskGetCurrentTaskHandle();
