@@ -161,6 +161,7 @@ SciApp_TestParams_t gSciApp_TestcaseParams[] =
         /** testType **/
         (SCI_APP_TEST_TYPE_SANITY)
     },
+#if defined (BUILD_MCU1_0)
     {
         /** enableTest **/
         SCI_APP_TEST_ENABLE,
@@ -172,7 +173,7 @@ SciApp_TestParams_t gSciApp_TestcaseParams[] =
         "PDK-14048",
 
         /** *testCaseName **/
-        "Sciclient dkek Negative Testcase",
+        "Sciclient dkek Testcase",
 
         /** *userInfo **/
         "None",
@@ -182,7 +183,8 @@ SciApp_TestParams_t gSciApp_TestcaseParams[] =
 
         /** *passFailCriteria **/
         "sciclient dkek functions should fail when \
-         the request parameter is set to NULL ",
+         called with invalid parameters and \
+         should pass when called with valid parameters ",
 
         /** cpuID **/
         SCI_APP_CORE_TYPE_R5F,
@@ -193,6 +195,7 @@ SciApp_TestParams_t gSciApp_TestcaseParams[] =
         /** testType **/
         (SCI_APP_TEST_TYPE_NEGATIVE)
     },
+#endif
     {
         /** enableTest **/
         SCI_APP_TEST_ENABLE,
@@ -640,6 +643,7 @@ SciApp_TestParams_t gSciApp_TestcaseParams[] =
         /** testType **/
         (SCI_APP_TEST_TYPE_SANITY)
     },
+#if defined (BUILD_MCU1_0)
     {
         /** enableTest **/
         SCI_APP_TEST_ENABLE,
@@ -648,43 +652,10 @@ SciApp_TestParams_t gSciApp_TestcaseParams[] =
         19U,
 
         /** *reqId **/
-        "PDK-14064",
-
-        /** *testCaseName **/
-        "Sciclient procboot Negative Testcase",
-
-        /** *userInfo **/
-        "None",
-
-        /** *disableReason **/
-        "None",
-
-        /** *passFailCriteria **/
-        "sciclient procboot functions should fail when \
-         called with invalid parameters",
-
-        /** cpuID **/
-        SCI_APP_CORE_TYPE_R5F,
-
-        /** printEnable **/
-        SCI_APP_PRINT_ENABLE,
-
-        /** testType **/
-        (SCI_APP_TEST_TYPE_SANITY)
-    },
-#if defined (BUILD_MCU1_0)
-    {
-        /** enableTest **/
-        SCI_APP_TEST_ENABLE,
-
-        /** testCaseId **/
-        20U,
-
-        /** *reqId **/
         "PDK-14062",
 
         /** *testCaseName **/
-        "SCICLIENT PM and RM BoardCfg Negative Testcase",
+        "SCICLIENT BoardCfg Testcase",
 
         /** *userInfo **/
         "None",
@@ -693,8 +664,9 @@ SciApp_TestParams_t gSciApp_TestcaseParams[] =
         "None",
 
         /** *passFailCriteria **/
-        "SCICLIENT PM and RM BoardCfg functions should fail \
-         when called with invalid parameters ",
+        "SCICLIENT BoardCfg functions should fail \
+         when called with invalid parameters and \
+         should pass when called with valid parameters ",
 
         /** cpuID **/
         SCI_APP_CORE_TYPE_R5F,
@@ -711,7 +683,7 @@ SciApp_TestParams_t gSciApp_TestcaseParams[] =
         SCI_APP_TEST_ENABLE,
 
         /** testCaseId **/
-        21U,
+        20U,
 
         /** *reqId **/
         "PDK-14129",
@@ -743,7 +715,7 @@ SciApp_TestParams_t gSciApp_TestcaseParams[] =
         SCI_APP_TEST_ENABLE,
 
         /** testCaseId **/
-        22U,
+        21U,
 
         /** *reqId **/
         "PDK-14124",
@@ -776,7 +748,7 @@ SciApp_TestParams_t gSciApp_TestcaseParams[] =
         SCI_APP_TEST_ENABLE,
 
         /** testCaseId **/
-        23U,
+        22U,
 
         /** *reqId **/
         "PDK-14125",
@@ -809,7 +781,7 @@ SciApp_TestParams_t gSciApp_TestcaseParams[] =
         SCI_APP_TEST_ENABLE,
 
         /** testCaseId **/
-        24U,
+        23U,
 
         /** *reqId **/
         "PDK-14175",
@@ -841,7 +813,7 @@ SciApp_TestParams_t gSciApp_TestcaseParams[] =
         SCI_APP_TEST_ENABLE,
 
         /** testCaseId **/
-        25U,
+        24U,
 
         /** *reqId **/
         "PDK-14176",
@@ -873,7 +845,7 @@ SciApp_TestParams_t gSciApp_TestcaseParams[] =
         SCI_APP_TEST_ENABLE,
 
         /** testCaseId **/
-        26U,
+        25U,
 
         /** *reqId **/
         "PDK-14237",
@@ -905,7 +877,7 @@ SciApp_TestParams_t gSciApp_TestcaseParams[] =
         SCI_APP_TEST_ENABLE,
 
         /** testCaseId **/
-        27U,
+        26U,
 
         /** *reqId **/
         "PDK-14238",
@@ -938,7 +910,7 @@ SciApp_TestParams_t gSciApp_TestcaseParams[] =
         SCI_APP_TEST_ENABLE,
 
         /** testCaseId **/
-        28U,
+        27U,
 
         /** *reqId **/
         "PDK-14226",
@@ -971,7 +943,7 @@ SciApp_TestParams_t gSciApp_TestcaseParams[] =
         SCI_APP_TEST_ENABLE,
 
         /** testCaseId **/
-        29U,
+        28U,
 
         /** *reqId **/
         "PDK-14244",
@@ -1003,7 +975,7 @@ SciApp_TestParams_t gSciApp_TestcaseParams[] =
         SCI_APP_TEST_ENABLE,
 
         /** testCaseId **/
-        30U,
+        29U,
 
         /** *reqId **/
         "PDK-14275",
@@ -1029,8 +1001,233 @@ SciApp_TestParams_t gSciApp_TestcaseParams[] =
 
         /** testType **/
         (SCI_APP_TEST_TYPE_SANITY)
-    }
+    },
+    {
+        /** enableTest **/
+        SCI_APP_TEST_ENABLE,
+
+        /** testCaseId **/
+        30U,
+
+        /** *reqId **/
+        "PDK-14278",
+
+        /** *testCaseName **/
+        "Sciclient secureProxy functions Negative Testcase",
+
+        /** *userInfo **/
+        "None",
+
+        /** *disableReason **/
+        "None",
+
+        /** *passFailCriteria **/
+        "sciclient secureProxy functions should fail when \
+         called with invalid parameters",
+
+        /** cpuID **/
+        SCI_APP_CORE_TYPE_R5F,
+
+        /** printEnable **/
+        SCI_APP_PRINT_ENABLE,
+
+        /** testType **/
+        (SCI_APP_TEST_TYPE_SANITY)
+    },  
+    {
+        /** enableTest **/
+        SCI_APP_TEST_ENABLE,
+
+        /** testCaseId **/
+        31U,
+
+        /** *reqId **/
+        "PDK-14314",
+
+        /** *testCaseName **/
+        "Sciclient rmIrqVintDelete Negative Testcase",
+
+        /** *userInfo **/
+        "None",
+
+        /** *disableReason **/
+        "None",
+
+        /** *passFailCriteria **/
+        "SciclientApp rmIrqVintDelete function fail when \
+         called with invalid parameters",
+
+        /** cpuID **/
+        SCI_APP_CORE_TYPE_R5F,
+
+        /** printEnable **/
+        SCI_APP_PRINT_ENABLE,
+
+        /** testType **/
+        (SCI_APP_TEST_TYPE_SANITY)
+    },
+    {
+        /** enableTest **/
+        SCI_APP_TEST_ENABLE,
+
+        /** testCaseId **/
+        32U,
+
+        /** *reqId **/
+        "PDK-14316",
+
+        /** *testCaseName **/
+        "Sciclient rmIaValidateEvt Negative Testcase",
+
+        /** *userInfo **/
+        "None",
+
+        /** *disableReason **/
+        "None",
+
+        /** *passFailCriteria **/
+        "Sciclient rmIaValidateEvt functions fail when \
+         called with invalid parameters",
+
+        /** cpuID **/
+        SCI_APP_CORE_TYPE_R5F,
+
+        /** printEnable **/
+        SCI_APP_PRINT_ENABLE,
+
+        /** testType **/
+        (SCI_APP_TEST_TYPE_SANITY)
+    },
 #endif
+    {
+        /** enableTest **/
+        SCI_APP_TEST_ENABLE,
+
+        /** testCaseId **/
+        33U,
+
+        /** *reqId **/
+        "PDK-14317",
+
+        /** *testCaseName **/
+        "Sciclient rmIaVintGetInfo Negative Testcase",
+
+        /** *userInfo **/
+        "None",
+
+        /** *disableReason **/
+        "None",
+
+        /** *passFailCriteria **/
+        "Sciclient rmIaVintGetInfo functions fail when \
+         called with invalid parameters",
+
+        /** cpuID **/
+        SCI_APP_CORE_TYPE_R5F,
+
+        /** printEnable **/
+        SCI_APP_PRINT_ENABLE,
+
+        /** testType **/
+        (SCI_APP_TEST_TYPE_SANITY)
+    },
+    {
+        /** enableTest **/
+        SCI_APP_TEST_ENABLE,
+
+        /** testCaseId **/
+        34U,
+
+        /** *reqId **/
+        "PDK-14318",
+
+        /** *testCaseName **/
+        "Sciclient rmIrqIsVintRouteSet Negative Testcase",
+
+        /** *userInfo **/
+        "None",
+
+        /** *disableReason **/
+        "None",
+
+        /** *passFailCriteria **/
+        "Sciclient rmIrqIsVintRouteSet functions fail when \
+         called with invalid parameters",
+
+        /** cpuID **/
+        SCI_APP_CORE_TYPE_R5F,
+
+        /** printEnable **/
+        SCI_APP_PRINT_ENABLE,
+
+        /** testType **/
+        (SCI_APP_TEST_TYPE_SANITY)
+    },
+    {
+        /** enableTest **/
+        SCI_APP_TEST_ENABLE,
+
+        /** testCaseId **/
+        35U,
+
+        /** *reqId **/
+        "PDK-14064",
+
+        /** *testCaseName **/
+        "Sciclient firewall positive Testcase",
+
+        /** *userInfo **/
+        "None",
+
+        /** *disableReason **/
+        "None",
+
+        /** *passFailCriteria **/
+        "sciclient firewall function should pass when \
+         called with valid parameters",
+
+        /** cpuID **/
+        SCI_APP_CORE_TYPE_R5F,
+
+        /** printEnable **/
+        SCI_APP_PRINT_ENABLE,
+
+        /** testType **/
+        (SCI_APP_TEST_TYPE_SANITY)
+    },
+    {
+        /** enableTest **/
+        SCI_APP_TEST_ENABLE,
+
+        /** testCaseId **/
+        36U,
+
+        /** *reqId **/
+        "PDK-14346",
+
+        /** *testCaseName **/
+        "Sciclient MC/DC Testcase",
+
+        /** *userInfo **/
+        "None",
+
+        /** *disableReason **/
+        "None",
+
+        /** *passFailCriteria **/
+        "sciclient functions should pass when \
+         called with valid parameters and fail when \
+         called with invalid parameters",
+
+        /** cpuID **/
+        SCI_APP_CORE_TYPE_R5F,
+
+        /** printEnable **/
+        SCI_APP_PRINT_ENABLE,
+
+        /** testType **/
+        (SCI_APP_TEST_TYPE_SANITY)
+    }
 };
 
 /* ========================================================================== */
