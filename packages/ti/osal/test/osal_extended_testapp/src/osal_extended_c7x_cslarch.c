@@ -82,23 +82,23 @@ static int32_t OsalApp_mmuTests(void){
     return result;
 }
 
-int32_t OsalApp_c7xHwiTests(void){
-    Hwi_StackInfo stkInfo;
+int32_t OsalApp_c7xHwiTests(void)
+{
     int32_t result = osal_OK;
 
 #if defined (BUILD_C7X)
+    Hwi_StackInfo stkInfo;
     /* Pass invalid interrupt number to event map. It should return abruptly.
      * Does not return any value, hence nothing to check it against.
      */
     Hwi_eventMap( OSAL_APP_HWI_MAX_NUM, 0);
-#endif
 
     Hwi_getStackInfo(&stkInfo, false);
     if(0 == stkInfo.hwiStackPeak)
     {
         result = osal_FAILURE;
     }
-    
+#endif
     return result;
 }
 
