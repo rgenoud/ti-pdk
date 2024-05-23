@@ -311,12 +311,6 @@ int32_t udmaTestParser(void)
                     udmaTestRunTc(testObj, testPrms);
                 }
 
-                /* Print test results */
-                udmaTestPrintTestResult(
-                    testObj,
-                    testObj->skipCount,
-                    testObj->disableCount);
-
                 elapsedTime1   = AppUtils_getElapsedTimeInMsec(startTime1);
                 durationInSecs = ((elapsedTime1) / 1000U);
                 hrs  = durationInSecs / (60U * 60U);
@@ -349,10 +343,6 @@ int32_t udmaTestParser(void)
 
                     udmaTestRunTc(testObj, testPrms);
                 }
-
-                /* Print test results */
-                udmaTestPrintTestResult(
-                    testObj, testObj->skipCount, testObj->disableCount);
 
                 elapsedTime1   = AppUtils_getElapsedTimeInMsec(startTime1);
                 durationInSecs = ((elapsedTime1) / 1000U);
