@@ -782,11 +782,8 @@ static I2C_Handle I2C_open_v1(I2C_Handle handle, const I2C_Params *params)
           }
           if(I2C_OPER_MODE_CALLBACK == object->operMode)
           {
-             if (NULL != params)
-             {
-                /* Save the callback function pointer */
-                object->i2cParams.transferCallbackFxn = params->transferCallbackFxn;
-             }
+             /* Save the callback function pointer */
+             object->i2cParams.transferCallbackFxn = params->transferCallbackFxn;
           }
 
           /* Specify the idle state for this I2C peripheral */
