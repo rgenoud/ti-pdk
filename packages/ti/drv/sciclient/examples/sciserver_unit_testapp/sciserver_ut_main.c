@@ -97,7 +97,7 @@ extern SemaphoreP_Handle gSciserverUserSemHandles[];
 
 void mainTask(void* arg0, void* arg1);
 static int32_t SciserverApp_serverFuncNegTest(void);
-static int32_t SciserverApp_secProxyTransferNegTest(void);
+static int32_t SciserverApp_secProxyTransferTest(void);
 static int32_t SciserverApp_secproxyRoutingDescriptionNegTest(void);
 static int32_t SciserverApp_rtosNegTest(void);
 static int32_t SciserverApp_processtaskTest(void);
@@ -162,7 +162,7 @@ int32_t SciApp_testMain(SciApp_TestParams_t *testParams)
             testParams->testResult = SciserverApp_serverFuncNegTest();
             break;
         case 2:
-            testParams->testResult = SciserverApp_secProxyTransferNegTest();
+            testParams->testResult = SciserverApp_secProxyTransferTest();
             break;
         case 3:
             testParams->testResult = SciserverApp_secproxyRoutingDescriptionNegTest();
@@ -279,7 +279,7 @@ static int32_t SciserverApp_serverFuncNegTest(void)
     return sciserverFuncTestStatus;
 }
 
-static int32_t SciserverApp_secProxyTransferNegTest(void)
+static int32_t SciserverApp_secProxyTransferTest(void)
 {
   int32_t   status               = CSL_PASS;
   int32_t   sciserverInitStatus  = CSL_PASS;
@@ -290,6 +290,11 @@ static int32_t SciserverApp_secProxyTransferNegTest(void)
   uint32_t  offset               = 0U;
   uint16_t  rxConfigId           = 0x55U;
   uint32_t  rxNumWords           = 0x0FU;
+  uint16_t  validHostId          = TISCI_HOST_ID_MCU_0_R5_0;
+  uint16_t  invalidHostId        = 1000;
+  uint16_t  invalidTxConfigId    = 0xFF;
+  uint16_t  invalidRxConfigId    = 0xFF;
+  uint32_t  invalidSenderHostId  = 0;
   Sciserver_CfgPrms_t prms;
   
    status = Sciserver_init(&prms);
@@ -302,24 +307,36 @@ static int32_t SciserverApp_secProxyTransferNegTest(void)
         if (status == CSL_EFAIL)
         {
             secProxyTestStatus += CSL_PASS;
-            SciApp_printf ("Sciserver_SproxyMsgGetSenderHostId: Negative Arg Test Passed.\n");
+            SciApp_printf ("Sciserver_SproxyMsgGetSenderHostId: Negative Arg Test-1 Passed.\n");
         }
         else
         {
            secProxyTestStatus += CSL_EFAIL;
-           SciApp_printf ("Sciserver_SproxyMsgGetSenderHostId: Negative Arg Test Failed.\n");
+           SciApp_printf ("Sciserver_SproxyMsgGetSenderHostId: Negative Arg Test-1 Failed.\n");
+        }
+
+        status = Sciserver_SproxyMsgGetSenderHostId(invalidRxConfigId, &invalidSenderHostId);
+        if(status == CSL_EFAIL)
+        {
+            secProxyTestStatus += CSL_PASS;
+            SciApp_printf ("Sciserver_SproxyMsgGetSenderHostId: Negative Arg Test-2 Passed.\n");
+        }
+        else
+        {
+           secProxyTestStatus += CSL_EFAIL;
+           SciApp_printf ("Sciserver_SproxyMsgGetSenderHostId: Negative Arg Test-2 Failed.\n");
         }
 
         status = Sciserver_SproxyMsgSendAtOffset(txConfigId, txBuff, txNumWords, offset);
         if (status == CSL_EFAIL)
         {
             secProxyTestStatus += CSL_PASS;
-            SciApp_printf ("Sciserver_SproxyMsgSendAtOffset: txNumWords Negative Arg Test Passed.\n");
+            SciApp_printf ("Sciserver_SproxyMsgSendAtOffset: txNumWords Negative Arg Test-1 Passed.\n");
         }
         else
         {
            secProxyTestStatus += CSL_EFAIL;
-           SciApp_printf ("Sciserver_SproxyMsgSendAtOffset: txNumWords Negative Arg Test Failed.\n");
+           SciApp_printf ("Sciserver_SproxyMsgSendAtOffset: txNumWords Negative Arg Test-1 Failed.\n");
         }
 
         txNumWords = 0U;
@@ -327,12 +344,12 @@ static int32_t SciserverApp_secProxyTransferNegTest(void)
         if (status == CSL_EFAIL)
         {
             secProxyTestStatus += CSL_PASS;
-            SciApp_printf ("Sciserver_SproxyMsgSendAtOffset: txNumWords=0 Negative Arg Test Passed.\n");
+            SciApp_printf ("Sciserver_SproxyMsgSendAtOffset: txNumWords=0 Negative Arg Test-2 Passed.\n");
         }
         else
         {
            secProxyTestStatus += CSL_EFAIL;
-           SciApp_printf ("Sciserver_SproxyMsgSendAtOffset: txNumWords=0 Negative Arg Test Failed.\n");
+           SciApp_printf ("Sciserver_SproxyMsgSendAtOffset: txNumWords=0 Negative Arg Test-2 Failed.\n");
         }
 
         txConfigId = 0xB2U;
@@ -364,12 +381,60 @@ static int32_t SciserverApp_secProxyTransferNegTest(void)
         if (status == CSL_EFAIL)
         {
             secProxyTestStatus += CSL_PASS;
-            SciApp_printf ("Sciserver_SproxyMsgReadAtOffset: Negative Arg Test Passed.\n");
+            SciApp_printf ("Sciserver_SproxyMsgReadAtOffset: Negative Arg Test-1 Passed.\n");
         }
         else
         {
            secProxyTestStatus += CSL_EFAIL;
-           SciApp_printf ("Sciserver_SproxyMsgReadAtOffset: Negative Arg Test Failed.\n");
+           SciApp_printf ("Sciserver_SproxyMsgReadAtOffset: Negative Arg Test-1 Failed.\n");
+        }
+
+        status = Sciserver_SproxyMsgReadAtOffset(rxConfigId, NULL, 0, offset);
+        if(status == CSL_EFAIL)
+        {
+            secProxyTestStatus += CSL_PASS;
+            SciApp_printf ("Sciserver_SproxyMsgReadAtOffset: Negative Arg Test-2 Passed.\n");
+        }
+        else
+        {
+           secProxyTestStatus += CSL_EFAIL;
+           SciApp_printf ("Sciserver_SproxyMsgReadAtOffset: Negative Arg Test-2 Failed.\n");
+        }
+
+        status = Sciserver_SproxyMsgValidateHostId(validHostId);
+        if(status == CSL_PASS)
+        {
+            secProxyTestStatus += CSL_PASS;
+            SciApp_printf ("Sciserver_SproxyMsgValidateHostId: Positive Arg Test Passed.\n");
+        }
+        else
+        {
+           secProxyTestStatus += CSL_EFAIL;
+           SciApp_printf ("Sciserver_SproxyMsgValidateHostId: Positive Arg Test Failed.\n");
+        }
+
+        status = Sciserver_SproxyMsgValidateHostId(invalidHostId);
+        if(status == CSL_EFAIL)
+        {
+            secProxyTestStatus += CSL_PASS;
+            SciApp_printf ("Sciserver_SproxyMsgValidateHostId: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+           secProxyTestStatus += CSL_EFAIL;
+           SciApp_printf ("Sciserver_SproxyMsgValidateHostId: Negative Arg Test Failed.\n");
+        }
+
+        status = Sciserver_SproxyMsgFinish(invalidTxConfigId);
+        if(status == CSL_EFAIL)
+        {
+            secProxyTestStatus += CSL_PASS;
+            SciApp_printf ("Sciserver_SproxyMsgFinish: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+           secProxyTestStatus += CSL_EFAIL;
+           SciApp_printf ("Sciserver_SproxyMsgFinish: Negative Arg Test Failed.\n");
         }
   }
   else
@@ -535,7 +600,8 @@ static int32_t SciserverApp_rtosNegTest(void)
         rtosTestStatus += CSL_EFAIL;
         SciApp_printf ("Sciserver_tirtosInit: Negative Arg Test Failed.\n");
     }
-  return rtosTestStatus;
+
+    return rtosTestStatus;
 }
 
 static int32_t SciserverApp_processtaskTest(void)

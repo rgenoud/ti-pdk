@@ -103,7 +103,7 @@ SciApp_TestParams_t gSciApp_TestcaseParams[] =
         "PDK-14051",
 
         /** *testCaseName **/
-        "Sciserver secProxyTransfer Negative Testcase",
+        "Sciserver secProxyTransfer Testcase",
 
         /** *userInfo **/
         "None",
@@ -113,7 +113,8 @@ SciApp_TestParams_t gSciApp_TestcaseParams[] =
 
         /** *passFailCriteria **/
         "Sciserver_secProxyTransfer functions should fail when \
-         called with invalid parameters ",
+         called with invalid parameters and should pass when \
+         called with valid parameters ",
 
         /** cpuID **/
         SCI_APP_CORE_TYPE_R5F,
