@@ -125,7 +125,7 @@ void CacheP_setMar(void *baseAddr, uint32_t size, uint32_t value)
     }
 }
 
-uint32_t CacheP_getMar(void *baseAddr)
+uint32_t CacheP_getMar(uintptr_t baseAddr)
 {
     uint32_t marNum;
     volatile uint32_t *marBase = (volatile uint32_t *)MAR;
