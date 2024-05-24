@@ -245,6 +245,10 @@ MutexP_Status MutexP_unlock(MutexP_Handle handle)
                 ret = MutexP_FAILURE;
             }
         }
+        else
+        {
+            ret = MutexP_FAILURE;
+        }
     }
     return ret;
 }

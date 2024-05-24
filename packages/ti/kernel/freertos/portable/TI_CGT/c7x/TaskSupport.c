@@ -104,28 +104,23 @@ void * TaskSupport_setupTaskStack(StackType_t * pxStackArrayEndAddress, StackTyp
 
     align = TaskSupport_getStackAlignment();
 
-    if (UFALSE != align) {
-        uintptr_t stackTemp;
-        
-        DebugP_assert(align >= portBYTE_ALIGNMENT);
-        /* align low address to stackAlignment */
-        /* MISRA.CAST.VOID_PTR_TO_INT.2012 */
-        stackTemp = (uintptr_t)pxStackArrayStartAddress;
-        stackTemp = stackTemp + (align - 1U);
-        stackTemp = stackTemp & ~(align - 1U);
-        pxStackArrayStartAddressAligned = (StackType_t *)(stackTemp);
+    DebugP_assert(0U < align);
+    uintptr_t stackTemp;
+    
+    DebugP_assert(align >= portBYTE_ALIGNMENT);
+    /* align low address to stackAlignment */
+    /* MISRA.CAST.VOID_PTR_TO_INT.2012 */
+    stackTemp = (uintptr_t)pxStackArrayStartAddress;
+    stackTemp = stackTemp + (align - 1U);
+    stackTemp = stackTemp & ~(align - 1U);
+    pxStackArrayStartAddressAligned = (StackType_t *)(stackTemp);
 
-        /* subtract what we removed from the low address from stackSize */
-        /* MISRA.CAST.VOID_PTR_TO_INT.2012 */
-        tskStackSize = tskStackSize - ((uintptr_t)pxStackArrayStartAddressAligned - (uintptr_t)pxStackArrayStartAddress);
+    /* subtract what we removed from the low address from stackSize */
+    /* MISRA.CAST.VOID_PTR_TO_INT.2012 */
+    tskStackSize = tskStackSize - ((uintptr_t)pxStackArrayStartAddressAligned - (uintptr_t)pxStackArrayStartAddress);
 
-        /* lower the high address as necessary */
-        tskStackSize = tskStackSize & (size_t)~(align - 1U);
-    }
-    else
-    {
-        pxStackArrayStartAddressAligned = pxStackArrayStartAddress;
-    }
+    /* lower the high address as necessary */
+    tskStackSize = tskStackSize & (size_t)~(align - 1U);
 
     DebugP_assert(tskStackSize >= TaskSupport_defaultStackSize);
 

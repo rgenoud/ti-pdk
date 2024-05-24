@@ -280,6 +280,10 @@ void OSAL_tests(void *arg0, void *arg1)
     
     result += OsalApp_freertosLoadTests();
 
+#if defined(BUILD_C7X)
+    result += OsalApp_freertosPortableTests();
+#endif
+
 #endif
 
 #if defined(BARE_METAL)

@@ -273,6 +273,10 @@ static int32_t OsalApp_mutexNegativeTest(void)
     if(MutexP_OK != MutexP_delete(mutexHandle))
     {
         result = osal_FAILURE;
+    }
+
+    if(osal_OK != result)
+    {
         OSAL_log("\n MutexP nonos Negative Test has failed!! \n");
     }
 

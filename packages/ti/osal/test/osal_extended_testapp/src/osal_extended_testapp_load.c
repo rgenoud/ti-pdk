@@ -48,14 +48,21 @@
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
-
+#if defined(BUILD_C7X)
+#define OSAL_APP_TASK_STACK_SIZE  (32U*1024U)
+#else
 #define OSAL_APP_TASK_STACK_SIZE  (1*1024U)
+#endif
 
 /* ========================================================================== */
 /*                            Global Variables                                */
 /* ========================================================================== */
 
+#if defined(SAFERTOS) && defined(BUILD_MCU)
 uint8_t gOsalAppTskStack[OSAL_APP_TASK_STACK_SIZE] __attribute__((aligned(OSAL_APP_TASK_STACK_SIZE)));
+#else
+uint8_t gOsalAppTskStack[OSAL_APP_TASK_STACK_SIZE] __attribute__((aligned(0x2000)));
+#endif
 extern void LoadP_removeTask(uint32_t tskId);
 extern uint32_t TaskP_getTaskId(TaskP_Handle handle);
 
@@ -171,7 +178,7 @@ int32_t OsalApp_freertosLoadTests(void)
     result += OsalApp_freertosLoadNullTest();
     result += OsalApp_freertosLoadCounterDiffTest();
     result += OsalApp_taskLoadNegativeTest();
-    
+
     if(osal_OK == result)
     {
         OSAL_log("\n All Load Freertos tests have passed!\n");

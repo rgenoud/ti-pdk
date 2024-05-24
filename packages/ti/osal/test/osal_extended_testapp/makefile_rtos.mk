@@ -37,6 +37,15 @@ SRCS_COMMON += osal_extended_testapp_archutils.c
 endif
 endif
 
+ifeq ($(BUILD_OS_TYPE),freertos)
+CFLAGS_OS_DEFINES = -DFREERTOS
+EXTERNAL_INTERFACES = freertos
+COMP_LIST_COMMON    = $(PDK_COMMON_FREERTOS_COMP)
+ifeq ($(CORE),$(filter $(CORE), c7x_1 c7x_2 c7x_3 c7x_4))
+SRCS_COMMON += osal_extended_testapp_portable.c
+endif
+endif
+
 # List all the external components/interfaces, whose interface header files
 # need to be included for this component
 INCLUDE_EXTERNAL_INTERFACES = pdk $(EXTERNAL_INTERFACES)

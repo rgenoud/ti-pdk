@@ -138,6 +138,9 @@ int32_t OsalApp_clockTests(void);
 /* Tests for CSL Arch for C7X */
 int32_t OsalApp_c7xArchTests(void);
 
+/* Top level function for freertos portable tests */
+int32_t OsalApp_freertosPortableTests(void);
+
 /* ========================================================================== */
 /*                       Static Function Definitions                          */
 /* ========================================================================== */

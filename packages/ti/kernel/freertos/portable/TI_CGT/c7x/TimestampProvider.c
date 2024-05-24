@@ -47,7 +47,7 @@
 /*
  *  ======== TimestampProvider_get32 ========
  */
-uint32_t TimestampProvider_get32()
+uint32_t TimestampProvider_get32(void)
 {
     return (uint32_t)__TSC;
 }

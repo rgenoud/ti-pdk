@@ -32,9 +32,9 @@
  */
 
 /**
- *  \file   osal_extended_testapp_cache.c
+ *  \file   osal_extended_testapp_archutils.c
  *
- *  \brief  OSAL Cache Sub Module testcases file.
+ *  \brief  OSAL archutils Sub Module testcase for c7x file.
  *
  */
 
@@ -43,62 +43,97 @@
 /* ========================================================================== */
 
 #include "osal_extended_test.h"
-#if defined(BUILD_C7X)
-#include "Mmu.h"
-#include "Hwi.h"
-#endif
+#include "TimestampProvider.h"
+#include "portmacro.h"
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-#define OSAL_APP_HWI_MAX_NUM (64U)
+#define OSAL_APP_TASK_STACK_SIZE  (32U*1024U)
+#define OSAL_APP_TSK_IRQ_INT_NUM  (27U)
 
 /* ========================================================================== */
 /*                            Global Variables                                */
 /* ========================================================================== */
 
-/* None */
+uint8_t      gOsalAppPortTskStack[OSAL_APP_TASK_STACK_SIZE] __attribute__((aligned(0x2000)));
+uint32_t     gOsalAppProgress = UFALSE;
 
 /* ========================================================================== */
 /*                           Function Declarations                            */
 /* ========================================================================== */
 
-/* None */
+/*
+ * Description: Testing portable layer API for c7x
+ */
+static int32_t OsalApp_portc7xGeneralTest(void);
 
 /* ========================================================================== */
-/*                          Internal Function Definitions                     */
+/*                    Internal Function Definitions                           */
 /* ========================================================================== */
 
-static int32_t OsalApp_mmuTests(void){
-
-    int32_t result = osal_OK;
-#if defined (BUILD_C7X)
-    /* Disable and then enable the MMU. Below APIs dont return anything. */
-    Mmu_enable();
-    Mmu_disable();
-    Mmu_enable();
-#endif
-    return result;
+static void OsalApp_dummytaskFxn(void *arg)
+{
+    /* Do Nothing */
 }
 
-int32_t OsalApp_c7xHwiTests(void)
+static void OsalApp_hwiTskIRQ(uintptr_t arg)
 {
-    int32_t result = osal_OK;
+    gOsalAppProgress = UTRUE;
+    vPortYieldAsyncFromISR();
+}
 
-#if defined (BUILD_C7X)
-    Hwi_StackInfo stkInfo;
-    /* Pass invalid interrupt number to event map. It should return abruptly.
-     * Does not return any value, hence nothing to check it against.
-     */
-    Hwi_eventMap( OSAL_APP_HWI_MAX_NUM, 0);
+static int32_t OsalApp_portc7xGeneralTest(void)
+{
+    HwiP_Params    hwiParams;
+    TaskP_Params   params;
+    TaskP_Handle   taskHandle;
+    HwiP_Handle    hwiHandle;
+    uint32_t       testTimeout = 100000U;
+    int32_t        result = osal_OK;
 
-    Hwi_getStackInfo(&stkInfo, false);
-    if(0 != stkInfo.hwiStackPeak)
+    TaskP_Params_init(&params);
+    HwiP_Params_init(&hwiParams);
+    params.priority = 1;
+    memset(gOsalAppPortTskStack, 0, sizeof(gOsalAppPortTskStack));
+    params.stack    = gOsalAppPortTskStack;
+    params.stacksize = sizeof(gOsalAppPortTskStack);
+
+    hwiHandle = HwiP_create(OSAL_APP_TSK_IRQ_INT_NUM, (HwiP_Fxn)OsalApp_hwiTskIRQ, &hwiParams);
+    taskHandle = TaskP_create((TaskP_Fxn)OsalApp_dummytaskFxn, &params);
+    if((NULL_PTR == hwiHandle) || (NULL_PTR == taskHandle))
     {
         result = osal_FAILURE;
     }
-#endif
+
+    if(osal_OK == result)
+    {
+        /* Check the timestamp */
+        if(0U == TimestampProvider_get32())
+        {
+            result = osal_FAILURE;
+        }
+
+        HwiP_post(OSAL_APP_TSK_IRQ_INT_NUM);
+        /* Wait till the interupt is hit */
+        while((UFALSE == gOsalAppProgress) && (testTimeout--))
+        {
+            /* Do nothing */
+        }
+        gOsalAppProgress = UFALSE;
+    }
+    
+    if((HwiP_OK != HwiP_delete(hwiHandle)) || (TaskP_OK != TaskP_delete(&taskHandle)))
+    {
+        result = osal_FAILURE;
+    }
+
+    if(osal_OK != result)
+    {
+        OSAL_log("\n C7x portable general test have failed!!\n");
+    }
+
     return result;
 }
 
@@ -106,13 +141,21 @@ int32_t OsalApp_c7xHwiTests(void)
 /*                          Function Definitions                              */
 /* ========================================================================== */
 
-int32_t OsalApp_c7xArchTests(void)
+int32_t OsalApp_freertosPortableTests(void)
 {
     int32_t result = osal_OK;
-#if defined (BUILD_C7X)
-    result += OsalApp_mmuTests();
-    result += OsalApp_c7xHwiTests();
-#endif
+
+    result += OsalApp_portc7xGeneralTest();
+
+    if(osal_OK == result)
+    {
+        OSAL_log("\n All freertos portable tests have passed!!\n");
+    }
+    else
+    {
+        OSAL_log("\n Some or All freertos portable tests have failed!!\n");
+    }
+    
     return result;
 }
 
