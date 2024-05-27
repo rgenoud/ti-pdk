@@ -778,6 +778,7 @@ int32_t UdmaTestRingFlushRawLcdmaCslNeg(UdmaTestTaskObj *taskObj)
     uint64_t          ringData;
     int32_t           status;
     Udma_DrvHandle    drvHandle;
+    uint32_t          backupDevIdRing;
 
     ringMode    = TISCI_MSG_VALUE_RM_RING_MODE_RING;
     ringMemSize = elemCnt * sizeof (uint64_t);
@@ -851,6 +852,7 @@ int32_t UdmaTestRingFlushRawLcdmaCslNeg(UdmaTestTaskObj *taskObj)
             for(qCnt = 0U; qCnt < elemCnt; qCnt++)
             {
                 ringData             = ((uint64_t) qCnt | (uint64_t) 0xDEADBEEF00000000UL);
+                backupDevIdRing      = drvHandle->devIdRing;
                 drvHandle->devIdRing = UDMA_RING_ANY;
                 status               = Udma_ringFlushRawLcdma(drvHandle, chHandle->fqRing, &ringData);
                 if(UDMA_SOK != status)
@@ -864,6 +866,7 @@ int32_t UdmaTestRingFlushRawLcdmaCslNeg(UdmaTestTaskObj *taskObj)
                               " [Error] Ring reset failed when devIdRing is invalid!!!\n");
                     retVal = UDMA_EFAIL;
                 }
+                drvHandle->devIdRing = backupDevIdRing;
             }
         }
         Udma_chDisable(chHandle, 0);
