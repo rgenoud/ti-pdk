@@ -763,7 +763,7 @@ int32_t CSL_lcdma_ringaccDequeue( CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRin
 {
     int32_t retVal;
     
-    if( pRing->wrOcc )
+    if((pRing->wrOcc) > 0U)
     {
         uint32_t fifoIdx;
         
