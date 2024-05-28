@@ -219,7 +219,7 @@ static int32_t CSL_bcdmaChanOpCfgChan( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType cha
                         CSL_FINS( regVal, BCDMA_TXCCFG_CHAN_TCFG_PAUSE_ON_ERR, pChanCfg->pauseOnError);
                         CSL_FINS( regVal, BCDMA_TXCCFG_CHAN_TCFG_BURST_SIZE, pChanCfg->burstSize );
                         CSL_FINS( regVal, BCDMA_TXCCFG_CHAN_TCFG_TDTYPE, pChanCfg->tdType );
-                        CSL_FINS( regVal, BCDMA_TXCCFG_CHAN_TCFG_NOTDPKT, pChanCfg->bNoTeardownCompletePkt );
+                        CSL_FINS( regVal, BCDMA_TXCCFG_CHAN_TCFG_NOTDPKT, (uint32_t)pChanCfg->bNoTeardownCompletePkt );
 #ifdef CSL_BCDMA_TXCCFG_CHAN_TCFG_ATYPE_MASK
                         CSL_FINS( regVal, BCDMA_TXCCFG_CHAN_TCFG_ATYPE, pChanCfg->addrType );
 #endif
