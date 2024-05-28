@@ -1,6 +1,6 @@
 #
-# This file is the makefile for building a testcase
-# to boot all ipc images using SBL.
+# This is the makefile for building a testcase to boot
+# all ipc images using SBL.
 #
 include $(PDK_INSTALL_PATH)/ti/build/Rules.make
 
@@ -10,7 +10,7 @@ SRCDIR += $(PDK_IPC_COMP_PATH)/examples/ipc_baremetal_echo_test
 
 # Local name of IPC test app
 RPRC_PREFIX_BAREMETAL = ipc_baremetal_echo_test
-RPRC_PREFIX_RTOS = ipc_rtos_echo_test_freertos
+RPRC_PREFIX_RTOS = ipc_rtos_sanity_test_freertos
 RPRC_OUT_NAME = ipc_baremetal_dualcore_test
 
 define BIN_PATH_PREFIX_RULE
