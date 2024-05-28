@@ -156,13 +156,11 @@ void IpcAPP_ReportResult(uint32_t id, int32_t result)
       gTotalTests++;
       if (result == IPC_SOK)
       {
-          App_printf("[%s] [%s] : [TEST_PASS]\n", Ipc_mpGetSelfName(), ExtTestCases[id].testName);
           UART_printf("[%s] [%s] : [TEST_PASS]\n", Ipc_mpGetSelfName(), ExtTestCases[id].testName);
           gTotalTestsPassed++;
       }
       else
       {
-          App_printf("[%s] [%s] : [TEST_FAIL]\n", Ipc_mpGetSelfName(), ExtTestCases[id].testName);
           UART_printf("[%s] [%s] : [TEST_FAIL]\n", Ipc_mpGetSelfName(), ExtTestCases[id].testName);
           gTotalTestsFailed++;
       }
@@ -197,7 +195,7 @@ int32_t Rpmsg_Extended_ResponderFxn(uint32_t testId)
       buf = pRecvTaskBuf;
       if (buf == NULL)
       {
-          App_printf("RecvTask: buffer allocation failed\n");
+          UART_printf("RecvTask: buffer allocation failed\n");
           return IPC_EFAIL;
       }
 
@@ -428,7 +426,7 @@ int32_t IpcApp_Extended_test(uint32_t testId)
 
        Ipc_getCoreName(17U);
 
-       App_printf("IPC_echo_test (core : %s) .....\r\n", Ipc_mpGetSelfName());
+       UART_printf("IPC_echo_test (core : %s) .....\r\n", Ipc_mpGetSelfName());
 
        /* Initialize IPC module */
        IpcInitPrms_init(0U, NULL_PTR);
@@ -456,12 +454,12 @@ int32_t IpcApp_Extended_test(uint32_t testId)
            return IPC_EFAIL;
        }
 
-       App_printf("Ipc_initVirtIO\n");
+       UART_printf("Ipc_initVirtIO\n");
        vqParam.vringBufSize  = IPC_VRING_BUFFER_SIZE;
        status = Ipc_initVirtIO(&vqParam);
        if (status != IPC_SOK)
        {
-          App_printf("[%s] Ipc_initVirtIO failed\n");
+          UART_printf("[%s] Ipc_initVirtIO failed\n");
           return IPC_EFAIL;
        }
 
@@ -507,12 +505,12 @@ int32_t IpcApp_Extended_test(uint32_t testId)
          return IPC_EFAIL;
        }
 
-       App_printf("RPMessage_init\n");
+       UART_printf("RPMessage_init\n");
        cntrlParam.stackSize   = IPC_TASK_STACKSIZE;
        status = RPMessage_init(&cntrlParam);
        if (status != IPC_SOK)
        {
-          App_printf("[%s] RPMessage_init failed\n", Ipc_mpGetSelfName());
+          UART_printf("[%s] RPMessage_init failed\n", Ipc_mpGetSelfName());
           return IPC_EFAIL;
        }
 
