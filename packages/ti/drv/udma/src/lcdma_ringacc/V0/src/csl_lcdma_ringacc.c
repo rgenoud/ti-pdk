@@ -153,8 +153,9 @@ static int32_t CSL_lcdma_ringaccPush64MultiAccess( CSL_LcdmaRingaccCfg *pCfg, CS
             {
                 numValuesWritten = numValues;
             }
-            for( i=0U; i<numValuesWritten; i++, pValsLocal++ )
+            for( i=0U; i<numValuesWritten; i++)
             {
+                pValsLocal++;
                 pRingEntry = (void *)(((uintptr_t)localWrIdx * pRing->elSz) + (uintptr_t)pRing->virtBase);
                 *(uint64_t *)pRingEntry = *pValsLocal;                   
                 localWrIdx++;
@@ -216,13 +217,15 @@ static int32_t CSL_lcdma_ringaccPop64MultiAccess( CSL_LcdmaRingaccCfg *pCfg, CSL
                 pRingEntry = (void *)(((uintptr_t)localRdIdx * pRing->elSz) + (uintptr_t)pRing->virtBase);
                 (*pfMemOps)((void *)pRingEntry, numValuesRead * sizeof(uint64_t), CSL_LCDMA_RINGACC_MEM_OPS_TYPE_RD);
             }
-            for( i=0U; i<numValuesRead; i++, pValsLocal++ )
+            for( i=0U; i<numValuesRead; i++)
             {
+                pValsLocal++;
                 pRingEntry = (void *)(((uintptr_t)localRdIdx * pRing->elSz) + (uintptr_t)pRing->virtBase);
                 *pValsLocal = *(uint64_t *)pRingEntry;
                 localRdIdx++;
                 localRdIdx = localRdIdx % pRing->elCnt;
             }
+
             CSL_lcdma_ringaccAckReverseRing( pCfg, pRing, (int32_t)numValuesRead );    /* This call will update rdOcc and rdIdx elements in pRing */
             if( numValues != numValuesRead )
             {
