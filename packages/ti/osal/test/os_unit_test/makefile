@@ -3,7 +3,7 @@ include $(PDK_INSTALL_PATH)/ti/build/Rules.make
 export DISABLE_RECURSE_DEPS
 
 #Name of the directory created under packages/ti/binary/
-APP_NAME = OSAL_TestApp_$(BUILD_OS_TYPE)
+APP_NAME = osal_testapp_$(BUILD_OS_TYPE)
 
 PACKAGE_SRCS_COMMON = . ../src
 

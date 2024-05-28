@@ -8,7 +8,7 @@ include $(RULES_MAKE)
 endif
 
 #Name of the directory created under packages/ti/binary/
-APP_NAME = OSAL_Baremetal_TestApp
+APP_NAME = osal_baremetal_testapp
 BUILD_OS_TYPE = baremetal
 
 SRCDIR = ../src
