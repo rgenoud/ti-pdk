@@ -348,15 +348,40 @@ static int32_t CSL_bcdmaChanOpSetChanPause( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanTyp
         {
 #ifdef CSL_BCDMA_BCRT_CHAN_CTL_PAUSE_MASK
             case CSL_BCDMA_CHAN_TYPE_BLOCK_COPY:
-                CSL_REG32_FINS( &pCfg->pBcChanRtRegs->CHAN[chanIdx].CTL, BCDMA_BCRT_CHAN_CTL_PAUSE, (bPause==(bool)false) ? (uint32_t)0U : (uint32_t)1U );
+                if(bPause==(bool)false)
+                {
+                   CSL_REG32_FINS( &pCfg->pBcChanRtRegs->CHAN[chanIdx].CTL, BCDMA_BCRT_CHAN_CTL_PAUSE, 0U);
+                }
+                else
+                {
+                   CSL_REG32_FINS( &pCfg->pBcChanRtRegs->CHAN[chanIdx].CTL, BCDMA_BCRT_CHAN_CTL_PAUSE, 1U);
+                }
                 break;
 #endif
             case CSL_BCDMA_CHAN_TYPE_SPLIT_TX:
-                CSL_REG32_FINS( &pCfg->pTxChanRtRegs->CHAN[chanIdx].CTL, BCDMA_TXCRT_CHAN_CTL_PAUSE, (bPause==(bool)false) ? (uint32_t)0U : (uint32_t)1U );
+
+                if(bPause==(bool)false)
+                {
+                   CSL_REG32_FINS( &pCfg->pTxChanRtRegs->CHAN[chanIdx].CTL, BCDMA_TXCRT_CHAN_CTL_PAUSE,  0U);
+                }
+                else
+                {
+                   CSL_REG32_FINS( &pCfg->pTxChanRtRegs->CHAN[chanIdx].CTL, BCDMA_TXCRT_CHAN_CTL_PAUSE,  1U);
+                }
                 break;
+
             case CSL_BCDMA_CHAN_TYPE_SPLIT_RX:
-                CSL_REG32_FINS( &pCfg->pRxChanRtRegs->CHAN[chanIdx].CTL, BCDMA_RXCRT_CHAN_CTL_PAUSE, (bPause==(bool)false) ? (uint32_t)0U : (uint32_t)1U );
+
+                if(bPause==(bool)false)
+                {
+                    CSL_REG32_FINS( &pCfg->pRxChanRtRegs->CHAN[chanIdx].CTL, BCDMA_RXCRT_CHAN_CTL_PAUSE,  0U);
+                }
+                else
+                {
+                    CSL_REG32_FINS( &pCfg->pRxChanRtRegs->CHAN[chanIdx].CTL, BCDMA_RXCRT_CHAN_CTL_PAUSE,  1U);
+                }
                 break;
+
             default:
                 retVal = CSL_EBADARGS;
                 break;
