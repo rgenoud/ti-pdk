@@ -809,7 +809,7 @@ int32_t CSL_lcdma_ringaccDequeue( CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRin
          *-------------------------------------------------------------------*/
         if( CSL_lcdma_ringaccGetForwardRingOcc( pCfg, pRing->ringNum, 0U ) > (uint32_t)0U )
         {
-            CSL_lcdma_ringaccSetForwardDoorbell( pCfg, pRing->ringNum, 0U, -1 );
+            (void)CSL_lcdma_ringaccSetForwardDoorbell( pCfg, pRing->ringNum, 0U, -1 );
         }
         pRing->wrOcc--;
         if( pRing->wrIdx == 0U ) { pRing->wrIdx = pRing->elCnt - 1U; } else { pRing->wrIdx--; }

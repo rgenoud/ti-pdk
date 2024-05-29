@@ -1173,14 +1173,26 @@ int32_t CSL_bcdmaTriggerRxChan( CSL_BcdmaCfg *pCfg, uint32_t chanIdx )
     return retVal;
 }
 
-void CSL_bcdmaGetChanStats( CSL_BcdmaCfg *pCfg, uint32_t chanIdx, CSL_BcdmaChanDir chanDir, CSL_BcdmaChanStats *pChanStats )
+int32_t CSL_bcdmaGetChanStats( CSL_BcdmaCfg *pCfg, uint32_t chanIdx, CSL_BcdmaChanDir chanDir, CSL_BcdmaChanStats *pChanStats )
 {
-    CSL_bcdmaDoChanOp( pCfg, CSL_BCDMA_CHAN_OP_GET_STATS, chanIdx, (void *)pChanStats );
+    int32_t retVal;
+    retVal = CSL_bcdmaDoChanOp( pCfg, CSL_BCDMA_CHAN_OP_GET_STATS, chanIdx, (void *)pChanStats );
+    if( retVal != CSL_PASS )
+    {
+        retVal = CSL_EFAIL;     /* API returns CSL_EFAIL on failure for backwards compatibility with udmap API */
+    }
+    return retVal;
 }
 
-void CSL_bcdmaDecChanStats( CSL_BcdmaCfg *pCfg, uint32_t chanIdx, CSL_BcdmaChanDir chanDir, const CSL_BcdmaChanStats *pChanStats )
+int32_t CSL_bcdmaDecChanStats( CSL_BcdmaCfg *pCfg, uint32_t chanIdx, CSL_BcdmaChanDir chanDir, const CSL_BcdmaChanStats *pChanStats )
 {
-    CSL_bcdmaDoChanOp( pCfg, CSL_BCDMA_CHAN_OP_DEC_STATS, chanIdx, (void *)pChanStats );
+    int32_t retVal;
+    retVal = CSL_bcdmaDoChanOp( pCfg, CSL_BCDMA_CHAN_OP_DEC_STATS, chanIdx, (void *)pChanStats );
+    if( retVal != CSL_PASS )
+    {
+        retVal = CSL_EFAIL;     /* API returns CSL_EFAIL on failure for backwards compatibility with udmap API */
+    }
+    return retVal;
 }
 
 int32_t CSL_bcdmaGetChanPeerReg( CSL_BcdmaCfg *pCfg, uint32_t chanIdx, CSL_BcdmaChanDir chanDir, uint32_t regIdx, uint32_t *pVal )
@@ -1241,14 +1253,26 @@ int32_t CSL_bcdmaRxChanSetBurstSize( CSL_BcdmaCfg *pCfg, uint32_t chanIdx, CSL_B
     return retVal;
 }
 
-void CSL_bcdmaClearTxChanError( CSL_BcdmaCfg *pCfg, uint32_t chanIdx )
+int32_t CSL_bcdmaClearTxChanError( CSL_BcdmaCfg *pCfg, uint32_t chanIdx )
 {
-    CSL_bcdmaDoChanOp( pCfg, CSL_BCDMA_CHAN_OP_CLEAR_ERROR, chanIdx, NULL );
+    int32_t retVal;
+    retVal =  CSL_bcdmaDoChanOp( pCfg, CSL_BCDMA_CHAN_OP_CLEAR_ERROR, chanIdx, NULL );
+    if( retVal != CSL_PASS )
+    {
+        retVal = CSL_EFAIL;     /* API returns CSL_EFAIL on failure for backwards compatibility with udmap API */
+    }
+    return retVal;
 }
 
-void CSL_bcdmaClearRxChanError( CSL_BcdmaCfg *pCfg, uint32_t chanIdx )
+int32_t CSL_bcdmaClearRxChanError( CSL_BcdmaCfg *pCfg, uint32_t chanIdx )
 {
-    CSL_bcdmaDoChanOp( pCfg, CSL_BCDMA_CHAN_OP_CLEAR_ERROR, chanIdx, NULL );
+    int32_t retVal;
+    retVal =  CSL_bcdmaDoChanOp( pCfg, CSL_BCDMA_CHAN_OP_CLEAR_ERROR, chanIdx, NULL );
+    if( retVal != CSL_PASS )
+    {
+        retVal = CSL_EFAIL;     /* API returns CSL_EFAIL on failure for backwards compatibility with udmap API */
+    }
+    return retVal;
 }
 
 void CSL_bcdmaInitRxFlowCfg( CSL_BcdmaRxFlowCfg *pFlow )

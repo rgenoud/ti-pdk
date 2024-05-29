@@ -1066,7 +1066,7 @@ extern int32_t CSL_bcdmaTriggerTxChan( CSL_BcdmaCfg *pCfg, uint32_t chanIdx );
  *
  *  \return None
  */
-extern void CSL_bcdmaClearTxChanError( CSL_BcdmaCfg *pCfg, uint32_t chanIdx );
+extern int32_t CSL_bcdmaClearTxChanError( CSL_BcdmaCfg *pCfg, uint32_t chanIdx );
 
 /**
  *  \brief Enable a receive channel.
@@ -1167,7 +1167,7 @@ extern int32_t CSL_bcdmaTriggerRxChan( CSL_BcdmaCfg *pCfg, uint32_t chanIdx );
  *
  *  \return None
  */
-extern void CSL_bcdmaClearRxChanError( CSL_BcdmaCfg *pCfg, uint32_t chanIdx );
+extern int32_t CSL_bcdmaClearRxChanError( CSL_BcdmaCfg *pCfg, uint32_t chanIdx );
 
 /**
  *  \brief [udmap_only] Configure the receive flow ID range firewall
@@ -1219,7 +1219,7 @@ extern bool CSL_bcdmaGetRxFlowIdFirewallStatus( CSL_BcdmaCfg *pCfg, CSL_BcdmaRxF
  *                                  where the statistics are returned
  *  \return None
  */
-extern void CSL_bcdmaGetChanStats( CSL_BcdmaCfg *pCfg, uint32_t chanIdx, CSL_BcdmaChanDir chanDir, CSL_BcdmaChanStats *pChanStats );
+extern int32_t CSL_bcdmaGetChanStats( CSL_BcdmaCfg *pCfg, uint32_t chanIdx, CSL_BcdmaChanDir chanDir, CSL_BcdmaChanStats *pChanStats );
 
 /**
  *  \brief Decrement channel statistics
@@ -1235,7 +1235,7 @@ extern void CSL_bcdmaGetChanStats( CSL_BcdmaCfg *pCfg, uint32_t chanIdx, CSL_Bcd
  *                                  statistic by
  *  \return None
  */
-extern void CSL_bcdmaDecChanStats( CSL_BcdmaCfg *pCfg, uint32_t chanIdx, CSL_BcdmaChanDir chanDir, const CSL_BcdmaChanStats *pChanStats );
+extern int32_t CSL_bcdmaDecChanStats( CSL_BcdmaCfg *pCfg, uint32_t chanIdx, CSL_BcdmaChanDir chanDir, const CSL_BcdmaChanStats *pChanStats );
 
 /**
  *  \brief Read a channel peer register
