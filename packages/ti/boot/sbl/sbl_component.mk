@@ -139,6 +139,7 @@ ifeq ($(SOC),$(filter $(SOC), j721s2 j784s4))
   sbl_EXAMPLE_LIST += sbl_mmcsd_img_hs sbl_ospi_img_hs sbl_uart_img_hs sbl_ospi_img_hlos_hs
   sbl_EXAMPLE_LIST += sbl_mmcsd_img_combined sbl_ospi_img_combined sbl_mmcsd_img_combined_hs sbl_ospi_img_combined_hs
   sbl_EXAMPLE_LIST += sbl_mmcsd_img_combined_hs_fs sbl_ospi_img_combined_hs_fs
+  sbl_EXAMPLE_LIST += sbl_ospi_nand_img sbl_ospi_nand_img_hs
   # sbl_hsm_boot_uart_img_hs is used to boot hsm core securely
   sbl_EXAMPLE_LIST += sbl_hsm_boot_uart_img_hs sbl_hsm_boot_uart_img
 else ifeq ($(SOC),$(filter $(SOC), j721e))
@@ -154,10 +155,6 @@ else
   sbl_EXAMPLE_LIST += sbl_mmcsd_img_hlos_hs sbl_ospi_img_hlos_hs
   sbl_EXAMPLE_LIST += sbl_mmcsd_img_combined sbl_ospi_img_combined sbl_mmcsd_img_combined_hs sbl_ospi_img_combined_hs
   sbl_EXAMPLE_LIST += sbl_mmcsd_img_combined_hs_fs sbl_ospi_img_combined_hs_fs
-endif
-
-ifeq ($(SOC),$(filter $(SOC), j721s2))
-  sbl_EXAMPLE_LIST += sbl_ospi_nand_img sbl_ospi_nand_img_hs
 endif
 
 
@@ -828,7 +825,7 @@ export sbl_ospi_nand_img_SOC_DEPENDENCY
 export sbl_ospi_nand_img_CORE_DEPENDENCY
 sbl_ospi_nand_img_PKG_LIST = sbl
 sbl_ospi_nand_img_INCLUDE = $(sbl_ospi_nand_img_PATH)
-sbl_ospi_nand_img_BOARDLIST = j721s2_evm
+sbl_ospi_nand_img_BOARDLIST = j721s2_evm j784s4_evm
 export sbl_ospi_nand_img_BOARDLIST
 sbl_ospi_nand_img_$(SOC)_CORELIST = mcu1_0
 export sbl_ospi_nand_img_$(SOC)_CORELIST
