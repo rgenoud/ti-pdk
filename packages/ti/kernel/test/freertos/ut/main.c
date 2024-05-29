@@ -50,14 +50,7 @@ void c66xIntrConfig(void);
 
 void frertos_main(void *args)
 {
-    test_freertos_main(NULL);
-
-    vTaskDelete(NULL);
-}
-
-
-int32_t main()
-{
+#if defined(BUILD_MCU1_0)
     Board_initCfg boardCfg;
     Board_STATUS  status;
 
@@ -67,7 +60,27 @@ int32_t main()
     status = Board_init(boardCfg);
 
     DebugP_assert(BOARD_SOK == status);
+#endif
 
+    test_freertos_main(NULL);
+
+    vTaskDelete(NULL);
+}
+
+
+int32_t main()
+{
+#if !defined(BUILD_MCU1_0)
+    Board_initCfg boardCfg;
+    Board_STATUS  status;
+
+    boardCfg = BOARD_INIT_PINMUX_CONFIG |
+               BOARD_INIT_UART_STDIO;
+
+    status = Board_init(boardCfg);
+
+    DebugP_assert(BOARD_SOK == status);
+#endif
     c66xIntrConfig();
 
 

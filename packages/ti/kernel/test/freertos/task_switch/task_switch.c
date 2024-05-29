@@ -42,6 +42,9 @@
 #include <task.h>
 #include <ti/csl/soc.h>
 #include <FREERTOS_log.h>
+#if defined (BUILD_MCU1_0)
+#include <ti/board/board.h>
+#endif
 
 TaskHandle_t TaskP_getFreertosHandle(TaskP_Handle handle);
 
@@ -395,10 +398,17 @@ void task_switch_main(void *args)
 {
     SemaphoreP_Params semParams;
     TaskP_Params      taskParams;
+#if defined(BUILD_MCU1_0)
+    Board_STATUS      status;
+    Board_initCfg     boardCfg;
 
+    boardCfg = BOARD_INIT_PINMUX_CONFIG |
+               BOARD_INIT_UART_STDIO;
 
-    /* Open drivers to open the UART driver for console */
-    //Drivers_open();
+    status = Board_init(boardCfg);
+
+    DebugP_assert(BOARD_SOK == status);
+#endif
 
     SemaphoreP_Params_init(&semParams);
     semParams.mode = SemaphoreP_Mode_BINARY;

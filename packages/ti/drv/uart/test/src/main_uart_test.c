@@ -3203,10 +3203,14 @@ int main(void)
     bool testResult = BFALSE;
     uint32_t i;
 
-#if defined(BAREMETAL)
+#if defined(BAREMETAL) || defined(BUILD_MCU1_0)
     if (BFALSE == Board_initUART())
     {
-        return(UART_SUCCESS);
+#if !defined(BAREMETAL)
+        return;
+#else
+        return (UART_ERROR);
+#endif
     }
 #endif
 
@@ -3255,11 +3259,13 @@ Int main()
 {
     TaskP_Params taskParams;
 
+#if !defined (BUILD_MCU1_0)
     if (BFALSE == Board_initUART())
     {
         printf("\nBoard_initUART failed!\n");
         return(0);
     }
+#endif
 
     /*  This should be called before any other OS calls (like Task creation, OS_start, etc..) */
     OS_init();

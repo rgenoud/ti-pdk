@@ -50,17 +50,20 @@ void c66xIntrConfig(void);
 
 int32_t main()
 {
-    Board_initCfg boardCfg;
-    Board_STATUS  status;
     TaskP_Params      taskParams;
+#if !defined(BUILD_MCU1_0)
+    Board_STATUS  status;
+    Board_initCfg boardCfg;
 
-    OS_init();
     boardCfg = BOARD_INIT_PINMUX_CONFIG |
                BOARD_INIT_UART_STDIO;
 
     status = Board_init(boardCfg);
 
     DebugP_assert(BOARD_SOK == status);
+#endif
+
+    OS_init();
 
     c66xIntrConfig();
 
