@@ -1,6 +1,6 @@
 /*
  * FreeRTOS Kernel V10.4.1
- * Copyright (C) 2021 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -25,7 +25,7 @@
  * 1 tab == 4 spaces!
  */
 /*
- *  Copyright (C) 2018-2023 Texas Instruments Incorporated
+ *  Copyright (C) 2018-2021 Texas Instruments Incorporated
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -57,18 +57,15 @@
  */
 #include <stdint.h>
 #include <stdio.h>
-#include <c7x.h>    /* for C7x intrinsics */
 #include <FreeRTOS.h>
 #include <task.h>
 #include <ti/osal/osal.h>
 #include <ti/osal/HwiP.h>
 #include <ti/osal/DebugP.h>
-#include "Hwi.h"
-#include "TimestampProvider.h"
-#include "TaskSupport.h"
-#include "Cache.h"
+#include <ti/osal/CacheP.h>
 #include <ti/csl/soc.h>
 #include <ti/csl/arch/csl_arch.h>
+#include <ti/csl/csl_tsc.h>
 #include <ti/osal/src/nonos/Nonos_config.h>
 
 /* Let the user override the pre-loading of the initial LR with the address of
@@ -114,18 +111,9 @@ BaseType_t ulPortInterruptNesting = pdFALSE;
 BaseType_t ulPortSchedularRunning = pdFALSE;
 
 
-/* Counts the incorrect yield, i.e, when doing switch to same task */
+/* set to true when scheduler gets enabled in xPortStartScheduler */
 BaseType_t uxPortIncorrectYieldCount = 0UL;
 
-/* Store the Schedular start TSC counter timerstamp.
- * This is required to account for schedular start time in current run time
- * counter calculations. */
-uint64_t ullPortSchedularStartTs = 0U;
-/*
- * Task control block.  A task control block (TCB) is allocated for each task,
- * and stores task state information, including a pointer to the task's context
- * (the task's run time environment, including register values)
- */
 /*
  * Task control block.  A task control block (TCB) is allocated for each task,
  * and stores task state information, including a pointer to the task's context
@@ -135,7 +123,7 @@ typedef struct tskTaskControlBlock       /* The old naming convention is used to
 {
     volatile StackType_t * pxTopOfStack; /*< Points to the location of the last item placed on the tasks stack.  THIS MUST BE THE FIRST MEMBER OF THE TCB STRUCT. */
 
-    #if ( portUSING_MPU_WRAPPERS == 1 )
+    #if ( 1 == portUSING_MPU_WRAPPERS )
         xMPU_SETTINGS xMPUSettings; /*< The MPU settings are defined as part of the port layer.  THIS MUST BE THE SECOND MEMBER OF THE TCB STRUCT. */
     #endif
 
@@ -145,15 +133,15 @@ typedef struct tskTaskControlBlock       /* The old naming convention is used to
     StackType_t * pxStack;                      /*< Points to the start of the stack. */
     char pcTaskName[ configMAX_TASK_NAME_LEN ]; /*< Descriptive name given to the task when created.  Facilitates debugging only. */ /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 
-    #if ( ( portSTACK_GROWTH > 0 ) || ( configRECORD_STACK_HIGH_ADDRESS == 1 ) )
+    #if ( ( portSTACK_GROWTH > 0 ) || ( 1 == configRECORD_STACK_HIGH_ADDRESS ) )
         StackType_t * pxEndOfStack; /*< Points to the highest valid address for the stack. */
     #endif
 
-    #if ( portCRITICAL_NESTING_IN_TCB == 1 )
+    #if ( 1 == portCRITICAL_NESTING_IN_TCB )
         UBaseType_t uxCriticalNesting; /*< Holds the critical section nesting depth for ports that do not maintain their own count in the port layer. */
     #endif
 
-    #if ( configUSE_TRACE_FACILITY == 1 )
+    #if ( 1 == configUSE_TRACE_FACILITY )
         UBaseType_t uxTCBNumber;  /*< Stores a number that increments each time a TCB is created.  It allows debuggers to determine when a task has been deleted and then recreated. */
         UBaseType_t uxTaskNumber; /*< Stores a number specifically for use by third party trace code. */
     #endif
@@ -163,7 +151,7 @@ typedef struct tskTaskControlBlock       /* The old naming convention is used to
         UBaseType_t uxMutexesHeld;
     #endif
 
-    #if ( configUSE_APPLICATION_TASK_TAG == 1 )
+    #if ( 1 == configUSE_APPLICATION_TASK_TAG )
         TaskHookFunction_t pxTaskTag;
     #endif
 
@@ -171,11 +159,11 @@ typedef struct tskTaskControlBlock       /* The old naming convention is used to
         void * pvThreadLocalStoragePointers[ configNUM_THREAD_LOCAL_STORAGE_POINTERS ];
     #endif
 
-    #if ( configGENERATE_RUN_TIME_STATS == 1 )
+    #if ( 1 == configGENERATE_RUN_TIME_STATS )
         uint32_t ulRunTimeCounter; /*< Stores the amount of time the task has spent in the Running state. */
     #endif
 
-    #if ( configUSE_NEWLIB_REENTRANT == 1 )
+    #if ( 1 == configUSE_NEWLIB_REENTRANT )
 
         /* Allocate a Newlib reent structure that is specific to this task.
          * Note Newlib support has been included by popular demand, but is not
@@ -190,22 +178,22 @@ typedef struct tskTaskControlBlock       /* The old naming convention is used to
         struct  _reent xNewLib_reent;
     #endif
 
-    #if ( configUSE_TASK_NOTIFICATIONS == 1 )
+    #if ( 1 == configUSE_TASK_NOTIFICATIONS )
         volatile uint32_t ulNotifiedValue[ configTASK_NOTIFICATION_ARRAY_ENTRIES ];
         volatile uint8_t ucNotifyState[ configTASK_NOTIFICATION_ARRAY_ENTRIES ];
     #endif
 
     /* See the comments in FreeRTOS.h with the definition of
      * tskSTATIC_AND_DYNAMIC_ALLOCATION_POSSIBLE. */
-    #if ( tskSTATIC_AND_DYNAMIC_ALLOCATION_POSSIBLE != 0 ) /*lint !e731 !e9029 Macro has been consolidated for readability reasons. */
+    #if ( 0 != tskSTATIC_AND_DYNAMIC_ALLOCATION_POSSIBLE ) /*lint !e731 !e9029 Macro has been consolidated for readability reasons. */
         uint8_t ucStaticallyAllocated;                     /*< Set to pdTRUE if the task is a statically allocated to ensure no attempt is made to free the memory. */
     #endif
 
-    #if ( INCLUDE_xTaskAbortDelay == 1 )
+    #if ( 1 == INCLUDE_xTaskAbortDelay )
         uint8_t ucDelayAborted;
     #endif
 
-    #if ( configUSE_POSIX_ERRNO == 1 )
+    #if ( 1 == configUSE_POSIX_ERRNO )
         int iTaskErrno;
     #endif
 } tskTCB;
@@ -228,8 +216,14 @@ static void prvTaskExitError( void )
     DebugP_assert(BFALSE);
 }
 
+#define TaskSupport_buildTaskStack ti_sysbios_family_c62_TaskSupport_buildTaskStack
+
+typedef void (*Task_FuncPtr)(uint32_t arg1, uint32_t arg2);
+
+typedef void (*TaskSupport_FuncPtr)(void);
 
 
+extern void * TaskSupport_buildTaskStack(void * stack, Task_FuncPtr fxn, TaskSupport_FuncPtr exit, TaskSupport_FuncPtr enter, uint32_t arg0, uint32_t arg1);
 /*
  *  ======== Task_exit ========
  */
@@ -249,88 +243,47 @@ void ti_sysbios_knl_Task_Func(uint32_t arg1, uint32_t arg2)
     pxCode((void *)arg1);
 }
 
-#if ( portHAS_STACK_OVERFLOW_CHECKING != 1 )
-#error "portHAS_STACK_OVERFLOW_CHECKING should be enabled for c7x"
-#endif
-
-#if ( portUSING_MPU_WRAPPERS == 1 )
-StackType_t *pxPortInitialiseStack(StackType_t * pxTopOfStack, StackType_t * pxEndOfStack, TaskFunction_t pxCode, void * pvParameters , bool privileged)
-#else
+#if ( 1 == portHAS_STACK_OVERFLOW_CHECKING )
 StackType_t *pxPortInitialiseStack(StackType_t * pxTopOfStack, StackType_t * pxEndOfStack, TaskFunction_t pxCode, void * pvParameters )
+#else
+StackType_t *pxPortInitialiseStack(StackType_t * pxTopOfStack, TaskFunction_t pxCode, void * pvParameters )
 #endif
 {
-#if ( portUSING_MPU_WRAPPERS != 1 )
-    /* TODO this should be a parameter */
-    bool privileged = BTRUE;
+#if ( 1 == portHAS_STACK_OVERFLOW_CHECKING )
+    {
+        (void) pxEndOfStack;
+    }
 #endif
-    pxTopOfStack = (StackType_t *)TaskSupport_setupTaskStack(pxTopOfStack, pxEndOfStack, ti_sysbios_knl_Task_Func, Task_exit, Task_enter, pxCode, pvParameters, privileged);
+
+    pxTopOfStack = (StackType_t *)TaskSupport_buildTaskStack(pxTopOfStack, ti_sysbios_knl_Task_Func, Task_exit, Task_enter, (uint32_t)pvParameters, (uint32_t)pxCode);
 
     return pxTopOfStack;
 }
 
-
-
+extern void Hwi_switchFromBootStack(void);
+extern void Hwi_Module_startup(void);
 
 TimerP_Handle pTickTimerHandle = NULL;
-//#define C7X_DUAL_TIMER_BUG_HACK (0)
-#define C7X_LOG_TIMER_INT_DELTA (1)
-
-#if (C7X_LOG_TIMER_INT_DELTA == 1)
-uint64_t gTscISRLog[1024];
-uint64_t gTscISRLogIdx = 0;
-#endif
-
 
 static void prvPorttimerTickIsr(uintptr_t args)
 {
     void vPortTimerTickHandler();
-#if (defined(C7X_DUAL_TIMER_BUG_HACK))
-    static uint64_t isrSkipWA = 0;
-
-    isrSkipWA++;
-    if (isrSkipWA & 0x1)
-    {
-        return;
-    }
-#endif
-#if (C7X_LOG_TIMER_INT_DELTA == 1)
-    gTscISRLog[gTscISRLogIdx % (sizeof(gTscISRLog)/sizeof(gTscISRLog[0]))] = __TSC;
-    gTscISRLogIdx++;
-#endif
 
     vPortTimerTickHandler();
 }
 
-static void prvPortInitTimerCLECCfg(uint32_t timerId, uint32_t timerIntNum)
-{
-    CSL_ClecEventConfig   cfgClec;
-    CSL_CLEC_EVTRegs     *clecBaseAddr = (CSL_CLEC_EVTRegs*)portCOMPUTE_CLUSTER_CLEC_BASE;
-    uint32_t input         = gDmTimerPInfoTbl[timerId].eventId;
-    uint32_t corepackEvent = timerIntNum;
-
-    /* Configure CLEC */
-    cfgClec.secureClaimEnable = UFALSE;
-    cfgClec.evtSendEnable     = UTRUE;
-    cfgClec.rtMap             = portCOMPUTE_CLUSTER_CLEC_RTMAP;
-    cfgClec.extEvtNum         = 0;
-    cfgClec.c7xEvtNum         = corepackEvent;
-    CSL_clecClearEvent(clecBaseAddr, input);
-    CSL_clecConfigEventLevel(clecBaseAddr, input, 0); /* configure interrupt as pulse */
-    CSL_clecConfigEvent(clecBaseAddr, input, &cfgClec);
-}
-
 static void prvPortInitTickTimer(void)
 {
+
     TimerP_Params timerParams;
 
-    prvPortInitTimerCLECCfg(configTIMER_ID, configTIMER_INT_NUM);
     TimerP_Params_init(&timerParams);
     timerParams.runMode    = TimerP_RunMode_CONTINUOUS;
     timerParams.startMode  = TimerP_StartMode_USER;
     timerParams.periodType = TimerP_PeriodType_MICROSECS;
     timerParams.period     = (portTICK_PERIOD_MS * 1000);
     timerParams.intNum     = configTIMER_INT_NUM;
-    timerParams.eventId    = TimerP_USE_DEFAULT;
+    timerParams.eventId    = configTIMER_EVENT_ID;
 
     pTickTimerHandle = TimerP_create(configTIMER_ID, &prvPorttimerTickIsr, &timerParams);
 
@@ -341,11 +294,11 @@ static void prvPortInitTickTimer(void)
 
 static void prvPortStartTickTimer(void)
 {
-    TimerP_Status status = TimerP_OK;
+    TimerP_Status status;
     status = TimerP_start(pTickTimerHandle);
 
     /* don't expect the handle to be null */
-    DebugP_assert (status == TimerP_OK);
+    DebugP_assert (TimerP_OK == status);
 
 }
 
@@ -358,6 +311,7 @@ BaseType_t xPortStartScheduler(void)
      */
     portDISABLE_INTERRUPTS();
 
+    Hwi_Module_startup();
     prvPortInitTickTimer();
     Hwi_switchFromBootStack();
 
@@ -412,25 +366,27 @@ void vPortConfigTimerForRunTimeStats()
 {
 
     /* we assume clock is initialized before the schedular is started */
-    TimestampProvider_Module_startup();
-
-    ullPortSchedularStartTs = __TSC;
+    /* start TSC */
+    TSCL = 0;
 }
 
-/* return current counter value of high speed counter in units of 10's of usecs */
+/* return current counter value of high speed counter in units of usecs */
 uint32_t uiPortGetRunTimeCounterValue()
 {
-    uint64_t ts = __TSC - ullPortSchedularStartTs;
+    uint64_t ts = CSL_tscRead();
     uint64_t timeInUsecs;
 
     timeInUsecs = (ts * 1000000) / configCPU_CLOCK_HZ;
     /* note, there is no overflow protection for this 32b value in FreeRTOS
      *
-     * Dividing by 10 to reduce the resolution and avoid overflow for longer duration
-     * This will overflow after
-     * ((0x100000000/1000000)/(60*60))*10 hours ~ 12 hrs
+     * This value will overflow in
+     * ((0xFFFFFFFF)/(1000000*60)) minutes ~ 71 minutes
+     *
+     * We call LoadP_update() in idle loop (from vApplicationIdleHook) to accumlate the task load into a 64b value.
+     * The implementation of LoadP_update() is in osal/src/freertos/LoadP_freertos.c
+     *
      */
-    return (uint32_t)timeInUsecs;
+    return (uint32_t)(timeInUsecs);
 }
 
 /* This is used to make sure we are using the FreeRTOS API from within a valid interrupt priority level
@@ -473,7 +429,7 @@ void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer,
  * the stack and so not exists after this function exits.
  */
 static StaticTask_t xIdleTaskTCB;
-static StackType_t uxIdleTaskStack[ (32 * 1024) ];
+static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
 
     /* Pass out a pointer to the StaticTask_t structure in which the Idle task’s
      * state will be stored.
@@ -487,7 +443,7 @@ static StackType_t uxIdleTaskStack[ (32 * 1024) ];
      * Note that, as the array is necessarily of type StackType_t,
      * configMINIMAL_STACK_SIZE is specified in words, not bytes.
      */
-    *pulIdleTaskStackSize = sizeof(uxIdleTaskStack)/sizeof(uxIdleTaskStack[0]);
+    *pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
 }
 
 /* configSUPPORT_STATIC_ALLOCATION and configUSE_TIMERS are both set to 1, so the
@@ -503,7 +459,7 @@ void vApplicationGetTimerTaskMemory( StaticTask_t **ppxTimerTaskTCBBuffer,
  * the stack and so not exists after this function exits.
  */
 static StaticTask_t xTimerTaskTCB;
-static StackType_t uxTimerTaskStack[ (32 * 1024) ];
+static StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
 
     /* Pass out a pointer to the StaticTask_t structure in which the Timer
      * task's state will be stored.
@@ -517,17 +473,17 @@ static StackType_t uxTimerTaskStack[ (32 * 1024) ];
      * Note that, as the array is necessarily of type StackType_t,
      * configTIMER_TASK_STACK_DEPTH is specified in words, not bytes.
      */
-    *pulTimerTaskStackSize = sizeof(uxTimerTaskStack)/sizeof(uxTimerTaskStack[0]);
+    *pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
 }
 
-
+extern void ti_sysbios_family_c62_TaskSupport_swap__E( void **oldtskContext, void **newtskContext);
 
 
 void vPortRestoreTaskContext()
 {
     void * dummyTaskSp;
 
-    TaskSupport_swap( &dummyTaskSp,  (void **)(&pxCurrentTCB->pxTopOfStack));
+    ti_sysbios_family_c62_TaskSupport_swap__E( &dummyTaskSp,  (void **)(&pxCurrentTCB->pxTopOfStack));
 }
 
 void vPortYield( void )
@@ -542,7 +498,7 @@ void vPortYield( void )
     /* We should not be swapping from one task back to same task. Indicates bug in invocation of vPortYield */
     if(oldSP != newSP)
     {
-        TaskSupport_swap( oldSP, newSP );
+        ti_sysbios_family_c62_TaskSupport_swap__E( oldSP, newSP );
     }
     else
     {
@@ -568,7 +524,7 @@ void vPortYieldAsyncFromISR( void )
     //DebugP_assert(oldSP != newSP);
     if(oldSP != newSP)
     {
-        TaskSupport_swap( oldSP, newSP );
+        ti_sysbios_family_c62_TaskSupport_swap__E( oldSP, newSP );
     }
     else
     {
@@ -579,15 +535,6 @@ void vPortYieldAsyncFromISR( void )
     /* Enable interrupts if task was preempted outside critical section */
     portDISABLE_INTERRUPTS();
 
-    /* If the Interrupt occured while NLCINIT was being executed,
-     * The NLC state might get corrupted when re-entering the interrupted task.
-     * Refer the issue: DOCU-470.
-     * Workaround is to execute a dummy NLCINIT that refreshes the NLC hardware state.
-     * For FreeRTOS, this is only a problem with the configUSE_TIME_SLICING turned on.
-     */
-#if (1U == configUSE_TIME_SLICING)
-    vPortRefreshNLC();
-#endif
 }
 
 /*
@@ -614,44 +561,6 @@ void vPortAssertIfInISR()
     configASSERT( !xPortInIsrContext() );
 }
 
-
-/* This function is called when configUSE_IDLE_HOOK is 1 in FreeRTOSConfig.h */
-void vApplicationIdleHook( void )
-{
-#if (configLOAD_UPDATE_IN_IDLE==1)
-    void vApplicationLoadHook();
-
-    vApplicationLoadHook();
-#endif
-
-}
-
-/*****************************************************************************/
-/* _SYSTEM_PRE_INIT() - _system_pre_init() is called in the C/C++ startup    */
-/* routine (_c_int00()) and provides a mechanism for the user to             */
-/* insert application specific low level initialization instructions prior   */
-/* to calling main().  The return value of _system_pre_init() is used to     */
-/* determine whether or not C/C++ global data initialization will be         */
-/* performed (return value of 0 to bypass C/C++ auto-initialization).        */
-/*                                                                           */
-/* PLEASE NOTE THAT BYPASSING THE C/C++ AUTO-INITIALIZATION ROUTINE MAY      */
-/* RESULT IN PROGRAM FAILURE.                                                */
-/*                                                                           */
-/* The version of _system_pre_init() below is skeletal and is provided to    */
-/* illustrate the interface and provide default behavior.  To replace this   */
-/* version rewrite the routine and include it as part of the current project.*/
-/* The linker will include the updated version if it is linked in prior to   */
-/* linking with the C/C++ runtime library.                                   */
-/*****************************************************************************/
-
-int32_t _system_pre_init(void)
-{
-    /* WA for K3_OPEN_SI-457 */
-    __sa_set_cr(0, __sa_get_cr(1));
-    extended_system_pre_init();
-    return 1;
-}
-
 /*****************************************************************************/
 /* _SYSTEM_POST_CINIT() - _system_post_cinit() is a hook function called in  */
 /* the C/C++ auto-initialization function after cinit() and before pinit().  */
@@ -663,13 +572,27 @@ int32_t _system_pre_init(void)
 /* linking with the C/C++ runtime library.                                   */
 /*****************************************************************************/
 
+/*---------------------------------------------------------------------------*/
+/* __TI_default_system_post_cinit indicates that the default                 */
 
 void _system_post_cinit(void)
 {
-    extern void c7x_startup_init(void);
-    extern void Exception_Module_startup(void);
-    c7x_startup_init();
-    Exception_Module_startup();
+    osalArch_Config_t cfg;
+
+    cfg.disableIrqOnInit = BTRUE;
+    osalArch_Init(&cfg);
     extended_system_post_cinit();
+}
+
+/* This function is called when configUSE_IDLE_HOOK is 1 in FreeRTOSConfig.h */
+void vApplicationIdleHook( void )
+{
+#if (configLOAD_UPDATE_IN_IDLE==1)
+    void vApplicationLoadHook();
+
+    vApplicationLoadHook();
+#endif
+
+    asm("    IDLE");
 }
 

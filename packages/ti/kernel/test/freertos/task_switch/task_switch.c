@@ -351,6 +351,13 @@ void ping_main(void *arg0, void *arg1)
 
     FREERTOS_log("\r\n");
     FREERTOS_log("[FreeRTOS] ping task ... done !!!\r\n");
+
+#if defined LDRA_DYN_COVERAGE_EXIT
+    FREERTOS_log("\n LDRA ENTRY... \n");
+    upload_execution_history();
+    FREERTOS_log("\n LDRA EXIT... \n");
+#endif
+
     FREERTOS_log("\r\n");
     FREERTOS_log("All tests have passed!!\r\n");
 }
