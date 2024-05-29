@@ -54,24 +54,24 @@
  *  Static internal functions
  * ----------------------------------------------------------------------------
  */
-static uint32_t CSL_bcdmaMapChanIdx( CSL_BcdmaCfg *pCfg, uint32_t chanIdx, CSL_BcdmaChanType *chanType );
+static uint32_t CSL_bcdmaMapChanIdx( const CSL_BcdmaCfg *pCfg, uint32_t chanIdx, CSL_BcdmaChanType *chanType );
 static int32_t CSL_bcdmaDoChanOp( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanOp chanOp, uint32_t chanIdx, void *pOpData );
-static bool    CSL_bcdmaChanOpIsValidChanIdx( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx );
-static bool    CSL_bcdmaChanOpIsChanEnabled( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx );
-static int32_t CSL_bcdmaChanOpCfgChan( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData );
-static int32_t CSL_bcdmaChanOpSetChanEnable( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, bool bEnable );
-static int32_t CSL_bcdmaChanOpSetChanPause( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, bool bPause );
-static int32_t CSL_bcdmaChanOpTeardownChan( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData );
-static int32_t CSL_bcdmaChanOpTriggerChan( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx );
-static int32_t CSL_bcdmaChanOpGetChanRT( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData );
-static int32_t CSL_bcdmaChanOpSetChanRT( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData );
-static int32_t CSL_bcdmaChanOpGetChanStats( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData );
-static int32_t CSL_bcdmaChanOpDecChanStats( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData );
-static int32_t CSL_bcdmaChanOpAccessRemotePeerReg( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData, bool bRead );
-static int32_t CSL_bcdmaChanOpSetBurstSize( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData );
-static int32_t CSL_bcdmaChanOpClearError( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx );
+static bool    CSL_bcdmaChanOpIsValidChanIdx( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx );
+static bool    CSL_bcdmaChanOpIsChanEnabled( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx );
+static int32_t CSL_bcdmaChanOpCfgChan( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData );
+static int32_t CSL_bcdmaChanOpSetChanEnable(const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, bool bEnable );
+static int32_t CSL_bcdmaChanOpSetChanPause( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, bool bPause );
+static int32_t CSL_bcdmaChanOpTeardownChan( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData );
+static int32_t CSL_bcdmaChanOpTriggerChan( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx );
+static int32_t CSL_bcdmaChanOpGetChanRT( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData );
+static int32_t CSL_bcdmaChanOpSetChanRT( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData );
+static int32_t CSL_bcdmaChanOpGetChanStats( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData );
+static int32_t CSL_bcdmaChanOpDecChanStats( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData );
+static int32_t CSL_bcdmaChanOpAccessRemotePeerReg( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData, bool bRead );
+static int32_t CSL_bcdmaChanOpSetBurstSize( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData );
+static int32_t CSL_bcdmaChanOpClearError( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx );
 
-static uint32_t CSL_bcdmaMapChanIdx( CSL_BcdmaCfg *pCfg, uint32_t chanIdx, CSL_BcdmaChanType *chanType )
+static uint32_t CSL_bcdmaMapChanIdx( const CSL_BcdmaCfg *pCfg, uint32_t chanIdx, CSL_BcdmaChanType *chanType )
 {
     uint32_t base0chanIdx;
 
@@ -125,7 +125,7 @@ static int32_t CSL_bcdmaDoChanOp( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanOp chanOp, ui
     return retVal;
 }
 
-static bool CSL_bcdmaChanOpIsValidChanIdx( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx )
+static bool CSL_bcdmaChanOpIsValidChanIdx( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx )
 {
     bool retVal = (bool)true;
 
@@ -157,7 +157,7 @@ static bool CSL_bcdmaChanOpIsValidChanIdx( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType
     return retVal;
 }
 
-static int32_t CSL_bcdmaChanOpCfgChan( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData )
+static int32_t CSL_bcdmaChanOpCfgChan( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData )
 {
     int32_t retVal = CSL_PASS;
 
@@ -285,7 +285,7 @@ static int32_t CSL_bcdmaChanOpCfgChan( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType cha
     return retVal;
 }
 
-static bool CSL_bcdmaChanOpIsChanEnabled( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx )
+static bool CSL_bcdmaChanOpIsChanEnabled( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx )
 {
     uint32_t regVal;
 
@@ -309,7 +309,7 @@ static bool CSL_bcdmaChanOpIsChanEnabled( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType 
     return ((regVal == 1U) ? (bool)true : (bool)false);
 }
 
-static int32_t CSL_bcdmaChanOpSetChanEnable( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, bool bEnable )
+static int32_t CSL_bcdmaChanOpSetChanEnable( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, bool bEnable )
 {
     int32_t retVal = CSL_PASS;
 
@@ -333,7 +333,7 @@ static int32_t CSL_bcdmaChanOpSetChanEnable( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanTy
     return retVal;
 }
 
-static int32_t CSL_bcdmaChanOpSetChanPause( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, bool bPause )
+static int32_t CSL_bcdmaChanOpSetChanPause( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, bool bPause )
 {
     int32_t retVal = CSL_PASS;
 
@@ -390,7 +390,7 @@ static int32_t CSL_bcdmaChanOpSetChanPause( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanTyp
     return retVal;
 }
 
-static int32_t CSL_bcdmaChanOpTeardownChan( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData )
+static int32_t CSL_bcdmaChanOpTeardownChan( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData )
 {
     int32_t  retVal = CSL_PASS;
 
@@ -452,7 +452,7 @@ static int32_t CSL_bcdmaChanOpTeardownChan( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanTyp
     return retVal;
 }
 
-static int32_t CSL_bcdmaChanOpTriggerChan( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx )
+static int32_t CSL_bcdmaChanOpTriggerChan( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx )
 {
     int32_t retVal = CSL_PASS;
 
@@ -486,7 +486,7 @@ static int32_t CSL_bcdmaChanOpTriggerChan( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType
     return retVal;
 }
 
-static int32_t CSL_bcdmaChanOpGetChanRT( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData )
+static int32_t CSL_bcdmaChanOpGetChanRT( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData )
 {
     int32_t retVal = CSL_PASS;
 
@@ -538,7 +538,7 @@ static int32_t CSL_bcdmaChanOpGetChanRT( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType c
     return retVal;
 }
 
-static int32_t CSL_bcdmaChanOpSetChanRT( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData )
+static int32_t CSL_bcdmaChanOpSetChanRT( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData )
 {
     int32_t retVal = CSL_PASS;
 
@@ -576,7 +576,7 @@ static int32_t CSL_bcdmaChanOpSetChanRT( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType c
     return retVal;
 }
 
-static int32_t CSL_bcdmaChanOpGetChanStats( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData )
+static int32_t CSL_bcdmaChanOpGetChanStats( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData )
 {
     int32_t retVal = CSL_PASS;
 
@@ -627,7 +627,7 @@ static int32_t CSL_bcdmaChanOpGetChanStats( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanTyp
     return retVal;
 }
 
-static int32_t CSL_bcdmaChanOpDecChanStats( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData )
+static int32_t CSL_bcdmaChanOpDecChanStats( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData )
 {
     int32_t retVal = CSL_PASS;
 
@@ -666,7 +666,7 @@ static int32_t CSL_bcdmaChanOpDecChanStats( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanTyp
     return retVal;
 }
 
-static int32_t CSL_bcdmaChanOpAccessRemotePeerReg( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData, bool bRead )
+static int32_t CSL_bcdmaChanOpAccessRemotePeerReg( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData, bool bRead )
 {
     int32_t retVal = CSL_PASS;
 
@@ -713,7 +713,7 @@ static int32_t CSL_bcdmaChanOpAccessRemotePeerReg( CSL_BcdmaCfg *pCfg, CSL_Bcdma
     return retVal;
 }
 
-static int32_t CSL_bcdmaChanOpSetBurstSize( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData )
+static int32_t CSL_bcdmaChanOpSetBurstSize( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData )
 {
     int32_t retVal = CSL_PASS;
 
@@ -766,7 +766,7 @@ static int32_t CSL_bcdmaChanOpSetBurstSize( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanTyp
     return retVal;
 }
 
-static int32_t CSL_bcdmaChanOpClearError( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx )
+static int32_t CSL_bcdmaChanOpClearError( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx )
 {
     int32_t retVal = CSL_PASS;
 
@@ -794,7 +794,7 @@ static int32_t CSL_bcdmaChanOpClearError( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType 
  *  Global API functions
  * ----------------------------------------------------------------------------
  */
-int32_t CSL_bcdmaChanOp( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanOp chanOp, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData )
+int32_t CSL_bcdmaChanOp( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanOp chanOp, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData )
 {
     int32_t retVal = CSL_PASS;
 
@@ -1259,7 +1259,7 @@ void CSL_bcdmaInitRxFlowCfg( CSL_BcdmaRxFlowCfg *pFlow )
     }
 }
 
-void CSL_bcdmaSetPerfCtrl( CSL_BcdmaCfg *pCfg, uint32_t rxRetryTimeoutCnt )
+void CSL_bcdmaSetPerfCtrl( const CSL_BcdmaCfg *pCfg, uint32_t rxRetryTimeoutCnt )
 {
     uint32_t regVal;
 

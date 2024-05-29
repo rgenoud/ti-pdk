@@ -762,7 +762,7 @@ extern void CSL_bcdmaInitRxFlowCfg( CSL_BcdmaRxFlowCfg *pFlow );
  *          CSL_EBADARGS = One or more arguments are invalid
  *          CSL_EINVALID_PARAMS = One or more parameters in 'pOpData' are invalid
  */
-extern int32_t CSL_bcdmaChanOp( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanOp chanOp, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData );
+extern int32_t CSL_bcdmaChanOp( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanOp chanOp, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData );
 
 /**
  *  \brief Set performance control parmeters
@@ -778,7 +778,7 @@ extern int32_t CSL_bcdmaChanOp( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanOp chanOp, CSL_
  *
  *  \return None
  */
-extern void CSL_bcdmaSetPerfCtrl( CSL_BcdmaCfg *pCfg, uint32_t rxRetryTimeoutCnt );
+extern void CSL_bcdmaSetPerfCtrl( const CSL_BcdmaCfg *pCfg, uint32_t rxRetryTimeoutCnt );
 
 /**
  *  \brief [udmap_only] Set UTC control parmeters

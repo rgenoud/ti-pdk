@@ -426,9 +426,9 @@ static inline void CSL_druChSubmitTr(const CSL_DRU_t *pRegs,
  *  \param   chId       [IN] Channel ID - 0 to (#CSL_DRU_NUM_CH - 1).
 *   \param   vdata      [IN] Vector TR to submit.
  */
-static inline void CSL_druChSubmitAtomicTr(CSL_DRU_t *pRegs,
+static inline void CSL_druChSubmitAtomicTr(const CSL_DRU_t *pRegs,
                                            uint32_t chId,
-                                           __ulong8 * vdata);
+                                           const __ulong8 * vdata);
 #endif
 
 /**
@@ -547,9 +547,9 @@ static inline void CSL_druChSubmitTr(const CSL_DRU_t *pRegs,
 }
 
 #if defined (BUILD_C7X)
-static inline void CSL_druChSubmitAtomicTr(CSL_DRU_t *pRegs,
+static inline void CSL_druChSubmitAtomicTr(const CSL_DRU_t *pRegs,
                                            uint32_t chId,
-                                           __ulong8 * vdata)
+                                           const __ulong8 * vdata)
 {
     volatile uintptr_t     pAtomic;
 

@@ -339,7 +339,7 @@ extern int32_t CSL_proxyCfgThread( CSL_ProxyCfg *pProxyCfg, uint32_t targetNum, 
  *             -1 = Invalid argument (targetNum or threadNum out of range)
  *
  */
-extern int32_t CSL_proxyCfgThreadErrEvtNum( CSL_ProxyCfg *pProxyCfg, uint32_t targetNum, uint32_t threadNum, uint32_t errEvtNum );
+extern int32_t CSL_proxyCfgThreadErrEvtNum( const CSL_ProxyCfg *pProxyCfg, uint32_t targetNum, uint32_t threadNum, uint32_t errEvtNum );
 
 /**
  *  \brief Get maximim message size

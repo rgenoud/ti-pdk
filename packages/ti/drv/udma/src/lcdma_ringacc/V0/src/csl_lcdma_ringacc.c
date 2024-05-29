@@ -47,7 +47,7 @@
 static bool bIsPhysBaseOk( const CSL_LcdmaRingaccRingCfg *pRing );
 static void *CSL_lcdma_ringaccGetRingRdElementAddr( const CSL_LcdmaRingaccRingCfg *pRing );
 static void *CSL_lcdma_ringaccGetRingWrElementAddr( const CSL_LcdmaRingaccRingCfg *pRing );
-static void CSL_lcdma_ringaccGetNewElCnt( CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing );
+static void CSL_lcdma_ringaccGetNewElCnt( const CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing );
 static bool CSL_lcdma_ringaccIsRingEmpty( const CSL_LcdmaRingaccRingCfg *pRing );
 static bool CSL_lcdma_ringaccIsRingFull( const CSL_LcdmaRingaccRingCfg *pRing );
 static void *CSL_lcdma_ringaccGetRingDataPtr( CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing );
@@ -86,7 +86,7 @@ static void *CSL_lcdma_ringaccGetRingWrElementAddr( const CSL_LcdmaRingaccRingCf
     return (void *)(((uintptr_t)pRing->wrIdx * pRing->elSz) + (uintptr_t)pRing->virtBase);
 }
 
-static void CSL_lcdma_ringaccGetNewElCnt( CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing )
+static void CSL_lcdma_ringaccGetNewElCnt( const CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing )
 {
     pRing->rdOcc = CSL_lcdma_ringaccGetReverseRingOcc( pCfg, pRing->ringNum, pRing->mode );
 }
@@ -303,7 +303,7 @@ void CSL_lcdma_ringaccInitRingObj( uint32_t ringNum,
     return;
 }
 
-int32_t CSL_lcdma_ringaccInitRing( CSL_LcdmaRingaccCfg *pCfg,
+int32_t CSL_lcdma_ringaccInitRing( const CSL_LcdmaRingaccCfg *pCfg,
                              uint32_t ringNum,
                              CSL_LcdmaRingaccRingCfg *pRing )
 {
@@ -363,7 +363,7 @@ void CSL_lcdma_ringaccCfgRingCred( CSL_LcdmaRingaccCfg *pCfg, const CSL_LcdmaRin
     return;
 }
 
-void CSL_lcdma_ringaccResetRing( CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing )
+void CSL_lcdma_ringaccResetRing( const CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing )
 {
     uint32_t regVal;
 
@@ -689,7 +689,7 @@ int32_t CSL_lcdma_ringaccRdData( CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRing
     return retVal;
 }
 
-int32_t CSL_lcdma_ringaccPeekData( CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing, uint8_t *pData, uint32_t numBytes, CSL_lcdma_ringaccMemOpsFxnPtr pfMemOps )
+int32_t CSL_lcdma_ringaccPeekData( const CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing, uint8_t *pData, uint32_t numBytes, CSL_lcdma_ringaccMemOpsFxnPtr pfMemOps )
 {
     int32_t retVal = 0;
     uint32_t numBytes_local = numBytes;

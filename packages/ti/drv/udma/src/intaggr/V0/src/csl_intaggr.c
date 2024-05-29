@@ -360,7 +360,7 @@ int32_t CSL_intaggrEnableEventMulticast( CSL_IntaggrCfg *pCfg, uint32_t globalEv
     return retVal;
 }
 
-int32_t CSL_intaggrMapUnmappedEventToEvent( CSL_IntaggrCfg *pCfg, uint32_t unmappedEventIdx, uint32_t globalEventOutIdx )
+int32_t CSL_intaggrMapUnmappedEventToEvent( const CSL_IntaggrCfg *pCfg, uint32_t unmappedEventIdx, uint32_t globalEventOutIdx )
 {
     int32_t  retVal;
 
@@ -400,7 +400,7 @@ int32_t CSL_intaggrMapUnmappedEventToEvent( CSL_IntaggrCfg *pCfg, uint32_t unmap
     return retVal;
 }
 
-int32_t CSL_intaggrSetIntrEnable( CSL_IntaggrCfg *pCfg, uint32_t statusBitNum, bool bEnable )
+int32_t CSL_intaggrSetIntrEnable( const CSL_IntaggrCfg *pCfg, uint32_t statusBitNum, bool bEnable )
 {
     int32_t  retVal = CSL_EFAIL;
     uint64_t regVal;
@@ -426,7 +426,7 @@ int32_t CSL_intaggrSetIntrEnable( CSL_IntaggrCfg *pCfg, uint32_t statusBitNum, b
     return retVal;
 }
 
-int32_t CSL_intaggrSetIntrPending( CSL_IntaggrCfg *pCfg, uint32_t statusBitNum )
+int32_t CSL_intaggrSetIntrPending( const CSL_IntaggrCfg *pCfg, uint32_t statusBitNum )
 {
     int32_t  retVal = CSL_EFAIL;
     uint64_t regVal;

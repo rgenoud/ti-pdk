@@ -380,7 +380,7 @@ extern int32_t CSL_intaggrEnableEventMulticast( CSL_IntaggrCfg *pCfg, uint32_t g
  *          CSL_EFAIL = INTAGGR does not support this feature
  *          CSL_EBADARGS = Invalid globalEventOutIdx parameter
  */
-extern int32_t CSL_intaggrMapUnmappedEventToEvent( CSL_IntaggrCfg *pCfg, uint32_t unmappedEventIdx, uint32_t globalEventOutIdx );
+extern int32_t CSL_intaggrMapUnmappedEventToEvent( const CSL_IntaggrCfg *pCfg, uint32_t unmappedEventIdx, uint32_t globalEventOutIdx );
 
 /**
  *  \brief Enable or disable a status interrupt
@@ -399,7 +399,7 @@ extern int32_t CSL_intaggrMapUnmappedEventToEvent( CSL_IntaggrCfg *pCfg, uint32_
  *  \return CSL_PASS = success
  *          CSL_EBADARGS = Invalid statusBitNum parameter
  */
-extern int32_t CSL_intaggrSetIntrEnable( CSL_IntaggrCfg *pCfg, uint32_t statusBitNum, bool bEnable );
+extern int32_t CSL_intaggrSetIntrEnable( const CSL_IntaggrCfg *pCfg, uint32_t statusBitNum, bool bEnable );
 
 /**
  *  \brief Set the raw pending status of an interrupt
@@ -416,7 +416,7 @@ extern int32_t CSL_intaggrSetIntrEnable( CSL_IntaggrCfg *pCfg, uint32_t statusBi
  *  \return CSL_PASS = success
  *          CSL_EBADARGS = Invalid statusBitNum parameter
  */
-extern int32_t CSL_intaggrSetIntrPending( CSL_IntaggrCfg *pCfg, uint32_t statusBitNum );
+extern int32_t CSL_intaggrSetIntrPending( const CSL_IntaggrCfg *pCfg, uint32_t statusBitNum );
 
 /**
  *  \brief Determine if a status interrupt is pending

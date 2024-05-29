@@ -369,7 +369,7 @@ extern void CSL_lcdma_ringaccInitRingObj( uint32_t ringNum,
  *
  *  \return 0 if successful, or -1 if an invalid argument is detected
  */
-extern int32_t CSL_lcdma_ringaccInitRing( CSL_LcdmaRingaccCfg *pCfg,
+extern int32_t CSL_lcdma_ringaccInitRing( const CSL_LcdmaRingaccCfg *pCfg,
                             uint32_t ringNum,
                             CSL_LcdmaRingaccRingCfg *pRing );
 
@@ -456,7 +456,7 @@ extern void CSL_lcdma_ringaccCfgRingCred( CSL_LcdmaRingaccCfg *pCfg, const CSL_L
  *
  *  \return None
  */
-extern void CSL_lcdma_ringaccResetRing( CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing );
+extern void CSL_lcdma_ringaccResetRing( const CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing );
 
 /**
  *  \brief Get pointer to next free forward ring element.
@@ -512,9 +512,9 @@ extern void *CSL_lcdma_ringaccGetReverseRingPtr( CSL_LcdmaRingaccCfg *pCfg, CSL_
  *
  *  \return      0 = success
  */
-static inline int32_t CSL_lcdma_ringaccSetForwardDoorbell( CSL_LcdmaRingaccCfg *pCfg, uint32_t ringNum, CSL_LcdmaRingaccRingMode mode, int32_t cnt );
+static inline int32_t CSL_lcdma_ringaccSetForwardDoorbell( const CSL_LcdmaRingaccCfg *pCfg, uint32_t ringNum, CSL_LcdmaRingaccRingMode mode, int32_t cnt );
 
-static inline int32_t CSL_lcdma_ringaccSetForwardDoorbell( CSL_LcdmaRingaccCfg *pCfg, uint32_t ringNum, CSL_LcdmaRingaccRingMode mode, int32_t cnt )
+static inline int32_t CSL_lcdma_ringaccSetForwardDoorbell( const CSL_LcdmaRingaccCfg *pCfg, uint32_t ringNum, CSL_LcdmaRingaccRingMode mode, int32_t cnt )
 {
     CSL_REG32_WR( &pCfg->pRingRtRegs->RING[ringNum].FDB, CSL_FMK(LCDMA_RINGACC_RINGRT_RING_FDB_CNT, (uint32_t)cnt) );
     return 0;
@@ -536,9 +536,9 @@ static inline int32_t CSL_lcdma_ringaccSetForwardDoorbell( CSL_LcdmaRingaccCfg *
  *
  *  \return      None
  */
-static inline void CSL_lcdma_ringaccSetReverseDoorbell( CSL_LcdmaRingaccCfg *pCfg, uint32_t ringNum, CSL_LcdmaRingaccRingMode mode, int32_t cnt );
+static inline void CSL_lcdma_ringaccSetReverseDoorbell( const CSL_LcdmaRingaccCfg *pCfg, uint32_t ringNum, CSL_LcdmaRingaccRingMode mode, int32_t cnt );
 
-static inline void CSL_lcdma_ringaccSetReverseDoorbell( CSL_LcdmaRingaccCfg *pCfg, uint32_t ringNum, CSL_LcdmaRingaccRingMode mode, int32_t cnt )
+static inline void CSL_lcdma_ringaccSetReverseDoorbell( const CSL_LcdmaRingaccCfg *pCfg, uint32_t ringNum, CSL_LcdmaRingaccRingMode mode, int32_t cnt )
 {
     CSL_REG32_WR( &pCfg->pRingRtRegs->RING[ringNum].RDB, CSL_FMK(LCDMA_RINGACC_RINGRT_RING_RDB_CNT, (uint32_t)cnt) );
 }
@@ -1110,7 +1110,7 @@ extern int32_t CSL_lcdma_ringaccRdData( CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRing
  *  \return  0 = success
  *          -2 = requested access size is greater than ring element size
  */
-extern int32_t CSL_lcdma_ringaccPeekData( CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing, uint8_t *pData, uint32_t numBytes, CSL_lcdma_ringaccMemOpsFxnPtr pfMemOps );
+extern int32_t CSL_lcdma_ringaccPeekData( const CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing, uint8_t *pData, uint32_t numBytes, CSL_lcdma_ringaccMemOpsFxnPtr pfMemOps );
 
 /**
  *  \brief Clear the asel field in an address
