@@ -33,6 +33,24 @@
 #define UART_DEBUG_ADDR CSL_MCU_UART0_BASE
 #endif
 
+#ifdef BUILD_MCU1_0
+static const char mcu_str[] = "MCU1_0";
+#else
+#ifdef BUILD_MCU1_1
+static const char mcu_str[] = "MCU1_1";
+#else
+#ifdef BUILD_MCU2_0
+static const char mcu_str[] = "MCU2_0";
+#else
+#ifdef BUILD_MCU2_1
+static const char mcu_str[] = "MCU2_1";
+#else
+static const char mcu_str[] = "UNKNOW";
+#endif
+#endif
+#endif
+#endif
+
 #if defined(DEBUG_SRAM_S2R) && defined(DEBUG_FULL_SRAM_S2R)
 #define Lpm_debugFullPrintf Lpm_debugPrintf
 #define Lpm_debugReadPmicA  Lpm_readPmicA
@@ -253,6 +271,10 @@ static void Lpm_debugPrintf(const char *pcString, ...)
     /* Start the varargs processing. */
     (void)va_start(vaArgP, pcString);
 
+    /* write the MCU we are on */
+    (void)Lpm_debugPutS(mcu_str, -1);
+    (void)Lpm_debugPutS(" ", -1);
+
     /* Loop while there are more characters in the string. */
     while (*pStr != (char)0U)
     {
@@ -303,6 +325,9 @@ static void Lpm_debugPrintf(const char *pcString, ...)
                  * identically; i.e. %X will use lower case letters for a-f
                  * instead of the upper case letters is should use.  We also
                  * alias %p to %x. */
+                case (char) 'd':
+                    (void)Lpm_debugPutS("0x", -1);
+		    /* fall through */
                 case (char) 'x':
                 case (char) 'X':
                 case (char) 'p':

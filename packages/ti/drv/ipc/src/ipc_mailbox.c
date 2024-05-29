@@ -66,6 +66,14 @@
 /* Fix Me, need not be 256, can be max remote proc / max proc */
 #define  IPC_MBOX_MAXDATA        8U
 
+#include "ti/debug_qnr.c"
+#undef App_printf
+#define App_printf Lpm_debugFullPrintf
+#undef SystemP_printf
+#define SystemP_printf Lpm_debugFullPrintf
+
+//#define DEBUG_PRINT
+
 /* ========================================================================== */
 /*                         Structure Declarations                             */
 /* ========================================================================== */
@@ -131,6 +139,8 @@ extern Ipc_Object gIpcObject;
 
 uint32_t     g_pollTaskExit = FALSE;
 TaskP_Handle g_pollTask     = NULL;
+
+#define  DEBUG_PRINT
 
 void Mailbox_Poll_Task(void* arg0, void* arg1)
 {
@@ -227,6 +237,7 @@ static void Ipc_mailboxEnable(uintptr_t baseAddr, uint32_t userId, uint32_t queu
  */
 static void Ipc_mailboxDisable(uintptr_t baseAddr, uint32_t userId, uint32_t queueId)
 {
+    Lpm_debugFullPrintf("%s: %d\n", __func__, __LINE__);
     Mailbox_disableNewMsgInt(baseAddr, userId, queueId);
 }
 
@@ -332,15 +343,19 @@ int32_t Ipc_mailboxRegister(uint16_t selfId, uint16_t remoteProcId,
     Ipc_Object           *pObj  = NULL;
     Ipc_OsalPrms         *pOsal = NULL;
 
+    App_printf("%s :%d \n", __func__, __LINE__);
     pObj = getIpcObjInst(0U);
     pOsal = &pObj->initPrms.osalPrms;
 
+    App_printf("%s :%d \n", __func__, __LINE__);
     Ipc_getMailboxInfoRx(selfId, remoteProcId,
         &clusterId, &userId, &queueId);
 
+    App_printf("%s :%d \n", __func__, __LINE__);
     if( (clusterId != MAILBOX_CLUSTER_INVALID) && (IPC_MAX_PROCS > remoteProcId))
     {
         baseAddr = Ipc_getMailboxBaseAddr(clusterId);
+    App_printf("%s :%d \n", __func__, __LINE__);
     }
     else
     {
@@ -348,8 +363,10 @@ int32_t Ipc_mailboxRegister(uint16_t selfId, uint16_t remoteProcId,
         retVal = IPC_EFAIL;
     }
 
+    App_printf("%s :%d \n", __func__, __LINE__);
     if(retVal == IPC_SOK)
     {
+    App_printf("%s :%d \n", __func__, __LINE__);
         for(n = 0; n < g_ipc_mBoxCnt; n++)
         {
             if((baseAddr == g_ipc_mBoxData[n].baseAddr) && (userId == g_ipc_mBoxData[n].userId))
@@ -358,6 +375,7 @@ int32_t Ipc_mailboxRegister(uint16_t selfId, uint16_t remoteProcId,
             }
         }
 
+    App_printf("%s :%d \n", __func__, __LINE__);
         /* Get the MailBox Data */
         mbox = &g_ipc_mBoxData[n];
 
@@ -368,23 +386,28 @@ int32_t Ipc_mailboxRegister(uint16_t selfId, uint16_t remoteProcId,
             mbox->fifoCnt  = 0;
             mbox->userId   = userId;
 
+    App_printf("%s :%d \n", __func__, __LINE__);
             if (NULL != pOsal->registerIntr)
             {
                 /* Do not clear the mailbox, other cores could have already sent messages */
                 Ipc_MbConfig cfg;
 
+    App_printf("%s :%d \n", __func__, __LINE__);
                 Mailbox_clrNewMsgStatus(baseAddr, userId, queueId);
 
                 /* Get the Interrupt Configuration */
                 Ipc_getMailboxIntrRouterCfg(selfId, clusterId, userId, &cfg, g_ipc_mBoxCnt);
 
+    App_printf("%s :%d \n", __func__, __LINE__);
                 {
                     /* Release the resource first */
                     Ipc_sciclientIrqRelease(selfId, clusterId, userId, cfg.eventId);
 
+    App_printf("%s :%d \n", __func__, __LINE__);
                     uint32_t timeout_cnt = 10;
                     do
                     {
+    App_printf("%s :%d \n", __func__, __LINE__);
                         retVal = Ipc_sciclientIrqSet(selfId, clusterId, userId, cfg.eventId);
                         if(retVal != 0)
                         {
@@ -393,17 +416,21 @@ int32_t Ipc_mailboxRegister(uint16_t selfId, uint16_t remoteProcId,
                         timeout_cnt--;
                     }while((retVal != 0) && (timeout_cnt > 0U));
 
+    App_printf("%s :%d \n", __func__, __LINE__);
                     if(timeout_cnt == 0U)
                     {
                         retVal = IPC_EFAIL;
                     }
                 }
 
+    App_printf("%s :%d \n", __func__, __LINE__);
                 /* Register Mailbox interrupt now... */
                 if (retVal == IPC_SOK)
                 {
+    App_printf("%s :%d \n", __func__, __LINE__);
                     /* disable the mailbox interrupt (from previous runs) */
                     Ipc_mailboxDisable(baseAddr, userId, queueId);
+    App_printf("%s :%d \n", __func__, __LINE__);
                     pObj->interruptHandle = pOsal->registerIntr(
                             &cfg,Ipc_mailboxInternalCallback,
                             (uintptr_t)mbox);
@@ -413,6 +440,7 @@ int32_t Ipc_mailboxRegister(uint16_t selfId, uint16_t remoteProcId,
             g_ipc_mBoxCnt++;
         }
 
+    App_printf("%s :%d \n", __func__, __LINE__);
         /* Add the fifo data for the remoteProcId. */
         mbox->fifoTable[mbox->fifoCnt].cfgNdx  = (int32_t)n;
         mbox->fifoTable[mbox->fifoCnt].func    = func;
@@ -422,11 +450,9 @@ int32_t Ipc_mailboxRegister(uint16_t selfId, uint16_t remoteProcId,
 
         mbox->fifoCnt++;
 
-#ifdef DEBUG_PRINT
         SystemP_printf("Ipc_MB(%d): Self %d Remote %d (c%d,u%d,q%d) arg %d,total %d\n",
                 mbox->fifoCnt, selfId, remoteProcId, clusterId, userId, queueId, arg,
                 g_ipc_mBoxCnt);
-#endif
     }
 
     return retVal;
@@ -445,21 +471,30 @@ static void Ipc_mailboxInternalCallback(uintptr_t arg)
     volatile uint32_t numMessages;
     Ipc_MailboxFifo  *fifo;
     uint32_t shutdownMsg = IPC_RP_MBOX_SHUTDOWN;
+#define CNT_MAX 10
+    static unsigned int count;
 
+    if (count < CNT_MAX)  {
+	    App_printf("%s :%d \n", __func__, __LINE__);
+	    count++;
+    }
     mbox = (Ipc_MailboxData *)arg;
     if(mbox != NULL)
     {
+if (count < CNT_MAX)  App_printf("%s :%d \n", __func__, __LINE__);
         mbox->intCnt++;
 
         for(n = 0; n < mbox->fifoCnt; n++)
         {
             fifo = &mbox->fifoTable[n];
 
+if (count < CNT_MAX)  App_printf("%s :%d \n", __func__, __LINE__);
             if(0U != Mailbox_getRawNewMsgStatus(mbox->baseAddr, mbox->userId, fifo->queueId))
             {
                 numMessages = Mailbox_getMessageCount(mbox->baseAddr, fifo->queueId);
                 if(numMessages > 0U)
                 {
+if (count < CNT_MAX)  App_printf("%s :%d \n", __func__, __LINE__);
                     /* Get the message from Mailbox fifo */
                     Mailbox_getMessage(mbox->baseAddr, fifo->queueId, (uint32_t *)msg);
 
@@ -467,9 +502,11 @@ static void Ipc_mailboxInternalCallback(uintptr_t arg)
                     Mailbox_clrNewMsgStatus(mbox->baseAddr, mbox->userId,
                                                fifo->queueId);
 
+if (count < CNT_MAX)  App_printf("%s :%d \n", __func__, __LINE__);
                     /* Process till we get the special RP Mbox message */
                     for(i=0; i<numMessages; i++)
                     {
+if (count < CNT_MAX)  App_printf("%s :%d \n", __func__, __LINE__);
                         if(msg[i] != shutdownMsg)
                         {
                             parsedMsg[i] = msg[i];
@@ -492,9 +529,11 @@ static void Ipc_mailboxInternalCallback(uintptr_t arg)
                     {
                         gIpcObject.initPrms.rpMboxMsgFxn(fifo->arg, rpMboxMsg);
                     }
+if (count < CNT_MAX)  App_printf("%s :%d \n", __func__, __LINE__);
                 }
                 else
                 {
+if (count < CNT_MAX)  App_printf("%s :%d \n", __func__, __LINE__);
                     /* Clear new message status of Mailbox */
                     Mailbox_clrNewMsgStatus(mbox->baseAddr, mbox->userId, fifo->queueId);
                 }
@@ -502,9 +541,15 @@ static void Ipc_mailboxInternalCallback(uintptr_t arg)
         }
         if(n == mbox->fifoCnt)
         {
+if (count < CNT_MAX)  App_printf("%s :%d \n", __func__, __LINE__);
             mbox->noMsgCnt++;
         }
     }
+if (count < CNT_MAX)  App_printf("%s :%d intCnt=%d noMsgCnt=%d fifoCnt=%d\n",
+			    __func__, __LINE__,
+			    mbox->intCnt,
+			    mbox->noMsgCnt,
+			    mbox->fifoCnt);
 }
 
 void Ipc_mailboxEnableNewMsgInt(uint16_t selfId, uint16_t remoteProcId)
@@ -550,10 +595,8 @@ void *Mailbox_plugInterrupt(Ipc_MbConfig *cfg, Ipc_OsalIsrFxn func, uintptr_t ar
     CSL_IntrRouterCfg           irRegs;
 #endif
 
-#ifdef DEBUG_PRINT
     SystemP_printf("Navss Rtr: input %d, output %d%d\n",
         cfg->inputIntrNum, cfg->outputIntrNum);
-#endif
 #ifdef QNX_OS
 #ifdef DEBUG_PRINT
     SystemP_printf("Mailbox_plugInterrupt: Navss Rtr input %d, output %d\n",
@@ -563,6 +606,7 @@ void *Mailbox_plugInterrupt(Ipc_MbConfig *cfg, Ipc_OsalIsrFxn func, uintptr_t ar
 #ifndef IPC_SUPPORT_SCICLIENT
     /* Configure Main NavSS512 interrupt router */
     #ifdef QNX_OS
+    App_printf("%s :%d \n", __func__, __LINE__);
     if(g_navssIntRtrBaseVirtAddr == 0)
     {
         g_navssIntRtrBaseVirtAddr = IpcUtils_getMemoryAddress(IPC_MCU_NAVSS0_INTR0_CFG_BASE,
@@ -574,6 +618,7 @@ void *Mailbox_plugInterrupt(Ipc_MbConfig *cfg, Ipc_OsalIsrFxn func, uintptr_t ar
     irRegs.numOutputIntrs  = MAIN_NAVSS_MAILBOX_OUTPUTINTR_MAX;
     CSL_intrRouterCfgMux(&irRegs, cfg->inputIntrNum, cfg->outputIntrNum);
     #else
+    App_printf("%s :%d \n", __func__, __LINE__);
     irRegs.pIntrRouterRegs = (CSL_intr_router_cfgRegs *)IPC_MCU_NAVSS0_INTR0_CFG_BASE;
     irRegs.pIntdRegs       = (CSL_intr_router_intd_cfgRegs *) NULL;
     irRegs.numInputIntrs   = MAIN_NAVSS_MAILBOX_INPUTINTR_MAX;
@@ -583,12 +628,14 @@ void *Mailbox_plugInterrupt(Ipc_MbConfig *cfg, Ipc_OsalIsrFxn func, uintptr_t ar
 
 #if defined (SOC_AM65XX)
 #if defined(BUILD_MCU1_0) || defined(BUILD_MCU1_1)
+    App_printf("%s :%d \n", __func__, __LINE__);
     Ipc_main2mcu_intRouter(cfg);
 #endif
 #endif
 
     /* Configure C66x Interrupt Router now */
 #if defined(BUILD_C66X)
+    App_printf("%s :%d \n", __func__, __LINE__);
     Ipc_configC66xIntrRouter(cfg->eventId );
 #endif
 
@@ -598,11 +645,13 @@ void *Mailbox_plugInterrupt(Ipc_MbConfig *cfg, Ipc_OsalIsrFxn func, uintptr_t ar
      * CLEC needs to be configured for all modes - CSL and Sciclient
      **/
 #if defined(BUILD_C7X)
+    App_printf("%s :%d \n", __func__, __LINE__);
     /* Pass the corePackEvent and the base (which was derived from the NAVSS IR o/p
      * range returned from BoardCfg) to route the corressponding CLEC i/p Event to
      * a C7x IRQ. The returned IRQ num is used to register Interrupt with OSAL. */
     coreIntrNum = Ipc_configClecRouter(cfg->eventId, cfg->eventIdBase);
 #else
+    App_printf("%s :%d \n", __func__, __LINE__);
     coreIntrNum = cfg->eventId;
 #endif
 
@@ -613,6 +662,7 @@ void *Mailbox_plugInterrupt(Ipc_MbConfig *cfg, Ipc_OsalIsrFxn func, uintptr_t ar
 #endif
 #endif
 
+    App_printf("%s :%d \n", __func__, __LINE__);
     /* Register interrupts */
     Osal_RegisterInterrupt_initParams(&intrPrms);
     intrPrms.corepacConfig.arg              = arg;
@@ -623,6 +673,7 @@ void *Mailbox_plugInterrupt(Ipc_MbConfig *cfg, Ipc_OsalIsrFxn func, uintptr_t ar
     intrPrms.corepacConfig.corepacEventNum  = coreIntrNum;
     intrPrms.corepacConfig.intVecNum        = OSAL_REGINT_INTVEC_EVENT_COMBINER;
 #else
+    App_printf("%s :%d \n", __func__, __LINE__);
     intrPrms.corepacConfig.intVecNum        = coreIntrNum;
     intrPrms.corepacConfig.corepacEventNum  = 0;
 #endif
@@ -630,6 +681,7 @@ void *Mailbox_plugInterrupt(Ipc_MbConfig *cfg, Ipc_OsalIsrFxn func, uintptr_t ar
     intrPrms.corepacConfig.intAutoEnable  = 1;
 #endif
     osalRetVal = Osal_RegisterInterrupt(&intrPrms, &hwiHandle);
+    App_printf("%s :%d \n", __func__, __LINE__);
     if(OSAL_INT_SUCCESS != osalRetVal)
     {
         SystemP_printf("Mailbox_plugInterrupt : Failed to register ISR...\n");

@@ -78,7 +78,12 @@
 #else
 #define NUMMSGS  10000 /* number of message sent per task */
 #endif
-//#define NUMMSGS  1000000   /* number of message sent per task */
+#undef NUMMSGS
+#define NUMMSGS  2   /* number of message sent per task */
+
+#include "ti/debug_qnr.c"
+#undef App_printf
+#define App_printf Lpm_debugFullPrintf
 
 typedef struct Ipc_TestParams_s
 {
@@ -151,7 +156,7 @@ __attribute__ ((aligned(APP_CHECKER_TSK_STACK)));
 static uint32_t		RecvEndPt = 0;
 #endif
 
-//#define DEBUG_PRINT
+#define DEBUG_PRINT
 
 bool g_exitRespTsk = 0;
 volatile uint32_t gbShutdown = 0U;
@@ -190,6 +195,7 @@ void rpmsg_responderFxn(void *arg0, void *arg1)
     uint32_t         cores;
     char             str[MSGSIZE];
 
+    Lpm_debugFullPrintf("enter %s\n", __func__);
 
     buf = &pRecvTaskBuf[gRecvTaskBufIdx++ * rpmsgDataSize];
     if(buf == NULL)
@@ -344,6 +350,7 @@ void rpmsg_senderFxn(void *arg0, void *arg1)
     uint32_t            cntPing = 0;
     uint32_t            cntPong = 0;
 
+    Lpm_debugFullPrintf("enter %s\n", __func__);
     buf1 = &pSendTaskBuf[rpmsgDataSize * (uint32_t)(*(uint32_t*)arg1)];
     dstProc = (uint32_t)(*(uint32_t*)arg0);
 
@@ -466,6 +473,7 @@ void rpmsg_vdevMonitorFxn(void* arg0, void* arg1)
 {
     int32_t status;
 
+    Lpm_debugFullPrintf("enter %s\n", __func__);
     /* Wait for Linux VDev ready... */
     while(!Ipc_isRemoteReady(IPC_MPU1_0))
     {
@@ -506,10 +514,12 @@ static void IpcRpMboxCallback(uint32_t remoteCoreId, uint32_t msgVal)
 {
     uint32_t i;
 
+    Lpm_debugFullPrintf("enter %s\n", __func__);
     if (msgVal == IPC_RP_MBOX_SHUTDOWN) /* Shutdown request from the remotecore */
     {
         if (IPC_MPU1_0 == remoteCoreId)
         {
+		Lpm_debugFullPrintf("%s remote=IPC_MPU1_0\n", __func__);
             gbShutdown = 1U;
             gbShutdownRemotecoreID = remoteCoreId;
             RPMessage_unblock((RPMessage_Handle)&pRecvTaskBuf[0]);
@@ -524,6 +534,7 @@ static void IpcRpMboxCallback(uint32_t remoteCoreId, uint32_t msgVal)
         }
         else
         {
+		Lpm_debugFullPrintf("%s remote=%d\n", __func__, remoteCoreId);
             Ipc_resetCoreVirtIO(remoteCoreId);
         }
     }
@@ -538,6 +549,7 @@ int32_t Ipc_echo_test(void)
     Ipc_InitPrms      initPrms;
     uint32_t          index = 0;
 
+    Lpm_debugFullPrintf("enter %s\n", __func__);
     /* Step1 : Initialize the multiproc */
     Ipc_mpSetConfig(selfProcId, numProc, pRemoteProcArray);
 
@@ -551,17 +563,19 @@ int32_t Ipc_echo_test(void)
 
     Ipc_init(&initPrms);
 
-    //App_printf("Required Local memory for Virtio_Object = %d\r\n",
-    //   numProc * Ipc_getVqObjMemoryRequiredPerCore());
+    App_printf("Required Local memory for Virtio_Object = %d\r\n",
+       numProc * Ipc_getVqObjMemoryRequiredPerCore());
 
 #if !defined(BUILD_MPU1_0) && defined(A72_LINUX_OS)
     /* If A72 remote core is running Linux OS, then
      * load resource table
      */
+    Lpm_debugFullPrintf("Load resource table\n");
     Ipc_loadResourceTable((void*)&ti_ipc_remoteproc_ResourceTable);
 
 #if !defined(A72_LINUX_OS_IPC_ATTACH)
     /* Wait for Linux VDev ready... */
+    Lpm_debugFullPrintf("Wait for Linux VDev ready...\n");
     for(t = 0; t < numProc; t++)
     {
         while(!Ipc_isRemoteReady(pRemoteProcArray[t]))
@@ -569,7 +583,7 @@ int32_t Ipc_echo_test(void)
             TaskP_sleep(10);
         }
     }
-    //App_printf("Linux VDEV ready now .....\n");
+    App_printf("Linux VDEV ready now .....\n");
 #endif
 #endif
 
@@ -579,8 +593,13 @@ int32_t Ipc_echo_test(void)
     vqParam.vringBaseAddr = (void*)VRING_BASE_ADDRESS;
     vqParam.vringBufSize  = IPC_VRING_BUFFER_SIZE;
     vqParam.timeoutCnt    = 100;  /* Wait for counts */
+    App_printf("vqParam.vqObjBaseAddr =%p\n",vqParam.vqObjBaseAddr );
+    App_printf("vqParam.vqBufSize    =%d \n",vqParam.vqBufSize);
+    App_printf("vqParam.vringBaseAddr =%p\n",vqParam.vringBaseAddr );
+    App_printf("vqParam.vringBufSize  =%d\n",vqParam.vringBufSize);
     Ipc_initVirtIO(&vqParam);
 
+    App_printf("Ipc_initVirtIO done.....\n");
 #if defined (BUILD_MCU1_0)
     EventP_Params      eventParams;
     TaskP_Params      taskParams;
@@ -598,11 +617,13 @@ int32_t Ipc_echo_test(void)
     /* Step 3: Initialize RPMessage */
     RPMessage_Params cntrlParam;
 
-    //App_printf("Required Local memory for RPMessage Object = %d\n",
-    //   RPMessage_getObjMemRequired());
+    App_printf("Required Local memory for RPMessage Object = %d\n",
+       RPMessage_getObjMemRequired());
 
     /* Initialize the param */
     RPMessageParams_init(&cntrlParam);
+
+    App_printf("RPMessageParams_initialized\n");
 
     /* Set memory for HeapMemory for control task */
     cntrlParam.buf         = pCntrlBuf;
@@ -611,6 +632,7 @@ int32_t Ipc_echo_test(void)
     cntrlParam.stackSize   = IPC_TASK_STACKSIZE;
     RPMessage_init(&cntrlParam);
 
+    App_printf("RPMessage_init\n");
     /* Respond to messages coming in to endPt ENDPT_PING */
     TaskP_Params_init(&params);
     params.priority   = 3;
@@ -620,6 +642,7 @@ int32_t Ipc_echo_test(void)
     params.arg1       = (void *)&service_ping.name[0];
     TaskP_create(&rpmsg_responderFxn, &params);
 
+    App_printf("TaskP_create &rpmsg_responderFxn done\n");
 #if !defined(BUILD_MPU1_0) && defined(A72_LINUX_OS)
     /* Respond to messages coming in to endPt ENDPT_CHRDEV (for testing rpmsg_chrdev) */
     TaskP_Params_init(&params);
@@ -629,6 +652,7 @@ int32_t Ipc_echo_test(void)
     params.arg0       = (void *)&service_chrdev.endPt;
     params.arg1       = (void *)&service_chrdev.name[0];
     TaskP_create(&rpmsg_responderFxn, &params);
+    App_printf("TaskP_create &rpmsg_responderFxn redone\n");
 #endif
 
     for(t = 0; t < numProc; t++, index++)
@@ -642,6 +666,7 @@ int32_t Ipc_echo_test(void)
          * the pointer of which is to be passed as argument to sender task */
         gSendTaskBufIdx[t] = t;
         /* send messages to peer(s) on ENDPT_PING */
+    App_printf("send messages to peer(s) on ENDPT_PING proc %d\n", t);
         TaskP_Params_init(&params);
         params.priority  = IPC_SETUP_TASK_PRI;
         params.stack     = &pTaskBuf[index * IPC_TASK_STACKSIZE];
@@ -649,15 +674,18 @@ int32_t Ipc_echo_test(void)
         params.arg0      = (void *)&pRemoteProcArray[t];
         params.arg1      = (void *)&gSendTaskBufIdx[t];
         TaskP_create(&rpmsg_senderFxn, &params);
+    App_printf("task created proc %d\n", t);
 
     }
 
 #if !defined(BUILD_MPU1_0) && defined(A72_LINUX_OS) && defined(A72_LINUX_OS_IPC_ATTACH)
     /* Respond to messages coming in to endPt ENDPT_PING */
+    App_printf("TaskP_Params_init\n");
     TaskP_Params_init(&params);
     params.priority = IPC_SETUP_TASK_PRI;
     params.stacksize = 0x1000;
     params.arg0 = 0;
+    App_printf("TaskP_create\n");
     TaskP_create(&rpmsg_vdevMonitorFxn, &params);
 #endif /* !defined(BUILD_MPU1_0) && defined(A72_LINUX_OS) && defined(A72_LINUX_OS_IPC_ATTACH) */
 

@@ -47,6 +47,11 @@
 #include <stdint.h>
 #include <ti/drv/ipc/src/mailbox/csl_mailbox.h>
 
+#include "ti/debug_qnr.c"
+#undef App_printf
+#define App_printf Lpm_debugFullPrintf
+#undef SystemP_printf
+#define SystemP_printf Lpm_debugFullPrintf
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
@@ -124,8 +129,10 @@ void Mailbox_disableNewMsgInt(uintptr_t baseAddr,
                               uint32_t queueId)
 {
     /* Set the NewMsgEnable field - Writing zero has no effect */
+    Lpm_debugFullPrintf("%s: %d\n", __func__, __LINE__);
     CSL_REG32_WR(baseAddr + CSL_MAILBOX_USER_IRQ_ENABLE_CLR(userId), (uint32_t) 0x1 <<
                 (queueId * 2U));
+    Lpm_debugFullPrintf("%s: %d\n", __func__, __LINE__);
 }
 
 void Mailbox_clrNewMsgStatus(uintptr_t baseAddr, 

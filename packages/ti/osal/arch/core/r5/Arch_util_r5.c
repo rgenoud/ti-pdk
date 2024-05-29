@@ -48,6 +48,11 @@
 
 #define OSAL_ARCH_UTIL_ZERO          ((uint32_t) 0U)
 
+#include "ti/debug_qnr.c"
+#undef App_printf
+#define App_printf Lpm_debugFullPrintf
+#undef SystemP_printf
+#define SystemP_printf Lpm_debugFullPrintf
 /* Local hwi structures */
 
 typedef struct HwiP_nonOs_s {
@@ -130,11 +135,13 @@ HwiP_Handle OsalArch_HwiPCreate(uint32_t interruptNum, HwiP_Fxn hwiFxn,
     HwiP_Handle       retHandle = NULL_PTR;
     CSL_ArmR5CPUInfo  info = {0U, 0U, 0U};
 
+    App_printf("%s :%d \n", __func__, __LINE__);
     /* Check if user has specified any memory block to be used, which gets
      * the precedence over the internal static memory block
      */
     if ((uintptr_t)(0U) != gOsal_HwAttrs.extHwiPBlock.base)
     {
+    App_printf("%s :%d \n", __func__, __LINE__);
         /* pick up the external memory block configured */
         hwiPool        = (HwiP_nonOs *) gOsal_HwAttrs.extHwiPBlock.base;
         temp           = ((uintptr_t) hwiPool) + gOsal_HwAttrs.extHwiPBlock.size;
@@ -142,21 +149,25 @@ HwiP_Handle OsalArch_HwiPCreate(uint32_t interruptNum, HwiP_Fxn hwiFxn,
     }
     else
     {
+    App_printf("%s :%d \n", __func__, __LINE__);
         /* Pick up the internal static memory block */
         hwiPool        = (HwiP_nonOs *) &hwiStructs[0];
         maxHwi         = OSAL_NONOS_CONFIGNUM_HWI;
 
         if(BFALSE == gHwiInitialized)
         {
+    App_printf("%s :%d \n", __func__, __LINE__);
           /* Initializing the first time */
           (void)memset((void *)hwiStructs,0,sizeof(hwiStructs));
           gHwiInitialized = BTRUE;
         }
     }
+    App_printf("%s :%d \n", __func__, __LINE__);
 
     if (NULL_PTR != params)
     {
 
+    App_printf("%s :%d \n", __func__, __LINE__);
     key = OsalArch_globalDisableInterrupt();
     for (i = 0U; i < maxHwi; i++) {
         if (BFALSE == hwiPool[i].used) {
@@ -164,8 +175,10 @@ HwiP_Handle OsalArch_HwiPCreate(uint32_t interruptNum, HwiP_Fxn hwiFxn,
             break;
         }
     }
+    App_printf("%s :%d \n", __func__, __LINE__);
     OsalArch_globalRestoreInterrupt(key);
 
+    App_printf("%s :%d \n", __func__, __LINE__);
     if (i != maxHwi)
     {
       hwi_handle = &(hwiPool[i].hwi);
@@ -176,15 +189,22 @@ HwiP_Handle OsalArch_HwiPCreate(uint32_t interruptNum, HwiP_Fxn hwiFxn,
       retHandle  = (HwiP_Handle)(NULL);
     }
 
+    App_printf("%s :%d \n", __func__, __LINE__);
     if (NULL_PTR != hwi_handle)
     {
+    App_printf("%s :%d \n", __func__, __LINE__);
         if (BTRUE == gFirstTime)
         {
+    App_printf("%s :%d \n", __func__, __LINE__);
             Intc_Init();
+    App_printf("%s :%d \n", __func__, __LINE__);
             CSL_armR5GetCpuID(&info);
+    App_printf("%s :%d \n", __func__, __LINE__);
 #if defined(CSL_MAIN_DOMAIN_VIM_BASE_ADDR0) && defined(CSL_MAIN_DOMAIN_VIM_BASE_ADDR1)
+    App_printf("%s :%d \n", __func__, __LINE__);
             if (CSL_ARM_R5_CLUSTER_GROUP_ID_0 == info.grpId)
             {
+    App_printf("%s :%d \n", __func__, __LINE__);
                 /* MCU SS Pulsar R5 SS */
                 if (CSL_ARM_R5_CPU_ID_0 == info.cpuID)
                 {
@@ -197,6 +217,7 @@ HwiP_Handle OsalArch_HwiPCreate(uint32_t interruptNum, HwiP_Fxn hwiFxn,
             }
             else
             {
+    App_printf("%s :%d \n", __func__, __LINE__);
                 /* MAIN SS Pulsar R5 SS */
                 if (CSL_ARM_R5_CPU_ID_0 == info.cpuID)
                 {
@@ -209,30 +230,38 @@ HwiP_Handle OsalArch_HwiPCreate(uint32_t interruptNum, HwiP_Fxn hwiFxn,
             }
 #else
             /* MCU SS Pulsar R5 SS */
+    App_printf("%s :%d \n", __func__, __LINE__);
             if (CSL_ARM_R5_CPU_ID_0 == info.cpuID)
             {
+    App_printf("%s :%d \n", __func__, __LINE__);
                 gVimRegs = (CSL_vimRegs *)(uintptr_t)CSL_MCU_DOMAIN_VIM_BASE_ADDR0;
             }
             else
             {
+    App_printf("%s :%d \n", __func__, __LINE__);
                 gVimRegs = (CSL_vimRegs *)(uintptr_t)CSL_MCU_DOMAIN_VIM_BASE_ADDR1;
             }
 #endif
+    App_printf("%s :%d \n", __func__, __LINE__);
             gFirstTime = BFALSE;
             if (BFALSE == gOsalArchConfig.disableIrqOnInit)
             {
+    App_printf("%s :%d \n", __func__, __LINE__);
                 Intc_SystemEnable();
             }
         }
 
+    App_printf("%s :%d \n", __func__, __LINE__);
         /* Disable the interrupt first */
         Intc_IntDisable((uint16_t)interruptNum);
 
+    App_printf("%s :%d \n", __func__, __LINE__);
         /* Set the trigger type */
         if ((OSAL_ARM_GIC_TRIG_TYPE_HIGH_LEVEL == params->triggerSensitivity) ||
             (OSAL_ARM_GIC_TRIG_TYPE_LEVEL      == params->triggerSensitivity) ||
             (OSAL_ARM_GIC_TRIG_TYPE_LOW_LEVEL  == params->triggerSensitivity))
         {
+    App_printf("%s :%d \n", __func__, __LINE__);
             Intc_IntSetSrcType((uint16_t)interruptNum, CSL_VIM_INTR_TYPE_LEVEL);
         }
         else
@@ -240,6 +269,7 @@ HwiP_Handle OsalArch_HwiPCreate(uint32_t interruptNum, HwiP_Fxn hwiFxn,
             Intc_IntSetSrcType((uint16_t)interruptNum, CSL_VIM_INTR_TYPE_PULSE);
         }
 
+    App_printf("%s :%d \n", __func__, __LINE__);
         hwi_handle->intNum = interruptNum;
 
         /* Set the priority to default priority if priority is set un-initialized */
@@ -250,28 +280,34 @@ HwiP_Handle OsalArch_HwiPCreate(uint32_t interruptNum, HwiP_Fxn hwiFxn,
         }
         else
         {
+    App_printf("%s :%d \n", __func__, __LINE__);
             priority = (uint16_t)params->priority;
         }
 
+    App_printf("%s :%d \n", __func__, __LINE__);
         /* Setting the priority for the UART interrupt in INTC. */
         Intc_IntPrioritySet((uint16_t)interruptNum, priority, 0);
 
+    App_printf("%s :%d \n", __func__, __LINE__);
         /* Registering the Interrupt Service Routine(ISR). */
         Intc_IntRegister((uint16_t)interruptNum, (IntrFuncPtr) hwiFxn, (void *)params->arg);
 
         /* Enabling the interrupt if configured */
         if (UTRUE == params->enableIntr)
         {
+    App_printf("%s :%d Intc_IntEnable:%d\n", __func__, __LINE__, interruptNum);
             /* Enabling the interrupt in INTC. */
             Intc_IntEnable((uint16_t)interruptNum);
         }
         else
         {
+    App_printf("%s :%d \n", __func__, __LINE__);
             /* Disabling the interrupt in INTC. */
             Intc_IntDisable((uint16_t)interruptNum);
         }
     }
   }
+    App_printf("%s :%d \n", __func__, __LINE__);
     return ((HwiP_Handle) (retHandle) );
 
 }

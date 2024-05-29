@@ -123,19 +123,6 @@
 /*                          Function Declarations                             */
 /* ========================================================================== */
 
-#ifdef BUILD_MCU1_0
-const char mcu_str[] = "MCU1_0";
-#endif
-#ifdef BUILD_MCU1_1
-const char mcu_str[] = "MCU1_1";
-#endif
-#ifdef BUILD_MCU2_0
-const char mcu_str[] = "MCU2_0";
-#endif
-#ifdef BUILD_MCU2_1
-const char mcu_str[] = "MCU2_1";
-#endif
-
 static void taskFxn(void* a0, void* a1);
 
 #if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)))

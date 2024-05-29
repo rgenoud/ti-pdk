@@ -49,6 +49,12 @@
 extern "C" {
 #endif
 
+#include "ti/debug_qnr.c"
+#undef App_printf
+#define App_printf Lpm_debugFullPrintf
+#undef SystemP_printf
+#define SystemP_printf Lpm_debugFullPrintf
+
 /*
  * Purpose:     Initializes the interrupt registration config structure
  * Description: Initializes the interrupt registration config structure prior to
@@ -91,6 +97,7 @@ OsalInterruptRetCode_e Osal_RegisterInterrupt(OsalRegisterIntrParams_t *interrup
     HwiP_Handle                hwiPHandle=NULL_PTR;
     HwiP_Params                 hwiInputParams;
 
+    App_printf("%s :%d \n", __func__, __LINE__);
      /* Program the corepac interrupt */
       if( ( (void (*)(uintptr_t arg)) NULL_PTR == interruptRegParams->corepacConfig.isrRoutine) ||
           ( CSL_INVALID_EVENT_ID               == interruptRegParams->corepacConfig.corepacEventNum) ) {
@@ -99,6 +106,7 @@ OsalInterruptRetCode_e Osal_RegisterInterrupt(OsalRegisterIntrParams_t *interrup
 
       HwiP_Params_init(&hwiInputParams);
 
+    App_printf("%s :%d \n", __func__, __LINE__);
       hwiInputParams.name = interruptRegParams->corepacConfig.name;
       hwiInputParams.arg  = interruptRegParams->corepacConfig.arg;
       hwiInputParams.priority = interruptRegParams->corepacConfig.priority;
@@ -108,6 +116,7 @@ OsalInterruptRetCode_e Osal_RegisterInterrupt(OsalRegisterIntrParams_t *interrup
       hwiInputParams.triggerSensitivity = interruptRegParams->corepacConfig.triggerSensitivity;
 #endif
 
+    App_printf("%s :%d \n", __func__, __LINE__);
 #ifdef _TMS320C6X
       /* Maps the core_event_in to the hwi Vector core_intVecNum (4-15) for C6x and core_intNum for ARM */
 /*       For C66x
@@ -116,6 +125,7 @@ OsalInterruptRetCode_e Osal_RegisterInterrupt(OsalRegisterIntrParams_t *interrup
             if core_intVecNum is set to -1 as input, it means Let RM find a free unused vector number;
             HwiP_Create(Event_combiner_event,core_intVecNum,Event_dispatcher_plug);
 */
+    App_printf("%s :%d \n", __func__, __LINE__);
    if(OSAL_REGINT_INTVEC_EVENT_COMBINER == interruptRegParams->corepacConfig.intVecNum) {
       OsalArch_oneTimeInit();
       /* Map to a particular group */
@@ -163,6 +173,7 @@ OsalInterruptRetCode_e Osal_RegisterInterrupt(OsalRegisterIntrParams_t *interrup
    }
 #else
 
+    App_printf("%s :%d \n", __func__, __LINE__);
 #if (defined (__ARM_ARCH_7A__) || defined (__aarch64__)) && !defined (SOC_AM437x) &&  !defined(SOC_AM335x)
     /* Initialize GIC if not done already */
     Osal_HwAttrs hwAttrs;
@@ -177,18 +188,22 @@ OsalInterruptRetCode_e Osal_RegisterInterrupt(OsalRegisterIntrParams_t *interrup
 #else
     /* Subtract 32 as the IRQ handler for A15 subtracts 32, Keystone handler does not do it */
 #if !defined(__aarch64__)
+    App_printf("%s :%d \n", __func__, __LINE__);
     interruptRegParams->corepacConfig.intVecNum -= 32U;
 #endif
 #endif
 #endif
 
+    App_printf("%s :%d \n", __func__, __LINE__);
    hwiPHandle =  HwiP_create(interruptRegParams->corepacConfig.intVecNum,interruptRegParams->corepacConfig.isrRoutine, &hwiInputParams);
    if(NULL_PTR == hwiPHandle) {
        ret = OSAL_INT_ERR_HWICREATE;
    }
 #endif
 
+    App_printf("%s :%d \n", __func__, __LINE__);
   *hwiPHandlePtr=hwiPHandle;
+    App_printf("%s :%d \n", __func__, __LINE__);
   return ret ;
 }
 

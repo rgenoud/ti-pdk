@@ -44,6 +44,12 @@
 
 extern uint32_t  gOsalHwiAllocCnt, gOsalHwiPeak;
 
+#include "ti/debug_qnr.c"
+#undef App_printf
+#define App_printf Lpm_debugFullPrintf
+#undef SystemP_printf
+#define SystemP_printf Lpm_debugFullPrintf
+
 /*
  *  ======== HwiP_Params_init ========
  */
@@ -76,8 +82,10 @@ void HwiP_Params_init(HwiP_Params *params)
 HwiP_Handle HwiP_create(uint32_t interruptNum, HwiP_Fxn hwiFxn, const HwiP_Params *params)
 {
     HwiP_Handle handle;
+    App_printf("%s :%d \n", __func__, __LINE__);
     handle = OsalArch_HwiPCreate(interruptNum,hwiFxn,params);
 
+    App_printf("%s :%d \n", __func__, __LINE__);
     /* Update statistics for successful allocation */
     if(NULL_PTR != handle)
     {
@@ -87,6 +95,7 @@ HwiP_Handle HwiP_create(uint32_t interruptNum, HwiP_Fxn hwiFxn, const HwiP_Param
             gOsalHwiPeak = gOsalHwiAllocCnt;
         }
     }
+    App_printf("%s :%d \n", __func__, __LINE__);
     return (handle);
 }
 

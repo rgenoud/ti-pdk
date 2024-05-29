@@ -78,13 +78,10 @@ int32_t Ipc_Trace_printf(const char *format, ...)
     va_start(args, format);
     vsprintf(buffer, format, args);
     va_end(args);
-#if defined(ENABLE_UART_PRINT)
     if(gBoardinit==1)
     {
         UART_printf("%s\n",buffer);
     }
-    
-#endif
     for (i = 0; i < strlen(buffer); i++)
     {
         Ipc_traceBuffer[gTraceBufIndex++] = buffer[i];
