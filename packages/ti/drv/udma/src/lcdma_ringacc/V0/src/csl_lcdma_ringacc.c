@@ -168,7 +168,7 @@ static int32_t CSL_lcdma_ringaccPush64MultiAccess( CSL_LcdmaRingaccCfg *pCfg, CS
              *---------------------------------------------------------------*/
             if( (pfMemOps != NULL) && (pRing->asel == (uint32_t)0U) )
             {
-                (*pfMemOps)((void *)pRingEntry, numValuesWritten * sizeof(uint64_t), CSL_LCDMA_RINGACC_MEM_OPS_TYPE_WR);
+                (*pfMemOps)((void *)pRingEntry, ((uint32_t)(numValuesWritten * sizeof(uint64_t))), CSL_LCDMA_RINGACC_MEM_OPS_TYPE_WR);
             }
             CSL_lcdma_ringaccCommitToForwardRing( pCfg, pRing, (int32_t)numValuesWritten );    /* This call will update wrOcc and wrIdx elements in pRing */
             if( numValues != numValuesWritten )
@@ -215,7 +215,7 @@ static int32_t CSL_lcdma_ringaccPop64MultiAccess( CSL_LcdmaRingaccCfg *pCfg, CSL
             if( (pfMemOps != NULL) && (pRing->asel == (uint32_t)0U) )
             {
                 pRingEntry = (void *)(((uintptr_t)localRdIdx * pRing->elSz) + (uintptr_t)pRing->virtBase);
-                (*pfMemOps)((void *)pRingEntry, numValuesRead * sizeof(uint64_t), CSL_LCDMA_RINGACC_MEM_OPS_TYPE_RD);
+                (*pfMemOps)((void *)pRingEntry, ((uint32_t)(numValuesRead * sizeof(uint64_t))), CSL_LCDMA_RINGACC_MEM_OPS_TYPE_RD);
             }
             for( i=0U; i<numValuesRead; i++)
             {
@@ -257,7 +257,7 @@ static int32_t CSL_lcdma_ringaccPeek64Access( CSL_LcdmaRingaccCfg *pCfg, CSL_Lcd
              *---------------------------------------------------------------*/
             if( (pfMemOps != NULL) && (pRing->asel == (uint32_t)0U) )
             {
-                (*pfMemOps)((void *)pRingEntry, sizeof(uint64_t), CSL_LCDMA_RINGACC_MEM_OPS_TYPE_RD);
+                (*pfMemOps)((void *)pRingEntry, (uint32_t)sizeof(uint64_t), CSL_LCDMA_RINGACC_MEM_OPS_TYPE_RD);
             }
             *pVal = *(uint64_t *)pRingEntry;
         }
@@ -486,7 +486,7 @@ int32_t CSL_lcdma_ringaccPush32( CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRing
          *---------------------------------------------------------------*/
         if( (pfMemOps != NULL) && (pRing->asel == (uint32_t)0U) )
         {
-            (*pfMemOps)((void *)pRingEntry, sizeof(uint32_t), CSL_LCDMA_RINGACC_MEM_OPS_TYPE_WR);
+            (*pfMemOps)((void *)pRingEntry, (uint32_t)sizeof(uint32_t), CSL_LCDMA_RINGACC_MEM_OPS_TYPE_WR);
         }
         CSL_lcdma_ringaccCommitToForwardRing( pCfg, pRing, 1 );
     }
@@ -511,7 +511,7 @@ int32_t CSL_lcdma_ringaccPop32( CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingC
          *---------------------------------------------------------------*/
         if( (pfMemOps != NULL) && (pRing->asel == (uint32_t)0U) )
         {
-            (*pfMemOps)((void *)pRingEntry, sizeof(uint32_t), CSL_LCDMA_RINGACC_MEM_OPS_TYPE_RD);
+            (*pfMemOps)((void *)pRingEntry, (uint32_t)sizeof(uint32_t), CSL_LCDMA_RINGACC_MEM_OPS_TYPE_RD);
         }
         *pVal = *pRingEntry;
         CSL_lcdma_ringaccAckReverseRing( pCfg, pRing, 1 );
@@ -543,7 +543,7 @@ int32_t CSL_lcdma_ringaccPeek32( CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRing
          *---------------------------------------------------------------*/
         if( (pfMemOps != NULL) && (pRing->asel == (uint32_t)0U) )
         {
-            (*pfMemOps)((void *)pRingEntry, sizeof(uint32_t), CSL_LCDMA_RINGACC_MEM_OPS_TYPE_RD);
+            (*pfMemOps)((void *)pRingEntry, (uint32_t)sizeof(uint32_t), CSL_LCDMA_RINGACC_MEM_OPS_TYPE_RD);
         }
         *pVal = *pRingEntry;
     }

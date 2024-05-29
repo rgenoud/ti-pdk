@@ -645,7 +645,7 @@ int32_t CSL_ringaccPush32( CSL_RingAccCfg *pCfg, CSL_RingAccRingCfg *pRing, uint
             CSL_archMemoryFence();
             if( pfMemOps != NULL )
             {
-                (*pfMemOps)((void *)pRingEntry, sizeof(uint32_t), CSL_RINGACC_MEM_OPS_TYPE_WR);
+                (*pfMemOps)((void *)pRingEntry, (uint32_t)sizeof(uint32_t), CSL_RINGACC_MEM_OPS_TYPE_WR);
             }
             CSL_ringaccCommitToCmdRing( pCfg, pRing, 1 );
         }
@@ -674,7 +674,7 @@ int32_t CSL_ringaccPop32( CSL_RingAccCfg *pCfg, CSL_RingAccRingCfg *pRing, uint3
         {
             if( pfMemOps != NULL )
             {
-                (*pfMemOps)((void *)pRingEntry, sizeof(uint32_t), CSL_RINGACC_MEM_OPS_TYPE_RD);
+                (*pfMemOps)((void *)pRingEntry, (uint32_t)sizeof(uint32_t), CSL_RINGACC_MEM_OPS_TYPE_RD);
             }
 
             *pVal = *pRingEntry;
@@ -708,7 +708,7 @@ int32_t CSL_ringaccHwPop32( CSL_RingAccCfg *pCfg, CSL_RingAccRingCfg *pRing, uin
         pRingHeadFifoAddr = (uint32_t *)&pCfg->pFifoRegs->FIFO[pRing->ringNum].RINGHEADDATA[CSL_RINGACC_FIFO_WINDOW_SIZE_WORDS-1U];
         if( pfMemOps != NULL )
         {
-            (*pfMemOps)((void *)pRingHeadFifoAddr, sizeof(uint32_t), CSL_RINGACC_MEM_OPS_TYPE_RD);
+            (*pfMemOps)((void *)pRingHeadFifoAddr, (uint32_t)sizeof(uint32_t), CSL_RINGACC_MEM_OPS_TYPE_RD);
         }
         *pVal = CSL_REG32_RD( pRingHeadFifoAddr );
     }
@@ -728,7 +728,7 @@ int32_t CSL_ringaccPeek32( CSL_RingAccCfg *pCfg, CSL_RingAccRingCfg *pRing, uint
         {
             if( pfMemOps != NULL )
             {
-                (*pfMemOps)((void *)pRingEntry, sizeof(uint32_t), CSL_RINGACC_MEM_OPS_TYPE_RD);
+                (*pfMemOps)((void *)pRingEntry, (uint32_t)sizeof(uint32_t), CSL_RINGACC_MEM_OPS_TYPE_RD);
             }
             *pVal = *pRingEntry;
         }
@@ -766,7 +766,7 @@ int32_t CSL_ringaccPush64( CSL_RingAccCfg *pCfg, CSL_RingAccRingCfg *pRing, uint
                 CSL_archMemoryFence();
                 if( pfMemOps != NULL )
                 {
-                    (*pfMemOps)((void *)pRingEntry, sizeof(uint64_t), CSL_RINGACC_MEM_OPS_TYPE_WR);
+                    (*pfMemOps)((void *)pRingEntry, (uint32_t)sizeof(uint64_t), CSL_RINGACC_MEM_OPS_TYPE_WR);
                 }
                 CSL_ringaccCommitToCmdRing( pCfg, pRing, 1 );
             }
@@ -802,7 +802,7 @@ int32_t CSL_ringaccPop64( CSL_RingAccCfg *pCfg, CSL_RingAccRingCfg *pRing, uint6
             {
                 if( pfMemOps != NULL )
                 {
-                    (*pfMemOps)((void *)pRingEntry, sizeof(uint64_t), CSL_RINGACC_MEM_OPS_TYPE_RD);
+                    (*pfMemOps)((void *)pRingEntry, (uint32_t)sizeof(uint64_t), CSL_RINGACC_MEM_OPS_TYPE_RD);
                 }
                 *pVal = *pRingEntry;
                 CSL_ringaccAckRspRing( pCfg, pRing, 1 );
@@ -840,7 +840,7 @@ int32_t CSL_ringaccHwPop64( CSL_RingAccCfg *pCfg, CSL_RingAccRingCfg *pRing, uin
         pRingHeadFifoAddr = (uint64_t *)&pCfg->pFifoRegs->FIFO[pRing->ringNum].RINGHEADDATA[CSL_RINGACC_FIFO_WINDOW_SIZE_WORDS-2U];
         if( pfMemOps != NULL )
         {
-            (*pfMemOps)((void *)pRingHeadFifoAddr, sizeof(uint64_t), CSL_RINGACC_MEM_OPS_TYPE_RD);
+            (*pfMemOps)((void *)pRingHeadFifoAddr, (uint32_t)sizeof(uint64_t), CSL_RINGACC_MEM_OPS_TYPE_RD);
         }
         *pVal = CSL_REG64_RD( pRingHeadFifoAddr );
     }
@@ -866,7 +866,7 @@ int32_t CSL_ringaccPeek64( CSL_RingAccCfg *pCfg, CSL_RingAccRingCfg *pRing, uint
             {
                 if( pfMemOps != NULL )
                 {
-                    (*pfMemOps)((void *)pRingEntry, sizeof(uint64_t), CSL_RINGACC_MEM_OPS_TYPE_RD);
+                    (*pfMemOps)((void *)pRingEntry, (uint32_t)sizeof(uint64_t), CSL_RINGACC_MEM_OPS_TYPE_RD);
                 }
                 *pVal = *pRingEntry;
             }
