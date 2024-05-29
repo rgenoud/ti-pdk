@@ -367,7 +367,6 @@ typedef uint32_t CSL_BcdmaDescriptorType;
 
 #define CSL_BCDMA_RXFDQ_CNT             (4U)
 #define CSL_BCDMA_RXFDQ_THRESH_CNT      (4U)
-#define CSL_BCDMA_NO_EVENT              (0xFFFFU)
 
 /** \brief [udmap_only] Receive free descriptor queue threshold information
  *
