@@ -1093,6 +1093,9 @@ static bool I2CApp_negativeTest(void *arg)
         testStatus = BFALSE;
     }
 
+    /* Test6: Called I2CMasterInitExpClk with internalClk=0U & outputClk=0U */
+    I2CMasterInitExpClk(i2cCfg->baseAddr, i2cCfg->funcClk, 0U, 0U);
+
     /*clear the FIFO*/
     I2CFlushFifo(i2cCfg->baseAddr);
 
