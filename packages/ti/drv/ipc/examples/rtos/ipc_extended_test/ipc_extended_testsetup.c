@@ -51,6 +51,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
+#include <stdio.h>
 
 #include <ti/drv/ipc/examples/common/src/ipc_setup.h>
 #include <ti/drv/ipc/ipc.h>
@@ -618,15 +619,16 @@ int32_t IpcApp_echoExtTest(void)
       RPMessage_deInit();
 
       Ipc_deinit();
-
+      
+      UART_printf("Tests finished\n");
+      UART_printf("Total tests: %d Passed: %d Failed %d\n", gTotalTests, gTotalTestsPassed, gTotalTestsFailed);
+      
       #if defined LDRA_DYN_COVERAGE_EXIT
           UART_printf("\n LDRA ENTRY... \n");
           upload_execution_history();
           UART_printf("\n LDRA EXIT... \n");
       #endif
       
-      UART_printf("Tests finished\n");
-      UART_printf("Total tests: %d Passed: %d Failed %d\n", gTotalTests, gTotalTestsPassed, gTotalTestsFailed);
       if (gTotalTests == gTotalTestsPassed)
       {
           UART_printf("All tests have passed.\n\n\n");
