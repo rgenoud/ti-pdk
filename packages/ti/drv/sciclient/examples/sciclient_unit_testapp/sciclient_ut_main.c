@@ -78,7 +78,7 @@
 /* ========================================================================== */
 
 extern Sciclient_ServiceHandle_t gSciclientHandle;
-extern uint32_t gInterruptRecieved;
+extern volatile uint32_t gInterruptRecieved;
 /* For SafeRTOS on R5F with FFI Support, task stack should be aligned to the stack size */
 #if defined(SAFERTOS) && defined (BUILD_MCU)
 static uint8_t  gSciclientAppTskStackMain[32*1024] __attribute__((aligned(32*1024))) = { 0 };
@@ -685,6 +685,10 @@ static int32_t SciclientApp_fwExcpNotificationTest(void)
 
     /* Invoking a firewall exception notification for the cmbn exception handler by writing to dmsc address */
     *excpRegCmbn = 0x01;
+
+    /* This ensures that all the LOAD and STORE operations that were issued before the barrier 
+    occur before the LOAD and STORE operations issued after the barrier */
+    __sync_synchronize();
 
     if (gInterruptRecieved != EXCEPTION_INTERRUPT_CNT)
     {
