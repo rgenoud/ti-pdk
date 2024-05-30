@@ -68,7 +68,7 @@ static int32_t CSL_bcdmaChanOpSetChanRT( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChan
 static int32_t CSL_bcdmaChanOpGetChanStats( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData );
 static int32_t CSL_bcdmaChanOpDecChanStats( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData );
 static int32_t CSL_bcdmaChanOpAccessRemotePeerReg( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData, bool bRead );
-static int32_t CSL_bcdmaChanOpSetBurstSize( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData );
+static int32_t CSL_bcdmaChanOpSetBurstSize( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, const void *pOpData );
 static int32_t CSL_bcdmaChanOpClearError( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx );
 
 static uint32_t CSL_bcdmaMapChanIdx( const CSL_BcdmaCfg *pCfg, uint32_t chanIdx, CSL_BcdmaChanType *chanType )
@@ -713,7 +713,7 @@ static int32_t CSL_bcdmaChanOpAccessRemotePeerReg( const CSL_BcdmaCfg *pCfg, CSL
     return retVal;
 }
 
-static int32_t CSL_bcdmaChanOpSetBurstSize( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData )
+static int32_t CSL_bcdmaChanOpSetBurstSize( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, const void *pOpData )
 {
     int32_t retVal = CSL_PASS;
 

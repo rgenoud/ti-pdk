@@ -472,7 +472,7 @@ extern void CSL_lcdma_ringaccResetRing( const CSL_LcdmaRingaccCfg *pCfg, CSL_Lcd
  *  \return NULL if the ring is full, otherwise a void pointer to the next
  *          free forward ring element
  */
-extern void *CSL_lcdma_ringaccGetForwardRingPtr( CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing );
+extern void *CSL_lcdma_ringaccGetForwardRingPtr( const CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing );
 
 /**
  *  \brief Get pointer to next available reverse ring element.
@@ -491,7 +491,7 @@ extern void *CSL_lcdma_ringaccGetForwardRingPtr( CSL_LcdmaRingaccCfg *pCfg, CSL_
  *  \return NULL if the ring is empty, otherwise a void pointer to the next
  *          available reverse ring element
  */
-extern void *CSL_lcdma_ringaccGetReverseRingPtr( CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing );
+extern void *CSL_lcdma_ringaccGetReverseRingPtr( const CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing );
 
 /**
  *  \brief Write to the ring foward doorbell.
@@ -560,9 +560,9 @@ static inline void CSL_lcdma_ringaccSetReverseDoorbell( const CSL_LcdmaRingaccCf
  *
  *  \return None
  */
-static inline void CSL_lcdma_ringaccCommitToForwardRing( CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing, int32_t cnt );
+static inline void CSL_lcdma_ringaccCommitToForwardRing( const CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing, int32_t cnt );
 
-static inline void CSL_lcdma_ringaccCommitToForwardRing( CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing, int32_t cnt )
+static inline void CSL_lcdma_ringaccCommitToForwardRing( const CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing, int32_t cnt )
 {
     int32_t cntLocal = cnt;
     /*-------------------------------------------------------------------------
@@ -606,9 +606,9 @@ static inline void CSL_lcdma_ringaccCommitToForwardRing( CSL_LcdmaRingaccCfg *pC
  *
  *  \return None
  */
-static inline void CSL_lcdma_ringaccAckReverseRing( CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing, int32_t cnt );
+static inline void CSL_lcdma_ringaccAckReverseRing( const CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing, int32_t cnt );
 
-static inline void CSL_lcdma_ringaccAckReverseRing( CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing, int32_t cnt )
+static inline void CSL_lcdma_ringaccAckReverseRing( const CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing, int32_t cnt )
 {
     int32_t cntLocal = cnt;
     /*-------------------------------------------------------------------------
@@ -1110,7 +1110,7 @@ extern int32_t CSL_lcdma_ringaccRdData( CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRing
  *  \return  0 = success
  *          -2 = requested access size is greater than ring element size
  */
-extern int32_t CSL_lcdma_ringaccPeekData( const CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing, uint8_t *pData, uint32_t numBytes, CSL_lcdma_ringaccMemOpsFxnPtr pfMemOps );
+extern int32_t CSL_lcdma_ringaccPeekData( const CSL_LcdmaRingaccCfg *pCfg, const CSL_LcdmaRingaccRingCfg *pRing, uint8_t *pData, uint32_t numBytes, CSL_lcdma_ringaccMemOpsFxnPtr pfMemOps );
 
 /**
  *  \brief Clear the asel field in an address
@@ -1185,7 +1185,7 @@ extern void CSL_lcdma_ringaccAckTeardown( const CSL_LcdmaRingaccCfg *pCfg, uint3
  *  \return  0 = success
  *          -1 = ring is empty (there are no more values in the ring to dequeue)
  */
-extern int32_t CSL_lcdma_ringaccDequeue( CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing, uint64_t *pVal );
+extern int32_t CSL_lcdma_ringaccDequeue( const CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing, uint64_t *pVal );
 
 /* @} */
 
