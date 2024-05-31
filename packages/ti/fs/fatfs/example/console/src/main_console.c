@@ -264,6 +264,17 @@ void fatfs_console(void* a0, void* a1)
     char drivePath[3];
 #endif
 
+    /* Call board init functions */
+    Board_initCfg boardCfg;
+    boardCfg = BOARD_INIT_PINMUX_CONFIG | BOARD_INIT_UART_STDIO | BOARD_INIT_MODULE_CLOCK;
+
+#if (defined(SOC_J721E) || defined (SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4)) &&  ((__ARM_ARCH == 7) && (__ARM_ARCH_PROFILE == 'R'))
+    /* Clear it until the issue is resolved */
+    boardCfg &= ~(BOARD_INIT_MODULE_CLOCK);
+#endif
+
+    Board_init(boardCfg);
+
 #ifdef FATFS_GPIO_ENABLED
     /* GPIO initialization */
     GPIO_init();
@@ -360,16 +371,6 @@ int main(void)
 {
 	TaskP_Handle task;
 	TaskP_Params taskParams;
-    /* Call board init functions */
-    Board_initCfg boardCfg;
-    boardCfg = BOARD_INIT_PINMUX_CONFIG | BOARD_INIT_UART_STDIO | BOARD_INIT_MODULE_CLOCK;
-
-#if (defined(SOC_J721E) || defined (SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4)) &&  ((__ARM_ARCH == 7) && (__ARM_ARCH_PROFILE == 'R'))
-    /* Clear it until the issue is resolved */
-    boardCfg &= ~(BOARD_INIT_MODULE_CLOCK);
-#endif
-
-    Board_init(boardCfg);
 
     OS_init();
 

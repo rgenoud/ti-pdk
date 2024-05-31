@@ -179,6 +179,8 @@ Ptr  hAicChannel;
 /* Function prototype */
 static void createStreams();
 static void prime();
+void configureAudio(void);
+void configMcASP_SocHwInfo(void);
 
 #if defined(SOC_J721S2)
 I2C_Handle  I2C_handle = NULL;
@@ -908,6 +910,18 @@ int total_frames_sent=0;
 
 void Audio_echo_Task(void *arg0, void *arg1)
 {
+    /* enable the pinmux & PSC-enable for the mcasp device    */
+    configureAudio();
+
+    /* Initializing McASP HwInfo parameters */
+    McaspDevice_init();
+
+    /* Perform SOC specific McASP HwInfo Configuration for non-default parameters
+     * using the socGetConfig() and socSetConfig(). Please note that
+     * this is being called AFTER McaspDevice_init() which initializes with the
+     * default parameters */
+    configMcASP_SocHwInfo();
+
     Mcasp_HwInfo hwInfo;
     volatile int32_t status = 0;
     uint32_t i32Count;

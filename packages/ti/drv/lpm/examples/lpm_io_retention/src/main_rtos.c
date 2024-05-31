@@ -397,21 +397,6 @@ void main_configure_can_uart_lock_dmsc()
 
 static void MainApp_TaskFxn(void* a0, void* a1)
 {
-    /* make sure that DMSC isolation bit is turned off
-       and that mmrs are unlocked. If this is not the
-       case, code will not execute correctly on other
-       cores */
-    disable_isolation_bit_and_unlock();
-	/* execute overall application*/
-    io_retention_main();
-}
-
-
-/*
- *  ======== main ========
- */
-int main(void)
-{
     int32_t ret = CSL_PASS;
     Board_initCfg boardCfg;
     int i;
@@ -442,8 +427,6 @@ int main(void)
         }
     }
 
-    OS_init();
-
     /* Initialize SCI Client Server */
     Sciclient_init(NULL_PTR);
     ret = SetupSciServer();
@@ -451,6 +434,25 @@ int main(void)
     {
         OS_stop();
     }
+
+    /* make sure that DMSC isolation bit is turned off
+       and that mmrs are unlocked. If this is not the
+       case, code will not execute correctly on other
+       cores */
+    disable_isolation_bit_and_unlock();
+
+	/* execute overall application*/
+    io_retention_main();
+}
+
+
+/*
+ *  ======== main ========
+ */
+int main(void)
+{
+
+    OS_init();
 
     /* Initialize the task params */
     TaskP_Params_init(&mainAppTaskParams);

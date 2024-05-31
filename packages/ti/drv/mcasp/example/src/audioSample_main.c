@@ -112,9 +112,6 @@ Void InitMmu()
 EDMA3_DRV_Handle hEdma;
 #endif
 
-void configureAudio(void);
-void configMcASP_SocHwInfo(void);
-
 extern void Audio_echo_Task(void *arg0, void *arg1);
 /* ========================================================================== */
 /*                           FUNCTION DEFINITIONS                             */
@@ -148,17 +145,6 @@ int main(void)
 
     myHeap = HeapP_create (&params);
 
-    /* enable the pinmux & PSC-enable for the mcasp device    */
-    configureAudio();
-
-    /* Initializing McASP HwInfo parameters */
-    McaspDevice_init();
-
-    /* Perform SOC specific McASP HwInfo Configuration for non-default parameters
-     * using the socGetConfig() and socSetConfig(). Please note that
-      this is being called AFTER McaspDevice_init() which initializes with the
-      default parameters */
-    configMcASP_SocHwInfo();
 #if defined(AIC_CODEC)
     Aic31_init();
 #endif
