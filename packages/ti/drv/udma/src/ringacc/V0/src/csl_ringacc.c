@@ -72,28 +72,28 @@ static uint32_t ringaccEncodeElementSize( uint32_t elSz )
 {
     uint32_t i;
 
-    for(i=6u; (i>0u) && (elSz != (1u<<(i+2U))); i--) {}
+    for(i=6U; (i>0U) && (elSz != (1u<<(i+2U))); i--) {}
     return i;
 }
 
 static bool bIsPowerOfTwo(uint32_t x)
 {
-  return ((x==0U) || ((x & (x - 1U))==0U)) ? (bool)true : (bool)false;
+  return ((0U == x) || (0U == (x & (x - 1U)))) ? BTRUE : BFALSE;
 }
 
 static bool bIsPhysBaseOk( const CSL_RingAccRingCfg *pRing )
 {
-    bool     bRetVal = (bool)true;
+    bool     bRetVal = BTRUE;
     uint64_t physBase = pRing->physBase;
 
     /*-------------------------------------------------------------------------
      * Base address cannot be 0 and must be aligned to the element size of the
      * ring (which has already been verified to be a power-of-2)
      *-----------------------------------------------------------------------*/
-    if( (physBase == 0UL)   ||
-        ((physBase & (((uint64_t)pRing->elSz - 1UL))) != (uint64_t)0UL) )
+    if( (0UL == physBase)   ||
+        ((uint64_t)0UL != (physBase & (((uint64_t)pRing->elSz - 1UL)))) )
     {
-        bRetVal = (bool)false;
+        bRetVal = BFALSE;
     }
     return bRetVal;
 }
@@ -115,13 +115,13 @@ static void CSL_ringaccRefreshRingOcc( CSL_RingAccCfg *pCfg, CSL_RingAccRingCfg 
 
 static bool CSL_ringaccIsRingEmpty( const CSL_RingAccRingCfg *pRing )
 {
-    bool bEmpty = (pRing->occ == 0U) ? (bool)true : (bool)false;
+    bool bEmpty = (0U == pRing->occ) ? BTRUE : BFALSE;
     return bEmpty;
 }
 
 static bool CSL_ringaccIsRingFull( const CSL_RingAccRingCfg *pRing )
 {
-    bool bFull = (pRing->occ == pRing->elCnt) ? (bool)true : (bool)false;
+    bool bFull = (pRing->occ == pRing->elCnt) ? BTRUE : BFALSE;
     return bFull;
 }
 
@@ -134,12 +134,12 @@ static void *CSL_ringaccGetRingDataPtr( CSL_RingAccCfg *pCfg, CSL_RingAccRingCfg
     void *ptr = NULL;
 
     /* If this ring appears empty, then update the occupancy */
-    if( CSL_ringaccIsRingEmpty( pRing ) == (bool)true )
+    if( BTRUE == CSL_ringaccIsRingEmpty( pRing ) )
     {
         CSL_ringaccRefreshRingOcc( pCfg, pRing );
     }
     /* Return pointer if not empty */
-    if( CSL_ringaccIsRingEmpty( pRing ) == (bool)false )
+    if( BFALSE == CSL_ringaccIsRingEmpty( pRing ) )
     {
         ptr = (void *)CSL_ringaccGetRingElementAddr( pRing );
     }
@@ -173,11 +173,11 @@ static void CSL_ringaccResetRingWorkaround( CSL_RingAccCfg *pCfg, const CSL_Ring
      *  If the ring occupancy is not 0, then we need to execute the workaround.
      *-----------------------------------------------------------------------*/
     ringOcc = CSL_ringaccGetRingOcc( pCfg, ringNum );
-    if( (pRing->mode == CSL_RINGACC_RING_MODE_CREDENTIALS) || (pRing->mode == CSL_RINGACC_RING_MODE_QM) )
+    if( (CSL_RINGACC_RING_MODE_CREDENTIALS == pRing->mode) || (CSL_RINGACC_RING_MODE_QM == pRing->mode) )
     {
         ringOcc >>= 1;
     }
-    if( ringOcc != 0U )
+    if( 0U != ringOcc )
     {
         /*---------------------------------------------------------------------
          *  2. Reset the ring
@@ -188,7 +188,7 @@ static void CSL_ringaccResetRingWorkaround( CSL_RingAccCfg *pCfg, const CSL_Ring
          *  3. Setup the ring in ring/doorbell mode (if not already in this
          *     mode)
          *-------------------------------------------------------------------*/
-        if( pRing->mode != CSL_RINGACC_RING_MODE_RING )
+        if( CSL_RINGACC_RING_MODE_RING != pRing->mode )
         {
             CSL_REG32_FINS( &pCfg->pCfgRegs->RING[ringNum].SIZE, RINGACC_CFG_RING_SIZE_QMODE, CSL_RINGACC_RING_MODE_RING );
         }
@@ -198,7 +198,7 @@ static void CSL_ringaccResetRingWorkaround( CSL_RingAccCfg *pCfg, const CSL_Ring
          *     wide) to 0.
          *-------------------------------------------------------------------*/
         dbRingCnt = ((uint32_t)1U << 22) - ringOcc;
-        while( dbRingCnt != 0U )
+        while( 0U != dbRingCnt )
         {
             /*-----------------------------------------------------------------
              *  Ring the doorbell with the maximum count each iteration if
@@ -218,7 +218,7 @@ static void CSL_ringaccResetRingWorkaround( CSL_RingAccCfg *pCfg, const CSL_Ring
         /*---------------------------------------------------------------------
          *  5. Restore the original ring mode (if not ring mode)
          *-------------------------------------------------------------------*/
-        if( pRing->mode != CSL_RINGACC_RING_MODE_RING )
+        if( CSL_RINGACC_RING_MODE_RING != pRing->mode )
         {
             CSL_REG32_FINS( &pCfg->pCfgRegs->RING[ringNum].SIZE, RINGACC_CFG_RING_SIZE_QMODE, pRing->mode );
         }
@@ -258,25 +258,25 @@ int32_t CSL_ringaccInitRing( CSL_RingAccCfg *pCfg,
                              uint32_t ringNum,
                              CSL_RingAccRingCfg *pRing )
 {
-    int32_t retVal = 0;
+    int32_t retVal = CSL_PASS;
 
-    if( (pCfg == NULL)                                          ||
-        (pCfg->pGlbRegs == NULL)                                ||
-        (pCfg->pCfgRegs == NULL)                                ||
-        (pCfg->pRtRegs == NULL)                                 ||
+    if( (NULL == pCfg)                                          ||
+        (NULL == pCfg->pGlbRegs)                                ||
+        (NULL == pCfg->pCfgRegs)                                ||
+        (NULL == pCfg->pRtRegs)                                 ||
         (pCfg->maxRings > CSL_RINGACC_MAX_RINGS)                ||
         (pCfg->maxMonitors > CSL_RINGACC_MAX_MONITORS)          ||
-        (pRing == NULL)                                         ||
+        (NULL == pRing)                                         ||
         (ringNum >= pCfg->maxRings)                             ||
-        (pRing->elCnt == 0U)                                    ||
-        (pRing->virtBase == NULL)                               ||
+        (0U == pRing->elCnt)                                    ||
+        (NULL == pRing->virtBase)                               ||
         (pRing->mode >= CSL_RINGACC_RING_MODE_INVALID)          ||
         (pRing->elSz < 4U)                                      ||
         (pRing->elSz > 256U)                                    ||
         (!bIsPowerOfTwo(pRing->elSz))                           ||
         (!bIsPhysBaseOk(pRing)) )
     {
-        retVal = -1;
+        retVal = CSL_EFAIL;
     }
     else
     {
@@ -308,14 +308,14 @@ int32_t CSL_ringaccSetEvent( CSL_RingAccCfg *pCfg,
                              uint32_t ringNum,
                              uint32_t evtNum )
 {
-    int32_t retVal = 0;
+    int32_t retVal = CSL_PASS;
 
-    if( (pCfg == NULL)                                          ||
-        (pCfg->pCfgRegs == NULL)                                ||
+    if( (NULL == pCfg)                                          ||
+        (NULL == pCfg->pCfgRegs)                                ||
         (pCfg->maxRings > CSL_RINGACC_MAX_RINGS)                ||
         (ringNum >= pCfg->maxRings))
     {
-        retVal = -1;
+        retVal = CSL_EFAIL;
     }
     else
     {
@@ -335,9 +335,9 @@ void CSL_ringaccSetRingOrderId( CSL_RingAccCfg *pCfg, const CSL_RingAccRingCfg *
 {
     uint32_t regVal;
 
-    if( orderId == CSL_RINGACC_ORDERID_BYPASS )
+    if( CSL_RINGACC_ORDERID_BYPASS == orderId )
     {
-        regVal = 0;
+        regVal = CSL_PASS;
     }
     else
     {
@@ -352,7 +352,7 @@ void CSL_ringaccCfgRingCred( CSL_RingAccCfg *pCfg, const CSL_RingAccRingCfg *pRi
     uint32_t regVal;
 
     /* Configure ISC CONTROL2 register */
-    if( pRing->credVirtId == CSL_RINGACC_CRED_PASSTHRU )
+    if( CSL_RINGACC_CRED_PASSTHRU == pRing->credVirtId )
     {
         regVal = CSL_FMK( RINGACC_ISC_EP_CONTROL2_PASS_V, (uint32_t)1U );
     }
@@ -364,15 +364,15 @@ void CSL_ringaccCfgRingCred( CSL_RingAccCfg *pCfg, const CSL_RingAccRingCfg *pRi
 
     /* Configure ISC CONTROL register */
     regVal = 0;
-    if( bEnable == (bool)true )
+    if( BTRUE == bEnable )
     {
         regVal |= CSL_FMK( RINGACC_ISC_EP_CONTROL_ENABLE, (uint32_t)0xAU );
     }
-    if( bLock == (bool)true )
+    if( BTRUE == bLock )
     {
         regVal |= CSL_FMK( RINGACC_ISC_EP_CONTROL_LOCK, (uint32_t)1U );
     }
-    if( pRing->credPrivId == CSL_RINGACC_CRED_PASSTHRU )
+    if( CSL_RINGACC_CRED_PASSTHRU == pRing->credPrivId )
     {
         regVal |= CSL_FMK( RINGACC_ISC_EP_CONTROL_PASS, (uint32_t)1U );
     }
@@ -381,7 +381,7 @@ void CSL_ringaccCfgRingCred( CSL_RingAccCfg *pCfg, const CSL_RingAccRingCfg *pRi
         regVal |= CSL_FMK( RINGACC_ISC_EP_CONTROL_PRIV_ID, pRing->credPrivId );
     }
     regVal |= CSL_FMK( RINGACC_ISC_EP_CONTROL_PRIV, pRing->credPriv );
-    if( pRing->credSecure == 0U)
+    if( 0U == pRing->credSecure )
     {
         regVal |= CSL_FMK( RINGACC_ISC_EP_CONTROL_NONSEC, (uint32_t)1U );
     }
@@ -426,7 +426,7 @@ void *CSL_ringaccGetCmdRingPtr( CSL_RingAccCfg *pCfg, CSL_RingAccRingCfg *pRing 
     void *ptr = NULL;
 
     /* If this ring appears full, then update the occupancy */
-    if( CSL_ringaccIsRingFull( pRing ) == (bool)true )
+    if( BTRUE == CSL_ringaccIsRingFull( pRing ) )
     {
         CSL_ringaccRefreshRingOcc( pCfg, pRing );
     }
@@ -447,7 +447,7 @@ void *CSL_ringaccGetRspRingPtr( CSL_RingAccCfg *pCfg, CSL_RingAccRingCfg *pRing 
     void *ptr = NULL;
 
     /* If this ring appears empty, then update the occupancy */
-    if( CSL_ringaccIsRingEmpty( pRing ) == (bool)true )
+    if( BTRUE == CSL_ringaccIsRingEmpty( pRing ) )
     {
         CSL_ringaccRefreshRingOcc( pCfg, pRing );
     }
@@ -467,13 +467,13 @@ void CSL_ringaccAckRspRing( CSL_RingAccCfg *pCfg, CSL_RingAccRingCfg *pRing, int
 {
     int32_t cntLocal = cnt;
 
-    if( cntLocal==0 )
+    if( 0 == cntLocal )
     {
         cntLocal = pRing->waiting;
     }
     if( cntLocal > 0 )
     {
-        if( CSL_ringaccSetRingDoorbell( pCfg, pRing->ringNum, 0-cntLocal ) == (int32_t)0 )
+        if( CSL_PASS == CSL_ringaccSetRingDoorbell( pCfg, pRing->ringNum, 0-cntLocal ) )
         {
             pRing->waiting -= cntLocal;
         }
@@ -515,7 +515,7 @@ uint32_t CSL_ringaccGetRingOcc( const CSL_RingAccCfg *pCfg, uint32_t ringNum )
 
 uint32_t CSL_ringaccGetRingHwOcc( const CSL_RingAccCfg *pCfg, uint32_t ringNum )
 {
-    uint32_t retVal = 0;
+    uint32_t retVal = CSL_PASS;
 
     if( ringNum < pCfg->maxRings )
     {
@@ -526,43 +526,43 @@ uint32_t CSL_ringaccGetRingHwOcc( const CSL_RingAccCfg *pCfg, uint32_t ringNum )
 
 int32_t CSL_ringaccSetTraceEnable( CSL_RingAccCfg *pCfg, bool bEnable )
 {
-    int32_t retVal = -1;
-    if( pCfg->bTraceSupported == (bool)true )
+    int32_t retVal = CSL_EFAIL;
+    if( BTRUE == pCfg->bTraceSupported )
     {
-        uint32_t traceEnable = (bEnable==(bool)true) ? (uint32_t)1U : (uint32_t)0U;
+        uint32_t traceEnable = (bEnable== BTRUE) ? UTRUE : UFALSE;
         CSL_REG32_FINS(&pCfg->pGlbRegs->TRACE_CTL, RINGACC_GCFG_TRACE_CTL_EN, traceEnable);
-        retVal = 0;
+        retVal = CSL_PASS;
     }
     return retVal;
 }
 
 int32_t CSL_ringaccEnableTrace( CSL_RingAccCfg *pCfg )
 {
-    return CSL_ringaccSetTraceEnable(pCfg, (bool)true);
+    return CSL_ringaccSetTraceEnable(pCfg, BTRUE);
 }
 
 int32_t CSL_ringaccDisableTrace( CSL_RingAccCfg *pCfg )
 {
-    return CSL_ringaccSetTraceEnable(pCfg, (bool)false);
+    return CSL_ringaccSetTraceEnable(pCfg, BFALSE);
 }
 
 int32_t CSL_ringaccCfgTrace( CSL_RingAccCfg *pCfg, bool bTraceAll, bool bIncMsgData, uint32_t ringNum )
 {
-    int32_t retVal = -1;
+    int32_t retVal = CSL_EFAIL;
     uint32_t ringNumLocal = ringNum;
 
     /* Ignore ring number for all trace enable */
-    if( bTraceAll == (bool)true )
+    if( BTRUE == bTraceAll )
     {
         ringNumLocal = 0U;
     }
     if( pCfg->bTraceSupported && (ringNumLocal < pCfg->maxRings) )
     {
         CSL_REG32_WR( &pCfg->pGlbRegs->TRACE_CTL,
-            CSL_FMK(RINGACC_GCFG_TRACE_CTL_ALL_QUEUES, ((bTraceAll==(bool)true) ? (uint32_t)1U: (uint32_t)0) )   |
-            CSL_FMK(RINGACC_GCFG_TRACE_CTL_MSG, ((bIncMsgData==(bool)true) ? (uint32_t)1U : (uint32_t)0) )        |
+            CSL_FMK(RINGACC_GCFG_TRACE_CTL_ALL_QUEUES, ((BTRUE == bTraceAll) ? UTRUE: UFALSE) )   |
+            CSL_FMK(RINGACC_GCFG_TRACE_CTL_MSG, ((BTRUE == bIncMsgData ) ? UTRUE : UFALSE) )        |
             CSL_FMK(RINGACC_GCFG_TRACE_CTL_QUEUE, ringNumLocal) );
-        retVal = 0;
+        retVal = CSL_PASS;
     }
     return retVal;
 }
@@ -577,17 +577,17 @@ int32_t CSL_ringaccCfgRingMonitor( CSL_RingAccCfg *pCfg,
                             uint32_t data1Val )
 {
     uint32_t data0Val_local = data0Val, data1Val_local = data1Val;
-    int32_t retVal = -1;
+    int32_t retVal = CSL_EFAIL;
 
     if( (pCfg->maxMonitors > 0U)                         &&
-        (monType < CSL_RINGACC_MONITOR_TYPE_INVALID)    &&
-        (monNum < pCfg->maxMonitors)                    &&
-        (ringNum < pCfg->maxRings)                      &&
+        (monType < CSL_RINGACC_MONITOR_TYPE_INVALID)     &&
+        (monNum < pCfg->maxMonitors)                     &&
+        (ringNum < pCfg->maxRings)                       &&
         (dataSrc < CSL_RINGACC_MONITOR_DATA_SRC_INVALID) )
     {
         uint32_t regVal;
 
-        if( monType == CSL_RINGACC_MONITOR_TYPE_THRESHOLD )
+        if( CSL_RINGACC_MONITOR_TYPE_THRESHOLD == monType )
         {
             if( data0Val_local > data1Val_local )
             {
@@ -604,46 +604,46 @@ int32_t CSL_ringaccCfgRingMonitor( CSL_RingAccCfg *pCfg,
                     CSL_FMK( RINGACC_MONITOR_MON_CONTROL_SOURCE, ((uint32_t)dataSrc) )    |
                     CSL_FMK( RINGACC_MONITOR_MON_CONTROL_MODE, monType );
         CSL_REG32_WR( &pCfg->pMonRegs->MON[monNum].CONTROL, regVal );
-        retVal = 0;
+        retVal = CSL_PASS;
     }
     return retVal;
 }
 
 int32_t CSL_ringaccReadRingMonitor( const CSL_RingAccCfg *pCfg, uint32_t monNum, uint32_t *pData0, uint32_t *pData1 )
 {
-    int32_t retVal = -1;
+    int32_t retVal = CSL_EFAIL;
 
     if( (pCfg->maxMonitors > 0U)        &&
         (monNum < pCfg->maxMonitors)    &&
-        (ringaccGetMonitorType( pCfg->pMonRegs, monNum ) != CSL_RINGACC_MONITOR_TYPE_DISABLED) )
+        (CSL_RINGACC_MONITOR_TYPE_DISABLED != ringaccGetMonitorType( pCfg->pMonRegs, monNum ) ) )
     {
-        if( pData0 != NULL )
+        if( NULL != pData0 )
         {
             *pData0 = CSL_REG32_RD( &pCfg->pMonRegs->MON[monNum].DATA0 );
         }
-        if( pData1 != NULL )
+        if( NULL != pData1 )
         {
             *pData1 = CSL_REG32_RD( &pCfg->pMonRegs->MON[monNum].DATA1 );
         }
-        retVal = 0;
+        retVal = CSL_PASS;
     }
     return retVal;
 }
 
 int32_t CSL_ringaccPush32( CSL_RingAccCfg *pCfg, CSL_RingAccRingCfg *pRing, uint32_t val, CSL_ringaccMemOpsFxnPtr pfMemOps)
 {
-    int32_t retVal = 0;
+    int32_t retVal = CSL_PASS;
 
-    if(pRing->mode == CSL_RINGACC_RING_MODE_RING)
+    if(CSL_RINGACC_RING_MODE_RING == pRing->mode )
     {
         uint32_t *pRingEntry;
 
         pRingEntry = (uint32_t *)CSL_ringaccGetCmdRingPtr( pCfg,  pRing );
-        if( pRingEntry != NULL )
+        if( NULL != pRingEntry )
         {
             *pRingEntry = val;
             CSL_archMemoryFence();
-            if( pfMemOps != NULL )
+            if( NULL != pfMemOps )
             {
                 (*pfMemOps)((void *)pRingEntry, (uint32_t)sizeof(uint32_t), CSL_RINGACC_MEM_OPS_TYPE_WR);
             }
@@ -651,7 +651,7 @@ int32_t CSL_ringaccPush32( CSL_RingAccCfg *pCfg, CSL_RingAccRingCfg *pRing, uint
         }
         else
         {
-            retVal = -1;    /* Ring is full */
+            retVal = CSL_EFAIL;    /* Ring is full */
         }
     }
     else
@@ -663,16 +663,16 @@ int32_t CSL_ringaccPush32( CSL_RingAccCfg *pCfg, CSL_RingAccRingCfg *pRing, uint
 
 int32_t CSL_ringaccPop32( CSL_RingAccCfg *pCfg, CSL_RingAccRingCfg *pRing, uint32_t *pVal, CSL_ringaccMemOpsFxnPtr pfMemOps )
 {
-    int32_t retVal = 0;
+    int32_t retVal = CSL_PASS;
 
-    if(pRing->mode == CSL_RINGACC_RING_MODE_RING)
+    if(CSL_RINGACC_RING_MODE_RING == pRing->mode )
     {
         uint32_t *pRingEntry;
 
         pRingEntry = (uint32_t *)CSL_ringaccGetRspRingPtr( pCfg, pRing );
-        if( pRingEntry != NULL )
+        if( NULL != pRingEntry )
         {
-            if( pfMemOps != NULL )
+            if( NULL != pfMemOps )
             {
                 (*pfMemOps)((void *)pRingEntry, (uint32_t)sizeof(uint32_t), CSL_RINGACC_MEM_OPS_TYPE_RD);
             }
@@ -683,7 +683,7 @@ int32_t CSL_ringaccPop32( CSL_RingAccCfg *pCfg, CSL_RingAccRingCfg *pRing, uint3
         else
         {
             *pVal = 0;
-            retVal = -1;    /* Ring is empty */
+            retVal = CSL_EFAIL;    /* Ring is empty */
         }
     }
     else
@@ -695,18 +695,18 @@ int32_t CSL_ringaccPop32( CSL_RingAccCfg *pCfg, CSL_RingAccRingCfg *pRing, uint3
 
 int32_t CSL_ringaccHwPop32( CSL_RingAccCfg *pCfg, CSL_RingAccRingCfg *pRing, uint32_t *pVal, CSL_ringaccMemOpsFxnPtr pfMemOps )
 {
-    int32_t retVal = 0;
+    int32_t retVal = CSL_PASS;
 
-    if( CSL_ringaccGetRingHwOcc( pCfg, pRing->ringNum ) == (uint32_t)0U )
+    if( 0U == CSL_ringaccGetRingHwOcc( pCfg, pRing->ringNum ) )
     {
-        retVal = -1;        /* Ring is empty */
+        retVal = CSL_EFAIL;        /* Ring is empty */
     }
     else
     {
         uint32_t *pRingHeadFifoAddr;
 
         pRingHeadFifoAddr = (uint32_t *)&pCfg->pFifoRegs->FIFO[pRing->ringNum].RINGHEADDATA[CSL_RINGACC_FIFO_WINDOW_SIZE_WORDS-1U];
-        if( pfMemOps != NULL )
+        if( NULL != pfMemOps )
         {
             (*pfMemOps)((void *)pRingHeadFifoAddr, (uint32_t)sizeof(uint32_t), CSL_RINGACC_MEM_OPS_TYPE_RD);
         }
@@ -717,16 +717,16 @@ int32_t CSL_ringaccHwPop32( CSL_RingAccCfg *pCfg, CSL_RingAccRingCfg *pRing, uin
 
 int32_t CSL_ringaccPeek32( CSL_RingAccCfg *pCfg, CSL_RingAccRingCfg *pRing, uint32_t *pVal, CSL_ringaccMemOpsFxnPtr pfMemOps )
 {
-    int32_t retVal = 0;
+    int32_t retVal = CSL_PASS;
 
-    if(pRing->mode == CSL_RINGACC_RING_MODE_RING)
+    if(CSL_RINGACC_RING_MODE_RING == pRing->mode)
     {
         uint32_t *pRingEntry;
 
         pRingEntry = (uint32_t *)CSL_ringaccGetRingDataPtr( pCfg, pRing );
-        if( pRingEntry != NULL )
+        if( NULL != pRingEntry )
         {
-            if( pfMemOps != NULL )
+            if( NULL != pfMemOps )
             {
                 (*pfMemOps)((void *)pRingEntry, (uint32_t)sizeof(uint32_t), CSL_RINGACC_MEM_OPS_TYPE_RD);
             }
@@ -735,7 +735,7 @@ int32_t CSL_ringaccPeek32( CSL_RingAccCfg *pCfg, CSL_RingAccRingCfg *pRing, uint
         else
         {
             *pVal = 0;
-            retVal = -1;    /* Ring is empty */
+            retVal = CSL_EFAIL;    /* Ring is empty */
         }
     }
     else
@@ -747,24 +747,24 @@ int32_t CSL_ringaccPeek32( CSL_RingAccCfg *pCfg, CSL_RingAccRingCfg *pRing, uint
 
 int32_t CSL_ringaccPush64( CSL_RingAccCfg *pCfg, CSL_RingAccRingCfg *pRing, uint64_t val, CSL_ringaccMemOpsFxnPtr pfMemOps )
 {
-    int32_t retVal = 0;
+    int32_t retVal = CSL_PASS;
 
     if( pRing->elSz < sizeof(uint64_t) )
     {
-        retVal = -2;        /* Requested access size is greater than ring element size */
+        retVal = CSL_EBADARGS;        /* Requested access size is greater than ring element size */
     }
     else
     {
-        if(pRing->mode == CSL_RINGACC_RING_MODE_RING)
+        if(CSL_RINGACC_RING_MODE_RING == pRing->mode)
         {
             uint64_t *pRingEntry;
 
             pRingEntry = (uint64_t *)CSL_ringaccGetCmdRingPtr( pCfg,  pRing );
-            if( pRingEntry != NULL )
+            if( NULL != pRingEntry )
             {
                 *pRingEntry = val;
                 CSL_archMemoryFence();
-                if( pfMemOps != NULL )
+                if( NULL != pfMemOps )
                 {
                     (*pfMemOps)((void *)pRingEntry, (uint32_t)sizeof(uint64_t), CSL_RINGACC_MEM_OPS_TYPE_WR);
                 }
@@ -772,7 +772,7 @@ int32_t CSL_ringaccPush64( CSL_RingAccCfg *pCfg, CSL_RingAccRingCfg *pRing, uint
             }
             else
             {
-                retVal = -1;    /* Ring is full */
+                retVal = CSL_EFAIL;    /* Ring is full */
             }
         }
         else
@@ -785,22 +785,22 @@ int32_t CSL_ringaccPush64( CSL_RingAccCfg *pCfg, CSL_RingAccRingCfg *pRing, uint
 
 int32_t CSL_ringaccPop64( CSL_RingAccCfg *pCfg, CSL_RingAccRingCfg *pRing, uint64_t *pVal, CSL_ringaccMemOpsFxnPtr pfMemOps )
 {
-    int32_t retVal = 0;
+    int32_t retVal = CSL_PASS;
 
     if( pRing->elSz < sizeof(uint64_t) )
     {
-        retVal = -2;        /* Requested access size is greater than ring element size */
+        retVal = CSL_EBADARGS;        /* Requested access size is greater than ring element size */
     }
     else
     {
-        if(pRing->mode == CSL_RINGACC_RING_MODE_RING)
+        if(CSL_RINGACC_RING_MODE_RING == pRing->mode)
         {
             uint64_t *pRingEntry;
 
             pRingEntry = (uint64_t *)CSL_ringaccGetRspRingPtr( pCfg, pRing );
-            if( pRingEntry != NULL )
+            if( NULL != pRingEntry )
             {
-                if( pfMemOps != NULL )
+                if( NULL != pfMemOps )
                 {
                     (*pfMemOps)((void *)pRingEntry, (uint32_t)sizeof(uint64_t), CSL_RINGACC_MEM_OPS_TYPE_RD);
                 }
@@ -810,7 +810,7 @@ int32_t CSL_ringaccPop64( CSL_RingAccCfg *pCfg, CSL_RingAccRingCfg *pRing, uint6
             else
             {
                 *pVal = 0;
-                retVal = -1;    /* Ring is empty */
+                retVal = CSL_EFAIL;    /* Ring is empty */
             }
         }
         else
@@ -823,22 +823,22 @@ int32_t CSL_ringaccPop64( CSL_RingAccCfg *pCfg, CSL_RingAccRingCfg *pRing, uint6
 
 int32_t CSL_ringaccHwPop64( CSL_RingAccCfg *pCfg, CSL_RingAccRingCfg *pRing, uint64_t *pVal, CSL_ringaccMemOpsFxnPtr pfMemOps )
 {
-    int32_t retVal = 0;
+    int32_t retVal = CSL_PASS;
 
-    if( CSL_ringaccGetRingHwOcc( pCfg, pRing->ringNum ) == (uint32_t)0U )
+    if( (uint32_t)0U == CSL_ringaccGetRingHwOcc( pCfg, pRing->ringNum ) )
     {
-        retVal = -1;        /* Ring is empty */
+        retVal = CSL_EFAIL;        /* Ring is empty */
     }
     else if( pRing->elSz < sizeof(uint64_t) )
     {
-        retVal = -2;        /* Requested access size is greater than ring element size */
+        retVal = CSL_EBADARGS;        /* Requested access size is greater than ring element size */
     }
     else
     {
         uint64_t *pRingHeadFifoAddr;
 
         pRingHeadFifoAddr = (uint64_t *)&pCfg->pFifoRegs->FIFO[pRing->ringNum].RINGHEADDATA[CSL_RINGACC_FIFO_WINDOW_SIZE_WORDS-2U];
-        if( pfMemOps != NULL )
+        if( NULL != pfMemOps )
         {
             (*pfMemOps)((void *)pRingHeadFifoAddr, (uint32_t)sizeof(uint64_t), CSL_RINGACC_MEM_OPS_TYPE_RD);
         }
@@ -849,22 +849,22 @@ int32_t CSL_ringaccHwPop64( CSL_RingAccCfg *pCfg, CSL_RingAccRingCfg *pRing, uin
 
 int32_t CSL_ringaccPeek64( CSL_RingAccCfg *pCfg, CSL_RingAccRingCfg *pRing, uint64_t *pVal, CSL_ringaccMemOpsFxnPtr pfMemOps )
 {
-    int32_t retVal = 0;
+    int32_t retVal = CSL_PASS;
 
     if( pRing->elSz < sizeof(uint64_t) )
     {
-        retVal = -2;        /* Requested access size is greater than ring element size */
+        retVal = CSL_EBADARGS;        /* Requested access size is greater than ring element size */
     }
     else
     {
-        if(pRing->mode == CSL_RINGACC_RING_MODE_RING)
+        if(CSL_RINGACC_RING_MODE_RING == pRing->mode)
         {
             uint64_t *pRingEntry;
 
             pRingEntry = (uint64_t *)CSL_ringaccGetRingDataPtr( pCfg, pRing );
-            if( pRingEntry != NULL )
+            if( NULL != pRingEntry )
             {
-                if( pfMemOps != NULL )
+                if( NULL != pfMemOps )
                 {
                     (*pfMemOps)((void *)pRingEntry, (uint32_t)sizeof(uint64_t), CSL_RINGACC_MEM_OPS_TYPE_RD);
                 }
@@ -873,7 +873,7 @@ int32_t CSL_ringaccPeek64( CSL_RingAccCfg *pCfg, CSL_RingAccRingCfg *pRing, uint
             else
             {
                 *pVal = 0;
-                retVal = -1;    /* Ring is empty */
+                retVal = CSL_EFAIL;    /* Ring is empty */
             }
         }
         else
@@ -886,23 +886,23 @@ int32_t CSL_ringaccPeek64( CSL_RingAccCfg *pCfg, CSL_RingAccRingCfg *pRing, uint
 
 int32_t CSL_ringaccWrData( CSL_RingAccCfg *pCfg, CSL_RingAccRingCfg *pRing, uint8_t *pData, uint32_t numBytes, CSL_ringaccMemOpsFxnPtr pfMemOps )
 {
-    int32_t retVal = 0;
+    int32_t retVal = CSL_PASS;
     uint32_t numBytes_local = numBytes;
     uint8_t *pData_local = pData;
 
 
-    if( pRing->mode == CSL_RINGACC_RING_MODE_RING )
+    if( CSL_RINGACC_RING_MODE_RING == pRing->mode )
     {
         if( numBytes_local <= pRing->elSz )
         {
             uint8_t *pRingEntry;
 
             pRingEntry = (uint8_t *)CSL_ringaccGetCmdRingPtr( pCfg,  pRing );
-            if( pRingEntry != NULL )
+            if( NULL != pRingEntry )
             {
                 uint8_t *pRingEntrySave = pRingEntry;
 
-                while( numBytes_local != 0U )
+                while( 0U != numBytes_local )
                 {
                     numBytes_local--;
                     *pRingEntry = *pData_local;
@@ -910,7 +910,7 @@ int32_t CSL_ringaccWrData( CSL_RingAccCfg *pCfg, CSL_RingAccRingCfg *pRing, uint
                     pData_local++;
                 }
                 CSL_archMemoryFence();
-                if( pfMemOps != NULL )
+                if( NULL != pfMemOps )
                 {
                     (*pfMemOps)((void *)pRingEntrySave, numBytes, CSL_RINGACC_MEM_OPS_TYPE_WR);
                 }
@@ -918,41 +918,41 @@ int32_t CSL_ringaccWrData( CSL_RingAccCfg *pCfg, CSL_RingAccRingCfg *pRing, uint
             }
             else
             {
-                retVal = -1;    /* Ring is full */
+                retVal = CSL_EFAIL;    /* Ring is full */
             }
         }
         else
         {
-            retVal = -2;    /* Requested access size is greater than ring element size */
+            retVal = CSL_EBADARGS;    /* Requested access size is greater than ring element size */
         }
     }
     else
     {
-        retVal = -3;        /* ring is configured in wrong mode (must be a ring mode ring) */
+        retVal = CSL_EINVALID_PARAMS;        /* ring is configured in wrong mode (must be a ring mode ring) */
     }
     return retVal;
 }
 
 int32_t CSL_ringaccRdData( CSL_RingAccCfg *pCfg, CSL_RingAccRingCfg *pRing, uint8_t *pData, uint32_t numBytes, CSL_ringaccMemOpsFxnPtr pfMemOps )
 {
-    int32_t retVal = 0;
+    int32_t retVal = CSL_PASS;
     uint32_t numBytes_local = numBytes;
     uint8_t *pData_local = pData;
 
-    if( pRing->mode == CSL_RINGACC_RING_MODE_RING )
+    if( CSL_RINGACC_RING_MODE_RING == pRing->mode )
     {
         if( numBytes_local <= pRing->elSz )
         {
             uint8_t *pRingEntry;
 
             pRingEntry = (uint8_t *)CSL_ringaccGetRspRingPtr( pCfg,  pRing );
-            if( pRingEntry != NULL )
+            if( NULL != pRingEntry )
             {
-                if( pfMemOps != NULL )
+                if( NULL != pfMemOps )
                 {
                     (*pfMemOps)((void *)pRingEntry, numBytes_local, CSL_RINGACC_MEM_OPS_TYPE_RD);
                 }
-                while( numBytes_local != 0U )
+                while( 0U != numBytes_local )
                 {
                     numBytes_local--;
                     *pData_local = *pRingEntry;
@@ -963,42 +963,42 @@ int32_t CSL_ringaccRdData( CSL_RingAccCfg *pCfg, CSL_RingAccRingCfg *pRing, uint
             }
             else
             {
-                retVal = -1;    /* Ring is empty */
+                retVal = CSL_EFAIL;    /* Ring is empty */
             }
         }
         else
         {
-            retVal = -2;    /* Requested access size is greater than ring element size */
+            retVal = CSL_EBADARGS;    /* Requested access size is greater than ring element size */
         }
     }
     else
     {
-        retVal = -3;        /* ring is configured in wrong mode (must be a ring mode ring) */
+        retVal = CSL_EINVALID_PARAMS;        /* ring is configured in wrong mode (must be a ring mode ring) */
     }
     return retVal;
 }
 
 int32_t CSL_ringaccPeekData( CSL_RingAccCfg *pCfg, CSL_RingAccRingCfg *pRing, uint8_t *pData, uint32_t numBytes, CSL_ringaccMemOpsFxnPtr pfMemOps )
 {
-    int32_t retVal = 0;
+    int32_t retVal = CSL_PASS;
     uint32_t numBytes_local = numBytes;
     uint8_t *pData_local = pData;
 
 
-    if( pRing->mode == CSL_RINGACC_RING_MODE_RING )
+    if( CSL_RINGACC_RING_MODE_RING == pRing->mode )
     {
         if( numBytes_local <= pRing->elSz )
         {
             uint8_t *pRingEntry;
 
             pRingEntry = (uint8_t *)CSL_ringaccGetRingElementAddr(pRing);
-            if (pRingEntry != NULL )
+            if ( NULL != pRingEntry )
             {
-                if( pfMemOps != NULL )
+                if( NULL != pfMemOps )
                 {
                     (*pfMemOps)((void *)pRingEntry, numBytes_local, CSL_RINGACC_MEM_OPS_TYPE_RD);
                 }
-                while( numBytes_local != 0U )
+                while( 0U != numBytes_local )
                 {
                     numBytes_local--;
                     *pData_local = *pRingEntry;
@@ -1009,12 +1009,12 @@ int32_t CSL_ringaccPeekData( CSL_RingAccCfg *pCfg, CSL_RingAccRingCfg *pRing, ui
         }
         else
         {
-            retVal = -2;    /* Requested access size is greater than ring element size */
+            retVal = CSL_EBADARGS;    /* Requested access size is greater than ring element size */
         }
     }
     else
     {
-        retVal = -3;        /* ring is configured in wrong mode (must be a ring mode ring) */
+        retVal = CSL_EINVALID_PARAMS;        /* ring is configured in wrong mode (must be a ring mode ring) */
     }
     return retVal;
 }

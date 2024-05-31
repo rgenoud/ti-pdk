@@ -393,7 +393,7 @@ extern int32_t CSL_intaggrMapUnmappedEventToEvent( const CSL_IntaggrCfg *pCfg, u
  *
  *  \param pCfg             [IN]    Pointer to the #CSL_IntaggrCfg structure
  *  \param statusBitNum     [IN]    Status bit # (0..(virtIntrCnt*64)-1)
- *  \param bEnable          [IN]    If true, interrupt is enabled. If false,
+ *  \param bEnable          [IN]    If BTRUE, interrupt is enabled. If BFALSE,
  *                                  it is disabled.
  *
  *  \return CSL_PASS = success
@@ -430,12 +430,12 @@ extern int32_t CSL_intaggrSetIntrPending( const CSL_IntaggrCfg *pCfg, uint32_t s
  *
  *  \param pCfg             [IN]    Pointer to the #CSL_IntaggrCfg structure
  *  \param statusBitNum     [IN]    Status bit # (0..(virtIntrCnt*64)-1)
- *  \param bMaskedStatus    [IN]    If true, the masked pending status is
- *                                  returned. If false, the raw pending status
+ *  \param bMaskedStatus    [IN]    If BTRUE, the masked pending status is
+ *                                  returned. If BFALSE, the raw pending status
  *                                  is returned.
  *
- *  \return  true  = The interrupt is pending
- *           false = The interrupt is not pending or the statusBitNum
+ *  \return  BTRUE  = The interrupt is pending
+ *           BFALSE = The interrupt is not pending or the statusBitNum
  *                   is invalid
  */
 extern bool CSL_intaggrIsIntrPending( const CSL_IntaggrCfg *pCfg, uint32_t statusBitNum, bool bMaskedStatus );

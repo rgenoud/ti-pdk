@@ -68,7 +68,7 @@ static bool bIsModuleRevAtLeast( const CSL_UdmapCfg *pCfg, uint32_t majorRev, ui
 
 static bool bIsModuleRevAtLeast( const CSL_UdmapCfg *pCfg, uint32_t majorRev, uint32_t minorRev, uint32_t rtlRev )
 {
-    bool bRetVal = (bool)false;
+    bool bRetVal = BFALSE;
     uint32_t pid, encodedPid, encodedRevVals;
     
     pid = CSL_udmapGetRevision( pCfg );
@@ -76,7 +76,7 @@ static bool bIsModuleRevAtLeast( const CSL_UdmapCfg *pCfg, uint32_t majorRev, ui
     encodedRevVals  = (((majorRev & 0x0007U) << 11U) | ((minorRev & 0x003FU) << 5U) | ((rtlRev & 0x001FU) >> 0));
     if( encodedPid >= encodedRevVals )
     {
-        bRetVal = (bool)true;
+        bRetVal = BTRUE;
     }
     return bRetVal;
 }
@@ -85,7 +85,7 @@ static bool CSL_udmapIsChanEnabled( const CSL_UdmapCfg *pCfg, uint32_t chanIdx, 
 {
     uint32_t regVal;
 
-    if( chanDir == CSL_UDMAP_CHAN_DIR_TX )
+    if( CSL_UDMAP_CHAN_DIR_TX == chanDir )
     {
         regVal = CSL_REG32_FEXT( &pCfg->pTxChanRtRegs->CHAN[chanIdx].CTL, UDMAP_TXCRT_CHAN_CTL_EN );
     }
@@ -93,12 +93,12 @@ static bool CSL_udmapIsChanEnabled( const CSL_UdmapCfg *pCfg, uint32_t chanIdx, 
     {
         regVal = CSL_REG32_FEXT( &pCfg->pRxChanRtRegs->CHAN[chanIdx].CTL, UDMAP_RXCRT_CHAN_CTL_EN );
     }
-    return ((regVal == 1U) ? (bool)true : (bool)false);
+    return ((1U == regVal) ? BTRUE : BFALSE);
 }
 
 static int32_t CSL_udmapSetChanEnable( CSL_UdmapCfg *pCfg, uint32_t chanIdx, CSL_UdmapChanDir chanDir, bool bEnable )
 {
-    if( chanDir == CSL_UDMAP_CHAN_DIR_TX )
+    if( CSL_UDMAP_CHAN_DIR_TX == chanDir )
     {
         CSL_REG32_WR(&pCfg->pTxChanRtRegs->CHAN[chanIdx].CTL, CSL_FMK(UDMAP_TXCRT_CHAN_CTL_EN,(bEnable ? (uint32_t)1 : (uint32_t)0)) );
     }
@@ -106,52 +106,52 @@ static int32_t CSL_udmapSetChanEnable( CSL_UdmapCfg *pCfg, uint32_t chanIdx, CSL
     {
         CSL_REG32_WR(&pCfg->pRxChanRtRegs->CHAN[chanIdx].CTL, CSL_FMK(UDMAP_RXCRT_CHAN_CTL_EN,(bEnable ? (uint32_t)1 : (uint32_t)0)) );
     }
-    return 0;
+    return CSL_PASS;
 }
 
 static int32_t CSL_udmapTeardownChan( CSL_UdmapCfg *pCfg, uint32_t chanIdx, CSL_UdmapChanDir chanDir, bool bForce, bool bWait )
 {
-    int32_t  retVal = 0;
+    int32_t  retVal = CSL_PASS;
     uint32_t regVal;
 
     /* Channel can be torn down only when it is enabled */
-    if( CSL_udmapIsChanEnabled( pCfg, chanIdx, chanDir ) == (bool)true )
+    if( BTRUE == CSL_udmapIsChanEnabled( pCfg, chanIdx, chanDir ) )
     {
-        if( chanDir == CSL_UDMAP_CHAN_DIR_TX )
+        if( CSL_UDMAP_CHAN_DIR_TX == chanDir )
         {
             regVal = CSL_REG32_RD( &pCfg->pTxChanRtRegs->CHAN[chanIdx].CTL );
             CSL_FINS( regVal, UDMAP_TXCRT_CHAN_CTL_TDOWN, (uint32_t)1U );
-            CSL_FINS( regVal, UDMAP_TXCRT_CHAN_CTL_FTDOWN, (bForce==(bool)false) ? (uint32_t)0U : (uint32_t)1U  );
+            CSL_FINS( regVal, UDMAP_TXCRT_CHAN_CTL_FTDOWN, (BFALSE == bForce) ? (uint32_t)0U : (uint32_t)1U  );
             CSL_REG32_WR( &pCfg->pTxChanRtRegs->CHAN[chanIdx].CTL, regVal );
         }
         else
         {
             regVal = CSL_REG32_RD( &pCfg->pRxChanRtRegs->CHAN[chanIdx].CTL );
             CSL_FINS( regVal, UDMAP_RXCRT_CHAN_CTL_TDOWN, (uint32_t)1U );
-            CSL_FINS( regVal, UDMAP_RXCRT_CHAN_CTL_FTDOWN, (bForce==(bool)false) ? (uint32_t)0U : (uint32_t)1U );
+            CSL_FINS( regVal, UDMAP_RXCRT_CHAN_CTL_FTDOWN, (BFALSE == bForce) ? (uint32_t)0U : (uint32_t)1U );
             CSL_REG32_WR( &pCfg->pRxChanRtRegs->CHAN[chanIdx].CTL, regVal );
         }
-        if( bWait == (bool)true )
+        if( BTRUE == bWait )
         {
             /* The channel's enable bit is cleared once teardown is complete */
-            while( CSL_udmapIsChanEnabled( pCfg, chanIdx, chanDir ) == (bool)true ) {};
+            while( BTRUE == CSL_udmapIsChanEnabled( pCfg, chanIdx, chanDir ) ) {};
         }
     }
     else
     {
-        retVal = -1;
+        retVal = CSL_EFAIL;
     }
     return retVal;
 }
 
 static int32_t CSL_udmapPauseChan( CSL_UdmapCfg *pCfg, uint32_t chanIdx, CSL_UdmapChanDir chanDir, uint32_t pauseVal )
 {
-    int32_t     retVal = 0;
+    int32_t     retVal = CSL_PASS;
 
     /* Channel can be paused/un-paused only when it is enabled */
-    if( CSL_udmapIsChanEnabled( pCfg, chanIdx, chanDir ) == (bool)true )
+    if( BTRUE == CSL_udmapIsChanEnabled( pCfg, chanIdx, chanDir ) )
     {
-        if( chanDir == CSL_UDMAP_CHAN_DIR_TX )
+        if( CSL_UDMAP_CHAN_DIR_TX == chanDir )
         {
             CSL_REG32_FINS( &pCfg->pTxChanRtRegs->CHAN[chanIdx].CTL, UDMAP_TXCRT_CHAN_CTL_PAUSE, pauseVal );
         }
@@ -162,14 +162,14 @@ static int32_t CSL_udmapPauseChan( CSL_UdmapCfg *pCfg, uint32_t chanIdx, CSL_Udm
     }
     else
     {
-        retVal = -1;
+        retVal = CSL_EFAIL;
     }
     return retVal;
 }
 
 static int32_t CSL_udmapTriggerChan( CSL_UdmapCfg *pCfg, uint32_t chanIdx, CSL_UdmapChanDir chanDir )
 {
-    if( chanDir == CSL_UDMAP_CHAN_DIR_TX )
+    if( CSL_UDMAP_CHAN_DIR_TX == chanDir )
     {
         CSL_REG32_WR(&pCfg->pTxChanRtRegs->CHAN[chanIdx].SWTRIG, CSL_FMK(UDMAP_TXCRT_CHAN_SWTRIG_TRIGGER, 1U));
     }
@@ -177,12 +177,12 @@ static int32_t CSL_udmapTriggerChan( CSL_UdmapCfg *pCfg, uint32_t chanIdx, CSL_U
     {
         CSL_REG32_WR(&pCfg->pRxChanRtRegs->CHAN[chanIdx].SWTRIG, CSL_FMK(UDMAP_RXCRT_CHAN_SWTRIG_TRIGGER, 1U));
     }
-    return 0;
+    return CSL_PASS;
 }
 
 static void CSL_udmapClearChanError( CSL_UdmapCfg *pCfg, uint32_t chanIdx, CSL_UdmapChanDir chanDir )
 {
-    if( chanDir == CSL_UDMAP_CHAN_DIR_TX )
+    if( CSL_UDMAP_CHAN_DIR_TX == chanDir )
     {
         CSL_REG32_FINS(&pCfg->pTxChanRtRegs->CHAN[chanIdx].CTL, UDMAP_TXCRT_CHAN_CTL_ERROR, 0U);
     }
@@ -199,7 +199,7 @@ static int32_t CSL_udmapAccessChanPeerReg( const CSL_UdmapCfg *pCfg, uint32_t ch
 
     if( regIdx < CSL_UDMAP_NUM_PEER_REGS )
     {
-        if( chanDir == CSL_UDMAP_CHAN_DIR_TX )
+        if( CSL_UDMAP_CHAN_DIR_TX == chanDir )
         {
             uint8_t  *pPeerReg8 = (uint8_t *)pCfg->pTxChanRtRegs;
             uint32_t byteOffset = (uint32_t)CSL_UDMAP_TXCRT_CHAN_PEER0(chanIdx) + (regIdx * (uint32_t)0x4U);
@@ -213,7 +213,7 @@ static int32_t CSL_udmapAccessChanPeerReg( const CSL_UdmapCfg *pCfg, uint32_t ch
             pPeerReg8 += byteOffset;
             pPeerReg = (uint32_t *)pPeerReg8;
         }
-        if( bRdAccess == (bool)true )
+        if( BTRUE == bRdAccess )
         {
             *pVal = CSL_REG32_RD( pPeerReg );
         }
@@ -221,11 +221,11 @@ static int32_t CSL_udmapAccessChanPeerReg( const CSL_UdmapCfg *pCfg, uint32_t ch
         {
             CSL_REG32_WR( pPeerReg, *pVal );
         }
-        retVal = 0;
+        retVal = CSL_PASS;
     }
     else
     {
-        retVal = -1;
+        retVal = CSL_EFAIL;
     }
     return retVal;
 }
@@ -250,7 +250,7 @@ int32_t CSL_udmapGetRevisionInfo( const CSL_UdmapCfg *pCfg, CSL_UdmapRevision *p
     pRev->custom    = CSL_FEXT( val, UDMAP_GCFG_REVISION_CUSTOM );
     pRev->revMinor  = CSL_FEXT( val, UDMAP_GCFG_REVISION_REVMIN );
 
-    return 0;
+    return CSL_PASS;
 }
 
 void CSL_udmapGetCfg( CSL_UdmapCfg *pCfg )
@@ -339,17 +339,17 @@ int32_t CSL_udmapRxFlowCfg(CSL_UdmapCfg *pCfg, uint32_t flow, const CSL_UdmapRxF
 {
     uint32_t cfgThresh, i, queue0;
 
-    cfgThresh = 0;
-    for(i=0; i<CSL_UDMAP_RXFDQ_THRESH_CNT; i++)
+    cfgThresh = 0U;
+    for(i=0U; i<CSL_UDMAP_RXFDQ_THRESH_CNT; i++)
     {
-        if( (pFlow->fdqThresh[i].fEnable) != 0U )
+        if( 0U != (pFlow->fdqThresh[i].fEnable) )
         {
             cfgThresh |= ((uint32_t)1U<<i);
         }
     }
 
     queue0 = pFlow->fdq[0];
-    if( (pFlow->fdqThresh[0].fEnable != 0U) && (pFlow->fdqThresh[0].queue != queue0) )
+    if( (0U != pFlow->fdqThresh[0].fEnable) && (pFlow->fdqThresh[0].queue != queue0) )
     {
         queue0 = pFlow->fdqThresh[0].queue;
     }
@@ -396,24 +396,24 @@ int32_t CSL_udmapRxFlowCfg(CSL_UdmapCfg *pCfg, uint32_t flow, const CSL_UdmapRxF
                     CSL_FMK(UDMAP_RXFCFG_FLOW_RFH_FDQ0_SZ2_QNUM,  pFlow->fdqThresh[2].queue) |
                     CSL_FMK(UDMAP_RXFCFG_FLOW_RFH_FDQ0_SZ3_QNUM,  pFlow->fdqThresh[3].queue) );
 
-    return 0;
+    return CSL_PASS;
 }
 
 int32_t CSL_udmapRxChanSetTrEvent( CSL_UdmapCfg *pCfg, uint32_t chanIdx, uint32_t trEventNum )
 {
     CSL_REG32_WR(&pCfg->pRxChanCfgRegs->CHAN[chanIdx].ROES[0],
                  CSL_FMK(UDMAP_RXCCFG_CHAN_ROES_EVT_NUM, trEventNum));
-    return 0;
+    return CSL_PASS;
 }
 
 int32_t CSL_udmapRxChanSetBurstSize( CSL_UdmapCfg *pCfg, uint32_t chanIdx, CSL_UdmapChanBurstSize burstSize )
 {
-    int32_t retVal = -1;
+    int32_t retVal = CSL_EFAIL;
 #ifdef CSL_UDMAP_RXCCFG_CHAN_RCFG_BURST_SIZE_MASK
     if( (burstSize >= CSL_UDMAP_CHAN_BURST_SIZE_64_BYTES) && (burstSize <= CSL_UDMAP_CHAN_BURST_SIZE_256_BYTES) )
     {
         CSL_REG32_FINS( &pCfg->pRxChanCfgRegs->CHAN[chanIdx].RCFG, UDMAP_RXCCFG_CHAN_RCFG_BURST_SIZE, burstSize );
-        retVal = 0;
+        retVal = CSL_PASS;
     }
 #endif
     return retVal;
@@ -456,24 +456,24 @@ int32_t CSL_udmapRxChanCfg( CSL_UdmapCfg *pCfg, uint32_t chanIdx, const CSL_Udma
             CSL_FMK(UDMAP_RXCCFG_CHAN_RFLOW_RNG_FLOWID_START, pRxChanCfg->flowIdFwRangeStart) |
             CSL_FMK(UDMAP_RXCCFG_CHAN_RFLOW_RNG_FLOWID_CNT, pRxChanCfg->flowIdFwRangeCnt  ));
 
-    return 0;
+    return CSL_PASS;
 }
 
 int32_t CSL_udmapTxChanSetTrEvent( CSL_UdmapCfg *pCfg, uint32_t chanIdx, uint32_t trEventNum )
 {
     CSL_REG32_WR(&pCfg->pTxChanCfgRegs->CHAN[chanIdx].TOES[0],
                  CSL_FMK(UDMAP_TXCCFG_CHAN_TOES_EVT_NUM, trEventNum));
-    return 0;
+    return CSL_PASS;
 }
 
 int32_t CSL_udmapTxChanSetBurstSize( CSL_UdmapCfg *pCfg, uint32_t chanIdx, CSL_UdmapChanBurstSize burstSize )
 {
-    int32_t retVal = -1;
+    int32_t retVal = CSL_EFAIL;
 #ifdef CSL_UDMAP_TXCCFG_CHAN_TCFG_BURST_SIZE_MASK
-    if( (burstSize >= CSL_UDMAP_CHAN_BURST_SIZE_64_BYTES) && (burstSize <= CSL_UDMAP_CHAN_BURST_SIZE_256_BYTES) )
+    if( (CSL_UDMAP_CHAN_BURST_SIZE_64_BYTES <= burstSize) && (CSL_UDMAP_CHAN_BURST_SIZE_256_BYTES >= burstSize) )
     {
         CSL_REG32_FINS( &pCfg->pTxChanCfgRegs->CHAN[chanIdx].TCFG, UDMAP_TXCCFG_CHAN_TCFG_BURST_SIZE, burstSize );
-        retVal = 0;
+        retVal = CSL_PASS;
     }
 #endif
     return retVal;
@@ -517,7 +517,7 @@ int32_t CSL_udmapTxChanCfg( CSL_UdmapCfg *pCfg, uint32_t chanIdx, const CSL_Udma
 
     CSL_REG32_WR(&pCfg->pTxChanCfgRegs->CHAN[chanIdx].THREAD,
             CSL_FMK( UDMAP_TXCCFG_CHAN_THREAD_ID, pTxChanCfg->txThread ) );
-    return 0;
+    return CSL_PASS;
 }
 
 int32_t CSL_udmapGetRxRT( const CSL_UdmapCfg *pCfg, uint32_t chanIdx, CSL_UdmapRT *pRT )
@@ -532,7 +532,7 @@ int32_t CSL_udmapGetRxRT( const CSL_UdmapCfg *pCfg, uint32_t chanIdx, CSL_UdmapR
     pRT->pause          = CSL_FEXT( val, UDMAP_RXCRT_CHAN_CTL_PAUSE );
     pRT->error          = CSL_FEXT( val, UDMAP_RXCRT_CHAN_CTL_ERROR );
 
-    return 0;
+    return CSL_PASS;
 }
 
 int32_t CSL_udmapSetRxRT( CSL_UdmapCfg *pCfg, uint32_t chanIdx, const CSL_UdmapRT *pRT )
@@ -543,7 +543,7 @@ int32_t CSL_udmapSetRxRT( CSL_UdmapCfg *pCfg, uint32_t chanIdx, const CSL_UdmapR
                     CSL_FMK(UDMAP_RXCRT_CHAN_CTL_FTDOWN,       pRT->forcedTeardown) |
                     CSL_FMK(UDMAP_RXCRT_CHAN_CTL_PAUSE,        pRT->pause) );
 
-    return 0;
+    return CSL_PASS;
 }
 
 int32_t CSL_udmapGetTxRT( const CSL_UdmapCfg *pCfg, uint32_t chanIdx, CSL_UdmapRT *pRT )
@@ -558,7 +558,7 @@ int32_t CSL_udmapGetTxRT( const CSL_UdmapCfg *pCfg, uint32_t chanIdx, CSL_UdmapR
     pRT->pause          = CSL_FEXT( val, UDMAP_TXCRT_CHAN_CTL_PAUSE );
     pRT->error          = CSL_FEXT( val, UDMAP_TXCRT_CHAN_CTL_ERROR );
 
-    return 0;
+    return CSL_PASS;
 }
 
 int32_t CSL_udmapSetTxRT( CSL_UdmapCfg *pCfg, uint32_t chanIdx, const CSL_UdmapRT *pRT )
@@ -569,17 +569,17 @@ int32_t CSL_udmapSetTxRT( CSL_UdmapCfg *pCfg, uint32_t chanIdx, const CSL_UdmapR
                     CSL_FMK(UDMAP_TXCRT_CHAN_CTL_FTDOWN,       pRT->forcedTeardown) |
                     CSL_FMK(UDMAP_TXCRT_CHAN_CTL_PAUSE,        pRT->pause) );
 
-    return 0;
+    return CSL_PASS;
 }
 
 int32_t CSL_udmapEnableTxChan( CSL_UdmapCfg *pCfg, uint32_t chanIdx )
 {
-    return CSL_udmapSetChanEnable( pCfg, chanIdx, CSL_UDMAP_CHAN_DIR_TX, (bool)true );
+    return CSL_udmapSetChanEnable( pCfg, chanIdx, CSL_UDMAP_CHAN_DIR_TX, BTRUE );
 }
 
 int32_t CSL_udmapDisableTxChan( CSL_UdmapCfg *pCfg, uint32_t chanIdx )
 {
-    return CSL_udmapSetChanEnable( pCfg, chanIdx, CSL_UDMAP_CHAN_DIR_TX, (bool)false );
+    return CSL_udmapSetChanEnable( pCfg, chanIdx, CSL_UDMAP_CHAN_DIR_TX, BFALSE );
 }
 
 int32_t CSL_udmapTeardownTxChan( CSL_UdmapCfg *pCfg, uint32_t chanIdx, bool bForce, bool bWait )
@@ -609,12 +609,12 @@ void CSL_udmapClearTxChanError( CSL_UdmapCfg *pCfg, uint32_t chanIdx )
 
 int32_t CSL_udmapEnableRxChan( CSL_UdmapCfg *pCfg, uint32_t chanIdx )
 {
-    return CSL_udmapSetChanEnable( pCfg, chanIdx, CSL_UDMAP_CHAN_DIR_RX, (bool)true );
+    return CSL_udmapSetChanEnable( pCfg, chanIdx, CSL_UDMAP_CHAN_DIR_RX, BTRUE );
 }
 
 int32_t CSL_udmapDisableRxChan( CSL_UdmapCfg *pCfg, uint32_t chanIdx )
 {
-    return CSL_udmapSetChanEnable( pCfg, chanIdx, CSL_UDMAP_CHAN_DIR_RX, (bool)false );
+    return CSL_udmapSetChanEnable( pCfg, chanIdx, CSL_UDMAP_CHAN_DIR_RX, BFALSE );
 }
 
 int32_t CSL_udmapTeardownRxChan( CSL_UdmapCfg *pCfg, uint32_t chanIdx, bool bForce, bool bWait )
@@ -651,24 +651,24 @@ void CSL_udmapCfgRxFlowIdFirewall( CSL_UdmapCfg *pCfg, uint32_t outEvtNum )
 bool CSL_udmapGetRxFlowIdFirewallStatus( CSL_UdmapCfg *pCfg, CSL_UdmapRxFlowIdFirewallStatus *pRxFlowIdFwStatus )
 {
     uint32_t regVal;
-    bool retVal = (bool)false;
+    bool retVal = BFALSE;
 
     regVal = CSL_REG32_RD( &pCfg->pGenCfgRegs->RFLOWFWSTAT );
 
-    if( CSL_FEXT( regVal, UDMAP_GCFG_RFLOWFWSTAT_PEND ) != 0U )
+    if( 0U != CSL_FEXT( regVal, UDMAP_GCFG_RFLOWFWSTAT_PEND ) )
     {
         pRxFlowIdFwStatus->flowId = CSL_FEXT( regVal, UDMAP_GCFG_RFLOWFWSTAT_FLOWID );
         pRxFlowIdFwStatus->chnIdx = CSL_FEXT( regVal, UDMAP_GCFG_RFLOWFWSTAT_CHANNEL );
         /* Clear pend bit to allow another exception to be captured */
         CSL_REG32_WR( &pCfg->pGenCfgRegs->RFLOWFWSTAT, 0 );
-        retVal = (bool)true;
+        retVal = BTRUE;
     }
     return retVal;
 }
 
 void CSL_udmapGetChanStats( const CSL_UdmapCfg *pCfg, uint32_t chanIdx, CSL_UdmapChanDir chanDir, CSL_UdmapChanStats *pChanStats )
 {
-    if( chanDir == CSL_UDMAP_CHAN_DIR_TX )
+    if( CSL_UDMAP_CHAN_DIR_TX == chanDir )
     {
         pChanStats->packetCnt        = CSL_REG32_RD( &pCfg->pTxChanRtRegs->CHAN[chanIdx].PCNT );
         pChanStats->completedByteCnt = CSL_REG32_RD( &pCfg->pTxChanRtRegs->CHAN[chanIdx].BCNT );
@@ -684,7 +684,7 @@ void CSL_udmapGetChanStats( const CSL_UdmapCfg *pCfg, uint32_t chanIdx, CSL_Udma
 
 void CSL_udmapDecChanStats( CSL_UdmapCfg *pCfg, uint32_t chanIdx, CSL_UdmapChanDir chanDir, const CSL_UdmapChanStats *pChanStats )
 {
-    if( chanDir == CSL_UDMAP_CHAN_DIR_TX )
+    if( CSL_UDMAP_CHAN_DIR_TX == chanDir )
     {
         CSL_REG32_WR( &pCfg->pTxChanRtRegs->CHAN[chanIdx].PCNT,  pChanStats->packetCnt );
         CSL_REG32_WR( &pCfg->pTxChanRtRegs->CHAN[chanIdx].BCNT,  pChanStats->completedByteCnt );
@@ -700,41 +700,41 @@ void CSL_udmapDecChanStats( CSL_UdmapCfg *pCfg, uint32_t chanIdx, CSL_UdmapChanD
 
 int32_t CSL_udmapGetChanPeerReg( const CSL_UdmapCfg *pCfg, uint32_t chanIdx, CSL_UdmapChanDir chanDir, uint32_t regIdx, uint32_t *pVal )
 {
-    return CSL_udmapAccessChanPeerReg( pCfg, chanIdx, regIdx, pVal, chanDir, (bool)true );
+    return CSL_udmapAccessChanPeerReg( pCfg, chanIdx, regIdx, pVal, chanDir, BTRUE );
 }
 
 int32_t CSL_udmapSetChanPeerReg( const CSL_UdmapCfg *pCfg, uint32_t chanIdx, CSL_UdmapChanDir chanDir, uint32_t regIdx, uint32_t *pVal )
 {
-    return CSL_udmapAccessChanPeerReg( pCfg, chanIdx, regIdx, pVal, chanDir, (bool)false );
+    return CSL_udmapAccessChanPeerReg( pCfg, chanIdx, regIdx, pVal, chanDir, BFALSE );
 }
 
 int32_t CSL_udmapEnableLink( CSL_UdmapCfg *pCfg, uint32_t chanIdx, CSL_UdmapChanDir chanDir )
 {
-    int32_t retVal = -1;
+    int32_t retVal = CSL_EFAIL;
     uint32_t peerEnableRegVal;
 
     peerEnableRegVal = (uint32_t)1U << 31;
-    if( chanDir == CSL_UDMAP_CHAN_DIR_TX )
+    if( CSL_UDMAP_CHAN_DIR_TX == chanDir )
     {
         /* a. Set UDMAP peer real-time enable by calling the CSL_udmapSetChanPeerReg() function */
-        if( CSL_udmapSetChanPeerReg( pCfg, chanIdx, chanDir, CSL_UDMAP_CHAN_PEER_REG_OFFSET_ENABLE, &peerEnableRegVal ) == 0 )
+        if( CSL_PASS == CSL_udmapSetChanPeerReg( pCfg, chanIdx, chanDir, CSL_UDMAP_CHAN_PEER_REG_OFFSET_ENABLE, &peerEnableRegVal ) )
         {
             /* b. Enable the UDMAP tx channel by calling the CSL_udmapEnableTxChan() function */
-            if( CSL_udmapEnableTxChan( pCfg, chanIdx ) == 0 )
+            if( CSL_PASS == CSL_udmapEnableTxChan( pCfg, chanIdx ) )
             {
-                retVal = 0;
+                retVal = CSL_PASS;
             }
         }
     }
-    if( chanDir == CSL_UDMAP_CHAN_DIR_RX )
+    if( CSL_UDMAP_CHAN_DIR_RX == chanDir )
     {
         /* a. Enable the UDMAP rx channel by calling the CSL_udmapEnableRxChan() function */
-        if( CSL_udmapEnableRxChan( pCfg, chanIdx ) == 0 )
+        if( CSL_PASS == CSL_udmapEnableRxChan( pCfg, chanIdx ) )
         {
             /* b. Set UDMAP peer real-time enable by calling the CSL_udmapSetChanPeerReg() function */
-            if( CSL_udmapSetChanPeerReg( pCfg, chanIdx, chanDir, CSL_UDMAP_CHAN_PEER_REG_OFFSET_ENABLE, &peerEnableRegVal ) == 0 )
+            if( CSL_PASS == CSL_udmapSetChanPeerReg( pCfg, chanIdx, chanDir, CSL_UDMAP_CHAN_PEER_REG_OFFSET_ENABLE, &peerEnableRegVal ) )
             {
-                retVal = 0;
+                retVal = CSL_PASS;
             }
         }
     }
@@ -743,22 +743,22 @@ int32_t CSL_udmapEnableLink( CSL_UdmapCfg *pCfg, uint32_t chanIdx, CSL_UdmapChan
 
 int32_t CSL_udmapSetAutoClockGatingEnable( CSL_UdmapCfg *pCfg, CSL_UdmapAutoClkgateBlock blockIds, bool bEnable )
 {
-    int32_t retVal = (int32_t) -1;
+    int32_t retVal = CSL_EFAIL;
 
 #ifdef CSL_UDMAP_GCFG_PM0_NOGATE_LO_MASK
     /*
      *  UDMAP revision 2.2.0.0 and later provides automatic dynamic clock gating
      *  support for internal sub-blocks based on real-time monitoring of activity. 
      */
-   if( bIsModuleRevAtLeast( pCfg, 2U, 2U, 0U) == (bool)true )
+   if( BTRUE == bIsModuleRevAtLeast( pCfg, 2U, 2U, 0U) )
    {
         uint32_t regVal, blockIdMask;
         
         blockIdMask = (uint32_t)(blockIds & ((CSL_UdmapAutoClkgateBlock)0xFFFFFFFFU));
-        if( blockIdMask != 0U )
+        if( 0U != blockIdMask )
         {
             regVal = CSL_REG32_RD( &pCfg->pGenCfgRegs->PM0 );
-            if( bEnable == (bool)true )
+            if( BTRUE == bEnable )
             {
                 /* Clear bits (enable) in UDMAP_GCFG_PM0_NOGATE_LO corresponding to 1 bits in blockIdMask */
                 regVal &= ~blockIdMask;
@@ -771,10 +771,10 @@ int32_t CSL_udmapSetAutoClockGatingEnable( CSL_UdmapCfg *pCfg, CSL_UdmapAutoClkg
             CSL_REG32_WR( &pCfg->pGenCfgRegs->PM0, regVal );
         }
         blockIdMask = (uint32_t)(blockIds >> 32);
-        if( blockIdMask != 0U )
+        if( 0U != blockIdMask )
         {
             regVal = CSL_REG32_RD( &pCfg->pGenCfgRegs->PM1 );
-            if( bEnable == (bool)true )
+            if( BTRUE == bEnable )
             {
                 /* Clear bits (enable) in UDMAP_GCFG_PM1_NOGATE_HI corresponding to 1 bits in blockIdMask */
                 regVal &= ~blockIdMask;
@@ -786,7 +786,7 @@ int32_t CSL_udmapSetAutoClockGatingEnable( CSL_UdmapCfg *pCfg, CSL_UdmapAutoClkg
             }
             CSL_REG32_WR( &pCfg->pGenCfgRegs->PM1, regVal );        
         }
-        retVal = 0;
+        retVal = CSL_PASS;
     }
 #endif
     return retVal;
@@ -794,20 +794,20 @@ int32_t CSL_udmapSetAutoClockGatingEnable( CSL_UdmapCfg *pCfg, CSL_UdmapAutoClkg
 
 int32_t CSL_udmapSetCommandThrottleThreshold( CSL_UdmapCfg *pCfg, CSL_UdmapMasterInterface interfaceId, uint32_t readCountThresh, uint32_t writeCountThresh )
 {
-    int32_t retVal = (int32_t) -1;
+    int32_t retVal = CSL_EFAIL;
     
 #ifdef CSL_UDMAP_GCFG_PERF0_VRD_THRESH0_MASK
     /* UDMAP revision 2.1.32.0 and later supports this feature */
-    if( bIsModuleRevAtLeast( pCfg, 2U, 1U, 32U) == (bool)true )
+    if( BTRUE == bIsModuleRevAtLeast( pCfg, 2U, 1U, 32U) )
     {
-        if( ((readCountThresh == 0U) && (interfaceId != CSL_UDMAP_MASTER_INTERFACE_UTC_WRITE))   ||
-            ((writeCountThresh == 0U) && (interfaceId != CSL_UDMAP_MASTER_INTERFACE_UTC_READ)) )
+        if( ((0U == readCountThresh) && (CSL_UDMAP_MASTER_INTERFACE_UTC_WRITE != interfaceId))   ||
+            ((0U == writeCountThresh) && (CSL_UDMAP_MASTER_INTERFACE_UTC_READ != interfaceId)) )
         {
-            retVal = (int32_t) -2;      /* Invalid read and/or write count threshold */            
+            retVal = (int32_t) CSL_EBADARGS;      /* Invalid read and/or write count threshold */            
         }
         else
         {
-            retVal = 0;
+            retVal = CSL_PASS;
             switch( interfaceId )
             {
                 case CSL_UDMAP_MASTER_INTERFACE_PKTDMA_0:
@@ -827,7 +827,7 @@ int32_t CSL_udmapSetCommandThrottleThreshold( CSL_UdmapCfg *pCfg, CSL_UdmapMaste
                     CSL_REG32_WR( &pCfg->pGenCfgRegs->PERF3, CSL_FMK(UDMAP_GCFG_PERF3_VWR_THRESH3, writeCountThresh) );
                     break;
                 default:
-                    retVal = (int32_t) -2;      /* Invalid interface ID */
+                    retVal = CSL_EBADARGS;      /* Invalid interface ID */
                     break;
             }
         }

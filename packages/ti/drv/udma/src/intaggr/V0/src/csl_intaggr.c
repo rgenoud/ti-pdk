@@ -54,11 +54,11 @@ static bool CSL_intaggrIsIntrModeStatusBitNum( uint32_t statusBitNum )
     
     if((statusBitNum & CSL_INTAGGR_INTR_MODE_FLAG) > 0U)
     {
-        bRetVal = (bool)true;
+        bRetVal = BTRUE;
     }
     else
     {
-        bRetVal = (bool)false;        
+        bRetVal = BFALSE;        
     }
     return bRetVal; 
 }
@@ -71,11 +71,11 @@ static bool CSL_intaggrIsValidStatusBitNum( const CSL_IntaggrCfg *pCfg, uint32_t
     localStatusBitNum &= ~CSL_INTAGGR_INTR_MODE_FLAG;   /* Remove intr mode flag */
     if( localStatusBitNum < (pCfg->virtIntrCnt << 6U) )
     {
-        bRetVal = (bool)true;
+        bRetVal = BTRUE;
     }
     else
     {
-        bRetVal = (bool)false;        
+        bRetVal = BFALSE;        
     }
     return bRetVal;
 }
@@ -87,11 +87,11 @@ static uint32_t CSL_intaggrBuildMapIdxValue( uint32_t statusBitNum );
 
 static bool CSL_intaggrIsModuleRevAtLeast( const CSL_IntaggrCfg *pCfg, uint32_t majorRev, uint32_t minorRev, uint32_t rtlRev )
 {
-    bool bRetVal = (bool)false;
+    bool bRetVal = BFALSE;
     uint32_t encodedRevVals;
     static uint32_t encodedPid = 0U;
 
-    if( encodedPid == 0U )
+    if( 0U == encodedPid )
     {
         uint32_t pid;
 
@@ -101,7 +101,7 @@ static bool CSL_intaggrIsModuleRevAtLeast( const CSL_IntaggrCfg *pCfg, uint32_t 
     encodedRevVals  = (((majorRev & 0x0007U) << 11U) | ((minorRev & 0x003FU) << 5U) | ((rtlRev & 0x001FU) >> 0));
     if( encodedPid >= encodedRevVals )
     {
-        bRetVal = (bool)true;
+        bRetVal = BTRUE;
     }
     return bRetVal;
 }
@@ -165,12 +165,12 @@ int32_t CSL_intaggrMapEventToLocalEvent( CSL_IntaggrCfg *pCfg, uint32_t globalEv
     int32_t  retVal;
     uint64_t regVal;
 
-    if( (pCfg->pL2gRegs == NULL) || (pCfg->localEventCnt == 0U) )
+    if( (NULL == pCfg->pL2gRegs) || (0U == pCfg->localEventCnt) )
     {
         retVal = CSL_EFAIL;    /* INTAGGR does not support this feature */
     }
     else if( (localEventIdx >= pCfg->localEventCnt)     ||
-             (localEventDetectMode >= CSL_INTAGGR_EVT_DETECT_MODE_INVALID) )
+             (CSL_INTAGGR_EVT_DETECT_MODE_INVALID <= localEventDetectMode) )
     {
         retVal = CSL_EBADARGS;    /* Invalid localEventIdx or localEventDetectMode parameter */
     }
@@ -188,7 +188,7 @@ int32_t CSL_intaggrMapEventRxCntEvent( CSL_IntaggrCfg *pCfg, uint32_t globalEven
 {
     int32_t  retVal;
 
-    if( (pCfg->pGcntCfgRegs == NULL) || (pCfg->globalEventCnt == 0U) )
+    if( (NULL == pCfg->pGcntCfgRegs) || (0U == pCfg->globalEventCnt) )
     {
         retVal = CSL_EFAIL;    /* INTAGGR does not support this feature */
     }
@@ -239,7 +239,7 @@ int32_t CSL_intaggrRdEventRxCnt( const CSL_IntaggrCfg *pCfg, uint32_t globalEven
 {
     int32_t  retVal;
 
-    if( (pCfg->pGcntCfgRegs == NULL) || (pCfg->globalEventCnt == 0U) )
+    if( (NULL == pCfg->pGcntCfgRegs) || (0U == pCfg->globalEventCnt) )
     {
         retVal = CSL_EFAIL;    /* INTAGGR does not support this feature */
     }
@@ -262,7 +262,7 @@ int32_t CSL_intaggrWrEventRxCnt( CSL_IntaggrCfg *pCfg, uint32_t globalEventIdx, 
 {
     int32_t  retVal;
 
-    if( (pCfg->pGcntCfgRegs == NULL) || (pCfg->globalEventCnt == 0U) )
+    if( (NULL == pCfg->pGcntCfgRegs) || (0U == pCfg->globalEventCnt) )
     {
         retVal = CSL_EFAIL;    /* INTAGGR does not support this feature */
     }
@@ -285,7 +285,7 @@ int32_t CSL_intaggrEnableEventMulticast( CSL_IntaggrCfg *pCfg, uint32_t globalEv
 {
     int32_t  retVal;
 
-    if( (pCfg->pMcastRegs == NULL) || (pCfg->mcastEventCnt == 0U) )
+    if( (NULL == pCfg->pMcastRegs) || (0U == pCfg->mcastEventCnt) )
     {
         retVal = CSL_EFAIL;    /* INTAGGR does not support this feature */
     }
@@ -336,7 +336,7 @@ int32_t CSL_intaggrEnableEventMulticast( CSL_IntaggrCfg *pCfg, uint32_t globalEv
                         retVal = CSL_EBADARGS;    /* Invalid globalEventOutIdx1 parameter */
                     }
                 }
-                if( retVal == CSL_PASS )
+                if( CSL_PASS == retVal )
                 {
                     regVal = CSL_FMK( INTAGGR_MCAST_GEVI_MCMAP_IRQMODE1, mode1Val ) |
                              CSL_FMK( INTAGGR_MCAST_GEVI_MCMAP_GEVIDX1,  idx1Val  ) |
@@ -365,7 +365,7 @@ int32_t CSL_intaggrMapUnmappedEventToEvent( const CSL_IntaggrCfg *pCfg, uint32_t
     int32_t  retVal;
 
 #ifdef CSL_INTAGGR_UNMAP_UNMAP_MAP_MAPIDX_MASK
-    if( (!CSL_intaggrIsModuleRevAtLeast(pCfg, 1U, 1U, 0U)) || (pCfg->pUnmapRegs == NULL) || (pCfg->unmapEventCnt == 0U) )
+    if( (!CSL_intaggrIsModuleRevAtLeast(pCfg, 1U, 1U, 0U)) || (NULL == pCfg->pUnmapRegs) || (0U == pCfg->unmapEventCnt) )
     {
         retVal = CSL_EFAIL;    /* INTAGGR does not support this feature */
     }
@@ -410,7 +410,7 @@ int32_t CSL_intaggrSetIntrEnable( const CSL_IntaggrCfg *pCfg, uint32_t statusBit
     {
         regNum = statusBitNum >> 6U;
         bitNum = statusBitNum & (uint32_t)0x003FU;
-        if( bEnable == (bool)true )
+        if( BTRUE == bEnable )
         {
             regVal = CSL_REG64_RD( &pCfg->pIntrRegs->VINT[regNum].ENABLE_SET );
             regVal |= (((uint64_t)1U) << bitNum);
@@ -445,7 +445,7 @@ int32_t CSL_intaggrSetIntrPending( const CSL_IntaggrCfg *pCfg, uint32_t statusBi
 
 bool CSL_intaggrIsIntrPending( const CSL_IntaggrCfg *pCfg, uint32_t statusBitNum, bool bMaskedStatus )
 {
-    bool     retVal = (bool)false;
+    bool     retVal = BFALSE;
     uint64_t regVal;
     uint32_t regNum, bitNum;
 
@@ -453,7 +453,7 @@ bool CSL_intaggrIsIntrPending( const CSL_IntaggrCfg *pCfg, uint32_t statusBitNum
     {
         regNum = statusBitNum >> 6U;
         bitNum = statusBitNum & (uint32_t)0x003FU;
-        if( bMaskedStatus == (bool)true )
+        if( BTRUE == bMaskedStatus )
         {
             regVal = CSL_REG64_RD( &pCfg->pIntrRegs->VINT[regNum].STATUSM );
         }
@@ -461,13 +461,13 @@ bool CSL_intaggrIsIntrPending( const CSL_IntaggrCfg *pCfg, uint32_t statusBitNum
         {
             regVal = CSL_REG64_RD( &pCfg->pIntrRegs->VINT[regNum].STATUS_SET );
         }
-        if( (regVal & (((uint64_t)1U) << bitNum)) == 0U )
+        if( 0U == (regVal & (((uint64_t)1U) << bitNum)) )
         {
-            retVal = (bool)false; /* Interrupt is not pending */
+            retVal = BFALSE; /* Interrupt is not pending */
         }
         else
         {
-            retVal = (bool)true;  /* Interrupt is pending */
+            retVal = BTRUE;  /* Interrupt is pending */
         }
     }
     return retVal;

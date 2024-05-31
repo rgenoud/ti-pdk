@@ -180,13 +180,13 @@ typedef struct
      *   Use CSL_DRU_CAPABILITIES_TYPE0_MASK, CSL_DRU_CAPABILITIES_TYPE1_MASK,
      *   etc macro to know if a particular TR tyoe is supported */
     uint64_t                staticSupported;
-    /**< TRUE - Static TR supported. */
+    /**< UTRUE - Static TR supported. */
     uint64_t                eolSupported;
-    /**< TRUE - EOL supported. */
+    /**< UTRUE - EOL supported. */
     uint64_t                localTriggerSupported;
-    /**< TRUE - Local trigger supported. */
+    /**< UTRUE - Local trigger supported. */
     uint64_t                globalTriggerSupported;
-    /**< TRUE - Global trigger supported. */
+    /**< UTRUE - Global trigger supported. */
     uint64_t                amode;
     /**< The maximum AMODE that is supported.
      *   Refer #CSL_UdmapTrFmtflagsAmode */
@@ -249,8 +249,8 @@ typedef struct
     /**< [IN] Pause on Error. This field controls what the channel will do if
      *   an error or exception occurs during a data transfer. This field is
      *   encoded as follows:
-     *      FALSE = Channel will drop current work and move on
-     *      TRUE  = Channel will pause and wait for SW to investigate and
+     *      UFALSE = Channel will drop current work and move on
+     *      UTRUE  = Channel will pause and wait for SW to investigate and
      *              un-pause the channel. */
     uint64_t                evtNum;
     /**< [IN] Global event number to generate anytime the required event generation
@@ -379,7 +379,7 @@ int32_t CSL_druChTeardown(const CSL_DRU_t *pRegs, uint32_t chId);
  *  \param   pRegs      [IN] DRU register base.
  *  \param   chId       [IN] Channel ID - 0 to (#CSL_DRU_NUM_CH - 1).
  *
- *  \return TRUE if complete else returns FALSE.
+ *  \return UTRUE if complete else returns UFALSE.
  */
 uint32_t CSL_druChIsTeardownComplete(const CSL_DRU_t *pRegs, uint32_t chId);
 

@@ -850,12 +850,12 @@ static inline CSL_UdmapTrResponseStatus CSL_udmapTrResponseGetStatusType( const 
 struct CSL_UdmapTdResponse_t
 {
     uint32_t tdIndicator;
-    /**< TRUE: Indicates that a teardown has completed. */
+    /**< UTRUE: Indicates that a teardown has completed. */
     uint32_t chId;
     /**< Indicates which channel the teardown completed on. */
     uint32_t forced;
-    /**< FALSE: Indicates that the teardown was graceful and data was not lost.
-     *   TRUE : Indicates that the teardown was not graceful and data was
+    /**< UFALSE: Indicates that the teardown was graceful and data was not lost.
+     *   UTRUE : Indicates that the teardown was not graceful and data was
       *  potentially lost */
 } __attribute__((__packed__));
 

@@ -430,9 +430,9 @@ extern void CSL_lcdma_ringaccSetRingOrderId( CSL_LcdmaRingaccCfg *pCfg, const CS
  *                              containing the ring accelerator configuration
  *  \param pRing        [IN]    Pointer to a #CSL_LcdmaRingaccRingCfg structure containing
  *                              the ring configuration
- *  \param bEnable      [IN]    true = Region is enabled, false = disabled
- *  \param bLock        [IN]    true = Region is locked (region values cannot
- *                              be changed), false = region is not locked
+ *  \param bEnable      [IN]    BTRUE = Region is enabled, BFALSE = disabled
+ *  \param bLock        [IN]    BTRUE = Region is locked (region values cannot
+ *                              be changed), BFALSE = region is not locked
  *
  *  \return None
  *
@@ -719,14 +719,14 @@ extern uint32_t CSL_lcdma_ringaccGetReverseRingOcc( const CSL_LcdmaRingaccCfg *p
  *
  *  \param pCfg         [IN]    Pointer to a #CSL_LcdmaRingaccCfg structure
  *                              containing the ring accelerator configuration
- *  \param bTraceAll    [IN]    If true, operations to every ring are traced.
- *                              If false, only the ring specified by ringNum
+ *  \param bTraceAll    [IN]    If BTRUE, operations to every ring are traced.
+ *                              If BFALSE, only the ring specified by ringNum
  *                              is traced.
- *  \param bIncMsgData  [IN]    If true, message data is included in the trace
+ *  \param bIncMsgData  [IN]    If BTRUE, message data is included in the trace
  *                              output.
  *  \param ringNum      [IN]    Specifies the ring whose operations are to be
  *                              traced. This parameter is ignored when
- *                              bTraceAll is true.
+ *                              bTraceAll is UTRUE.
  *
  *  \return     0  = success
  *              -1 = trace support is not available or ringNum is out of range
@@ -741,7 +741,7 @@ extern int32_t CSL_lcdma_ringaccCfgTrace( CSL_LcdmaRingaccCfg *pCfg, bool bTrace
  *
  *  \param pCfg         [IN]    Pointer to a #CSL_LcdmaRingaccCfg structure
  *                              containing the ring accelerator configuration
- *  \param bEnable      [IN]    If true, trace support is enabled. If false,
+ *  \param bEnable      [IN]    If BTRUE, trace support is enabled. If BFALSE,
  *                              it is disabled.
  *
  *  \return     0  = success
@@ -1146,8 +1146,8 @@ extern uint64_t CSL_lcdma_ringaccSetAselInAddr( uint64_t addr, CSL_LcdmaRingAccA
  *                              containing the ring accelerator configuration
  *  \param ringNum      [IN]    The ring number
  *
- *  \return  0 = false (no teardown completion)
- *           1 = true (teardown is complete)
+ *  \return  0 = BFALSE (no teardown completion)
+ *           1 = BTRUE (teardown is complete)
  */
 extern bool CSL_lcdma_ringaccIsTeardownComplete( const CSL_LcdmaRingaccCfg *pCfg, uint32_t ringNum );
 
