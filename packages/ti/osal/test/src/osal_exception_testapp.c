@@ -236,6 +236,7 @@ int main(void)
         upload_execution_history();
         OSAL_log("\n LDRA EXIT... \n");
 #endif
+        OSAL_log("\n All tests have passed. \n");
         OsalApp_generateException();
     }
 
