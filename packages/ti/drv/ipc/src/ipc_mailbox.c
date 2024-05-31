@@ -471,7 +471,7 @@ static void Ipc_mailboxInternalCallback(uintptr_t arg)
     volatile uint32_t numMessages;
     Ipc_MailboxFifo  *fifo;
     uint32_t shutdownMsg = IPC_RP_MBOX_SHUTDOWN;
-#define CNT_MAX 10
+#define CNT_MAX -1
     static unsigned int count;
 
     if (count < CNT_MAX)  {
@@ -518,13 +518,18 @@ if (count < CNT_MAX)  App_printf("%s :%d msg=0x%x\n", __func__, __LINE__, msg[i]
                             break;
                         }
                     }
+if (count < CNT_MAX)  App_printf("%s :%d rpMboxMsgRecv=%d numMessages=%d\n", __func__, __LINE__,rpMboxMsgRecv,numMessages);
 
                     if((0U == rpMboxMsgRecv) || ((1U == rpMboxMsgRecv) && (numMessages > 1U)))
                     {
+if (count < CNT_MAX)  App_printf("%s :%d call func %d %p\n", __func__, __LINE__, n,
+				 (void *)&(mbox->fifoTable[n].func));
                         /* Call the function with arg */
+
                         (mbox->fifoTable[n].func)((uint32_t *)parsedMsg, fifo->arg);
                     }
 
+if (count < CNT_MAX)  App_printf("%s :%d rpMboxMsgRecv=%d\n", __func__, __LINE__,rpMboxMsgRecv);
                     if((1U == rpMboxMsgRecv) && (NULL != gIpcObject.initPrms.rpMboxMsgFxn))
                     {
                         gIpcObject.initPrms.rpMboxMsgFxn(fifo->arg, rpMboxMsg);
