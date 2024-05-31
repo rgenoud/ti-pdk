@@ -142,6 +142,9 @@ portBaseType prvSetupHardware( void )
 
 int main( void )
 {
+    portBaseType xStatus;
+
+#if !defined(BUILD_MCU1_0)
     Board_initCfg boardCfg;
     Board_STATUS  status;
 
@@ -152,16 +155,13 @@ int main( void )
 
     DebugP_assert(status == BOARD_SOK);
 
-    portBaseType xStatus;
-
     /* Setup Board Hardware. */
     xStatus = prvSetupHardware();
+    DebugP_assert(xStatus != pdFAIL);
+#endif
 
     /* Initialise the Kernel Scheduler. */
-    if( pdPASS == xStatus )
-    {
-        xStatus = xInitializeScheduler();
-    }
+    xStatus = xInitializeScheduler();
 
     /* Everything OK? */
     if( pdPASS == xStatus )

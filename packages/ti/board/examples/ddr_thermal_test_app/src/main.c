@@ -94,18 +94,17 @@ int main(void)
     int32_t       retVal = 0;
     Board_STATUS  boardStatus = BOARD_SOK;
     char inputChar;
-#ifdef BAREMETAL
     Board_initCfg boardCfg;
 
     boardCfg = BOARD_INIT_PINMUX_CONFIG
                | BOARD_INIT_UART_STDIO;
     boardStatus = Board_init(boardCfg);
+
     if (boardStatus != BOARD_SOK)
     {
         retVal = -1;
         UART_printf("[Error] Board init failed!!\n");
     }
-#endif /* BAREMETAL */
     if (retVal == 0)
     {
         boardStatus = Board_DDRTempMonitoringInit(&Test_DDRTempMonitorCallback);
@@ -145,18 +144,6 @@ int main()
 {
     TaskP_Handle task;
     TaskP_Params taskParams;
-
-    Board_initCfg boardCfg;
-    Board_STATUS  boardStatus;
-
-    boardCfg = BOARD_INIT_PINMUX_CONFIG
-               | BOARD_INIT_UART_STDIO;
-    boardStatus = Board_init(boardCfg);
-    if (boardStatus != BOARD_SOK)
-    {
-        UART_printf("[Error] Board init failed!!\n");
-        return(-1);
-    }
 
     OS_init();
 

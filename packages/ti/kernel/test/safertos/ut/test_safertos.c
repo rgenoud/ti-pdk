@@ -672,6 +672,21 @@ void pong_main( void *args )
 void test_safertos_main( void *args )
 {
     portBaseType xStatus;
+#if defined(BUILD_MCU1_0)
+    Board_initCfg boardCfg;
+    Board_STATUS  status;
+
+    boardCfg = BOARD_INIT_PINMUX_CONFIG |
+               BOARD_INIT_UART_STDIO;
+
+    status = Board_init(boardCfg);
+
+    DebugP_assert(status == BOARD_SOK);
+
+    /* Setup Board Hardware. */
+    xStatus = prvSetupHardware();
+    DebugP_assert(xStatus != pdFAIL);
+#endif
 
     /* Create the semaphore used by the first two tasks. */
     /* safertos creates binary semaphore with init value of 1 */
