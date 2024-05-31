@@ -470,7 +470,7 @@ static void Ipc_mailboxInternalCallback(uintptr_t arg)
                     /* Process till we get the special RP Mbox message */
                     for(i=0; i<numMessages; i++)
                     {
-                        if(msg[i] != shutdownMsg)
+                        if((msg[i] != shutdownMsg) && (msg[i] != IPC_RP_MBOX_READY))
                         {
                             parsedMsg[i] = msg[i];
                         }

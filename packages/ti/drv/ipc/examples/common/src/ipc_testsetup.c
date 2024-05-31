@@ -156,6 +156,8 @@ static uint32_t		RecvEndPt = 0;
 bool g_exitRespTsk = 0;
 volatile uint32_t gbShutdown = 0U;
 volatile uint32_t gbShutdownRemotecoreID = 0U;
+static bool announce_ping = false;
+static bool announce_chrdev = false;
 
 /* ========================================================================== */
 /*                          Function Definitions                              */
@@ -184,6 +186,7 @@ void rpmsg_responderFxn(void *arg0, void *arg1)
     void		     *buf;
     uint32_t         requestedEpt = (uint32_t)(*(uint32_t*)arg0);
     char *           name = (char *)arg1;
+    bool *           announce = NULL;
 
     uintptr_t        key;
     uint32_t         bufSize = rpmsgDataSize;
@@ -217,6 +220,8 @@ void rpmsg_responderFxn(void *arg0, void *arg1)
     }
 #endif
 
+    announce = (requestedEpt == ENDPT_PING) ? &announce_ping : &announce_chrdev;
+
     status = RPMessage_announce(RPMESSAGE_ALL, myEndPt, name);
     if(status != IPC_SOK)
     {
@@ -235,6 +240,17 @@ void rpmsg_responderFxn(void *arg0, void *arg1)
 
         if(status != IPC_SOK)
         {
+            if (*announce)
+            {
+                *announce = false;
+                status = RPMessage_announce(RPMESSAGE_ALL, myEndPt, name);
+                if(status != IPC_SOK)
+                {
+                    App_printf("RecvTask: RPMessage_announce() for %s failed\n", name);
+                }
+                continue;
+            }
+
             App_printf("RecvTask: failed with code %d\n", status);
         }
         else
@@ -526,6 +542,15 @@ static void IpcRpMboxCallback(uint32_t remoteCoreId, uint32_t msgVal)
         {
             Ipc_resetCoreVirtIO(remoteCoreId);
         }
+    }
+    if ((msgVal == IPC_RP_MBOX_READY) && /* MPU core is ready */
+        (IPC_MPU1_0 == remoteCoreId))
+    {
+        /* force re-announce if MPU is ready */
+        announce_ping = true;
+        announce_chrdev = true;
+        RPMessage_unblock((RPMessage_Handle)&pRecvTaskBuf[0]);
+        RPMessage_unblock((RPMessage_Handle)&pRecvTaskBuf[rpmsgDataSize]);
     }
 }
 
