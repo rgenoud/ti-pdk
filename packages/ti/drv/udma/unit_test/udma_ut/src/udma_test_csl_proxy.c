@@ -92,6 +92,7 @@ int32_t UdmaTestRingCSLProxy(UdmaTestTaskObj *taskObj)
     Udma_ProxyHandle     proxyHandle;
     Udma_ProxyCfg        proxyCfg;
     CSL_ProxyThreadCfg   threadCfg;
+    uint32_t             backupbufferSizeBytes;
 
     ringMemSize = elemCnt * sizeof (uint64_t);
     ringMem     = Utils_memAlloc(heapId, ringMemSize, UDMA_CACHELINE_ALIGNMENT);
@@ -207,6 +208,7 @@ int32_t UdmaTestRingCSLProxy(UdmaTestTaskObj *taskObj)
                     GT_1trace(taskObj->traceMask, GT_INFO1,
                               " |TEST INFO|:: Task:%d: Test CSL_proxyGetMaxMsgSize ::\r\n",
                               taskObj->taskId);
+                    backupbufferSizeBytes = drvHandle->proxyCfg.bufferSizeBytes;
                     drvHandle->proxyCfg.bufferSizeBytes = UDMA_PROXY_ANY;
                     retVal                              = CSL_proxyGetMaxMsgSize(&drvHandle->proxyCfg,
                                                                                  drvHandle->proxyTargetNumRing);
@@ -222,6 +224,7 @@ int32_t UdmaTestRingCSLProxy(UdmaTestTaskObj *taskObj)
                     {
                         retVal = UDMA_SOK;
                     }
+                    drvHandle->proxyCfg.bufferSizeBytes = backupbufferSizeBytes;
                 }
 
                 if(UDMA_SOK == retVal)
@@ -291,7 +294,7 @@ int32_t UdmaTestRingCSLProxy(UdmaTestTaskObj *taskObj)
                     GT_1trace(taskObj->traceMask, GT_INFO1,
                               " |TEST INFO|:: Task:%d: Test CSL_proxyCfgThread ::\r\n",
                               taskObj->taskId);
-                    threadCfg.elSz = CSL_RINGACC_MAX_MONITORS;
+                    threadCfg.elSz = CSL_RINGACC_RING_MODE_INVALID + 1U;
                     retVal         = CSL_proxyCfgThread(&drvHandle->proxyCfg, drvHandle->proxyTargetNumRing,
                                                         drvHandle->initPrms.rmInitPrms.proxyThreadNum, &threadCfg);
                     if(0 == retVal)

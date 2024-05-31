@@ -454,6 +454,15 @@ int32_t UdmaTestCSLDruChIsTeardownComplete(UdmaTestTaskObj *taskObj)
         retVal = UDMA_SOK;
     }
 
+    if(UDMA_SOK == retVal)
+    {
+        retVal = CSL_druChEnable(pRegs, CSL_DRU_NUM_QUEUE);
+        if(UDMA_SOK == retVal)
+        {
+            CSL_druChIsTeardownComplete(pRegs, CSL_DRU_NUM_QUEUE);
+        }
+    }
+
     return retVal;
 }
 
@@ -640,14 +649,17 @@ int32_t UdmaTestCSLDruChConfig(UdmaTestTaskObj *taskObj)
 }
 
 /*
- * Test Case Description: Verifies the function CSL_druQueueConfig
+ * Test Case Description: Verifies the function CSL_druQueueConfig and CSL_druChGetTriggerRegAddr
  * Test scenario 1: Check when DRU register base is NULL
+ * Test scenario 2: Check CSL_druChGetTriggerRegAddr when  DRU register base is NULL
+ * Test scenario 3: Check CSL_druChGetTriggerRegAddr when ChId is invalid
  */
 int32_t UdmaTestCSLDruQueueConfig(UdmaTestTaskObj *taskObj)
 {
-    int32_t    retVal  = UDMA_SOK;
-    CSL_DRU_t *pRegs   = ((CSL_DRU_t *) UDMA_UTC_BASE_DRU0);
-    uint32_t   queueId = CSL_DRU_QUEUE_ID_0;
+    int32_t            retVal  = UDMA_SOK;
+    CSL_DRU_t         *pRegs   = ((CSL_DRU_t *) UDMA_UTC_BASE_DRU0);
+    uint32_t           queueId = CSL_DRU_QUEUE_ID_0;
+    volatile uint64_t *regAddr = NULL;
 
     GT_1trace(taskObj->traceMask, GT_INFO1,
               " |TEST INFO|:: Task:%d: CSL_druQueueConfig Testcase ::\r\n",
@@ -665,6 +677,40 @@ int32_t UdmaTestCSLDruQueueConfig(UdmaTestTaskObj *taskObj)
     else
     {
         retVal = UDMA_SOK;
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 2: Check CSL_druChGetTriggerRegAddr when  DRU register base is NULL */
+        regAddr = CSL_druChGetTriggerRegAddr(NULL, CSL_DRU_MAX_CH);
+        if(NULL != regAddr)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: CSL_druChSetEvent:: Neg:: "
+                      " Check CSL_druChGetTriggerRegAddr when  DRU register base is NULL!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        else
+        {
+            retVal = UDMA_SOK;
+        }
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 3: Check CSL_druChGetTriggerRegAddr when ChId is invalid */
+        regAddr = CSL_druChGetTriggerRegAddr(pRegs, CSL_DRU_MAX_CH);
+        if(NULL != regAddr)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: CSL_druChSetEvent:: Neg:: "
+                      " Check CSL_druChGetTriggerRegAddr when ChId is invalid!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        else
+        {
+            retVal = UDMA_SOK;
+        }
     }
 
     return retVal;

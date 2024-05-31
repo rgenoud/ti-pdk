@@ -549,6 +549,9 @@ int32_t udmaTestUdmaInitSkipEventRegTc(UdmaTestTaskObj *taskObj)
  * Test scenario 4: Check when chPrms is Null
  * Test scenario 5: Check when pdmaPrms is Null
  * Test scenario 6: Check when eventPrms is Null
+ * Test scenario 7: Check when queueCfg is NULL
+ * Test scenario 8: Check when osalPrms is NULL
+ * Test scenario 9: Check when cachePrms is NULL
  */ 
 int32_t UdmaInitPrmsNeg(UdmaTestTaskObj *taskObj)
 {
@@ -567,6 +570,12 @@ int32_t UdmaInitPrmsNeg(UdmaTestTaskObj *taskObj)
     UdmaChPdmaPrms_init(NULL);
     /* Test scenario 6: Check when eventPrms is Null */
     UdmaEventPrms_init(NULL);
+    /* Test scenario 7: Check when queueCfg is NULL */
+    UdmaDruQueueConfig_init(NULL);
+    /* Test scenario 8: Check when osalPrms is NULL */
+    UdmaOsalPrms_init(NULL);
+    /* Test scenario 9: Check when cachePrms is NULL */
+    UdmaOsalCachePrms_init(NULL);
 
     return retVal;
 }

@@ -648,6 +648,8 @@ int32_t udmaTestBlkcpyChainingTc(UdmaTestTaskObj *taskObj);
  */
 int32_t udmaTestRingProxyTc(UdmaTestTaskObj *taskObj);
 int32_t udmaTestCslRingAcc(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestCslRing(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestCslRingMonitor(UdmaTestTaskObj *taskObj);
 int32_t udmaTestRingFlushTc(UdmaTestTaskObj *taskObj);
 int32_t udmaTestRingEventTc(UdmaTestTaskObj *taskObj);
 int32_t udmaTestRingParamCheckTc(UdmaTestTaskObj *taskObj);
@@ -956,6 +958,9 @@ int32_t UdmaTestCSLDruChConfig(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestCslUdmap(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestCslUdmapNeg(UdmaTestTaskObj *taskObj);
 
+/*
+ * Proxy csl test functions
+ */
 int32_t UdmaTestRingCSLProxy(UdmaTestTaskObj *taskObj);
 
 /*
