@@ -90,7 +90,8 @@ extern "C" {
 #define IPC_RP_MBOX_SUSPEND_CANCEL            ((uint32_t)0xFFFFFF13U)
 #define IPC_RP_MBOX_SHUTDOWN                  ((uint32_t)0xFFFFFF14U)
 #define IPC_RP_MBOX_SHUTDOWN_ACK              ((uint32_t)0xFFFFFF15U)
-#define IPC_RP_MBOX_END_MSG                   ((uint32_t)0xFFFFFF16U)
+#define IPC_RP_MBOX_DETACH                    ((uint32_t)0xFFFFFF16U)
+#define IPC_RP_MBOX_END_MSG                   ((uint32_t)0xFFFFFF17U)
 /* @} */
 
 /* Resource info: Must match include/linux/remoteproc.h: */

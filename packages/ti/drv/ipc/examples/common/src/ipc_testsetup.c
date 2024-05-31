@@ -154,6 +154,7 @@ __attribute__ ((aligned(APP_CHECKER_TSK_STACK)));
 
 #if !defined(BUILD_MPU1_0) && defined(A72_LINUX_OS) && defined(A72_LINUX_OS_IPC_ATTACH)
 static uint32_t		RecvEndPt = 0;
+static uint32_t		RecvEndPtChrDev = 0;
 #endif
 
 #define DEBUG_PRINT
@@ -223,6 +224,10 @@ void rpmsg_responderFxn(void *arg0, void *arg1)
     if (requestedEpt == ENDPT_PING)
     {
         RecvEndPt = myEndPt;
+    }
+    if (requestedEpt == ENDPT_CHRDEV)
+    {
+        RecvEndPtChrDev = myEndPt;
     }
 #endif
 
@@ -490,31 +495,42 @@ void rpmsg_vdevMonitorFxn(void* arg0, void* arg1)
     int32_t status;
 
     Lpm_debugFullPrintf("enter %s\n", __func__);
-    /* Wait for Linux VDev ready... */
-    while(!Ipc_isRemoteReady(IPC_MPU1_0))
-    {
-        TaskP_sleep(10);
-    }
+    while (true) {
+        /* Wait for Linux VDev ready... */
+        while(!Ipc_isRemoteReady(IPC_MPU1_0))
+        {
+            TaskP_sleep(10);
+        }
 
-    /* Create the VRing now ... */
-    status = Ipc_lateVirtioCreate(IPC_MPU1_0);
-    if(status != IPC_SOK)
-    {
-        App_printf("%s: Ipc_lateVirtioCreate failed\n", __func__);
-        return;
-    }
+        /* Create the VRing now ... */
+        status = Ipc_lateVirtioCreate(IPC_MPU1_0);
+        if(status != IPC_SOK)
+        {
+            App_printf("%s: Ipc_lateVirtioCreate failed\n", __func__);
+            return;
+        }
 
-    status = RPMessage_lateInit(IPC_MPU1_0);
-    if(status != IPC_SOK)
-    {
-        App_printf("%s: RPMessage_lateInit failed\n", __func__);
-        return;
-    }
+        status = RPMessage_lateInit(IPC_MPU1_0);
+        if(status != IPC_SOK)
+        {
+            App_printf("%s: RPMessage_lateInit failed\n", __func__);
+            return;
+        }
 
-    status = RPMessage_announce(IPC_MPU1_0, RecvEndPt, SERVICE_PING);
-    if(status != IPC_SOK)
-    {
-        App_printf("rpmsg_vdevMonitorFxn: RPMessage_announce() failed\n");
+        status = RPMessage_announce(IPC_MPU1_0, RecvEndPt, SERVICE_PING);
+        if(status != IPC_SOK)
+        {
+            App_printf("rpmsg_vdevMonitorFxn: RPMessage_announce() failed\n");
+        }
+        status = RPMessage_announce(IPC_MPU1_0, RecvEndPtChrDev, SERVICE_CHRDEV);
+        if(status != IPC_SOK)
+        {
+            App_printf("rpmsg_vdevMonitorFxn: RPMessage_announceChrDev() failed\n");
+        }
+        while(Ipc_isRemoteReady(IPC_MPU1_0))
+        {
+            TaskP_sleep(100);
+        }
     }
 }
 #endif /* !defined(BUILD_MPU1_0) && defined(A72_LINUX_OS) && defined(A72_LINUX_OS_IPC_ATTACH)*/
