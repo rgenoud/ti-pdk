@@ -506,8 +506,8 @@ if (count < CNT_MAX)  App_printf("%s :%d \n", __func__, __LINE__);
                     /* Process till we get the special RP Mbox message */
                     for(i=0; i<numMessages; i++)
                     {
-if (count < CNT_MAX)  App_printf("%s :%d \n", __func__, __LINE__);
-                        if(msg[i] != shutdownMsg)
+if (count < CNT_MAX)  App_printf("%s :%d msg=0x%x\n", __func__, __LINE__, msg[i]);
+                        if((msg[i] != shutdownMsg) && (msg[i] != IPC_RP_MBOX_READY))
                         {
                             parsedMsg[i] = msg[i];
                         }
