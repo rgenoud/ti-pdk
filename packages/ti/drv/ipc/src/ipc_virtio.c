@@ -449,7 +449,7 @@ int32_t Ipc_initVirtIO(Ipc_VirtIoParams *vqParam)
 {
     int32_t   retVal = IPC_SOK;
 
-    App_printf("enter %s\n", __func__);
+    //App_printf("enter %s\n", __func__);
     if( (vqParam == NULL) ||
         (vqParam->vringBufSize < IPC_VRING_BUFFER_SIZE) ||
 		(vqParam->vqBufSize == 0U))
@@ -458,19 +458,19 @@ int32_t Ipc_initVirtIO(Ipc_VirtIoParams *vqParam)
         retVal = IPC_EFAIL;
     }
 
-    App_printf("%s :%d \n", __func__, __LINE__);
+    //App_printf("%s :%d \n", __func__, __LINE__);
     if(retVal == IPC_SOK)
     {
-    App_printf("%s :%d \n", __func__, __LINE__);
+    //App_printf("%s :%d \n", __func__, __LINE__);
         /* Initialize the global queue registry */
         memset(queueRegistry, 0, sizeof(queueRegistry));
 
-    App_printf("%s :%d \n", __func__, __LINE__);
+    //App_printf("%s :%d \n", __func__, __LINE__);
         virtio_cnt = 0;
         g_vqItemCnt = 0;
         g_ipc_mBoxCnt = 0;
 
-    App_printf("%s :%d \n", __func__, __LINE__);
+    //App_printf("%s :%d \n", __func__, __LINE__);
         vqBaseAddr = (void*)vqParam->vqObjBaseAddr;
         vqSizeLeft = vqParam->vqBufSize;
 
@@ -478,7 +478,7 @@ int32_t Ipc_initVirtIO(Ipc_VirtIoParams *vqParam)
         retVal = VirtioIPC_init(vqParam);
     }
 
-    App_printf("%s :%d \n", __func__, __LINE__);
+    //App_printf("%s :%d \n", __func__, __LINE__);
     return retVal;
 }
 
@@ -748,13 +748,13 @@ static void Virtio_isr(uint32_t* msg, uint32_t priv)
     int32_t retVal;
     Virtio_Object *vq = NULL;
 
-    App_printf("%s :%d \n", __func__, __LINE__);
+    //App_printf("%s :%d \n", __func__, __LINE__);
     if (procId < IPC_MAX_PROCS)
     {
         vq = (Virtio_Object *)Ipc_allocVirtio();
     }
 
-    App_printf("%s :%d \n", __func__, __LINE__);
+    //App_printf("%s :%d \n", __func__, __LINE__);
     if (NULL != vq)
     {
         vq->callback       = callback;
@@ -766,13 +766,13 @@ static void Virtio_isr(uint32_t* msg, uint32_t priv)
         vq->direction      = direction;
         vq->timeoutCnt     = timeoutCnt;
 
-    App_printf("%s :%d \n", __func__, __LINE__);
+    //App_printf("%s :%d \n", __func__, __LINE__);
         vring_init(&(vq->vring), params->num, (void*)params->addr, params->align);
 
         /* Each processor clears only its TX vq memory. */
         if (direction == VIRTIO_TX)
         {
-    App_printf("%s :%d \n", __func__, __LINE__);
+    //App_printf("%s :%d \n", __func__, __LINE__);
             memset((void*)params->addr, 0, vring_size(params->num, params->align));
             /* Don't trigger a mailbox message every time remote rpoc */
             /* makes another buffer available.                        */
@@ -782,11 +782,11 @@ static void Virtio_isr(uint32_t* msg, uint32_t priv)
 
         if (direction == VIRTIO_RX)
         {
-    App_printf("%s :%d \n", __func__, __LINE__);
+    //App_printf("%s :%d \n", __func__, __LINE__);
             uint32_t selfId = Ipc_mpGetSelfId();
             queueRegistry[(2U*procId)+1U] = vq;
             retVal = Ipc_mailboxRegister((uint16_t)selfId, (uint16_t)procId, Virtio_isr, procId, timeoutCnt);
-    App_printf("%s :%d \n", __func__, __LINE__);
+    //App_printf("%s :%d \n", __func__, __LINE__);
             if (retVal != IPC_SOK)
             {
                  SystemP_printf("Virtio_create : Failed to register mailbox\n");
@@ -892,7 +892,7 @@ static int32_t VirtioIPC_createVirtioCorePair(Ipc_VirtioInfo* vqInfo, uint32_t t
     uint8_t        status = 0;
     int32_t        retVal = IPC_SOK;
 
-    App_printf("%s :%d \n", __func__, __LINE__);
+    //App_printf("%s :%d \n", __func__, __LINE__);
     /* TX VQ */
     params.num   = vqInfo->num;
     params.addr  = (uintptr_t)mapPAtoVA(vqInfo->daTx);
@@ -904,7 +904,7 @@ static int32_t VirtioIPC_createVirtioCorePair(Ipc_VirtioInfo* vqInfo, uint32_t t
         SystemP_printf("TX Virtio creation failure: %d\n", vqInfo->txNotifyId);
         retVal = IPC_EFAIL;
     }
-    App_printf("%s :%d \n", __func__, __LINE__);
+    //App_printf("%s :%d \n", __func__, __LINE__);
     if(retVal == IPC_SOK)
     {
         /* Prime the transmit buffer */
@@ -915,7 +915,7 @@ static int32_t VirtioIPC_createVirtioCorePair(Ipc_VirtioInfo* vqInfo, uint32_t t
         params.num   = vqInfo->num;
         params.addr  = (uintptr_t)mapPAtoVA(vqInfo->daRx);
         params.align = vqInfo->align;
-    App_printf("%s :%d \n", __func__, __LINE__);
+    //App_printf("%s :%d \n", __func__, __LINE__);
         rx_vq = Virtio_create(vqInfo->rxNotifyId, vqInfo->remoteId, NULL,
                   &params, VIRTIO_RX, status, timeoutCnt);
         if (rx_vq == NULL)
@@ -925,7 +925,7 @@ static int32_t VirtioIPC_createVirtioCorePair(Ipc_VirtioInfo* vqInfo, uint32_t t
         }
     }
 
-    App_printf("%s :%d \n", __func__, __LINE__);
+    //App_printf("%s :%d \n", __func__, __LINE__);
     if(retVal == IPC_SOK)
     {
         /* Add to global registry */
@@ -945,7 +945,7 @@ Bool Ipc_isRemoteVirtioCreated(uint32_t remoteId)
     Bool      vqCreated = FALSE;
     uint32_t  idx     = 0;
 
-    App_printf("%s :%d \n", __func__, __LINE__);
+    //App_printf("%s :%d \n", __func__, __LINE__);
     for(idx = 0; idx < (uint32_t)g_vqItemCnt; idx++)
     {
         if (remoteId == g_vqTable[idx].procId)
@@ -965,7 +965,7 @@ static void Ipc_updateVirtioInfo(uint32_t numProc, const void *baseAddr, uint32_
     uint32_t revPrimeBuf;
 #endif
 
-    App_printf("%s :%d \n", __func__, __LINE__);
+    //App_printf("%s :%d \n", __func__, __LINE__);
     if(info->remoteId > info->selfId)
     {
         a = info->selfId;
@@ -977,7 +977,7 @@ static void Ipc_updateVirtioInfo(uint32_t numProc, const void *baseAddr, uint32_
         b = info->selfId;
     }
 
-    App_printf("%s :%d \n", __func__, __LINE__);
+    //App_printf("%s :%d \n", __func__, __LINE__);
     for(i = 0; i < a; i++)
     {
         cnt += (numProc - i - 1U);
@@ -985,7 +985,7 @@ static void Ipc_updateVirtioInfo(uint32_t numProc, const void *baseAddr, uint32_
     cnt += (b - a - 1U);
     cnt *= 4U;
 
-    App_printf("%s :%d \n", __func__, __LINE__);
+    //App_printf("%s :%d \n", __func__, __LINE__);
     if(info->remoteId > info->selfId)
     {
         info->daTx       = (uint32_t)((uint32_t)(uintptr_t)baseAddr + (cnt * vrBufSize));
@@ -1009,7 +1009,7 @@ static void Ipc_updateVirtioInfo(uint32_t numProc, const void *baseAddr, uint32_
         info->rxNotifyId = 1;
     }
 
-    App_printf("%s :%d \n", __func__, __LINE__);
+    //App_printf("%s :%d \n", __func__, __LINE__);
     /* If remote core is Linux, and vdev is ready
      * update the address
      */
@@ -1021,7 +1021,7 @@ static void Ipc_updateVirtioInfo(uint32_t numProc, const void *baseAddr, uint32_
         info->primeBuf  = info->daTx + (2U*vrBufSize);
     }
 
-    App_printf("%s :%d \n", __func__, __LINE__);
+    //App_printf("%s :%d \n", __func__, __LINE__);
 #ifdef QNX_OS
     /* For QNX, mmap to local process space */
     Ipc_addTranslationEntry(info->daTx, vrBufSize);
@@ -1045,27 +1045,27 @@ int32_t VirtioIPC_init(Ipc_VirtIoParams *vqParams)
     uint32_t         procId;
     uint32_t         idx;
 
-    App_printf("%s :%d \n", __func__, __LINE__);
+    //App_printf("%s :%d \n", __func__, __LINE__);
     selfId = Ipc_mpGetSelfId();
 
-    App_printf("%s :%d \n", __func__, __LINE__);
+    //App_printf("%s :%d \n", __func__, __LINE__);
     vqInfo.align = IPC_VRING_ALIGNMENT;
     vqInfo.num   = IPC_VRING_BUF_CNT;
     vqInfo.selfId = selfId;
 
-    App_printf("%s :%d \n", __func__, __LINE__);
+    //App_printf("%s :%d \n", __func__, __LINE__);
     for(idx = 0; idx < numProcessors; idx++)
     {
         procId = Ipc_mpGetRemoteProcId(idx);
 
-    App_printf("%s :%d \n", __func__, __LINE__);
+    //App_printf("%s :%d \n", __func__, __LINE__);
         /* if virtio is already created for this core then ignore */
         if(TRUE == Ipc_isRemoteVirtioCreated(procId))
         {
             continue;
         }
 
-    App_printf("%s :%d \n", __func__, __LINE__);
+    //App_printf("%s :%d \n", __func__, __LINE__);
         if(FALSE == Ipc_isRemoteReady((uint16_t)procId))
         {
             /* Linux on A72 is not ready, go to next core
@@ -1074,11 +1074,11 @@ int32_t VirtioIPC_init(Ipc_VirtIoParams *vqParams)
              */
             continue;
         }
-    App_printf("%s :%d \n", __func__, __LINE__);
+    //App_printf("%s :%d \n", __func__, __LINE__);
         vqInfo.remoteId   = procId;
         Ipc_updateVirtioInfo(IPC_MAX_PROCS, vqParams->vringBaseAddr, IPC_VRING_SIZE, &vqInfo);
         retVal = VirtioIPC_createVirtioCorePair(&vqInfo, vqParams->timeoutCnt);
-    App_printf("%s :%d \n", __func__, __LINE__);
+    //App_printf("%s :%d \n", __func__, __LINE__);
         if(retVal != IPC_SOK)
         {
             SystemP_printf("VirtioIPC_init: Failed to create VirtIO for procId..\n",
@@ -1086,7 +1086,7 @@ int32_t VirtioIPC_init(Ipc_VirtIoParams *vqParams)
             break;
         }
     }
-    App_printf("%s :%d \n", __func__, __LINE__);
+    //App_printf("%s :%d \n", __func__, __LINE__);
     return retVal;
 }
 
