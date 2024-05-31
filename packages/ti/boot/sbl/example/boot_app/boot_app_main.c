@@ -62,8 +62,10 @@
 
 /* Task Priority Levels, CAN Task has higher priority so that CAN Response happens 
  * first followed by the Boot Task */
-#define BOOT_APP_CAN_TASK_PRIORITY        (4)
-#define BOOT_APP_BOOT_TASK_PRIORITY       (2)
+#if defined(CAN_RESP_TASK_ENABLED)
+#define BOOT_APP_CAN_TASK_PRIORITY        (6)
+#endif
+#define BOOT_APP_BOOT_TASK_PRIORITY       (5)
 
 /* Uncomment the following for debug logs */
 /* #define UART_PRINT_DEBUG */
@@ -198,8 +200,6 @@ extern void     (*fp_seek)(void *srcAddr, uint32_t location);
 
 int32_t main(void)
 {
-    Board_initCfg boardCfg;
-    uint32_t ret = CSL_PASS;
     TaskP_Params bootTaskParams;
 
 #if defined(CAN_RESP_TASK_ENABLED)
@@ -208,21 +208,9 @@ int32_t main(void)
     BootApp_canEnableTransceivers();
 #endif
 
-    boardCfg = BOARD_INIT_PINMUX_CONFIG | BOARD_INIT_UART_STDIO;
-    Board_init(boardCfg);
     OS_init();
 
-    ret = BootApp_setupSciServer();
-    if(ret != CSL_PASS)
-    {
-        UART_printf("Failed to setup sciserver for boot app\r\n");
-        OS_stop();
-    }
-    else
-    {
-        BootApp_armR5PmuCntrInit();
-
-        UART_printf("MCU R5F App started at %d usecs\r\n", BootApp_getTimeInMicroSec(CSL_armR5PmuReadCntr(CSL_ARM_R5_PMU_CYCLE_COUNTER_NUM)));
+    BootApp_armR5PmuCntrInit();
 
     #if defined(CAN_RESP_TASK_ENABLED) 
         /* Initialize the task params */
@@ -234,26 +222,23 @@ int32_t main(void)
         gBootAppCanTask = TaskP_create(&BootApp_canTaskFxn, &canRespTaskParams);
         if(NULL == gBootAppCanTask)
         {
-            UART_printf("Can Response Task creation failed\r\n");
             OS_stop();
         }
     #endif
 
-        /* Initialize the task params */
-        TaskP_Params_init(&bootTaskParams);
-        bootTaskParams.priority       = BOOT_APP_BOOT_TASK_PRIORITY;
-        bootTaskParams.stack          = gBootAppTaskStack;
-        bootTaskParams.stacksize      = sizeof (gBootAppTaskStack);
+    /* Initialize the task params */
+    TaskP_Params_init(&bootTaskParams);
+    bootTaskParams.priority       = BOOT_APP_BOOT_TASK_PRIORITY;
+    bootTaskParams.stack          = gBootAppTaskStack;
+    bootTaskParams.stacksize      = sizeof (gBootAppTaskStack);
 
-        gBootAppTask = TaskP_create(&BootApp_bootTaskFxn, &bootTaskParams);
-        if (NULL == gBootAppTask)
-        {
-            UART_printf("Boot Task creation failed\r\n");
-            OS_stop();
-        }
-
-        OS_start();    /* Does not return */
+    gBootAppTask = TaskP_create(&BootApp_bootTaskFxn, &bootTaskParams);
+    if (NULL == gBootAppTask)
+    {
+        OS_stop();
     }
+
+    OS_start();    /* Does not return */
     return(0);
 }
 
@@ -337,6 +322,9 @@ static uint32_t BootApp_getTimeInMicroSec(uint32_t pmuCntrVal)
 #if defined(CAN_RESP_TASK_ENABLED)
 static void BootApp_canTaskFxn(void* a0, void* a1)
 {
+    Board_initCfg boardCfg;
+    boardCfg = BOARD_INIT_PINMUX_CONFIG | BOARD_INIT_UART_STDIO;
+    Board_init(boardCfg);
     BootApp_canResponseTest();
     return;
 }
@@ -445,14 +433,30 @@ static void BootApp_mainDomainSetup()
 
 static void BootApp_bootTaskFxn(void* a0, void* a1)
 {
-    gBootAppTimeStart = BootApp_getTimeInMicroSec(CSL_armR5PmuReadCntr(CSL_ARM_R5_PMU_CYCLE_COUNTER_NUM));
+    #if !defined(CAN_RESP_TASK_ENABLED)
+    Board_initCfg boardCfg;
+    boardCfg = BOARD_INIT_PINMUX_CONFIG | BOARD_INIT_UART_STDIO;
+    Board_init(boardCfg);
+    #endif
+    uint32_t ret = CSL_PASS;
 
-    BootApp_loadImg();
+    ret = BootApp_setupSciServer();
+    if(ret != CSL_PASS)
+    {
+        UART_printf("Failed to setup sciserver for boot app\r\n");
+    }
+    else
+    {
+        UART_printf("MCU R5F App started at %d usecs\r\n", BootApp_getTimeInMicroSec(CSL_armR5PmuReadCntr(CSL_ARM_R5_PMU_CYCLE_COUNTER_NUM)));
 
-    gBootAppTimeFinish = BootApp_getTimeInMicroSec(CSL_armR5PmuReadCntr(CSL_ARM_R5_PMU_CYCLE_COUNTER_NUM));
+        gBootAppTimeStart = BootApp_getTimeInMicroSec(CSL_armR5PmuReadCntr(CSL_ARM_R5_PMU_CYCLE_COUNTER_NUM));
 
-    UART_printf("MCU Boot Task started at %d usecs and finished at %d usecs\r\n", (uint32_t)gBootAppTimeStart, (uint32_t)gBootAppTimeFinish);
+        BootApp_loadImg();
 
+        gBootAppTimeFinish = BootApp_getTimeInMicroSec(CSL_armR5PmuReadCntr(CSL_ARM_R5_PMU_CYCLE_COUNTER_NUM));
+
+        UART_printf("MCU Boot Task started at %d usecs and finished at %d usecs\r\n", (uint32_t)gBootAppTimeStart, (uint32_t)gBootAppTimeFinish);
+    }
     return;
 }
 
