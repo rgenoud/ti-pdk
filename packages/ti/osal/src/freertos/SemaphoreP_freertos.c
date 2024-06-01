@@ -172,20 +172,27 @@ int32_t SemaphoreP_constructBinary(SemaphoreP_freertos *handle, uint32_t initCou
 {
     int32_t status;
 
-    handle->semHndl = xSemaphoreCreateBinaryStatic(&handle->semObj);
-    if( NULL == handle->semHndl )
+    if (NULL == handle || initCount > 1U)
     {
         status = SemaphoreP_FAILURE;
     }
     else
     {
-        vQueueAddToRegistry(handle->semHndl, "Binary Sem (OSAL)");
-        if(1U == initCount)
+        handle->semHndl = xSemaphoreCreateBinaryStatic(&handle->semObj);
+        if( NULL == handle->semHndl)
         {
-            /* post a semaphore to increment initial count to 1 */
-            (void)xSemaphoreGive(handle->semHndl);
+            status = SemaphoreP_FAILURE;
         }
-        status = SemaphoreP_OK;
+        else
+        {
+            vQueueAddToRegistry(handle->semHndl, "Binary Sem (OSAL)");
+            if(1U == initCount)
+            {
+                /* post a semaphore to increment initial count to 1 */
+                (void)xSemaphoreGive(handle->semHndl);
+            }
+            status = SemaphoreP_OK;
+        }
     }
 
     return status;
