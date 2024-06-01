@@ -116,7 +116,11 @@ EventP_Handle EventP_create(EventP_Params *params)
     else
     {
         xCreateResult = xEventGroupCreate(&(handle->eventObj), &handle->eventHndl);
-        if((errNULL_PARAMETER_SUPPLIED == xCreateResult) || (errEVENT_GROUP_ALREADY_IN_USE == xCreateResult))
+        if(pdPASS == xCreateResult)
+        {
+            ret_handle = ((EventP_Handle)handle);
+        }
+        else
         {
             /* If there was an error reset the event object and return NULL. */
             key = HwiP_disable();
@@ -128,10 +132,6 @@ EventP_Handle EventP_create(EventP_Params *params)
             }
             HwiP_restore(key);
             ret_handle = NULL_PTR;
-        }
-        if(pdPASS == xCreateResult)
-        {
-            ret_handle = ((EventP_Handle)handle);
         }
     }
 
