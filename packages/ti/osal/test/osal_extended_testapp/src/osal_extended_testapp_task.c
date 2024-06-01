@@ -273,6 +273,7 @@ static int32_t OsalApp_taskNegativeTests(void)
 {
     TaskP_Params    params;
     TaskP_Handle    handle;
+    TaskP_Handle    junkHandle;
     int32_t         result = osal_OK;
 
 #if defined(FREERTOS)
@@ -302,6 +303,13 @@ static int32_t OsalApp_taskNegativeTests(void)
         result = osal_FAILURE;
     }
 #endif
+
+    memset(&junkHandle, 0U, sizeof(TaskP_Handle));
+
+    if(TaskP_OK == TaskP_delete(&junkHandle))
+    {
+        result = osal_FAILURE;
+    }
 
     if((TaskP_OK != TaskP_delete(&handle)) || (TaskP_OK == TaskP_delete(NULL_PTR)))
     {
