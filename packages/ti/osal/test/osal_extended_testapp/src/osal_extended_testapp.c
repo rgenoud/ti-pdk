@@ -362,6 +362,10 @@ LoadP_update();
 OS_stop();
 #endif
 
+#if defined (SAFERTOS)
+OS_stop();
+#endif
+
     TaskP_Params taskParams;
     OS_init();
     memset( gAppTskStackMain, 0xFF, sizeof( gAppTskStackMain ) );
