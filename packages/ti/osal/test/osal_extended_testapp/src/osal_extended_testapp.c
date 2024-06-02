@@ -366,7 +366,10 @@ OS_stop();
 OS_stop();
 #endif
 
-    OsalCfgClecAccessCtrl(BFALSE);
+#if defined(BUILD_C7X)
+OsalCfgClecAccessCtrl(BFALSE);
+#endif
+
     TaskP_Params taskParams;
     OS_init();
     memset( gAppTskStackMain, 0xFF, sizeof( gAppTskStackMain ) );

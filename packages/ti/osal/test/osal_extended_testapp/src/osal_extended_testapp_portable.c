@@ -134,6 +134,14 @@ static int32_t OsalApp_portc7xGeneralTest(void)
         OSAL_log("\n C7x portable general test have failed!!\n");
     }
 
+#if defined(FREERTOS) && defined(BUILD_MCU)
+    ulGetDataFaultStatusRegister();
+    ulGetDataFaultAddressRegister();
+    ulGetInstructionFaultStatusRegister();
+    ulGetInstructionFaultAddressRegister();
+    ulGetCPSR();
+#endif
+
     return result;
 }
 

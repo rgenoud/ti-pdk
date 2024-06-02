@@ -122,6 +122,7 @@ static void OsalApp_semaphoreISR(void *arg)
     gOsalAppsemISRisExecuted = BTRUE;
     SemaphoreP_post(gOsalAppsemhandle);
     SemaphoreP_pend(gOsalAppsemhandle, SemaphoreP_NO_WAIT);
+    SemaphoreP_post(gOsalAppsemhandle);
 }
 
 static int32_t OsalApp_isInISRsemaphoreTest(void)
