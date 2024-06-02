@@ -67,6 +67,7 @@ MEMORY
     VECTORS (X)                 : ORIGIN = 0x00000000 , LENGTH = 0x00000040
     R5F_TCMA0(RWIX)             : ORIGIN = 0x00000040 , LENGTH = 0x00007F00
     R5F_TCMB0(RWIX)             : ORIGIN = 0x41010100 , LENGTH = 0x00007F00
+    SBL_USED_OCMC_RAM           : ORIGIN = 0x41C00000 , LENGTH = 0x30000
     OCMC_RAM_BOARD_CFG (RWIX)   : ORIGIN = 0x41c80000 , LENGTH = 0x2000
     /* Sciserver App Space */
     OCMC_RAM_SCISERVER (RWIX)   : ORIGIN = 0x41C82000 , LENGTH = 0x00060000
@@ -92,7 +93,7 @@ SECTIONS
     .rodata         : {} palign(8)   > OCMC_RAM_SCISERVER
     .cinit          : {} palign(8)   > R5F_TCMB0
     .far            : {} align(4)    > OCMC_RAM_SCISERVER
-    .bss            : {*(.bss.devgroup*)} align(4)    > OCMC_RAM_SCISERVER
+    .bss            : {*(.bss.devgroup*)} align(4)    > SBL_USED_OCMC_RAM
     .data           : {} palign(128) > OCMC_RAM_SCISERVER
     .sysmem         : {}             > OCMC_RAM_SCISERVER
     .stack          : {} align(4)    > OCMC_RAM_SCISERVER
