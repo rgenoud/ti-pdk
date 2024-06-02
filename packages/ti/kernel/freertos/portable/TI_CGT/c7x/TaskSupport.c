@@ -124,10 +124,6 @@ void * TaskSupport_setupTaskStack(StackType_t * pxStackArrayEndAddress, StackTyp
 
     DebugP_assert(tskStackSize >= TaskSupport_defaultStackSize);
 
-    if (tskStackSize < TaskSupport_defaultStackSize) {
-        return (NULL);
-    }
-
     tcspBase = (void *)(((uintptr_t)pxStackArrayStartAddressAligned + tskStackSize) - TCSP_SIZE);
     if (align)
     {
