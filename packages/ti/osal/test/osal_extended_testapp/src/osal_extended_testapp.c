@@ -366,6 +366,7 @@ OS_stop();
 OS_stop();
 #endif
 
+    OsalCfgClecAccessCtrl(BFALSE);
     TaskP_Params taskParams;
     OS_init();
     memset( gAppTskStackMain, 0xFF, sizeof( gAppTskStackMain ) );
@@ -392,7 +393,7 @@ extern void Osal_initMmuDefault(void);
 void InitMmu(void)
 {
     /* Setup CLEC access/configure in secure mode */
-    OsalCfgClecAccessCtrl(BTRUE);
+    OsalCfgClecAccessCtrl(BFALSE);
     /* Reverting to non-secure mode */
     Osal_initMmuDefault();
 }
