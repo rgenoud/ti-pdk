@@ -447,7 +447,7 @@ static int32_t OsalApp_hwiCreateAllocOvrflwTest(void)
         hwiParamsCsl.maskSetting = Hwi_MaskingOption_LOWER;
         hwiParamsCsl.disableMask = 0xABCDABCD;
         hwiParamsCsl.restoreMask = 0xABCDABCD;
-        Hwi_reconfig((Hwi_Handle)0xABCDABCD, reconfigTestFunc, &hwiParamsCsl);
+        Hwi_reconfig(hwiHandle, reconfigTestFunc, &hwiParamsCsl);
 
 #endif
 
