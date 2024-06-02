@@ -6,10 +6,8 @@ include $(PDK_INSTALL_PATH)/ti/build/Rules.make
 
 APP_NAME = ipc_baremetal_dualcore_echo_test
 
-SRCDIR += $(PDK_IPC_COMP_PATH)/examples/ipc_baremetal_echo_test
-
 # Local name of IPC test app
-RPRC_PREFIX_BAREMETAL = ipc_baremetal_echo_test
+RPRC_PREFIX_BAREMETAL = ipc_baremetal_sanity_test
 RPRC_PREFIX_RTOS = ipc_rtos_sanity_test_freertos
 RPRC_OUT_NAME = ipc_baremetal_dualcore_test
 
@@ -31,7 +29,6 @@ CORES_IN_TEST = mcu1_0 mcu2_0
 MULTICORE_IMG_PARAMS = $(foreach SOC_CORE_ID, $(CORES_IN_TEST), $(SBL_CORE_ID_$(SOC_CORE_ID)) $(BIN_PATH_PREFIX_$(SOC_CORE_ID))_$(SOC_CORE_ID)_$(BUILD_PROFILE_$(CORE)).rprc)
 
 CFLAGS_LOCAL_COMMON = $(PDK_CFLAGS)
-PACKAGE_SRCS_COMMON = .
 
 # List all the external components/interfaces, whose interface header files
 #  need to be included for this component
@@ -43,8 +40,9 @@ COMP_LIST_COMMON =
 SRCS_COMMON = force_multi_core_img_gen.c
 
 force_multi_core_img_gen.c:
+	$(MKDIR) -p $(BINDIR)
 	$(ECHO) "# Combining RPRC images to generate multicore image...."
-	$(ECHO) "# BINDIR is $(BINDIR) CORELIST is $(filter-out mpu1_0, $(drvipc_$(SOC)_CORELIST))"
+	$(ECHO) "# BINDIR is $(BINDIR) CORELIST is $(CORES_IN_TEST)"
 	$(ECHO) "# MULTICORE_IMG_PARAMS are $(MULTICORE_IMG_PARAMS)"
 	$(SBL_IMAGE_GEN) LE $(SBL_DEV_ID) $(BINDIR)/$(RPRC_OUT_NAME)_all_cores_$(BUILD_PROFILE_$(CORE)).appimage $(MULTICORE_IMG_PARAMS)
 	$(ECHO) "#"

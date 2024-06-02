@@ -6,8 +6,6 @@ include $(PDK_INSTALL_PATH)/ti/build/Rules.make
 
 APP_NAME = ipc_rtos_dualcore_echo_test_$(BUILD_OS_TYPE)
 
-SRCDIR      += $(PDK_IPC_COMP_PATH)/examples/ipc_rtos_sanity_test
-
 # Local name of IPC test app
 RPRC_PREFIX = ipc_rtos_sanity_test
 RPRC_OUT_NAME = ipc_rtos_dualcore_test
@@ -37,8 +35,9 @@ COMP_LIST_COMMON =
 SRCS_COMMON = force_multi_core_img_gen.c
 
 force_multi_core_img_gen.c:
+	$(MKDIR) -p $(BINDIR)
 	$(ECHO) "# Combining RPRC images to generate multicore image...."
-	$(ECHO) "# BINDIR is $(BINDIR) CORELIST is $(drvipc_$(SOC)_RTOS_CORELIST)"
+	$(ECHO) "# BINDIR is $(BINDIR) CORELIST is $(CORES_IN_TEST)"
 	$(ECHO) "# MULTICORE_IMG_PARAMS are $(MULTICORE_IMG_PARAMS)"
 	$(SBL_IMAGE_GEN) LE $(SBL_DEV_ID) $(BINDIR)/$(RPRC_OUT_NAME)_$(BUILD_OS_TYPE)_all_cores_$(BUILD_PROFILE_$(CORE)).appimage $(MULTICORE_IMG_PARAMS)
 	$(ECHO) "#"

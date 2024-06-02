@@ -470,7 +470,7 @@ define IPC_RTOS_DUALCORE_ECHO_TEST_RULE
 
 export ipc_rtos_dualcore_echo_test_$(1)_COMP_LIST = ipc_rtos_dualcore_echo_test_$(1)
 ipc_rtos_dualcore_echo_test_$(1)_RELPATH = ti/drv/ipc/examples/rtos/ipc_rtos_sanity_test
-ipc_rtos_dualcore_echo_test_$(1)_BINPATH = $(PDK_INSTALL_PATH)/ti/binary/ipc_rtos_sanity_test_$(1)/bin
+ipc_rtos_dualcore_echo_test_$(1)_BINPATH = $(PDK_INSTALL_PATH)/ti/binary/ipc_rtos_echo_test_$(1)/bin
 ipc_rtos_dualcore_echo_test_$(1)_PATH = $(PDK_IPC_COMP_PATH)/examples/rtos/ipc_rtos_sanity_test
 export ipc_rtos_dualcore_echo_test_$(1)_BOARD_DEPENDENCY = yes
 export ipc_rtos_dualcore_echo_test_$(1)_CORE_DEPENDENCY = yes
@@ -496,7 +496,7 @@ $(eval ${ipc_rtos_dualcore_echo_test_MACRO_LIST})
 # Test Configuration: Dual core echo test for baremetal, uses ipc_baremetal_sanity_test
 export ipc_baremetal_dualcore_echo_test_COMP_LIST = ipc_baremetal_dualcore_echo_test
 ipc_baremetal_dualcore_echo_test_RELPATH = ti/drv/ipc/examples/baremetal/ipc_baremetal_sanity_test
-ipc_baremetal_dualcore_echo_test_BINPATH = $(PDK_INSTALL_PATH)/ti/binary/ipc_baremetal_sanity_test/bin
+ipc_baremetal_dualcore_echo_test_BINPATH = $(PDK_INSTALL_PATH)/ti/binary/ipc_baremetal_echo_test/bin
 ipc_baremetal_dualcore_echo_test_PATH = $(PDK_IPC_COMP_PATH)/examples/baremetal/ipc_baremetal_sanity_test
 export ipc_baremetal_dualcore_echo_test_BOARD_DEPENDENCY = yes
 export ipc_baremetal_dualcore_echo_test_CORE_DEPENDENCY = yes
