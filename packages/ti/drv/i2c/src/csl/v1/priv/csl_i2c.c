@@ -448,7 +448,7 @@ uint8_t I2CSlaveDataGet(uintptr_t baseAddr)
 }
 #endif
 
-#if (1U == I2C_ENABLE_DMA_MODE)
+#if (1U == CSL_I2C_ENABLE_DMA_MODE)
 void I2CDMATxEventEnable(uintptr_t baseAddr)
 {
     CSL_REG32_FINS(baseAddr + CSL_I2C_BUF, I2C_BUF_XDMA_EN,
