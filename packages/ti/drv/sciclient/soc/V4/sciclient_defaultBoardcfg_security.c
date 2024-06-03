@@ -105,8 +105,8 @@ __attribute__(( aligned(128), section(".boardcfg_data") )) =
         },
         .auth_resource_owner = 0,
         .enable_saul_psil_global_config_writes = 0,
-        .safety_host_present = 0,
-        .safety_host = 0,
+        .safety_host_present = 0x5A,
+        .safety_host = 0x3,
     },
     /* Secure JTAG Unlock Configuration */
     .sec_dbg_config = {
