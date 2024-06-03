@@ -154,8 +154,12 @@ I2C_Handle I2C_open(uint32_t idx, I2C_Params *params)
     /* Input parameter validation */
     if ((NULL != params) && (idx < (sizeof(I2C_config)/sizeof(I2C_config[0]))))
     {
-        handle = (I2C_Handle)&(I2C_config[idx]);
-        handle = handle->fxnTablePtr->openFxn(handle, params);
+        /* Input parameter validation for NULL callback in case of I2C_MODE_CALLBACK mode */
+        if((I2C_MODE_CALLBACK != params->transferMode) || ((I2C_MODE_CALLBACK == params->transferMode) && (NULL != params->transferCallbackFxn)))
+        {
+            handle = (I2C_Handle)&(I2C_config[idx]);
+            handle = handle->fxnTablePtr->openFxn(handle, params);
+        }
     }
 
     return (handle);
