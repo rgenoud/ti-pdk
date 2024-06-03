@@ -308,6 +308,27 @@ endef
 IPC_RTOS_ECHO_TESTB_MACRO_LIST := $(foreach curos, $(drvipc_RTOS_LIST), $(call IPC_RTOS_ECHO_TESTB_RULE,$(curos)))
 $(eval ${IPC_RTOS_ECHO_TESTB_MACRO_LIST})
 
+# Test Configuration: Graceful shutdown test on MCU1_0, MCU2_0 and MCU3_0. MCU2_0 sends shutdown to mcu3_0 and mcu3_0 sends ack back
+define IPC_GRACEFUL_SHUTDOWN_TEST_RULE
+export ipc_graceful_shutdown_test_$(1)_COMP_LIST = ipc_graceful_shutdown_test_$(1)
+ipc_graceful_shutdown_test_$(1)_RELPATH = ti/drv/ipc/examples/rtos/ipc_graceful_shutdown_test
+ipc_graceful_shutdown_test_$(1)_PATH = $(PDK_IPC_COMP_PATH)/examples/rtos/ipc_graceful_shutdown_test
+export ipc_graceful_shutdown_test_$(1)_BOARD_DEPENDENCY = yes
+export ipc_graceful_shutdown_test_$(1)_CORE_DEPENDENCY = yes
+export ipc_graceful_shutdown_test_$(1)_XDC_CONFIGURO = $(if $(findstring tirtos, $(1)), yes, no)
+export ipc_graceful_shutdown_test_$(1)_MAKEFILE = -f makefile BUILD_OS_TYPE=$(1)
+ipc_graceful_shutdown_test_$(1)_PKG_LIST = ipc_graceful_shutdown_test_$(1)
+ipc_graceful_shutdown_test_$(1)_INCLUDE = $(ipc_graceful_shutdown_test_$(1)_PATH)
+export ipc_graceful_shutdown_test_$(1)_BOARDLIST = j784s4_evm
+export ipc_graceful_shutdown_test_$(1)_$(SOC)_CORELIST = mcu1_0 mcu2_0 mcu3_0
+export ipc_graceful_shutdown_test_$(1)_SBL_APPIMAGEGEN = yes
+ifneq ($(1),$(filter $(1), safertos))
+ipc_EXAMPLE_LIST += ipc_graceful_shutdown_test_$(1)
+endif
+endef
+IPC_GRACEFUL_SHUTDOWN_TEST_MACRO_LIST := $(foreach curos, $(drvipc_RTOS_LIST), $(call IPC_GRACEFUL_SHUTDOWN_TEST_RULE,$(curos)))
+$(eval ${IPC_GRACEFUL_SHUTDOWN_TEST_MACRO_LIST})
+
 # Test Configuration: A72/A53 core not included, baremetal on R5 cores other than mcu1_0, FreeRTOS on mcu1_0 and DSP cores(C66x,C7x)
 ipc_baremetal_echo_test_COMP_LIST = ipc_baremetal_echo_test
 ipc_baremetal_echo_test_RELPATH = ti/drv/ipc/examples/baremetal
@@ -611,6 +632,30 @@ endif
 endef
 IPC_MULTICORE_PERF_TEST_MACRO_LIST := $(foreach curos, $(filter-out tirtos, $(drvipc_RTOS_LIST)), $(call IPC_MULTICORE_PERF_TEST_RULE,$(curos)))
 $(eval ${IPC_MULTICORE_PERF_TEST_MACRO_LIST})
+ 
+# Test Configuration: Multicore IPC graceful shutdown test, uses ipc_graceful_shutdown_test
+define IPC_GRACEFUL_SHUTDOWN_MULTICORE_TEST_RULE
+
+export ipc_graceful_shutdown_multicore_test_$(1)_COMP_LIST = ipc_graceful_shutdown_multicore_test_$(1)
+ipc_graceful_shutdown_multicore_test_$(1)_RELPATH = ti/drv/ipc/examples/rtos/ipc_graceful_shutdown_test
+ipc_graceful_shutdown_multicore_test_$(1)_BINPATH = $(PDK_INSTALL_PATH)/ti/binary/ipc_graceful_shutdown_test_$(1)/bin
+ipc_graceful_shutdown_multicore_test_$(1)_PATH = $(PDK_IPC_COMP_PATH)/examples/rtos/ipc_graceful_shutdown_test
+export ipc_graceful_shutdown_multicore_test_$(1)_BOARD_DEPENDENCY = yes
+export ipc_graceful_shutdown_multicore_test_$(1)_CORE_DEPENDENCY = yes
+export ipc_graceful_shutdown_multicore_test_$(1)_XDC_CONFIGURO = $(if $(findstring tirtos, $(1)), yes, no)
+export ipc_graceful_shutdown_multicore_test_$(1)_MAKEFILE =  -f$(PDK_IPC_COMP_PATH)/examples/rtos/ipc_graceful_shutdown_test/ipc_graceful_shutdown_multicore_test.mk BUILD_OS_TYPE=$(1)
+export ipc_graceful_shutdown_multicore_test_$(1)_DEPENDS_ON=ipc_graceful_shutdown_test_$(1)
+ipc_graceful_shutdown_multicore_test_$(1)_PKG_LIST = ipc_graceful_shutdown_multicore_test_$(1)
+ipc_graceful_shutdown_multicore_test_$(1)_INCLUDE = $(ipc_graceful_shutdown_multicore_test_$(1)_PATH)
+export ipc_graceful_shutdown_multicore_test_$(1)_BOARDLIST = j784s4_evm
+export ipc_graceful_shutdown_multicore_test_$(1)_$(SOC)_CORELIST := mcu3_0
+export ipc_graceful_shutdown_multicore_test_SBL_APPIMAGEGEN = no
+ifneq ($(1),$(filter $(1), safertos))
+ipc_DUP_EXAMPLE_LIST += ipc_graceful_shutdown_multicore_test_$(1)
+endif
+endef
+IPC_GRACEFUL_SHUTDOWN_MULTICORE_TEST_MACRO_LIST := $(foreach curos, $(drvipc_RTOS_LIST), $(call IPC_GRACEFUL_SHUTDOWN_MULTICORE_TEST_RULE,$(curos)))
+$(eval ${IPC_GRACEFUL_SHUTDOWN_MULTICORE_TEST_MACRO_LIST})
 
 
 export ipc_LIB_LIST
