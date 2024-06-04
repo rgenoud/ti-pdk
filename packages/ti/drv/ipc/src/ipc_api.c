@@ -72,6 +72,7 @@ typedef struct RPMessage_Object_s*            RPMessage_EndptPool[MAXENDPOINTS];
 /* ========================================================================== */
 
 #define CNTRLMSG_ANNOUNCE (0x00000000U)
+#define CNTRLMSG_DESTROY (0x00000001U)
 
 /* Message Header: Must match mp_msg_hdr in virtio_rp_msg.h on Linux side. */
 typedef struct RPMessage_MsgHeader_s
@@ -531,6 +532,71 @@ int32_t RPMessage_announce(uint32_t remoteProcId, uint32_t endPt, const char* na
     if(IPC_EFAIL != status)
     {
         msg.ctrl.type = CNTRLMSG_ANNOUNCE;
+        msg.endPt = endPt;
+        strncpy(msg.name, name, SERVICENAMELEN-1U);
+        msg.name[SERVICENAMELEN-1U] = '\0';
+
+        if(remoteProcId == RPMESSAGE_ALL)
+        {
+            for(c = 0; c < module.numCallbacks; c++)
+            {
+                /* Find callback for RX VQs that have matching pool. */
+                if(module.VQ_callbacks[c].pool == pool)
+                {
+                    vq = module.VQ_callbacks[c].vq;
+                    procId = Virtio_getProcId(vq);
+#ifdef DEBUG_PRINT
+                    SystemP_printf("RPMessage_announce.....c%d ProcId %d\n", c, procId);
+#endif
+                    status = RPMessage_send(NULL, procId, IPC_CTRL_ENDPOINT_ID,
+                            IPC_CTRL_ENDPOINT_ID, &msg, (uint16_t)sizeof(msg));
+                    if (status != IPC_SOK)
+                    {
+                        SystemP_printf("RPMessage_announce.....failed to send c %d (%s)\n", c, Ipc_mpGetName(procId));
+                        /* even if failed to annouce to one CPU continue to other CPUs */
+                        continue;
+                    }
+                }
+            }
+        }
+        else
+        {
+            status = RPMessage_send(NULL, remoteProcId, IPC_CTRL_ENDPOINT_ID,
+                    IPC_CTRL_ENDPOINT_ID, &msg, (uint16_t)sizeof(msg));
+            if (status != IPC_SOK)
+            {
+                SystemP_printf("RPMessage_announce.....failed to send\n");
+            }
+        }
+    }
+
+    return status;
+}
+
+int32_t RPMessage_announce_destroy(uint32_t remoteProcId, uint32_t endPt, const char* name)
+{
+    RPMessage_EndptPool     *pool = &module.globalPool;
+    RPMessage_Announcement  msg;
+    Virtio_Handle           vq;
+    uint32_t                c;
+    uint32_t                procId;
+    int32_t                 status = IPC_SOK;
+    size_t                  namelen;
+
+#ifdef DEBUG_PRINT
+    SystemP_printf("RPMessage_announce : remote %d, endpt %d, name %s\n",
+        remoteProcId, endPt, name);
+#endif
+
+    namelen = IpcUtils_strnlen(name);
+    if((namelen >= SERVICENAMELEN) || (namelen == 0U))
+    {
+        status = IPC_EFAIL;
+    }
+
+    if(IPC_EFAIL != status)
+    {
+        msg.ctrl.type = CNTRLMSG_DESTROY;
         msg.endPt = endPt;
         strncpy(msg.name, name, SERVICENAMELEN-1U);
         msg.name[SERVICENAMELEN-1U] = '\0';

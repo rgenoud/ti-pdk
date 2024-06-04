@@ -70,6 +70,7 @@
 /*                         Structure Declarations                             */
 /* ========================================================================== */
 
+#include "ti/debug_qnr.c"
 typedef struct Ipc_MailboxFifo_s
 {
     int32_t                 cfgNdx;
@@ -470,12 +471,16 @@ static void Ipc_mailboxInternalCallback(uintptr_t arg)
                     /* Process till we get the special RP Mbox message */
                     for(i=0; i<numMessages; i++)
                     {
-                        if((msg[i] != shutdownMsg) && (msg[i] != IPC_RP_MBOX_READY))
+                        if((msg[i] != shutdownMsg) && (msg[i] != IPC_RP_MBOX_READY) &&
+			   (msg[i] != IPC_RP_MBOX_ABORT_REQUEST))
                         {
+Lpm_debugFullPrintf("msg=%x\n", msg[i]);
                             parsedMsg[i] = msg[i];
                         }
                         else
                         {
+Lpm_debugFullPrintf("msg=%x\n", msg[i]);
+if (msg[i] == IPC_RP_MBOX_READY) Lpm_debugFullPrintf("READY MSG\n");
                             rpMboxMsgRecv = 1;
                             rpMboxMsg = msg[i];
                             break;
@@ -484,12 +489,14 @@ static void Ipc_mailboxInternalCallback(uintptr_t arg)
 
                     if((0U == rpMboxMsgRecv) || ((1U == rpMboxMsgRecv) && (numMessages > 1U)))
                     {
+Lpm_debugFullPrintf("func\n");
                         /* Call the function with arg */
                         (mbox->fifoTable[n].func)((uint32_t *)parsedMsg, fifo->arg);
                     }
 
                     if((1U == rpMboxMsgRecv) && (NULL != gIpcObject.initPrms.rpMboxMsgFxn))
                     {
+Lpm_debugFullPrintf("fgIpcObject.initPrms.rpMboxMsgFxn\n");
                         gIpcObject.initPrms.rpMboxMsgFxn(fifo->arg, rpMboxMsg);
                     }
                 }

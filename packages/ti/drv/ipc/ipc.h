@@ -525,6 +525,7 @@ void RPMessage_unblockGetRemoteEndPt(uint32_t token);
  */
 int32_t RPMessage_announce(uint32_t remoteProcId, uint32_t endPt,
        const char* name);
+int32_t RPMessage_announce_destroy(uint32_t remoteProcId, uint32_t endPt, const char* name);
 
 /** \brief API Mailbox Enable new MSG interrupt for a given remote processor
  *

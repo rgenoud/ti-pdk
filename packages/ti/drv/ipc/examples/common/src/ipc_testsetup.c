@@ -80,6 +80,7 @@
 #endif
 //#define NUMMSGS  1000000   /* number of message sent per task */
 
+#include "ti/debug_qnr.c"
 typedef struct Ipc_TestParams_s
 {
     uint32_t endPt;
@@ -157,6 +158,8 @@ bool g_exitRespTsk = 0;
 volatile uint32_t gbShutdown = 0U;
 volatile uint32_t gbShutdownRemotecoreID = 0U;
 static bool announce_ping = false;
+static bool detach_ping = false;
+static bool detach_chrdev = false;
 static bool announce_chrdev = false;
 
 /* ========================================================================== */
@@ -187,6 +190,7 @@ void rpmsg_responderFxn(void *arg0, void *arg1)
     uint32_t         requestedEpt = (uint32_t)(*(uint32_t*)arg0);
     char *           name = (char *)arg1;
     bool *           announce = NULL;
+    bool *           detach = NULL;
 
     uintptr_t        key;
     uint32_t         bufSize = rpmsgDataSize;
@@ -221,7 +225,9 @@ void rpmsg_responderFxn(void *arg0, void *arg1)
 #endif
 
     announce = (requestedEpt == ENDPT_PING) ? &announce_ping : &announce_chrdev;
+    detach = (requestedEpt == ENDPT_PING) ? &detach_ping : &detach_chrdev;
 
+Lpm_debugFullPrintf("\nANNOUNCE %s\n", name);
     status = RPMessage_announce(RPMESSAGE_ALL, myEndPt, name);
     if(status != IPC_SOK)
     {
@@ -237,20 +243,38 @@ void rpmsg_responderFxn(void *arg0, void *arg1)
         {
             break;
         }
-
-        if(status != IPC_SOK)
-        {
+Lpm_debugFullPrintf("announce ping : %s *annouce=%s\n", announce_ping ? "true" : "false", *announce ? "true" : "false");
+Lpm_debugFullPrintf("announce chrdev : %s *annouce=%s\n", announce_chrdev ? "true" : "false", *announce ? "true" : "false");
             if (*announce)
             {
+Lpm_debugFullPrintf("%s:%x\n", __func__, __LINE__);
                 *announce = false;
+Lpm_debugFullPrintf("\nre-ANNOUNCE %s\n", name);
                 status = RPMessage_announce(RPMESSAGE_ALL, myEndPt, name);
+Lpm_debugFullPrintf("%s:%x\n", __func__, __LINE__);
                 if(status != IPC_SOK)
                 {
+Lpm_debugFullPrintf("%s:%x\n", __func__, __LINE__);
                     App_printf("RecvTask: RPMessage_announce() for %s failed\n", name);
                 }
                 continue;
             }
 
+            if (*detach)
+            {
+                *detach = false;
+Lpm_debugFullPrintf("\nannounce destroy %s\n", name);
+                status = RPMessage_announce_destroy(IPC_MPU1_0, myEndPt, name);
+                if(status != IPC_SOK)
+                {
+                    App_printf("RecvTask: RPMessage_detach() for %s failed\n", name);
+                }
+                continue;
+            }
+
+        if(status != IPC_SOK)
+        {
+Lpm_debugFullPrintf("%s:%d\n", __func__, __LINE__);
             App_printf("RecvTask: failed with code %d\n", status);
         }
         else
@@ -546,9 +570,18 @@ static void IpcRpMboxCallback(uint32_t remoteCoreId, uint32_t msgVal)
     if ((msgVal == IPC_RP_MBOX_READY) && /* MPU core is ready */
         (IPC_MPU1_0 == remoteCoreId))
     {
+Lpm_debugFullPrintf("\nForcing announce\n");
         /* force re-announce if MPU is ready */
         announce_ping = true;
         announce_chrdev = true;
+        RPMessage_unblock((RPMessage_Handle)&pRecvTaskBuf[0]);
+        RPMessage_unblock((RPMessage_Handle)&pRecvTaskBuf[rpmsgDataSize]);
+    }
+    if ((msgVal == IPC_RP_MBOX_ABORT_REQUEST) && /* MPU core is detaching */
+        (IPC_MPU1_0 == remoteCoreId))
+    {
+        detach_ping = true;
+        detach_chrdev = true;
         RPMessage_unblock((RPMessage_Handle)&pRecvTaskBuf[0]);
         RPMessage_unblock((RPMessage_Handle)&pRecvTaskBuf[rpmsgDataSize]);
     }
@@ -591,12 +624,13 @@ int32_t Ipc_echo_test(void)
     {
         while(!Ipc_isRemoteReady(pRemoteProcArray[t]))
         {
-            TaskP_sleep(10);
+            TaskP_sleep(100);
         }
     }
     //App_printf("Linux VDEV ready now .....\n");
 #endif
 #endif
+Lpm_debugFullPrintf("\nEND WAIT\n");
 
     /* Step2 : Initialize Virtio */
     vqParam.vqObjBaseAddr = (void*)pSysVqBuf;
