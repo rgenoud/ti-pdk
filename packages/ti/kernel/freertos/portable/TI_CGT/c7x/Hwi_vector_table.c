@@ -39,7 +39,7 @@
 
 #pragma FUNC_EXT_CALLED(Hwi_dispatchC);
 
-void Hwi_dispatchC(int32_t intNum)
+void Hwi_dispatchC(uint32_t intNum)
 {
     extern BaseType_t ulPortInterruptNesting;
     extern BaseType_t ulPortYieldRequired;
