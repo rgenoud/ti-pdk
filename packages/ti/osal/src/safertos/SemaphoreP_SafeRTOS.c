@@ -163,7 +163,7 @@ int32_t SemaphoreP_constructBinary( SemaphoreP_safertos *handle, uint32_t initCo
 {
     int32_t status;
 
-    if (NULL == handle || initCount > 1U)
+    if ((NULL == handle) || (initCount > 1U))
     {
         status = SemaphoreP_FAILURE;
     }
