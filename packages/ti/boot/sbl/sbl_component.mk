@@ -106,7 +106,7 @@ sbl_DISABLE_PARALLEL_MAKE = yes
 # sbl_ospi_img_hlos_hs uses sbl_lib_ospi_hlos_hs
 ifeq ($(SOC),$(filter $(SOC), j721s2 j784s4 j721e j7200))
   sbl_LIB_LIST = sbl_lib_mmcsd sbl_lib_ospi sbl_lib_uart sbl_lib_cust sbl_lib_emmc
-  sbl_LIB_LIST += sbl_lib_mmcsd_hlos sbl_lib_ospi_hlos sbl_lib_ospi_hlos_hs
+  sbl_LIB_LIST += sbl_lib_mmcsd_hlos sbl_lib_ospi_hlos sbl_lib_ospi_hlos_hs sbl_lib_mmcsd_hlos_hs
   sbl_LIB_LIST += sbl_lib_mmcsd_hs sbl_lib_ospi_hs sbl_lib_uart_hs sbl_lib_cust_hs
   sbl_LIB_LIST += sbl_lib_cust_nondma sbl_lib_cust_nondma_hs
 endif
@@ -942,7 +942,7 @@ export sbl_ospi_nand_img_hs_COMP_LIST = sbl_ospi_nand_img_hs
 sbl_ospi_nand_img_hs_RELPATH = ti/boot/sbl/board/k3
 sbl_ospi_nand_img_hs_CUSTOM_BINPATH = $(PDK_SBL_COMP_PATH)/binary/$(BOARD)_hs/ospi_nand/bin
 sbl_ospi_nand_img_hs_PATH = $(PDK_SBL_COMP_PATH)/board/k3
-export sbl_ospi_nand_img_hs_MAKEFILE = -f$(PDK_SBL_COMP_PATH)/build/sbl_img.mk BOOTMODE=ospi OSPI_NAND=yes SBL_USE_DMA=no BUILD_HS=yes
+export sbl_ospi_nand_img_hs_MAKEFILE = -f$(PDK_SBL_COMP_PATH)/build/sbl_img.mk BOOTMODE=ospi OSPI_NAND=yes SBL_USE_DMA=yes BUILD_HS=yes
 export sbl_ospi_nand_img_hs_SBL_CERT_KEY=$(SBL_CERT_KEY_HS)
 export sbl_ospi_nand_img_hs_BOARD_DEPENDENCY = yes
 export sbl_ospi_nand_img_hs_SOC_DEPENDENCY = yes
@@ -1704,7 +1704,7 @@ export sbl_cust_img_hs_COMP_LIST = sbl_cust_img_hs
 sbl_cust_img_hs_RELPATH = ti/boot/sbl/board/k3
 sbl_cust_img_hs_CUSTOM_BINPATH = $(PDK_SBL_COMP_PATH)/binary/$(BOARD)_hs/cust/bin
 sbl_cust_img_hs_PATH = $(PDK_SBL_COMP_PATH)/board/k3
-export sbl_cust_img_hs_MAKEFILE = -f$(PDK_SBL_COMP_PATH)/build/sbl_img.mk CUST_SBL_FLAGS=$(CUST_SBL_TEST_FLAGS) BOOTMODE=cust SBL_USE_DMA=no BUILD_HS=yes
+export sbl_cust_img_hs_MAKEFILE = -f$(PDK_SBL_COMP_PATH)/build/sbl_img.mk CUST_SBL_FLAGS=$(CUST_SBL_TEST_FLAGS) BOOTMODE=cust SBL_USE_DMA=yes BUILD_HS=yes
 export sbl_cust_img_hs_SBL_CERT_KEY=$(SBL_CERT_KEY_HS)
 export sbl_cust_img_hs_BOARD_DEPENDENCY = yes
 export sbl_cust_img_hs_SOC_DEPENDENCY = yes
