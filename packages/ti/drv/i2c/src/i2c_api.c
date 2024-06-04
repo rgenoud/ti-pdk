@@ -354,13 +354,16 @@ static void I2C_v1_hwiFxnMaster(I2C_Handle handle)
 	                /* Save the received data */
 	                if ((uint8_t *)0U < object->readBufIdx)
 	                {
-	                    *(object->readBufIdx) = I2CMasterDataGet(hwAttrs->baseAddr);
-	                    object->readBufIdx++;
-	                    object->readCountIdx--;
-	                }
+                        if(0U < I2CBufferStatus(hwAttrs->baseAddr,CSL_I2C_RX_BUFFER_STATUS))
+                        {
+	                        *(object->readBufIdx) = I2CMasterDataGet(hwAttrs->baseAddr);
+	                        object->readBufIdx++;
+	                        object->readCountIdx--;
 
-	                I2CMasterIntClearEx(hwAttrs->baseAddr,
-	                                    (stat & CSL_I2C_INT_RECV_READY));
+	                        I2CMasterIntClearEx(hwAttrs->baseAddr,
+	                                            (stat & CSL_I2C_INT_RECV_READY));
+                        }
+                    }
 	            }
 
 	            if (0U != (stat & CSL_I2C_INT_TRANSMIT_READY))
@@ -1060,14 +1063,17 @@ static int16_t I2C_primeTransfer_v1(I2C_Handle handle,
                        break;
                     }
                     /* write byte and increase data pointer to next byte */
-                    I2CMasterDataPut(hwAttrs->baseAddr, *(object->writeBufIdx));
-                    (object->writeBufIdx)++;
+                    if(0U < I2CBufferStatus(hwAttrs->baseAddr,CSL_I2C_TX_BUFFER_STATUS))
+                    {
+                        I2CMasterDataPut(hwAttrs->baseAddr, *(object->writeBufIdx));
+                        (object->writeBufIdx)++;
 
-                    /* clear transmit ready interrupt */
-                    I2CMasterIntClearEx(hwAttrs->baseAddr, CSL_I2C_INT_TRANSMIT_READY);
+                        /* clear transmit ready interrupt */
+                        I2CMasterIntClearEx(hwAttrs->baseAddr, CSL_I2C_INT_TRANSMIT_READY);
 
-                    /* update number of bytes written */
-                    object->writeCountIdx--;
+                        /* update number of bytes written */
+                        object->writeCountIdx--;
+                    }
                 }
 
                 if ((UFALSE == fatalError) && (0U != timeout))
@@ -1192,16 +1198,17 @@ static int16_t I2C_primeTransfer_v1(I2C_Handle handle,
                        fatalError = UTRUE;
                        break;
                     }
+                    if(0U < I2CBufferStatus(hwAttrs->baseAddr,CSL_I2C_RX_BUFFER_STATUS))
+                    {
+                        /* read byte and increase data pointer to next byte */
+                        *(object->readBufIdx) =
+                            (uint8_t)I2CMasterDataGet(hwAttrs->baseAddr);
+                        /* clear receive ready interrupt */
+                        I2CMasterIntClearEx(hwAttrs->baseAddr, CSL_I2C_INT_RECV_READY);
 
-                    /* read byte and increase data pointer to next byte */
-                    *(object->readBufIdx) =
-                        (uint8_t)I2CMasterDataGet(hwAttrs->baseAddr);
-
-                    /* clear receive ready interrupt */
-                    I2CMasterIntClearEx(hwAttrs->baseAddr, CSL_I2C_INT_RECV_READY);
-
-                    object->readBufIdx++;
-                    object->readCountIdx--;   /* update number of bytes read */
+                        object->readBufIdx++;
+                        object->readCountIdx--;   /* update number of bytes read */
+                    }
                 }
 
                 if ((UFALSE == fatalError) && (0U != timeout))
