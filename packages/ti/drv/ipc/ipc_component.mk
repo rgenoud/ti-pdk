@@ -399,7 +399,7 @@ endef
 IPC_PERF_TEST_MACRO_LIST := $(foreach curos, $(drvipc_RTOS_LIST), $(call IPC_PERF_TEST_RULE,$(curos)))
 $(eval ${IPC_PERF_TEST_MACRO_LIST})
 
-#Test Configuration: Set of tests to validate IPC APIs, run indpendently on each core
+#Test Configuration: IPC extended test for IPC API coverage; runs on mcu1_0
 define IPC_EXTENDED_TEST_RULE
 export ipc_extended_test_$(1)_COMP_LIST = ipc_extended_test_$(1)
 ipc_extended_test_$(1)_RELPATH = ti/drv/ipc/examples/rtos/ipc_extended_test

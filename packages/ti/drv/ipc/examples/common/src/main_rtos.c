@@ -300,7 +300,7 @@ static void taskFxn(void* a0, void* a1)
 #if defined IPC_NEGATIVE_TEST
     Ipc_echo_neg_test();
 #elif defined IPC_EXTENDED_TEST
-    IpcApp_test();
+    IpcApp_extTest();
 #else
     Ipc_echo_test();  
 #endif

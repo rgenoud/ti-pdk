@@ -32,30 +32,26 @@
  */
 
 /**
- *  \file ipc_extended_setup.h
+ *  \file ipc_extended_test_config.c
  *
- *  \brief Define the macros and functions for IPC extended test.
+ *  \brief IPC extended test configurations.
  *
  */
-
-#ifndef IPC_EXT_SETUP_H_
-#define IPC_EXT_SETUP_H_
 
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
 
-/* None */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include <stdint.h>
+#include <ti/drv/ipc/ipc.h>
+#include <ti/drv/ipc/examples/common/src/ipc_setup.h>
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-/* None */
+/* Number of processors under test; dummy for this app */
+#define IPC_APP_NUM_CORE_IN_TEST            3
 
 /* ========================================================================== */
 /*                         Structure Declarations                             */
@@ -67,16 +63,40 @@ extern "C" {
 /*                          Function Declarations                             */
 /* ========================================================================== */
 
-int32_t IpcApp_extTest(void);
+/* None */
 
 /* ========================================================================== */
-/*                       Static Function Definitions                          */
+/*                            Global Variables                                */
+/* ========================================================================== */
+
+/*
+ * IPC stack buffers
+ */
+uint8_t  gIpcApp_TaskStackBuf[(IPC_APP_NUM_CORE_IN_TEST+2)*IPC_TASK_STACKSIZE];
+uint8_t  gIpcApp_CntrlBuf[RPMSG_DATA_SIZE] __attribute__ ((section("ipc_data_buffer"), aligned (8)));
+uint8_t  gIpcApp_SysVqBuf[VQ_BUF_SIZE]  __attribute__ ((section ("ipc_data_buffer"), aligned (8)));
+uint8_t  gIpcApp_SendBuf[RPMSG_DATA_SIZE * IPC_APP_NUM_CORE_IN_TEST]  __attribute__ ((section ("ipc_data_buffer"), aligned (8)));
+uint8_t  gIpcApp_RspBuf[RPMSG_DATA_SIZE]  __attribute__ ((section ("ipc_data_buffer"), aligned (8)));
+uint8_t  gIpcApp_TimeoutBuf[RPMSG_DATA_SIZE] __attribute__ ((section ("ipc_data_buffer"), aligned (8)));
+
+uint8_t *gIpcApp_CntrlBufPtr     = gIpcApp_CntrlBuf;
+uint8_t *gIpcApp_TaskStackBufPtr = gIpcApp_TaskStackBuf;
+uint8_t *gIpcApp_SendBufPtr      = gIpcApp_SendBuf;
+uint8_t *gIpcApp_RspBufPtr       = gIpcApp_RspBuf;
+uint8_t *gIpcApp_TimeoutBufPtr   = gIpcApp_TimeoutBuf;
+uint8_t *gIpcApp_SysVqBufPtr     = gIpcApp_SysVqBuf;
+
+uint32_t gIpcApp_SelfProcId = IPC_MCU1_0;
+uint32_t gIpcApp_RemoteProc[] =
+{
+    IPC_MPU1_0, IPC_MCU1_1
+};
+
+uint32_t *gIpcApp_RemoteProcArray = gIpcApp_RemoteProc;
+uint32_t  gIpcApp_NumRemoteProc = sizeof(gIpcApp_RemoteProc)/sizeof(gIpcApp_RemoteProc[0]);
+
+/* ========================================================================== */
+/*                          Function Definitions                              */
 /* ========================================================================== */
 
 /* None */
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* IPC_EXT_SETUP_H_ */
