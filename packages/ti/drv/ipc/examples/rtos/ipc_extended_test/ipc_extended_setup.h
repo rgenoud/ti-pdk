@@ -66,7 +66,7 @@ extern "C" {
 /*                          Function Declarations                             */
 /* ========================================================================== */
 
-int32_t IpcApp_echoExtTest(void);
+int32_t IpcApp_test(void);
 
 /* ========================================================================== */
 /*                       Static Function Definitions                          */
