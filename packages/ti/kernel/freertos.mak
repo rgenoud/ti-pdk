@@ -32,8 +32,7 @@ endif
 SRCS_COMMON += \
     timers.c \
     queue.c \
-    list.c \
-    port_preinit.c
+    list.c
 
 # FreeRTOS tasks, event_groups does not compile in CPP build. Skip it for CPP build
 ifneq ($(CPLUSPLUS_BUILD), yes)

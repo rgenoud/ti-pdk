@@ -561,6 +561,49 @@ void vPortAssertIfInISR()
     configASSERT( !xPortInIsrContext() );
 }
 
+void vPortCacheConfig(void)
+{
+    DSPICFGCacheEnable(SOC_DSP_ICFG_BASE,
+                    DSPICFG_MEM_L1P,
+                    portCONFIGURE_CACHE_LIP_SIZE);
+    DSPICFGCacheEnable(SOC_DSP_ICFG_BASE,
+                    DSPICFG_MEM_L1D,
+                    portCONFIGURE_CACHE_LID_SIZE);
+    DSPICFGCacheEnable(SOC_DSP_ICFG_BASE,
+                    DSPICFG_MEM_L2,
+                    portCONFIGURE_CACHE_L2_SIZE);
+
+    /* Enable cache for all DDR space */
+    CacheP_setMar((void *)portCONFIGURE_DDR_START,
+                  (uint32_t)portCONFIGURE_DDR_SIZE,
+                  CacheP_Mar_ENABLE);
+}
+
+/*****************************************************************************/
+/* _SYSTEM_PRE_INIT() - _system_pre_init() is called in the C/C++ startup    */
+/* routine (_c_int00()) and provides a mechanism for the user to             */
+/* insert application specific low level initialization instructions prior   */
+/* to calling main().  The return value of _system_pre_init() is used to     */
+/* determine whether or not C/C++ global data initialization will be         */
+/* performed (return value of 0 to bypass C/C++ auto-initialization).        */
+/*                                                                           */
+/* PLEASE NOTE THAT BYPASSING THE C/C++ AUTO-INITIALIZATION ROUTINE MAY      */
+/* RESULT IN PROGRAM FAILURE.                                                */
+/*                                                                           */
+/* The version of _system_pre_init() below is skeletal and is provided to    */
+/* illustrate the interface and provide default behavior.  To replace this   */
+/* version rewrite the routine and include it as part of the current project.*/
+/* The linker will include the updated version if it is linked in prior to   */
+/* linking with the C/C++ runtime library.                                   */
+/*****************************************************************************/
+
+int32_t _system_pre_init(void)
+{
+    vPortCacheConfig();
+    extended_system_pre_init();
+    return 1;
+}
+
 /*****************************************************************************/
 /* _SYSTEM_POST_CINIT() - _system_post_cinit() is a hook function called in  */
 /* the C/C++ auto-initialization function after cinit() and before pinit().  */
