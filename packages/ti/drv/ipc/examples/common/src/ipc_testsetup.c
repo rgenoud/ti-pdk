@@ -250,13 +250,15 @@ Lpm_debugFullPrintf("announce chrdev : %s *annouce=%s\n", announce_chrdev ? "tru
 Lpm_debugFullPrintf("%s:%x\n", __func__, __LINE__);
                 *announce = false;
 Lpm_debugFullPrintf("\nre-ANNOUNCE %s\n", name);
-                status = RPMessage_announce(RPMESSAGE_ALL, myEndPt, name);
+                status = RPMessage_announce(IPC_MPU1_0, myEndPt, name);
 Lpm_debugFullPrintf("%s:%x\n", __func__, __LINE__);
                 if(status != IPC_SOK)
                 {
 Lpm_debugFullPrintf("%s:%x\n", __func__, __LINE__);
                     App_printf("RecvTask: RPMessage_announce() for %s failed\n", name);
                 }
+TaskP_sleep(1000);
+                status = RPMessage_announce(IPC_MPU1_0, myEndPt, name);
                 continue;
             }
 

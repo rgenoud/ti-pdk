@@ -74,6 +74,7 @@ typedef struct RPMessage_Object_s*            RPMessage_EndptPool[MAXENDPOINTS];
 #define CNTRLMSG_ANNOUNCE (0x00000000U)
 #define CNTRLMSG_DESTROY (0x00000001U)
 
+#include "ti/debug_qnr.c"
 /* Message Header: Must match mp_msg_hdr in virtio_rp_msg.h on Linux side. */
 typedef struct RPMessage_MsgHeader_s
 {
@@ -518,6 +519,8 @@ int32_t RPMessage_announce(uint32_t remoteProcId, uint32_t endPt, const char* na
     int32_t                 status = IPC_SOK;
     size_t                  namelen;
 
+Lpm_debugFullPrintf("RPMessage_announce : remote %x, endpt %x, name %s\n",
+		    remoteProcId, endPt, name);
 #ifdef DEBUG_PRINT
     SystemP_printf("RPMessage_announce : remote %d, endpt %d, name %s\n",
         remoteProcId, endPt, name);
@@ -529,8 +532,10 @@ int32_t RPMessage_announce(uint32_t remoteProcId, uint32_t endPt, const char* na
         status = IPC_EFAIL;
     }
 
+Lpm_debugFullPrintf("%s:%x\n", __func__, __LINE__);
     if(IPC_EFAIL != status)
     {
+Lpm_debugFullPrintf("%s:%x\n", __func__, __LINE__);
         msg.ctrl.type = CNTRLMSG_ANNOUNCE;
         msg.endPt = endPt;
         strncpy(msg.name, name, SERVICENAMELEN-1U);
@@ -538,20 +543,25 @@ int32_t RPMessage_announce(uint32_t remoteProcId, uint32_t endPt, const char* na
 
         if(remoteProcId == RPMESSAGE_ALL)
         {
+Lpm_debugFullPrintf("%s:%x\n", __func__, __LINE__);
             for(c = 0; c < module.numCallbacks; c++)
             {
+Lpm_debugFullPrintf("%s:%x\n", __func__, __LINE__);
                 /* Find callback for RX VQs that have matching pool. */
                 if(module.VQ_callbacks[c].pool == pool)
                 {
+Lpm_debugFullPrintf("%s:%x\n", __func__, __LINE__);
                     vq = module.VQ_callbacks[c].vq;
                     procId = Virtio_getProcId(vq);
 #ifdef DEBUG_PRINT
                     SystemP_printf("RPMessage_announce.....c%d ProcId %d\n", c, procId);
 #endif
+Lpm_debugFullPrintf("%s:%x\n", __func__, __LINE__);
                     status = RPMessage_send(NULL, procId, IPC_CTRL_ENDPOINT_ID,
                             IPC_CTRL_ENDPOINT_ID, &msg, (uint16_t)sizeof(msg));
                     if (status != IPC_SOK)
                     {
+Lpm_debugFullPrintf("%s:%x\n", __func__, __LINE__);
                         SystemP_printf("RPMessage_announce.....failed to send c %d (%s)\n", c, Ipc_mpGetName(procId));
                         /* even if failed to annouce to one CPU continue to other CPUs */
                         continue;
@@ -561,15 +571,18 @@ int32_t RPMessage_announce(uint32_t remoteProcId, uint32_t endPt, const char* na
         }
         else
         {
+Lpm_debugFullPrintf("%s:%x\n", __func__, __LINE__);
             status = RPMessage_send(NULL, remoteProcId, IPC_CTRL_ENDPOINT_ID,
                     IPC_CTRL_ENDPOINT_ID, &msg, (uint16_t)sizeof(msg));
             if (status != IPC_SOK)
             {
+Lpm_debugFullPrintf("%s:%x\n", __func__, __LINE__);
                 SystemP_printf("RPMessage_announce.....failed to send\n");
             }
         }
     }
 
+Lpm_debugFullPrintf("%s:%x status=%x\n", __func__, __LINE__, status);
     return status;
 }
 
