@@ -138,7 +138,7 @@ int32_t udmaTestCslIntaggr(UdmaTestTaskObj *taskObj)
                 " |TEST INFO|:: Task:%d: CSL_intaggrSetIntrPending Testcase ::\r\n", taskObj->taskId);
         uint32_t statusBitNum = drvHandle->globalEventHandle->vintrNum * UDMA_MAX_EVENTS_PER_VINTR;
         retVal = CSL_intaggrSetIntrPending(&drvHandle->iaRegs, statusBitNum);
-        if(UDMA_SOK == retVal)
+        if(UDMA_SOK != retVal)
         {
             GT_1trace(taskObj->traceMask, GT_INFO1,
                     " |TEST INFO|:: Task:%d: FAIL: CSL_intaggrSetIntrPending Testcase ::\r\n", taskObj->taskId);
@@ -159,6 +159,22 @@ int32_t udmaTestCslIntaggr(UdmaTestTaskObj *taskObj)
         {
             GT_1trace(taskObj->traceMask, GT_INFO1,
                     " |TEST INFO|:: Task:%d: FAIL: CSL_intaggrIsIntrPending Testcase ::\r\n", taskObj->taskId);
+        }
+        else
+        {
+            retVal = UDMA_SOK;
+        }
+    }
+
+    /* Test CSL_intaggrIsIntrPending when status bit is INVALID */
+    if(UDMA_SOK == retVal)
+    {
+        GT_1trace(taskObj->traceMask, GT_INFO1,
+                " |TEST INFO|:: Task:%d: CSL_intaggrIsIntrPending Testcase when status bit is INVALID ::\r\n", taskObj->taskId);
+        if(CSL_intaggrIsIntrPending(&drvHandle->iaRegs, UDMA_EVENT_INVALID, BFALSE))
+        {
+            GT_1trace(taskObj->traceMask, GT_INFO1,
+                    " |TEST INFO|:: Task:%d: FAIL: CSL_intaggrIsIntrPending Testcase when status bit is INVALID ::\r\n", taskObj->taskId);
         }
         else
         {

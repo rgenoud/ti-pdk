@@ -8970,7 +8970,7 @@ static UdmaTestParams gUdmaTestCases[] =
     },
     {
         .enableTest = TEST_ENABLE,
-        .tcId       = 1U,
+        .tcId       = 14374U,
         .tcName     = "CSL ring monitor testcase",
         .disableInfo= NULL,
         .printEnable= PRINT_ENABLE,
@@ -9008,7 +9008,7 @@ static UdmaTestParams gUdmaTestCases[] =
     },
     {
         .enableTest = TEST_ENABLE,
-        .tcId       = 2U,
+        .tcId       = 14373U,
         .tcName     = "CSL ring testcase",
         .disableInfo= NULL,
         .printEnable= PRINT_ENABLE,

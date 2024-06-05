@@ -90,6 +90,7 @@ static void memOpsFxn(void *addr, uint32_t size, uint32_t type)
  * 8)Test scenario 8: Test CSL_ringaccGetRingOcc
  * 9)Test scenario 9: Test CSL_ringaccGetRingHwOcc
  * 10)Test scenario 10: Test CSL_ringaccPush64 CSL_ringaccPeek64 CSL_ringaccPop64
+ * 11)Test scenario 11: Test CSL_ringaccPush64 CSL_ringaccPeek64 CSL_ringaccPop64
  */
 int32_t udmaTestCslRingAcc(UdmaTestTaskObj *taskObj)
 {
@@ -237,6 +238,31 @@ int32_t udmaTestCslRingAcc(UdmaTestTaskObj *taskObj)
         CSL_ringaccPeek64(&drvHandle->raRegs, &ringCfg, ringMem, NULL);
         /* Test CSL_ringaccPop64 when CSL_ringaccMemOpsFxnPtr is NULL */
         CSL_ringaccPop64(&drvHandle->raRegs, &chHandle->fqRing->cfg, ringMem, NULL);
+    }
+
+    /* Test scenario 11: Test CSL_ringaccPush64 CSL_ringaccPeek64 CSL_ringaccPop64 */
+    if(UDMA_SOK == retVal)
+    {
+        CSL_RingAccRingCfg ringCfg;
+        ringCfg.elSz = 0U;
+        GT_1trace(taskObj->traceMask, GT_INFO1,
+        " |TEST INFO|:: Task:%d: CSL_ringaccGetRingHwIdx Testcase ::\r\n", taskObj->taskId);
+        /* Test CSL_ringaccPeek64 when ring is empty */
+        CSL_ringaccPeekData(&drvHandle->raRegs, &chHandle->fqRing->cfg, (uint8_t *)ringMem, 1U, NULL);
+        /* Test CSL_ringaccPush64 when CSL_ringaccMemOpsFxnPtr is NULL */
+        CSL_ringaccWrData(&drvHandle->raRegs, &chHandle->fqRing->cfg, (uint8_t *)ringMem, 1U, NULL);
+        /* Test CSL_ringaccPush64 when ring elsz < sizeof(uint64_t) */
+        CSL_ringaccWrData(&drvHandle->raRegs, &ringCfg, (uint8_t *)ringMem, 1U, NULL);
+        /* Test CSL_ringaccPeek64 when CSL_ringaccMemOpsFxnPtr is NULL */
+        CSL_ringaccPeekData(&drvHandle->raRegs, &chHandle->fqRing->cfg, (uint8_t *)ringMem, 1U, NULL);
+        /* Test CSL_ringaccPeek64 when CSL_ringaccMemOpsFxnPtr is not NULL */
+        CSL_ringaccPeekData(&drvHandle->raRegs, &chHandle->fqRing->cfg, (uint8_t *)ringMem, 1U, memOpsFxn);
+        /* Test CSL_ringaccPeek64 when ring elsz < sizeof(uint64_t) */
+        CSL_ringaccPeekData(&drvHandle->raRegs, &ringCfg, (uint8_t *)ringMem, 1U, NULL);
+        /* Test CSL_ringaccPop64 when CSL_ringaccMemOpsFxnPtr is not NULL */
+        CSL_ringaccRdData(&drvHandle->raRegs, &chHandle->fqRing->cfg, (uint8_t *)ringMem, 1U, memOpsFxn);
+        /* Test CSL_ringaccPop64 when CSL_ringaccMemOpsFxnPtr is NULL */
+        CSL_ringaccRdData(&drvHandle->raRegs, &chHandle->fqRing->cfg, (uint8_t *)ringMem, 1U, NULL);
     }
 
     retVal = UdmaTestDeInitRingAcc(chHandle);

@@ -96,6 +96,19 @@ static void memOpsFxn(void *addr, uint32_t size, uint32_t type)
  * 14)Test scenario 14: Test CSL_lcdma_ringaccPeek64 when asel is not 0 and memOpsFxn is not NULL
  * 15 Test scenario 15: Test CSL_lcdma_ringaccPeek64 when asel is 0 and memOpsFxn is not NULL
  * 16)Test scenario 16: Validate CSL_lcdma_ringaccPop64Multi API
+ * 17)Test scenario 17: Test CSL_lcdma_ringaccPop64Multi when requested access size is less than element size
+ * 18)Test scenario 18: Validate CSL_lcdma_ringaccWrData API
+ * 19)Test scenario 19: Test CSL_lcdma_ringaccRdData when asel is 0 and memOpsFxn is not NULL
+ * 20)Test scenario 20: Test CSL_lcdma_ringaccRdData when asel is 0 and memOpsFxn is not NULL
+ * 21)Test scenario 21: Test CSL_lcdma_ringaccRdData when asel is 0 and memOpsFxn is not NULL
+ * 22)Test scenario 22: Validate CSL_lcdma_ringaccRdData API
+ * 23)Test scenario 23: Test CSL_lcdma_ringaccRdData when asel is 0 and memOpsFxn is not NULL
+ * 24)Test scenario 24: Test CSL_lcdma_ringaccRdData when asel is not 0 and memOpsFxn is not NULL
+ * 25)Test scenario 25: Validate CSL_lcdma_ringaccPeekData API
+ * 26)Test scenario 26: Validate CSL_lcdma_ringaccPush64Multi API to check numValues not equal numValuesWritten
+ * 27)Test scenario 27: Validate CSL_lcdma_ringaccAckTeardown API
+ * 28)Test scenario 28: Validate CSL_lcdma_ringaccIsTeardownComplete API when channel is not disabled 
+ * 29)Test scenario 29: Validate CSL_lcdma_ringaccIsTeardownComplete API when channel is disabled
  */
 int32_t UdmaTestCslRingLcdma(UdmaTestTaskObj *taskObj)
 {
@@ -315,7 +328,7 @@ int32_t UdmaTestCslRingLcdma(UdmaTestTaskObj *taskObj)
         if(UDMA_SOK != retVal)
         {
             GT_1trace(taskObj->traceMask, GT_INFO1,
-                      " |TEST INFO|:: Task:%d: FAIL :: Test CSL_lcdma_ringaccPop64Multi ::"
+                      " |TEST INFO|:: Task:%d: FAIL :: Test CSL_lcdma_ringaccPush64Multi ::"
                       " Test CSL_lcdma_ringaccPush64Multi when element count is 0 \r\n",
                       taskObj->taskId);
         }
@@ -426,13 +439,13 @@ int32_t UdmaTestCslRingLcdma(UdmaTestTaskObj *taskObj)
     if(UDMA_SOK == retVal)
     {
         GT_1trace(taskObj->traceMask, GT_INFO1,
-                  " |TEST INFO|:: Task:%d: Test CSL_lcdma_ringaccPop64Multi ::\r\n",
+                  " |TEST INFO|:: Task:%d: Test CSL_lcdma_ringaccPop64Multi when numvalues is 0 ::\r\n",
                   taskObj->taskId);
-        retVal = CSL_lcdma_ringaccPop64Multi(&drvHandle->lcdmaRaRegs, &chHandle->fqRing->lcdmaCfg, ringData, elemCnt, NULL);
+        retVal = CSL_lcdma_ringaccPop64Multi(&drvHandle->lcdmaRaRegs, &chHandle->fqRing->lcdmaCfg, ringData, 0U, NULL);
         if(UDMA_SOK > retVal)
         {
             GT_1trace(taskObj->traceMask, GT_INFO1,
-                    " |TEST INFO|:: Task:%d: FAIL :: Test CSL_lcdma_ringaccPop64Multi 2::\r\n",
+                    " |TEST INFO|:: Task:%d: FAIL :: Test CSL_lcdma_ringaccPop64Multi when numvalues is 0 ::\r\n",
                     taskObj->taskId);
         }
         else
@@ -612,7 +625,9 @@ int32_t UdmaTestCslRingLcdma(UdmaTestTaskObj *taskObj)
         GT_1trace(taskObj->traceMask, GT_INFO1,
                   " |TEST INFO|:: Task:%d: Test CSL_lcdma_ringaccPush64Multi ::\r\n",
                   taskObj->taskId);
-        retVal = CSL_lcdma_ringaccPush64Multi(&drvHandle->lcdmaRaRegs, &chHandle->fqRing->lcdmaCfg, ringData, elemCnt, NULL);
+        backupAsel = chHandle->fqRing->lcdmaCfg.asel;
+        chHandle->fqRing->lcdmaCfg.asel = 1U;
+        retVal = CSL_lcdma_ringaccPush64Multi(&drvHandle->lcdmaRaRegs, &chHandle->fqRing->lcdmaCfg, ringData, elemCnt, &memOpsFxn);
         if(retVal >= UDMA_SOK)
         {
             retVal = UDMA_SOK;
@@ -624,6 +639,7 @@ int32_t UdmaTestCslRingLcdma(UdmaTestTaskObj *taskObj)
                       taskObj->taskId);
             retVal = UDMA_EFAIL;
         }
+        chHandle->fqRing->lcdmaCfg.asel = backupAsel;
     }
 
     /* Test scenario 27: Validate CSL_lcdma_ringaccAckTeardown API */
@@ -634,10 +650,19 @@ int32_t UdmaTestCslRingLcdma(UdmaTestTaskObj *taskObj)
                   taskObj->taskId);
         CSL_lcdma_ringaccAckTeardown(&drvHandle->lcdmaRaRegs, chHandle->fqRing->lcdmaCfg.ringNum);
     }
+
+    /* Test scenario 28: Validate CSL_lcdma_ringaccIsTeardownComplete API when channel is not disabled */
+    if(UDMA_SOK == retVal)
+    {
+        GT_1trace(taskObj->traceMask, GT_INFO1,
+                  " |TEST INFO|:: Task:%d: Test CSL_lcdma_ringaccIsTeardownComplete ::\r\n",
+                  taskObj->taskId);
+        CSL_lcdma_ringaccIsTeardownComplete(&drvHandle->lcdmaRaRegs, chHandle->fqRing->lcdmaCfg.ringNum);
+    }
     
     Udma_chDisable(chHandle, 0);
 
-    /* Test scenario 28: Validate CSL_lcdma_ringaccIsTeardownComplete API */
+    /* Test scenario 29: Validate CSL_lcdma_ringaccIsTeardownComplete API when channel is disabled */
     if(UDMA_SOK == retVal)
     {
         GT_1trace(taskObj->traceMask, GT_INFO1,
@@ -726,6 +751,7 @@ static int32_t UdmaTestDeInitLcdma(Udma_ChHandle chHandle)
  * 9)Test scenario 9:Test CSL_lcdma_ringaccWrData when pRingEntry is NULL
  * 10)Test scenario 10: Test get return from CSL_lcdma_ringaccIsRingEmpty as false
  * 11)Test scenario 11: Test CSL_lcdma_ringaccPeek64
+ * 12)Test scenario 12: Test CSL_lcdma_ringaccPeek64 when rdOcc is OU
  */
 int32_t UdmaTestCSL_lcdma_ringaccPeekData(UdmaTestTaskObj *taskObj)
 {
@@ -739,6 +765,9 @@ int32_t UdmaTestCSL_lcdma_ringaccPeekData(UdmaTestTaskObj *taskObj)
     uint32_t          backupAsel;
 
     retVal = UdmaTestInitLcdma(drvHandle, chHandle, elemCnt);
+
+    CSL_lcdma_ringaccGetRevision(&drvHandle->lcdmaRaRegs);
+
     if(UDMA_SOK == retVal)
     {
         /* Test scenario 1: Test CSL_lcdma_ringaccPeekData when Number of bytes to peek is greater
@@ -938,6 +967,25 @@ int32_t UdmaTestCSL_lcdma_ringaccPeekData(UdmaTestTaskObj *taskObj)
     if(UDMA_SOK == retVal)
     {
         /* Test scenario 11: Test CSL_lcdma_ringaccPeek64 */
+        retVal = CSL_lcdma_ringaccPeek64(&drvHandle->lcdmaRaRegs, &chHandle->fqRing->lcdmaCfg, ringData, &memOpsFxn);
+        if(UDMA_SOK == retVal)
+        {
+            GT_1trace(taskObj->traceMask, GT_INFO1,
+                    " |TEST INFO|:: Task:%d: FAIL :: Test CSL_lcdma_ringaccPeek64 ::"
+                    " Test CSL_lcdma_ringaccPeek64\r\n",
+                    taskObj->taskId);
+        }
+        else
+        {
+            retVal = UDMA_SOK;
+        }
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        /* Test scenario 12: Test CSL_lcdma_ringaccPeek64 when rdOcc is OU */
+        chHandle->fqRing->lcdmaCfg.elSz = sizeof(uint64_t);
+        chHandle->fqRing->lcdmaCfg.rdOcc = 0U;
         retVal = CSL_lcdma_ringaccPeek64(&drvHandle->lcdmaRaRegs, &chHandle->fqRing->lcdmaCfg, ringData, &memOpsFxn);
         if(UDMA_SOK == retVal)
         {
