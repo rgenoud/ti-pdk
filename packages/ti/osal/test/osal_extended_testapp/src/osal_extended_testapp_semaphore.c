@@ -328,6 +328,7 @@ static int32_t OsalApp_semaphoreNegativeTest(void)
         result = osal_FAILURE;
     }
 
+#if !defined (BARE_METAL)
     if(osal_OK == result)
     {
         semParams.mode = SemaphoreP_Mode_BINARY;
@@ -338,6 +339,7 @@ static int32_t OsalApp_semaphoreNegativeTest(void)
             result = osal_FAILURE;
         }
     }
+#endif
 
     if(osal_OK != result)
     {
