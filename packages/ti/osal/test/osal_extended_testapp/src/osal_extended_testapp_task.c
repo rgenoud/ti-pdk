@@ -200,8 +200,11 @@ static int32_t OsalApp_taskGeneralTests(void)
     TaskP_sleepInMsecs(100);
     TaskP_sleep(100);
     end = TimerP_getTimeInUsecs();
-    
-    if((end - start) > (200000+5000))
+
+    /* LDRA instrumentation adds a lot of code into the OSAL library.
+     * This increases execution time of these APIs and hence, the measured *time gets hampered.
+     * Hence, increase the tolerance of time measurement. */
+    if((end - start) > (10*(200000+5000)))
     {
         result = osal_FAILURE;
     }
