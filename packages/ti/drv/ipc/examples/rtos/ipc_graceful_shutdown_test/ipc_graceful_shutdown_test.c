@@ -493,6 +493,12 @@ static void IpcApp_rpMboxCallback(uint32_t remoteCoreId, uint32_t msgVal)
 #if defined (BUILD_MCU3_0)
         uint32_t i;
 
+        #if defined LDRA_DYN_COVERAGE_EXIT
+        UART_printf("\n LDRA ENTRY... \n");
+        upload_execution_history();
+        UART_printf("\n LDRA EXIT... \n");
+        #endif
+
         if (IPC_MCU2_0 == remoteCoreId)
         {
             gIpcApp_Shutdown             = 1U;
