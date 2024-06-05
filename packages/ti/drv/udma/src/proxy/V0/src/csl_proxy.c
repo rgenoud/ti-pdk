@@ -78,12 +78,8 @@ uint32_t CSL_proxyGetNumThreads( const CSL_ProxyCfg *pProxyCfg )
 int32_t CSL_proxyCfgGlobalErrEvtNum( const CSL_ProxyCfg *pProxyCfg, uint32_t globalErrEvtNum )
 {
     int32_t retVal;
-#ifdef CSL_PROXY_GLB_EVT_ERR_EVENT_MASK
     CSL_REG32_FINS( &pProxyCfg->pGlbRegs->GLB_EVT, PROXY_GLB_EVT_ERR_EVENT, globalErrEvtNum );
     retVal = 0;
-#else
-    retVal = -1;
-#endif
     return retVal;
 }
 

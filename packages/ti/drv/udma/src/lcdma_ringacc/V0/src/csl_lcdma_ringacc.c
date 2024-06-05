@@ -746,7 +746,7 @@ bool CSL_lcdma_ringaccIsTeardownComplete( const CSL_LcdmaRingaccCfg *pCfg, uint3
 {
     bool bRetVal = BFALSE;
     
-#ifdef CSL_LCDMA_RINGACC_RINGRT_RING_ROCC_COMP_MASK
+#if defined (SOC_J784S4) || defined (SOC_J721S2)
     if( (uint32_t)0U != CSL_REG32_FEXT( &pCfg->pRingRtRegs->RING[ringNum].ROCC, LCDMA_RINGACC_RINGRT_RING_ROCC_COMP ) )
     {
         bRetVal = BTRUE;
@@ -757,7 +757,7 @@ bool CSL_lcdma_ringaccIsTeardownComplete( const CSL_LcdmaRingaccCfg *pCfg, uint3
 
 void CSL_lcdma_ringaccAckTeardown( const CSL_LcdmaRingaccCfg *pCfg, uint32_t ringNum )
 {
-#ifdef CSL_LCDMA_RINGACC_RINGRT_RING_RDB_ACK_MASK
+#if defined (SOC_J784S4) || defined (SOC_J721S2)
     CSL_REG32_WR( &pCfg->pRingRtRegs->RING[ringNum].RDB, CSL_FMK( LCDMA_RINGACC_RINGRT_RING_RDB_ACK, (uint32_t)1U ) );
 #endif
 }

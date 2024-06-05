@@ -420,13 +420,12 @@ static void udmaTestEventCb(Udma_EventHandle eventHandle,
 
 /*
  * Test Case Description: Verifies the functions of Csl_udmap.c
- * Test scenario 1: Validate CSL_udmapGetRxFlowIdFirewallStatus API
- * Test scenario 2: Validate Udma_eventGetRxFlowIdFwStatus API
- * Test scenario 3: Validate CSL_udmapPauseRxChan API when channel is not enabled
- * Test scenario 4: Validate CSL_udmapInitTxChanCfg API
- * Test scenario 5: Validate CSL_udmapInitRxChanCfg API
- * Test scenario 6: Validate CSL_udmapInitRxFlowCfg API 
- * Test scenario 7: Validate CSL_udmapGetChanPeerReg API 
+ * Test scenario 1: Validate Udma_eventGetRxFlowIdFwStatus API
+ * Test scenario 2: Validate CSL_udmapPauseRxChan API when channel is not enabled
+ * Test scenario 3: Validate CSL_udmapInitTxChanCfg API
+ * Test scenario 4: Validate CSL_udmapInitRxChanCfg API
+ * Test scenario 5: Validate CSL_udmapInitRxFlowCfg API 
+ * Test scenario 6: Validate CSL_udmapGetChanPeerReg API 
  *                  when regIdx is greater than CSL_UDMAP_NUM_PEER_REGS
  */
 int32_t UdmaTestCslUdmapNeg(UdmaTestTaskObj *taskObj)
@@ -441,6 +440,10 @@ int32_t UdmaTestCslUdmapNeg(UdmaTestTaskObj *taskObj)
     Udma_ChPrms                     chPrms;
     uint32_t                        chType;
     Udma_ChRxPrms                   rxChPrms;
+    uint32_t                        timeout=0U;
+    Udma_EventPrms                  eventPrms;
+    struct Udma_EventObj            eventObj;
+    Udma_EventHandle                eventHandle;
     CSL_UdmapTxChanCfg              pTxChanCfg;
     CSL_UdmapRxChanCfg              pRxChanCfg;
     CSL_UdmapRxFlowCfg              pFlow;
@@ -449,6 +452,8 @@ int32_t UdmaTestCslUdmapNeg(UdmaTestTaskObj *taskObj)
     CSL_UdmapChanDir                chanDir;
     Udma_ChTxPrms                   txChPrms;
     Udma_ChRxPrms                   rxPrms;
+    Udma_EventRxFlowIdFwStatus      status;
+    struct Udma_DrvObj              backUpDrvObj;
 
     GT_1trace(taskObj->traceMask, GT_INFO1,
               " |TEST INFO|:: Task:%d: UDMA Testcase:: Csl Udmap Negative test case \r\n",
@@ -457,6 +462,49 @@ int32_t UdmaTestCslUdmapNeg(UdmaTestTaskObj *taskObj)
     instId           = UDMA_TEST_DEFAULT_UDMA_INST;
     drvHandle        = &taskObj->testObj->drvObj[instId];
     pUdmapRegs       = &drvHandle->udmapRegs;
+    Udma_initDrvHandle(drvHandle);
+    chHandle         = &chObj;
+    chType           = UDMA_CH_TYPE_RX;
+    UdmaChPrms_init(&chPrms, chType);
+    chPrms.peerChNum = UDMA_PSIL_CH_MCU_CPSW0_RX;
+    retVal           = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
+    UdmaChRxPrms_init(&rxChPrms, chType);
+    if(UDMA_SOK == retVal)
+    {
+        retVal = Udma_chConfigRx(chHandle, &rxChPrms);     
+        if(UDMA_SOK == retVal)
+        {
+            Udma_chEnable(chHandle);
+            /* Test scenario 1: Validate Udma_eventGetRxFlowIdFwStatus API */
+            eventHandle = &eventObj;
+            UdmaEventPrms_init(&eventPrms);
+            eventPrms.eventType         = UDMA_EVENT_TYPE_ERR_OUT_OF_RANGE_FLOW;
+            eventPrms.eventMode         = UDMA_EVENT_MODE_SHARED;
+            eventPrms.masterEventHandle = Udma_eventGetGlobalHandle(drvHandle);
+            eventPrms.eventCb           = &udmaTestEventCb;
+            retVal                      = Udma_eventRegister(drvHandle, eventHandle, &eventPrms);
+            pUdmapRegs                  = &drvHandle->udmapRegs;
+            backUpDrvObj                = taskObj->testObj->drvObj[instId];
+            drvHandle->devIdUdma        = TISCI_DEV_MCU_NAVSS0_UDMAP_0 + 1U;
+            retVal                     += Udma_eventGetRxFlowIdFwStatus(eventHandle, &status);
+            if(UDMA_SOK == retVal)
+            {
+                GT_0trace(taskObj->traceMask, GT_ERR,
+                        " |TEST INFO|:: FAIL:: UDMA:: Udma_eventGetRxFlowIdFwStatus:: Neg::"
+                        " Check when flow id is out of range!!\n");
+                retVal = UDMA_EFAIL;
+            }
+            else
+            {
+                retVal = UDMA_SOK;
+            }
+            taskObj->testObj->drvObj[instId] = backUpDrvObj;
+            Udma_eventUnRegister(eventHandle);
+            Udma_chDisable(chHandle, timeout);
+        }
+        Udma_chClose(chHandle);
+    }
+
     if(UDMA_SOK == retVal)
     {
         Udma_initDrvHandle(drvHandle);
@@ -471,11 +519,11 @@ int32_t UdmaTestCslUdmapNeg(UdmaTestTaskObj *taskObj)
             retVal = Udma_chConfigRx(chHandle, &rxChPrms);     
             if(UDMA_SOK == retVal)
             {
-                /* Test scenario 3: Validate CSL_udmapPauseRxChan API 
+                /* Test scenario 2: Validate CSL_udmapPauseRxChan API 
                  *                  when channel is not enabled
                  */
                 chanIdx = chHandle->rxChNum;
-                retVal = CSL_udmapPauseRxChan(pUdmapRegs, chanIdx);
+                retVal  = CSL_udmapPauseRxChan(pUdmapRegs, chanIdx);
                 if(UDMA_SOK == retVal)
                 {
                     GT_0trace(taskObj->traceMask, GT_ERR,
@@ -506,11 +554,11 @@ int32_t UdmaTestCslUdmapNeg(UdmaTestTaskObj *taskObj)
         {
             retVal = Udma_chConfigTx(chHandle, &txChPrms);
             retVal = Udma_chConfigRx(chHandle, &rxPrms);
-            /* Test scenario 4: Validate CSL_udmapInitTxChanCfg API */
+            /* Test scenario 3: Validate CSL_udmapInitTxChanCfg API */
             CSL_udmapInitTxChanCfg(&pTxChanCfg);
-            /* Test scenario 5: Validate CSL_udmapInitRxChanCfg API */
+            /* Test scenario 4: Validate CSL_udmapInitRxChanCfg API */
             CSL_udmapInitRxChanCfg(&pRxChanCfg);
-            /* Test scenario 6: Validate CSL_udmapInitRxFlowCfg API */
+            /* Test scenario 5: Validate CSL_udmapInitRxFlowCfg API */
             CSL_udmapInitRxFlowCfg(&pFlow);
             if(UDMA_SOK == retVal)
             {
@@ -518,7 +566,7 @@ int32_t UdmaTestCslUdmapNeg(UdmaTestTaskObj *taskObj)
                 chanIdx = chHandle->txChNum;
                 chanDir = CSL_UDMAP_CHAN_DIR_TX;
                 regIdx  = CSL_UDMAP_NUM_PEER_REGS + 1U;
-                /* Test scenario 7: Validate CSL_udmapGetChanPeerReg API 
+                /* Test scenario 6: Validate CSL_udmapGetChanPeerReg API 
                  *                  when regIdx is greater than CSL_UDMAP_NUM_PEER_REGS
                  */
                 retVal = CSL_udmapGetChanPeerReg(pUdmapRegs, chanIdx, chanDir, regIdx, &pVal);

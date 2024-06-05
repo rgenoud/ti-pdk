@@ -1393,12 +1393,13 @@ int32_t UdmaRmAllocTestNeg(UdmaTestTaskObj *taskObj)
     chHandle->drvHandle = &taskObj->testObj->drvObj[instID];
     backUpChObj         = chObj;
     preferredIrIntrNum  = chHandle->drvHandle->initPrms.rmInitPrms.startIrIntr;
+    chHandle->drvHandle->irIntrFlag[0] = 1;
     retVal              = Udma_rmAllocIrIntr(preferredIrIntrNum, chHandle->drvHandle);
-    if(UDMA_SOK == retVal)
+    if(UDMA_INTR_INVALID != retVal)
     {
         preferredIrIntrNum = chHandle->drvHandle->initPrms.rmInitPrms.startIrIntr - 1U;
         retVal             = Udma_rmAllocIrIntr(preferredIrIntrNum, chHandle->drvHandle);
-        if(UDMA_SOK == retVal)
+        if(UDMA_INTR_INVALID != retVal)
         {
             GT_0trace(taskObj->traceMask, GT_ERR,
                       " |TEST INFO|:: FAIL:: UDMA:: Udma_rmAllocIrIntr:: Neg::"

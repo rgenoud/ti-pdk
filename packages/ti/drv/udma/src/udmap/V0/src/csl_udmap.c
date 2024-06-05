@@ -265,16 +265,8 @@ void CSL_udmapGetCfg( CSL_UdmapCfg *pCfg )
     pCfg->txExtUtcChanCnt = CSL_FEXT( regVal, UDMAP_GCFG_CAP2_ECHAN_CNT );
     regVal = CSL_REG32_RD( &pCfg->pGenCfgRegs->CAP3 );
     pCfg->rxFlowCnt       = CSL_FEXT( regVal, UDMAP_GCFG_CAP3_RFLOW_CNT );
-#ifdef CSL_UDMAP_GCFG_CAP3_HCHAN_CNT_MASK
     pCfg->txHighCapacityChanCnt = CSL_FEXT( regVal, UDMAP_GCFG_CAP3_HCHAN_CNT );
-#else
-    pCfg->txHighCapacityChanCnt = 0;
-#endif
-#ifdef CSL_UDMAP_GCFG_CAP3_UCHAN_CNT_MASK
     pCfg->txUltraHighCapacityChanCnt = CSL_FEXT( regVal, UDMAP_GCFG_CAP3_UCHAN_CNT );
-#else
-    pCfg->txUltraHighCapacityChanCnt = 0;
-#endif
 }
 
 void CSL_udmapInitTxChanCfg( CSL_UdmapTxChanCfg *pTxChanCfg )
@@ -409,13 +401,11 @@ int32_t CSL_udmapRxChanSetTrEvent( CSL_UdmapCfg *pCfg, uint32_t chanIdx, uint32_
 int32_t CSL_udmapRxChanSetBurstSize( CSL_UdmapCfg *pCfg, uint32_t chanIdx, CSL_UdmapChanBurstSize burstSize )
 {
     int32_t retVal = CSL_EFAIL;
-#ifdef CSL_UDMAP_RXCCFG_CHAN_RCFG_BURST_SIZE_MASK
     if( (burstSize >= CSL_UDMAP_CHAN_BURST_SIZE_64_BYTES) && (burstSize <= CSL_UDMAP_CHAN_BURST_SIZE_256_BYTES) )
     {
         CSL_REG32_FINS( &pCfg->pRxChanCfgRegs->CHAN[chanIdx].RCFG, UDMAP_RXCCFG_CHAN_RCFG_BURST_SIZE, burstSize );
         retVal = CSL_PASS;
     }
-#endif
     return retVal;
 }
 
@@ -469,13 +459,11 @@ int32_t CSL_udmapTxChanSetTrEvent( CSL_UdmapCfg *pCfg, uint32_t chanIdx, uint32_
 int32_t CSL_udmapTxChanSetBurstSize( CSL_UdmapCfg *pCfg, uint32_t chanIdx, CSL_UdmapChanBurstSize burstSize )
 {
     int32_t retVal = CSL_EFAIL;
-#ifdef CSL_UDMAP_TXCCFG_CHAN_TCFG_BURST_SIZE_MASK
     if( (CSL_UDMAP_CHAN_BURST_SIZE_64_BYTES <= burstSize) && (CSL_UDMAP_CHAN_BURST_SIZE_256_BYTES >= burstSize) )
     {
         CSL_REG32_FINS( &pCfg->pTxChanCfgRegs->CHAN[chanIdx].TCFG, UDMAP_TXCCFG_CHAN_TCFG_BURST_SIZE, burstSize );
         retVal = CSL_PASS;
     }
-#endif
     return retVal;
 }
 
@@ -491,10 +479,8 @@ int32_t CSL_udmapTxChanCfg( CSL_UdmapCfg *pCfg, uint32_t chanIdx, const CSL_Udma
     CSL_FINS( regVal, UDMAP_TXCCFG_CHAN_TCFG_NOTDPKT,         ((pTxChanCfg->bNoTeardownCompletePkt) ? (uint32_t)1U : (uint32_t)0U) );
     CSL_FINS( regVal, UDMAP_TXCCFG_CHAN_TCFG_CHAN_TYPE,       pTxChanCfg->chanType );
     CSL_FINS( regVal, UDMAP_TXCCFG_CHAN_TCFG_FETCH_SIZE,      pTxChanCfg->fetchWordSize );
-#ifdef CSL_UDMAP_TXCCFG_CHAN_TCFG_TDTYPE_MASK
     /* Teardown-type support valid in udmap version 2.0.0 and later */
     CSL_FINS( regVal, UDMAP_TXCCFG_CHAN_TCFG_TDTYPE,          pTxChanCfg->tdType );
-#endif
     CSL_REG32_WR( &pCfg->pTxChanCfgRegs->CHAN[chanIdx].TCFG, regVal );
 
     CSL_REG32_WR( &pCfg->pTxChanCfgRegs->CHAN[chanIdx].TOES[0],
@@ -745,7 +731,6 @@ int32_t CSL_udmapSetAutoClockGatingEnable( CSL_UdmapCfg *pCfg, CSL_UdmapAutoClkg
 {
     int32_t retVal = CSL_EFAIL;
 
-#ifdef CSL_UDMAP_GCFG_PM0_NOGATE_LO_MASK
     /*
      *  UDMAP revision 2.2.0.0 and later provides automatic dynamic clock gating
      *  support for internal sub-blocks based on real-time monitoring of activity. 
@@ -788,7 +773,6 @@ int32_t CSL_udmapSetAutoClockGatingEnable( CSL_UdmapCfg *pCfg, CSL_UdmapAutoClkg
         }
         retVal = CSL_PASS;
     }
-#endif
     return retVal;
 }
 
