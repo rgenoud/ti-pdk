@@ -661,6 +661,10 @@ int32_t UdmaTestCslBcdma(UdmaTestTaskObj *taskObj)
  * Test scenario 47: Validate CSL_bcdmaChanOp API when pBcdmaRegs is NULL, 
  *                   chanIdx is splitRxChanCnt and chanType is greater 
  *                   than CSL_BCDMA_CHAN_TYPE_SPLIT_RX
+ * Test scenario 48: Validate CSL_bcdmaGetChanStats API when pBcdmaRegs is NULL
+ * Test scenario 49: Validate CSL_bcdmaDecChanStats API when pBcdmaRegs is NULL
+ * Test scenario 50: Validate CSL_bcdmaClearTxChanError API when pBcdmaRegs is NULL
+ * Test scenario 51: Validate CSL_bcdmaClearRxChanError API when pBcdmaRegs is NULL
  */
 int32_t UdmaTestCslBcdmaNeg(UdmaTestTaskObj *taskObj)
 {
@@ -1551,6 +1555,76 @@ int32_t UdmaTestCslBcdmaNeg(UdmaTestTaskObj *taskObj)
                       " |TEST INFO|:: FAIL:: UDMA:: CSL_bcdmaChanOp:: Neg::"
                       " Check when pBcdmaRegs is NULL, chanIdx is splitRxChanCnt and"
                       " chanType is greater than CSL_BCDMA_CHAN_TYPE_SPLIT_RX!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        else
+        {
+            retVal = UDMA_SOK;
+        }
+    }
+
+    /* Test scenario 48: Validate CSL_bcdmaGetChanStats API when pBcdmaRegs is NULL */
+    if(UDMA_SOK == retVal)
+    {
+        chanDir = CSL_BCDMA_CHAN_DIR_TX;
+        retVal  = CSL_bcdmaGetChanStats(NULL, chanIdx, chanDir, &pChanStats);
+        if(UDMA_SOK == retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: CSL_bcdmaGetChanStats:: Neg::"
+                      " Check when pBcdmaRegs is NULL!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        else
+        {
+            retVal = UDMA_SOK;
+        }
+    }
+
+    /* Test scenario 49: Validate CSL_bcdmaDecChanStats API when pBcdmaRegs is NULL */
+    if(UDMA_SOK == retVal)
+    {
+        chanDir = CSL_BCDMA_CHAN_DIR_TX;
+        retVal  = CSL_bcdmaDecChanStats(NULL, chanIdx, chanDir, &pChanStats);
+        if(UDMA_SOK == retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: CSL_bcdmaChanOp:: Neg::"
+                      " Check when pBcdmaRegs is NULL!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        else
+        {
+            retVal = UDMA_SOK;
+        }
+    }
+
+    /* Test scenario 50: Validate CSL_bcdmaClearTxChanError API when pBcdmaRegs is NULL */
+    if(UDMA_SOK == retVal)
+    {
+        retVal = CSL_bcdmaClearTxChanError(NULL, chanIdx);
+        if(UDMA_SOK == retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: CSL_bcdmaClearTxChanError:: Neg::"
+                      " Check when pBcdmaRegs is NULL!!\n");
+            retVal = UDMA_EFAIL;
+        }
+        else
+        {
+            retVal = UDMA_SOK;
+        }
+    }
+
+    /* Test scenario 51: Validate CSL_bcdmaClearRxChanError API when pBcdmaRegs is NULL */
+    if(UDMA_SOK == retVal)
+    {
+        retVal = CSL_bcdmaClearRxChanError(NULL, chanIdx);
+        if(UDMA_SOK == retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: CSL_bcdmaClearRxChanError:: Neg::"
+                      " Check when pBcdmaRegs is NULL!!\n");
             retVal = UDMA_EFAIL;
         }
         else
