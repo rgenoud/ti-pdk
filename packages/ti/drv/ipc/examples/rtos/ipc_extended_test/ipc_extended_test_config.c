@@ -89,7 +89,7 @@ uint8_t *gIpcApp_SysVqBufPtr     = gIpcApp_SysVqBuf;
 uint32_t gIpcApp_SelfProcId = IPC_MCU1_0;
 uint32_t gIpcApp_RemoteProc[] =
 {
-    IPC_MPU1_0, IPC_MCU1_1
+    IPC_MPU1_0, IPC_MCU2_0
 };
 
 uint32_t *gIpcApp_RemoteProcArray = gIpcApp_RemoteProc;
