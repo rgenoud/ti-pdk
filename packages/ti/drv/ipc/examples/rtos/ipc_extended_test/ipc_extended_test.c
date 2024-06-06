@@ -439,8 +439,14 @@ static void IpcApp_otherTests(void)
     RPMessage_lateInit(IPC_MCU1_0);
 
     RPMessage_deInit();
-
+    
+    Ipc_loadResourceTable(NULL);
+    
+    Ipc_getResourceTraceBufPtr();
+    
+    Ipc_resetCoreVirtIO(IPC_MCU1_0);
+    
     Ipc_deinit();
-
+    
     UART_printf("IPC extended tests: Other Tests Done\n");
 }
