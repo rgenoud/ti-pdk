@@ -219,7 +219,14 @@ static int32_t CSL_bcdmaChanOpCfgChan( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanTy
                         CSL_FINS( regVal, BCDMA_TXCCFG_CHAN_TCFG_PAUSE_ON_ERR, pChanCfg->pauseOnError);
                         CSL_FINS( regVal, BCDMA_TXCCFG_CHAN_TCFG_BURST_SIZE, pChanCfg->burstSize );
                         CSL_FINS( regVal, BCDMA_TXCCFG_CHAN_TCFG_TDTYPE, pChanCfg->tdType );
-                        CSL_FINS( regVal, BCDMA_TXCCFG_CHAN_TCFG_NOTDPKT, (uint32_t)pChanCfg->bNoTeardownCompletePkt );
+                        if(pChanCfg->bNoTeardownCompletePkt == BTRUE)
+                        {
+                            CSL_FINS( regVal, BCDMA_TXCCFG_CHAN_TCFG_NOTDPKT, 1U);
+                        }
+                        else
+                        {
+                            CSL_FINS( regVal, BCDMA_TXCCFG_CHAN_TCFG_NOTDPKT, 0U);
+                        }
 #if defined (SOC_J784S4) || defined (SOC_J721S2)
                         CSL_FINS( regVal, BCDMA_TXCCFG_CHAN_TCFG_ATYPE, pChanCfg->addrType );
 #endif
