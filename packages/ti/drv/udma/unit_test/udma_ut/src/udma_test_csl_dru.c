@@ -73,8 +73,9 @@
 
 /*
  * Test Case Description: Verifies the function CSL_druGetCapabilities
- * Test scenario 1: NULL check for druCap
- * Test scenario 2: Check with CSL_druGetCapabilities valid arguments
+ * Test scenario 1: Check when queueCfg is NULL
+ * Test scenario 2: NULL check for druCap
+ * Test scenario 3: Check with CSL_druGetCapabilities valid arguments
  */
 int32_t UdmaTestCSLDruGetCapabilities(UdmaTestTaskObj *taskObj)
 {
@@ -86,7 +87,10 @@ int32_t UdmaTestCSLDruGetCapabilities(UdmaTestTaskObj *taskObj)
               " |TEST INFO|:: Task:%d: CSL_druGetCapabilities Testcase ::\r\n",
               taskObj->taskId);
 
-    /* Test scenario 1: NULL check for druCap */
+    /* Test scenario 1: Check when queueCfg is NULL */
+    UdmaDruQueueConfig_init(NULL);
+
+    /* Test scenario 2: NULL check for druCap */
     retVal = CSL_druGetCapabilities(pRegs, NULL);
     if(CSL_PASS == retVal)
     {
@@ -100,7 +104,7 @@ int32_t UdmaTestCSLDruGetCapabilities(UdmaTestTaskObj *taskObj)
         retVal = UDMA_SOK;
     }
 
-    /* Test scenario 2: Check with CSL_druGetCapabilities valid arguments */
+    /* Test scenario 3: Check with CSL_druGetCapabilities valid arguments */
     if(UDMA_SOK == retVal)
     {
         retVal = CSL_druGetCapabilities(pRegs, &druCap);
