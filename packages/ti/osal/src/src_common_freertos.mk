@@ -32,8 +32,8 @@ endif
 ifeq ($(CORE),$(filter $(CORE), mcu1_0 mcu2_0 mcu2_1 mcu1_1 mcu3_0 mcu3_1 mcu4_0 mcu4_1))
   SRCDIR += arch/core/r5
   SRCS_COMMON += CacheP_nonos_r5.c Arch_util_r5.c
-  SRCS_ASM_COMMON += TimestampProvider_asm.asm
-  PACKAGE_SRCS_COMMON += arch/core/r5
+  SRCS_ASM_COMMON += TimestampProvider_asm.asm freertos_utils_r5f.asm
+  PACKAGE_SRCS_COMMON += arch/core/r5 src/freertos/freertos_utils_r5f.asm
 endif
 
 ifeq ($(CORE),$(filter $(CORE), c66x c66xdsp_1 c66xdsp_2 c674x))
