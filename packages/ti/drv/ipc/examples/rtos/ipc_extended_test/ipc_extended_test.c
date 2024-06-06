@@ -280,11 +280,13 @@ static void IpcApp_utilTests(void)
     IpcUtils_Qnext(NULL_PTR);
     IpcUtils_Qdelete(&qhandle);
     IpcUtils_Qdelete(NULL_PTR);
+    IpcUtils_QisEmpty(NULL);
     IpcUtils_Qremove(NULL);
 
     /* Test heap APIs */
     IpcUtils_HeapCreate(NULL, NULL);
     IpcUtils_HeapCreate(&pHndl, &hparam);
+    IpcUtils_HeapAlloc(&pHndl, size, align);
     IpcUtils_HeapAlloc(NULL_PTR, size, align);
     IpcUtils_HeapFree(&pHndl, NULL, size);
     IpcUtils_HeapFree(&pHndl, &payload, size);
