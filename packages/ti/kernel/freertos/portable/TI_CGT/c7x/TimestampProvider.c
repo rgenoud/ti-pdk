@@ -92,9 +92,9 @@ uint32_t TimestampProvider_get32(void)
 #define NOP1000   do {           \
                         NOP500;  \
                         NOP500;  \
-                  } while(0)
+                  } while(BFALSE)
 
-uint64_t gTscDeltaCalib = 0;
+uint64_t gTscDeltaCalib = 0U;
 
 #endif /* #if (C7X_ENABLE_TSC_CALIBRATION == 1) */
 
@@ -112,7 +112,7 @@ void TimestampProvider_Module_startup( void )
     */
    /* TSC already started by firmware, nothing to do here */
    startTime = __TSC;
-   for (i = 0; i < 1000; i++)
+   for (i = 0U; i < 1000U; i++)
    {
        NOP1000;
    }

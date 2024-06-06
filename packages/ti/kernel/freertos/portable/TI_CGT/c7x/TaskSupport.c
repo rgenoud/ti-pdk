@@ -90,11 +90,11 @@
  *
  */
 
-#define TCSP_SIZE  0x2000
+#define TCSP_SIZE  0x2000U
 #define TCSP_ALIGN 0x2000
 
 
-void * TaskSupport_setupTaskStack(StackType_t * pxStackArrayEndAddress, StackType_t * pxStackArrayStartAddress, Task_FuncPtr fxn, TaskSupport_FuncPtr exit, TaskSupport_FuncPtr enter, TaskFunction_t pxCode, void * pvParameters , bool privileged)
+void * TaskSupport_setupTaskStack(StackType_t * pxStackArrayEndAddress, StackType_t * pxStackArrayStartAddress, Task_FuncPtr fxn, TaskSupport_FuncPtr doexit, TaskSupport_FuncPtr enter, TaskFunction_t pxCode, void * pvParameters , bool privileged)
 {
     void * sp;
     void * tcspBase;
@@ -125,13 +125,13 @@ void * TaskSupport_setupTaskStack(StackType_t * pxStackArrayEndAddress, StackTyp
     DebugP_assert(tskStackSize >= TaskSupport_defaultStackSize);
 
     tcspBase = (void *)(((uintptr_t)pxStackArrayStartAddressAligned + tskStackSize) - TCSP_SIZE);
-    if (align)
+    if (0u != align)
     {
         DebugP_assert(0U == ((uintptr_t)tcspBase & (align - 1U)));
     }
     /* subtract 16 from size to account for 16-byte free area @SP */
-    sp = TaskSupport_buildTaskStack((void *)((size_t)tcspBase - 16), fxn,
-                                    exit, enter, pvParameters, pxCode,
+    sp = TaskSupport_buildTaskStack((void *)((size_t)tcspBase - 16U), fxn,
+                                    doexit, enter, pvParameters, pxCode,
                                     tcspBase, privileged);
 
     return (sp);
@@ -140,7 +140,7 @@ void * TaskSupport_setupTaskStack(StackType_t * pxStackArrayEndAddress, StackTyp
 /*
  *  ======== TaskSupport_getStackAlignment ========
  */
-uint32_t TaskSupport_getStackAlignment()
+uint32_t TaskSupport_getStackAlignment(void)
 {
     return (TaskSupport_stackAlignment);
 }

@@ -112,7 +112,7 @@
     #define portYIELD_FROM_ISR( x )    vPortYeildFromISR( x )
     #define portEND_SWITCHING_ISR( x ) vPortYeildFromISR( x )
     #define portYIELD()                vPortYield();
-    void vPortAssertIfInISR();
+    void vPortAssertIfInISR(void);
     #define portASSERT_IF_IN_ISR()    vPortAssertIfInISR()
     #define vPortRefreshNLC()         Hwi_refreshNLC()
 
@@ -160,10 +160,10 @@
 /* Required by the kernel aware debugger. */
     /* #define portREMOVE_STATIC_QUALIFIER */
 
-    void vPortConfigTimerForRunTimeStats();
+    void vPortConfigTimerForRunTimeStats(void);
     #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() vPortConfigTimerForRunTimeStats()
 
-    uint32_t uiPortGetRunTimeCounterValue();
+    uint32_t uiPortGetRunTimeCounterValue(void);
     #define portGET_RUN_TIME_COUNTER_VALUE()        uiPortGetRunTimeCounterValue()
 
 

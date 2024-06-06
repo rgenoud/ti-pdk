@@ -217,6 +217,18 @@ extern  tskTCB * volatile pxCurrentTCB;
  */
 extern void vPortRestoreTaskContext( void );
 
+/* Task Exit */
+void Task_exit(void);
+/* Task Enter */
+void Task_enter(void);
+void ti_sysbios_knl_Task_Func(uint32_t arg1, uint32_t arg2);
+void vApplicationGetTimerTaskMemory(StaticTask_t **ppxTimerTaskTCBBuffer,
+                                    StackType_t **ppxTimerTaskStackBuffer,
+                                    uint32_t *pulTimerTaskStackSize);
+
+void vApplicationIdleHook(void);
+int32_t _system_pre_init(void);
+
 static void prvTaskExitError( void )
 {
     /* A function that implements a task must not exit or attempt to return to
@@ -263,13 +275,8 @@ StackType_t *pxPortInitialiseStack(StackType_t * pxTopOfStack, StackType_t * pxE
     /* TODO this should be a parameter */
     bool privileged = BTRUE;
 #endif
-    pxTopOfStack = (StackType_t *)TaskSupport_setupTaskStack(pxTopOfStack, pxEndOfStack, ti_sysbios_knl_Task_Func, Task_exit, Task_enter, pxCode, pvParameters, privileged);
-
-    return pxTopOfStack;
+    return (StackType_t *)TaskSupport_setupTaskStack(pxTopOfStack, pxEndOfStack, ti_sysbios_knl_Task_Func, Task_exit, Task_enter, pxCode, pvParameters, privileged);
 }
-
-
-
 
 TimerP_Handle pTickTimerHandle = NULL;
 //#define C7X_DUAL_TIMER_BUG_HACK (0)
@@ -328,7 +335,7 @@ static void prvPortInitTickTimer(void)
     timerParams.runMode    = TimerP_RunMode_CONTINUOUS;
     timerParams.startMode  = TimerP_StartMode_USER;
     timerParams.periodType = TimerP_PeriodType_MICROSECS;
-    timerParams.period     = (portTICK_PERIOD_MS * 1000);
+    timerParams.period     = (portTICK_PERIOD_MS * 1000U);
     timerParams.intNum     = configTIMER_INT_NUM;
     timerParams.eventId    = TimerP_USE_DEFAULT;
 
@@ -386,7 +393,7 @@ void vPortYeildFromISR( uint32_t xSwitchRequired )
     }
 }
 
-void vPortTimerTickHandler()
+void vPortTimerTickHandler(void)
 {
     if( pdTRUE == ulPortSchedularRunning )
     {
@@ -408,7 +415,7 @@ void vPortTaskUsesFPU( void )
 
 
 /* initialize high resolution timer for CPU and task load calculation */
-void vPortConfigTimerForRunTimeStats()
+void vPortConfigTimerForRunTimeStats(void)
 {
 
     /* we assume clock is initialized before the schedular is started */
@@ -418,12 +425,12 @@ void vPortConfigTimerForRunTimeStats()
 }
 
 /* return current counter value of high speed counter in units of 10's of usecs */
-uint32_t uiPortGetRunTimeCounterValue()
+uint32_t uiPortGetRunTimeCounterValue(void)
 {
     uint64_t ts = __TSC - ullPortSchedularStartTs;
     uint64_t timeInUsecs;
 
-    timeInUsecs = (ts * 1000000) / configCPU_CLOCK_HZ;
+    timeInUsecs = (ts * 1000000U) / (uint64_t)configCPU_CLOCK_HZ;
     /* note, there is no overflow protection for this 32b value in FreeRTOS
      *
      * Dividing by 10 to reduce the resolution and avoid overflow for longer duration
@@ -438,14 +445,14 @@ uint32_t uiPortGetRunTimeCounterValue()
  * i.e FreeRTOS API should not be called from FIQ, however right now we dont enforce it by checking
  * if we are in FIQ when this API is called.
  */
-void vPortValidateInterruptPriority()
+void vPortValidateInterruptPriority(void)
 {
 }
 
 /* This is called as part of vTaskEndScheduler(), in our port, there is nothing to do here.
  * interrupt are disabled by FreeRTOS before calling this.
  */
-void vPortEndScheduler()
+void vPortEndScheduler(void)
 {
     /* nothing to do */
 }
@@ -520,10 +527,7 @@ static StackType_t uxTimerTaskStack[ (32 * 1024) ];
     *pulTimerTaskStackSize = sizeof(uxTimerTaskStack)/sizeof(uxTimerTaskStack[0]);
 }
 
-
-
-
-void vPortRestoreTaskContext()
+void vPortRestoreTaskContext( void )
 {
     void * dummyTaskSp;
 
@@ -549,7 +553,7 @@ void vPortYield( void )
         DebugP_log1("Doing switch to same task:%p",(uintptr_t)oldSP);
         uxPortIncorrectYieldCount++;
     }
-    if (0 == pxCurrentTCB->uxCriticalNesting)
+    if (0U == pxCurrentTCB->uxCriticalNesting)
     {
         /* Enable interrupts if task was preempted outside critical section */
         portENABLE_INTERRUPTS();
@@ -594,7 +598,7 @@ void vPortYieldAsyncFromISR( void )
  * Returns true if the current core is in ISR context; low prio ISR, med prio ISR or timer tick ISR. High prio ISRs
  * aren't detected here, but they normally cannot call C code, so that should not be an issue anyway.
  */
-BaseType_t xPortInIsrContext()
+BaseType_t xPortInIsrContext( void )
 {
     BaseType_t inISR = pdFALSE;
     if (pdFALSE != ulPortInterruptNesting)
@@ -604,16 +608,15 @@ BaseType_t xPortInIsrContext()
     return inISR;
 }
 
-void vPortAssertIfInISR()
+void vPortAssertIfInISR( void )
 {
-    if( xPortInIsrContext() )
+    if( 1 == xPortInIsrContext() )
     {
         DebugP_log0( "port_interruptNesting\n\n");
     }
 
-    configASSERT( !xPortInIsrContext() );
+    configASSERT( !(uint32_t)xPortInIsrContext() );
 }
-
 
 /* This function is called when configUSE_IDLE_HOOK is 1 in FreeRTOSConfig.h */
 void vApplicationIdleHook( void )
