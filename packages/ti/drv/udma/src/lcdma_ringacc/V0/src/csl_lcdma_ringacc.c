@@ -736,9 +736,11 @@ uint64_t CSL_lcdma_ringaccClrAselInAddr( uint64_t addr )
 uint64_t CSL_lcdma_ringaccSetAselInAddr( uint64_t addr, CSL_LcdmaRingAccAselEndpoint asel )
 {
     uint64_t retAddr;
+    uint32_t tempRetAddr;
 
     retAddr = CSL_lcdma_ringaccClrAselInAddr( addr );
-    retAddr |= (((uint64_t)CSL_FMK( LCDMA_RINGACC_RING_CFG_RING_BA_HI_ASEL, asel )) << 32U);
+    tempRetAddr = CSL_FMK( LCDMA_RINGACC_RING_CFG_RING_BA_HI_ASEL, asel );
+    retAddr |= ((uint64_t) tempRetAddr << 32UL);
     return retAddr;
 }
 
