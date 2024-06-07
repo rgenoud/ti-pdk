@@ -1459,14 +1459,22 @@ void spi_test()
     bool        testFail = BFALSE;
     OSPI_Tests *test;
 
-#if defined(SAFERTOS)
     /* Call board init functions */
     Board_initCfg boardCfg;
     boardCfg = BOARD_INIT_PINMUX_CONFIG |
         BOARD_INIT_MODULE_CLOCK |
         BOARD_INIT_UART_STDIO;
-
+#if defined (SOC_J7200)
+    /* Need to do PLL config through board init for proper clock input on J7200 */
+    boardCfg |= BOARD_INIT_PLL;
+#endif
     Board_init(boardCfg);
+
+#ifdef OSPI_PROFILE
+    /* Configure GTC Timer for profiling */
+    App_setGTCClk(OSPI_FLASH_GTC_MOD_ID,
+                           OSPI_FLASH_GTC_CLK_ID,
+                           OSPI_FLASH_GTC_CLK_FREQ);
 #endif
 
     /* Init OSPI driver */
@@ -1516,33 +1524,9 @@ void spi_test()
  */
 int main(void)
 {
-    /* Call board init functions */
-#if !defined(SAFERTOS)
-    Board_initCfg boardCfg;
-#endif
 #if defined(OSPI_TESTAPP_RTOS)
     TaskP_Handle task;
     TaskP_Params taskParams;
-#endif
-#if !defined(SAFERTOS)
-    boardCfg = BOARD_INIT_PINMUX_CONFIG |
-        BOARD_INIT_MODULE_CLOCK |
-        BOARD_INIT_UART_STDIO;
-#if defined (SOC_J7200)
-    /* Need to do PLL config through board init for proper clock input on J7200 */
-    boardCfg |= BOARD_INIT_PLL;
-#endif
-    Board_init(boardCfg);
-#endif
-
-#ifdef OSPI_PROFILE
-    /* Configure GTC Timer for profiling */
-    App_setGTCClk(OSPI_FLASH_GTC_MOD_ID,
-                           OSPI_FLASH_GTC_CLK_ID,
-                           OSPI_FLASH_GTC_CLK_FREQ);
-#endif
-
-#if defined(OSPI_TESTAPP_RTOS)
 
 	OS_init();
     /* Initialize the task params */
