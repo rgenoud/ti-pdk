@@ -651,7 +651,7 @@ void vApplicationIdleHook( void )
 int32_t _system_pre_init(void)
 {
     /* WA for K3_OPEN_SI-457 */
-    __sa_set_cr(0U, __sa_get_cr(1U));
+    __sa_set_cr((uint32_t)0U, __sa_get_cr((uint32_t)1U));
     extended_system_pre_init();
     return 1;
 }
