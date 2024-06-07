@@ -165,6 +165,7 @@ extern uint32_t ulGetInstructionFaultAddressRegister( void );
 extern uint32_t ulGetCPSR( void );
 extern uint32_t ulDoWFI( void );
 extern uint32_t ulDoCPSID( void );
+extern uint32_t ulDoCPSIE( void );
 
 void vPortDumpExceptionState( void );
 uint64_t getRunTimeCounterValue(void);
@@ -441,7 +442,7 @@ void vPortExitCritical( void )
         {
             /* Critical nesting has reached zero so all interrupt priorities
              * should be unmasked. */
-            ulDoCPSID();
+            ulDoCPSIE();
         }
     }
 }

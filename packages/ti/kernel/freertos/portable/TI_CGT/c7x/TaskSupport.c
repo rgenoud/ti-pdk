@@ -117,7 +117,7 @@ void * TaskSupport_setupTaskStack(StackType_t * pxStackArrayEndAddress, StackTyp
 
     /* subtract what we removed from the low address from stackSize */
     /* MISRA.CAST.VOID_PTR_TO_INT.2012 */
-    tskStackSize = tskStackSize - (uintptr_t)pxStackArrayStartAddressAligned - (uintptr_t)pxStackArrayStartAddress;
+    tskStackSize = tskStackSize - ((uintptr_t)pxStackArrayStartAddressAligned - (uintptr_t)pxStackArrayStartAddress);
 
     /* lower the high address as necessary */
     tskStackSize = tskStackSize & (uintptr_t)(~(align - 1U));
