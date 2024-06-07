@@ -33,7 +33,7 @@
 /**
  *  \file udma_test_csl_ringacc.c
  *
- *  \brief File containing test cases for UDMA UTC related APIs.
+ *  \brief File containing test cases for UDMA Csl Ringacc related APIs.
  *
  */
 
@@ -90,7 +90,8 @@ static void memOpsFxn(void *addr, uint32_t size, uint32_t type)
  * 8)Test scenario 8: Test CSL_ringaccGetRingOcc
  * 9)Test scenario 9: Test CSL_ringaccGetRingHwOcc
  * 10)Test scenario 10: Test CSL_ringaccPush64 CSL_ringaccPeek64 CSL_ringaccPop64
- * 11)Test scenario 11: Test CSL_ringaccPush64 CSL_ringaccPeek64 CSL_ringaccPop64
+ * 11)Test scenario 11: Test CSL_ringaccPeekData CSL_ringaccWrData CSL_ringaccRdData
+ * 12)Test scenario 12: Test CSL_ringaccWrData CSL_ringaccRdData passing pfMemOps as NULL
  */
 int32_t udmaTestCslRingAcc(UdmaTestTaskObj *taskObj)
 {
@@ -240,31 +241,45 @@ int32_t udmaTestCslRingAcc(UdmaTestTaskObj *taskObj)
         CSL_ringaccPop64(&drvHandle->raRegs, &chHandle->fqRing->cfg, ringMem, NULL);
     }
 
-    /* Test scenario 11: Test CSL_ringaccPush64 CSL_ringaccPeek64 CSL_ringaccPop64 */
+    /* Test scenario 11: Test CSL_ringaccPeekData CSL_ringaccWrData CSL_ringaccRdData */
     if(UDMA_SOK == retVal)
     {
         CSL_RingAccRingCfg ringCfg;
         ringCfg.elSz = 0U;
         GT_1trace(taskObj->traceMask, GT_INFO1,
         " |TEST INFO|:: Task:%d: CSL_ringaccGetRingHwIdx Testcase ::\r\n", taskObj->taskId);
-        /* Test CSL_ringaccPeek64 when ring is empty */
+        /* Test CSL_ringaccPeekData when ring is empty */
         CSL_ringaccPeekData(&drvHandle->raRegs, &chHandle->fqRing->cfg, (uint8_t *)ringMem, 1U, NULL);
-        /* Test CSL_ringaccPush64 when CSL_ringaccMemOpsFxnPtr is NULL */
-        CSL_ringaccWrData(&drvHandle->raRegs, &chHandle->fqRing->cfg, (uint8_t *)ringMem, 1U, NULL);
-        /* Test CSL_ringaccPush64 when ring elsz < sizeof(uint64_t) */
+        /* Test CSL_ringaccWrData when CSL_ringaccMemOpsFxnPtr is not NULL */
+        CSL_ringaccWrData(&drvHandle->raRegs, &chHandle->fqRing->cfg, (uint8_t *)ringMem, 1U, memOpsFxn);
+        /* Test CSL_ringaccWrData when ring elsz < sizeof(uint64_t) */
         CSL_ringaccWrData(&drvHandle->raRegs, &ringCfg, (uint8_t *)ringMem, 1U, NULL);
-        /* Test CSL_ringaccPeek64 when CSL_ringaccMemOpsFxnPtr is NULL */
+        /* Test CSL_ringaccPeekData when CSL_ringaccMemOpsFxnPtr is NULL */
         CSL_ringaccPeekData(&drvHandle->raRegs, &chHandle->fqRing->cfg, (uint8_t *)ringMem, 1U, NULL);
-        /* Test CSL_ringaccPeek64 when CSL_ringaccMemOpsFxnPtr is not NULL */
+        /* Test CSL_ringaccPeekData when CSL_ringaccMemOpsFxnPtr is not NULL */
         CSL_ringaccPeekData(&drvHandle->raRegs, &chHandle->fqRing->cfg, (uint8_t *)ringMem, 1U, memOpsFxn);
-        /* Test CSL_ringaccPeek64 when ring elsz < sizeof(uint64_t) */
+        /* Test CSL_ringaccPeekData when ring elsz < sizeof(uint64_t) */
         CSL_ringaccPeekData(&drvHandle->raRegs, &ringCfg, (uint8_t *)ringMem, 1U, NULL);
-        /* Test CSL_ringaccPop64 when CSL_ringaccMemOpsFxnPtr is not NULL */
+        /* Test CSL_ringaccRdData when CSL_ringaccMemOpsFxnPtr is not NULL */
         CSL_ringaccRdData(&drvHandle->raRegs, &chHandle->fqRing->cfg, (uint8_t *)ringMem, 1U, memOpsFxn);
-        /* Test CSL_ringaccPop64 when CSL_ringaccMemOpsFxnPtr is NULL */
-        CSL_ringaccRdData(&drvHandle->raRegs, &chHandle->fqRing->cfg, (uint8_t *)ringMem, 1U, NULL);
     }
 
+    retVal = UdmaTestDeInitRingAcc(chHandle);
+
+    /* Test scenario 12: Test CSL_ringaccWrData CSL_ringaccRdData passing pfMemOps as NULL */
+    retVal = UdmaTestInitRingAcc(drvHandle, chHandle, elemCnt);
+    {
+        if(UDMA_SOK == retVal)
+        {
+            GT_1trace(taskObj->traceMask, GT_INFO1,
+            " |TEST INFO|:: Task:%d: CSL_ringaccWrData  CSL_ringaccRdData Testcase ::\r\n", taskObj->taskId);
+            CSL_ringaccPeekData(&drvHandle->raRegs, &chHandle->fqRing->cfg, (uint8_t *)ringMem, 1U, NULL);
+            /* Test CSL_ringaccWrData when CSL_ringaccMemOpsFxnPtr is NULL */
+            CSL_ringaccWrData(&drvHandle->raRegs, &chHandle->fqRing->cfg, (uint8_t *)ringMem, 1U, NULL);
+            /* Test CSL_ringaccRdData when CSL_ringaccMemOpsFxnPtr is NULL */
+            CSL_ringaccRdData(&drvHandle->raRegs, &chHandle->fqRing->cfg, (uint8_t *)ringMem, 1U, NULL);
+        }
+    }
     retVal = UdmaTestDeInitRingAcc(chHandle);
 
     return (retVal);
@@ -334,7 +349,14 @@ static int32_t UdmaTestDeInitRingAcc(Udma_ChHandle chHandle)
  * 1)Test scenario 1: Check CSL_ringaccPeek64 mode is not CSL_RINGACC_RING_MODE_RING
  * 2)Test scenario 2: Check CSL_ringaccPeek64 to get pRingEntry equal to NULL
  * 3)Test scenario 3: Check CSL_ringaccPop64 mode is not CSL_RINGACC_RING_MODE_RING
- * 4)Test scenario 4: Check to get ringaccGetMonitorType not equal to CSL_RINGACC_MONITOR_TYPE_DISABLED
+ * 4)Test scenario 4: Check CSL_ringaccWrData mode is not CSL_RINGACC_RING_MODE_RING
+ * 5)Test scenario 5: Check CSL_ringaccReadRingMonitor mode is not CSL_RINGACC_RING_MODE_RING
+ * 6)Test scenario 6: Check CSL_ringaccPeek64 to get pRingEntry equal to NULL
+ * 7)Test scenario 7: Check CSL_ringaccRdData when elsz count is more than numBytes
+ * 8)Test scenario 8: Check CSL_ringaccRdData to get pRingEntry is NULL
+ * 9)Test scenario 9: Check CSL_ringaccPeekData to get pRingEntry is NULL
+ * 10)Test scenario 10: Check CSL_ringaccWrData to get pRingEntry is NULL
+ * 11)Test scenario 11: Check CSL_ringaccPop64 mode is not CSL_RINGACC_RING_MODE_RING
  */
 int32_t UdmaTestCslRing(UdmaTestTaskObj *taskObj)
 {
@@ -347,7 +369,7 @@ int32_t UdmaTestCslRing(UdmaTestTaskObj *taskObj)
     struct Udma_RingObj  ringObj;
     Udma_RingHandle      ringHandle;
     uint32_t             ringMemSize;
-    ringHandle = &ringObj;
+    ringHandle  = &ringObj;
     ringMemSize = elemCnt * sizeof (uint64_t);
     ringMem     = Utils_memAlloc(heapId, ringMemSize, UDMA_CACHELINE_ALIGNMENT);
     if(NULL == ringMem)
@@ -383,14 +405,82 @@ int32_t UdmaTestCslRing(UdmaTestTaskObj *taskObj)
         {
             GT_1trace(taskObj->traceMask, GT_INFO1,
                       " |TEST INFO|:: Task:%d: FAIL :: Test CSL_ringaccPeek64 ::"
-                      " when requested access size is less than element size \r\n",
+                      " Check CSL_ringaccPeek64 mode is not CSL_RINGACC_RING_MODE_RING \r\n",
                       taskObj->taskId);
             retVal = UDMA_EFAIL;
         }
 
         if(UDMA_SOK == retVal)
         {
-            /* Test scenario 2: Check CSL_ringaccPeek64 to get pRingEntry equal to NULL */
+            /* Test scenario 2: Check CSL_ringaccPeekData mode is not CSL_RINGACC_RING_MODE_RING */
+            retVal = CSL_ringaccPeekData(&drvHandle->raRegs, &ringHandle->cfg, (uint8_t *)ringMem, 1U, NULL);
+            if(UDMA_SOK != retVal)
+            {
+                retVal = UDMA_SOK;
+            }
+            else
+            {
+                GT_1trace(taskObj->traceMask, GT_INFO1,
+                          " |TEST INFO|:: Task:%d: FAIL :: Test CSL_ringaccPeekData \r\n",
+                          taskObj->taskId);
+                retVal = UDMA_EFAIL;
+            }
+        }
+
+        if(UDMA_SOK == retVal)
+        {
+            /* Test scenario 3: Check CSL_ringaccRdData mode is not CSL_RINGACC_RING_MODE_RING */
+            retVal = CSL_ringaccRdData(&drvHandle->raRegs, &ringHandle->cfg, (uint8_t *)ringMem, 1U, NULL);
+            if(UDMA_SOK != retVal)
+            {
+                retVal = UDMA_SOK;
+            }
+            else
+            {
+                GT_1trace(taskObj->traceMask, GT_INFO1,
+                          " |TEST INFO|:: Task:%d: FAIL :: Test CSL_ringaccRdData \r\n",
+                          taskObj->taskId);
+                retVal = UDMA_EFAIL;
+            }
+        }
+
+        if(UDMA_SOK == retVal)
+        {
+            /* Test scenario 4: Check CSL_ringaccWrData mode is not CSL_RINGACC_RING_MODE_RING */
+            retVal = CSL_ringaccWrData(&drvHandle->raRegs, &ringHandle->cfg, (uint8_t *)ringMem, 1U, NULL);
+            if(UDMA_SOK != retVal)
+            {
+                retVal = UDMA_SOK;
+            }
+            else
+            {
+                GT_1trace(taskObj->traceMask, GT_INFO1,
+                          " |TEST INFO|:: Task:%d: FAIL :: Test CSL_ringaccWrData \r\n",
+                          taskObj->taskId);
+                retVal = UDMA_EFAIL;
+            }
+        }
+
+        if(UDMA_SOK == retVal)
+        {
+            /* Test scenario 5: Check CSL_ringaccReadRingMonitor mode is not CSL_RINGACC_RING_MODE_RING */
+            retVal = CSL_ringaccReadRingMonitor(&drvHandle->raRegs, UDMA_RING_ORDERID_MAX, NULL, NULL);
+            if(UDMA_SOK != retVal)
+            {
+                retVal = UDMA_SOK;
+            }
+            else
+            {
+                GT_1trace(taskObj->traceMask, GT_INFO1,
+                          " |TEST INFO|:: Task:%d: FAIL :: Test CSL_ringaccReadRingMonitor \r\n",
+                          taskObj->taskId);
+                retVal = UDMA_EFAIL;
+            }
+        }
+
+        if(UDMA_SOK == retVal)
+        {
+            /* Test scenario 6: Check CSL_ringaccPeek64 to get pRingEntry equal to NULL */
             ringHandle->cfg.mode = CSL_RINGACC_RING_MODE_RING;
             retVal = CSL_ringaccPeek64(&drvHandle->raRegs, &ringHandle->cfg, ringMem, NULL);
             if(UDMA_SOK != retVal)
@@ -401,7 +491,7 @@ int32_t UdmaTestCslRing(UdmaTestTaskObj *taskObj)
             {
                 GT_1trace(taskObj->traceMask, GT_INFO1,
                           " |TEST INFO|:: Task:%d: FAIL :: Test CSL_ringaccPeek64 ::"
-                          " when requested access size is less than element size \r\n",
+                          " Check CSL_ringaccPeek64 to get pRingEntry equal to NULL \r\n",
                           taskObj->taskId);
                 retVal = UDMA_EFAIL;
             }
@@ -409,7 +499,82 @@ int32_t UdmaTestCslRing(UdmaTestTaskObj *taskObj)
 
         if(UDMA_SOK == retVal)
         {
-            /* Test scenario 3: Check CSL_ringaccPop64 mode is not CSL_RINGACC_RING_MODE_RING */
+            /* Test scenario 7: Check CSL_ringaccRdData when elsz count is more than numBytes */
+            ringHandle->cfg.mode = CSL_RINGACC_RING_MODE_RING;
+            retVal = CSL_ringaccRdData(&drvHandle->raRegs, &ringHandle->cfg, (uint8_t *)ringMem, UDMA_RING_ANY, NULL);
+            if(UDMA_SOK != retVal)
+            {
+                retVal = UDMA_SOK;
+            }
+            else
+            {
+                GT_1trace(taskObj->traceMask, GT_INFO1,
+                          " |TEST INFO|:: Task:%d: FAIL :: Test CSL_ringaccRdData"
+                          " Check CSL_ringaccRdData when elsz count is more than numBytes \r\n",
+                          taskObj->taskId);
+                retVal = UDMA_EFAIL;
+            }
+        }
+
+        if(UDMA_SOK == retVal)
+        {
+            /* Test scenario 8: Check CSL_ringaccRdData to get pRingEntry is NULL */
+            ringHandle->cfg.mode = CSL_RINGACC_RING_MODE_RING;
+            retVal = CSL_ringaccRdData(&drvHandle->raRegs, &ringHandle->cfg, (uint8_t *)ringMem, 1U, NULL);
+            if(UDMA_SOK != retVal)
+            {
+                retVal = UDMA_SOK;
+            }
+            else
+            {
+                GT_1trace(taskObj->traceMask, GT_INFO1,
+                          " |TEST INFO|:: Task:%d: FAIL :: Test CSL_ringaccRdData \r\n",
+                          taskObj->taskId);
+                retVal = UDMA_EFAIL;
+            }
+        }
+
+        if(UDMA_SOK == retVal)
+        {
+            /* Test scenario 9: Check CSL_ringaccPeekData to get pRingEntry is NULL */
+            ringHandle->cfg.mode     = CSL_RINGACC_RING_MODE_RING;
+            ringHandle->cfg.rwIdx    = 0;
+            ringHandle->cfg.virtBase = 0;
+            retVal = CSL_ringaccPeekData(&drvHandle->raRegs, &ringHandle->cfg, (uint8_t *)ringMem, 1U, NULL);
+            if(UDMA_SOK == retVal)
+            {
+                retVal = UDMA_SOK;
+            }
+            else
+            {
+                GT_1trace(taskObj->traceMask, GT_INFO1,
+                          " |TEST INFO|:: Task:%d: FAIL :: Test CSL_ringaccPeekData \r\n",
+                          taskObj->taskId);
+                retVal = UDMA_EFAIL;
+            }
+        }
+
+        if(UDMA_SOK == retVal)
+        {
+            /* Test scenario 10: Check CSL_ringaccWrData to get pRingEntry is NULL */
+            ringHandle->cfg.mode  = CSL_RINGACC_RING_MODE_RING;
+            retVal = CSL_ringaccWrData(&drvHandle->raRegs, &ringHandle->cfg, (uint8_t *)ringMem, 1U, NULL);
+            if(UDMA_SOK != retVal)
+            {
+                retVal = UDMA_SOK;
+            }
+            else
+            {
+                GT_1trace(taskObj->traceMask, GT_INFO1,
+                          " |TEST INFO|:: Task:%d: FAIL :: Test CSL_ringaccWrData \r\n",
+                          taskObj->taskId);
+                retVal = UDMA_EFAIL;
+            }
+        }
+
+        if(UDMA_SOK == retVal)
+        {
+            /* Test scenario 11: Check CSL_ringaccPop64 mode is not CSL_RINGACC_RING_MODE_RING */
             ringHandle->cfg.mode = CSL_RINGACC_RING_MODE_MESSAGE;
             retVal = CSL_ringaccPop64(&drvHandle->raRegs, &ringHandle->cfg, ringMem, NULL);
             if(UDMA_SOK == retVal)
@@ -421,25 +586,6 @@ int32_t UdmaTestCslRing(UdmaTestTaskObj *taskObj)
                 GT_1trace(taskObj->traceMask, GT_INFO1,
                           " |TEST INFO|:: Task:%d: FAIL :: Test CSL_ringaccPop64 ::"
                           " mode is not CSL_RINGACC_RING_MODE_RING \r\n",
-                          taskObj->taskId);
-                retVal = UDMA_EFAIL;
-            }
-        }
-
-        if(UDMA_SOK == retVal)
-        {
-            /* Test scenario 4: Check to get ringaccGetMonitorType not equal to CSL_RINGACC_MONITOR_TYPE_DISABLED */
-            ringHandle->cfg.mode = CSL_RINGACC_RING_MODE_MESSAGE;
-            retVal = CSL_ringaccReadRingMonitor(&drvHandle->raRegs, UDMA_RING_ORDERID_MAX,
-                                                NULL, NULL);
-            if(UDMA_SOK != retVal)
-            {
-                retVal = UDMA_SOK;
-            }
-            else
-            {
-                GT_1trace(taskObj->traceMask, GT_INFO1,
-                          " |TEST INFO|:: Task:%d: FAIL :: Test CSL_ringaccPeek64 ::\r\n",
                           taskObj->taskId);
                 retVal = UDMA_EFAIL;
             }
@@ -490,10 +636,10 @@ int32_t UdmaTestCslRingMonitor(UdmaTestTaskObj *taskObj)
         ringMode = TISCI_MSG_VALUE_RM_RING_MODE_RING;
 
         UdmaRingPrms_init(&ringPrms);
-        ringPrms.ringMem = ringMem;
+        ringPrms.ringMem     = ringMem;
         ringPrms.ringMemSize = ringMemSize;
-        ringPrms.mode = ringMode;
-        ringPrms.elemCnt = elemCnt;
+        ringPrms.mode        = ringMode;
+        ringPrms.elemCnt     = elemCnt;
 
         /* Allocate a free ring */
         retVal = Udma_ringAlloc(drvHandle, ringHandle, UDMA_RING_ANY, &ringPrms);
