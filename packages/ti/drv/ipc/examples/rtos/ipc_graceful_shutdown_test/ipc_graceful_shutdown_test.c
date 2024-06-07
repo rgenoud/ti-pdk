@@ -222,7 +222,7 @@ int32_t IpcApp_gracefulShutdownTest(void)
  * then replies with a "pong" for ping message and goes to
  * WFI for shutdown message
  */
-void IpcApp_rpmsgResponderFxn(void *arg0, void *arg1)
+static void IpcApp_rpmsgResponderFxn(void *arg0, void *arg1)
 {
     uintptr_t key;
     uint32_t  endPt        = 0U;
@@ -355,7 +355,7 @@ void IpcApp_rpmsgResponderFxn(void *arg0, void *arg1)
     App_printf("%s responder task exiting ...\n",Ipc_mpGetSelfName());
 }
 
-void IpcApp_rpmsgSenderFxn(void *arg0, void *arg1)
+static void IpcApp_rpmsgSenderFxn(void *arg0, void *arg1)
 {
     uintptr_t key;
     uint32_t remoteProcId = 0U;
