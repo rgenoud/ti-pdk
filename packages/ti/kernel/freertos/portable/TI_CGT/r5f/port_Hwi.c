@@ -268,7 +268,8 @@ void __attribute__((section(".text.hwi"))) HwiP_prefetch_abort_handler_c(void)
     gCurrentProcessorState = CSL_ARM_R5_ABORT_MODE;
     vPortDumpExceptionState();
     while(loop)
-        ;
+    {
+    }
 }
 
 /* Data Abort handler starts execution in HwiP_data_abort_handler, defined in portASM.S 

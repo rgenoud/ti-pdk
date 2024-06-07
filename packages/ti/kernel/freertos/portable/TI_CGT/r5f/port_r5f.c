@@ -107,7 +107,7 @@
  * a non zero value to ensure interrupts don't inadvertently become unmasked before
  * the scheduler starts.  As it is stored as part of the task context it will
  * automatically be set to 0 when the first task is started. */
-volatile uint32_t ulCriticalNesting = 9999UL;
+volatile uint32_t ulCriticalNesting = 9999U;
 
 /* Saved as part of the task context.  If ulPortTaskHasFPUContext is non-zero then
  * a floating point context must be saved and restored for the task. */
@@ -172,12 +172,15 @@ uint64_t getRunTimeCounterValue64(void);
 void vApplicationGetTimerTaskMemory(StaticTask_t **ppxTimerTaskTCBBuffer,
                                     StackType_t **ppxTimerTaskStackBuffer,
                                     uint32_t *pulTimerTaskStackSize);
+int32_t _system_pre_init(void);
 void _system_post_cinit(void);
 void vApplicationIdleHook(void);
 
 BaseType_t xPortInIsrContext(void);
 
 uint64_t uxPortReadPmuCounter(void);
+
+uint64_t uiPortGetRunTimeCounterValue64(void);
 
 static void prvTaskExitError( void )
 {
@@ -270,7 +273,7 @@ StackType_t * pxPortInitialiseStack( StackType_t * pxTopOfStack,
 
     /* Next all the FPU bank registers S0 to S31 */
     uint32_t ulNumFpuReg = portNUM_FPU_REGS;
-    while (ulNumFpuReg > 0)
+    while (ulNumFpuReg > 0U)
     {
         ulNumFpuReg--;
         *pxTOS = ( StackType_t ) 0x00000000;     /* S0 to S31 */
@@ -313,7 +316,7 @@ static void prvPortInitTickTimer(void)
     DebugP_assert (NULL != pTickTimerHandle);
 
     /* init internal data structure */
-    gTimerCntrl.uxTicks             = 0;
+    gTimerCntrl.uxTicks             = 0U;
     gTimerCntrl.ulUSecPerTick       = (portTICK_PERIOD_MS * 1000U);
     gTimerCntrl.pxTimerHandle       = pTickTimerHandle;
 }
@@ -403,7 +406,7 @@ void vPortEnterCritical( void )
     /* Now interrupts are disabled ulCriticalNesting can be accessed
      * directly.  Increment ulCriticalNesting to keep a count of how many times
      * portENTER_CRITICAL() has been called. */
-    ulCriticalNesting = ulCriticalNesting + 1;
+    ulCriticalNesting = ulCriticalNesting + 1U;
 
     #if (configOPTIMIZE_FOR_LATENCY==0)
     /* This API should NOT be called from within ISR context. Below logic checks for this.
@@ -430,7 +433,7 @@ void vPortExitCritical( void )
     {
         /* Decrement the nesting count as the critical section is being
          * exited. */
-        ulCriticalNesting = ulCriticalNesting - 1;
+        ulCriticalNesting = ulCriticalNesting - 1U;
 
         /* If the nesting level has reached zero then all interrupt
          * priorities must be re-enabled. */
@@ -438,7 +441,7 @@ void vPortExitCritical( void )
         {
             /* Critical nesting has reached zero so all interrupt priorities
              * should be unmasked. */
-            asm ( " CPSIE	i");
+            ulDoCPSID();
         }
     }
 }
@@ -514,7 +517,7 @@ uint64_t getRunTimeCounterValue(void)
      */
     do
     {
-        noBusyWaiting = noBusyWaiting - 1;
+        noBusyWaiting = noBusyWaiting - 1U;
         t1 = gTimerCntrl.uxTicks;
         /* PMU counter increments after last OS tick  */
         pmuCounterRead = uxPortReadPmuCounter();
@@ -529,7 +532,7 @@ uint64_t getRunTimeCounterValue(void)
             /* Increase the higher 32 bits by 1, as overflow has happened. Do not handle the overflow
              * as the tick timer will handle it. Just use the correct value here.
              */
-            pmuCounterReadHi++;
+            pmuCounterReadHi = pmuCounterReadHi + 1ULL;
             pmuCounterRead =  (pmuCounterReadHi << 32U) | pmuCounterReadLow;
         }
         uxDeltaTs = pmuCounterRead - ullPortLastTickPmuTs;
@@ -541,17 +544,17 @@ uint64_t getRunTimeCounterValue(void)
     /* If t1 and t2 are not equal after 2 iterations of the while loop, then this is 
      * as unexpected situation and we should return an error, i.e., 0
      */
-    if ( ( 0U == noBusyWaiting ) && ( t1 != t2 ) )
+    if ( ( 0U == noBusyWaiting ) && cond1 )
     {
-        uxTimeInUsecs = (uint64_t)0;
+        uxTimeInUsecs = 0ULL;
     }
     else
     {
         /* time in milliseconds based on no. of OS ticks */
         uxTimeInMilliSecs = t2 * (uint64_t)portTICK_PERIOD_MS;
 
-        uxTimeInUsecs = (uxTimeInMilliSecs * 1000U) + 
-                            ((uxDeltaTs * 1000000U) / (uint32_t)configCPU_CLOCK_HZ) /* convert PMU timestamp to microseconds */;
+        uxTimeInUsecs = ((uxTimeInMilliSecs * 1000ULL) + 
+                            ((uxDeltaTs * 1000000ULL) / (uint64_t)configCPU_CLOCK_HZ)); /* convert PMU timestamp to microseconds */
 
         /* note, there is no overflow protection for this 32b value in FreeRTOS
         *

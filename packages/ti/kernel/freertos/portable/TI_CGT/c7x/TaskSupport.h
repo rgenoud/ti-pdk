@@ -94,11 +94,11 @@ typedef void (*Task_FuncPtr)(uint32_t arg1, uint32_t arg2);
 
 
 /* defaultStackSize */
-extern const size_t TaskSupport_defaultStackSize;
+extern const uintptr_t TaskSupport_defaultStackSize;
 
 
 /* stackAlignment */
-extern const unsigned int TaskSupport_stackAlignment;
+extern const uint32_t TaskSupport_stackAlignment;
 
 
 

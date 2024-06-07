@@ -98,7 +98,7 @@ void * TaskSupport_setupTaskStack(StackType_t * pxStackArrayEndAddress, StackTyp
 {
     void * sp;
     void * tcspBase;
-    uint32_t tskStackSize = (uintptr_t)pxStackArrayEndAddress - (uintptr_t)pxStackArrayStartAddress;
+    uintptr_t tskStackSize = (uintptr_t)pxStackArrayEndAddress - (uintptr_t)pxStackArrayStartAddress;
     uint32_t align;
     StackType_t * pxStackArrayStartAddressAligned;
 
@@ -111,23 +111,23 @@ void * TaskSupport_setupTaskStack(StackType_t * pxStackArrayEndAddress, StackTyp
     /* align low address to stackAlignment */
     /* MISRA.CAST.VOID_PTR_TO_INT.2012 */
     stackTemp = (uintptr_t)pxStackArrayStartAddress;
-    stackTemp = stackTemp + (align - 1U);
-    stackTemp = stackTemp & ~(align - 1U);
+    stackTemp = stackTemp + ((uintptr_t)align - 1UL);
+    stackTemp = stackTemp & ~((uintptr_t)align - 1UL);
     pxStackArrayStartAddressAligned = (StackType_t *)(stackTemp);
 
     /* subtract what we removed from the low address from stackSize */
     /* MISRA.CAST.VOID_PTR_TO_INT.2012 */
-    tskStackSize = tskStackSize - ((uintptr_t)pxStackArrayStartAddressAligned - (uintptr_t)pxStackArrayStartAddress);
+    tskStackSize = tskStackSize - (uintptr_t)pxStackArrayStartAddressAligned - (uintptr_t)pxStackArrayStartAddress;
 
     /* lower the high address as necessary */
-    tskStackSize = tskStackSize & (size_t)~(align - 1U);
+    tskStackSize = tskStackSize & (uintptr_t)(~(align - 1U));
 
     DebugP_assert(tskStackSize >= TaskSupport_defaultStackSize);
 
     tcspBase = (void *)(((uintptr_t)pxStackArrayStartAddressAligned + tskStackSize) - TCSP_SIZE);
-    if (0u != align)
+    if (0U != align)
     {
-        DebugP_assert(0U == ((uintptr_t)tcspBase & (align - 1U)));
+        DebugP_assert(0UL == ((uintptr_t)tcspBase & ((uintptr_t)align - 1UL)));
     }
     /* subtract 16 from size to account for 16-byte free area @SP */
     sp = TaskSupport_buildTaskStack((void *)((size_t)tcspBase - 16U), fxn,
@@ -146,12 +146,12 @@ uint32_t TaskSupport_getStackAlignment(void)
 }
 
 #pragma DATA_SECTION(TaskSupport_defaultStackSize, ".const:TaskSupport_defaultStackSize");
-const size_t TaskSupport_defaultStackSize = (size_t)(16 * 1024);
+const uintptr_t TaskSupport_defaultStackSize = (16UL * 1024UL);
 
   
 /* stackAlignment__C */
 #pragma DATA_SECTION(TaskSupport_stackAlignment, ".const:TaskSupport_stackAlignment");
-const unsigned int TaskSupport_stackAlignment = (unsigned int)0x2000U;
+const uint32_t TaskSupport_stackAlignment = (uint32_t)0x2000U;
 
 #pragma DATA_SECTION(OS_mpeEnabled, ".const:OS_mpeEnabled");
 const uint32_t OS_mpeEnabled = 0U;

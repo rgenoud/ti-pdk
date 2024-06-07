@@ -97,7 +97,7 @@
  * a non zero value to ensure interrupts don't inadvertently become unmasked before
  * the scheduler starts.  As it is stored as part of the task context it will
  * automatically be set to 0 when the first task is started. */
-volatile uint32_t ulCriticalNesting = 9999UL;
+volatile uint32_t ulCriticalNesting = 9999U;
 
 /* Saved as part of the task context.  If ulPortTaskHasFPUContext is non-zero then
  * a floating point context must be saved and restored for the task. */
@@ -115,12 +115,12 @@ BaseType_t ulPortSchedularRunning = pdFALSE;
 
 
 /* Counts the incorrect yield, i.e, when doing switch to same task */
-BaseType_t uxPortIncorrectYieldCount = 0UL;
+BaseType_t uxPortIncorrectYieldCount = 0;
 
 /* Store the Schedular start TSC counter timerstamp.
  * This is required to account for schedular start time in current run time
  * counter calculations. */
-uint64_t ullPortSchedularStartTs = 0U;
+uint64_t ullPortSchedularStartTs = 0ULL;
 /*
  * Task control block.  A task control block (TCB) is allocated for each task,
  * and stores task state information, including a pointer to the task's context
@@ -206,7 +206,7 @@ typedef struct tskTaskControlBlock       /* The old naming convention is used to
     #endif
 
     #if ( configUSE_POSIX_ERRNO == 1 )
-        int iTaskErrno;
+        int32_t iTaskErrno;
     #endif
 } tskTCB;
 
@@ -228,6 +228,7 @@ void vApplicationGetTimerTaskMemory(StaticTask_t **ppxTimerTaskTCBBuffer,
 
 void vApplicationIdleHook(void);
 int32_t _system_pre_init(void);
+void _system_post_cinit(void);
 
 static void prvTaskExitError( void )
 {
@@ -278,7 +279,7 @@ StackType_t *pxPortInitialiseStack(StackType_t * pxTopOfStack, StackType_t * pxE
     return (StackType_t *)TaskSupport_setupTaskStack(pxTopOfStack, pxEndOfStack, ti_sysbios_knl_Task_Func, Task_exit, Task_enter, pxCode, pvParameters, privileged);
 }
 
-TimerP_Handle pTickTimerHandle = NULL;
+TimerP_Handle pTickTimerHandle = NULL_PTR;
 //#define C7X_DUAL_TIMER_BUG_HACK (0)
 #define C7X_LOG_TIMER_INT_DELTA (1)
 
@@ -290,7 +291,7 @@ uint64_t gTscISRLogIdx = 0;
 
 static void prvPorttimerTickIsr(uintptr_t args)
 {
-    void vPortTimerTickHandler();
+    void vPortTimerTickHandler(void);
 #if (defined(C7X_DUAL_TIMER_BUG_HACK))
     static uint64_t isrSkipWA = 0;
 
@@ -312,14 +313,14 @@ static void prvPortInitTimerCLECCfg(uint32_t timerId, uint32_t timerIntNum)
 {
     CSL_ClecEventConfig   cfgClec;
     CSL_CLEC_EVTRegs     *clecBaseAddr = (CSL_CLEC_EVTRegs*)portCOMPUTE_CLUSTER_CLEC_BASE;
-    uint32_t input         = gDmTimerPInfoTbl[timerId].eventId;
+    uint32_t input         = (uint32_t)gDmTimerPInfoTbl[timerId].eventId;
     uint32_t corepackEvent = timerIntNum;
 
     /* Configure CLEC */
     cfgClec.secureClaimEnable = UFALSE;
     cfgClec.evtSendEnable     = UTRUE;
     cfgClec.rtMap             = portCOMPUTE_CLUSTER_CLEC_RTMAP;
-    cfgClec.extEvtNum         = 0;
+    cfgClec.extEvtNum         = 0U;
     cfgClec.c7xEvtNum         = corepackEvent;
     CSL_clecClearEvent(clecBaseAddr, input);
     CSL_clecConfigEventLevel(clecBaseAddr, input, 0); /* configure interrupt as pulse */
@@ -342,7 +343,7 @@ static void prvPortInitTickTimer(void)
     pTickTimerHandle = TimerP_create(configTIMER_ID, &prvPorttimerTickIsr, &timerParams);
 
     /* don't expect the handle to be null */
-    DebugP_assert (NULL != pTickTimerHandle);
+    DebugP_assert (NULL_PTR != pTickTimerHandle);
 
 }
 
@@ -615,14 +616,14 @@ void vPortAssertIfInISR( void )
         DebugP_log0( "port_interruptNesting\n\n");
     }
 
-    configASSERT( !(uint32_t)xPortInIsrContext() );
+    configASSERT( 0 == xPortInIsrContext() );
 }
 
 /* This function is called when configUSE_IDLE_HOOK is 1 in FreeRTOSConfig.h */
 void vApplicationIdleHook( void )
 {
 #if (configLOAD_UPDATE_IN_IDLE==1)
-    void vApplicationLoadHook();
+    void vApplicationLoadHook(void);
 
     vApplicationLoadHook();
 #endif
@@ -650,7 +651,7 @@ void vApplicationIdleHook( void )
 int32_t _system_pre_init(void)
 {
     /* WA for K3_OPEN_SI-457 */
-    __sa_set_cr(0, __sa_get_cr(1));
+    __sa_set_cr(0U, __sa_get_cr(1U));
     extended_system_pre_init();
     return 1;
 }
