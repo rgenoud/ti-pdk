@@ -1352,7 +1352,41 @@ static bool I2CApp_negativeTest(void *arg)
         testStatus = BFALSE;
     }
 
-    /* Test6: Called I2CMasterInitExpClk with internalClk=0U & outputClk=0U */
+    /* Test6: Restart I2C communication with callback transfer NULL  */
+    I2C_close(handle);
+    test->intrMode = BTRUE;
+    I2CApp_initConfig(I2C_APP_EEPROM_INSTANCE, test);
+
+    I2C_Params_init(&i2cParams);
+
+    i2cParams.transferMode = I2C_MODE_CALLBACK;
+    i2cParams.transferCallbackFxn = NULL;
+
+    /* Set bitRate */
+    i2cParams.bitRate = I2C_100kHz;
+    handle = I2C_open(I2C_APP_EEPROM_INSTANCE, &i2cParams);
+    if(NULL == handle)
+    {
+        testStatus = BFALSE;
+    }
+
+    memset(rxBuf, 0, I2C_APP_EEPROM_TEST_LENGTH);
+    I2C_transactionInit(&i2cTransaction);
+    i2cTransaction.slaveAddress = test->slaveAddress;
+    i2cTransaction.writeBuf     = NULL;
+    i2cTransaction.writeCount   = 0U;
+    i2cTransaction.readBuf      = (uint8_t *)&rxBuf[0];
+    i2cTransaction.readCount    = test->readcount;
+    i2cTransaction.timeout      = test->timeout;
+    status = I2C_transfer(handle, &i2cTransaction);
+
+    if(I2C_STS_SUCCESS != status)
+    {
+       UART_printf("I2C Test: Callback transfer check.  \n");
+       testStatus = BTRUE;
+    }
+
+    /* Test7: Called I2CMasterInitExpClk with internalClk=0U & outputClk=0U */
     I2CMasterInitExpClk(i2cCfg->baseAddr, i2cCfg->funcClk, 0U, 0U);
 
     /*clear the FIFO*/
