@@ -51,8 +51,8 @@ typedef struct SemaphoreP_safertos_s {
 /* global pool of statically allocated semaphore pools */
 static SemaphoreP_safertos gOsalSemPsafertosPool[OSAL_SAFERTOS_CONFIGNUM_SEMAPHORE] __attribute__( ( aligned( 32 ) ) );
 
-int32_t SemaphoreP_constructBinary( SemaphoreP_safertos *handle, uint32_t initCount );
-int32_t SemaphoreP_constructCounting( SemaphoreP_safertos *handle, uint32_t initCount, uint32_t maxCount );
+static int32_t SemaphoreP_constructBinary( SemaphoreP_safertos *handle, uint32_t initCount );
+static int32_t SemaphoreP_constructCounting( SemaphoreP_safertos *handle, uint32_t initCount, uint32_t maxCount );
 
 /*
  *  ======== SemaphoreP_create ========
@@ -159,7 +159,7 @@ SemaphoreP_Handle SemaphoreP_create( uint32_t count,
     return ret_handle;
 }
 
-int32_t SemaphoreP_constructBinary( SemaphoreP_safertos *handle, uint32_t initCount )
+static int32_t SemaphoreP_constructBinary( SemaphoreP_safertos *handle, uint32_t initCount )
 {
     int32_t status;
 
@@ -193,7 +193,7 @@ int32_t SemaphoreP_constructBinary( SemaphoreP_safertos *handle, uint32_t initCo
     return status;
 }
 
-int32_t SemaphoreP_constructCounting( SemaphoreP_safertos *handle, uint32_t initCount, uint32_t maxCount )
+static int32_t SemaphoreP_constructCounting( SemaphoreP_safertos *handle, uint32_t initCount, uint32_t maxCount )
 {
     int32_t status;
 

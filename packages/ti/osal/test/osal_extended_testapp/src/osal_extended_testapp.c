@@ -396,7 +396,7 @@ extern void Osal_initMmuDefault(void);
 void InitMmu(void)
 {
     /* Setup CLEC access/configure in secure mode */
-    OsalCfgClecAccessCtrl(BFALSE);
+    OsalCfgClecAccessCtrl(BTRUE);
     /* Reverting to non-secure mode */
     Osal_initMmuDefault();
 }
