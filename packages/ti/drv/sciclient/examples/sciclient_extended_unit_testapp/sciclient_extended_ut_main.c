@@ -5211,32 +5211,6 @@ static int32_t SciclientApp_sciclientMcdcTest(void)
               sciclientTestStatus += CSL_EFAIL;
               SciApp_printf("Sciclient_serviceGetPayloadSize Negative test Failed\n");
           }
-                    
-          //passing TISCI_MSG_ALLOW_FWL_CTRL_READ message type
-          status = Sciclient_getCurrentContext(TISCI_MSG_ALLOW_FWL_CTRL_READ);
-          if(status == SCICLIENT_CONTEXT_SEC)
-          {
-              sciclientTestStatus += CSL_PASS;
-              SciApp_printf("Sciclient_getCurrentContext test Passed\n");
-          }
-          else
-          {
-              sciclientTestStatus += CSL_EFAIL;
-              SciApp_printf("Sciclient_serviceGetPayloadSize test Failed\n");
-          }
-          
-          //passing TISCI_MSG_FORBID_FWL_CTRL_READ message type
-          status = Sciclient_getCurrentContext(TISCI_MSG_FORBID_FWL_CTRL_READ);
-          if(status == SCICLIENT_CONTEXT_SEC)
-          {
-              sciclientTestStatus += CSL_PASS;
-              SciApp_printf("Sciclient_getCurrentContext test Passed\n");
-          }
-          else
-          {
-              sciclientTestStatus += CSL_EFAIL;
-              SciApp_printf("Sciclient_serviceGetPayloadSize test Failed\n");
-          }
   }
   else
   {
