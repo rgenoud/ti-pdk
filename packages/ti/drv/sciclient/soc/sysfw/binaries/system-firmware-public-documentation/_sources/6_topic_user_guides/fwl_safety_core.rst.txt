@@ -55,7 +55,7 @@ This entry controls the SAUL / Safety configuration on the SOC.
    | integrity check                  | ftbool                         | Set to 0x5A to enable                             |
    +----------------------------------+--------------------------------+---------------------------------------------------+
    | safety_host_info                 | u8[2]                          | {0x5AU, host id of Safety core}. For ex:          |
-   |                                  |                                | Host ID of R5 (pulsar_0) in J784S4 = 0x3          |
+   |                                  |                                | Host ID of R5 (pulsar_0) in J784S4 = 0x4          |
    |                                  |                                | Host ID of WKUP R5 in AM62x      = 0x23           |
    +----------------------------------+--------------------------------+---------------------------------------------------+
 

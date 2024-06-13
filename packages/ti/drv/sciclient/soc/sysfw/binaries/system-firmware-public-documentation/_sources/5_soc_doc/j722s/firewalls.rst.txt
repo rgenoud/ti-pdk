@@ -66,6 +66,12 @@ List of Region Based Firewalls
 +---------------+----------+---------+-----------------+---------------+---------------------+--------------------+--------------------+
 |             9 |        9 | none    | 0x3F005000      | 0x4C01FFFF    | everyone,rwcd       | everyone,rwcd      | everyone,rwcd      |
 +---------------+----------+---------+-----------------+---------------+---------------------+--------------------+--------------------+
+|            15 |        0 | none    | 0x43C40000      | 0x43C7FFFF    | everyone,rwcd       | everyone,rwcd      | everyone,rwcd      |
++---------------+----------+---------+-----------------+---------------+---------------------+--------------------+--------------------+
+|            15 |        1 | none    | 0x70000000      | 0x7000AFFF    | everyone,rwcd       | everyone,rwcd      | everyone,rwcd      |
++---------------+----------+---------+-----------------+---------------+---------------------+--------------------+--------------------+
+|            15 |        2 | none    | 0x7000B000      | 0x7000FFFF    | everyone,rwcd       | everyone,rwcd      | everyone,rwcd      |
++---------------+----------+---------+-----------------+---------------+---------------------+--------------------+--------------------+
 |            33 |        0 | none    | 0x00000000      | 0xFFFFFFFFFFF | everyone,rwcd       | everyone,rwcd      | everyone,rwcd      |
 +---------------+----------+---------+-----------------+---------------+---------------------+--------------------+--------------------+
 |            33 |        1 | tifs    | 0x00A00000      | 0x00A007FF    | tifs,rwcd           | dm,rwcd            | everyone,r         |
@@ -160,6 +166,9 @@ List of Region Based Firewalls
 
 .. note::
 
+    Firewall is only specified for those regions which have owners. When accessing any region that has no specific firewall,
+              it is advised to first take ownership of the region through the TISCI_MSG_SET_FWL_REGION api and then access it.
+              
     For more details on firewalls, refer to the "Interconnect Firewalls" section of the TRM.
 
 .. _soc_doc_j722s_public_fwl_desc_channel_fwl_list:

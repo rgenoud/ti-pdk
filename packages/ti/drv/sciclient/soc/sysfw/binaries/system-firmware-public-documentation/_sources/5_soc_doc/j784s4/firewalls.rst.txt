@@ -210,7 +210,7 @@ List of Region Based Firewalls
 +---------------+----------+---------+-----------------+---------------+---------------------+--------------------+--------------------+
 |          5140 |       22 | tifs    | 0x6E000000      | 0x6EFFFFFF    | tifs,rwcd           | everyone,r         |                    |
 +---------------+----------+---------+-----------------+---------------+---------------------+--------------------+--------------------+
-|          5140 |       23 | tifs    |                 |               | sproxy_private,rwcd |                    |                    |
+|          5140 |       23 | tifs    | (1)             |               | sproxy_private,rwcd |                    |                    |
 +---------------+----------+---------+-----------------+---------------+---------------------+--------------------+--------------------+
 |          5141 |        0 | none    | 0x70000000      | 0x707EFFFF    | everyone,rwcd       | everyone,rwcd      | everyone,rwcd      |
 +---------------+----------+---------+-----------------+---------------+---------------------+--------------------+--------------------+
@@ -220,7 +220,7 @@ List of Region Based Firewalls
 +---------------+----------+---------+-----------------+---------------+---------------------+--------------------+--------------------+
 |          5141 |       22 | tifs    | 0x6E000000      | 0x6EFFFFFF    | tifs,rwcd           | everyone,r         |                    |
 +---------------+----------+---------+-----------------+---------------+---------------------+--------------------+--------------------+
-|          5141 |       23 | tifs    |                 |               | sproxy_private,rwcd |                    |                    |
+|          5141 |       23 | tifs    | (1)             |               | sproxy_private,rwcd |                    |                    |
 +---------------+----------+---------+-----------------+---------------+---------------------+--------------------+--------------------+
 |          6148 |        0 | tifs    | 0x28590000      | 0x285900FF    | tifs,rwcd           | pulsar_0,rwcd      | everyone,r         |
 +---------------+----------+---------+-----------------+---------------+---------------------+--------------------+--------------------+
@@ -278,6 +278,10 @@ List of Region Based Firewalls
 
 .. note::
 
+    (1) For this firewall ID,  region 23, the memory range will be based on the MSMC memory configuration.
+            The memory range shown as "MSMC Memory (communication) 64Kbytes, at below link would be the memory range applied to region 23.  
+            [TISCI_MSG_QUERY_MSC|TISCI General Message API Documentation — TISCI User Guide]
+                  
     For more details on firewalls, refer to the "Interconnect Firewalls" section of the TRM.
 
 .. _soc_doc_j784s4_public_fwl_desc_channel_fwl_list:
@@ -483,4 +487,11 @@ List of priv-ids
 +---------------------------+-----------+----------+--------------+--------------+--------+-------------------+
 | main_2_r5_1_secure        |       217 | True     | False        | True         | True   | 48                |
 +---------------------------+-----------+----------+--------------+--------------+--------+-------------------+
+
+
+.. note::
+
+ NOTE: pulsar_0 refers to cores MCU_0_R5_0(Non Secure) and MCU_0_R5_1(Secure). pulsar_1 refers to MCU_0_R5_2(Non Secure) 
+            and MCU_0_R5_3(Secure)
+                  
 

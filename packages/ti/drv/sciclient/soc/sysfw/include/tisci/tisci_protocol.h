@@ -307,6 +307,12 @@ struct tisci_sec_header {
 /** Message to derive a constant DKEK and return it via TISCI */
 #define TISCI_MSG_SA2UL_GET_DKEK_CONST            (0x902BU)
 
+/** Message to encrypt a blob */
+#define TISCI_MSG_SA2UL_AES_ENCRYPT                        (0x9040U)
+
+/** Message to decrypt a blob */
+#define TISCI_MSG_SA2UL_AES_DECRYPT                        (0x9041U)
+
 /* Processor Control APIs */
 
 /** Message to get a Processor */
