@@ -359,6 +359,8 @@ int main(void)
 /* Loading before Task is created */
 #if defined(FREERTOS)
 LoadP_update();
+extern void vPortTimerTickHandler(void);
+vPortTimerTickHandler();
 OS_stop();
 #endif
 
