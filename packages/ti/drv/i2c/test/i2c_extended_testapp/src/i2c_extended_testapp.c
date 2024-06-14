@@ -785,9 +785,14 @@ static bool I2CApp_callBackBusRecoveryTest(void *arg)
 
 static bool I2CApp_nullTest(void *arg)
 {
-    bool    testResult = BTRUE;
-    I2C_Transaction i2cTransaction;
-    uint32_t busFrequency = I2C_400kHz;
+    I2C_Params          i2cParams;
+    I2C_Handle          handle = NULL;
+    I2CApp_TestCfg      *test = (I2CApp_TestCfg *)arg;
+    I2C_v1_Object       *object = NULL;
+    I2C_Transaction     testHeadPtr;
+    bool                testResult = BTRUE;
+    I2C_Transaction     i2cTransaction;
+    uint32_t            busFrequency = I2C_400kHz;
 
     /*null check for i2c_drv.c file*/
     I2C_init();
@@ -796,6 +801,24 @@ static bool I2CApp_nullTest(void *arg)
     I2C_transfer(NULL, &i2cTransaction);
     I2C_control(NULL, I2C_CMD_SET_BUS_FREQUENCY, &busFrequency);
     I2C_close(NULL);
+
+    /* Null check test for i2c_api.c file */
+    I2CApp_initConfig(I2C_APP_EEPROM_INSTANCE, test);
+
+    I2C_Params_init(&i2cParams);
+
+    /* Set bitRate */
+    i2cParams.bitRate = I2C_100kHz;
+    handle = I2C_open(I2C_APP_EEPROM_INSTANCE, &i2cParams);
+    if(NULL == handle)
+    {
+       testResult = BFALSE;
+    }
+
+    /* Headptr null check */
+    object = handle->object;
+    object->headPtr = &testHeadPtr;
+    I2C_close(handle);
 
     return (testResult);
 }
@@ -1386,7 +1409,37 @@ static bool I2CApp_negativeTest(void *arg)
        testStatus = BTRUE;
     }
 
-    /* Test7: Called I2CMasterInitExpClk with internalClk=0U & outputClk=0U */
+    /* Test7: Restart I2C communication with readcount=0 and writecount=0  */
+    I2C_close(handle);
+    test->intrMode = BTRUE;
+    I2CApp_initConfig(I2C_APP_EEPROM_INSTANCE, test);
+
+    I2C_Params_init(&i2cParams);
+
+    /* Set bitRate */
+    i2cParams.bitRate = I2C_100kHz;
+    handle = I2C_open(I2C_APP_EEPROM_INSTANCE, &i2cParams);
+    if(NULL == handle)
+    {
+        testStatus = BFALSE;
+    }
+
+    memset(rxBuf, 0, I2C_APP_EEPROM_TEST_LENGTH);
+    I2C_transactionInit(&i2cTransaction);
+    i2cTransaction.slaveAddress = test->slaveAddress;
+    i2cTransaction.writeBuf     = (uint8_t *)&txBuf[0];
+    i2cTransaction.writeCount   = 0U;
+    i2cTransaction.readBuf      = (uint8_t *)&rxBuf[0];
+    i2cTransaction.readCount    = 0U;
+    i2cTransaction.timeout      = test->timeout;
+    status = I2C_transfer(handle, &i2cTransaction);
+
+    if(I2C_STS_SUCCESS != status)
+    {
+       testStatus = BTRUE;
+    }
+
+    /* Test8: Called I2CMasterInitExpClk with internalClk=0U & outputClk=0U */
     I2CMasterInitExpClk(i2cCfg->baseAddr, i2cCfg->funcClk, 0U, 0U);
 
     /*clear the FIFO*/
