@@ -61,104 +61,76 @@
  */
  
 /* Linker Settings */
---retain="*(.bootCode)"
---retain="*(.startupCode)"
---retain="*(.startupData)"
---retain="*(.intvecs)"
---retain="*(.intc_text)"
---retain="*(.rstvectors)"
---retain="*(.irqStack)"
---retain="*(.fiqStack)"
---retain="*(.abortStack)"
---retain="*(.undStack)"
---retain="*(.svcStack)"
+--retain="*(StartUp)"
+--retain="*(.init)"
+--retain="*(.fini)"
+--retain="*(.preinit_array)"
+--retain="*(.init_array)"
+--retain="*(.fini_array)"
+--retain="*(.ctors)"
+--retain="*(.dtors)"
+--retain="*(.jcr)"
 --fill_value=0
---stack_size=0x2000
---heap_size=0x1000
---entry_point=_resetvectors     /* Default C RTS boot.asm   */
+--entry_point=Start
 
--stack  0x2000                              /* SOFTWARE STACK SIZE           */
--heap   0x2000                              /* HEAP AREA SIZE                */
-
-/* Stack Sizes for various modes */
-__IRQ_STACK_SIZE = 0x1000;
-__FIQ_STACK_SIZE = 0x1000;
-__ABORT_STACK_SIZE = 0x1000;
-__UND_STACK_SIZE = 0x1000;
-__SVC_STACK_SIZE = 0x1000;
+_start=_c_int00;
+__etext=__data_start;
 
 /* Memory Map */
 MEMORY
 {
-    /* MCU0_R5F_0 local view */
-    MCU0_R5F_TCMA_SBL_RSVD (X)  : origin=0x0        length=0x100
-    MCU0_R5F_TCMA (X)       : origin=0x100      length=0x8000 - 0x100
-    MCU0_R5F_TCMB0 (RWIX)   : origin=0x41010000 length=0x8000
-
-    /* MCU0_R5F_1 SoC view */
-    MCU0_R5F1_ATCM (RWIX)   : origin=0x41400000 length=0x8000
-    MCU0_R5F1_BTCM (RWIX)   : origin=0x41410000 length=0x8000
-
-    /* Refer the user guide for details on persistence of these sections */
-    OCMC_RAM_BOARD_CFG (RWIX)   : origin=0x41C80000 length=0x2000
-    OCMC_RAM_SCISERVER (RWIX)   : origin=0x41C82000 length=0x60000
-    VECTORS (X)                 : origin=0x41CE2000 length=0x1000
-    RESET_VECTORS (X)           : origin=0x41CE3000 length=0x100
-    OCMC_RAM (RWIX)             : origin=0x41CE3100 length=0x1AA00
-    OCMC_RAM_X509_HEADER (RWIX) : origin=0x41CFDB00 length=0x500
-
-    /* J784S4 MCMS3 locations */
-    /* J784S4 Reserved Memory for ARM Trusted Firmware */
-    MSMC3_ARM_FW   (RWIX)   : origin=0x70000000 length=0x20000         /* 128KB */
-    MSMC3   (RWIX)          : origin=0x70020000 length=0x7D0000        /* 8MB - 192KB */
-    /* J784S4 Reserved Memory for DMSC Firmware */
-    MSMC3_DMSC_FW  (RWIX)   : origin=0x707F0000 length=0x10000         /* 64KB */
-
-    DDR0    (RWIX)          : origin=0x80000000 length=0x80000000      /* 2GB */
+    CORE_BOOT (X)    : origin=0x60000000 length=0x01000
+    CORE_EXEC (RWIX) : origin=0x61000000 length=0x100000
+    ATCM (RWIX)      : origin=0xee000000 length=0x20000
+    BTCM (RWIX)      : origin=0xee100000 length=0x20000
+    CTCM (RWIX)      : origin=0xee200000 length=0x20000
 }
 
 /* Section Configuration */
 SECTIONS
 {
-    /* 'intvecs' and 'intc_text' sections shall be placed within */
-    /* a range of +\- 16 MB */
-    .intvecs       : {} palign(8)      > VECTORS
-    .intc_text     : {} palign(8)      > VECTORS
-    .rstvectors    : {} palign(8)      > RESET_VECTORS
-    .bootCode      : {} palign(8)      > MSMC3
-    .startupCode   : {} palign(8)      > MSMC3
-    .startupData   : {} palign(8)      > MSMC3, type = NOINIT
-    .text          : {} palign(8)      > DDR0
-    .const         : {} palign(8)      > DDR0
-    .rodata        : {} palign(8)      > DDR0
-    .cinit         : {} palign(8)      > DDR0
-    .pinit         : {} palign(8)      > DDR0
-    .bss           : {} align(4)       > DDR0
-    .far           : {} align(4)       > DDR0
-    .data          : {} palign(128)    > DDR0
-    .sysmem        : {}                > DDR0
-    .data_buffer   : {} palign(128)    > DDR0
-    .bss.devgroup    : {*(.bss.devgroup*)} align(4)        > DDR0
-    .const.devgroup  : {*(.const.devgroup*)} align(4)      > DDR0
-    .boardcfg_data : {} align(4)       > DDR0
-
-    /* USB or any other LLD buffer for benchmarking */
-    .benchmark_buffer (NOLOAD) {} ALIGN (8) > DDR0
-
-    .stack      : {} align(4)       > DDR0  (HIGH)
-    .irqStack   : {. = . + __IRQ_STACK_SIZE;} align(4)      > DDR0  (HIGH)
-    RUN_START(__IRQ_STACK_START)
-    RUN_END(__IRQ_STACK_END)
-    .fiqStack   : {. = . + __FIQ_STACK_SIZE;} align(4)      > DDR0  (HIGH)
-    RUN_START(__FIQ_STACK_START)
-    RUN_END(__FIQ_STACK_END)
-    .abortStack : {. = . + __ABORT_STACK_SIZE;} align(4)    > DDR0  (HIGH)
-    RUN_START(__ABORT_STACK_START)
-    RUN_END(__ABORT_STACK_END)
-    .undStack   : {. = . + __UND_STACK_SIZE;} align(4)      > DDR0  (HIGH)
-    RUN_START(__UND_STACK_START)
-    RUN_END(__UND_STACK_END)
-    .svcStack   : {. = . + __SVC_STACK_SIZE;} align(4)      > DDR0  (HIGH)
-    RUN_START(__SVC_STACK_START)
-    RUN_END(__SVC_STACK_END)
+    .vectors    : START(__code_start), {
+                   *(VECTORS)
+                   *(StartUp)
+                   *(RESET)
+                  } > CORE_BOOT
+    .bootCode    : {} palign(8)      > CORE_EXEC
+    .startupCode : {} palign(8)      > CORE_EXEC
+    .startupData : {} palign(8)      > CORE_EXEC, type = NOINIT
+    .init        : {*(.init)}  > CORE_EXEC
+    .text        : END(__code_end), {*(.text*)} > CORE_EXEC
+    .const   	 : {} palign(8)      > CORE_EXEC
+    .fini        : {*(.fini)}  > CORE_EXEC
+    .rodata      : {
+                   *(.rodata)
+                   *(.rodata.*)
+                   *(.eh_frame)
+                  }           > CORE_EXEC
+    .preinit_array : {*(.preinit_array)} > CORE_EXEC
+    .init_array : {
+                   *(.init_array.*)
+                   *(.init_array)
+                  }           > CORE_EXEC
+    .fini_array : {
+                   *(.fini_array.*)
+                   *(.fini_array)
+                  }           > CORE_EXEC
+    .ctors      : {
+                   *(.ctors.*)
+                   *(.ctors)
+                  }           > CORE_EXEC
+    .dtors      : {
+                   *(.dtors.*)
+                   *(.dtors)
+                  }           > CORE_EXEC
+    .jcr        : {*(.jcr)}   > CORE_EXEC
+    .data       : {} palign(128), START(__data_start), END(__data_end) > CORE_EXEC
+    .cinit      : {} palign(8), RUN_END(__cinit_end)                > CORE_EXEC
+    .pinit      : {} palign(8)                                      > CORE_EXEC
+    .bss        : {} align(4), START(__bss_start), END(__bss_end__) > CORE_EXEC
+    atcm        : {} > ATCM
+    btcm        : {} > BTCM
+    ctcm        : {} > CTCM
+    .stack      : {. = . + 0x8000;} align(64), RUN_END(__stack) > CORE_EXEC (HIGH)
+    .sysmem     : {. = . + 0x20000;} palign(64), RUN_START(__heap_start), RUN_END(__end__) > CORE_EXEC (HIGH)
 }

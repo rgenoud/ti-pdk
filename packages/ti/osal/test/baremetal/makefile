@@ -30,13 +30,13 @@ ifeq ($(MANUAL_CACHE_TEST),YES)
 endif
 
 ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4))
-  CFLAGS_LOCAL_COMMON += -DENABLE_TIMER_TEST
+  CFLAGS_LOCAL_COMMON += -DENABLE_TIMER_TEST -DTCM -DENABLE_R52_SPECIFIC_CONFIG
 endif
 
 SRCS_COMMON += main_osal_test.c uart.c sys.c
-SRCS_SMALLS_COMMON += boot_armv8r.s
+SRCS_S_COMMON += startup.S
 
-LNKFLAGS_LOCAL_mcu1_0 += --entry common_entry_point
+LNKFLAGS_LOCAL_mcu1_0 += -Xlinker -e=Start
 LNKFLAGS_LOCAL_mpu1_0 += --entry Entry
 
 

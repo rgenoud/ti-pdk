@@ -115,6 +115,9 @@
 #endif
 #include <ti/csl/arch/csl_arch.h>
 
+//extern void enable_mpu(void);
+//extern void enable_caches(void);
+
 #if   defined (SOC_AM571x) || defined (SOC_AM572x) || defined (SOC_AM574x)
 #undef  TWO_TIMER_INTERRUPT_TEST
 #define TWO_TIMER_INTERRUPT_TEST 1
@@ -2305,11 +2308,15 @@ void osal_test(void *arg0, void *arg1)
 #if 0
     Board_initOSAL();
 #endif
+    //enable_mpu();
+
     Setup_UART_Reg_Address();
     Setup_UART();
 
     OSAL_log ("\n OSAL Baremetal TestApp - Cortex-R52/R52+ \n");
     OSAL_log ("\n");
+
+    //enable_caches();
 
     if (BTRUE == OSAL_startup_hook_test())
     {

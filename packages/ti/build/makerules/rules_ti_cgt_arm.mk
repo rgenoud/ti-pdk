@@ -49,7 +49,6 @@ endif
 
 CODEGEN_INCLUDE = $(TOOLCHAIN_PATH_$(CGT_ISA_PATH_PRFX))/include/c
 CC = $(TOOLCHAIN_PATH_$(CGT_ISA_PATH_PRFX))/bin/tiarmclang
-ARMASM = $(TOOLCHAIN_PATH_$(CGT_ISA_PATH_PRFX))/bin/armasm
 AR = $(TOOLCHAIN_PATH_$(CGT_ISA_PATH_PRFX))/bin/tiarmar
 LNK = $(TOOLCHAIN_PATH_$(CGT_ISA_PATH_PRFX))/bin/tiarmclang
 STRP = $(TOOLCHAIN_PATH_$(CGT_ISA_PATH_PRFX))/bin/tiarmstrip
@@ -216,19 +215,20 @@ ASMFLAGS = -me -g --diag_warning=225
 # Object file creation
 $(OBJ_PATHS_ASM): $(OBJDIR)/%.$(OBJEXT): %.asm $(GEN_FILE) | $(OBJDIR) $(DEPDIR)
 	$(ECHO) \# Compiling $(PRINT_MESSAGE): $<
-	$(CC) -MMD $(_CFLAGS) $(INCLUDES) $(CFLAGS_DIROPTS) -x ti-asm $< -o $@
-	$(CC) $(_CFLAGS) $(INCLUDES) $(CFLAGS_DIROPTS) -x ti-asm $< -o $@
+	$(CC) -MMD $(_CFLAGS) $(INCLUDES) $(CFLAGS_DIROPTS) -x none $< -o $@
+	$(CC) $(_CFLAGS) $(INCLUDES) $(CFLAGS_DIROPTS) -x none $< -o $@
 
 # Object file creation
 $(OBJ_PATHS_SMALLS): $(OBJDIR)/%.$(OBJEXT): %.s $(GEN_FILE) | $(OBJDIR) $(DEPDIR)
 	$(ECHO) \# Compiling $(PRINT_MESSAGE): $<
-	$(ARMASM) -M --cpu=Cortex-R52.no_neon --arm $(INCLUDES) $< -o $@ --depend $(DEPFILE).d
+	$(CC) -MMD -c $(_CFLAGS) $(INCLUDES) $(CFLAGS_DIROPTS) -x none $< -o $@ -MF $(DEPFILE).d
+	$(CC) -c $(_CFLAGS) $(INCLUDES) $(CFLAGS_DIROPTS) -x none $< -o $@
 
 # Object file creation
 $(OBJ_PATHS_S): $(OBJDIR)/%.$(OBJEXT): %.S $(GEN_FILE) | $(OBJDIR) $(DEPDIR)
 	$(ECHO) \# Compiling $(PRINT_MESSAGE): $<
-	$(CC) -MMD -c $(_CFLAGS) $< -o $@ -MF $(DEPFILE).d
-	$(CC) -c $(_CFLAGS) $< -o $@
+	$(CC) -MMD -c $(_CFLAGS) -x none $< -o $@ -MF $(DEPFILE).d
+	$(CC) -c $(_CFLAGS) -x none $< -o $@
 
 $(PACKAGE_PATHS): $(PACKAGEDIR)/%: %
 	$(ECHO) \# Copying to $(PACKAGE_RELPATH)/$($(APP_NAME)$(MODULE_NAME)_RELPATH)/$<
@@ -333,7 +333,7 @@ endif
 
 	$(ECHO) \# Linking into $(EXE_NAME)...
 	$(ECHO) \#
-	$(LNK) $(_LNKFLAGS) $(OBJ_PATHS_ASM) $(OBJ_PATHS_S) $(OBJ_PATHS) $(OBJ_PATHS_CPP) -Xlinker $(LNKCMD_FILE) $(EXTERNAL_LNKCMD_FILE) $(APPEND_LNKCMD_FILE) -Xlinker --map_file=$@.map -Xlinker --output_file=$@ $(LNK_LIBS) $(RTSLIB_PATH)
+	$(LNK) $(_LNKFLAGS) $(OBJ_PATHS_ASM) $(OBJ_PATHS_SMALLS) $(OBJ_PATHS_S) $(OBJ_PATHS) $(OBJ_PATHS_CPP) -Xlinker $(LNKCMD_FILE) $(EXTERNAL_LNKCMD_FILE) $(APPEND_LNKCMD_FILE) -Xlinker --map_file=$@.map -Xlinker --output_file=$@ $(LNK_LIBS)
 	#$(LNK) $(_LNKFLAGS) --output $@ --predefine="-DCORE_ID=0" --scatter=$(EXTERNAL_LNKCMD_FILE) $(OBJ_PATHS_ASM) $(OBJ_PATHS_SMALLS) $(OBJ_PATHS_S) $(OBJ_PATHS) $(OBJ_PATHS_CPP) $(LNK_LIBS)
 	$(ECHO) \#
 	$(ECHO) \# $@ created.

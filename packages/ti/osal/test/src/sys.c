@@ -34,6 +34,7 @@ FILE __stdout;
 FILE __stdin;
 FILE __stderr;
  
+#if 0
 int fputc(int ch, FILE *f) 
 {
   while( IsTxFifoFull() ) { }
@@ -46,6 +47,7 @@ int fputc(int ch, FILE *f)
   }
   return ch;
 }
+#endif
 
 int fgetc(FILE *f)
 {

@@ -257,7 +257,7 @@ endif
 
 ifeq ($(BUILD_OS_TYPE),baremetal)
   ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4))
-      CONFIG_BLD_LNK_r5f   = $(pdk_PATH)/ti/build/$(SOC)/scatter_r5.scat
+      CONFIG_BLD_LNK_r5f   = $(pdk_PATH)/ti/build/$(SOC)/linker_r5.lds
       CONFIG_BLD_LNK_a72   = $(pdk_PATH)/ti/build/$(SOC)/linker_a72_mpu1_0.lds
       CONFIG_BLD_LNK_c66   = $(pdk_PATH)/ti/build/$(SOC)/linker_c66.cmd
   endif
