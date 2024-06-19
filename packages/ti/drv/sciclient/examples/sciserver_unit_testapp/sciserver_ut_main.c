@@ -101,6 +101,7 @@ static int32_t SciserverApp_secProxyTransferTest(void);
 static int32_t SciserverApp_secproxyRoutingDescriptionNegTest(void);
 static int32_t SciserverApp_rtosNegTest(void);
 static int32_t SciserverApp_processtaskTest(void);
+static int32_t SciserverApp_serverTest(void);
 
 /* ========================================================================== */
 /*                          Function Definitions                              */
@@ -169,6 +170,9 @@ int32_t SciApp_testMain(SciApp_TestParams_t *testParams)
             break;
         case 4:
             testParams->testResult = SciserverApp_rtosNegTest();
+            break;
+        case 5:
+            testParams->testResult = SciserverApp_serverTest();
             break;
         default:
             break;
@@ -665,3 +669,181 @@ static int32_t SciserverApp_processtaskTest(void)
   
     return processtaskTestStatus;
 }
+
+static int32_t SciserverApp_serverTest(void)
+{
+    int32_t  status                  = CSL_PASS;
+    int32_t  sciserverTestStatus     = CSL_PASS;
+    uint32_t messageType[13]         =
+    {
+        TISCI_MSG_RM_UDMAP_FLOW_DELEGATE, TISCI_MSG_RM_IRQ_SET, TISCI_MSG_BOARD_CONFIG_PM,
+        TISCI_MSG_SET_CLOCK, TISCI_MSG_GET_CLOCK, TISCI_MSG_SET_CLOCK_PARENT, TISCI_MSG_GET_CLOCK_PARENT,
+        TISCI_MSG_GET_NUM_CLOCK_PARENTS, TISCI_MSG_SET_FREQ, TISCI_MSG_QUERY_FREQ, TISCI_MSG_GET_FREQ,
+        TISCI_MSG_SET_DEVICE_RESETS, TISCI_MSG_BOARD_CONFIG_RM
+    };
+    uint8_t  num;
+
+    Sciserver_taskData utdSetMsgHostId =
+    {
+        .task_id                 = SCISERVER_TASK_USER_HI,
+        .hw_msg_buffer_count     = SCISERVER_SECPROXY_INSTANCE_COUNT,
+        .hw_msg_buffer_sz        = SCISERVER_HW_QUEUE_SIZE,
+        .semaphore_id            = SCISERVER_SEMAPHORE_USER_HI,
+    };
+    utdSetMsgHostId.state->state = SCISERVER_TASK_PROCESSING_USER_MSG;
+    /* Passing valid parameters to cover Sciserver_SetMsgHostId function */
+    status = Sciserver_processtask(&utdSetMsgHostId);
+    if (status == CSL_PASS)
+    {
+        sciserverTestStatus += CSL_PASS;
+        SciApp_printf ("Sciserver_processtask: Sciserver_SetMsgHostId Test Passed.\n");
+    }
+    else
+    {
+       sciserverTestStatus += CSL_EFAIL;
+       SciApp_printf ("Sciserver_processtask: Sciserver_SetMsgHostId Test Failed.\n");
+    }
+
+    Sciserver_taskData utdTestFail =
+    {
+        .task_id             = SCISERVER_TASK_USER_HI,
+        .hw_msg_buffer_count = SCISERVER_SECPROXY_INSTANCE_COUNT,
+        .hw_msg_buffer_sz    = SCISERVER_HW_QUEUE_SIZE,
+        .semaphore_id        = SCISERVER_SEMAPHORE_USER_HI,
+    };
+    utdTestFail.state->state = SCISERVER_TASK_PROCESSING_SECURE_MSG;
+    /* Passing task state as SCISERVER_TASK_PROCESSING_SECURE_MSG to cover fail condition in Sciserver_processtask */
+    status = Sciserver_processtask(&utdTestFail);
+    if (status == CSL_EFAIL)
+    {
+        sciserverTestStatus += CSL_PASS;
+        SciApp_printf ("Sciserver_processtask: Negative Arg Test Passed.\n");
+    }
+    else
+    {
+       sciserverTestStatus += CSL_EFAIL;
+       SciApp_printf ("Sciserver_processtask: Negative Arg Test Failed.\n");
+    }
+
+    uint32_t user_hi_msg_buffer[SCISERVER_HW_QUEUE_SIZE] =
+    {
+        2U, 3U  /* Values to update the tisci_flags in the Sciserver_processtask function */
+    };
+    uint32_t user_hi_main_msg_buffer[SCISERVER_HW_QUEUE_SIZE];
+    uint32_t *const user_hi_msg_buffer_list[SCISERVER_SECPROXY_INSTANCE_COUNT] = 
+    {
+        user_hi_msg_buffer,
+        user_hi_main_msg_buffer
+    };
+    Sciserver_taskData utdTisciMsgResponseFail =
+    {
+        .user_msg_data      = (void *)-1,
+        .hw_msg_buffer_list = user_hi_msg_buffer_list
+    };
+    utdTisciMsgResponseFail.state->state                = SCISERVER_TASK_PROCESSING_USER_MSG;
+    utdTisciMsgResponseFail.state->current_buffer_idx   = 1;
+    /* Passing invalid user_msg_data to cover fail condition in Sciserver_TisciMsgResponse function */
+    status = Sciserver_processtask(&utdTisciMsgResponseFail);
+    if (status == CSL_EFAIL)
+    {
+        sciserverTestStatus += CSL_PASS;
+        SciApp_printf ("Sciserver_processtask: Negative Arg Test Passed.\n");
+    }
+    else
+    {
+       sciserverTestStatus += CSL_EFAIL;
+       SciApp_printf ("Sciserver_processtask: Negative Arg Test Failed.\n");
+    }
+
+    uint32_t user_hi_msg_buffer_rmirq[SCISERVER_HW_QUEUE_SIZE] =
+    {
+        TISCI_MSG_RM_IRQ_SET
+    };
+    uint32_t *const user_hi_msg_buffer_list_rmirq[SCISERVER_SECPROXY_INSTANCE_COUNT] = {
+        user_hi_msg_buffer_rmirq,
+        user_hi_main_msg_buffer
+    };
+    Sciserver_taskData utdRmMessage =
+    {
+        .hw_msg_buffer_list = user_hi_msg_buffer_list_rmirq
+    };
+    utdRmMessage.state->state              = SCISERVER_TASK_PROCESSING_USER_MSG;
+    utdRmMessage.state->current_buffer_idx = 0U;
+    utdRmMessage.user_msg_data[0]->host    = TISCI_HOST_ID_DMSC2DM;
+    /* Passing user_msg_data host as TISCI_HOST_ID_DMSC2DM to cover rm message pass conditions in Sciserver_UserProcessMsg function */
+    status = Sciserver_processtask(&utdRmMessage);
+    if (status == CSL_PASS)
+    {
+        sciserverTestStatus += CSL_PASS;
+        SciApp_printf ("Sciserver_processtask: Sciserver_UserProcessMsg Test Passed.\n");
+    }
+    else
+    {
+       sciserverTestStatus += CSL_EFAIL;
+       SciApp_printf ("Sciserver_processtask: Sciserver_UserProcessMsg Test Failed.\n");
+    }
+
+    for(num = 0; num < 12; num++)
+    {
+        uint32_t user_hi_msg_buffer_message_types[SCISERVER_HW_QUEUE_SIZE] =
+        {
+            messageType[num]
+        };
+
+        uint32_t *const user_hi_msg_buffer_list_message_types[SCISERVER_SECPROXY_INSTANCE_COUNT] = {
+            user_hi_msg_buffer_message_types,
+            user_hi_main_msg_buffer
+        };
+        Sciserver_taskData utdUserProcessMsg =
+        {
+            .hw_msg_buffer_list = user_hi_msg_buffer_list_message_types
+        };
+        utdUserProcessMsg.state->state               = SCISERVER_TASK_PROCESSING_USER_MSG;
+        utdUserProcessMsg.state->current_buffer_idx  = 0U;
+        utdUserProcessMsg.user_msg_data[0]->host     = TISCI_HOST_ID_DMSC2DM;
+        /* Passing different message types to Sciserver_UserProcessMsg function to process different message types */
+        status = Sciserver_processtask(&utdUserProcessMsg);
+        if (status == CSL_PASS)
+        {
+            sciserverTestStatus += CSL_PASS;
+            SciApp_printf ("Sciserver_processtask: Sciserver_UserProcessMsg Test Passed.\n");
+        }
+        else
+        {
+        sciserverTestStatus += CSL_EFAIL;
+        SciApp_printf ("Sciserver_processtask: Sciserver_UserProcessMsg Test Failed.\n");
+        }
+    }
+
+    uint32_t user_hi_msg_buffer_rm_message_type[SCISERVER_HW_QUEUE_SIZE] =
+    {
+        messageType[12]
+    };
+
+    uint32_t *const user_hi_msg_buffer_list_rm_message_type[SCISERVER_SECPROXY_INSTANCE_COUNT] = {
+        user_hi_msg_buffer_rm_message_type,
+        user_hi_main_msg_buffer
+    };
+    Sciserver_taskData utdUserProcessRmMsg =
+    {
+        .hw_msg_buffer_list = user_hi_msg_buffer_list_rm_message_type
+    };
+    utdUserProcessRmMsg.state->state               = SCISERVER_TASK_PROCESSING_USER_MSG;
+    utdUserProcessRmMsg.state->current_buffer_idx  = 0U;
+    utdUserProcessRmMsg.user_msg_data[0]->host     = TISCI_HOST_ID_DMSC2DM;
+    /* Passing message type as TISCI_MSG_BOARD_CONFIG_RM to Sciserver_UserProcessMsg function to process rm message type */
+    status = Sciserver_processtask(&utdUserProcessRmMsg);
+    if (status == CSL_EFAIL)
+    {
+        sciserverTestStatus += CSL_PASS;
+        SciApp_printf ("Sciserver_processtask: Sciserver_UserProcessMsg Test Passed.\n");
+    }
+    else
+    {
+    sciserverTestStatus += CSL_EFAIL;
+    SciApp_printf ("Sciserver_processtask: Sciserver_UserProcessMsg Test Failed.\n");
+    }
+
+    return sciserverTestStatus;
+}
+

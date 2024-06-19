@@ -1227,7 +1227,75 @@ SciApp_TestParams_t gSciApp_TestcaseParams[] =
 
         /** testType **/
         (SCI_APP_TEST_TYPE_SANITY)
+    },
+#if defined(BUILD_MCU1_0)
+    {
+        /** enableTest **/
+        SCI_APP_TEST_ENABLE,
+
+        /** testCaseId **/
+        37U,
+
+        /** *reqId **/
+        "PDK-14385",
+
+        /** *testCaseName **/
+        "Sciclient rmIrInpRomMappedTest Testcase",
+
+        /** *userInfo **/
+        "None",
+
+        /** *disableReason **/
+        "None",
+
+        /** *passFailCriteria **/
+        "sciclient rmIrInpRomMapped function should fail when \
+         called with invalid parameters and should pass when \
+         called with valid parameters",
+
+        /** cpuID **/
+        SCI_APP_CORE_TYPE_R5F,
+
+        /** printEnable **/
+        SCI_APP_PRINT_ENABLE,
+
+        /** testType **/
+        (SCI_APP_TEST_TYPE_SANITY)
+    },   
+    {
+        /** enableTest **/
+        SCI_APP_TEST_ENABLE,
+
+        /** testCaseId **/
+        38U,
+
+        /** *reqId **/
+        "PDK-14315",
+
+        /** *testCaseName **/
+        " Sciclient loadFirmware and bootNotification Testcase",
+
+        /** *userInfo **/
+        "None",
+
+        /** *disableReason **/
+        "None",
+
+        /** *passFailCriteria **/
+        "sciclient loadFirmware and bootNotification functions should fail when \
+         called with invalid parameters and should pass when \
+         called with valid parameters",
+
+        /** cpuID **/
+        SCI_APP_CORE_TYPE_R5F,
+
+        /** printEnable **/
+        SCI_APP_PRINT_ENABLE,
+
+        /** testType **/
+        (SCI_APP_TEST_TYPE_NEGATIVE)
     }
+#endif        
 };
 
 /* ========================================================================== */
