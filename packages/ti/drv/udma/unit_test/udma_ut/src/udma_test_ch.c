@@ -1286,3 +1286,63 @@ int32_t UdmaChGetStatsTest(UdmaTestTaskObj *taskObj)
     return retVal;
 }
 
+/*
+ * Test Case Description: Verifies the function Udma_chGetTriggerEvent when
+ * Test scenario 1: Check when instType is UDMA_INST_TYPE_LCDMA_BCDMA
+ */
+int32_t UdmaChGetTriggerEventTest(UdmaTestTaskObj *taskObj)
+{
+    int32_t            retVal = UDMA_SOK;
+    struct Udma_ChObj  chObj;
+    Udma_ChHandle      chHandle;
+    uint32_t           instID;
+    Udma_DrvHandle     drvHandle;
+    Udma_ChPrms        chPrms;
+    uint32_t           chType;
+    Udma_ChRxPrms      rxChPrms;
+    uint32_t           timeout = 0U;
+    uint32_t           trigger;
+
+    GT_1trace(taskObj->traceMask, GT_INFO1,
+              " |TEST INFO|:: Task:%d: UDMA ChGetTriggerEvent Testcase ::\r\n",
+              taskObj->taskId);
+
+    chHandle = &chObj;
+    chType   = UDMA_CH_TYPE_RX;
+    UdmaChPrms_init(&chPrms, chType);
+    instID           = UDMA_TEST_INST_ID_BCDMA_0;
+    drvHandle        = &taskObj->testObj->drvObj[instID];
+    /* CSI Rx module is not power-on state */
+    chPrms.peerChNum = UDMA_PSIL_CH_MCU_CPSW0_RX;
+    retVal           = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
+    UdmaChRxPrms_init(&rxChPrms, chType);
+    if(UDMA_SOK == retVal)
+    {
+        retVal = Udma_chConfigRx(chHandle, &rxChPrms);
+        if(UDMA_SOK == retVal)
+        {
+            retVal = Udma_chEnable(chHandle);
+            if(UDMA_SOK == retVal)
+            {
+                trigger = CSL_UDMAP_TR_FLAGS_TRIGGER_GLOBAL1;
+                retVal  = Udma_chSetChaining(chHandle, chHandle, trigger);
+                if(UDMA_SOK != retVal)
+                {
+                    GT_0trace(taskObj->traceMask, GT_ERR,
+                              " |TEST INFO|:: FAIL:: UDMA:: Udma_chGetTriggerEvent:: Pos::"
+                              " Check when instType is UDMA_INST_TYPE_LCDMA_BCDMA!!\n");
+                    retVal = UDMA_EFAIL;
+                }
+                else
+                {
+                    retVal = UDMA_SOK;
+                }
+                Udma_chDisable(chHandle, timeout);
+                Udma_chBreakChaining(chHandle, chHandle);
+            }
+        }
+        Udma_chClose(chHandle);
+    }
+    
+    return retVal;
+}

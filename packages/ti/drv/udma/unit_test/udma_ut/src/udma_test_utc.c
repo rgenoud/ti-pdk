@@ -1311,3 +1311,103 @@ int32_t UdmaEventProgramSteeringTestNeg(UdmaTestTaskObj *taskObj)
     return retVal;
 }
 
+/*
+ * Test Case Description: Verifies the function Udma_rmAllocExtCh
+ * Test scenario 1: Check when chNum is less than numUtcCh
+ * Test scenario 2: Check Udma_rmAllocExtCh when no resource is available 
+ *                  and chNum is less than numUtcCh
+ * Test scenario 3: Check Udma_rmAllocExtCh when no resource is available
+ */
+int32_t UdmaTestRmAllocExtChNeg(UdmaTestTaskObj *taskObj)
+{
+    int32_t            retVal = UDMA_SOK;
+    struct Udma_ChObj  chObj;
+    Udma_ChHandle      chHandle;
+    struct Udma_DrvObj backUpDrvObj;
+    Udma_DrvHandle     drvHandle;
+    Udma_ChPrms        chPrms;
+    uint32_t           chType;
+  
+    GT_1trace(taskObj->traceMask, GT_INFO1,
+              " |TEST INFO|:: Task:%d: UDMA RmAllocExtCh negative Testcase ::\r\n",
+              taskObj->taskId);
+
+    /* Test scenario 1: Check when chNum is less than numUtcCh */
+    chHandle     = &chObj;
+    chType       = UDMA_CH_TYPE_UTC;
+    backUpDrvObj = taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0];           
+    UdmaChPrms_init(&chPrms, chType);
+    chPrms.utcId = UDMA_UTC_ID_MSMC_DRU0;
+    drvHandle    = &taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0];
+    chPrms.chNum = drvHandle->initPrms.rmInitPrms.numUtcCh[chPrms.utcId] - 1U;
+    retVal       = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
+    if(UDMA_SOK != retVal)
+    {
+        GT_0trace(taskObj->traceMask, GT_ERR,
+                  " |TEST INFO|:: FAIL:: UDMA:: Udma_rmAllocExtCh::Pos::" 
+                  " Check when chNum is less than numUtcCh!!\n");
+        retVal = UDMA_EFAIL;
+    }
+    else 
+    {
+        retVal = UDMA_SOK;
+        Udma_chClose(chHandle);
+    }
+    taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0] = backUpDrvObj; 
+
+    /* Test scenario 2: Check Udma_rmAllocExtCh when no resource is available 
+                        and chNum is less than numUtcCh */
+    if(UDMA_SOK == retVal)
+    {
+        chHandle     = &chObj;
+        chType       = UDMA_CH_TYPE_UTC;
+        backUpDrvObj = taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0];           
+        UdmaChPrms_init(&chPrms, chType);
+        chPrms.utcId = UDMA_UTC_ID_MSMC_DRU0;
+        drvHandle    = &taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0];
+        chPrms.chNum = drvHandle->initPrms.rmInitPrms.numUtcCh[chPrms.utcId] - 1U;
+        drvHandle->utcChFlag[chPrms.utcId][0] = 0U;
+        retVal = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
+        if(UDMA_SOK == retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Udma_rmAllocExtCh::Neg:: Check when" 
+                      " no resource is available and chNum is less than numUtcCh!!\n");
+            retVal = UDMA_EFAIL;
+            Udma_chClose(chHandle);
+        }
+        else 
+        {
+            retVal = UDMA_SOK;
+        }
+        taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0] = backUpDrvObj; 
+    }
+
+    /* Test scenario 3: Check Udma_rmAllocExtCh when no resource is available */
+    if(UDMA_SOK == retVal)
+    {
+        chHandle     = &chObj;
+        chType       = UDMA_CH_TYPE_UTC;
+        backUpDrvObj = taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0];           
+        UdmaChPrms_init(&chPrms, chType);
+        chPrms.utcId = UDMA_UTC_ID_MSMC_DRU0;
+        drvHandle    = &taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0];
+        drvHandle->initPrms.rmInitPrms.numUtcCh[chPrms.utcId] = 0U;
+        retVal = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
+        if(UDMA_SOK == retVal)
+        {
+            GT_0trace(taskObj->traceMask, GT_ERR,
+                      " |TEST INFO|:: FAIL:: UDMA:: Udma_rmAllocExtCh::Neg::" 
+                      " Check when no resource is available!!\n");
+            retVal = UDMA_EFAIL;
+            Udma_chClose(chHandle);
+        }
+        else 
+        {
+            retVal = UDMA_SOK;
+        }
+        taskObj->testObj->drvObj[UDMA_TEST_INST_ID_MAIN_0] = backUpDrvObj; 
+    }
+
+    return retVal;
+}

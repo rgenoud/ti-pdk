@@ -714,6 +714,7 @@ int32_t UdmaTestChGetTdCqRingHandle(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestChGetFqRingNum(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestChSetSwTriggerRegister(UdmaTestTaskObj *taskObj);
 int32_t UdmaChGetStatsTest(UdmaTestTaskObj *taskObj);
+int32_t UdmaChGetTriggerEventTest(UdmaTestTaskObj *taskObj);
 
 /*
  * UDMA Driver Negative test functions
@@ -805,6 +806,7 @@ int32_t UdmaRmAllocRxChTestNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaRmAllocTestNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaRmTranslateCoreIntrInputTestNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaRmSetSharedResRmInitPrmsTestNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaRmTestNeg(UdmaTestTaskObj *taskObj);
 
 /*
  * UDMA SOC specific functions
@@ -887,6 +889,7 @@ int32_t UdmaTestDruGetTriggerRegAddr(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestChPauseDru(UdmaTestTaskObj *taskObj);
 int32_t UdmaDruVhwaTestNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaEventProgramSteeringTestNeg(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestRmAllocExtChNeg(UdmaTestTaskObj *taskObj);
 
 /*
  * UDMA Event negative test functions
