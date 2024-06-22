@@ -438,6 +438,30 @@ int32_t Udma_ringDequeueRaw(Udma_RingHandle ringHandle, uint64_t *phyDescMem);
 int32_t Udma_ringFlushRaw(Udma_RingHandle ringHandle, uint64_t *phyDescMem);
 
 /**
+ *  \brief UDMA Flush all descriptors from a ring when UDMA channel is disabled -
+ *  raw version (Takes all physical pointers).
+ *
+ *  This function will pop the unprocessed descriptors from the the ring (say
+ *  the free ring which is used by UDMA channel).
+ *
+ *  Caution: Dequeuing from a ring (free queue) to which the UDMA reads
+ *  should be performed only when the channel is disabled.
+ *
+ *  Requirement: DOX_REQ_TAG(PDK-14201)
+ *
+ *  \param ringHandle   [IN] UDMA ring handle.
+ *                           This parameter can't be NULL.
+ *  \param phyDescMem   [OUT] Descriptor memory physical pointer read from the
+ *                          ring. This will be NULL if there is
+ *                          nothing to pop from the ring.
+ *  \param retryCnt     [IN] Maximum number of times to perform Dequeue.
+ *                           This should be greater than ring occupancy.
+ *
+ *  \return \ref Udma_ErrorCodes
+ */
+int32_t Udma_ringFlushAll(Udma_RingHandle ringHandle, uint64_t *phyDescMem, uint64_t retryCnt);
+
+/**
  *  \brief UDMA prime descriptor to a exposed/"RING" mode ring - raw version
  *  (Takes all physical pointers). This will write the descriptor to the
  *  ring memory without setting the doorbell (doesn't commit the push).

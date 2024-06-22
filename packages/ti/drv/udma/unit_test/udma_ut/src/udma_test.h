@@ -651,6 +651,7 @@ int32_t udmaTestCslRingAcc(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestCslRing(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestCslRingMonitor(UdmaTestTaskObj *taskObj);
 int32_t udmaTestRingFlushTc(UdmaTestTaskObj *taskObj);
+int32_t udmaTestRingFlushAllTc(UdmaTestTaskObj *taskObj);
 int32_t udmaTestRingEventTc(UdmaTestTaskObj *taskObj);
 int32_t udmaTestRingParamCheckTc(UdmaTestTaskObj *taskObj);
 int32_t udmaTestRingUtilsMemSizeTc(UdmaTestTaskObj *taskObj);

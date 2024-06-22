@@ -447,6 +447,48 @@ int32_t Udma_ringFlushRaw(Udma_RingHandle ringHandle, uint64_t *phyDescMem)
     return (retVal);
 }
 
+int32_t Udma_ringFlushAll(Udma_RingHandle ringHandle, uint64_t *phyDescMem, uint64_t retryCnt)
+{
+    int32_t         retVal = UDMA_SOK;
+    Udma_DrvHandle  drvHandle;
+
+    /* Error check */
+    if((NULL_PTR == ringHandle) ||
+       (UDMA_INIT_DONE != ringHandle->ringInitDone) ||
+       (UDMA_RING_INVALID == ringHandle->ringNum))
+    {
+        retVal = UDMA_EBADARGS;
+    }
+    if(UDMA_SOK == retVal)
+    {
+        drvHandle = ringHandle->drvHandle;
+        if((NULL_PTR == drvHandle) || (UDMA_INIT_DONE != drvHandle->drvInitDone))
+        {
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    if(UDMA_SOK == retVal)
+    {
+        while ((retVal != UDMA_ETIMEOUT) && (retryCnt > 0U))
+        {
+            retVal = drvHandle->ringFlushRaw(drvHandle,ringHandle,phyDescMem);
+            retryCnt -= 1U;
+        }
+        /* ringFlushRaw will return UDMA_ETIMEOUT if ring is empty */
+        if(retVal == UDMA_ETIMEOUT)
+        {
+            retVal = UDMA_SOK;
+        }
+        else
+        {
+            retVal = UDMA_EFAIL;
+        }
+    }
+
+    return (retVal);
+}
+
 void Udma_ringPrime(Udma_RingHandle ringHandle, uint64_t phyDescMem)
 {
     Udma_DrvHandle  drvHandle = ringHandle->drvHandle;
