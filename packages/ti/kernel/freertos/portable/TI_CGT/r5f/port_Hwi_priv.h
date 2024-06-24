@@ -45,7 +45,13 @@ extern "C" {
 
 void HwiP_fiq_handler(void);
 void HwiP_irq_handler(void);
-
+int32_t _system_pre_init(void);
+void HwiP_fiq_handler_c(void);
+void HwiP_prefetch_abort_handler_c(void);
+void HwiP_undefined_handler_c(void);
+void HwiP_data_abort_handler_c(void);
+void HwiP_reserved_handler(void);
+void HwiP_irq_handler_c(void);
 
 #ifdef __cplusplus
 }

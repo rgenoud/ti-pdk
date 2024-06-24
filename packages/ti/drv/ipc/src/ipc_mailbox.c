@@ -487,18 +487,17 @@ static void Ipc_mailboxInternalCallback(uintptr_t arg)
                         /* Call the function with arg */
                         (mbox->fifoTable[n].func)((uint32_t *)parsedMsg, fifo->arg);
                     }
-                    else if((1U == rpMboxMsgRecv) && (numMessages > 1U))
+                    else /* (1U == rpMboxMsgRecv) */
                     {
-                        (mbox->fifoTable[n].func)((uint32_t *)parsedMsg, fifo->arg);
-                    }
-                    else 
-                    {
-                        /*Do Nothing*/
-                    }
-
-                    if((1U == rpMboxMsgRecv) && (NULL != gIpcObject.initPrms.rpMboxMsgFxn))
-                    {
-                        gIpcObject.initPrms.rpMboxMsgFxn(fifo->arg, rpMboxMsg);
+                        if(numMessages > 1U)
+                        {
+                            (mbox->fifoTable[n].func)((uint32_t *)parsedMsg, fifo->arg);
+                        }
+                        
+                        if(NULL != gIpcObject.initPrms.rpMboxMsgFxn)
+                        {
+                            gIpcObject.initPrms.rpMboxMsgFxn(fifo->arg, rpMboxMsg);
+                        }
                     }
                 }
                 else

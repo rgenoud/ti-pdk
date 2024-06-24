@@ -367,7 +367,6 @@ typedef uint32_t CSL_BcdmaDescriptorType;
 
 #define CSL_BCDMA_RXFDQ_CNT             (4U)
 #define CSL_BCDMA_RXFDQ_THRESH_CNT      (4U)
-#define CSL_BCDMA_NO_EVENT              (0xFFFFU)
 
 /** \brief [udmap_only] Receive free descriptor queue threshold information
  *
@@ -478,8 +477,8 @@ typedef struct
     uint32_t                rxThread;             /**< [udmap_only] [IN] Rx channel destination ThreadID mapping */
     uint32_t                flowIdFwRangeStart;   /**< [udmap_only] [IN] Starting flow ID value for firewall check */
     uint32_t                flowIdFwRangeCnt;     /**< [udmap_only] [IN] Number of valid flow ID's starting from flowIdFwRangeStart for firewall check */
-    bool                    bIgnoreShortPkts;     /**< [udmap_only] [IN] This field controls whether or not short packets will be treated as exceptions (false) or ignored (true) for the channel. This field is only used when the channel is in split UTC mode.*/
-    bool                    bIgnoreLongPkts;      /**< [IN] This field controls whether or not long packets will be treated as exceptions (false) or ignored (true) for the channel. This field is only used when the channel is in split UTC mode.*/
+    bool                    bIgnoreShortPkts;     /**< [udmap_only] [IN] This field controls whether or not short packets will be treated as exceptions (BFALSE) or ignored (BTRUE) for the channel. This field is only used when the channel is in split UTC mode.*/
+    bool                    bIgnoreLongPkts;      /**< [IN] This field controls whether or not long packets will be treated as exceptions (BFALSE) or ignored (BTRUE) for the channel. This field is only used when the channel is in split UTC mode.*/
     CSL_BcdmaChanSchedPri   dmaPriority;          /**< [IN] This field selects which scheduling bin the channel will be placed in for bandwidth allocation of the Rx DMA units */
     CSL_BcdmaChanBurstSize  burstSize;            /**< [bcdma_only] [IN] Encoded nominal burst size and alignment for data transfers on this channel (split-rx supports 0=32, 1=64) */
     uint32_t                threadId;             /**< [bcdma_only] [IN] This field contains the (up-to) 16-bit value which will be output on the strm_o_thread_id output during all transactions for this channel */
@@ -763,7 +762,7 @@ extern void CSL_bcdmaInitRxFlowCfg( CSL_BcdmaRxFlowCfg *pFlow );
  *          CSL_EBADARGS = One or more arguments are invalid
  *          CSL_EINVALID_PARAMS = One or more parameters in 'pOpData' are invalid
  */
-extern int32_t CSL_bcdmaChanOp( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanOp chanOp, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData );
+extern int32_t CSL_bcdmaChanOp( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanOp chanOp, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData );
 
 /**
  *  \brief Set performance control parmeters
@@ -779,7 +778,7 @@ extern int32_t CSL_bcdmaChanOp( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanOp chanOp, CSL_
  *
  *  \return None
  */
-extern void CSL_bcdmaSetPerfCtrl( CSL_BcdmaCfg *pCfg, uint32_t rxRetryTimeoutCnt );
+extern void CSL_bcdmaSetPerfCtrl( const CSL_BcdmaCfg *pCfg, uint32_t rxRetryTimeoutCnt );
 
 /**
  *  \brief [udmap_only] Set UTC control parmeters
@@ -1002,11 +1001,11 @@ extern int32_t CSL_bcdmaDisableTxChan( CSL_BcdmaCfg *pCfg, uint32_t chanIdx );
  *
  *  \param pCfg     [IN]    Pointer to the BCDMA configuration structure
  *  \param chanIdx  [IN]    The index of the transmit channel
- *  \param bForce   [IN]    If true, the channel is torn down without attempting
+ *  \param bForce   [IN]    If BTRUE, the channel is torn down without attempting
  *                          to preserve data or wait for events (flushes the
- *                          channel). If false, any packets in flight are
+ *                          channel). If BFALSE, any packets in flight are
  *                          completed prior to the channel being torn down.
- *  \param bWait    [IN]    If true, wait for the teardown operation to complete.
+ *  \param bWait    [IN]    If BTRUE, wait for the teardown operation to complete.
  *                          Otherwise, return immediately.
  *
  *  \return CSL_PASS  = Function executed successfully
@@ -1067,7 +1066,7 @@ extern int32_t CSL_bcdmaTriggerTxChan( CSL_BcdmaCfg *pCfg, uint32_t chanIdx );
  *
  *  \return None
  */
-extern void CSL_bcdmaClearTxChanError( CSL_BcdmaCfg *pCfg, uint32_t chanIdx );
+extern int32_t CSL_bcdmaClearTxChanError( CSL_BcdmaCfg *pCfg, uint32_t chanIdx );
 
 /**
  *  \brief Enable a receive channel.
@@ -1103,11 +1102,11 @@ extern int32_t CSL_bcdmaDisableRxChan( CSL_BcdmaCfg *pCfg, uint32_t chanIdx );
  *
  *  \param pCfg     [IN]    Pointer to the BCDMA configuration structure
  *  \param chanIdx  [IN]    The index of the receive channel
- *  \param bForce   [IN]    If true, the channel is torn down without attempting
+ *  \param bForce   [IN]    If BTRUE, the channel is torn down without attempting
  *                          to preserve data or wait for events (flushes the
- *                          channel). If false, any packets in flight are
+ *                          channel). If BFALSE, any packets in flight are
  *                          completed prior to the channel being torn down.
- *  \param bWait    [IN]    If true, wait for the teardown operation to complete.
+ *  \param bWait    [IN]    If BTRUE, wait for the teardown operation to complete.
  *                          Otherwise, return immediately.
  *
  *  \return CSL_PASS  = Function executed successfully
@@ -1168,7 +1167,7 @@ extern int32_t CSL_bcdmaTriggerRxChan( CSL_BcdmaCfg *pCfg, uint32_t chanIdx );
  *
  *  \return None
  */
-extern void CSL_bcdmaClearRxChanError( CSL_BcdmaCfg *pCfg, uint32_t chanIdx );
+extern int32_t CSL_bcdmaClearRxChanError( CSL_BcdmaCfg *pCfg, uint32_t chanIdx );
 
 /**
  *  \brief [udmap_only] Configure the receive flow ID range firewall
@@ -1189,22 +1188,22 @@ extern void CSL_bcdmaCfgRxFlowIdFirewall( CSL_BcdmaCfg *pCfg, uint32_t outEvtNum
  *  This function returns information from the receive flow ID range firewall.
  *
  *  If the receive flow ID firewall has detected an out of range flow ID,
- *  the function returns true and the fields within the
+ *  the function returns BTRUE and the fields within the
  *  #CSL_BcdmaRxFlowIdFirewallStatus structure contain error details. The
  *  function will automatically reset the receive flow ID firewall to capture
  *  the next error.
  *
  *  If the receive flow ID firewall has not detected an out of range flow ID,
- *  the function returns false and the fields within the
+ *  the function returns BFALSE and the fields within the
  *  #CSL_BcdmaRxFlowIdFirewallStatus structure are not updated.
  *
  *  \param pCfg                 [IN]    Pointer to the BCDMA configuration structure
  *  \param pRxFlowIdFwStatus    [IN]    Pointer to a #CSL_BcdmaRxFlowIdFirewallStatus
  *                                      structure containing error details (valid
- *                                      only when true is returned)
+ *                                      only when UTRUE is returned)
  *
- *  \return true if the receive flow ID range firewall has detected an out of range
- *          flow ID, false if no error was detected
+ *  \return BTRUE if the receive flow ID range firewall has detected an out of range
+ *          flow ID, BFALSE if no error was detected
  */
 extern bool CSL_bcdmaGetRxFlowIdFirewallStatus( CSL_BcdmaCfg *pCfg, CSL_BcdmaRxFlowIdFirewallStatus *pRxFlowIdFwStatus );
 
@@ -1220,7 +1219,7 @@ extern bool CSL_bcdmaGetRxFlowIdFirewallStatus( CSL_BcdmaCfg *pCfg, CSL_BcdmaRxF
  *                                  where the statistics are returned
  *  \return None
  */
-extern void CSL_bcdmaGetChanStats( CSL_BcdmaCfg *pCfg, uint32_t chanIdx, CSL_BcdmaChanDir chanDir, CSL_BcdmaChanStats *pChanStats );
+extern int32_t CSL_bcdmaGetChanStats( CSL_BcdmaCfg *pCfg, uint32_t chanIdx, CSL_BcdmaChanDir chanDir, CSL_BcdmaChanStats *pChanStats );
 
 /**
  *  \brief Decrement channel statistics
@@ -1236,7 +1235,7 @@ extern void CSL_bcdmaGetChanStats( CSL_BcdmaCfg *pCfg, uint32_t chanIdx, CSL_Bcd
  *                                  statistic by
  *  \return None
  */
-extern void CSL_bcdmaDecChanStats( CSL_BcdmaCfg *pCfg, uint32_t chanIdx, CSL_BcdmaChanDir chanDir, const CSL_BcdmaChanStats *pChanStats );
+extern int32_t CSL_bcdmaDecChanStats( CSL_BcdmaCfg *pCfg, uint32_t chanIdx, CSL_BcdmaChanDir chanDir, const CSL_BcdmaChanStats *pChanStats );
 
 /**
  *  \brief Read a channel peer register
@@ -1501,8 +1500,8 @@ struct CSL_BcdmaTdResponse_t
     uint32_t chId;
     /**< Indicates which channel the teardown completed on. */
     uint32_t forced;
-    /**< FALSE: Indicates that the teardown was graceful and data was not lost.
-     *   TRUE : Indicates that the teardown was not graceful and data was
+    /**< UFALSE: Indicates that the teardown was graceful and data was not lost.
+     *   UTRUE : Indicates that the teardown was not graceful and data was
       *  potentially lost */
 } __attribute__((__packed__));
 
@@ -2004,9 +2003,9 @@ static inline void CSL_bcdmaGetTdResponse(uint64_t tdResponseWord,
 {
     if(NULL != pTdResponse)
     {
-        pTdResponse->tdIndicator = CSL_FEXT(tdResponseWord, BCDMA_TD_RESPONSE_TD_INDICATOR);
-        pTdResponse->chId = CSL_FEXT(tdResponseWord, BCDMA_TD_RESPONSE_CHAN_ID);
-        pTdResponse->forced = CSL_FEXT(tdResponseWord, BCDMA_TD_RESPONSE_FORCED);
+        pTdResponse->tdIndicator = ((uint32_t) CSL_FEXT(tdResponseWord, BCDMA_TD_RESPONSE_TD_INDICATOR));
+        pTdResponse->chId =((uint32_t) CSL_FEXT(tdResponseWord, BCDMA_TD_RESPONSE_CHAN_ID));
+        pTdResponse->forced =((uint32_t) CSL_FEXT(tdResponseWord, BCDMA_TD_RESPONSE_FORCED));
     }
 }
 

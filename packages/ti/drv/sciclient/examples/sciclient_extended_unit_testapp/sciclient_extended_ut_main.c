@@ -56,22 +56,33 @@
 #if defined (SOC_J721E)
 #define TISCI_DEV_NAVSS0_MODSS_INTAGG     TISCI_DEV_NAVSS0_MODSS_INTAGGR_0
 #define TISCI_DEV_NAVSS0_INTR             TISCI_DEV_NAVSS0_INTR_ROUTER_0
+#define TISCI_DEV_NAVSS0_MAILBOX          TISCI_DEV_NAVSS0_MAILBOX_0
 #define TISCI_DEV_MCU_NAVSS0_INTR         TISCI_DEV_MCU_NAVSS0_INTR_0
+#define TISCI_DEV_NAVSS0_MODSS_INTAGG1    TISCI_DEV_NAVSS0_MODSS_INTAGGR_1
+#define TISCI_DEV_NAVSS0_UDMASS_INTAGG    TISCI_DEV_NAVSS0_UDMASS_INTAGGR_0
 #elif defined (SOC_J7200)
 #define TISCI_DEV_NAVSS0_MODSS_INTAGG     TISCI_DEV_NAVSS0_MODSS_INTA_0
 #define TISCI_DEV_NAVSS0_INTR             TISCI_DEV_NAVSS0_INTR_ROUTER_0
+#define TISCI_DEV_NAVSS0_MAILBOX          TISCI_DEV_NAVSS0_MAILBOX_0
 #define TISCI_DEV_MCU_NAVSS0_INTR         TISCI_DEV_MCU_NAVSS0_INTR_0
+#define TISCI_DEV_NAVSS0_MODSS_INTAGG1    TISCI_DEV_NAVSS0_MODSS_INTA_1 
+#define TISCI_DEV_NAVSS0_UDMASS_INTAGG    TISCI_DEV_NAVSS0_UDMASS_INTA_0
 #elif defined (SOC_J721S2) || defined (SOC_J784S4)
 #define TISCI_DEV_NAVSS0_MODSS_INTAGG     TISCI_DEV_NAVSS0_MODSS_INTA_0
 #define TISCI_DEV_NAVSS0_INTR             TISCI_DEV_NAVSS0_INTR_0
+#define TISCI_DEV_NAVSS0_MAILBOX          TISCI_DEV_NAVSS0_MAILBOX1_0
 #define TISCI_DEV_MCU_NAVSS0_INTR         TISCI_DEV_MCU_NAVSS0_INTR_ROUTER_0
+#define TISCI_DEV_NAVSS0_MODSS_INTAGG1    TISCI_DEV_NAVSS0_MODSS_INTA_1
+#define TISCI_DEV_NAVSS0_UDMASS_INTAGG    TISCI_DEV_NAVSS0_UDMASS_INTA_0
 #endif
+#define SCICLIENT_APP_DRAM_FWL_ID         (1280U)
 
 /* ========================================================================== */
 /*                            Global Variables                                */
 /* ========================================================================== */
 
 extern Sciclient_ServiceHandle_t gSciclientHandle;
+extern CSL_SecProxyCfg *pSciclient_secProxyCfg;
 
 /* For SafeRTOS on R5F with FFI Support, task stack should be aligned to the stack size */
 /* IMPORTANT NOTE: For C7x,
@@ -112,14 +123,17 @@ static void mainTask(void* arg0, void* arg1);
 static int32_t SciclientApp_pmMessageTest(void);
 static int32_t SciclientApp_directNegTest(void);
 static int32_t SciclientApp_pmMessageNegTest(void);
-static int32_t SciclientApp_boardCfgNegTest(void);
+static int32_t SciclientApp_boardCfgTest(void);
 static int32_t SciclientApp_directFuncTest(void);
 static int32_t SciclientApp_rmUdmapRingPsilProxyPositiveTest(void);
 static int32_t SciclientApp_rmUnmappedVintRouteCreatePositiveTest(void);
+static int32_t SciclientApp_secureProxyNegTest(void);
+static int32_t SciclientApp_rmIrqVintDeleteNegTest(void);
+static int32_t SciclientApp_rmIaValidateEvtTest(void);
+static int32_t SciclientApp_dkekTest(void);
 #endif
 static int32_t SciclientApp_msmcQueryNegTest(void);
 static int32_t SciclientApp_otpProcessKeyCfgNegTest(void);
-static int32_t SciclientApp_dkekNegTest(void);
 static int32_t SciclientApp_firewallNegTest(void);
 static int32_t SciclientApp_prepareHeaderNegTest(void);
 #if defined (SOC_J784S4)
@@ -133,8 +147,7 @@ static int32_t SciclientApp_rmUdmapNegTest(void);
 static int32_t SciclientApp_rmSetProxyNegTest(void);
 static int32_t SciclientApp_procbootNegTest(void);
 static int32_t SciclientApp_rmNegTest(void);
-static int32_t SciclientApp_procbootTest(void);
-static int32_t SciclientApp_procbootFuncNegTest(void);
+static int32_t SciclientApp_procbootPositiveTest(void);
 static int32_t SciclientApp_rmIrqValidParamsNegTest(void);
 static int32_t SciclientApp_rmIrqCfgIsUnmappedVintDirectEventNegTest(void);
 static int32_t SciclientApp_rmIrqCfgIsEventToVintMappingOnlyNegTest(void);
@@ -148,6 +161,10 @@ static int32_t SciclientApp_rmClearInterruptRouteTest(void);
 static int32_t SciclientApp_rmProgramInterruptRouteTest(void);
 static int32_t SciclientApp_rmIrqUnmappedVintRouteDeleteNegTest(void);
 static int32_t SciclientApp_rmIrqFindRouteNegTest(void);
+static int32_t SciclientApp_rmIaVintGetInfoNegTest(void);
+static int32_t SciclientApp_rmIrqIsVintRouteSetNegTest(void);
+static int32_t SciclientApp_firewallPositiveTest(void);
+static int32_t SciclientApp_sciclientMcdcTest(void);
 
 /* ========================================================================== */
 /*                          Function Definitions                              */
@@ -199,9 +216,11 @@ int32_t SciApp_testMain(SciApp_TestParams_t *testParams)
         case 3:
             testParams->testResult = SciclientApp_otpProcessKeyCfgNegTest();
             break;
+#if defined (BUILD_MCU1_0)
         case 4:
-            testParams->testResult = SciclientApp_dkekNegTest();
+            testParams->testResult = SciclientApp_dkekTest();
             break;
+#endif
         case 5:
             testParams->testResult = SciclientApp_firewallNegTest();
             break;
@@ -246,48 +265,66 @@ int32_t SciApp_testMain(SciApp_TestParams_t *testParams)
             testParams->testResult = SciclientApp_rmNegTest();
             break;     
         case 18:
-            testParams->testResult = SciclientApp_procbootTest();
-            break;
-        case 19:
-            testParams->testResult = SciclientApp_procbootFuncNegTest();
+            testParams->testResult = SciclientApp_procbootPositiveTest();
             break;
 #if defined (BUILD_MCU1_0)
-        case 20:
-            testParams->testResult = SciclientApp_boardCfgNegTest();
+        case 19:
+            testParams->testResult = SciclientApp_boardCfgTest();
             break;
 #endif
-        case 21:
+        case 20:
             testParams->testResult = SciclientApp_rmIrqValidParamsNegTest();
             break;
-        case 22:
+        case 21:
             testParams->testResult = SciclientApp_rmTranslateIntOutputTest();
             break;
-        case 23:
+        case 22:
             testParams->testResult = SciclientApp_rmTranslateIrqInputTest();
             break;
-        case 24:  
+        case 23:  
             testParams->testResult = SciclientApp_rmClearInterruptRouteTest();
             break;   
-        case 25:  
+        case 24:  
             testParams->testResult = SciclientApp_rmProgramInterruptRouteTest();
             break;    
-        case 26:
+        case 25:
             testParams->testResult =  SciclientApp_rmIrqUnmappedVintRouteDeleteNegTest();
             break;
-        case 27:
+        case 26:
             testParams->testResult =  SciclientApp_rmIrqFindRouteNegTest();
             break;
 #if defined (BUILD_MCU1_0)
-        case 28:
+        case 27:
             testParams->testResult =  SciclientApp_directFuncTest();
             break;
-        case 29:
+        case 28:
             testParams->testResult =  SciclientApp_rmUdmapRingPsilProxyPositiveTest();
             break;
-        case 30:
+        case 29:
             testParams->testResult =  SciclientApp_rmUnmappedVintRouteCreatePositiveTest();
             break;
+        case 30:
+            testParams->testResult =  SciclientApp_secureProxyNegTest();
+            break;        
+        case 31:
+             testParams->testResult = SciclientApp_rmIrqVintDeleteNegTest();
+             break;
+        case 32:
+             testParams->testResult = SciclientApp_rmIaValidateEvtTest();
+             break;
 #endif
+        case 33:
+             testParams->testResult = SciclientApp_rmIaVintGetInfoNegTest();
+             break;
+        case 34:
+             testParams->testResult = SciclientApp_rmIrqIsVintRouteSetNegTest();
+             break;
+        case 35:
+            testParams->testResult =  SciclientApp_firewallPositiveTest();
+            break;
+        case 36:
+            testParams->testResult =  SciclientApp_sciclientMcdcTest();
+            break;
         default:
             break;
     }
@@ -329,6 +366,7 @@ static int32_t SciclientApp_pmMessageTest(void)
     uint32_t  moduleState          = 0U;
     uint32_t  resetState           = 0U;
     uint32_t  contextLossState     = 0U;
+    uint32_t  reqFlag              = 0U;
     Sciclient_ConfigPrms_t  config =
     {
         SCICLIENT_SERVICE_OPERATION_MODE_POLLED,
@@ -537,6 +575,97 @@ static int32_t SciclientApp_pmMessageTest(void)
             pmMessageTestStatus += CSL_EFAIL;
             SciApp_printf("Sciclient_pmGetModuleState Test Failed.\n");
         }
+        
+        //Reset TISCI_DEV_LED0 module
+        status = Sciclient_pmSetModuleRst(TISCI_DEV_LED0,
+                                          1U,
+                                          SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_PASS)
+        {
+            pmMessageTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_pmSetModuleRst Test Passed.\n");
+        }
+        else
+        {
+            pmMessageTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_pmSetModuleRst Test Failed.\n");
+        }
+        
+        //SetModuleRst_flags for TISCI_DEV_LED0
+        reqFlag = TISCI_MSG_FLAG_ACK;
+        status = Sciclient_pmSetModuleRst_flags(TISCI_DEV_LED0, 0U, reqFlag, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_PASS)
+        {
+            pmMessageTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_pmSetModuleRst_flags Test Passed.\n");
+        }
+        else
+        {
+            pmMessageTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_pmSetModuleRst_flags Test Failed.\n");
+        }
+        
+        //set ClkFreq for TISCI_DEV_UART1 module
+        reqFreq = 100U;
+        status = Sciclient_pmSetModuleClkFreq(TISCI_DEV_UART1,
+                                              TISCI_DEV_UART1_FCLK_CLK,
+                                              reqFreq,
+                                              TISCI_MSG_FLAG_CLOCK_ALLOW_FREQ_CHANGE,
+                                              SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_PASS)
+        {
+            pmMessageTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_pmSetModuleClkFreq Test Passed.\n");
+        }
+        else
+        {
+            pmMessageTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_pmSetModuleClkFreq Test Failed.\n");
+        }
+        
+        //QueryModuleClkFreq for TISCI_DEV_UART1 module
+        reqFreq = 100U;
+        status = Sciclient_pmQueryModuleClkFreq(TISCI_DEV_UART1,
+                                                TISCI_DEV_UART1_FCLK_CLK,
+                                                reqFreq,
+                                                &respFreq,
+                                                SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_PASS)
+        {
+            pmMessageTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_pmQueryModuleClkFreq Test Passed.\n");
+        }
+        else
+        {
+            pmMessageTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_pmQueryModuleClkFreq Test Failed.\n");
+        }
+        
+        //Reset domain group DOMGRP_02
+        status = Sciclient_pmDomainReset(DOMGRP_02, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            pmMessageTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_pmDomainReset Negative Test Passed.\n");
+        }
+        else
+        {
+            pmMessageTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_pmDomainReset Negative Test Failed.\n");
+        }
+        
+        //Check whether TISCI_DEV_UART1 module is valid or not
+        status = Sciclient_pmIsModuleValid(TISCI_DEV_UART1);
+        if (status == CSL_PASS)
+        {
+            pmMessageTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_pmIsModuleValid Test Passed.\n");
+        }
+        else
+        {
+            pmMessageTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_pmIsModuleValid Test Failed.\n");
+        }
     }
     else
     {
@@ -680,11 +809,19 @@ static int32_t SciclientApp_otpProcessKeyCfgNegTest(void)
   return otpProcessKeyTestStatus;
 }
 
-static int32_t SciclientApp_dkekNegTest(void)
+#if defined (BUILD_MCU1_0)
+static int32_t SciclientApp_dkekTest(void)
 {
     int32_t status                = CSL_PASS;
     int32_t sciclientInitStatus   = CSL_PASS;
     int32_t dkekTestStatus        = CSL_PASS;
+    struct tisci_msg_sa2ul_set_dkek_req setDkekReq;
+    struct tisci_msg_sa2ul_set_dkek_resp setDkekResp;
+    struct tisci_msg_sa2ul_get_dkek_req getDkekReq;
+    struct tisci_msg_sa2ul_get_dkek_resp getDkekResp;
+    struct tisci_msg_sa2ul_release_dkek_req releaseDkekReq;
+    struct tisci_msg_sa2ul_release_dkek_resp releaseDkekResp;
+
     Sciclient_ConfigPrms_t config =
     {
        SCICLIENT_SERVICE_OPERATION_MODE_INTERRUPT,
@@ -737,6 +874,52 @@ static int32_t SciclientApp_dkekNegTest(void)
            dkekTestStatus += CSL_EFAIL;
            SciApp_printf("Sciclient_getDKEK: Negative Arg Test Failed.\n");
         }
+
+        /* Passing valid setDkekReq parameters to cover Sciclient_setDKEK */
+        setDkekReq.sa2ul_instance  = 0;
+        setDkekReq.kdf_label_len   = 16;
+        setDkekReq.kdf_context_len = 16;
+        status = Sciclient_setDKEK(&setDkekReq, &setDkekResp, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_PASS)
+        {
+            dkekTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_setDKEK: Positive Arg Test Passed.\n");
+        }
+        else
+        {
+            dkekTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_setDKEK: Positive Arg Test Failed.\n");
+        }
+
+        /* Passing valid getDkekReq parameters to cover Sciclient_getDKEK */
+        getDkekReq.sa2ul_instance  = 0;
+        getDkekReq.kdf_label_len   = 16;
+        getDkekReq.kdf_context_len = 16;
+        status = Sciclient_getDKEK(&getDkekReq, &getDkekResp, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_PASS)
+        {
+            dkekTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_getDKEK: Positive Arg Test Passed.\n");
+        }
+        else
+        {
+            dkekTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_getDKEK: Positive Arg Test Failed.\n");
+        }
+
+        /* Passing valid releaseDkekReq parameters to cover Sciclient_releaseDKEK */
+        releaseDkekReq.sa2ul_instance = 0;
+        status = Sciclient_releaseDKEK(&releaseDkekReq, &releaseDkekResp, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_PASS)
+        {
+            dkekTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_releaseDKEK: Positive Arg Test Passed.\n");
+        }
+        else
+        {
+            dkekTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_releaseDKEK: Positive Arg Test Failed.\n");
+        }
     }
     else
     {
@@ -761,6 +944,7 @@ static int32_t SciclientApp_dkekNegTest(void)
 
   return dkekTestStatus;
 }
+#endif
 
 static int32_t SciclientApp_firewallNegTest(void)
 {
@@ -1880,11 +2064,14 @@ static int32_t SciclientApp_procbootNegTest(void)
     uint32_t ctrlFlagSet          = 1U;
     uint32_t ctrlFlagClr          = 2U;
     uint8_t  numMatchIterations   = 1U;
-    uint8_t  delayPerIterationus  = 10U;
+    uint8_t  delayPerIterations   = 10U;
     uint32_t statusFlagSetAllWait = 1U;
     uint32_t statusFlagSetAnyWait = 2U;
     uint32_t statusFlagClrAllWait = 1U;
     uint32_t statusFlagClrAnyWait = 2U;
+    const struct tisci_msg_proc_set_config_req procSetConfigReq  = {0};
+    const struct tisci_msg_proc_auth_boot_req procAuthBootReq    = {0};
+    struct tisci_msg_proc_get_status_resp procGetStatusResp;
     Sciclient_ConfigPrms_t config =
     {
        SCICLIENT_SERVICE_OPERATION_MODE_INTERRUPT,
@@ -1901,154 +2088,182 @@ static int32_t SciclientApp_procbootNegTest(void)
 
      if(status == CSL_PASS)
      {
-          SciApp_printf ("Sciclient_init PASSED.\n");
-          status = Sciclient_procBootRequestProcessor(invalidProcID, SCICLIENT_SERVICE_WAIT_FOREVER);
-          if(status == CSL_EFAIL)
-          {
-              procbootTestStatus += CSL_PASS;
-              SciApp_printf ("Sciclient_procBootRequestProcessor: Negative Arg Test PASSED \n");
-          }
-          else
-          {
-              procbootTestStatus += CSL_EFAIL;
-              SciApp_printf ("Sciclient_procBootRequestProcessor: Negative Arg Test FAILED \n");
-          }
+        SciApp_printf ("Sciclient_init PASSED.\n");
+        status = Sciclient_procBootRequestProcessor(invalidProcID, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if(status == CSL_EFAIL)
+        {
+            procbootTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_procBootRequestProcessor: Negative Arg Test PASSED \n");
+        }
+        else
+        {
+            procbootTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_procBootRequestProcessor: Negative Arg Test FAILED \n");
+        }
 
-          status = Sciclient_procBootReleaseProcessor(invalidProcID, TISCI_MSG_FLAG_AOP, 
+        status = Sciclient_procBootReleaseProcessor(invalidProcID, TISCI_MSG_FLAG_AOP, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if(status == CSL_EFAIL)
+        {
+            procbootTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_procBootReleaseProcessor: TISCI_MSG_FLAG_AOP Negative Arg Test PASSED \n");
+        }
+        else
+        {
+            procbootTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_procBootReleaseProcessor: TISCI_MSG_FLAG_AOP Negative Arg Test FAILED \n");
+        }
+
+        status = Sciclient_procBootReleaseProcessor(invalidProcID, TISCI_MSG_FLAG_RESERVED0, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if(status == CSL_EFAIL)
+        {
+            procbootTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_procBootReleaseProcessor: TISCI_MSG_FLAG_RESERVED0 Negative Arg Test PASSED \n");
+        }
+        else
+        {
+            procbootTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_procBootReleaseProcessor: TISCI_MSG_FLAG_RESERVED0 Negative Arg Test FAILED \n");
+        }
+
+        status = Sciclient_procBootHandoverProcessor(invalidProcID, TISCI_HOST_ID_MCU_0_R5_1, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if(status == CSL_EFAIL)
+        {
+            procbootTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_procBootHandoverProcessor: Negative Arg Test PASSED \n");
+        }
+        else
+        {
+            procbootTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_procBootHandoverProcessor: Negative Arg Test FAILED \n");
+        }
+
+        status = Sciclient_procBootSetSequenceCtrl(invalidProcID, ctrlFlagSet, ctrlFlagClr, TISCI_MSG_FLAG_AOP, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if(status == CSL_EFAIL)
+        {
+            procbootTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_procBootSetSequenceCtrl: TISCI_MSG_FLAG_AOP Negative Arg Test PASSED \n");
+        }
+        else
+        {
+            procbootTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_procBootSetSequenceCtrl: TISCI_MSG_FLAG_AOP Negative Arg Test FAILED \n");
+        }
+
+        status = Sciclient_procBootSetSequenceCtrl(invalidProcID, ctrlFlagSet, ctrlFlagClr, TISCI_MSG_FLAG_RESERVED0, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if(status == CSL_EFAIL)
+        {
+            procbootTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_procBootSetSequenceCtrl: TISCI_MSG_FLAG_RESERVED0 Negative Arg Test PASSED \n");
+        }
+        else
+        {
+            procbootTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_procBootSetSequenceCtrl: TISCI_MSG_FLAG_RESERVED0 Negative Arg Test FAILED \n");
+        }
+
+        status = Sciclient_procBootSetProcessorCfg(NULL, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if(status == CSL_EFAIL)
+        {
+            procbootTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_procBootSetProcessorCfg: Negative Arg Test PASSED \n");
+        }
+        else
+        {
+            procbootTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_procBootSetProcessorCfg: Negative Arg Test FAILED \n");
+        }
+
+        status = Sciclient_procBootAuthAndStart(NULL, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if(status == CSL_EFAIL)
+        {
+            procbootTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_procBootAuthAndStart: Negative Arg Test PASSED \n");
+        }
+        else
+        {
+            procbootTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_procBootAuthAndStart: Negative Arg Test FAILED \n");
+        }
+
+        status = Sciclient_procBootGetProcessorState(invalidProcID, NULL, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if(status == CSL_EFAIL)
+        {
+            procbootTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_procBootGetProcessorState: Negative Arg Test PASSED \n");
+        }
+        else
+        {
+            procbootTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_procBootGetProcessorState: Negative Arg Test FAILED \n");
+        }
+
+        status = Sciclient_procBootWaitProcessorState(invalidProcID, numMatchIterations, 
+                                                      delayPerIterations,statusFlagSetAllWait, 
+                                                      statusFlagSetAnyWait, statusFlagClrAllWait,
+                                                      statusFlagClrAnyWait, TISCI_MSG_FLAG_AOP, 
                                                       SCICLIENT_SERVICE_WAIT_FOREVER);
-          if(status == CSL_EFAIL)
-          {
-              procbootTestStatus += CSL_PASS;
-              SciApp_printf ("Sciclient_procBootReleaseProcessor: TISCI_MSG_FLAG_AOP Negative Arg Test PASSED \n");
-          }
-          else
-          {
-              procbootTestStatus += CSL_EFAIL;
-              SciApp_printf ("Sciclient_procBootReleaseProcessor: TISCI_MSG_FLAG_AOP Negative Arg Test FAILED \n");
-          }
+        if(status == CSL_EFAIL)
+        {
+            procbootTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_procBootWaitProcessorState: TISCI_MSG_FLAG_AOP Negative Arg Test PASSED \n");
+        }
+        else
+        {
+            procbootTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_procBootWaitProcessorState: TISCI_MSG_FLAG_AOP Negative Arg Test FAILED \n");
+        }
 
-          status = Sciclient_procBootReleaseProcessor(invalidProcID, TISCI_MSG_FLAG_RESERVED0, 
+        status = Sciclient_procBootWaitProcessorState(invalidProcID, numMatchIterations, 
+                                                      delayPerIterations, statusFlagSetAllWait, 
+                                                      statusFlagSetAnyWait, statusFlagClrAllWait,
+                                                      statusFlagClrAnyWait, TISCI_MSG_FLAG_RESERVED0, 
                                                       SCICLIENT_SERVICE_WAIT_FOREVER);
-          if(status == CSL_EFAIL)
-          {
-              procbootTestStatus += CSL_PASS;
-              SciApp_printf ("Sciclient_procBootReleaseProcessor: TISCI_MSG_FLAG_RESERVED0 Negative Arg Test PASSED \n");
-          }
-          else
-          {
-              procbootTestStatus += CSL_EFAIL;
-              SciApp_printf ("Sciclient_procBootReleaseProcessor: TISCI_MSG_FLAG_RESERVED0 Negative Arg Test FAILED \n");
-          }
+        if(status == CSL_EFAIL)
+        {
+            procbootTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_procBootWaitProcessorState: TISCI_MSG_FLAG_RESERVED0 Negative Arg Test PASSED \n");
+        }
+        else
+        {
+            procbootTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_procBootWaitProcessorState: TISCI_MSG_FLAG_RESERVED0 Negative Arg Test FAILED \n");
+        }
 
-          status = Sciclient_procBootHandoverProcessor(invalidProcID, TISCI_HOST_ID_MCU_0_R5_1, 
-                                                       SCICLIENT_SERVICE_WAIT_FOREVER);
-          if(status == CSL_EFAIL)
-          {
-              procbootTestStatus += CSL_PASS;
-              SciApp_printf ("Sciclient_procBootHandoverProcessor: Negative Arg Test PASSED \n");
-          }
-          else
-          {
-              procbootTestStatus += CSL_EFAIL;
-              SciApp_printf ("Sciclient_procBootHandoverProcessor: Negative Arg Test FAILED \n");
-          }
+        status = Sciclient_procBootGetProcessorState(invalidProcID, &procGetStatusResp, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            procbootTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_procBootGetProcessorState: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+            procbootTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_procBootGetProcessorState: Negative Arg Test Failed.\n");
+        }
 
-          status = Sciclient_procBootSetSequenceCtrl(invalidProcID, ctrlFlagSet, 
-                                                     ctrlFlagClr, TISCI_MSG_FLAG_AOP, 
-                                                     SCICLIENT_SERVICE_WAIT_FOREVER);
-          if(status == CSL_EFAIL)
-          {
-              procbootTestStatus += CSL_PASS;
-              SciApp_printf ("Sciclient_procBootSetSequenceCtrl: TISCI_MSG_FLAG_AOP Negative Arg Test PASSED \n");
-          }
-          else
-          {
-              procbootTestStatus += CSL_EFAIL;
-              SciApp_printf ("Sciclient_procBootSetSequenceCtrl: TISCI_MSG_FLAG_AOP Negative Arg Test FAILED \n");
-          }
+        status = Sciclient_procBootSetProcessorCfg(&procSetConfigReq, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            procbootTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_procBootSetProcessorCfg: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+            procbootTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_procBootSetProcessorCfg: Negative Arg Test Failed.\n");
+        }
 
-          status = Sciclient_procBootSetSequenceCtrl(invalidProcID, ctrlFlagSet, 
-                                                     ctrlFlagClr, TISCI_MSG_FLAG_RESERVED0, 
-                                                     SCICLIENT_SERVICE_WAIT_FOREVER);
-          if(status == CSL_EFAIL)
-          {
-              procbootTestStatus += CSL_PASS;
-              SciApp_printf ("Sciclient_procBootSetSequenceCtrl: TISCI_MSG_FLAG_RESERVED0 Negative Arg Test PASSED \n");
-          }
-          else
-          {
-              procbootTestStatus += CSL_EFAIL;
-              SciApp_printf ("Sciclient_procBootSetSequenceCtrl: TISCI_MSG_FLAG_RESERVED0 Negative Arg Test FAILED \n");
-          }
-
-          status = Sciclient_procBootSetProcessorCfg(NULL, SCICLIENT_SERVICE_WAIT_FOREVER);
-          if(status == CSL_EFAIL)
-          {
-              procbootTestStatus += CSL_PASS;
-              SciApp_printf ("Sciclient_procBootSetProcessorCfg: Negative Arg Test PASSED \n");
-          }
-          else
-          {
-              procbootTestStatus += CSL_EFAIL;
-              SciApp_printf ("Sciclient_procBootSetProcessorCfg: Negative Arg Test FAILED \n");
-          }
-
-          status = Sciclient_procBootAuthAndStart(NULL, SCICLIENT_SERVICE_WAIT_FOREVER);
-          if(status == CSL_EFAIL)
-          {
-              procbootTestStatus += CSL_PASS;
-              SciApp_printf ("Sciclient_procBootAuthAndStart: Negative Arg Test PASSED \n");
-          }
-          else
-          {
-              procbootTestStatus += CSL_EFAIL;
-              SciApp_printf ("Sciclient_procBootAuthAndStart: Negative Arg Test FAILED \n");
-          }
-
-          status = Sciclient_procBootGetProcessorState(invalidProcID, NULL, 
-                                                       SCICLIENT_SERVICE_WAIT_FOREVER);
-          if(status == CSL_EFAIL)
-          {
-              procbootTestStatus += CSL_PASS;
-              SciApp_printf ("Sciclient_procBootGetProcessorState: Negative Arg Test PASSED \n");
-          }
-          else
-          {
-              procbootTestStatus += CSL_EFAIL;
-              SciApp_printf ("Sciclient_procBootGetProcessorState: Negative Arg Test FAILED \n");
-          }
-
-          status = Sciclient_procBootWaitProcessorState(invalidProcID, numMatchIterations, 
-                                                        delayPerIterationus,statusFlagSetAllWait, 
-                                                        statusFlagSetAnyWait, statusFlagClrAllWait,
-                                                        statusFlagClrAnyWait, TISCI_MSG_FLAG_AOP, 
-                                                        SCICLIENT_SERVICE_WAIT_FOREVER);
-          if(status == CSL_EFAIL)
-          {
-              procbootTestStatus += CSL_PASS;
-              SciApp_printf ("Sciclient_procBootWaitProcessorState: TISCI_MSG_FLAG_AOP Negative Arg Test PASSED \n");
-          }
-          else
-          {
-              procbootTestStatus += CSL_EFAIL;
-              SciApp_printf ("Sciclient_procBootWaitProcessorState: TISCI_MSG_FLAG_AOP Negative Arg Test FAILED \n");
-          }
-
-          status = Sciclient_procBootWaitProcessorState(invalidProcID, numMatchIterations, 
-                                                        delayPerIterationus, statusFlagSetAllWait, 
-                                                        statusFlagSetAnyWait, statusFlagClrAllWait,
-                                                        statusFlagClrAnyWait, TISCI_MSG_FLAG_RESERVED0, 
-                                                        SCICLIENT_SERVICE_WAIT_FOREVER);
-          if(status == CSL_EFAIL)
-          {
-              procbootTestStatus += CSL_PASS;
-              SciApp_printf ("Sciclient_procBootWaitProcessorState: TISCI_MSG_FLAG_RESERVED0 Negative Arg Test PASSED \n");
-          }
-          else
-          {
-              procbootTestStatus += CSL_EFAIL;
-              SciApp_printf ("Sciclient_procBootWaitProcessorState: TISCI_MSG_FLAG_RESERVED0 Negative Arg Test FAILED \n");
-          }
+        status = Sciclient_procBootAuthAndStart(&procAuthBootReq, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            procbootTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_procBootAuthAndStart: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+            procbootTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_procBootAuthAndStart: Negative Arg Test Failed.\n");
+        }
      }
      else
      {
@@ -2333,12 +2548,12 @@ static int32_t SciclientApp_rmNegTest(void)
     return rmTestStatus;
 }
 
-static int32_t SciclientApp_procbootTest(void)
+static int32_t SciclientApp_procbootPositiveTest(void)
 {
     int32_t  status                      = CSL_PASS;
     int32_t  sciclientInitStatus         = CSL_PASS;
     int32_t  procbootTestStatus          = CSL_PASS;
-    struct tisci_msg_proc_get_status_resp SciApp_ProcStatus;
+    struct tisci_msg_proc_get_status_resp procGetStatusResp;
     Sciclient_ConfigPrms_t SciApp_Config =
     {
        SCICLIENT_SERVICE_OPERATION_MODE_INTERRUPT,
@@ -2368,7 +2583,7 @@ static int32_t SciclientApp_procbootTest(void)
             SciApp_printf ("Sciclient_procBootRequestProcessor: Positive Arg Test Failed.\n");
         }
 
-        status = Sciclient_procBootGetProcessorState(SCICLIENT_PROC_ID_MCU_R5FSS0_CORE0, &SciApp_ProcStatus, SCICLIENT_SERVICE_WAIT_FOREVER);
+        status = Sciclient_procBootGetProcessorState(SCICLIENT_PROC_ID_MCU_R5FSS0_CORE0, &procGetStatusResp, SCICLIENT_SERVICE_WAIT_FOREVER);
         if (status == CSL_PASS)
         {
             procbootTestStatus += CSL_PASS;
@@ -2390,6 +2605,93 @@ static int32_t SciclientApp_procbootTest(void)
         {
             procbootTestStatus += CSL_EFAIL;
             SciApp_printf ("Sciclient_procBootReleaseProcessor: Positive Arg Test Failed.\n");
+        }
+
+        status = Sciclient_procBootRequestProcessor(SCICLIENT_PROC_ID_R5FSS0_CORE0, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if(status == CSL_PASS)
+        {
+            status = Sciclient_procBootGetProcessorState(SCICLIENT_PROC_ID_R5FSS0_CORE0, &procGetStatusResp, SCICLIENT_SERVICE_WAIT_FOREVER);
+            if(status == CSL_PASS)
+            {
+                SciApp_printf ("Sciclient_procBootGetProcessorState: PASSED \n");
+                const struct tisci_msg_proc_set_config_req procSetConfigReq = 
+                {
+                    .processor_id         = procGetStatusResp.processor_id,
+                    .bootvector_lo        = procGetStatusResp.bootvector_lo,
+                    .bootvector_hi        = procGetStatusResp.bootvector_hi,
+                    .config_flags_1_clear = 0,
+                    .config_flags_1_set   = 0
+                };
+                status = Sciclient_procBootSetProcessorCfg(&procSetConfigReq, SCICLIENT_SERVICE_WAIT_FOREVER);
+                if(status == CSL_PASS)
+                {
+                    procbootTestStatus += CSL_PASS;
+                    SciApp_printf ("Sciclient_procBootSetProcessorCfg: Positive Arg Test PASSED \n");
+                }
+                else
+                {
+                    procbootTestStatus += CSL_EFAIL;
+                    SciApp_printf ("Sciclient_procBootSetProcessorCfg: Positive Arg Test FAILED \n");
+                }
+            }
+            else
+            {
+                procbootTestStatus += CSL_EFAIL;
+                SciApp_printf ("Sciclient_procBootGetProcessorState: FAILED \n");
+            }
+
+            status = Sciclient_procBootSetSequenceCtrl(SCICLIENT_PROC_ID_R5FSS0_CORE0, TISCI_MSG_VAL_PROC_BOOT_CTRL_FLAG_R5_CORE_HALT, 0, TISCI_MSG_FLAG_AOP, SCICLIENT_SERVICE_WAIT_FOREVER);
+            if(status == CSL_PASS)
+            {
+                procbootTestStatus += CSL_PASS;
+                SciApp_printf ("Sciclient_procBootSetSequenceCtrl: Positive Arg Test PASSED \n");
+            }
+            else
+            {
+                procbootTestStatus += CSL_EFAIL;
+                SciApp_printf ("Sciclient_procBootSetSequenceCtrl: Positive Arg Test FAILED \n");
+            }
+
+            status = Sciclient_procBootWaitProcessorState(SCICLIENT_PROC_ID_R5FSS0_CORE0, 1, 1, 0, 3, 0, 0, 0, SCICLIENT_SERVICE_WAIT_FOREVER);
+            if(status == CSL_PASS)
+            {
+                procbootTestStatus += CSL_PASS;
+                SciApp_printf ("Sciclient_procBootWaitProcessorState: Positive Arg Test PASSED \n");
+            }
+            else
+            {
+                procbootTestStatus += CSL_EFAIL;
+                SciApp_printf ("Sciclient_procBootWaitProcessorState: Positive Arg Test FAILED \n");
+            }
+
+            status = Sciclient_procBootHandoverProcessor(SCICLIENT_PROC_ID_R5FSS0_CORE0, TISCI_HOST_ID_MAIN_0_R5_1, SCICLIENT_SERVICE_WAIT_FOREVER);
+            if(status == CSL_PASS)
+            {
+                procbootTestStatus += CSL_PASS;
+                SciApp_printf ("Sciclient_procBootHandoverProcessor: Positive Arg Test PASSED \n");
+            }
+            else
+            {
+                procbootTestStatus += CSL_EFAIL;
+                SciApp_printf ("Sciclient_procBootHandoverProcessor: Positive Arg Test FAILED \n");
+            }
+        }
+        else
+        {
+            procbootTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_procBootHandoverProcessor: Positive Arg Test FAILED \n");
+        }
+
+        status = Sciclient_procBootReleaseProcessor(SCICLIENT_PROC_ID_MCU_R5FSS0_CORE0, 0U, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if(status == CSL_PASS)
+        {
+            procbootTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_procBootReleaseProcessor: Positive Arg Test PASSED \n");
+        }
+        else
+        {
+            procbootTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_procBootReleaseProcessor: Positive Arg Test FAILED \n");
         }
     }
     else
@@ -2416,99 +2718,12 @@ static int32_t SciclientApp_procbootTest(void)
      return procbootTestStatus;
 }
 
-static int32_t SciclientApp_procbootFuncNegTest(void)
-{
-    int32_t  status                      = CSL_PASS;
-    int32_t  sciclientInitStatus         = CSL_PASS;
-    int32_t  procbootNegTestStatus       = CSL_PASS;
-    uint8_t  invalidProcId               = 0x81U;
-    struct tisci_msg_proc_get_status_resp SciApp_ProcStatus;
-    const struct tisci_msg_proc_set_config_req SciApp_ConfigReq  = {0};
-    const struct tisci_msg_proc_auth_boot_req SciApp_AuthBootCfg = {0};
-    Sciclient_ConfigPrms_t SciApp_Config =
-    {
-       SCICLIENT_SERVICE_OPERATION_MODE_INTERRUPT,
-       NULL,
-       0 /* isSecure = 0 un secured for all cores */
-    };
-
-     while (gSciclientHandle.initCount != 0)
-     {
-         status = Sciclient_deinit();
-     }
-     status = Sciclient_init(&SciApp_Config);
-     sciclientInitStatus = status;
-
-     if(status == CSL_PASS)
-     {
-        SciApp_printf ("Sciclient_init PASSED.\n");
-
-        status = Sciclient_procBootGetProcessorState(invalidProcId, &SciApp_ProcStatus, SCICLIENT_SERVICE_WAIT_FOREVER);
-        if (status == CSL_EFAIL)
-        {
-            procbootNegTestStatus += CSL_PASS;
-            SciApp_printf ("Sciclient_procBootGetProcessorState: Negative Arg Test Passed.\n");
-        }
-        else
-        {
-            procbootNegTestStatus += CSL_EFAIL;
-            SciApp_printf ("Sciclient_procBootGetProcessorState: Negative Arg Test Failed.\n");
-        }
-
-        status = Sciclient_procBootSetProcessorCfg(&SciApp_ConfigReq, SCICLIENT_SERVICE_WAIT_FOREVER);
-        if (status == CSL_EFAIL)
-        {
-            procbootNegTestStatus += CSL_PASS;
-            SciApp_printf ("Sciclient_procBootSetProcessorCfg: Negative Arg Test Passed.\n");
-        }
-        else
-        {
-            procbootNegTestStatus += CSL_EFAIL;
-            SciApp_printf ("Sciclient_procBootSetProcessorCfg: Negative Arg Test Failed.\n");
-        }
-
-        status = Sciclient_procBootAuthAndStart(&SciApp_AuthBootCfg, SCICLIENT_SERVICE_WAIT_FOREVER);
-        if (status == CSL_EFAIL)
-        {
-            procbootNegTestStatus += CSL_PASS;
-            SciApp_printf ("Sciclient_procBootAuthAndStart: Negative Arg Test Passed.\n");
-        }
-        else
-        {
-            procbootNegTestStatus += CSL_EFAIL;
-            SciApp_printf ("Sciclient_procBootAuthAndStart: Negative Arg Test Failed.\n");
-        }
-    }
-    else
-    {
-        procbootNegTestStatus += CSL_EFAIL;
-        SciApp_printf ("Sciclient_init FAILED.\n");
-    }
-
-    if(sciclientInitStatus == CSL_PASS)
-    {
-        status = Sciclient_deinit();
-        if(status == CSL_PASS)
-        {
-            procbootNegTestStatus += CSL_PASS;
-            SciApp_printf ("Sciclient_deinit PASSED.\n");
-        }
-        else
-        {
-            procbootNegTestStatus += CSL_EFAIL;
-            SciApp_printf ("Sciclient_deinit FAILED.\n");
-        }
-    }
-
-     return procbootNegTestStatus;
-}
-
 #if defined (BUILD_MCU1_0)
-static int32_t SciclientApp_boardCfgNegTest(void)
+static int32_t SciclientApp_boardCfgTest(void)
 {
     int32_t status                = CSL_PASS;
     int32_t sciclientInitStatus   = CSL_PASS;
-    int32_t boardCfgNegTestStatus = CSL_PASS;
+    int32_t boardCfgTestStatus    = CSL_PASS;
     Sciclient_ConfigPrms_t config =
     {
         SCICLIENT_SERVICE_OPERATION_MODE_POLLED,
@@ -2533,30 +2748,82 @@ static int32_t SciclientApp_boardCfgNegTest(void)
         status = Sciclient_boardCfgPm(&pmBoardCfgParams);
         if(status != CSL_PASS)
         {
-            boardCfgNegTestStatus += CSL_PASS;
+            boardCfgTestStatus += CSL_PASS;
             SciApp_printf("Sciclient_boardCfgPm NULL Arg Test PASSED \n");
         }
         else
         {
-            boardCfgNegTestStatus += CSL_EFAIL;
+            boardCfgTestStatus += CSL_EFAIL;
             SciApp_printf("Sciclient_boardCfgPm NULL Arg Test FAILED \n");
         }
 
         status = Sciclient_getDefaultBoardCfgInfo(NULL);
         if(status != CSL_PASS)
         {
-            boardCfgNegTestStatus += CSL_PASS;
+            boardCfgTestStatus += CSL_PASS;
             SciApp_printf("Sciclient_getDefaultBoardCfgInfo NULL Arg Test PASSED \n");
         }
         else
         {
-            boardCfgNegTestStatus += CSL_EFAIL;
+            boardCfgTestStatus += CSL_EFAIL;
             SciApp_printf("Sciclient_getDefaultBoardCfgInfo NULL Arg Test FAILED \n");
+        }
+
+        /* Passing NULL parameter to cover branch in Sciclient_boardCfg */
+        status = Sciclient_boardCfg(NULL);
+        if (status == CSL_PASS)
+        {
+            boardCfgTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_boardCfg NULL Arg Test PASSED \n");
+        }
+        else
+        {
+            boardCfgTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_boardCfg NULL Arg Test FAILED \n");
+        }
+
+        /* Passing NULL parameter to cover branch in Sciclient_boardCfgRm */
+        status = Sciclient_boardCfgRm(NULL);
+        if (status == CSL_PASS)
+        {
+            boardCfgTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_boardCfgRm NULL Arg Test PASSED \n");
+        }
+        else
+        {
+            boardCfgTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_boardCfgRm NULL Arg Test FAILED \n");
+        }
+
+        /* Passing NULL parameter to cover branch in  Sciclient_boardCfgSec */
+        status = Sciclient_boardCfgSec(NULL);
+        if (status == CSL_PASS)
+        {
+            boardCfgTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_boardCfgSec NULL Arg Test PASSED \n");
+        }
+        else
+        {
+            boardCfgTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_boardCfgSec NULL Arg Test FAILED \n");
+        }
+        
+        /* Passing NULL parameter to cover branch in Sciclient_boardCfgPm */
+        status = Sciclient_boardCfgPm(NULL);
+        if (status == CSL_PASS)
+        {
+            boardCfgTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_boardCfgPm NULL Arg Test PASSED \n");
+        }
+        else
+        {
+            boardCfgTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_boardCfgPm NULL Arg Test FAILED \n");
         }
     }
     else
     {
-        boardCfgNegTestStatus += CSL_EFAIL;
+        boardCfgTestStatus += CSL_EFAIL;
         SciApp_printf ("Sciclient_init Failed.\n");
     }
 
@@ -2565,17 +2832,17 @@ static int32_t SciclientApp_boardCfgNegTest(void)
         status = Sciclient_deinit();
         if(status == CSL_PASS)
         {
-            boardCfgNegTestStatus += CSL_PASS;
+            boardCfgTestStatus += CSL_PASS;
             SciApp_printf ("Sciclient_deinit Passed.\n");
         }
         else
         {
-            boardCfgNegTestStatus += CSL_EFAIL;
+            boardCfgTestStatus += CSL_EFAIL;
             SciApp_printf ("Sciclient_deinit Failed.\n");
         }
     }
 
-    return boardCfgNegTestStatus;
+    return boardCfgTestStatus;
 }
 #endif
 
@@ -3004,6 +3271,19 @@ static int32_t SciclientApp_rmTranslateIntOutputTest(void)
             rmTranslateIntOutputTestStatus += CSL_EFAIL;
             SciApp_printf("Sciclient_rmTranslateIntOutput: Negative Arg Test Failed.\n");
         }
+        
+        /* Passing valid IA src_id and invalid dst_dev_id */
+        status = Sciclient_rmTranslateIntOutput(TISCI_DEV_NAVSS0_MODSS_INTAGG, (range).src_start, TISCI_DEV_R5FSS0_CORE1, &dstInput);
+        if (status != CSL_PASS)
+        {
+            rmTranslateIntOutputTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_rmTranslateIntOutput: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+            rmTranslateIntOutputTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_rmTranslateIntOutput: Negative Arg Test Failed.\n");
+        }
     }
     else
     {
@@ -3097,6 +3377,19 @@ static int32_t SciclientApp_rmTranslateIrqInputTest(void)
 
         /* Passing valid src_id, dst_dev_id and invalid dst_input */
         status = Sciclient_rmTranslateIrqInput(TISCI_DEV_R5FSS0_CORE0, (range).dst_end + 1, TISCI_DEV_NAVSS0_INTR, &srcOutput);
+        if (status != CSL_PASS)
+        {
+            rmTranslateIrqInputTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_rmTranslateIrqInput: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+            rmTranslateIrqInputTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_rmTranslateIrqInput: Negative Arg Test Failed.\n");
+        }
+        
+        /* Passing valid IA src_id, dst_dev_id and invalid dst_input */
+        status = Sciclient_rmTranslateIrqInput(TISCI_DEV_NAVSS0_INTR, (range).dst_end + 1, TISCI_DEV_NAVSS0_MODSS_INTAGG, &srcOutput);
         if (status != CSL_PASS)
         {
             rmTranslateIrqInputTestStatus += CSL_PASS;
@@ -3310,6 +3603,21 @@ static int32_t SciclientApp_rmProgramInterruptRouteTest(void)
                 SciApp_printf("Sciclient_rmProgramInterruptRoute: Negative Arg Test Failed.\n");
             } 
         }
+        
+        /* Passing src_id as interrupt aggregator and remaining parameters as invalid covers Sciclient_rmIaIsIa() in sciclient_rmProgramInterruptRoute() */
+        rmIrqSetReq.valid_params = (TISCI_MSG_VALUE_RM_DST_ID_VALID | TISCI_MSG_VALUE_RM_DST_HOST_IRQ_VALID);
+        rmIrqSetReq.src_id       = TISCI_DEV_NAVSS0_MODSS_INTAGG1 ;
+        status = Sciclient_rmProgramInterruptRoute(&rmIrqSetReq, &rmIrqSetResp, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status != CSL_PASS )
+        {
+            rmProgramInterruptRouteTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_rmProgramInterruptRoute: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+           rmProgramInterruptRouteTestStatus += CSL_EFAIL;
+           SciApp_printf("Sciclient_rmProgramInterruptRoute: Negative Arg Test Failed.\n");
+        } 
     }
     else
     {
@@ -4172,7 +4480,761 @@ static int32_t SciclientApp_rmUnmappedVintRouteCreatePositiveTest(void)
 
   return rmUnmappedVintRouteCreatePositiveTestStatus;
 }
+
+static int32_t SciclientApp_secureProxyNegTest(void)
+{
+  int32_t status                      = CSL_PASS;
+  int32_t sciclientInitStatus         = CSL_PASS;
+  int32_t secureProxyTestStatus       = CSL_PASS;
+  uint32_t thread                     = TISCI_SEC_PROXY_MCU_0_R5_0_READ_NOTIFY_THREAD_ID;
+  uint32_t threadAddr                 = 0U;
+  uint32_t regVal                     = 0U;
+  uint32_t gSciclient_maxMsgSizeBytes = 0U;
+  uint32_t timeout                    = 2U;
+  Sciclient_ConfigPrms_t config       =
+  {
+     SCICLIENT_SERVICE_OPERATION_MODE_INTERRUPT,
+     NULL,
+     0 /* isSecure = 0 un secured for all cores */
+  };
+
+  while (gSciclientHandle.initCount != 0)
+  {
+      status = Sciclient_deinit();
+  }
+  status = Sciclient_init(&config);
+  sciclientInitStatus = status;
+
+  if(status == CSL_PASS)
+  {
+      SciApp_printf("Sciclient_init PASSED.\n");
+      
+      /* Setting up MSB in thread value to fail Sciclient_verifyThread() */
+      gSciclient_maxMsgSizeBytes = CSL_secProxyGetMaxMsgSize(pSciclient_secProxyCfg) - CSL_SEC_PROXY_RSVD_MSG_BYTES;
+      threadAddr = CSL_secProxyGetDataAddr(pSciclient_secProxyCfg, thread, 0U) + ((uintptr_t) gSciclient_maxMsgSizeBytes  - (uintptr_t) 4U);
+      regVal = HW_RD_REG32(threadAddr);
+      regVal = regVal | 0x8000000;
+      HW_WR_REG32(threadAddr, regVal);
+      status = Sciclient_verifyThread(thread);
+      if (status == CSL_EFAIL)
+      {
+          secureProxyTestStatus += CSL_PASS;
+          SciApp_printf("Sciclient_verifyThread: Negative Arg Test Passed.\n");
+      }
+      else
+      {
+          secureProxyTestStatus += CSL_EFAIL;
+          SciApp_printf("Sciclient_verifyThread: Negative Arg Test Failed.\n");
+      }
+      
+      /* Less timeout is given */
+      status = Sciclient_waitThread(thread, timeout);
+      if (status == CSL_ETIMEOUT)
+      {
+          secureProxyTestStatus += CSL_PASS;
+          SciApp_printf("Sciclient_waitThread: Negative Arg Test Passed.\n");
+      }
+      else
+      {
+          secureProxyTestStatus += CSL_EFAIL;
+          SciApp_printf("Sciclient_waitThread: Negative Arg Test Failed.\n");
+      }
+      
+      /* 0 timeout is given */
+      status = Sciclient_waitThread(thread, SCICLIENT_SERVICE_NO_WAIT);
+      if (status == CSL_ETIMEOUT)
+      {
+          secureProxyTestStatus += CSL_PASS;
+          SciApp_printf("Sciclient_waitThread: Negative Arg Test Passed.\n");
+      }
+      else
+      {
+          secureProxyTestStatus += CSL_EFAIL;
+          SciApp_printf("Sciclient_waitThread: Negative Arg Test Failed.\n");
+      }
+      
+      /* Few NULL, 0U Arguments and appropriate gSciclient_maxMsgSizeBytes argument is passed
+         to Sciclient_sendMessage */
+      gSciclient_maxMsgSizeBytes = 8U;
+      Sciclient_sendMessage(thread, NULL, 0U, NULL, NULL, 0U, gSciclient_maxMsgSizeBytes);
+  }
+  else
+  {
+      secureProxyTestStatus += CSL_EFAIL;
+      SciApp_printf("Sciclient_init FAILED.\n");
+  }
+  
+  if(sciclientInitStatus == CSL_PASS)
+  {
+      status = Sciclient_deinit();
+      if(status == CSL_PASS)
+      {
+          secureProxyTestStatus += CSL_PASS;
+          SciApp_printf("Sciclient_deinit PASSED.\n");
+      }
+      else
+      {
+          secureProxyTestStatus += CSL_EFAIL;
+          SciApp_printf("Sciclient_deinit FAILED.\n");
+      }
+  }
+
+  return secureProxyTestStatus;
+}
+
+static int32_t SciclientApp_rmIrqVintDeleteNegTest(void)
+{
+    int32_t  status                         = CSL_PASS;
+    int32_t  sciclientInitStatus            = CSL_PASS;
+    int32_t  rmIrqVintDeleteTestStatus      = CSL_PASS;
+    uint16_t intNum                         = 0U;
+    struct tisci_msg_rm_get_resource_range_req Sciclient_ReqVint;
+    struct tisci_msg_rm_get_resource_range_resp Sciclient_ResVint;
+    struct tisci_msg_rm_get_resource_range_req Sciclient_ReqGlobal;
+    struct tisci_msg_rm_get_resource_range_resp Sciclient_ResGlobal;
+    struct tisci_msg_rm_get_resource_range_req Sciclient_ReqIrq;
+    struct tisci_msg_rm_get_resource_range_resp Sciclient_ResIrq;
+    struct tisci_msg_rm_irq_release_resp Sciclient_Resp;
+    Sciclient_ConfigPrms_t config           =
+    {
+       SCICLIENT_SERVICE_OPERATION_MODE_INTERRUPT,
+       NULL,
+       0 /* isSecure = 0 un secured for all cores */
+    };
+
+    while (gSciclientHandle.initCount != 0)
+    {
+        status = Sciclient_deinit();
+    }
+    status = Sciclient_init(&config);
+    sciclientInitStatus = status;
+
+    if(status == CSL_PASS)
+    {
+        SciApp_printf("Sciclient_init PASSED.\n");
+        Sciclient_ReqVint.type       = TISCI_DEV_NAVSS0_UDMASS_INTAGG;
+        Sciclient_ReqVint.subtype    = TISCI_RESASG_SUBTYPE_IA_VINT;
+        status  = Sciclient_rmGetResourceRange(&Sciclient_ReqVint, &Sciclient_ResVint, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if(status == CSL_PASS)
+        {
+            SciApp_printf("Sciclient_rmGetResourceRange() execution is successful for vint\n");
+        }
+        else
+        {
+            SciApp_printf("Sciclient_rmGetResourceRange() execution is failed for vint\n");
+        }
+
+        Sciclient_ReqGlobal.type       = TISCI_DEV_NAVSS0_UDMASS_INTAGG;
+        Sciclient_ReqGlobal.subtype    = TISCI_RESASG_SUBTYPE_GLOBAL_EVENT_SEVT;
+        status  = Sciclient_rmGetResourceRange(&Sciclient_ReqGlobal, &Sciclient_ResGlobal, SCICLIENT_SERVICE_WAIT_FOREVER);    
+        if(status == CSL_PASS)
+        {
+            SciApp_printf("Sciclient_rmGetResourceRange() execution is successful for globalevent\n");
+        }
+        else
+        {
+            SciApp_printf("Sciclient_rmGetResourceRange() execution is failed for globalevent\n");
+        } 
+
+        Sciclient_ReqIrq.type           = TISCI_DEV_NAVSS0_INTR;
+        Sciclient_ReqIrq.subtype        = TISCI_RESASG_SUBTYPE_IR_OUTPUT;
+        Sciclient_ReqIrq.secondary_host = TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST;
+        status  = Sciclient_rmGetResourceRange(&Sciclient_ReqIrq, &Sciclient_ResIrq, SCICLIENT_SERVICE_WAIT_FOREVER);
+
+        if(status == CSL_PASS)
+        {
+            SciApp_printf("Sciclient_rmGetResourceRange() execution is successful\n");
+            status = Sciclient_rmIrqTranslateIrOutput(Sciclient_ReqIrq.type,
+                                                      Sciclient_ResIrq.range_start,
+                                                      TISCI_DEV_MCU_R5FSS0_CORE0,
+                                                      &intNum);
+            if(status == CSL_PASS)
+            {
+                SciApp_printf("Sciclient_rmIrqTranslateIrOutput() execution is successful and host interrupt number is %d\n", intNum);
+                const struct tisci_msg_rm_irq_release_req Sciclient_Req =
+                {
+                    .valid_params          = TISCI_MSG_VALUE_RM_DST_ID_VALID | TISCI_MSG_VALUE_RM_DST_HOST_IRQ_VALID |
+                                             TISCI_MSG_VALUE_RM_IA_ID_VALID | TISCI_MSG_VALUE_RM_VINT_VALID |
+                                             TISCI_MSG_VALUE_RM_GLOBAL_EVENT_VALID | TISCI_MSG_VALUE_RM_VINT_STATUS_BIT_INDEX_VALID,
+                    .src_id                = TISCI_DEV_NAVSS0_MAILBOX,
+                    .src_index             = 0U,
+                    .dst_id                = TISCI_DEV_MCU_R5FSS0_CORE0,
+                    .dst_host_irq          = intNum,
+                    .global_event          = Sciclient_ResGlobal.range_start,
+                    .ia_id                 = TISCI_DEV_NAVSS0_UDMASS_INTAGG,
+                    .vint                  = Sciclient_ResVint.range_start,
+                    .vint_status_bit_index = 0U
+                };
+                /* No events are present for TISCI_DEV_NAVSS0_UDMASS_INTAGG, so Sciclient_rmIrqVintDelete
+                   returns CSL_EBADARGS since no events are there to unmap */
+                status = Sciclient_rmClearInterruptRoute(&Sciclient_Req, &Sciclient_Resp, SCICLIENT_SERVICE_WAIT_FOREVER);
+                if (status == CSL_EBADARGS)
+                {
+                    rmIrqVintDeleteTestStatus += CSL_PASS;
+                    SciApp_printf("Sciclient_rmClearInterruptRoute: rmIrqVintDelete Test Passed.\n");
+                }
+                else
+                {
+                    rmIrqVintDeleteTestStatus += CSL_EFAIL;
+                    SciApp_printf("Sciclient_rmClearInterruptRoute: rmIrqVintDelete Test Failed.\n");
+                }
+            }
+            else
+            {
+                rmIrqVintDeleteTestStatus += CSL_EFAIL;
+                SciApp_printf("Sciclient_rmIrqTranslateIrOutput() has failed\n");
+            }
+        }
+        else
+        {
+            rmIrqVintDeleteTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_rmGetResourceRange() has failed\n");
+        }
+    }
+    else
+    {
+        rmIrqVintDeleteTestStatus += CSL_EFAIL;
+        SciApp_printf("Sciclient_init FAILED.\n");
+    }
+
+    if(sciclientInitStatus == CSL_PASS)
+    {
+        status = Sciclient_deinit();
+        if(status == CSL_PASS)
+        {
+            rmIrqVintDeleteTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_deinit PASSED.\n");
+        }
+        else
+        {
+            rmIrqVintDeleteTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_deinit FAILED.\n");
+        }
+    }
+
+  return rmIrqVintDeleteTestStatus;
+}
+
+static int32_t SciclientApp_rmIaValidateEvtTest(void)
+{
+    int32_t  status                         = CSL_PASS;
+    int32_t  sciclientInitStatus            = CSL_PASS;
+    int32_t  rmIaValidateEvtTestStatus      = CSL_PASS;
+    uint16_t intNum                         = 0U;
+    struct tisci_msg_rm_get_resource_range_req Sciclient_ReqVint;
+    struct tisci_msg_rm_get_resource_range_resp Sciclient_ResVint;
+    struct tisci_msg_rm_get_resource_range_req Sciclient_ReqGlobal;
+    struct tisci_msg_rm_get_resource_range_resp Sciclient_ResGlobal;
+    struct tisci_msg_rm_get_resource_range_req Sciclient_ReqIrq;
+    struct tisci_msg_rm_get_resource_range_resp Sciclient_ResIrq;
+    struct tisci_msg_rm_irq_set_resp Sciclient_Resp;
+    Sciclient_ConfigPrms_t config           =
+    {
+       SCICLIENT_SERVICE_OPERATION_MODE_INTERRUPT,
+       NULL,
+       0 /* isSecure = 0 un secured for all cores */
+    };
+
+    while (gSciclientHandle.initCount != 0)
+    {
+        status = Sciclient_deinit();
+    }
+    status = Sciclient_init(&config);
+    sciclientInitStatus = status;
+
+    if(status == CSL_PASS)
+    {
+        SciApp_printf("Sciclient_init PASSED.\n");
+        Sciclient_ReqVint.type       = TISCI_DEV_MCU_NAVSS0_UDMASS_INTA_0;
+        Sciclient_ReqVint.subtype    = TISCI_RESASG_SUBTYPE_IA_VINT;
+        status  = Sciclient_rmGetResourceRange(&Sciclient_ReqVint, &Sciclient_ResVint, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if(status == CSL_PASS)
+        {
+            SciApp_printf("Sciclient_rmGetResourceRange() execution is successful for vint\n");
+        }
+        else
+        {
+            SciApp_printf("Sciclient_rmGetResourceRange() execution is failed for vint\n");
+        }
+
+        Sciclient_ReqGlobal.type       = TISCI_DEV_MCU_NAVSS0_UDMASS_INTA_0;
+        Sciclient_ReqGlobal.subtype    = TISCI_RESASG_SUBTYPE_GLOBAL_EVENT_SEVT;
+        status  = Sciclient_rmGetResourceRange(&Sciclient_ReqGlobal, &Sciclient_ResGlobal, SCICLIENT_SERVICE_WAIT_FOREVER);    
+        if(status == CSL_PASS)
+        {
+            SciApp_printf("Sciclient_rmGetResourceRange() execution is successful for globalevent\n");
+        }
+        else
+        {
+            SciApp_printf("Sciclient_rmGetResourceRange() execution is failed for globalevent\n");
+        } 
+
+        Sciclient_ReqIrq.type           = TISCI_DEV_MCU_NAVSS0_INTR;
+        Sciclient_ReqIrq.subtype        = TISCI_RESASG_SUBTYPE_IR_OUTPUT;
+        Sciclient_ReqIrq.secondary_host = TISCI_MSG_VALUE_RM_UNUSED_SECONDARY_HOST;
+        status  = Sciclient_rmGetResourceRange(&Sciclient_ReqIrq, &Sciclient_ResIrq, SCICLIENT_SERVICE_WAIT_FOREVER);  
+        if(status == CSL_PASS)
+        {
+            SciApp_printf("Sciclient_rmGetResourceRange() execution is successful\n");
+            status = Sciclient_rmIrqTranslateIrOutput(Sciclient_ReqIrq.type, Sciclient_ResIrq.range_start, TISCI_DEV_MCU_R5FSS0_CORE0, &intNum);
+            if(status == CSL_PASS)
+            {
+                const struct tisci_msg_rm_irq_set_req Sciclient_Req =
+                {
+                    .valid_params          = TISCI_MSG_VALUE_RM_DST_ID_VALID | TISCI_MSG_VALUE_RM_DST_HOST_IRQ_VALID |
+                                             TISCI_MSG_VALUE_RM_IA_ID_VALID | TISCI_MSG_VALUE_RM_VINT_VALID |
+                                             TISCI_MSG_VALUE_RM_GLOBAL_EVENT_VALID | TISCI_MSG_VALUE_RM_VINT_STATUS_BIT_INDEX_VALID,
+                    .src_id                = TISCI_DEV_MCU_NAVSS0_MCRC_0,
+                    .src_index             = 0U,
+                    .dst_id                = TISCI_DEV_MCU_R5FSS0_CORE0,
+                    .dst_host_irq          = intNum,
+                    .global_event          = Sciclient_ResGlobal.range_start + Sciclient_ResGlobal.range_num + 16400U, /* Invalid global event value for TISCI_DEV_MCU_NAVSS0_UDMASS_INTA_0 */
+                    .ia_id                 = TISCI_DEV_MCU_NAVSS0_UDMASS_INTA_0,
+                    .vint                  = Sciclient_ResVint.range_start,
+                    .vint_status_bit_index = 0U
+                };
+                /* Passing invalid global event value to cover Sciclient_rmIaEvtRomMapped function from Sciclient_rmIaValidateEvt */
+                status = Sciclient_rmProgramInterruptRoute(&Sciclient_Req, &Sciclient_Resp, SCICLIENT_SERVICE_WAIT_FOREVER);
+                if (status == CSL_EFAIL)
+                {
+                    rmIaValidateEvtTestStatus += CSL_PASS;
+                    SciApp_printf("Sciclient_rmProgramInterruptRoute: Valid Arg Test Passed.\n");
+                }
+                else
+                {
+                    rmIaValidateEvtTestStatus += CSL_EFAIL;
+                    SciApp_printf("Sciclient_rmProgramInterruptRoute: Valid Arg Test Failed.\n");
+                }
+                const struct tisci_msg_rm_irq_set_req Sciclient_Req1 =
+                {
+                    .valid_params          = TISCI_MSG_VALUE_RM_DST_ID_VALID | TISCI_MSG_VALUE_RM_DST_HOST_IRQ_VALID |
+                                             TISCI_MSG_VALUE_RM_IA_ID_VALID | TISCI_MSG_VALUE_RM_VINT_VALID |
+                                             TISCI_MSG_VALUE_RM_GLOBAL_EVENT_VALID | TISCI_MSG_VALUE_RM_VINT_STATUS_BIT_INDEX_VALID,
+                    .src_id                = TISCI_DEV_MCU_NAVSS0_MCRC_0,
+                    .src_index             = 0U,
+                    .dst_id                = TISCI_DEV_MCU_R5FSS0_CORE0,
+                    .dst_host_irq          = intNum,
+                    .global_event          = Sciclient_ResGlobal.range_start,
+                    .ia_id                 = TISCI_DEV_MCU_NAVSS0_UDMASS_INTA_0,
+                    .vint                  = Sciclient_ResVint.range_start,
+                    .vint_status_bit_index = 0U
+                };
+                /* Passing these parameters can cover Sciclient_rmIaValidateEvt badargs condition */
+                status = Sciclient_rmProgramInterruptRoute(&Sciclient_Req1, &Sciclient_Resp, SCICLIENT_SERVICE_WAIT_FOREVER);
+                if (status == CSL_EFAIL)
+                {
+                    rmIaValidateEvtTestStatus += CSL_PASS;
+                    SciApp_printf("Sciclient_rmProgramInterruptRoute: Arg Test Passed.\n");
+                }
+                else
+                {
+                    rmIaValidateEvtTestStatus += CSL_EFAIL;
+                    SciApp_printf("Sciclient_rmProgramInterruptRoute: Arg Test Failed.\n");
+                }
+            }
+            else
+            {
+                rmIaValidateEvtTestStatus += CSL_EFAIL;
+                SciApp_printf("Sciclient_rmIrqTranslateIrOutput() has failed\n");
+            }
+        }
+        else
+        {
+            rmIaValidateEvtTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_rmGetResourceRange() has failed\n");
+        }
+    }
+    else
+    {
+        rmIaValidateEvtTestStatus += CSL_EFAIL;
+        SciApp_printf("Sciclient_init FAILED.\n");
+    }
+
+    if(sciclientInitStatus == CSL_PASS)
+    {
+        status = Sciclient_deinit();
+        if(status == CSL_PASS)
+        {
+            rmIaValidateEvtTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_deinit PASSED.\n");
+        }
+        else
+        {
+            rmIaValidateEvtTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_deinit FAILED.\n");
+        }
+    }
+
+  return rmIaValidateEvtTestStatus;
+}
 #endif
+
+static int32_t SciclientApp_rmIaVintGetInfoNegTest(void)
+{
+    int32_t  status                                     = CSL_PASS;
+    int32_t  sciclientInitStatus                        = CSL_PASS;
+    int32_t  rmIaVintGetInfoTestStatus                  = CSL_PASS;
+    const struct tisci_msg_rm_irq_set_req Sciclient_Req =
+    {
+        .valid_params   = TISCI_MSG_VALUE_RM_DST_ID_VALID | TISCI_MSG_VALUE_RM_DST_HOST_IRQ_VALID |
+                          TISCI_MSG_VALUE_RM_IA_ID_VALID | TISCI_MSG_VALUE_RM_VINT_VALID,
+        .ia_id          = TISCI_DEV_MCU_NAVSS0_UDMASS_INTA_0,
+        .vint           = 300U /* Invalid vint value for TISCI_DEV_MCU_NAVSS0_UDMASS_INTA_0 */
+    };
+    struct tisci_msg_rm_irq_set_resp Sciclient_Resp;
+    Sciclient_ConfigPrms_t config =
+    {
+       SCICLIENT_SERVICE_OPERATION_MODE_INTERRUPT,
+       NULL,
+       0 /* isSecure = 0 un secured for all cores */
+    };
+
+     while (gSciclientHandle.initCount != 0)
+     {
+         status = Sciclient_deinit();
+     }
+     status = Sciclient_init(&config);
+     sciclientInitStatus = status;
+
+     if(status == CSL_PASS)
+     {
+        SciApp_printf("Sciclient_init PASSED.\n");
+        /* Passing invalid vint value(greater than the vint value of ia_id) to cover the badargs condition for Sciclient_rmIaVintGetInfo */
+        status = Sciclient_rmProgramInterruptRoute(&Sciclient_Req, &Sciclient_Resp, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EBADARGS)
+        {
+            rmIaVintGetInfoTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_rmProgramInterruptRoute: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+            rmIaVintGetInfoTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_rmProgramInterruptRoute: Negative Arg Test Failed.\n");
+        }
+    }
+    else
+    {
+        rmIaVintGetInfoTestStatus += CSL_EFAIL;
+        SciApp_printf("Sciclient_init FAILED.\n");
+    }
+
+    if(sciclientInitStatus == CSL_PASS)
+    {
+        status = Sciclient_deinit();
+        if(status == CSL_PASS)
+        {
+            rmIaVintGetInfoTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_deinit PASSED.\n");
+        }
+        else
+        {
+            rmIaVintGetInfoTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_deinit FAILED.\n");
+        }
+    }
+
+  return rmIaVintGetInfoTestStatus;
+}
+
+static int32_t SciclientApp_rmIrqIsVintRouteSetNegTest(void)
+{
+    int32_t  status                                     = CSL_PASS;
+    int32_t  sciclientInitStatus                        = CSL_PASS;
+    int32_t  rmIrqIsVintRouteSetTestStatus              = CSL_PASS;
+    const struct tisci_msg_rm_irq_set_req Sciclient_Req =
+    {
+        .valid_params   = TISCI_MSG_VALUE_RM_DST_ID_VALID | TISCI_MSG_VALUE_RM_DST_HOST_IRQ_VALID |
+                          TISCI_MSG_VALUE_RM_IA_ID_VALID | TISCI_MSG_VALUE_RM_VINT_VALID |
+                          TISCI_MSG_VALUE_RM_GLOBAL_EVENT_VALID | TISCI_MSG_VALUE_RM_VINT_STATUS_BIT_INDEX_VALID,
+        .ia_id          = TISCI_DEV_NAVSS0_MODSS_INTAGG,
+        .vint           = 200U /* Invalid vint value for TISCI_DEV_NAVSS0_MODSS_INTAGG */
+    };
+    struct tisci_msg_rm_irq_set_resp Sciclient_Resp;
+    Sciclient_ConfigPrms_t config =
+    {
+       SCICLIENT_SERVICE_OPERATION_MODE_INTERRUPT,
+       NULL,
+       0 /* isSecure = 0 un secured for all cores */
+    };
+
+     while (gSciclientHandle.initCount != 0)
+     {
+         status = Sciclient_deinit();
+     }
+     status = Sciclient_init(&config);
+     sciclientInitStatus = status;
+
+     if(status == CSL_PASS)
+     {
+        SciApp_printf("Sciclient_init PASSED.\n");
+        /* "IR input tied to the IA VINT is in use" check will fail by passing invalid vint value to Sciclient_rmIrqIsVintRouteSet */
+        status = Sciclient_rmProgramInterruptRoute(&Sciclient_Req, &Sciclient_Resp, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_EFAIL)
+        {
+            rmIrqIsVintRouteSetTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_rmProgramInterruptRoute: Negative Arg Test Passed.\n");
+        }
+        else
+        {
+            rmIrqIsVintRouteSetTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_rmProgramInterruptRoute: Negative Arg Test Failed.\n");
+        }
+    }
+    else
+    {
+        rmIrqIsVintRouteSetTestStatus += CSL_EFAIL;
+        SciApp_printf("Sciclient_init FAILED.\n");
+    }
+
+    if(sciclientInitStatus == CSL_PASS)
+    {
+        status = Sciclient_deinit();
+        if(status == CSL_PASS)
+        {
+            rmIrqIsVintRouteSetTestStatus += CSL_PASS;
+            SciApp_printf("Sciclient_deinit PASSED.\n");
+        }
+        else
+        {
+            rmIrqIsVintRouteSetTestStatus += CSL_EFAIL;
+            SciApp_printf("Sciclient_deinit FAILED.\n");
+        }
+    }
+
+  return rmIrqIsVintRouteSetTestStatus;
+}
+
+static int32_t SciclientApp_firewallPositiveTest(void)
+{
+    int32_t status                       = CSL_PASS;
+    int32_t sciclientInitStatus          = CSL_PASS;
+    int32_t firewallPositiveTestStatus   = CSL_PASS;
+    struct tisci_msg_fwl_get_firewall_region_resp getFirewallRegionResp;
+    struct tisci_msg_fwl_get_firewall_region_req getFirewallRegionReq =
+    {
+        .fwl_id            = SCICLIENT_APP_DRAM_FWL_ID,
+        .region            = 0,
+        .n_permission_regs = 3
+    };
+    Sciclient_ConfigPrms_t SciApp_Config =
+    {
+       SCICLIENT_SERVICE_OPERATION_MODE_INTERRUPT,
+       NULL,
+       0 /* isSecure = 0 un secured for all cores */
+    };
+
+    while (gSciclientHandle.initCount != 0U)
+    {
+        status = Sciclient_deinit();
+    }
+    status = Sciclient_init(&SciApp_Config);
+    sciclientInitStatus = status;
+
+    if(status == CSL_PASS)
+    {
+        SciApp_printf ("Sciclient_init PASSED.\n");
+        status = Sciclient_firewallGetRegion(&getFirewallRegionReq, &getFirewallRegionResp, SCICLIENT_SERVICE_WAIT_FOREVER);
+        if (status == CSL_PASS)
+        {
+            firewallPositiveTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_firewallGetRegion: Positive Arg Test Passed.\n");
+        }
+        else
+        {
+            firewallPositiveTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_firewallGetRegion: Positive Arg Test Failed.\n");
+        }
+
+     }
+     else
+     {
+         firewallPositiveTestStatus += CSL_EFAIL;
+         SciApp_printf ("Sciclient_init FAILED.\n");
+     }
+
+    if(sciclientInitStatus == CSL_PASS)
+    {
+        status = Sciclient_deinit();
+        if(status == CSL_PASS)
+        {
+            firewallPositiveTestStatus += CSL_PASS;
+            SciApp_printf ("Sciclient_deinit PASSED.\n");
+        }
+        else
+        {
+            firewallPositiveTestStatus += CSL_EFAIL;
+            SciApp_printf ("Sciclient_deinit FAILED.\n");
+        }
+    }
+
+   return firewallPositiveTestStatus;
+}
+
+static int32_t SciclientApp_sciclientMcdcTest(void)
+{
+  int32_t  status               = CSL_PASS;
+  int32_t  sciclientInitStatus  = CSL_PASS;
+  int32_t  sciclientTestStatus  = CSL_PASS;
+  Sciclient_ConfigPrms_t config =
+  {
+     SCICLIENT_SERVICE_OPERATION_MODE_POLLED,
+     NULL,
+     0 /* isSecure = 0 un secured for all cores */
+  };
+  Sciclient_ReqPrm_t reqPrms;
+  Sciclient_RespPrm_t respPrms;
+  while (gSciclientHandle.initCount != 0)
+  {
+      status = Sciclient_deinit();
+  }
+  status = Sciclient_init(&config);
+  sciclientInitStatus = status;
+
+  if(status == CSL_PASS)
+  {
+      SciApp_printf("Sciclient_init PASSED.\n");
+      
+      //setting up PM and RM boardcfg parameters
+#if defined(BUILD_MCU1_0)
+  Sciclient_BoardCfgPrms_t  pmBoardCfgParams = {
+        .boardConfigLow  = SCICLIENT_ALLOWED_BOARDCFG_BASE_START - 1U,
+        .boardConfigHigh = 0U,
+        .boardConfigSize = SCICLIENT_BOARDCFG_PM_SIZE_IN_BYTES,
+        .devGrp          = DEVGRP_ALL
+  };
+  Sciclient_BoardCfgPrms_t rmBoardCfgParams =  {
+        .boardConfigLow  = SCICLIENT_ALLOWED_BOARDCFG_BASE_START,
+        .boardConfigHigh = 0,
+        .boardConfigSize = SCICLIENT_BOARDCFG_RM_SIZE_IN_BYTES,
+        .devGrp          = DEVGRP_ALL  
+  };
+      status = Sciclient_boardCfgPm(&pmBoardCfgParams);
+      if(status == CSL_PASS)
+      {
+          sciclientTestStatus += CSL_PASS;
+          SciApp_printf("Sciclient_boardCfgPm(): Execution successful\n");
+      }
+      else
+      {
+          sciclientTestStatus += CSL_EFAIL;
+          SciApp_printf("Sciclient_boardCfgPm(): Execution failed\n");
+      }
+      
+      status = Sciclient_boardCfgRm(&rmBoardCfgParams);
+      if(status == CSL_PASS)
+      {
+          sciclientTestStatus += CSL_PASS;
+          SciApp_printf("Sciclient_boardCfgRm(): Execution successful\n");
+      }
+      else
+      {
+          sciclientTestStatus += CSL_EFAIL;
+          SciApp_printf("Sciclient_boardCfgRm(): Execution failed\n");
+      }
+      
+      status = Sciclient_configPrmsInit(&config);
+      if(status == CSL_PASS)
+      {
+          sciclientTestStatus += CSL_PASS;
+          SciApp_printf("Sciclient_configPrmsInit test Passed\n");
+      }
+      else
+      {
+          sciclientTestStatus += CSL_EFAIL;
+          SciApp_printf("Sciclient_configPrmsInit test Failed\n");
+      }          
+#endif
+          
+          //passing invalid arguments
+          while (gSciclientHandle.initCount != 0)
+          {
+              status = Sciclient_deinit();
+          }
+          config.opModeFlag = 2U;
+          status = Sciclient_init(&config);
+          if(status == CSL_EBADARGS)
+          {
+              sciclientTestStatus += CSL_PASS;
+              SciApp_printf("Sciclient_init Negative test Passed\n");
+          }
+          else
+          {
+              sciclientTestStatus += CSL_EFAIL;
+              SciApp_printf("Sciclient_init Negative test Failed\n");
+          }
+          
+          while (gSciclientHandle.initCount != 0)
+          {
+              status = Sciclient_deinit();
+          }
+          config.opModeFlag = SCICLIENT_SERVICE_OPERATION_MODE_POLLED;
+          config.isSecureMode = 2U;
+          status = Sciclient_init(&config);
+          if(status == CSL_EBADARGS)
+          {
+              sciclientTestStatus += CSL_PASS;
+              SciApp_printf("Sciclient_init Negative test Passed\n");
+          }
+          else
+          {
+              sciclientTestStatus += CSL_EFAIL;
+              SciApp_printf("Sciclient_init Negative test Failed\n");
+          }
+          
+          //passing NULL argument
+          while (gSciclientHandle.initCount != 0)
+          {
+              status = Sciclient_deinit();
+          }
+          status = Sciclient_serviceSecureProxy(&reqPrms, NULL);
+          if(status == CSL_EBADARGS)
+          {
+              sciclientTestStatus += CSL_PASS;
+              SciApp_printf("Sciclient_serviceGetPayloadSize Negative test Passed\n");
+          }
+          else
+          {
+              sciclientTestStatus += CSL_EFAIL;
+              SciApp_printf("Sciclient_serviceGetPayloadSize Negative test Failed\n");
+          }
+          
+          reqPrms.pReqPayload = NULL;
+          reqPrms.reqPayloadSize = sizeof(reqPrms.pReqPayload);
+          status = Sciclient_serviceSecureProxy(&reqPrms, &respPrms);
+          if(status == CSL_EBADARGS)
+          {
+              sciclientTestStatus += CSL_PASS;
+              SciApp_printf("Sciclient_serviceGetPayloadSize Negative test Passed\n");
+          }
+          else
+          {
+              sciclientTestStatus += CSL_EFAIL;
+              SciApp_printf("Sciclient_serviceGetPayloadSize Negative test Failed\n");
+          }
+  }
+  else
+  {
+      sciclientTestStatus += CSL_EFAIL;
+      SciApp_printf("Sciclient_init FAILED.\n");
+  }
+
+  if(sciclientInitStatus == CSL_PASS)
+  {
+      status = Sciclient_deinit();
+      if(status == CSL_PASS)
+      {
+          sciclientTestStatus += CSL_PASS;
+          SciApp_printf("Sciclient_deinit PASSED.\n");
+      }
+      else
+      {
+          sciclientTestStatus += CSL_EFAIL;
+          SciApp_printf("Sciclient_deinit FAILED.\n");
+      }
+  }
+
+  return sciclientTestStatus;
+}
 
 #if defined(BUILD_MPU) || defined (BUILD_C7X)
 extern void Osal_initMmuDefault(void);

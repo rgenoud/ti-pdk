@@ -464,8 +464,8 @@ typedef struct
     uint32_t                rxThread;             /**< [IN] Rx channel destination ThreadID mapping */
     uint32_t                flowIdFwRangeStart;   /**< [IN] Starting flow ID value for firewall check */
     uint32_t                flowIdFwRangeCnt;     /**< [IN] Number of valid flow ID's starting from flowIdFwRangeStart for firewall check */
-    bool                    bIgnoreShortPkts;     /**< [IN] This field controls whether or not short packets will be treated as exceptions (false) or ignored (true) for the channel. This field is only used when the channel is in split UTC mode.*/
-    bool                    bIgnoreLongPkts;      /**< [IN] This field controls whether or not long packets will be treated as exceptions (false) or ignored (true) for the channel. This field is only used when the channel is in split UTC mode.*/
+    bool                    bIgnoreShortPkts;     /**< [IN] This field controls whether or not short packets will be treated as exceptions (BFALSE) or ignored (BTRUE) for the channel. This field is only used when the channel is in split UTC mode.*/
+    bool                    bIgnoreLongPkts;      /**< [IN] This field controls whether or not long packets will be treated as exceptions (BFALSE) or ignored (BTRUE) for the channel. This field is only used when the channel is in split UTC mode.*/
     CSL_UdmapChanSchedPri   dmaPriority;          /**< [IN] This field selects which scheduling bin the channel will be placed in for bandwidth allocation of the Rx DMA units */
 } CSL_UdmapRxChanCfg;
 
@@ -861,11 +861,11 @@ extern int32_t CSL_udmapDisableTxChan( CSL_UdmapCfg *pCfg, uint32_t chanIdx );
  *
  *  \param pCfg     [IN]    Pointer to the UDMAP configuration structure
  *  \param chanIdx  [IN]    The index of the transmit channel
- *  \param bForce   [IN]    If true, the channel is torn down without attempting
+ *  \param bForce   [IN]    If BTRUE, the channel is torn down without attempting
  *                          to preserve data or wait for events (flushes the
- *                          channel). If false, any packets in flight are
+ *                          channel). If BFALSE, any packets in flight are
  *                          completed prior to the channel being torn down.
- *  \param bWait    [IN]    If true, wait for the teardown operation to complete.
+ *  \param bWait    [IN]    If BTRUE, wait for the teardown operation to complete.
  *                          Otherwise, return immediately.
  *
  *  \return 0 = Success, -1 = Operation prohibited (channel is disabled)
@@ -956,11 +956,11 @@ extern int32_t CSL_udmapDisableRxChan( CSL_UdmapCfg *pCfg, uint32_t chanIdx );
  *
  *  \param pCfg     [IN]    Pointer to the UDMAP configuration structure
  *  \param chanIdx  [IN]    The index of the receive channel
- *  \param bForce   [IN]    If true, the channel is torn down without attempting
+ *  \param bForce   [IN]    If BTRUE, the channel is torn down without attempting
  *                          to preserve data or wait for events (flushes the
- *                          channel). If false, any packets in flight are
+ *                          channel). If BFALSE, any packets in flight are
  *                          completed prior to the channel being torn down.
- *  \param bWait    [IN]    If true, wait for the teardown operation to complete.
+ *  \param bWait    [IN]    If BTRUE, wait for the teardown operation to complete.
  *                          Otherwise, return immediately.
  *
  *  \return 0 = Success, -1 = Operation prohibited (channel is disabled)
@@ -1038,22 +1038,22 @@ extern void CSL_udmapCfgRxFlowIdFirewall( CSL_UdmapCfg *pCfg, uint32_t outEvtNum
  *  This function returns information from the receive flow ID range firewall.
  *
  *  If the receive flow ID firewall has detected an out of range flow ID,
- *  the function returns true and the fields within the
+ *  the function returns BTRUE and the fields within the
  *  #CSL_UdmapRxFlowIdFirewallStatus structure contain error details. The
  *  function will automatically reset the receive flow ID firewall to capture
  *  the next error.
  *
  *  If the receive flow ID firewall has not detected an out of range flow ID,
- *  the function returns false and the fields within the
+ *  the function returns BFALSE and the fields within the
  *  #CSL_UdmapRxFlowIdFirewallStatus structure are not updated.
  *
  *  \param pCfg                 [IN]    Pointer to the UDMAP configuration structure
  *  \param pRxFlowIdFwStatus    [IN]    Pointer to a #CSL_UdmapRxFlowIdFirewallStatus
  *                                      structure containing error details (valid
- *                                      only when true is returned)
+ *                                      only when BTRUE is returned)
  *
- *  \return true if the receive flow ID range firewall has detected an out of range
- *          flow ID, false if no error was detected
+ *  \return BTRUE if the receive flow ID range firewall has detected an out of range
+ *          flow ID, BFALSE if no error was detected
  */
 extern bool CSL_udmapGetRxFlowIdFirewallStatus( CSL_UdmapCfg *pCfg, CSL_UdmapRxFlowIdFirewallStatus *pRxFlowIdFwStatus );
 
@@ -1146,7 +1146,7 @@ extern int32_t CSL_udmapEnableLink( CSL_UdmapCfg *pCfg, uint32_t chanIdx, CSL_Ud
  *  \param blockIds         [IN]    One or more block ID's created by logically
  *                                  or'ing one or more ID's defined in
  *                                  \ref CSL_UdmapAutoClkgateBlock
- *  \param bEnable          [IN]    If true, automatic dynamic clock gating for
+ *  \param bEnable          [IN]    If BTRUE, automatic dynamic clock gating for
  *                                  the specified blocks is enabled. Otherwise,
  *                                  it is disabled.
  *

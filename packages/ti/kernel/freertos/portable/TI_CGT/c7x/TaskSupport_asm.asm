@@ -107,7 +107,7 @@ SWREGS  .set    10                      ; number of regs saved in _Task_switch
 ;
 ;  ======== TaskSupport_buildTaskStack ========
 ;
-;  TaskSupport_buildTaskStack(stack, fxn, argv, exit, entry, TCSP, privileged)
+;  TaskSupport_buildTaskStack(stack, fxn, argv, doexit, entry, TCSP, privileged)
 ;
 ;
 ;

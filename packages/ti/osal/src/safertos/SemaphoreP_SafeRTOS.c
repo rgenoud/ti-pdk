@@ -51,8 +51,8 @@ typedef struct SemaphoreP_safertos_s {
 /* global pool of statically allocated semaphore pools */
 static SemaphoreP_safertos gOsalSemPsafertosPool[OSAL_SAFERTOS_CONFIGNUM_SEMAPHORE] __attribute__( ( aligned( 32 ) ) );
 
-int32_t SemaphoreP_constructBinary( SemaphoreP_safertos *handle, uint32_t initCount );
-int32_t SemaphoreP_constructCounting( SemaphoreP_safertos *handle, uint32_t initCount, uint32_t maxCount );
+static int32_t SemaphoreP_constructBinary( SemaphoreP_safertos *handle, uint32_t initCount );
+static int32_t SemaphoreP_constructCounting( SemaphoreP_safertos *handle, uint32_t initCount, uint32_t maxCount );
 
 /*
  *  ======== SemaphoreP_create ========
@@ -159,34 +159,41 @@ SemaphoreP_Handle SemaphoreP_create( uint32_t count,
     return ret_handle;
 }
 
-int32_t SemaphoreP_constructBinary( SemaphoreP_safertos *handle, uint32_t initCount )
+static int32_t SemaphoreP_constructBinary( SemaphoreP_safertos *handle, uint32_t initCount )
 {
     int32_t status;
 
-    portBaseType xResult = xSemaphoreCreateBinary((portInt8Type *)&(handle->semObj[0]), &handle->semHndl  );
-    if( ( pdPASS != xResult ) || ( NULL == handle->semHndl ) )
+    if ((NULL == handle) || (initCount > 1U))
     {
         status = SemaphoreP_FAILURE;
     }
     else
     {
-        if( 0U == initCount )
+        portBaseType xResult = xSemaphoreCreateBinary((portInt8Type *)&(handle->semObj[0]), &handle->semHndl  );
+        if( ( pdPASS != xResult ) || ( NULL == handle->semHndl ) )
         {
-            uint32_t            isSemTaken;
-            DebugP_assert(0 == Osal_isInISRContext( ));
-            /* SafeRTOS on BinarySemaphore create initializes semaphore with count of 1.
-             * So we need to take semaphore to make count 0, if we are creating a binary semaphore with init count of 0.
-             */
-            isSemTaken = (uint32_t)xSemaphoreTake( handle->semHndl, safertosapiMAX_DELAY);
-            DebugP_assert(UTRUE == isSemTaken);
+            status = SemaphoreP_FAILURE;
         }
-        status = SemaphoreP_OK;
+        else
+        {
+            if( 0U == initCount )
+            {
+                uint32_t            isSemTaken;
+                DebugP_assert(0 == Osal_isInISRContext( ));
+                /* SafeRTOS on BinarySemaphore create initializes semaphore with count of 1.
+                * So we need to take semaphore to make count 0, if we are creating a binary semaphore with init count of 0.
+                */
+                isSemTaken = (uint32_t)xSemaphoreTake( handle->semHndl, safertosapiMAX_DELAY);
+                DebugP_assert(UTRUE == isSemTaken);
+            }
+            status = SemaphoreP_OK;
+        }
     }
 
     return status;
 }
 
-int32_t SemaphoreP_constructCounting( SemaphoreP_safertos *handle, uint32_t initCount, uint32_t maxCount )
+static int32_t SemaphoreP_constructCounting( SemaphoreP_safertos *handle, uint32_t initCount, uint32_t maxCount )
 {
     int32_t status;
 

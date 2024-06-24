@@ -94,11 +94,11 @@ typedef void (*Task_FuncPtr)(uint32_t arg1, uint32_t arg2);
 
 
 /* defaultStackSize */
-extern const size_t TaskSupport_defaultStackSize;
+extern const uintptr_t TaskSupport_defaultStackSize;
 
 
 /* stackAlignment */
-extern const unsigned int TaskSupport_stackAlignment;
+extern const uint32_t TaskSupport_stackAlignment;
 
 
 
@@ -115,9 +115,9 @@ void TaskSupport_swap( void **oldtskContext, void **newtskContext);
 uint32_t TaskSupport_getStackAlignment( void);
 
 
-extern void * TaskSupport_buildTaskStack(void * stack, Task_FuncPtr fxn, TaskSupport_FuncPtr exit, TaskSupport_FuncPtr enter, void* arg0, TaskFunction_t arg1, void * TCSP, bool privileged);
+extern void * TaskSupport_buildTaskStack(void * stack, Task_FuncPtr fxn, TaskSupport_FuncPtr doexit, TaskSupport_FuncPtr enter, void* arg0, TaskFunction_t arg1, void * TCSP, bool privileged);
 
-extern void * TaskSupport_setupTaskStack(StackType_t * pxTopOfStack, StackType_t * pxEndOfStack, Task_FuncPtr fxn, TaskSupport_FuncPtr exit, TaskSupport_FuncPtr enter, TaskFunction_t pxCode, void * pvParameters , bool privileged);
+extern void * TaskSupport_setupTaskStack(StackType_t * pxTopOfStack, StackType_t * pxEndOfStack, Task_FuncPtr fxn, TaskSupport_FuncPtr doexit, TaskSupport_FuncPtr enter, TaskFunction_t pxCode, void * pvParameters , bool privileged);
 
 #ifdef __cplusplus
     } /* extern C */

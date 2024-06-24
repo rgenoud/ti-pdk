@@ -369,7 +369,7 @@ extern void CSL_lcdma_ringaccInitRingObj( uint32_t ringNum,
  *
  *  \return 0 if successful, or -1 if an invalid argument is detected
  */
-extern int32_t CSL_lcdma_ringaccInitRing( CSL_LcdmaRingaccCfg *pCfg,
+extern int32_t CSL_lcdma_ringaccInitRing( const CSL_LcdmaRingaccCfg *pCfg,
                             uint32_t ringNum,
                             CSL_LcdmaRingaccRingCfg *pRing );
 
@@ -430,9 +430,9 @@ extern void CSL_lcdma_ringaccSetRingOrderId( CSL_LcdmaRingaccCfg *pCfg, const CS
  *                              containing the ring accelerator configuration
  *  \param pRing        [IN]    Pointer to a #CSL_LcdmaRingaccRingCfg structure containing
  *                              the ring configuration
- *  \param bEnable      [IN]    true = Region is enabled, false = disabled
- *  \param bLock        [IN]    true = Region is locked (region values cannot
- *                              be changed), false = region is not locked
+ *  \param bEnable      [IN]    BTRUE = Region is enabled, BFALSE = disabled
+ *  \param bLock        [IN]    BTRUE = Region is locked (region values cannot
+ *                              be changed), BFALSE = region is not locked
  *
  *  \return None
  *
@@ -456,7 +456,7 @@ extern void CSL_lcdma_ringaccCfgRingCred( CSL_LcdmaRingaccCfg *pCfg, const CSL_L
  *
  *  \return None
  */
-extern void CSL_lcdma_ringaccResetRing( CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing );
+extern void CSL_lcdma_ringaccResetRing( const CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing );
 
 /**
  *  \brief Get pointer to next free forward ring element.
@@ -472,7 +472,7 @@ extern void CSL_lcdma_ringaccResetRing( CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRing
  *  \return NULL if the ring is full, otherwise a void pointer to the next
  *          free forward ring element
  */
-extern void *CSL_lcdma_ringaccGetForwardRingPtr( CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing );
+extern void *CSL_lcdma_ringaccGetForwardRingPtr( const CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing );
 
 /**
  *  \brief Get pointer to next available reverse ring element.
@@ -491,7 +491,7 @@ extern void *CSL_lcdma_ringaccGetForwardRingPtr( CSL_LcdmaRingaccCfg *pCfg, CSL_
  *  \return NULL if the ring is empty, otherwise a void pointer to the next
  *          available reverse ring element
  */
-extern void *CSL_lcdma_ringaccGetReverseRingPtr( CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing );
+extern void *CSL_lcdma_ringaccGetReverseRingPtr( const CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing );
 
 /**
  *  \brief Write to the ring foward doorbell.
@@ -512,9 +512,9 @@ extern void *CSL_lcdma_ringaccGetReverseRingPtr( CSL_LcdmaRingaccCfg *pCfg, CSL_
  *
  *  \return      0 = success
  */
-static inline int32_t CSL_lcdma_ringaccSetForwardDoorbell( CSL_LcdmaRingaccCfg *pCfg, uint32_t ringNum, CSL_LcdmaRingaccRingMode mode, int32_t cnt );
+static inline int32_t CSL_lcdma_ringaccSetForwardDoorbell( const CSL_LcdmaRingaccCfg *pCfg, uint32_t ringNum, CSL_LcdmaRingaccRingMode mode, int32_t cnt );
 
-static inline int32_t CSL_lcdma_ringaccSetForwardDoorbell( CSL_LcdmaRingaccCfg *pCfg, uint32_t ringNum, CSL_LcdmaRingaccRingMode mode, int32_t cnt )
+static inline int32_t CSL_lcdma_ringaccSetForwardDoorbell( const CSL_LcdmaRingaccCfg *pCfg, uint32_t ringNum, CSL_LcdmaRingaccRingMode mode, int32_t cnt )
 {
     CSL_REG32_WR( &pCfg->pRingRtRegs->RING[ringNum].FDB, CSL_FMK(LCDMA_RINGACC_RINGRT_RING_FDB_CNT, (uint32_t)cnt) );
     return 0;
@@ -536,9 +536,9 @@ static inline int32_t CSL_lcdma_ringaccSetForwardDoorbell( CSL_LcdmaRingaccCfg *
  *
  *  \return      None
  */
-static inline void CSL_lcdma_ringaccSetReverseDoorbell( CSL_LcdmaRingaccCfg *pCfg, uint32_t ringNum, CSL_LcdmaRingaccRingMode mode, int32_t cnt );
+static inline void CSL_lcdma_ringaccSetReverseDoorbell( const CSL_LcdmaRingaccCfg *pCfg, uint32_t ringNum, CSL_LcdmaRingaccRingMode mode, int32_t cnt );
 
-static inline void CSL_lcdma_ringaccSetReverseDoorbell( CSL_LcdmaRingaccCfg *pCfg, uint32_t ringNum, CSL_LcdmaRingaccRingMode mode, int32_t cnt )
+static inline void CSL_lcdma_ringaccSetReverseDoorbell( const CSL_LcdmaRingaccCfg *pCfg, uint32_t ringNum, CSL_LcdmaRingaccRingMode mode, int32_t cnt )
 {
     CSL_REG32_WR( &pCfg->pRingRtRegs->RING[ringNum].RDB, CSL_FMK(LCDMA_RINGACC_RINGRT_RING_RDB_CNT, (uint32_t)cnt) );
 }
@@ -560,9 +560,9 @@ static inline void CSL_lcdma_ringaccSetReverseDoorbell( CSL_LcdmaRingaccCfg *pCf
  *
  *  \return None
  */
-static inline void CSL_lcdma_ringaccCommitToForwardRing( CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing, int32_t cnt );
+static inline void CSL_lcdma_ringaccCommitToForwardRing( const CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing, int32_t cnt );
 
-static inline void CSL_lcdma_ringaccCommitToForwardRing( CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing, int32_t cnt )
+static inline void CSL_lcdma_ringaccCommitToForwardRing( const CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing, int32_t cnt )
 {
     int32_t cntLocal = cnt;
     /*-------------------------------------------------------------------------
@@ -606,9 +606,9 @@ static inline void CSL_lcdma_ringaccCommitToForwardRing( CSL_LcdmaRingaccCfg *pC
  *
  *  \return None
  */
-static inline void CSL_lcdma_ringaccAckReverseRing( CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing, int32_t cnt );
+static inline void CSL_lcdma_ringaccAckReverseRing( const CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing, int32_t cnt );
 
-static inline void CSL_lcdma_ringaccAckReverseRing( CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing, int32_t cnt )
+static inline void CSL_lcdma_ringaccAckReverseRing( const CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing, int32_t cnt )
 {
     int32_t cntLocal = cnt;
     /*-------------------------------------------------------------------------
@@ -719,14 +719,14 @@ extern uint32_t CSL_lcdma_ringaccGetReverseRingOcc( const CSL_LcdmaRingaccCfg *p
  *
  *  \param pCfg         [IN]    Pointer to a #CSL_LcdmaRingaccCfg structure
  *                              containing the ring accelerator configuration
- *  \param bTraceAll    [IN]    If true, operations to every ring are traced.
- *                              If false, only the ring specified by ringNum
+ *  \param bTraceAll    [IN]    If BTRUE, operations to every ring are traced.
+ *                              If BFALSE, only the ring specified by ringNum
  *                              is traced.
- *  \param bIncMsgData  [IN]    If true, message data is included in the trace
+ *  \param bIncMsgData  [IN]    If BTRUE, message data is included in the trace
  *                              output.
  *  \param ringNum      [IN]    Specifies the ring whose operations are to be
  *                              traced. This parameter is ignored when
- *                              bTraceAll is true.
+ *                              bTraceAll is UTRUE.
  *
  *  \return     0  = success
  *              -1 = trace support is not available or ringNum is out of range
@@ -741,7 +741,7 @@ extern int32_t CSL_lcdma_ringaccCfgTrace( CSL_LcdmaRingaccCfg *pCfg, bool bTrace
  *
  *  \param pCfg         [IN]    Pointer to a #CSL_LcdmaRingaccCfg structure
  *                              containing the ring accelerator configuration
- *  \param bEnable      [IN]    If true, trace support is enabled. If false,
+ *  \param bEnable      [IN]    If BTRUE, trace support is enabled. If BFALSE,
  *                              it is disabled.
  *
  *  \return     0  = success
@@ -1110,7 +1110,7 @@ extern int32_t CSL_lcdma_ringaccRdData( CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRing
  *  \return  0 = success
  *          -2 = requested access size is greater than ring element size
  */
-extern int32_t CSL_lcdma_ringaccPeekData( CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing, uint8_t *pData, uint32_t numBytes, CSL_lcdma_ringaccMemOpsFxnPtr pfMemOps );
+extern int32_t CSL_lcdma_ringaccPeekData( const CSL_LcdmaRingaccCfg *pCfg, const CSL_LcdmaRingaccRingCfg *pRing, uint8_t *pData, uint32_t numBytes, CSL_lcdma_ringaccMemOpsFxnPtr pfMemOps );
 
 /**
  *  \brief Clear the asel field in an address
@@ -1146,8 +1146,8 @@ extern uint64_t CSL_lcdma_ringaccSetAselInAddr( uint64_t addr, CSL_LcdmaRingAccA
  *                              containing the ring accelerator configuration
  *  \param ringNum      [IN]    The ring number
  *
- *  \return  0 = false (no teardown completion)
- *           1 = true (teardown is complete)
+ *  \return  0 = BFALSE (no teardown completion)
+ *           1 = BTRUE (teardown is complete)
  */
 extern bool CSL_lcdma_ringaccIsTeardownComplete( const CSL_LcdmaRingaccCfg *pCfg, uint32_t ringNum );
 
@@ -1185,7 +1185,7 @@ extern void CSL_lcdma_ringaccAckTeardown( const CSL_LcdmaRingaccCfg *pCfg, uint3
  *  \return  0 = success
  *          -1 = ring is empty (there are no more values in the ring to dequeue)
  */
-extern int32_t CSL_lcdma_ringaccDequeue( CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing, uint64_t *pVal );
+extern int32_t CSL_lcdma_ringaccDequeue( const CSL_LcdmaRingaccCfg *pCfg, CSL_LcdmaRingaccRingCfg *pRing, uint64_t *pVal );
 
 /* @} */
 

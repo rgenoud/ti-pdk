@@ -394,9 +394,9 @@ extern void CSL_ringaccSetRingOrderId( CSL_RingAccCfg *pCfg, const CSL_RingAccRi
  *                              containing the ring accelerator configuration
  *  \param pRing        [IN]    Pointer to a #CSL_RingAccRingCfg structure containing
  *                              the ring configuration
- *  \param bEnable      [IN]    true = Region is enabled, false = disabled
- *  \param bLock        [IN]    true = Region is locked (region values cannot
- *                              be changed), false = region is not locked
+ *  \param bEnable      [IN]    BTRUE = Region is enabled, BFALSE = disabled
+ *  \param bLock        [IN]    BTRUE = Region is locked (region values cannot
+ *                              be changed), BFALSE = region is not locked
  *
  *  \return None
  *
@@ -557,14 +557,14 @@ extern void CSL_ringaccAckRspRing( CSL_RingAccCfg *pCfg, CSL_RingAccRingCfg *pRi
  *
  *  \param pCfg         [IN]    Pointer to a #CSL_RingAccCfg structure
  *                              containing the ring accelerator configuration
- *  \param bTraceAll    [IN]    If true, operations to every ring are traced.
- *                              If false, only the ring specified by ringNum
+ *  \param bTraceAll    [IN]    If BTRUE, operations to every ring are traced.
+ *                              If BFALSE, only the ring specified by ringNum
  *                              is traced.
- *  \param bIncMsgData  [IN]    If true, message data is included in the trace
+ *  \param bIncMsgData  [IN]    If BTRUE, message data is included in the trace
  *                              output.
  *  \param ringNum      [IN]    Specifies the ring whose operations are to be
  *                              traced. This parameter is ignored when
- *                              bTraceAll is true.
+ *                              bTraceAll is UTRUE.
  *
  *  \return     0  = success
  *              -1 = trace support is not available or ringNum is out of range
@@ -579,7 +579,7 @@ extern int32_t CSL_ringaccCfgTrace( CSL_RingAccCfg *pCfg, bool bTraceAll, bool b
  *
  *  \param pCfg         [IN]    Pointer to a #CSL_RingAccCfg structure
  *                              containing the ring accelerator configuration
- *  \param bEnable      [IN]    If true, trace support is enabled. If false,
+ *  \param bEnable      [IN]    If BTRUE, trace support is enabled. If BFALSE,
  *                              it is disabled.
  *
  *  \return     0  = success

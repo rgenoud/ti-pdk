@@ -158,7 +158,10 @@ extern "C" {
 #define UDMA_TEST_RF_CORE_ALL           ((uint64_t)(((uint64_t) 0xFFFFU) << 32U))
 #define UDMA_TEST_RF_CORE_MCU_ALL       (UDMA_TEST_RF_CORE_MCU1_0 | UDMA_TEST_RF_CORE_MCU1_1 | \
                                          UDMA_TEST_RF_CORE_MCU2_0 | UDMA_TEST_RF_CORE_MCU2_1 | \
-                                         UDMA_TEST_RF_CORE_MCU3_0 | UDMA_TEST_RF_CORE_MCU3_1)
+                                         UDMA_TEST_RF_CORE_MCU3_0 | UDMA_TEST_RF_CORE_MCU3_1 | \
+                                         UDMA_TEST_RF_CORE_MCU4_0 | UDMA_TEST_RF_CORE_MCU4_1)
+#define UDMA_TEST_RF_CORE_C7X_ALL       (UDMA_TEST_RF_CORE_C7X_1 | UDMA_TEST_RF_CORE_C7X_2 | \
+                                         UDMA_TEST_RF_CORE_C7X_3 | UDMA_TEST_RF_CORE_C7X_4)
 
 /* For future when we have dynamic coverage testcases */
 #define UDMA_TEST_RF_CFG_DEF            ((uint64_t)(((uint64_t) 0x00001U) << 48U))
@@ -644,6 +647,9 @@ int32_t udmaTestBlkcpyChainingTc(UdmaTestTaskObj *taskObj);
  * UDMA ring test functions
  */
 int32_t udmaTestRingProxyTc(UdmaTestTaskObj *taskObj);
+int32_t udmaTestCslRingAcc(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestCslRing(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestCslRingMonitor(UdmaTestTaskObj *taskObj);
 int32_t udmaTestRingFlushTc(UdmaTestTaskObj *taskObj);
 int32_t udmaTestRingEventTc(UdmaTestTaskObj *taskObj);
 int32_t udmaTestRingParamCheckTc(UdmaTestTaskObj *taskObj);
@@ -861,6 +867,10 @@ int32_t UdmaInitPrmsNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaChGetSwTriggerRegisterTestNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaChDequeueTdResponseTestNeg(UdmaTestTaskObj *taskObj);
 int32_t UdmaChBcdmaInstTestNeg(UdmaTestTaskObj *taskObj);
+int32_t udmaTestCslIntaggr(UdmaTestTaskObj *taskObj);
+#if defined (BUILD_C7X)
+int32_t udmaTestCslClec(UdmaTestTaskObj *taskObj);
+#endif
 
 /*
  * UDMA utc test functions
@@ -924,6 +934,40 @@ int32_t UdmaTestRingLcdmaDoorBell(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestRingGetForwardRingOccLcdma(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestQueueDequeueLcdma(UdmaTestTaskObj *taskObj);
 int32_t UdmaTestRingFlushRawLcdma(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestCslRingLcdma(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestCSL_lcdma_ringaccPeekData(UdmaTestTaskObj *taskObj);
+
+/*
+ *  UDMA CSL DRU test functions
+ */
+int32_t UdmaTestCSLDruGetCapabilities(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestCSLDruChSetGlobalTrigger1(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestCSLDruChSetGlobalTrigger0(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestCSLDruChSetLocalTrigger0(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestCSLDruChGetQueueStatus(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestCSLDruChResume(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestCSLDruChPause(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestCSLDruChIsTeardownComplete(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestCSLDruChSetEvent(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestCSLDruQueueConfig(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestCSLDruChConfig(UdmaTestTaskObj *taskObj);
+
+/*
+ * UDMAP csl test functions
+ */
+int32_t UdmaTestCslUdmap(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestCslUdmapNeg(UdmaTestTaskObj *taskObj);
+
+/*
+ * Proxy csl test functions
+ */
+int32_t UdmaTestRingCSLProxy(UdmaTestTaskObj *taskObj);
+
+/*
+ *  CSL Bcdma test functions
+ */
+int32_t UdmaTestCslBcdma(UdmaTestTaskObj *taskObj);
+int32_t UdmaTestCslBcdmaNeg(UdmaTestTaskObj *taskObj);
 
 /* ========================================================================== */
 /*      Internal Function Declarations (Needed for other static inlines)      */

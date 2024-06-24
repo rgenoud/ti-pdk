@@ -211,6 +211,52 @@ $(eval ${IPC_ECHO_TESTB_MACRO_LIST})
 # IPC Echo tests for RTOS
 #############################################
 
+# Test Configuration: mcu1_0 and mcu2_0 cores running FreeRTOS
+define IPC_RTOS_SANITY_TEST_RULE
+
+export ipc_rtos_sanity_test_$(1)_COMP_LIST = ipc_rtos_sanity_test_$(1)
+ipc_rtos_sanity_test_$(1)_RELPATH = ti/drv/ipc/examples/rtos/ipc_rtos_sanity_test
+ipc_rtos_sanity_test_$(1)_PATH = $(PDK_IPC_COMP_PATH)/examples/rtos/ipc_rtos_sanity_test
+export ipc_rtos_sanity_test_$(1)_BOARD_DEPENDENCY = yes
+export ipc_rtos_sanity_test_$(1)_CORE_DEPENDENCY = yes
+export ipc_rtos_sanity_test_$(1)_XDC_CONFIGURO = $(if $(findstring tirtos, $(1)), yes, no)
+export ipc_rtos_sanity_test_$(1)_MAKEFILE = -f makefile BUILD_OS_TYPE=$(1)
+ipc_rtos_sanity_test_$(1)_PKG_LIST = ipc_rtos_sanity_test_$(1)
+ipc_rtos_sanity_test_$(1)_INCLUDE = $(ipc_rtos_sanity_test_$(1)_PATH)
+export ipc_rtos_sanity_test_$(1)_BOARDLIST = $(filter $(DEFAULT_BOARDLIST_$(1)), $(drvipc_BOARDLIST))
+export ipc_rtos_sanity_test_$(1)_$(SOC)_CORELIST = mcu1_0 mcu2_0
+export ipc_rtos_sanity_test_$(1)_SBL_APPIMAGEGEN = yes
+ifneq ($(1),$(filter $(1), safertos))
+ipc_EXAMPLE_LIST += ipc_rtos_sanity_test_$(1)
+else
+ifneq ($(wildcard $(SAFERTOS_KERNEL_INSTALL_PATH)),)
+ipc_EXAMPLE_LIST += ipc_rtos_sanity_test_$(1)
+endif
+endif
+endef
+IPC_RTOS_SANITY_TEST_MACRO_LIST := $(foreach curos, $(drvipc_RTOS_LIST) safertos, $(call IPC_RTOS_SANITY_TEST_RULE,$(curos)))
+$(eval ${IPC_RTOS_SANITY_TEST_MACRO_LIST})
+
+# Test Configuration: FreeRTOS on mcu1_0 and baremetal on mcu2_0
+ipc_baremetal_sanity_test_COMP_LIST = ipc_baremetal_sanity_test
+ipc_baremetal_sanity_test_RELPATH = ti/drv/ipc/examples/baremetal/ipc_baremetal_sanity_test
+ipc_baremetal_sanity_test_PATH = $(PDK_IPC_COMP_PATH)/examples/baremetal/ipc_baremetal_sanity_test
+ipc_baremetal_sanity_test_BOARD_DEPENDENCY = yes
+ipc_baremetal_sanity_test_CORE_DEPENDENCY = yes
+ipc_baremetal_sanity_test_XDC_CONFIGURO = no
+export ipc_baremetal_sanity_test_COMP_LIST
+export ipc_baremetal_sanity_test_BOARD_DEPENDENCY
+export ipc_baremetal_sanity_test_CORE_DEPENDENCY
+export ipc_baremetal_sanity_test_XDC_CONFIGURO
+ipc_baremetal_sanity_test_PKG_LIST = ipc_baremetal_sanity_test
+ipc_baremetal_sanity_test_INCLUDE = $(ipc_baremetal_sanity_test_PATH)
+ipc_baremetal_sanity_test_BOARDLIST = $(drvipc_BOARDLIST)
+export ipc_baremetal_sanity_test_BOARDLIST
+ipc_baremetal_sanity_test_$(SOC)_CORELIST = mcu2_0
+export ipc_baremetal_sanity_test_$(SOC)_CORELIST
+ipc_EXAMPLE_LIST += ipc_baremetal_sanity_test
+export ipc_baremetal_sanity_test_SBL_APPIMAGEGEN = yes
+
 # Test Configuration: A72/A53 core not included, all cores running FreeRTOS
 define IPC_RTOS_ECHO_TEST_RULE
 
@@ -261,6 +307,27 @@ endif
 endef
 IPC_RTOS_ECHO_TESTB_MACRO_LIST := $(foreach curos, $(drvipc_RTOS_LIST), $(call IPC_RTOS_ECHO_TESTB_RULE,$(curos)))
 $(eval ${IPC_RTOS_ECHO_TESTB_MACRO_LIST})
+
+# Test Configuration: Graceful shutdown test on MCU1_0, MCU2_0 and MCU3_0. MCU2_0 sends shutdown to mcu3_0 and mcu3_0 sends ack back
+define IPC_GRACEFUL_SHUTDOWN_TEST_RULE
+export ipc_graceful_shutdown_test_$(1)_COMP_LIST = ipc_graceful_shutdown_test_$(1)
+ipc_graceful_shutdown_test_$(1)_RELPATH = ti/drv/ipc/examples/rtos/ipc_graceful_shutdown_test
+ipc_graceful_shutdown_test_$(1)_PATH = $(PDK_IPC_COMP_PATH)/examples/rtos/ipc_graceful_shutdown_test
+export ipc_graceful_shutdown_test_$(1)_BOARD_DEPENDENCY = yes
+export ipc_graceful_shutdown_test_$(1)_CORE_DEPENDENCY = yes
+export ipc_graceful_shutdown_test_$(1)_XDC_CONFIGURO = $(if $(findstring tirtos, $(1)), yes, no)
+export ipc_graceful_shutdown_test_$(1)_MAKEFILE = -f makefile BUILD_OS_TYPE=$(1)
+ipc_graceful_shutdown_test_$(1)_PKG_LIST = ipc_graceful_shutdown_test_$(1)
+ipc_graceful_shutdown_test_$(1)_INCLUDE = $(ipc_graceful_shutdown_test_$(1)_PATH)
+export ipc_graceful_shutdown_test_$(1)_BOARDLIST = j784s4_evm
+export ipc_graceful_shutdown_test_$(1)_$(SOC)_CORELIST = mcu1_0 mcu2_0 mcu3_0
+export ipc_graceful_shutdown_test_$(1)_SBL_APPIMAGEGEN = yes
+ifneq ($(1),$(filter $(1), safertos))
+ipc_EXAMPLE_LIST += ipc_graceful_shutdown_test_$(1)
+endif
+endef
+IPC_GRACEFUL_SHUTDOWN_TEST_MACRO_LIST := $(foreach curos, $(drvipc_RTOS_LIST), $(call IPC_GRACEFUL_SHUTDOWN_TEST_RULE,$(curos)))
+$(eval ${IPC_GRACEFUL_SHUTDOWN_TEST_MACRO_LIST})
 
 # Test Configuration: A72/A53 core not included, baremetal on R5 cores other than mcu1_0, FreeRTOS on mcu1_0 and DSP cores(C66x,C7x)
 ipc_baremetal_echo_test_COMP_LIST = ipc_baremetal_echo_test
@@ -332,7 +399,7 @@ endef
 IPC_PERF_TEST_MACRO_LIST := $(foreach curos, $(drvipc_RTOS_LIST), $(call IPC_PERF_TEST_RULE,$(curos)))
 $(eval ${IPC_PERF_TEST_MACRO_LIST})
 
-#Test Configuration: Set of tests to validate IPC APIs, run indpendently on each core
+#Test Configuration: IPC extended test for IPC API coverage; runs on mcu1_0
 define IPC_EXTENDED_TEST_RULE
 export ipc_extended_test_$(1)_COMP_LIST = ipc_extended_test_$(1)
 ipc_extended_test_$(1)_RELPATH = ti/drv/ipc/examples/rtos/ipc_extended_test
@@ -419,6 +486,51 @@ $(eval ${IPC_QNX_ECHO_TESTB_MACRO_LIST})
 # IPC Mutlicore tests: Multi core images for IPC tests
 ##########################################################
 
+# Test Configuration: Dual core echo test for RTOS, uses ipc_rtos_sanity_test
+define IPC_RTOS_DUALCORE_ECHO_TEST_RULE
+
+export ipc_rtos_dualcore_echo_test_$(1)_COMP_LIST = ipc_rtos_dualcore_echo_test_$(1)
+ipc_rtos_dualcore_echo_test_$(1)_RELPATH = ti/drv/ipc/examples/rtos/ipc_rtos_sanity_test
+ipc_rtos_dualcore_echo_test_$(1)_BINPATH = $(PDK_INSTALL_PATH)/ti/binary/ipc_rtos_echo_test_$(1)/bin
+ipc_rtos_dualcore_echo_test_$(1)_PATH = $(PDK_IPC_COMP_PATH)/examples/rtos/ipc_rtos_sanity_test
+export ipc_rtos_dualcore_echo_test_$(1)_BOARD_DEPENDENCY = yes
+export ipc_rtos_dualcore_echo_test_$(1)_CORE_DEPENDENCY = yes
+export ipc_rtos_dualcore_echo_test_$(1)_XDC_CONFIGURO = $(if $(findstring tirtos, $(1)), yes, no)
+export ipc_rtos_dualcore_echo_test_$(1)_MAKEFILE =  -f$(PDK_IPC_COMP_PATH)/examples/rtos/ipc_rtos_sanity_test/ipc_rtos_dualcore_echo_test.mk BUILD_OS_TYPE=$(1)
+export ipc_rtos_dualcore_echo_test_$(1)_DEPENDS_ON=ipc_rtos_sanity_test_$(1)
+ipc_rtos_dualcore_echo_test_$(1)_PKG_LIST = ipc_rtos_dualcore_echo_test_$(1)
+ipc_rtos_dualcore_echo_test_$(1)_INCLUDE = $(ipc_rtos_dualcore_echo_test_$(1)_PATH)
+export ipc_rtos_dualcore_echo_test_$(1)_BOARDLIST = $(filter $(DEFAULT_BOARDLIST_$(1)), $(drvipc_BOARDLIST))
+export ipc_rtos_dualcore_echo_test_$(1)_$(SOC)_CORELIST := mcu2_0
+export ipc_rtos_dualcore_echo_test_SBL_APPIMAGEGEN = no
+ifneq ($(1),$(filter $(1), safertos))
+ipc_DUP_EXAMPLE_LIST += ipc_rtos_dualcore_echo_test_$(1)
+else
+ifneq ($(wildcard $(SAFERTOS_KERNEL_INSTALL_PATH)),)
+ipc_DUP_EXAMPLE_LIST += ipc_rtos_dualcore_echo_test_$(1)
+endif
+endif
+endef
+ipc_rtos_dualcore_echo_test_MACRO_LIST := $(foreach curos, $(drvipc_RTOS_LIST), $(call IPC_RTOS_DUALCORE_ECHO_TEST_RULE,$(curos)))
+$(eval ${ipc_rtos_dualcore_echo_test_MACRO_LIST})
+
+# Test Configuration: Dual core echo test for baremetal, uses ipc_baremetal_sanity_test
+export ipc_baremetal_dualcore_echo_test_COMP_LIST = ipc_baremetal_dualcore_echo_test
+ipc_baremetal_dualcore_echo_test_RELPATH = ti/drv/ipc/examples/baremetal/ipc_baremetal_sanity_test
+ipc_baremetal_dualcore_echo_test_BINPATH = $(PDK_INSTALL_PATH)/ti/binary/ipc_baremetal_echo_test/bin
+ipc_baremetal_dualcore_echo_test_PATH = $(PDK_IPC_COMP_PATH)/examples/baremetal/ipc_baremetal_sanity_test
+export ipc_baremetal_dualcore_echo_test_BOARD_DEPENDENCY = yes
+export ipc_baremetal_dualcore_echo_test_CORE_DEPENDENCY = yes
+export ipc_baremetal_dualcore_echo_test_XDC_CONFIGURO = $(if $(findstring tirtos, $(1)), yes, no)
+export ipc_baremetal_dualcore_echo_test_MAKEFILE = -f$(PDK_IPC_COMP_PATH)/examples/baremetal/ipc_baremetal_sanity_test/ipc_baremetal_dualcore_echo_test.mk
+export ipc_baremetal_dualcore_echo_test_DEPENDS_ON = ipc_baremetal_sanity_test ipc_rtos_sanity_test_freertos
+ipc_baremetal_dualcore_echo_test_PKG_LIST = ipc_baremetal_dualcore_echo_test
+ipc_baremetal_dualcore_echo_test_INCLUDE = $(ipc_baremetal_dualcore_echo_test_PATH)
+export ipc_baremetal_dualcore_echo_test_BOARDLIST = $(drvipc_BOARDLIST)
+export ipc_baremetal_dualcore_echo_test_$(SOC)_CORELIST:= mcu2_0
+export ipc_baremetal_dualcore_echo_test_SBL_APPIMAGEGEN = no
+ipc_DUP_EXAMPLE_LIST += ipc_baremetal_dualcore_echo_test
+
 # Test Configuration: Multicore echo test for RTOS, uses ipc_rtos_echo_test
 define IPC_RTOS_MULTICORE_ECHO_TEST_RULE
 
@@ -447,34 +559,6 @@ endef
 IPC_RTOS_MULTICORE_ECHO_TEST_MACRO_LIST := $(foreach curos, $(drvipc_RTOS_LIST) safertos, $(call IPC_RTOS_MULTICORE_ECHO_TEST_RULE,$(curos)))
 $(eval ${IPC_RTOS_MULTICORE_ECHO_TEST_MACRO_LIST})
 
-# Test Configuration: Dual core echo test for RTOS, uses ipc_rtos_echo_test
-define IPC_RTOS_DUALCORE_ECHO_TEST_RULE
-
-export ipc_rtos_dualcore_echo_test_$(1)_COMP_LIST = ipc_rtos_dualcore_echo_test_$(1)
-ipc_rtos_dualcore_echo_test_$(1)_RELPATH = ti/drv/ipc/examples/rtos/ipc_rtos_echo_test
-ipc_rtos_dualcore_echo_test_$(1)_BINPATH = $(PDK_INSTALL_PATH)/ti/binary/ipc_rtos_echo_test_$(1)/bin
-ipc_rtos_dualcore_echo_test_$(1)_PATH = $(PDK_IPC_COMP_PATH)/examples/rtos/ipc_rtos_echo_test
-export ipc_rtos_dualcore_echo_test_$(1)_BOARD_DEPENDENCY = yes
-export ipc_rtos_dualcore_echo_test_$(1)_CORE_DEPENDENCY = yes
-export ipc_rtos_dualcore_echo_test_$(1)_XDC_CONFIGURO = $(if $(findstring tirtos, $(1)), yes, no)
-export ipc_rtos_dualcore_echo_test_$(1)_MAKEFILE =  -f$(PDK_IPC_COMP_PATH)/examples/rtos/ipc_rtos_echo_test/ipc_rtos_dualcore_echo_test.mk BUILD_OS_TYPE=$(1)
-export ipc_rtos_dualcore_echo_test_$(1)_DEPENDS_ON=ipc_rtos_echo_test_$(1)
-ipc_rtos_dualcore_echo_test_$(1)_PKG_LIST = ipc_rtos_dualcore_echo_test_$(1)
-ipc_rtos_dualcore_echo_test_$(1)_INCLUDE = $(ipc_rtos_dualcore_echo_test_$(1)_PATH)
-export ipc_rtos_dualcore_echo_test_$(1)_BOARDLIST = $(filter $(DEFAULT_BOARDLIST_$(1)), $(drvipc_BOARDLIST))
-export ipc_rtos_dualcore_echo_test_$(1)_$(SOC)_CORELIST := mcu2_0
-export ipc_rtos_dualcore_echo_test_SBL_APPIMAGEGEN = no
-ifneq ($(1),$(filter $(1), safertos))
-ipc_DUP_EXAMPLE_LIST += ipc_rtos_dualcore_echo_test_$(1)
-else
-ifneq ($(wildcard $(SAFERTOS_KERNEL_INSTALL_PATH)),)
-ipc_DUP_EXAMPLE_LIST += ipc_rtos_dualcore_echo_test_$(1)
-endif
-endif
-endef
-IPC_RTOS_DUALCORE_ECHO_TEST_MACRO_LIST := $(foreach curos, $(drvipc_RTOS_LIST) safertos, $(call IPC_RTOS_DUALCORE_ECHO_TEST_RULE,$(curos)))
-$(eval ${IPC_RTOS_DUALCORE_ECHO_TEST_MACRO_LIST})
-
 # Test Configuration: Multicore echo test for baremetal, uses ipc_baremetal_echo_test
 export ipc_baremetal_multicore_echo_test_COMP_LIST = ipc_baremetal_multicore_echo_test
 ipc_baremetal_multicore_echo_test_RELPATH = ti/drv/ipc/examples/baremetal
@@ -491,23 +575,6 @@ export ipc_baremetal_multicore_echo_test_BOARDLIST = $(drvipc_BOARDLIST)
 export ipc_baremetal_multicore_echo_test_$(SOC)_CORELIST:= $(drvipc_$(SOC)_LASTCORE)
 export ipc_baremetal_multicore_echo_test_SBL_APPIMAGEGEN = no
 ipc_DUP_EXAMPLE_LIST += ipc_baremetal_multicore_echo_test
-
-# Test Configuration: Dual core echo test for baremetal, uses ipc_baremetal_echo_test
-export ipc_baremetal_dualcore_echo_test_COMP_LIST = ipc_baremetal_dualcore_echo_test
-ipc_baremetal_dualcore_echo_test_RELPATH = ti/drv/ipc/examples/baremetal
-ipc_baremetal_dualcore_echo_test_BINPATH = $(PDK_INSTALL_PATH)/ti/binary/ipc_baremetal_echo_test/bin
-ipc_baremetal_dualcore_echo_test_PATH = $(PDK_IPC_COMP_PATH)/examples/baremetal
-export ipc_baremetal_dualcore_echo_test_BOARD_DEPENDENCY = yes
-export ipc_baremetal_dualcore_echo_test_CORE_DEPENDENCY = yes
-export ipc_baremetal_dualcore_echo_test_XDC_CONFIGURO = $(if $(findstring tirtos, $(1)), yes, no)
-export ipc_baremetal_dualcore_echo_test_MAKEFILE = -f$(PDK_IPC_COMP_PATH)/examples/baremetal/ipc_baremetal_dualcore_echo_test.mk
-export ipc_baremetal_dualcore_echo_test_DEPENDS_ON = ipc_baremetal_echo_test ipc_rtos_echo_test_freertos
-ipc_baremetal_dualcore_echo_test_PKG_LIST = ipc_baremetal_dualcore_echo_test
-ipc_baremetal_dualcore_echo_test_INCLUDE = $(ipc_baremetal_dualcore_echo_test_PATH)
-export ipc_baremetal_dualcore_echo_test_BOARDLIST = $(drvipc_BOARDLIST)
-export ipc_baremetal_dualcore_echo_test_$(SOC)_CORELIST:= mcu2_0
-export ipc_baremetal_dualcore_echo_test_SBL_APPIMAGEGEN = no
-ipc_DUP_EXAMPLE_LIST += ipc_baremetal_dualcore_echo_test
 
 # Test Configuration: Multicore echo test for echo_testb, uses ipc_rtos_echo_testb
 define IPC_RTOS_MULTICORE_ECHO_TESTB_RULE
@@ -565,6 +632,30 @@ endif
 endef
 IPC_MULTICORE_PERF_TEST_MACRO_LIST := $(foreach curos, $(filter-out tirtos, $(drvipc_RTOS_LIST)), $(call IPC_MULTICORE_PERF_TEST_RULE,$(curos)))
 $(eval ${IPC_MULTICORE_PERF_TEST_MACRO_LIST})
+ 
+# Test Configuration: Multicore IPC graceful shutdown test, uses ipc_graceful_shutdown_test
+define IPC_GRACEFUL_SHUTDOWN_MULTICORE_TEST_RULE
+
+export ipc_graceful_shutdown_multicore_test_$(1)_COMP_LIST = ipc_graceful_shutdown_multicore_test_$(1)
+ipc_graceful_shutdown_multicore_test_$(1)_RELPATH = ti/drv/ipc/examples/rtos/ipc_graceful_shutdown_test
+ipc_graceful_shutdown_multicore_test_$(1)_BINPATH = $(PDK_INSTALL_PATH)/ti/binary/ipc_graceful_shutdown_test_$(1)/bin
+ipc_graceful_shutdown_multicore_test_$(1)_PATH = $(PDK_IPC_COMP_PATH)/examples/rtos/ipc_graceful_shutdown_test
+export ipc_graceful_shutdown_multicore_test_$(1)_BOARD_DEPENDENCY = yes
+export ipc_graceful_shutdown_multicore_test_$(1)_CORE_DEPENDENCY = yes
+export ipc_graceful_shutdown_multicore_test_$(1)_XDC_CONFIGURO = $(if $(findstring tirtos, $(1)), yes, no)
+export ipc_graceful_shutdown_multicore_test_$(1)_MAKEFILE =  -f$(PDK_IPC_COMP_PATH)/examples/rtos/ipc_graceful_shutdown_test/ipc_graceful_shutdown_multicore_test.mk BUILD_OS_TYPE=$(1)
+export ipc_graceful_shutdown_multicore_test_$(1)_DEPENDS_ON=ipc_graceful_shutdown_test_$(1)
+ipc_graceful_shutdown_multicore_test_$(1)_PKG_LIST = ipc_graceful_shutdown_multicore_test_$(1)
+ipc_graceful_shutdown_multicore_test_$(1)_INCLUDE = $(ipc_graceful_shutdown_multicore_test_$(1)_PATH)
+export ipc_graceful_shutdown_multicore_test_$(1)_BOARDLIST = j784s4_evm
+export ipc_graceful_shutdown_multicore_test_$(1)_$(SOC)_CORELIST := mcu3_0
+export ipc_graceful_shutdown_multicore_test_SBL_APPIMAGEGEN = no
+ifneq ($(1),$(filter $(1), safertos))
+ipc_DUP_EXAMPLE_LIST += ipc_graceful_shutdown_multicore_test_$(1)
+endif
+endef
+IPC_GRACEFUL_SHUTDOWN_MULTICORE_TEST_MACRO_LIST := $(foreach curos, $(drvipc_RTOS_LIST), $(call IPC_GRACEFUL_SHUTDOWN_MULTICORE_TEST_RULE,$(curos)))
+$(eval ${IPC_GRACEFUL_SHUTDOWN_MULTICORE_TEST_MACRO_LIST})
 
 
 export ipc_LIB_LIST

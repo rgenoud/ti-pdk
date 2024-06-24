@@ -78,12 +78,8 @@ uint32_t CSL_proxyGetNumThreads( const CSL_ProxyCfg *pProxyCfg )
 int32_t CSL_proxyCfgGlobalErrEvtNum( const CSL_ProxyCfg *pProxyCfg, uint32_t globalErrEvtNum )
 {
     int32_t retVal;
-#ifdef CSL_PROXY_GLB_EVT_ERR_EVENT_MASK
     CSL_REG32_FINS( &pProxyCfg->pGlbRegs->GLB_EVT, PROXY_GLB_EVT_ERR_EVENT, globalErrEvtNum );
     retVal = 0;
-#else
-    retVal = -1;
-#endif
     return retVal;
 }
 
@@ -113,7 +109,7 @@ int32_t CSL_proxyCfgThread( CSL_ProxyCfg *pProxyCfg, uint32_t targetNum, uint32_
     return retVal;
 }
 
-int32_t CSL_proxyCfgThreadErrEvtNum( CSL_ProxyCfg *pProxyCfg, uint32_t targetNum, uint32_t threadNum, uint32_t errEvtNum )
+int32_t CSL_proxyCfgThreadErrEvtNum( const CSL_ProxyCfg *pProxyCfg, uint32_t targetNum, uint32_t threadNum, uint32_t errEvtNum )
 {
     int32_t retVal = 0;
 
@@ -147,11 +143,19 @@ uint32_t CSL_proxyGetMaxMsgSize( const CSL_ProxyCfg *pProxyCfg, uint32_t targetN
 
 uintptr_t CSL_proxyGetDataAddr( const CSL_ProxyCfg *pProxyCfg, uint32_t targetNum, uint32_t threadNum, uint32_t numBytes )
 {
-    uintptr_t dataAddr;
+    uintptr_t dataAddr = NULL;
     CSL_ProxyTargetParams *pProxyTargetParams = &((pProxyCfg->pProxyTargetParams)[targetNum]);
 
-    dataAddr =  (uintptr_t)pProxyTargetParams->pTargetRegs->PROXY[threadNum].DATA;
-    dataAddr += (uintptr_t)CSL_PROXY_TARGET_MAX_MSG_SIZE - (uintptr_t)numBytes;
+    if(pProxyTargetParams != NULL)
+    {
+    	dataAddr =  (uintptr_t)pProxyTargetParams->pTargetRegs->PROXY[threadNum].DATA;
+    	dataAddr += (uintptr_t)CSL_PROXY_TARGET_MAX_MSG_SIZE - (uintptr_t)numBytes;
+    }
+    else
+    {
+    	//do nothing
+    }
+
     return dataAddr;
 }
 

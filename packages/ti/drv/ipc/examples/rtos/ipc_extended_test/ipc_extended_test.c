@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) Texas Instruments Incorporated 2023
+ *  Copyright (c) Texas Instruments Incorporated 2024
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -34,37 +34,47 @@
 /**
  *  \file ipc_extended_test.c
  *
- *  \brief setup configurations for IPC extended test Application
- *   to perform communication using IPC driver.
- *
+ *  \brief IPC extended test application to cover IPC APIs for different
+ *         parameters and sequences like invalid configurations, deinit, etc.
  */
 
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
 
-#include <stdio.h>
+/* Standard Includes */
 #include <stdint.h>
 
-#include <ti/drv/ipc/examples/common/src/ipc_setup.h>
+/* PDK Generic Includes */
+#include <ti/drv/uart/UART_stdio.h>
+
+/* IPC driver includes; contains internal header files for this example */
 #include <ti/drv/ipc/ipc.h>
+#include <ti/drv/ipc/src/ipc_mailbox.h>
+#include <ti/drv/ipc/src/ipc_virtioPrivate.h>
+#include <ti/drv/ipc/src/ipc_utils.h>
+#include <ti/drv/ipc/src/ipc_priv.h>
+
+/* IPC example includes */
+#include <ti/drv/ipc/examples/common/src/ipc_setup.h>
+#include <ti/drv/ipc/examples/rtos/ipc_extended_test/ipc_extended_setup.h>
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-/* Number of processors supports for each soc */
-#if defined (SOC_J721E)
-#define NUM_CORE_IN_TEST            9
-#elif defined (SOC_J7200)
-#define NUM_CORE_IN_TEST            5
-#elif defined (SOC_J721S2)
-#define NUM_CORE_IN_TEST            8
-#elif defined (SOC_J784S4)
-#define NUM_CORE_IN_TEST            12
-#else
-#error "Invalid SOC"
-#endif
+/* IPC test macros for message and end point */
+#define IPC_APP_MSGSIZE 256U
+#define IPC_APP_ENDPT1  13U
+
+/* Macros for invalid ids */
+#define IPC_APP_INVALID_ID    50U
+#define IPC_APP_INVALID_PROC  17U
+#define IPC_APP_MP_INVALID_ID 0xFFFFFFFFU
+
+/* Macros for ping */
+#define IPC_APP_SERVICE_PING      "ti.ipc4.ping-pong"
+#define IPC_APP_SERVICE_PING_LONG "ti.ipc4.ping-pong.ti.ipc4.ping-pong"
 
 /* ========================================================================== */
 /*                         Structure Declarations                             */
@@ -73,240 +83,370 @@
 /* None */
 
 /* ========================================================================== */
-/*                          Function Declarations                             */
+/*                            Global Variables                                */
 /* ========================================================================== */
 
 /* None */
 
 /* ========================================================================== */
+/*                          Function Declarations                             */
+/* ========================================================================== */
+
+static void IpcApp_virtioTests(void);
+static void IpcApp_multiprocessorTests(void);
+static void IpcApp_mailboxTests(void);
+static void IpcApp_utilTests(void);
+static void IpcApp_initTests(void);
+static void IpcApp_rpmsgTests(void);
+static void IpcApp_otherTests(void);
+
+/* ========================================================================== */
 /*                            Global Variables                                */
 /* ========================================================================== */
 
-/*
- * In the cfg file of R5F, C66x, default heap is 48K which is not
- * enough for 9 task_stack, so creating task_stack on global.
- * C7x cfg has 256k default heap, so no need to put task_stack on global
- */
-#if !defined(BUILD_C7X)
+/* Variables defined by test config */
+extern uint8_t  *gIpcApp_CntrlBufPtr;
+extern uint8_t  *gIpcApp_TaskStackBufPtr;
+extern uint8_t  *gIpcApp_SendBufPtr;
+extern uint8_t  *gIpcApp_RspBufPtr;
+extern uint8_t  *gIpcApp_SysVqBufPtr;
+extern uint32_t  gIpcApp_SelfProcId;
+extern uint32_t *gIpcApp_RemoteProcArray;
+extern uint32_t  gIpcApp_NumRemoteProc;
 
-uint8_t  gtaskStackBuf[(NUM_CORE_IN_TEST+2)*IPC_TASK_STACKSIZE];
+/* ========================================================================== */
+/*                          Function Definitions                              */
+/* ========================================================================== */
 
-#else
-
-/* IMPORTANT NOTE: For C7x,
- * - stack size and stack ptr MUST be 8KB aligned
- * - AND min stack size MUST be 16KB
- * - AND stack assigned for task context is "size - 8KB"
-*       - 8KB chunk for the stack area is used for interrupt handling in this task context
-*/
-uint8_t gtaskStackBuf[(NUM_CORE_IN_TEST+2)*IPC_TASK_STACKSIZE]
-__attribute__ ((section(".bss:taskStackSection")))
-__attribute__ ((aligned(8192)))
-    ;
-#endif
-
-uint8_t  gCntrlBuf[RPMSG_DATA_SIZE] __attribute__ ((section("ipc_data_buffer"), aligned (8)));
-uint8_t  gsysVqBuf[VQ_BUF_SIZE]  __attribute__ ((section ("ipc_data_buffer"), aligned (8)));
-uint8_t  gsendBuf[RPMSG_DATA_SIZE * NUM_CORE_IN_TEST]  __attribute__ ((section ("ipc_data_buffer"), aligned (8)));
-uint8_t  grspBuf[RPMSG_DATA_SIZE]  __attribute__ ((section ("ipc_data_buffer"), aligned (8)));
-uint8_t  gtimeoutBuf[RPMSG_DATA_SIZE] __attribute__ ((section ("ipc_data_buffer"), aligned (8)));
-
-uint8_t *pCntrlBuf    = gCntrlBuf;
-uint8_t *pTaskBuf     = gtaskStackBuf;
-uint8_t *pSendTaskBuf = gsendBuf;
-uint8_t *pRecvTaskBuf = grspBuf;
-uint8_t *pTimeoutBuf  = gtimeoutBuf;
-uint8_t *pSysVqBuf    = gsysVqBuf;
-
-#ifdef BUILD_MPU1_0
-uint32_t selfProcId = IPC_MPU1_0;
-uint32_t remoteProc[] =
+int32_t IpcApp_extTest(void)
 {
-#if defined (SOC_J721E)
-    IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1, IPC_MCU3_0, IPC_MCU3_1, IPC_C66X_1, IPC_C66X_2, IPC_C7X_1
-#elif defined (SOC_J7200)
-    IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1
-#elif defined (SOC_J721S2)
-    IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1, IPC_MCU3_0, IPC_MCU3_1, IPC_C7X_1, IPC_C7X_2
-#elif defined (SOC_J784S4)
-    IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1, IPC_MCU3_0, IPC_MCU3_1, IPC_MCU4_0, IPC_MCU4_1, IPC_C7X_1, IPC_C7X_2, IPC_C7X_3, IPC_C7X_4
-#endif
-};
-#endif
+    UART_printf("Starting IPC extended tests\n");
 
-#ifdef BUILD_MCU1_0
-uint32_t selfProcId = IPC_MCU1_0;
-uint32_t remoteProc[] =
+    IpcApp_virtioTests();
+
+    IpcApp_multiprocessorTests();
+
+    IpcApp_mailboxTests();
+
+    IpcApp_utilTests();
+
+    IpcApp_initTests();
+
+    IpcApp_rpmsgTests();
+
+    IpcApp_otherTests();
+
+    UART_printf("IPC extended tests have completed\n");
+
+    #if defined LDRA_DYN_COVERAGE_EXIT
+    UART_printf("\n LDRA ENTRY... \n");
+    upload_execution_history();
+    UART_printf("\n LDRA EXIT... \n");
+    #endif
+
+    UART_printf("All tests have passed.\n\n\n");
+
+    return 0;
+}
+
+/* ========================================================================== */
+/*                       Static Function Definitions                          */
+/* ========================================================================== */
+
+
+static void IpcApp_virtioTests(void)
 {
-#if defined (SOC_J721E)
-    IPC_MPU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1, IPC_MCU3_0, IPC_MCU3_1, IPC_C66X_1, IPC_C66X_2, IPC_C7X_1
-#elif defined (SOC_J7200)
-    IPC_MPU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1
-#elif defined (SOC_J721S2)
-    IPC_MPU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1, IPC_MCU3_0, IPC_MCU3_1, IPC_C7X_1, IPC_C7X_2
-#elif defined (SOC_J784S4)
-    IPC_MPU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1, IPC_MCU3_0, IPC_MCU3_1, IPC_MCU4_0, IPC_MCU4_1, IPC_C7X_1, IPC_C7X_2, IPC_C7X_3, IPC_C7X_4
-#endif
-};
-#endif
+    Virtio_Handle vq = NULL;
+    uint32_t p     = 0U;
 
-#ifdef BUILD_MCU1_1
-uint32_t selfProcId = IPC_MCU1_1;
-uint32_t remoteProc[] =
+    UART_printf("IPC extended tests: Running Virtio Tests\n");
+
+    /* Test virtio enable and disable callback */
+    Virtio_enableCallback(vq);
+    Virtio_disableCallback(vq);
+
+    /* Test NULL callback setting for Virtio */
+    Virtio_setCallback(p, NULL, NULL);
+
+    UART_printf("IPC extended tests: Virtio Tests Done\n");
+}
+
+static void IpcApp_multiprocessorTests(void)
 {
-#if defined (SOC_J721E)
-    IPC_MPU1_0, IPC_MCU1_0, IPC_MCU2_0, IPC_MCU2_1, IPC_MCU3_0, IPC_MCU3_1, IPC_C66X_1, IPC_C66X_2, IPC_C7X_1
-#elif defined (SOC_J7200)
-    IPC_MPU1_0, IPC_MCU1_0, IPC_MCU2_0, IPC_MCU2_1
-#elif defined (SOC_J721S2)
-    IPC_MPU1_0, IPC_MCU1_0, IPC_MCU2_0, IPC_MCU2_1, IPC_MCU3_0, IPC_MCU3_1, IPC_C7X_1, IPC_C7X_2
-#elif defined (SOC_J784S4)
-    IPC_MPU1_0, IPC_MCU1_0, IPC_MCU2_0, IPC_MCU2_1, IPC_MCU3_0, IPC_MCU3_1, IPC_MCU4_0, IPC_MCU4_1, IPC_C7X_1, IPC_C7X_2, IPC_C7X_3, IPC_C7X_4
-#endif
-};
-#endif
+    uint32_t numProc = gIpcApp_NumRemoteProc;
+    char* name       = "mcu2_0";
 
-#ifdef BUILD_MCU2_0
-uint32_t selfProcId = IPC_MCU2_0;
-uint32_t remoteProc[] =
+    UART_printf("IPC extended tests: Running Multiprocessor Tests\n");
+
+    /* Test multiprocessor config for invalid params */
+    Ipc_mpSetConfig(gIpcApp_SelfProcId, numProc, gIpcApp_RemoteProcArray);
+    Ipc_mpSetConfig(IPC_APP_INVALID_ID, numProc, gIpcApp_RemoteProcArray);
+    Ipc_mpSetConfig(IPC_APP_INVALID_ID, IPC_APP_INVALID_ID, gIpcApp_RemoteProcArray);
+    Ipc_mpSetConfig(gIpcApp_SelfProcId, 5U, gIpcApp_RemoteProcArray);
+
+    /* Test multiprocessor get id for different params */
+    Ipc_mpGetId(name);
+    Ipc_mpGetId((char*)(NULL));
+    Ipc_mpGetId((char*)(gIpcApp_SelfProcId));
+    Ipc_mpGetId(0U);
+    Ipc_mpGetId((char*)(IPC_APP_MP_INVALID_ID));
+
+    /* Test multiprocessor get name API for different params */
+    Ipc_mpGetName((uint32_t)(NULL));
+    Ipc_mpGetName(gIpcApp_SelfProcId);
+    Ipc_mpGetName(IPC_APP_INVALID_PROC);
+
+    /* Other tests */
+    Ipc_isCacheCoherent();
+    Ipc_mpGetRemoteProcId(IPC_APP_ENDPT1);
+    Ipc_getCoreName(IPC_APP_INVALID_PROC);
+
+    UART_printf("IPC extended tests: Multiprocessor Tests Done\n");
+}
+
+static void IpcApp_mailboxTests(void)
 {
-#if defined (SOC_J721E)
-    IPC_MPU1_0, IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_1, IPC_MCU3_0, IPC_MCU3_1, IPC_C66X_1, IPC_C66X_2, IPC_C7X_1
-#elif defined (SOC_J7200)
-    IPC_MPU1_0, IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_1
-#elif defined (SOC_J721S2)
-    IPC_MPU1_0, IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_1, IPC_MCU3_0, IPC_MCU3_1, IPC_C7X_1, IPC_C7X_2
-#elif defined (SOC_J784S4)
-    IPC_MPU1_0, IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_1, IPC_MCU3_0, IPC_MCU3_1, IPC_MCU4_0, IPC_MCU4_1, IPC_C7X_1, IPC_C7X_2, IPC_C7X_3, IPC_C7X_4
-#endif
-};
-#endif
+    uintptr_t baseAddr    = 0U;
+    uint32_t  queueId     = 0U;
+    uint32_t remoteProcId = 0U;
+    uint32_t timeoutCnt   = 0U;
+    uint32_t arg          = 0U;
+    uint32_t selfId       = Ipc_getCoreId();
+    Ipc_Object *ipcObjPtr    = getIpcObjInst(0U);
+    Ipc_OsalPrms *pOsalPrms  = &ipcObjPtr->initPrms.osalPrms;
+    Mailbox_hwiCallback func = NULL;
+    uint32_t userId;
+    uint32_t clusterId;
 
-#ifdef BUILD_MCU2_1
-uint32_t selfProcId = IPC_MCU2_1;
-uint32_t remoteProc[] =
+    UART_printf("IPC extended tests: Running Mailbox Tests\n");
+
+    /* Test mailbox register API for different params */
+    Ipc_mailboxRegister(gIpcApp_SelfProcId, IPC_APP_INVALID_ID, func, arg, timeoutCnt);
+    Ipc_mailboxRegister(gIpcApp_SelfProcId, remoteProcId, func, arg, timeoutCnt);
+    Ipc_mailboxRegister(gIpcApp_SelfProcId, remoteProcId, func, arg, 100U);
+
+    /* Test mailbox interrupt enable API for different params */
+    Ipc_mailboxEnableNewMsgInt(IPC_APP_ENDPT1, remoteProcId);
+    Ipc_mailboxEnableNewMsgInt(gIpcApp_SelfProcId, IPC_APP_ENDPT1);
+
+    /* Test mailbox interrupt disable API for different params */
+    Ipc_mailboxDisableNewMsgInt(gIpcApp_SelfProcId, remoteProcId);
+    Ipc_mailboxDisableNewMsgInt(IPC_APP_ENDPT1, IPC_APP_ENDPT1);
+    Ipc_mailboxDisableNewMsgInt(IPC_APP_ENDPT1, 15U);
+    Ipc_mailboxDisableNewMsgInt(15U, IPC_APP_ENDPT1);
+
+    /* Test mailbox send API */
+    pOsalPrms -> disableAllIntr = NULL ;
+    pOsalPrms -> restoreAllIntr = NULL ;
+    Ipc_mailboxSend(selfId, remoteProcId, 1U, timeoutCnt);
+
+    /* Test mailbox clear API */
+    Ipc_mailboxClear(baseAddr,queueId);
+
+    /* Test mailbox get APIs */
+    Ipc_getMailboxInfoTx(IPC_APP_INVALID_PROC, remoteProcId, &clusterId, &userId, &queueId);
+    Ipc_getMailboxInfoRx(IPC_APP_INVALID_PROC, remoteProcId, &clusterId, &userId, &queueId);
+    Ipc_getNavss512MailboxInputIntr(19U, userId);
+    Ipc_getNavss512MailboxInputIntr(clusterId, 5U);
+    Ipc_getNavss512MailboxInputIntr(clusterId, MAILBOX_USER_INVALID);
+    Ipc_getNavss512MailboxInputIntr(MAILBOX_CLUSTER_INVALID, userId);
+
+    UART_printf("IPC extended tests: Mailbox Tests Done\n");
+}
+
+static void IpcApp_utilTests(void)
 {
-#if defined (SOC_J721E)
-    IPC_MPU1_0, IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU3_0, IPC_MCU3_1, IPC_C66X_1, IPC_C66X_2, IPC_C7X_1
-#elif defined (SOC_J7200)
-    IPC_MPU1_0, IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_0
-#elif defined (SOC_J721S2)
-    IPC_MPU1_0, IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU3_0, IPC_MCU3_1, IPC_C7X_1, IPC_C7X_2
-#elif defined (SOC_J784S4)
-    IPC_MPU1_0, IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU3_0, IPC_MCU3_1, IPC_MCU4_0, IPC_MCU4_1, IPC_C7X_1, IPC_C7X_2, IPC_C7X_3, IPC_C7X_4
-#endif
-};
-#endif
+    uint32_t size  = 0U;
+    uint32_t align = 0U;
+    IpcUtils_HeapParams hparam;
+    IpcUtils_HeapHandle pHndl;
+    IpcUtils_QHandle qhandle;
+    IpcUtils_QElem   qelem;
+    RPMessage_Handle *payload = NULL;
 
-#ifdef BUILD_MCU3_0
-uint32_t selfProcId = IPC_MCU3_0;
-uint32_t remoteProc[] =
+    /* Assign NULL to heap params */
+    hparam.buf = NULL;
+
+    UART_printf("IPC extended tests: Running Util Tests\n");
+
+    /* Test queue APIs */
+    IpcUtils_Qcreate(NULL);
+    IpcUtils_QgetHeadNode(&qhandle);
+    IpcUtils_QgetHeadNode(NULL_PTR);
+    IpcUtils_Qenqueue(&qhandle, &qelem);
+    IpcUtils_Qenqueue(&qhandle, NULL);
+    IpcUtils_Qdequeue(&qhandle);
+    IpcUtils_Qnext(&qelem);
+    IpcUtils_Qnext(NULL_PTR);
+    IpcUtils_Qdelete(&qhandle);
+    IpcUtils_Qdelete(NULL_PTR);
+    IpcUtils_QisEmpty(NULL);
+    IpcUtils_Qremove(NULL);
+
+    /* Test heap APIs */
+    IpcUtils_HeapCreate(NULL, NULL);
+    IpcUtils_HeapCreate(&pHndl, &hparam);
+    IpcUtils_HeapAlloc(&pHndl, size, align);
+    IpcUtils_HeapAlloc(NULL_PTR, size, align);
+    IpcUtils_HeapFree(&pHndl, NULL, size);
+    IpcUtils_HeapFree(&pHndl, &payload, size);
+    IpcUtils_HeapFree(NULL, &payload, size);
+    IpcUtils_HeapDelete(&pHndl);
+    IpcUtils_HeapDelete(NULL_PTR);
+
+    /* Test IPC Utils init/deinit */
+    IpcUtils_Init(NULL);
+    IpcUtils_DeInit();
+
+    UART_printf("IPC extended tests: Util Tests Done\n");
+}
+
+static void IpcApp_initTests(void)
 {
-#if defined (SOC_J721E)
-    IPC_MPU1_0, IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1, IPC_MCU3_1, IPC_C66X_1, IPC_C66X_2, IPC_C7X_1
-#elif defined (SOC_J721S2)
-    IPC_MPU1_0, IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1, IPC_MCU3_1, IPC_C7X_1, IPC_C7X_2
-#elif defined (SOC_J784S4)
-    IPC_MPU1_0, IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1, IPC_MCU3_1, IPC_MCU4_0, IPC_MCU4_1, IPC_C7X_1, IPC_C7X_2, IPC_C7X_3, IPC_C7X_4
-#endif
-};
-#endif
+    uint32_t numProc = gIpcApp_NumRemoteProc;
+    Ipc_VirtIoParams vqParam;
 
-#ifdef BUILD_MCU3_1
-uint32_t selfProcId = IPC_MCU3_1;
-uint32_t remoteProc[] =
+    UART_printf("IPC extended tests: Running Init Tests\n");
+
+    /* Initialize Virtio */
+    vqParam.vqObjBaseAddr = (void*)gIpcApp_SysVqBufPtr;
+    vqParam.vqBufSize     = numProc * Ipc_getVqObjMemoryRequiredPerCore();
+    vqParam.vringBaseAddr = (void*)VRING_BASE_ADDRESS;
+    vqParam.vringBufSize  = IPC_VRING_BUFFER_SIZE;
+    vqParam.timeoutCnt    = 100;  /* Wait for counts */
+
+    /* Test IPC null initialization */
+    IpcInitPrms_init(0U, NULL_PTR);
+    Ipc_init(NULL);
+
+    /* Test Ipc_initVirtIO with NULL and valid parameters */
+    Ipc_initVirtIO(NULL);
+    Ipc_initVirtIO(&vqParam);
+
+    UART_printf("IPC extended tests: Init Tests Done\n");
+}
+
+static void IpcApp_rpmsgTests(void)
 {
-#if defined (SOC_J721E)
-    IPC_MPU1_0, IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1, IPC_MCU3_0, IPC_C66X_1, IPC_C66X_2, IPC_C7X_1
-#elif defined (SOC_J721S2)
-    IPC_MPU1_0, IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1, IPC_MCU3_0, IPC_C7X_1, IPC_C7X_2
-#elif defined (SOC_J784S4)
-    IPC_MPU1_0, IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1, IPC_MCU3_0, IPC_MCU4_0, IPC_MCU4_1, IPC_C7X_1, IPC_C7X_2, IPC_C7X_3, IPC_C7X_4
-#endif
-};
-#endif
+    uint32_t announcedEndpts = 0U;
+    uint32_t remoteProcId = 0U;
+    uint32_t srcEndPt     = 0U;
+    uint32_t procId       = Ipc_mpGetSelfId();
+    uint32_t selfId       = Ipc_getCoreId();
+    uint16_t len          = 0U;
+    void     *buf         = NULL;
+    char     str[IPC_APP_MSGSIZE];
+    uint32_t remoteEndPt;
+    RPMessage_Handle handle = NULL;
 
-#ifdef BUILD_MCU4_0
-uint32_t selfProcId = IPC_MCU4_0;
-uint32_t remoteProc[] =
+    UART_printf("IPC extended tests: Running RPMessage Tests\n");
+
+    /* Test RP message announce */
+    RPMessage_announce(0U, announcedEndpts, NULL_PTR);
+    RPMessage_announce(0U, announcedEndpts, NULL_PTR);
+    RPMessage_announce(0U, 0U, NULL);
+    RPMessage_announce(32U, 0U, NULL);
+    RPMessage_announce(IPC_APP_INVALID_PROC, 0U, IPC_APP_SERVICE_PING_LONG);
+    RPMessage_announce(IPC_APP_INVALID_PROC, 0U, IPC_APP_SERVICE_PING);
+
+    /* Test RPMessage send/receive with invalid parameters */
+    RPMessage_send(NULL, IPC_APP_INVALID_ID, IPC_APP_ENDPT1, srcEndPt, (Ptr)buf, len);
+    RPMessage_send(NULL, procId, IPC_APP_ENDPT1, srcEndPt, (Ptr)buf, len);
+    RPMessage_recvNb(handle, (Ptr)str, &len, &remoteEndPt, &remoteProcId);
+
+    /* Test RPMessage unblock */
+    Ipc_Object *ipcObjPtr = getIpcObjInst(0U);
+    Ipc_OsalPrms *pOsalPrms = &ipcObjPtr->initPrms.osalPrms;
+    pOsalPrms -> unlockMutex = NULL ;
+    RPMessage_unblock(handle);
+    RPMessage_unblock(handle);
+
+    /* Test RPMessage get remote end point APIs */
+    RPMessage_getRemoteEndPt(selfId, NULL, &remoteProcId, &remoteEndPt, 1000);
+    RPMessage_getRemoteEndPtToken(IPC_MCU1_0, NULL, &remoteProcId, &remoteEndPt, 1000, 0);
+
+    UART_printf("IPC extended tests: RPMessage Tests Done\n");
+}
+
+static void IpcApp_otherTests(void)
 {
-#if defined (SOC_J784S4)
-    IPC_MPU1_0, IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1, IPC_MCU3_0, IPC_MCU3_1, IPC_MCU4_1, IPC_C7X_1, IPC_C7X_2, IPC_C7X_3, IPC_C7X_4
-#endif
-};
-#endif
+    uint32_t remoteProcId = 0U;
+    uint32_t index        = 0U;
+    uint32_t size         = 0U;
+    uint32_t token        = 0U;
+    uint32_t daAddr       = 0U;
+    uint32_t remoteEndPt;
+    RPMessage_Params cntrlParam;
+    RPMessage_Params params;
 
-#ifdef BUILD_MCU4_1
-uint32_t selfProcId = IPC_MCU4_1;
-uint32_t remoteProc[] =
-{
-#if defined (SOC_J784S4)
-    IPC_MPU1_0, IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1, IPC_MCU3_0, IPC_MCU3_1, IPC_MCU4_0, IPC_C7X_1, IPC_C7X_2, IPC_C7X_3, IPC_C7X_4
-#endif
-};
-#endif
+    /* Initialize an RPMessage_Params structure */
+    RPMessageParams_init(&cntrlParam);
 
-#ifdef BUILD_C66X_1
-uint32_t selfProcId = IPC_C66X_1;
-uint32_t remoteProc[] =
-{
-    IPC_MPU1_0, IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1, IPC_MCU3_0, IPC_MCU3_1, IPC_C66X_2, IPC_C7X_1
-};
-#endif
+    UART_printf("IPC extended tests: Running Other Tests\n");
 
-#ifdef BUILD_C66X_2
-uint32_t selfProcId = IPC_C66X_2;
-uint32_t remoteProc[] =
-{
-    IPC_MPU1_0, IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1, IPC_MCU3_0, IPC_MCU3_1, IPC_C66X_1, IPC_C7X_1
-};
-#endif
+    /* Set HeapMemory for control task */
+    cntrlParam.buf         = gIpcApp_CntrlBufPtr;
+    cntrlParam.bufSize     = RPMSG_DATA_SIZE;
+    cntrlParam.stackBuffer = &gIpcApp_TaskStackBufPtr[index * IPC_TASK_STACKSIZE];
+    cntrlParam.stackSize   = IPC_TASK_STACKSIZE;
 
-#ifdef BUILD_C7X_1
-uint32_t selfProcId = IPC_C7X_1;
-uint32_t remoteProc[] =
-{
-#if defined (SOC_J721E)
-    IPC_MPU1_0, IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1, IPC_MCU3_0, IPC_MCU3_1, IPC_C66X_1, IPC_C66X_2
-#elif defined (SOC_J721S2)
-    IPC_MPU1_0, IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1, IPC_MCU3_0, IPC_MCU3_1, IPC_C7X_2
-#elif defined (SOC_J784S4)
-    IPC_MPU1_0, IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1, IPC_MCU3_0, IPC_MCU3_1, IPC_MCU4_0, IPC_MCU4_1, IPC_C7X_2, IPC_C7X_3, IPC_C7X_4
-#endif
-};
-#endif
+    /* Test RPMessage_init with NULL parameters */
+    RPMessage_init(NULL);
 
-#ifdef BUILD_C7X_2
-uint32_t selfProcId = IPC_C7X_2;
-uint32_t remoteProc[] =
-{
-#if defined (SOC_J721S2)
-    IPC_MPU1_0, IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1, IPC_MCU3_0, IPC_MCU3_1, IPC_C7X_1
-#elif defined (SOC_J784S4)
-    IPC_MPU1_0, IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1, IPC_MCU3_0, IPC_MCU3_1, IPC_MCU4_0, IPC_MCU4_1, IPC_C7X_1, IPC_C7X_3, IPC_C7X_4
-#endif
-};
-#endif
+    cntrlParam.stackSize   = IPC_TASK_STACKSIZE;
+    RPMessage_init(&cntrlParam);
+    RPMessage_getMessageBufferSize();
 
-#ifdef BUILD_C7X_3
-uint32_t selfProcId = IPC_C7X_3;
-uint32_t remoteProc[] =
-{
-#if defined (SOC_J784S4)
-    IPC_MPU1_0, IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1, IPC_MCU3_0, IPC_MCU3_1, IPC_MCU4_0, IPC_MCU4_1, IPC_C7X_1, IPC_C7X_2, IPC_C7X_4
-#endif
-};
-#endif
+    RPMessage_unblockGetRemoteEndPt(token);
 
-#ifdef BUILD_C7X_4
-uint32_t selfProcId = IPC_C7X_4;
-uint32_t remoteProc[] =
-{
-#if defined (SOC_J784S4)
-    IPC_MPU1_0, IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1, IPC_MCU3_0, IPC_MCU3_1, IPC_MCU4_0, IPC_MCU4_1, IPC_C7X_1, IPC_C7X_2, IPC_C7X_3
-#endif
-};
-#endif
-uint32_t *pRemoteProcArray = remoteProc;
-uint32_t  gNumRemoteProc = sizeof(remoteProc)/sizeof(remoteProc[0]);
+    /*Test RPMessage_unblockGetRemoteEndPt with NULL Pointer */
+    {
+        Ipc_Object *ipcObjPtr = getIpcObjInst(0U);
+        Ipc_OsalPrms *pOsalPrms = &ipcObjPtr->initPrms.osalPrms;
+        pOsalPrms -> unLockHIsrGate = NULL_PTR ;
+        pOsalPrms -> lockHIsrGate = NULL_PTR ;
+        pOsalPrms -> unlockMutex = NULL_PTR ;
+        RPMessage_unblockGetRemoteEndPt(token);
+    }
 
+    IpcUtils_Qput(NULL,NULL);
+
+    Ipc_Object *ipcObjPtr = getIpcObjInst(0U);
+    Ipc_OsalPrms *pOsalPrms = &ipcObjPtr->initPrms.osalPrms;
+    pOsalPrms -> createMutex = NULL_PTR ;
+    pOsalPrms -> lockMutex =  NULL_PTR ;
+    pOsalPrms -> deleteMutex = NULL_PTR ;
+    pOsalPrms -> lockHIsrGate = NULL_PTR ;
+    pOsalPrms -> unLockHIsrGate = NULL_PTR ;
+
+    RPMessage_getRemoteEndPtToken(IPC_MCU1_0, IPC_APP_SERVICE_PING_LONG, &remoteProcId,
+                &remoteEndPt,1000,0);
+
+    RPMessage_getRemoteEndPt(Ipc_getCoreId(), NULL, &remoteProcId, &remoteEndPt, 1000);
+
+    RPMessage_getRemoteEndPtToken(IPC_MCU1_0, NULL, &remoteProcId, &remoteEndPt, 1000, 0);
+
+    RPMessageParams_init(NULL);
+
+    RPMessageParams_init(&params);
+
+    Ipc_getVqObjMemoryRequired();
+
+    IpcUtils_getMemoryAddress(daAddr,size);
+
+    Ipc_lateVirtioCreate(IPC_MCU1_0);
+
+    RPMessage_lateInit(IPC_MCU1_0);
+
+    RPMessage_deInit();
+    
+    Ipc_loadResourceTable(NULL);
+    
+    Ipc_getResourceTraceBufPtr();
+    
+    Ipc_resetCoreVirtIO(IPC_MCU1_0);
+    
+    Ipc_deinit();
+    
+    UART_printf("IPC extended tests: Other Tests Done\n");
+}

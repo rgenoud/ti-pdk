@@ -200,8 +200,11 @@ static int32_t OsalApp_taskGeneralTests(void)
     TaskP_sleepInMsecs(100);
     TaskP_sleep(100);
     end = TimerP_getTimeInUsecs();
-    
-    if((end - start) > (200000+5000))
+
+    /* LDRA instrumentation adds a lot of code into the OSAL library.
+     * This increases execution time of these APIs and hence, the measured *time gets hampered.
+     * Hence, increase the tolerance of time measurement. */
+    if((end - start) > (10*(200000+5000)))
     {
         result = osal_FAILURE;
     }
@@ -273,6 +276,7 @@ static int32_t OsalApp_taskNegativeTests(void)
 {
     TaskP_Params    params;
     TaskP_Handle    handle;
+    TaskP_Handle    junkHandle;
     int32_t         result = osal_OK;
 
 #if defined(FREERTOS)
@@ -302,6 +306,13 @@ static int32_t OsalApp_taskNegativeTests(void)
         result = osal_FAILURE;
     }
 #endif
+
+    memset(&junkHandle, 0U, sizeof(TaskP_Handle));
+
+    if(TaskP_OK == TaskP_delete(&junkHandle))
+    {
+        result = osal_FAILURE;
+    }
 
     if((TaskP_OK != TaskP_delete(&handle)) || (TaskP_OK == TaskP_delete(NULL_PTR)))
     {

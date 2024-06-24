@@ -41,6 +41,7 @@
 #include <ti/csl/soc.h>
 #include <SAFERTOS_log.h>
 #include <SafeRTOS_API.h>
+#include <ti/board/board.h>
 
 #include "safertos_config.h"
 
@@ -672,6 +673,18 @@ void pong_main( void *args )
 void test_safertos_main( void *args )
 {
     portBaseType xStatus;
+#if defined(BUILD_MCU1_0)
+    Board_initCfg boardCfg;
+    Board_STATUS  status;
+
+    boardCfg = BOARD_INIT_PINMUX_CONFIG |
+               BOARD_INIT_UART_STDIO;
+
+    status = Board_init(boardCfg);
+
+    DebugP_assert(status == BOARD_SOK);
+
+#endif
 
     /* Create the semaphore used by the first two tasks. */
     /* safertos creates binary semaphore with init value of 1 */

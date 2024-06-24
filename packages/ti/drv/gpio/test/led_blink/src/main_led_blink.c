@@ -202,8 +202,10 @@ void gpio_test(void* arg0, void* arg1)
 #else
 int main()
 {
-    Board_initGPIO();
 #endif
+
+    /* Call board init functions */
+    Board_initGPIO();
 
     /* GPIO initialization */
     GPIO_init();
@@ -249,8 +251,6 @@ int main()
  */
 int main(void)
 {
-    /* Call board init functions */
-    Board_initGPIO();
 
     TaskP_Params taskParams;
     

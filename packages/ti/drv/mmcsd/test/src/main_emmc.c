@@ -159,6 +159,7 @@ void InitMmu(void)
 #endif
 
 Uint32 readWriteTestFlag = 0;
+volatile uint32_t emuwait_board=1;
 
 typedef enum {
    MMCSD_REGRESSION_INTRMODE_TEST,
@@ -554,11 +555,25 @@ void mmcsd_test()
 void mmcsd_test(void *arg0, void *arg1)
 #endif
 {
-    MMCSD_Error ret;
+
+  /* Call board init functions */
+  Board_initCfg boardCfg;
+  Board_STATUS board_status;
+
+  MMCSD_Error ret;
 	uint32_t testprofile;
 	mmcsdTestMMCProfile_t *testProfilePtr;
 	int32_t testID=0; /* Default */
-    uint32_t num_tests_passed=0,num_tests_run=0;
+  uint32_t num_tests_passed=0,num_tests_run=0;
+
+  boardCfg = BOARD_INIT_PINMUX_CONFIG |
+  BOARD_INIT_MODULE_CLOCK | BOARD_INIT_UART_STDIO;
+
+  board_status=Board_init(boardCfg);
+  if(board_status!=BOARD_SOK) {
+		while(emuwait_board);
+	}
+
 #ifndef MMCSD_REGRESSION_TEST
     uint32_t defaults_test_index=0;
 #endif
@@ -735,16 +750,12 @@ void mmcsd_test(void *arg0, void *arg1)
 
 }
 
-volatile uint32_t emuwait_board=1;
 /*
  *  ======== main ========
  */
 
 int main(void)
 {
-    /* Call board init functions */
-    Board_initCfg boardCfg;
-    Board_STATUS board_status;
 
 #ifdef RTOS_ENV
     TaskP_Handle task;
@@ -752,17 +763,7 @@ int main(void)
 
 
     OS_init();
-#endif
 
-    boardCfg = BOARD_INIT_PINMUX_CONFIG |
-        BOARD_INIT_MODULE_CLOCK | BOARD_INIT_UART_STDIO;
-
-    board_status=Board_init(boardCfg);
-    if(board_status!=BOARD_SOK) {
-		while(emuwait_board);
-	}
-
-#ifdef RTOS_ENV
     TaskP_Params_init (&taskParams);
     taskParams.priority     = 2;
     taskParams.stack        = gAppTskStackMain;

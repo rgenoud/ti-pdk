@@ -54,24 +54,24 @@
  *  Static internal functions
  * ----------------------------------------------------------------------------
  */
-static uint32_t CSL_bcdmaMapChanIdx( CSL_BcdmaCfg *pCfg, uint32_t chanIdx, CSL_BcdmaChanType *chanType );
+static uint32_t CSL_bcdmaMapChanIdx( const CSL_BcdmaCfg *pCfg, uint32_t chanIdx, CSL_BcdmaChanType *chanType );
 static int32_t CSL_bcdmaDoChanOp( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanOp chanOp, uint32_t chanIdx, void *pOpData );
-static bool    CSL_bcdmaChanOpIsValidChanIdx( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx );
-static bool    CSL_bcdmaChanOpIsChanEnabled( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx );
-static int32_t CSL_bcdmaChanOpCfgChan( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData );
-static int32_t CSL_bcdmaChanOpSetChanEnable( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, bool bEnable );
-static int32_t CSL_bcdmaChanOpSetChanPause( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, bool bPause );
-static int32_t CSL_bcdmaChanOpTeardownChan( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData );
-static int32_t CSL_bcdmaChanOpTriggerChan( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx );
-static int32_t CSL_bcdmaChanOpGetChanRT( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData );
-static int32_t CSL_bcdmaChanOpSetChanRT( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData );
-static int32_t CSL_bcdmaChanOpGetChanStats( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData );
-static int32_t CSL_bcdmaChanOpDecChanStats( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData );
-static int32_t CSL_bcdmaChanOpAccessRemotePeerReg( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData, bool bRead );
-static int32_t CSL_bcdmaChanOpSetBurstSize( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData );
-static int32_t CSL_bcdmaChanOpClearError( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx );
+static bool    CSL_bcdmaChanOpIsValidChanIdx( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx );
+static bool    CSL_bcdmaChanOpIsChanEnabled( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx );
+static int32_t CSL_bcdmaChanOpCfgChan( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData );
+static int32_t CSL_bcdmaChanOpSetChanEnable(const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, bool bEnable );
+static int32_t CSL_bcdmaChanOpSetChanPause( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, bool bPause );
+static int32_t CSL_bcdmaChanOpTeardownChan( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData );
+static int32_t CSL_bcdmaChanOpTriggerChan( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx );
+static int32_t CSL_bcdmaChanOpGetChanRT( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData );
+static int32_t CSL_bcdmaChanOpSetChanRT( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData );
+static int32_t CSL_bcdmaChanOpGetChanStats( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData );
+static int32_t CSL_bcdmaChanOpDecChanStats( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData );
+static int32_t CSL_bcdmaChanOpAccessRemotePeerReg( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData, bool bRead );
+static int32_t CSL_bcdmaChanOpSetBurstSize( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, const void *pOpData );
+static int32_t CSL_bcdmaChanOpClearError( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx );
 
-static uint32_t CSL_bcdmaMapChanIdx( CSL_BcdmaCfg *pCfg, uint32_t chanIdx, CSL_BcdmaChanType *chanType )
+static uint32_t CSL_bcdmaMapChanIdx( const CSL_BcdmaCfg *pCfg, uint32_t chanIdx, CSL_BcdmaChanType *chanType )
 {
     uint32_t base0chanIdx;
 
@@ -101,7 +101,7 @@ static int32_t CSL_bcdmaDoChanOp( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanOp chanOp, ui
 {
     int32_t retVal = CSL_EFAIL;
 
-    if( pCfg == NULL )
+    if( NULL == pCfg )
     {
         retVal = CSL_EBADARGS;
     }
@@ -113,11 +113,11 @@ static int32_t CSL_bcdmaDoChanOp( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanOp chanOp, ui
          * Call CSL_bcdmaGetCfg to populate the bcdma cfg structure if it appears
          * the caller has not yet done so.
          */
-        if( (pCfg->bcChanCnt == (uint32_t)0U) || (pCfg->splitTxChanCnt == (uint32_t)0U) || (pCfg->splitRxChanCnt == (uint32_t)0U) ) {
+        if( ((uint32_t)0U == pCfg->bcChanCnt) || ((uint32_t)0U == pCfg->splitTxChanCnt) || ((uint32_t)0U == pCfg->splitRxChanCnt) ) {
             CSL_bcdmaGetCfg( pCfg );
         }
         base0chanIdx = CSL_bcdmaMapChanIdx( pCfg, chanIdx, &chanType );
-        if( base0chanIdx != CSL_BCDMA_INVALID_CHANNEL_INDEX )
+        if( CSL_BCDMA_INVALID_CHANNEL_INDEX != base0chanIdx )
         {
             retVal = CSL_bcdmaChanOp( pCfg, chanOp, chanType, base0chanIdx, pOpData );
         }
@@ -125,43 +125,43 @@ static int32_t CSL_bcdmaDoChanOp( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanOp chanOp, ui
     return retVal;
 }
 
-static bool CSL_bcdmaChanOpIsValidChanIdx( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx )
+static bool CSL_bcdmaChanOpIsValidChanIdx( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx )
 {
-    bool retVal = (bool)true;
+    bool retVal = BTRUE;
 
-    if( chanType == CSL_BCDMA_CHAN_TYPE_BLOCK_COPY )
+    if( CSL_BCDMA_CHAN_TYPE_BLOCK_COPY == chanType )
     {
         if( chanIdx > pCfg->bcChanCnt )
         {
-            retVal = (bool)false;
+            retVal = BFALSE;
         }
     }
-    else if( chanType == CSL_BCDMA_CHAN_TYPE_SPLIT_RX )
+    else if( CSL_BCDMA_CHAN_TYPE_SPLIT_RX == chanType )
     {
         if( chanIdx > pCfg->splitRxChanCnt )
         {
-            retVal = (bool)false;
+            retVal = BFALSE;
         }
     }
-    else if( chanType == CSL_BCDMA_CHAN_TYPE_SPLIT_TX )
+    else if( CSL_BCDMA_CHAN_TYPE_SPLIT_TX == chanType )
     {
         if( chanIdx > pCfg->splitTxChanCnt )
         {
-            retVal = (bool)false;
+            retVal = BFALSE;
         }
     }
     else
     {
-        retVal = (bool)false;
+        retVal = BFALSE;
     }
     return retVal;
 }
 
-static int32_t CSL_bcdmaChanOpCfgChan( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData )
+static int32_t CSL_bcdmaChanOpCfgChan( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData )
 {
     int32_t retVal = CSL_PASS;
 
-    if( pOpData == NULL )
+    if( NULL == pOpData )
     {
         retVal = CSL_EBADARGS;
     }
@@ -170,7 +170,7 @@ static int32_t CSL_bcdmaChanOpCfgChan( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType cha
         uint32_t regVal;
         switch( chanType )
         {
-#ifdef CSL_BCDMA_BCCFG_CHAN_CFG_PAUSE_ON_ERR_MASK
+#if defined (SOC_J784S4) || defined (SOC_J721S2)
             case CSL_BCDMA_CHAN_TYPE_BLOCK_COPY:
                 {
                     CSL_BcdmaTxChanCfg *pChanCfg = (CSL_BcdmaTxChanCfg *)pOpData;
@@ -194,7 +194,7 @@ static int32_t CSL_bcdmaChanOpCfgChan( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType cha
                         CSL_REG32_WR( &pCfg->pBcChanCfgRegs->CHAN[chanIdx].PRI_CTRL, regVal );
                         /* TST_SCHED */
                         CSL_REG32_WR( &pCfg->pBcChanCfgRegs->CHAN[chanIdx].TST_SCHED, CSL_FMK(BCDMA_BCCFG_CHAN_TST_SCHED_PRIORITY, pChanCfg->dmaPriority) );
-#ifdef CSL_BCDMA_BCCFG_CHAN_VIRT_CTRL_VIRTID_MASK
+#if defined (SOC_J784S4) || defined (SOC_J721S2)
                         /* VIRT_CTRL */
                         CSL_REG32_WR( &pCfg->pBcChanCfgRegs->CHAN[chanIdx].VIRT_CTRL, CSL_FMK(BCDMA_BCCFG_CHAN_VIRT_CTRL_VIRTID, pChanCfg->virtId) );
 #endif
@@ -219,8 +219,15 @@ static int32_t CSL_bcdmaChanOpCfgChan( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType cha
                         CSL_FINS( regVal, BCDMA_TXCCFG_CHAN_TCFG_PAUSE_ON_ERR, pChanCfg->pauseOnError);
                         CSL_FINS( regVal, BCDMA_TXCCFG_CHAN_TCFG_BURST_SIZE, pChanCfg->burstSize );
                         CSL_FINS( regVal, BCDMA_TXCCFG_CHAN_TCFG_TDTYPE, pChanCfg->tdType );
-                        CSL_FINS( regVal, BCDMA_TXCCFG_CHAN_TCFG_NOTDPKT, pChanCfg->bNoTeardownCompletePkt );
-#ifdef CSL_BCDMA_TXCCFG_CHAN_TCFG_ATYPE_MASK
+                        if(pChanCfg->bNoTeardownCompletePkt == BTRUE)
+                        {
+                            CSL_FINS( regVal, BCDMA_TXCCFG_CHAN_TCFG_NOTDPKT, 1U);
+                        }
+                        else
+                        {
+                            CSL_FINS( regVal, BCDMA_TXCCFG_CHAN_TCFG_NOTDPKT, 0U);
+                        }
+#if defined (SOC_J784S4) || defined (SOC_J721S2)
                         CSL_FINS( regVal, BCDMA_TXCCFG_CHAN_TCFG_ATYPE, pChanCfg->addrType );
 #endif
                         CSL_REG32_WR( &pCfg->pTxChanCfgRegs->CHAN[chanIdx].TCFG, regVal );
@@ -232,7 +239,7 @@ static int32_t CSL_bcdmaChanOpCfgChan( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType cha
                         CSL_REG32_WR( &pCfg->pTxChanCfgRegs->CHAN[chanIdx].THREAD, CSL_FMK(BCDMA_TXCCFG_CHAN_THREAD_ID, pChanCfg->threadId) );
                         /* TST_SCHED */
                         CSL_REG32_WR( &pCfg->pTxChanCfgRegs->CHAN[chanIdx].TST_SCHED, CSL_FMK(BCDMA_TXCCFG_CHAN_TST_SCHED_PRIORITY, pChanCfg->dmaPriority) );
-#ifdef CSL_BCDMA_TXCCFG_CHAN_TVIRT_CTRL_VIRTID_MASK
+#if defined (SOC_J784S4) || defined (SOC_J721S2)
                         /* TVIRT_CTRL */
                         CSL_REG32_WR( &pCfg->pTxChanCfgRegs->CHAN[chanIdx].TVIRT_CTRL, CSL_FMK(BCDMA_TXCCFG_CHAN_TVIRT_CTRL_VIRTID, pChanCfg->virtId) );
 #endif
@@ -255,10 +262,10 @@ static int32_t CSL_bcdmaChanOpCfgChan( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType cha
                         regVal = CSL_REG32_RD( &pCfg->pRxChanCfgRegs->CHAN[chanIdx].RCFG );
                         CSL_FINS( regVal, BCDMA_RXCCFG_CHAN_RCFG_PAUSE_ON_ERR, pChanCfg->pauseOnError);
                         CSL_FINS( regVal, BCDMA_RXCCFG_CHAN_RCFG_BURST_SIZE, pChanCfg->burstSize );
-#ifdef CSL_BCDMA_RXCCFG_CHAN_RCFG_IGNORE_LONG_MASK
+#if defined (SOC_J784S4) || defined (SOC_J721S2)
                         CSL_FINS( regVal, BCDMA_RXCCFG_CHAN_RCFG_IGNORE_LONG, pChanCfg->bIgnoreLongPkts ? (uint32_t)1U : (uint32_t)0U );
 #endif
-#ifdef CSL_BCDMA_RXCCFG_CHAN_RCFG_ATYPE_MASK
+#if defined (SOC_J784S4) || defined (SOC_J721S2)
                         CSL_FINS( regVal, BCDMA_RXCCFG_CHAN_RCFG_ATYPE, pChanCfg->addrType );
 #endif
                         CSL_REG32_WR( &pCfg->pRxChanCfgRegs->CHAN[chanIdx].RCFG, regVal );
@@ -270,7 +277,7 @@ static int32_t CSL_bcdmaChanOpCfgChan( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType cha
                         CSL_REG32_WR( &pCfg->pRxChanCfgRegs->CHAN[chanIdx].THREAD, CSL_FMK(BCDMA_RXCCFG_CHAN_THREAD_ID, pChanCfg->threadId) );
                         /* RST_SCHED */
                         CSL_REG32_WR( &pCfg->pRxChanCfgRegs->CHAN[chanIdx].RST_SCHED, CSL_FMK(BCDMA_RXCCFG_CHAN_RST_SCHED_PRIORITY, pChanCfg->dmaPriority) );
-#ifdef CSL_BCDMA_RXCCFG_CHAN_RVIRT_CTRL_VIRTID_MASK
+#if defined (SOC_J784S4) || defined (SOC_J721S2)
                         /* RVIRT_CTRL */
                         CSL_REG32_WR( &pCfg->pRxChanCfgRegs->CHAN[chanIdx].RVIRT_CTRL, CSL_FMK(BCDMA_RXCCFG_CHAN_RVIRT_CTRL_VIRTID, pChanCfg->virtId) );
 #endif
@@ -285,14 +292,14 @@ static int32_t CSL_bcdmaChanOpCfgChan( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType cha
     return retVal;
 }
 
-static bool CSL_bcdmaChanOpIsChanEnabled( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx )
+static bool CSL_bcdmaChanOpIsChanEnabled( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx )
 {
     uint32_t regVal;
 
     switch( chanType )
     {
         case CSL_BCDMA_CHAN_TYPE_BLOCK_COPY:
-#ifdef CSL_BCDMA_BCRT_CHAN_CTL_EN_MASK
+#if defined (SOC_J784S4) || defined (SOC_J721S2)
             regVal = CSL_REG32_FEXT( &pCfg->pBcChanRtRegs->CHAN[chanIdx].CTL, BCDMA_BCRT_CHAN_CTL_EN );
 #endif
             break;
@@ -306,17 +313,17 @@ static bool CSL_bcdmaChanOpIsChanEnabled( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType 
             regVal = 0U;
             break;
     }
-    return ((regVal == 1U) ? (bool)true : (bool)false);
+    return ((1U == regVal) ? BTRUE : BFALSE);
 }
 
-static int32_t CSL_bcdmaChanOpSetChanEnable( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, bool bEnable )
+static int32_t CSL_bcdmaChanOpSetChanEnable( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, bool bEnable )
 {
     int32_t retVal = CSL_PASS;
 
     switch( chanType )
     {
         case CSL_BCDMA_CHAN_TYPE_BLOCK_COPY:
-#ifdef CSL_BCDMA_BCRT_CHAN_CTL_EN_MASK
+#if defined (SOC_J784S4) || defined (SOC_J721S2)
             CSL_REG32_WR(&pCfg->pBcChanRtRegs->CHAN[chanIdx].CTL, CSL_FMK(BCDMA_BCRT_CHAN_CTL_EN,(bEnable ? (uint32_t)1U : (uint32_t)0U)) );
 #endif
             break;
@@ -333,11 +340,11 @@ static int32_t CSL_bcdmaChanOpSetChanEnable( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanTy
     return retVal;
 }
 
-static int32_t CSL_bcdmaChanOpSetChanPause( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, bool bPause )
+static int32_t CSL_bcdmaChanOpSetChanPause( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, bool bPause )
 {
     int32_t retVal = CSL_PASS;
 
-    if( CSL_bcdmaChanOpIsChanEnabled( pCfg, chanType, chanIdx ) == (bool)false )
+    if( BFALSE == CSL_bcdmaChanOpIsChanEnabled( pCfg, chanType, chanIdx ) )
     {
         /* Channel must be enabled in order to be paused or resumed */
         retVal = CSL_EFAIL;
@@ -346,17 +353,42 @@ static int32_t CSL_bcdmaChanOpSetChanPause( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanTyp
     {
         switch( chanType )
         {
-#ifdef CSL_BCDMA_BCRT_CHAN_CTL_PAUSE_MASK
+#if defined (SOC_J784S4) || defined (SOC_J721S2)
             case CSL_BCDMA_CHAN_TYPE_BLOCK_COPY:
-                CSL_REG32_FINS( &pCfg->pBcChanRtRegs->CHAN[chanIdx].CTL, BCDMA_BCRT_CHAN_CTL_PAUSE, (bPause==(bool)false) ? (uint32_t)0U : (uint32_t)1U );
+                if(BFALSE == bPause)
+                {
+                   CSL_REG32_FINS( &pCfg->pBcChanRtRegs->CHAN[chanIdx].CTL, BCDMA_BCRT_CHAN_CTL_PAUSE, 0U);
+                }
+                else
+                {
+                   CSL_REG32_FINS( &pCfg->pBcChanRtRegs->CHAN[chanIdx].CTL, BCDMA_BCRT_CHAN_CTL_PAUSE, 1U);
+                }
                 break;
 #endif
             case CSL_BCDMA_CHAN_TYPE_SPLIT_TX:
-                CSL_REG32_FINS( &pCfg->pTxChanRtRegs->CHAN[chanIdx].CTL, BCDMA_TXCRT_CHAN_CTL_PAUSE, (bPause==(bool)false) ? (uint32_t)0U : (uint32_t)1U );
+
+                if(BFALSE == bPause)
+                {
+                   CSL_REG32_FINS( &pCfg->pTxChanRtRegs->CHAN[chanIdx].CTL, BCDMA_TXCRT_CHAN_CTL_PAUSE,  0U);
+                }
+                else
+                {
+                   CSL_REG32_FINS( &pCfg->pTxChanRtRegs->CHAN[chanIdx].CTL, BCDMA_TXCRT_CHAN_CTL_PAUSE,  1U);
+                }
                 break;
+
             case CSL_BCDMA_CHAN_TYPE_SPLIT_RX:
-                CSL_REG32_FINS( &pCfg->pRxChanRtRegs->CHAN[chanIdx].CTL, BCDMA_RXCRT_CHAN_CTL_PAUSE, (bPause==(bool)false) ? (uint32_t)0U : (uint32_t)1U );
+
+                if(BFALSE == bPause)
+                {
+                    CSL_REG32_FINS( &pCfg->pRxChanRtRegs->CHAN[chanIdx].CTL, BCDMA_RXCRT_CHAN_CTL_PAUSE,  0U);
+                }
+                else
+                {
+                    CSL_REG32_FINS( &pCfg->pRxChanRtRegs->CHAN[chanIdx].CTL, BCDMA_RXCRT_CHAN_CTL_PAUSE,  1U);
+                }
                 break;
+
             default:
                 retVal = CSL_EBADARGS;
                 break;
@@ -365,11 +397,11 @@ static int32_t CSL_bcdmaChanOpSetChanPause( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanTyp
     return retVal;
 }
 
-static int32_t CSL_bcdmaChanOpTeardownChan( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData )
+static int32_t CSL_bcdmaChanOpTeardownChan( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData )
 {
     int32_t  retVal = CSL_PASS;
 
-    if( CSL_bcdmaChanOpIsChanEnabled( pCfg, chanType, chanIdx ) == (bool)false )
+    if( BFALSE == CSL_bcdmaChanOpIsChanEnabled( pCfg, chanType, chanIdx ) )
     {
         /* Channel can be torn down only when it is enabled */
         retVal = CSL_EFAIL;
@@ -379,7 +411,7 @@ static int32_t CSL_bcdmaChanOpTeardownChan( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanTyp
         uint32_t regVal;
         uint32_t force = (uint32_t)0U, wait = (uint32_t)0U;
 
-        if( pOpData != NULL )
+        if( NULL != pOpData )
         {
             CSL_BcdmaTeardownOpts *pTdOpts = (CSL_BcdmaTeardownOpts *)pOpData;
             force = pTdOpts->force;
@@ -387,39 +419,39 @@ static int32_t CSL_bcdmaChanOpTeardownChan( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanTyp
         }
         switch( chanType )
         {
-#ifdef CSL_BCDMA_BCRT_CHAN_CTL_TDOWN_MASK
+#if defined (SOC_J784S4) || defined (SOC_J721S2)
             case CSL_BCDMA_CHAN_TYPE_BLOCK_COPY:
                 regVal = CSL_REG32_RD( &pCfg->pBcChanRtRegs->CHAN[chanIdx].CTL );
                 CSL_FINS( regVal, BCDMA_BCRT_CHAN_CTL_TDOWN, (uint32_t)1U );
-                CSL_FINS( regVal, BCDMA_BCRT_CHAN_CTL_FTDOWN, (force==0U) ? (uint32_t)0U : (uint32_t)1U  );
+                CSL_FINS( regVal, BCDMA_BCRT_CHAN_CTL_FTDOWN, (0U == force) ? (uint32_t)0U : (uint32_t)1U  );
                 CSL_REG32_WR( &pCfg->pBcChanRtRegs->CHAN[chanIdx].CTL, regVal );
                 break;
 #endif
             case CSL_BCDMA_CHAN_TYPE_SPLIT_TX:
                 regVal = CSL_REG32_RD( &pCfg->pTxChanRtRegs->CHAN[chanIdx].CTL );
                 CSL_FINS( regVal, BCDMA_TXCRT_CHAN_CTL_TDOWN, (uint32_t)1U );
-                CSL_FINS( regVal, BCDMA_TXCRT_CHAN_CTL_FTDOWN, (force==0U) ? (uint32_t)0U : (uint32_t)1U  );
+                CSL_FINS( regVal, BCDMA_TXCRT_CHAN_CTL_FTDOWN, (0U == force) ? (uint32_t)0U : (uint32_t)1U  );
                 CSL_REG32_WR( &pCfg->pTxChanRtRegs->CHAN[chanIdx].CTL, regVal );
                 break;
             case CSL_BCDMA_CHAN_TYPE_SPLIT_RX:
                 regVal = CSL_REG32_RD( &pCfg->pRxChanRtRegs->CHAN[chanIdx].CTL );
                 CSL_FINS( regVal, BCDMA_RXCRT_CHAN_CTL_TDOWN, (uint32_t)1U );
-                CSL_FINS( regVal, BCDMA_RXCRT_CHAN_CTL_FTDOWN, (force==0U) ? (uint32_t)0U : (uint32_t)1U  );
+                CSL_FINS( regVal, BCDMA_RXCRT_CHAN_CTL_FTDOWN, (0U == force) ? (uint32_t)0U : (uint32_t)1U  );
                 CSL_REG32_WR( &pCfg->pRxChanRtRegs->CHAN[chanIdx].CTL, regVal );
                 break;
             default:
                 retVal = CSL_EBADARGS;
                 break;
         }
-        if( (retVal == CSL_PASS) && (wait != 0U) )
+        if( (CSL_PASS == retVal) && (0U != wait) )
         {
             uint32_t retryCnt = CSL_BCDMA_TEARDOWN_COMPLETE_WAIT_MAX_CNT;
             /* The channel's enable bit is cleared once teardown is complete */
-            while( (CSL_bcdmaChanOpIsChanEnabled( pCfg, chanType, chanIdx ) == (bool)true) && (retryCnt != (uint32_t)0U) )
+            while( (BTRUE == CSL_bcdmaChanOpIsChanEnabled( pCfg, chanType, chanIdx ) ) && ((uint32_t)0U != retryCnt) )
             {
                 retryCnt--;
             }
-            if( retryCnt == (uint32_t)0U ) {
+            if( (uint32_t)0U == retryCnt) {
                 retVal = CSL_EFAIL;
             }
         }
@@ -427,28 +459,28 @@ static int32_t CSL_bcdmaChanOpTeardownChan( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanTyp
     return retVal;
 }
 
-static int32_t CSL_bcdmaChanOpTriggerChan( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx )
+static int32_t CSL_bcdmaChanOpTriggerChan( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx )
 {
     int32_t retVal = CSL_PASS;
 
-#ifdef CSL_BCDMA_BCRT_CHAN_SWTRIG_TRIGGER_MASK
-    if( chanType == CSL_BCDMA_CHAN_TYPE_BLOCK_COPY )
+#if defined (SOC_J784S4) || defined (SOC_J721S2)
+    if( CSL_BCDMA_CHAN_TYPE_BLOCK_COPY == chanType )
     {
         CSL_REG32_WR(&pCfg->pBcChanRtRegs->CHAN[chanIdx].SWTRIG, CSL_FMK(BCDMA_BCRT_CHAN_SWTRIG_TRIGGER, (uint32_t)1U));
     }
     else
 #endif
-    if( chanType == CSL_BCDMA_CHAN_TYPE_SPLIT_TX )
+    if( CSL_BCDMA_CHAN_TYPE_SPLIT_TX == chanType )
     {
-#ifdef CSL_BCDMA_TXCRT_CHAN_SWTRIG_TRIGGER_MASK
+#if defined (SOC_J784S4) || defined (SOC_J721S2)
         CSL_REG32_WR(&pCfg->pTxChanRtRegs->CHAN[chanIdx].SWTRIG, CSL_FMK(BCDMA_TXCRT_CHAN_SWTRIG_TRIGGER, (uint32_t)1U));
 #else
         retVal = CSL_EFAIL;
 #endif
     }
-    else if( chanType == CSL_BCDMA_CHAN_TYPE_SPLIT_RX )
+    else if( CSL_BCDMA_CHAN_TYPE_SPLIT_RX == chanType )
     {
-#ifdef CSL_BCDMA_RXCRT_CHAN_SWTRIG_TRIGGER_MASK
+#if defined (SOC_J784S4) || defined (SOC_J721S2)
         CSL_REG32_WR(&pCfg->pRxChanRtRegs->CHAN[chanIdx].SWTRIG, CSL_FMK(BCDMA_RXCRT_CHAN_SWTRIG_TRIGGER, (uint32_t)1U));
 #else
         retVal = CSL_EFAIL;
@@ -461,11 +493,11 @@ static int32_t CSL_bcdmaChanOpTriggerChan( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType
     return retVal;
 }
 
-static int32_t CSL_bcdmaChanOpGetChanRT( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData )
+static int32_t CSL_bcdmaChanOpGetChanRT( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData )
 {
     int32_t retVal = CSL_PASS;
 
-    if( pOpData == NULL )
+    if( NULL == pOpData )
     {
         retVal = CSL_EBADARGS;
     }
@@ -474,7 +506,7 @@ static int32_t CSL_bcdmaChanOpGetChanRT( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType c
         uint32_t val;
         switch( chanType )
         {
-#ifdef CSL_BCDMA_BCRT_CHAN_CTL_EN_MASK
+#if defined (SOC_J784S4) || defined (SOC_J721S2)
             case CSL_BCDMA_CHAN_TYPE_BLOCK_COPY:
                 val = CSL_REG32_RD( &pCfg->pBcChanRtRegs->CHAN[chanIdx].CTL );
                 break;
@@ -489,7 +521,7 @@ static int32_t CSL_bcdmaChanOpGetChanRT( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType c
                 retVal = CSL_EBADARGS;
                 break;
         }
-        if( retVal == CSL_PASS )
+        if( CSL_PASS == retVal )
         {
             CSL_BcdmaRT *pRT = (CSL_BcdmaRT *)pOpData;
 
@@ -498,8 +530,8 @@ static int32_t CSL_bcdmaChanOpGetChanRT( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType c
             pRT->forcedTeardown = CSL_FEXT( val, BCDMA_TXCRT_CHAN_CTL_FTDOWN );
             pRT->pause          = CSL_FEXT( val, BCDMA_TXCRT_CHAN_CTL_PAUSE );
             pRT->error          = CSL_FEXT( val, BCDMA_TXCRT_CHAN_CTL_ERROR );
-#ifdef CSL_BCDMA_RXCRT_CHAN_CTL_STARVATION_MASK
-            if( chanType == CSL_BCDMA_CHAN_TYPE_SPLIT_RX )
+#if defined (SOC_J784S4) || defined (SOC_J721S2)
+            if( CSL_BCDMA_CHAN_TYPE_SPLIT_RX == chanType )
             {
                 pRT->starvation = CSL_FEXT( val, BCDMA_RXCRT_CHAN_CTL_STARVATION );
             }
@@ -513,11 +545,11 @@ static int32_t CSL_bcdmaChanOpGetChanRT( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType c
     return retVal;
 }
 
-static int32_t CSL_bcdmaChanOpSetChanRT( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData )
+static int32_t CSL_bcdmaChanOpSetChanRT( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData )
 {
     int32_t retVal = CSL_PASS;
 
-    if( pOpData == NULL )
+    if( NULL == pOpData )
     {
         retVal = CSL_EBADARGS;
     }
@@ -532,7 +564,7 @@ static int32_t CSL_bcdmaChanOpSetChanRT( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType c
                 CSL_FMK(BCDMA_TXCRT_CHAN_CTL_PAUSE,        pRT->pause);
         switch( chanType )
         {
-#ifdef CSL_BCDMA_BCRT_CHAN_CTL_EN_MASK
+#if defined (SOC_J784S4) || defined (SOC_J721S2)
             case CSL_BCDMA_CHAN_TYPE_BLOCK_COPY:
                 CSL_REG32_WR( &pCfg->pBcChanRtRegs->CHAN[chanIdx].CTL, val );
                 break;
@@ -551,11 +583,11 @@ static int32_t CSL_bcdmaChanOpSetChanRT( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType c
     return retVal;
 }
 
-static int32_t CSL_bcdmaChanOpGetChanStats( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData )
+static int32_t CSL_bcdmaChanOpGetChanStats( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData )
 {
     int32_t retVal = CSL_PASS;
 
-    if( pOpData == NULL )
+    if( NULL == pOpData )
     {
         retVal = CSL_EBADARGS;
     }
@@ -565,7 +597,7 @@ static int32_t CSL_bcdmaChanOpGetChanStats( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanTyp
 
         switch( chanType )
         {
-#ifdef CSL_BCDMA_BCRT_CHAN_PCNT_PCNT_MASK
+#if defined (SOC_J784S4) || defined (SOC_J721S2)
             case CSL_BCDMA_CHAN_TYPE_BLOCK_COPY:
                 pChanStats->packetCnt        = CSL_REG32_RD( &pCfg->pBcChanRtRegs->CHAN[chanIdx].PCNT );
                 pChanStats->txPayloadByteCnt = CSL_REG32_RD( &pCfg->pBcChanRtRegs->CHAN[chanIdx].BCNT );
@@ -602,11 +634,11 @@ static int32_t CSL_bcdmaChanOpGetChanStats( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanTyp
     return retVal;
 }
 
-static int32_t CSL_bcdmaChanOpDecChanStats( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData )
+static int32_t CSL_bcdmaChanOpDecChanStats( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData )
 {
     int32_t retVal = CSL_PASS;
 
-    if( pOpData == NULL )
+    if( NULL == pOpData )
     {
         retVal = CSL_EBADARGS;
     }
@@ -616,7 +648,7 @@ static int32_t CSL_bcdmaChanOpDecChanStats( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanTyp
 
         switch( chanType )
         {
-#ifdef CSL_BCDMA_BCRT_CHAN_PCNT_PCNT_MASK
+#if defined (SOC_J784S4) || defined (SOC_J721S2)
             case CSL_BCDMA_CHAN_TYPE_BLOCK_COPY:
                 CSL_REG32_WR( &pCfg->pBcChanRtRegs->CHAN[chanIdx].PCNT,   pChanStats->packetCnt );
                 CSL_REG32_WR( &pCfg->pBcChanRtRegs->CHAN[chanIdx].BCNT,   pChanStats->txPayloadByteCnt );
@@ -641,11 +673,11 @@ static int32_t CSL_bcdmaChanOpDecChanStats( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanTyp
     return retVal;
 }
 
-static int32_t CSL_bcdmaChanOpAccessRemotePeerReg( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData, bool bRead )
+static int32_t CSL_bcdmaChanOpAccessRemotePeerReg( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData, bool bRead )
 {
     int32_t retVal = CSL_PASS;
 
-    if( pOpData == NULL )
+    if( NULL == pOpData )
     {
         retVal = CSL_EBADARGS;
     }
@@ -664,17 +696,17 @@ static int32_t CSL_bcdmaChanOpAccessRemotePeerReg( CSL_BcdmaCfg *pCfg, CSL_Bcdma
                 retVal = CSL_EBADARGS;
                 break;
         }
-        if( pRemotePeerReg != NULL )
+        if( NULL != pRemotePeerReg )
         {
             CSL_BcdmaRemotePeerOpts *pPeerOpts = (CSL_BcdmaRemotePeerOpts *)pOpData;
-            if( pPeerOpts->regIdx >= (uint32_t)16u )
+            if( (uint32_t)16U <= pPeerOpts->regIdx )
             {
                 retVal = CSL_EINVALID_PARAMS;
             }
             else
             {
                 pRemotePeerReg += pPeerOpts->regIdx;    /* Increment to specified peer register */
-                if( bRead == (bool)true )
+                if( BTRUE == bRead )
                 {
                     pPeerOpts->regVal = CSL_REG32_RD( pRemotePeerReg );
                 }
@@ -688,11 +720,11 @@ static int32_t CSL_bcdmaChanOpAccessRemotePeerReg( CSL_BcdmaCfg *pCfg, CSL_Bcdma
     return retVal;
 }
 
-static int32_t CSL_bcdmaChanOpSetBurstSize( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData )
+static int32_t CSL_bcdmaChanOpSetBurstSize( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx, const void *pOpData )
 {
     int32_t retVal = CSL_PASS;
 
-    if( pOpData == NULL )
+    if( NULL == pOpData )
     {
         retVal = CSL_EBADARGS;
     }
@@ -701,7 +733,7 @@ static int32_t CSL_bcdmaChanOpSetBurstSize( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanTyp
         CSL_BcdmaChanBurstSize burstSize = *(CSL_BcdmaChanBurstSize *)pOpData;
         switch( chanType )
         {
-#ifdef CSL_BCDMA_BCCFG_CHAN_CFG_BURST_SIZE_MASK
+#if defined (SOC_J784S4) || defined (SOC_J721S2)
             case CSL_BCDMA_CHAN_TYPE_BLOCK_COPY:
                 if( burstSize > CSL_BCDMA_CHAN_BURST_SIZE_128_BYTES )   /* Block-copy supports 32, 64, and 128-byte bursts */
                 {
@@ -741,13 +773,13 @@ static int32_t CSL_bcdmaChanOpSetBurstSize( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanTyp
     return retVal;
 }
 
-static int32_t CSL_bcdmaChanOpClearError( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx )
+static int32_t CSL_bcdmaChanOpClearError( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType chanType, uint32_t chanIdx )
 {
     int32_t retVal = CSL_PASS;
 
     switch( chanType )
     {
-#ifdef CSL_BCDMA_BCRT_CHAN_CTL_ERROR_MASK
+#if defined (SOC_J784S4) || defined (SOC_J721S2)
         case CSL_BCDMA_CHAN_TYPE_BLOCK_COPY:
             CSL_REG32_FINS( &pCfg->pBcChanRtRegs->CHAN[chanIdx].CTL, BCDMA_BCRT_CHAN_CTL_ERROR, (uint32_t)0U );
             break;
@@ -769,11 +801,11 @@ static int32_t CSL_bcdmaChanOpClearError( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanType 
  *  Global API functions
  * ----------------------------------------------------------------------------
  */
-int32_t CSL_bcdmaChanOp( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanOp chanOp, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData )
+int32_t CSL_bcdmaChanOp( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanOp chanOp, CSL_BcdmaChanType chanType, uint32_t chanIdx, void *pOpData )
 {
     int32_t retVal = CSL_PASS;
 
-    if( ( pCfg == NULL )                                    ||
+    if( ( NULL == pCfg )                                    ||
         ( chanType > CSL_BCDMA_CHAN_TYPE_SPLIT_RX )         ||
         ( !CSL_bcdmaChanOpIsValidChanIdx( pCfg, chanType, chanIdx ) )
       )
@@ -788,16 +820,16 @@ int32_t CSL_bcdmaChanOp( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanOp chanOp, CSL_BcdmaCh
                 retVal = CSL_bcdmaChanOpCfgChan( pCfg, chanType, chanIdx, pOpData );
                 break;
             case CSL_BCDMA_CHAN_OP_ENABLE:
-                retVal = CSL_bcdmaChanOpSetChanEnable( pCfg, chanType, chanIdx, (bool)true );
+                retVal = CSL_bcdmaChanOpSetChanEnable( pCfg, chanType, chanIdx, BTRUE );
                 break;
             case CSL_BCDMA_CHAN_OP_DISABLE:
-                retVal = CSL_bcdmaChanOpSetChanEnable( pCfg, chanType, chanIdx, (bool)false );
+                retVal = CSL_bcdmaChanOpSetChanEnable( pCfg, chanType, chanIdx, BFALSE );
                 break;
             case CSL_BCDMA_CHAN_OP_PAUSE:
-                retVal = CSL_bcdmaChanOpSetChanPause( pCfg, chanType, chanIdx, (bool)true );
+                retVal = CSL_bcdmaChanOpSetChanPause( pCfg, chanType, chanIdx, BTRUE );
                 break;
             case CSL_BCDMA_CHAN_OP_RESUME:
-                retVal = CSL_bcdmaChanOpSetChanPause( pCfg, chanType, chanIdx, (bool)false );
+                retVal = CSL_bcdmaChanOpSetChanPause( pCfg, chanType, chanIdx, BFALSE );
                 break;
             case CSL_BCDMA_CHAN_OP_TEARDOWN:
                 retVal = CSL_bcdmaChanOpTeardownChan( pCfg, chanType, chanIdx, pOpData );
@@ -818,10 +850,10 @@ int32_t CSL_bcdmaChanOp( CSL_BcdmaCfg *pCfg, CSL_BcdmaChanOp chanOp, CSL_BcdmaCh
                 retVal = CSL_bcdmaChanOpDecChanStats( pCfg, chanType, chanIdx, pOpData );
                 break;
             case CSL_BCDMA_CHAN_OP_GET_REMOTE_PEER_REG:
-                retVal = CSL_bcdmaChanOpAccessRemotePeerReg( pCfg, chanType, chanIdx, pOpData, (bool)true );
+                retVal = CSL_bcdmaChanOpAccessRemotePeerReg( pCfg, chanType, chanIdx, pOpData, BTRUE );
                 break;
             case CSL_BCDMA_CHAN_OP_SET_REMOTE_PEER_REG:
-                retVal = CSL_bcdmaChanOpAccessRemotePeerReg( pCfg, chanType, chanIdx, pOpData, (bool)false );
+                retVal = CSL_bcdmaChanOpAccessRemotePeerReg( pCfg, chanType, chanIdx, pOpData, BFALSE );
                 break;
             case CSL_BCDMA_CHAN_OP_SET_BURST_SIZE:
                 retVal = CSL_bcdmaChanOpSetBurstSize( pCfg, chanType, chanIdx, pOpData );
@@ -841,7 +873,7 @@ uint32_t CSL_bcdmaGetRevision( const CSL_BcdmaCfg *pCfg )
 {
     uint32_t retVal = 0U;
 
-    if( (pCfg != NULL) && (pCfg->pGenCfgRegs != NULL) )
+    if( (NULL != pCfg) && (NULL != pCfg->pGenCfgRegs) )
     {
        retVal = CSL_REG32_RD( &pCfg->pGenCfgRegs->REVISION );
     }
@@ -852,7 +884,7 @@ int32_t CSL_bcdmaGetRevisionInfo( const CSL_BcdmaCfg *pCfg, CSL_BcdmaRevision *p
 {
     int32_t retVal = CSL_PASS;
 
-    if( (pCfg == NULL) || (pCfg->pGenCfgRegs == NULL) || (pRev == NULL) )
+    if( (NULL == pCfg) || (NULL == pCfg->pGenCfgRegs) || (NULL == pRev) )
     {
         retVal = CSL_EFAIL;
     }
@@ -872,7 +904,7 @@ int32_t CSL_bcdmaGetRevisionInfo( const CSL_BcdmaCfg *pCfg, CSL_BcdmaRevision *p
 
 void CSL_bcdmaInitCfg( CSL_BcdmaCfg *pCfg )
 {
-    if( pCfg != NULL )
+    if( NULL != pCfg )
     {
         memset( (void *)pCfg, 0, sizeof(CSL_BcdmaCfg) );
     }
@@ -880,7 +912,7 @@ void CSL_bcdmaInitCfg( CSL_BcdmaCfg *pCfg )
 
 void CSL_bcdmaGetCfg( CSL_BcdmaCfg *pCfg )
 {
-    if( ! ((pCfg == NULL) || (pCfg->pGenCfgRegs == NULL)) )
+    if( ! ((NULL == pCfg) || (NULL == pCfg->pGenCfgRegs)) )
     {
         uint32_t regVal;
 
@@ -946,7 +978,7 @@ int32_t CSL_bcdmaTxChanCfg( CSL_BcdmaCfg *pCfg, uint32_t chanIdx, const CSL_Bcdm
 {
     int32_t retVal;
     retVal = CSL_bcdmaDoChanOp( pCfg, CSL_BCDMA_CHAN_OP_CONFIG, chanIdx, (void *)pTxChanCfg );
-    if( retVal != CSL_PASS )
+    if( CSL_PASS != retVal )
     {
         retVal = CSL_EFAIL;     /* API returns CSL_EFAIL on failure for backwards compatibility with udmap API */
     }
@@ -957,7 +989,7 @@ int32_t CSL_bcdmaRxChanCfg( CSL_BcdmaCfg *pCfg, uint32_t chanIdx, const CSL_Bcdm
 {
     int32_t retVal;
     retVal = CSL_bcdmaDoChanOp( pCfg, CSL_BCDMA_CHAN_OP_CONFIG, chanIdx, (void *)pRxChanCfg );
-    if( retVal != CSL_PASS )
+    if( CSL_PASS != retVal )
     {
         retVal = CSL_EFAIL;     /* API returns CSL_EFAIL on failure for backwards compatibility with udmap API */
     }
@@ -968,7 +1000,7 @@ int32_t CSL_bcdmaEnableTxChan( CSL_BcdmaCfg *pCfg, uint32_t chanIdx )
 {
     int32_t retVal;
     retVal = CSL_bcdmaDoChanOp( pCfg, CSL_BCDMA_CHAN_OP_ENABLE, chanIdx, NULL );
-    if( retVal != CSL_PASS )
+    if( CSL_PASS != retVal )
     {
         retVal = CSL_EFAIL;     /* API returns CSL_EFAIL on failure for backwards compatibility with udmap API */
     }
@@ -979,7 +1011,7 @@ int32_t CSL_bcdmaEnableRxChan( CSL_BcdmaCfg *pCfg, uint32_t chanIdx )
 {
     int32_t retVal;
     retVal = CSL_bcdmaDoChanOp( pCfg, CSL_BCDMA_CHAN_OP_ENABLE, chanIdx, NULL );
-    if( retVal != CSL_PASS )
+    if( CSL_PASS != retVal )
     {
         retVal = CSL_EFAIL;     /* API returns CSL_EFAIL on failure for backwards compatibility with udmap API */
     }
@@ -990,7 +1022,7 @@ int32_t CSL_bcdmaGetTxRT( CSL_BcdmaCfg *pCfg, uint32_t chanIdx, CSL_BcdmaRT *pRT
 {
     int32_t retVal;
     retVal = CSL_bcdmaDoChanOp( pCfg, CSL_BCDMA_CHAN_OP_GET_RT, chanIdx, (void *)pRT );
-    if( retVal != CSL_PASS )
+    if( CSL_PASS != retVal )
     {
         retVal = CSL_EFAIL;     /* API returns CSL_EFAIL on failure for backwards compatibility with udmap API */
     }
@@ -1001,7 +1033,7 @@ int32_t CSL_bcdmaGetRxRT( CSL_BcdmaCfg *pCfg, uint32_t chanIdx, CSL_BcdmaRT *pRT
 {
     int32_t retVal;
     retVal = CSL_bcdmaDoChanOp( pCfg, CSL_BCDMA_CHAN_OP_GET_RT, chanIdx, (void *)pRT );
-    if( retVal != CSL_PASS )
+    if( CSL_PASS != retVal )
     {
         retVal = CSL_EFAIL;     /* API returns CSL_EFAIL on failure for backwards compatibility with udmap API */
     }
@@ -1012,7 +1044,7 @@ int32_t CSL_bcdmaSetTxRT( CSL_BcdmaCfg *pCfg, uint32_t chanIdx, const CSL_BcdmaR
 {
     int32_t retVal;
     retVal = CSL_bcdmaDoChanOp( pCfg, CSL_BCDMA_CHAN_OP_SET_RT, chanIdx, (void *)pRT );
-    if( retVal != CSL_PASS )
+    if( CSL_PASS != retVal )
     {
         retVal = CSL_EFAIL;     /* API returns CSL_EFAIL on failure for backwards compatibility with udmap API */
     }
@@ -1023,7 +1055,7 @@ int32_t CSL_bcdmaSetRxRT( CSL_BcdmaCfg *pCfg, uint32_t chanIdx, const CSL_BcdmaR
 {
     int32_t retVal;
     retVal = CSL_bcdmaDoChanOp( pCfg, CSL_BCDMA_CHAN_OP_SET_RT, chanIdx, (void *)pRT );
-    if( retVal != CSL_PASS )
+    if( CSL_PASS != retVal )
     {
         retVal = CSL_EFAIL;     /* API returns CSL_EFAIL on failure for backwards compatibility with udmap API */
     }
@@ -1034,7 +1066,7 @@ int32_t CSL_bcdmaDisableTxChan( CSL_BcdmaCfg *pCfg, uint32_t chanIdx )
 {
     int32_t retVal;
     retVal = CSL_bcdmaDoChanOp( pCfg, CSL_BCDMA_CHAN_OP_DISABLE, chanIdx, NULL );
-    if( retVal != CSL_PASS )
+    if( CSL_PASS != retVal )
     {
         retVal = CSL_EFAIL;     /* API returns CSL_EFAIL on failure for backwards compatibility with udmap API */
     }
@@ -1045,7 +1077,7 @@ int32_t CSL_bcdmaDisableRxChan( CSL_BcdmaCfg *pCfg, uint32_t chanIdx )
 {
     int32_t retVal;
     retVal = CSL_bcdmaDoChanOp( pCfg, CSL_BCDMA_CHAN_OP_DISABLE, chanIdx, NULL );
-    if( retVal != CSL_PASS )
+    if( CSL_PASS != retVal )
     {
         retVal = CSL_EFAIL;     /* API returns CSL_EFAIL on failure for backwards compatibility with udmap API */
     }
@@ -1057,10 +1089,10 @@ int32_t CSL_bcdmaTeardownTxChan( CSL_BcdmaCfg *pCfg, uint32_t chanIdx, bool bFor
     int32_t retVal;
     CSL_BcdmaTeardownOpts   teardownOpts;
 
-    teardownOpts.force  = (bForce == (bool)false) ? (uint32_t)0U : (uint32_t)1U;
-    teardownOpts.wait   = (bWait  == (bool)false) ? (uint32_t)0U : (uint32_t)1U;
+    teardownOpts.force  = (bForce == BFALSE) ? (uint32_t)0U : (uint32_t)1U;
+    teardownOpts.wait   = (bWait  == BFALSE) ? (uint32_t)0U : (uint32_t)1U;
     retVal = CSL_bcdmaDoChanOp( pCfg, CSL_BCDMA_CHAN_OP_TEARDOWN, chanIdx, (void *)&teardownOpts );
-    if( retVal != CSL_PASS )
+    if( CSL_PASS != retVal )
     {
         retVal = CSL_EFAIL;     /* API returns CSL_EFAIL on failure for backwards compatibility with udmap API */
     }
@@ -1072,10 +1104,10 @@ int32_t CSL_bcdmaTeardownRxChan( CSL_BcdmaCfg *pCfg, uint32_t chanIdx, bool bFor
     int32_t retVal;
     CSL_BcdmaTeardownOpts   teardownOpts;
 
-    teardownOpts.force  = (bForce == (bool)false) ? (uint32_t)0U : (uint32_t)1U;
-    teardownOpts.wait   = (bWait  == (bool)false) ? (uint32_t)0U : (uint32_t)1U;
+    teardownOpts.force  = (bForce == BFALSE) ? (uint32_t)0U : (uint32_t)1U;
+    teardownOpts.wait   = (bWait  == BFALSE) ? (uint32_t)0U : (uint32_t)1U;
     retVal = CSL_bcdmaDoChanOp( pCfg, CSL_BCDMA_CHAN_OP_TEARDOWN, chanIdx, (void *)&teardownOpts );
-    if( retVal != CSL_PASS )
+    if( CSL_PASS != retVal )
     {
         retVal = CSL_EFAIL;     /* API returns CSL_EFAIL on failure for backwards compatibility with udmap API */
     }
@@ -1086,7 +1118,7 @@ int32_t CSL_bcdmaPauseTxChan( CSL_BcdmaCfg *pCfg, uint32_t chanIdx )
 {
     int32_t retVal;
     retVal = CSL_bcdmaDoChanOp( pCfg, CSL_BCDMA_CHAN_OP_PAUSE, chanIdx, NULL );
-    if( retVal != CSL_PASS )
+    if( CSL_PASS != retVal )
     {
         retVal = CSL_EFAIL;     /* API returns CSL_EFAIL on failure for backwards compatibility with udmap API */
     }
@@ -1097,7 +1129,7 @@ int32_t CSL_bcdmaPauseRxChan( CSL_BcdmaCfg *pCfg, uint32_t chanIdx )
 {
     int32_t retVal;
     retVal = CSL_bcdmaDoChanOp( pCfg, CSL_BCDMA_CHAN_OP_PAUSE, chanIdx, NULL );
-    if( retVal != CSL_PASS )
+    if( CSL_PASS != retVal )
     {
         retVal = CSL_EFAIL;     /* API returns CSL_EFAIL on failure for backwards compatibility with udmap API */
     }
@@ -1108,7 +1140,7 @@ int32_t CSL_bcdmaUnpauseTxChan( CSL_BcdmaCfg *pCfg, uint32_t chanIdx )
 {
     int32_t retVal;
     retVal = CSL_bcdmaDoChanOp( pCfg, CSL_BCDMA_CHAN_OP_RESUME, chanIdx, NULL );
-    if( retVal != CSL_PASS )
+    if( CSL_PASS != retVal )
     {
         retVal = CSL_EFAIL;     /* API returns CSL_EFAIL on failure for backwards compatibility with udmap API */
     }
@@ -1119,7 +1151,7 @@ int32_t CSL_bcdmaUnpauseRxChan( CSL_BcdmaCfg *pCfg, uint32_t chanIdx )
 {
     int32_t retVal;
     retVal = CSL_bcdmaDoChanOp( pCfg, CSL_BCDMA_CHAN_OP_RESUME, chanIdx, NULL );
-    if( retVal != CSL_PASS )
+    if( CSL_PASS != retVal )
     {
         retVal = CSL_EFAIL;     /* API returns CSL_EFAIL on failure for backwards compatibility with udmap API */
     }
@@ -1130,7 +1162,7 @@ int32_t CSL_bcdmaTriggerTxChan( CSL_BcdmaCfg *pCfg, uint32_t chanIdx )
 {
     int32_t retVal;
     retVal = CSL_bcdmaDoChanOp( pCfg, CSL_BCDMA_CHAN_OP_TRIGGER, chanIdx, NULL );
-    if( retVal != CSL_PASS )
+    if( CSL_PASS != retVal )
     {
         retVal = CSL_EFAIL;     /* API returns CSL_EFAIL on failure for backwards compatibility with udmap API */
     }
@@ -1141,21 +1173,33 @@ int32_t CSL_bcdmaTriggerRxChan( CSL_BcdmaCfg *pCfg, uint32_t chanIdx )
 {
     int32_t retVal;
     retVal = CSL_bcdmaDoChanOp( pCfg, CSL_BCDMA_CHAN_OP_TRIGGER, chanIdx, NULL );
-    if( retVal != CSL_PASS )
+    if( CSL_PASS != retVal )
     {
         retVal = CSL_EFAIL;     /* API returns CSL_EFAIL on failure for backwards compatibility with udmap API */
     }
     return retVal;
 }
 
-void CSL_bcdmaGetChanStats( CSL_BcdmaCfg *pCfg, uint32_t chanIdx, CSL_BcdmaChanDir chanDir, CSL_BcdmaChanStats *pChanStats )
+int32_t CSL_bcdmaGetChanStats( CSL_BcdmaCfg *pCfg, uint32_t chanIdx, CSL_BcdmaChanDir chanDir, CSL_BcdmaChanStats *pChanStats )
 {
-    CSL_bcdmaDoChanOp( pCfg, CSL_BCDMA_CHAN_OP_GET_STATS, chanIdx, (void *)pChanStats );
+    int32_t retVal;
+    retVal = CSL_bcdmaDoChanOp( pCfg, CSL_BCDMA_CHAN_OP_GET_STATS, chanIdx, (void *)pChanStats );
+    if( CSL_PASS != retVal )
+    {
+        retVal = CSL_EFAIL;     /* API returns CSL_EFAIL on failure for backwards compatibility with udmap API */
+    }
+    return retVal;
 }
 
-void CSL_bcdmaDecChanStats( CSL_BcdmaCfg *pCfg, uint32_t chanIdx, CSL_BcdmaChanDir chanDir, const CSL_BcdmaChanStats *pChanStats )
+int32_t CSL_bcdmaDecChanStats( CSL_BcdmaCfg *pCfg, uint32_t chanIdx, CSL_BcdmaChanDir chanDir, const CSL_BcdmaChanStats *pChanStats )
 {
-    CSL_bcdmaDoChanOp( pCfg, CSL_BCDMA_CHAN_OP_DEC_STATS, chanIdx, (void *)pChanStats );
+    int32_t retVal;
+    retVal = CSL_bcdmaDoChanOp( pCfg, CSL_BCDMA_CHAN_OP_DEC_STATS, chanIdx, (void *)pChanStats );
+    if( CSL_PASS != retVal )
+    {
+        retVal = CSL_EFAIL;     /* API returns CSL_EFAIL on failure for backwards compatibility with udmap API */
+    }
+    return retVal;
 }
 
 int32_t CSL_bcdmaGetChanPeerReg( CSL_BcdmaCfg *pCfg, uint32_t chanIdx, CSL_BcdmaChanDir chanDir, uint32_t regIdx, uint32_t *pVal )
@@ -1165,7 +1209,7 @@ int32_t CSL_bcdmaGetChanPeerReg( CSL_BcdmaCfg *pCfg, uint32_t chanIdx, CSL_Bcdma
 
     remotePeerOpts.regIdx = regIdx;
     retVal = CSL_bcdmaDoChanOp( pCfg, CSL_BCDMA_CHAN_OP_GET_REMOTE_PEER_REG, chanIdx, (void *)&remotePeerOpts );
-    if( retVal == CSL_PASS )
+    if( CSL_PASS == retVal )
     {
         *pVal = remotePeerOpts.regVal;
     }
@@ -1185,7 +1229,7 @@ int32_t CSL_bcdmaSetChanPeerReg( CSL_BcdmaCfg *pCfg, uint32_t chanIdx, CSL_Bcdma
     remotePeerOpts.regIdx = regIdx;
     remotePeerOpts.regVal = *pVal;
     retVal = CSL_bcdmaDoChanOp( pCfg, CSL_BCDMA_CHAN_OP_SET_REMOTE_PEER_REG, chanIdx, (void *)&remotePeerOpts );
-    if( retVal != CSL_PASS )
+    if( CSL_PASS != retVal )
     {
         retVal = CSL_EFAIL;     /* API returns CSL_EFAIL on failure for backwards compatibility with udmap API */
     }
@@ -1197,7 +1241,7 @@ int32_t CSL_bcdmaTxChanSetBurstSize( CSL_BcdmaCfg *pCfg, uint32_t chanIdx, CSL_B
     int32_t retVal;
     CSL_BcdmaChanBurstSize parm = burstSize;
     retVal = CSL_bcdmaDoChanOp( pCfg, CSL_BCDMA_CHAN_OP_SET_BURST_SIZE, chanIdx, (void *)&parm );
-    if( retVal != CSL_PASS )
+    if( CSL_PASS != retVal )
     {
         retVal = CSL_EFAIL;     /* API returns CSL_EFAIL on failure for backwards compatibility with udmap API */
     }
@@ -1209,32 +1253,44 @@ int32_t CSL_bcdmaRxChanSetBurstSize( CSL_BcdmaCfg *pCfg, uint32_t chanIdx, CSL_B
     int32_t retVal;
     CSL_BcdmaChanBurstSize parm = burstSize;
     retVal = CSL_bcdmaDoChanOp( pCfg, CSL_BCDMA_CHAN_OP_SET_BURST_SIZE, chanIdx, (void *)&parm );
-    if( retVal != CSL_PASS )
+    if( CSL_PASS != retVal )
     {
         retVal = CSL_EFAIL;     /* API returns CSL_EFAIL on failure for backwards compatibility with udmap API */
     }
     return retVal;
 }
 
-void CSL_bcdmaClearTxChanError( CSL_BcdmaCfg *pCfg, uint32_t chanIdx )
+int32_t CSL_bcdmaClearTxChanError( CSL_BcdmaCfg *pCfg, uint32_t chanIdx )
 {
-    CSL_bcdmaDoChanOp( pCfg, CSL_BCDMA_CHAN_OP_CLEAR_ERROR, chanIdx, NULL );
+    int32_t retVal;
+    retVal =  CSL_bcdmaDoChanOp( pCfg, CSL_BCDMA_CHAN_OP_CLEAR_ERROR, chanIdx, NULL );
+    if( CSL_PASS != retVal )
+    {
+        retVal = CSL_EFAIL;     /* API returns CSL_EFAIL on failure for backwards compatibility with udmap API */
+    }
+    return retVal;
 }
 
-void CSL_bcdmaClearRxChanError( CSL_BcdmaCfg *pCfg, uint32_t chanIdx )
+int32_t CSL_bcdmaClearRxChanError( CSL_BcdmaCfg *pCfg, uint32_t chanIdx )
 {
-    CSL_bcdmaDoChanOp( pCfg, CSL_BCDMA_CHAN_OP_CLEAR_ERROR, chanIdx, NULL );
+    int32_t retVal;
+    retVal =  CSL_bcdmaDoChanOp( pCfg, CSL_BCDMA_CHAN_OP_CLEAR_ERROR, chanIdx, NULL );
+    if( CSL_PASS != retVal )
+    {
+        retVal = CSL_EFAIL;     /* API returns CSL_EFAIL on failure for backwards compatibility with udmap API */
+    }
+    return retVal;
 }
 
 void CSL_bcdmaInitRxFlowCfg( CSL_BcdmaRxFlowCfg *pFlow )
 {
-    if( pFlow != NULL )
+    if( NULL != pFlow )
     {
         memset( (void *)pFlow, 0, sizeof(CSL_BcdmaRxFlowCfg) );
     }
 }
 
-void CSL_bcdmaSetPerfCtrl( CSL_BcdmaCfg *pCfg, uint32_t rxRetryTimeoutCnt )
+void CSL_bcdmaSetPerfCtrl( const CSL_BcdmaCfg *pCfg, uint32_t rxRetryTimeoutCnt )
 {
     uint32_t regVal;
 
@@ -1267,7 +1323,7 @@ void CSL_bcdmaCfgRxFlowIdFirewall( CSL_BcdmaCfg *pCfg, uint32_t outEvtNum )
 
 bool CSL_bcdmaGetRxFlowIdFirewallStatus( CSL_BcdmaCfg *pCfg, CSL_BcdmaRxFlowIdFirewallStatus *pRxFlowIdFwStatus )
 {
-    return (bool)false;
+    return BFALSE;
 }
 
 int32_t CSL_bcdmaEnableLink( CSL_BcdmaCfg *pCfg, uint32_t chanIdx, CSL_BcdmaChanDir chanDir )
@@ -1276,27 +1332,27 @@ int32_t CSL_bcdmaEnableLink( CSL_BcdmaCfg *pCfg, uint32_t chanIdx, CSL_BcdmaChan
     uint32_t peerEnableRegVal;
 
     peerEnableRegVal = (uint32_t)1U << 31;
-    if( chanDir == CSL_BCDMA_CHAN_DIR_TX )
+    if( CSL_BCDMA_CHAN_DIR_TX == chanDir )
     {
         /* a. Set BCDMA peer real-time enable by calling the CSL_bcdmaSetChanPeerReg() function */
         if( CSL_bcdmaSetChanPeerReg( pCfg, chanIdx, chanDir, CSL_BCDMA_CHAN_PEER_REG_OFFSET_ENABLE, &peerEnableRegVal ) == 0 )
         {
             /* b. Enable the BCDMA tx channel by calling the CSL_bcdmaEnableTxChan() function */
-            if( CSL_bcdmaEnableTxChan( pCfg, chanIdx ) == 0 )
+            if( CSL_PASS == CSL_bcdmaEnableTxChan( pCfg, chanIdx ) )
             {
-                retVal = 0;
+                retVal = CSL_PASS;
             }
         }
     }
-    if( chanDir == CSL_BCDMA_CHAN_DIR_RX )
+    if( CSL_BCDMA_CHAN_DIR_RX == chanDir )
     {
         /* a. Enable the BCDMA rx channel by calling the CSL_bcdmaEnableRxChan() function */
-        if( CSL_bcdmaEnableRxChan( pCfg, chanIdx ) == 0 )
+        if( CSL_PASS == CSL_bcdmaEnableRxChan( pCfg, chanIdx ) )
         {
             /* b. Set BCDMA peer real-time enable by calling the CSL_bcdmaSetChanPeerReg() function */
-            if( CSL_bcdmaSetChanPeerReg( pCfg, chanIdx, chanDir, CSL_BCDMA_CHAN_PEER_REG_OFFSET_ENABLE, &peerEnableRegVal ) == 0 )
+            if( CSL_PASS == CSL_bcdmaSetChanPeerReg( pCfg, chanIdx, chanDir, CSL_BCDMA_CHAN_PEER_REG_OFFSET_ENABLE, &peerEnableRegVal ) )
             {
-                retVal = 0;
+                retVal = CSL_PASS;
             }
         }
     }

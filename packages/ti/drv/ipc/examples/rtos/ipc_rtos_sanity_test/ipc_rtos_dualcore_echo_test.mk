@@ -1,25 +1,18 @@
 #
-# This file is the makefile for building a testcase
-# to boot all ipc images using SBL.
+# This is the makefile for building a testcase to boot
+# all ipc images using SBL.
 #
 include $(PDK_INSTALL_PATH)/ti/build/Rules.make
 
-APP_NAME = ipc_baremetal_dualcore_echo_test
-
-SRCDIR += $(PDK_IPC_COMP_PATH)/examples/ipc_baremetal_echo_test
+APP_NAME = ipc_rtos_dualcore_echo_test_$(BUILD_OS_TYPE)
 
 # Local name of IPC test app
-RPRC_PREFIX_BAREMETAL = ipc_baremetal_echo_test
-RPRC_PREFIX_RTOS = ipc_rtos_echo_test_freertos
-RPRC_OUT_NAME = ipc_baremetal_dualcore_test
+RPRC_PREFIX = ipc_rtos_sanity_test
+RPRC_OUT_NAME = ipc_rtos_dualcore_test
 
 define BIN_PATH_PREFIX_RULE
-# baremetal ipc is supported for only mcu cores
-# Instead of baremetal mcu1_0, FREERTOS mcu1_0 binary has been used for multicore app because of sciserver dependency
 
-BIN_PATH_PREFIX_$(1) = $(if $(findstring $(1), $(filter-out mcu1_0, $(drvipc_$(SOC)_BAREMETAL_CORELIST))),\
-							$(pdk_PATH)/ti/binary/$(RPRC_PREFIX_BAREMETAL)/bin/$(BOARD)/$(RPRC_PREFIX_BAREMETAL),\
-							$(pdk_PATH)/ti/binary/$(RPRC_PREFIX_RTOS)/bin/$(BOARD)/$(RPRC_PREFIX_RTOS))
+BIN_PATH_PREFIX_$(1) =  $(pdk_PATH)/ti/binary/$(RPRC_PREFIX)_$(BUILD_OS_TYPE)/bin/$(BOARD)/$(RPRC_PREFIX)_$(BUILD_OS_TYPE)
 
 endef
 
@@ -31,7 +24,6 @@ CORES_IN_TEST = mcu1_0 mcu2_0
 MULTICORE_IMG_PARAMS = $(foreach SOC_CORE_ID, $(CORES_IN_TEST), $(SBL_CORE_ID_$(SOC_CORE_ID)) $(BIN_PATH_PREFIX_$(SOC_CORE_ID))_$(SOC_CORE_ID)_$(BUILD_PROFILE_$(CORE)).rprc)
 
 CFLAGS_LOCAL_COMMON = $(PDK_CFLAGS)
-PACKAGE_SRCS_COMMON = .
 
 # List all the external components/interfaces, whose interface header files
 #  need to be included for this component
@@ -43,19 +35,20 @@ COMP_LIST_COMMON =
 SRCS_COMMON = force_multi_core_img_gen.c
 
 force_multi_core_img_gen.c:
+	$(MKDIR) -p $(BINDIR)
 	$(ECHO) "# Combining RPRC images to generate multicore image...."
-	$(ECHO) "# BINDIR is $(BINDIR) CORELIST is $(filter-out mpu1_0, $(drvipc_$(SOC)_CORELIST))"
+	$(ECHO) "# BINDIR is $(BINDIR) CORELIST is $(CORES_IN_TEST)"
 	$(ECHO) "# MULTICORE_IMG_PARAMS are $(MULTICORE_IMG_PARAMS)"
-	$(SBL_IMAGE_GEN) LE $(SBL_DEV_ID) $(BINDIR)/$(RPRC_OUT_NAME)_all_cores_$(BUILD_PROFILE_$(CORE)).appimage $(MULTICORE_IMG_PARAMS)
+	$(SBL_IMAGE_GEN) LE $(SBL_DEV_ID) $(BINDIR)/$(RPRC_OUT_NAME)_$(BUILD_OS_TYPE)_all_cores_$(BUILD_PROFILE_$(CORE)).appimage $(MULTICORE_IMG_PARAMS)
 	$(ECHO) "#"
-	$(ECHO) "# Multicore IPC App image $(BINDIR)/$(RPRC_OUT_NAME)_all_cores_$(BUILD_PROFILE_$(CORE)).appimage created."
+	$(ECHO) "# Multicore IPC App image $(BINDIR)/$(RPRC_OUT_NAME)_$(BUILD_OS_TYPE)_all_cores_$(BUILD_PROFILE_$(CORE)).appimage created."
 	$(ECHO) "#"
 	$(ECHO) "# Signing the multicore image...."
 ifneq ($(OS),Windows_NT)
 	$(CHMOD) a+x $(SBL_CERT_GEN)
 endif
-	$(SBL_CERT_GEN) -b $(BINDIR)/$(RPRC_OUT_NAME)_all_cores_$(BUILD_PROFILE_$(CORE)).appimage -o $(BINDIR)/$(RPRC_OUT_NAME)_all_cores_$(BUILD_PROFILE_$(CORE)).appimage.signed -c R5 -l $(SBL_RUN_ADDRESS) -k $(SBL_CERT_KEY_HS)
-	$(SBL_CERT_GEN) -b $(BINDIR)/$(RPRC_OUT_NAME)_all_cores_$(BUILD_PROFILE_$(CORE)).appimage -o $(BINDIR)/$(RPRC_OUT_NAME)_all_cores_$(BUILD_PROFILE_$(CORE)).appimage.hs_fs -c R5 -l $(SBL_RUN_ADDRESS) -k $(SBL_CERT_KEY)
+	$(SBL_CERT_GEN) -b $(BINDIR)/$(RPRC_OUT_NAME)_$(BUILD_OS_TYPE)_all_cores_$(BUILD_PROFILE_$(CORE)).appimage -o $(BINDIR)/$(RPRC_OUT_NAME)_$(BUILD_OS_TYPE)_all_cores_$(BUILD_PROFILE_$(CORE)).appimage.signed -c R5 -l $(SBL_RUN_ADDRESS) -k $(SBL_CERT_KEY_HS)
+	$(SBL_CERT_GEN) -b $(BINDIR)/$(RPRC_OUT_NAME)_$(BUILD_OS_TYPE)_all_cores_$(BUILD_PROFILE_$(CORE)).appimage -o $(BINDIR)/$(RPRC_OUT_NAME)_$(BUILD_OS_TYPE)_all_cores_$(BUILD_PROFILE_$(CORE)).appimage.hs_fs -c R5 -l $(SBL_RUN_ADDRESS) -k $(SBL_CERT_KEY)
 
 # Core/SoC/platform specific source files and CFLAGS
 # Example:

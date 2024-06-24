@@ -285,6 +285,26 @@ static int32_t OsalApp_mailboxPendPostTest(uint32_t timeout)
 
     if(osal_OK == result)
     {
+        for(index = 0U; index < params.count; index++)
+        {
+            status += MailboxP_post(handle, &gOsalAppStrToSend[index], timeout);
+        }
+        if(MailboxP_OK != status)
+        {
+            result = osal_FAILURE;
+        }
+        else
+        {
+            /* Posting the mailbox one additional time, should cause it to fail. */
+            if(MailboxP_OK == MailboxP_post(handle, &gOsalAppStrToSend[index], 0))
+            {
+                result = osal_FAILURE;
+            }
+        }
+    }
+
+    if(osal_OK == result)
+    {
 #if defined (FREERTOS)
         if(MailboxP_OK != MailboxP_delete(handle))
 #elif defined (SAFERTOS)

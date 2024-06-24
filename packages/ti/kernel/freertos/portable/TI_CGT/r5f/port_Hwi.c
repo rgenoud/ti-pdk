@@ -88,7 +88,9 @@ static void IntDefaultHandler(void *dummy)
 {
     volatile bool loop = BTRUE;
     while(loop)
-        ;
+    {
+
+    }
 }
 
 void Intc_IntRegister(uint16_t intrNum, IntrFuncPtr fptr, void *fun_arg)
@@ -245,7 +247,8 @@ void __attribute__((interrupt("UNDEF"), section(".text.hwi"))) HwiP_reserved_han
     /* Go into an infinite loop.*/
     volatile bool loop = BTRUE;
     while(loop)
-        ;
+    {
+    }
 }
 
 void __attribute__((section(".text.hwi"))) HwiP_undefined_handler_c(void)
@@ -253,7 +256,8 @@ void __attribute__((section(".text.hwi"))) HwiP_undefined_handler_c(void)
     /* Go into an infinite loop.*/
     volatile bool loop = BTRUE;
     while(loop)
-        ;
+    {
+    }
 }
 
 void __attribute__((section(".text.hwi"))) HwiP_prefetch_abort_handler_c(void)
@@ -264,7 +268,8 @@ void __attribute__((section(".text.hwi"))) HwiP_prefetch_abort_handler_c(void)
     gCurrentProcessorState = CSL_ARM_R5_ABORT_MODE;
     vPortDumpExceptionState();
     while(loop)
-        ;
+    {
+    }
 }
 
 /* Data Abort handler starts execution in HwiP_data_abort_handler, defined in portASM.S 
@@ -286,7 +291,8 @@ void __attribute__((section(".text.hwi"))) HwiP_data_abort_handler_c(void)
         /* Go into an infinite loop.*/
         volatile bool loop = BTRUE;
         while(loop)
-            ;
+        {
+        }
     }
 }
 

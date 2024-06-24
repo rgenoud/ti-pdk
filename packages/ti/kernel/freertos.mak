@@ -24,15 +24,15 @@ SRCS_COMMON += \
             Hwi_vector_table.c                         \
             c7x_module_config_mmu_init.c               \
             TaskSupport.c                              \
-            TimestampProvider.c
+            TimestampProvider.c                        \
+            port_c7x.c
 
 endif
 
 SRCS_COMMON += \
     timers.c \
     queue.c \
-    list.c \
-    port.c
+    list.c
 
 # FreeRTOS tasks, event_groups does not compile in CPP build. Skip it for CPP build
 ifneq ($(CPLUSPLUS_BUILD), yes)
@@ -45,12 +45,14 @@ endif
 #ISA specific C files
 ifeq ($(ISA),$(filter $(ISA), c66))
 SRCS_COMMON += \
-    port_Hwi.c
+    port_Hwi.c \
+    port_c66.c
 endif
 
 ifeq ($(ISA),$(filter $(ISA), r5f))
 SRCS_COMMON += \
-    port_Hwi.c
+    port_Hwi.c \
+    port_r5f.c
 endif
 
 #ISA specific assembly files

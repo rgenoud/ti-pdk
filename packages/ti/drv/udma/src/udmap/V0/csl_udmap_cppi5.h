@@ -605,42 +605,42 @@ static inline void CSL_udmapCppi5LinkDesc( CSL_UdmapCppi5HMPD *pDesc, uint64_t p
 /**
  *  \brief Is the EPI block present in the descriptor?
  *
- *  This function returns true if the Extended Packet Info (EPI) block
- *  is present in the descriptor and false if it is not present.
+ *  This function returns BTRUE if the Extended Packet Info (EPI) block
+ *  is present in the descriptor and BFALSE if it is not present.
  *
  *  This function is intended for use with host-mode and mono-mode
  *  descriptors only.
  *
  *  \param pDesc    [IN]    Pointer to the descriptor
  *
- *  \return  true = EPI block is present in the descriptor
- *          false = EPI block is not present in the descriptor
+ *  \return  BTRUE = EPI block is present in the descriptor
+ *          BFALSE = EPI block is not present in the descriptor
  */
 static inline bool CSL_udmapCppi5IsEpiDataPresent( const void *pDesc )
 {
     uint32_t fieldVal;
 
     fieldVal = CSL_FEXT( ((const CSL_UdmapCppi5HMPD *)pDesc)->descInfo, UDMAP_CPPI5_PD_DESCINFO_EINFO );
-    return (fieldVal == (uint32_t)0U) ? (bool)false : (bool)true;
+    return ((uint32_t)0U == fieldVal) ? BFALSE : BTRUE;
 }
 
 /**
  *  \brief Set indicator if the EPI block is present in the descriptor
  *
  *  This function is used to set if the Extended Packet Info (EPI) block
- *  is present in the descriptor (true) or if it is not present (false).
+ *  is present in the descriptor (BTRUE) or if it is not present (BFALSE).
  *
  *  This function is intended for use with host-mode and mono-mode
  *  descriptors only.
  *
  *  \param pDesc            [IN]    Pointer to the descriptor
- *  \param bEpiDataPresent  [IN]    true if EPI block is present, false if not
+ *  \param bEpiDataPresent  [IN]    BTRUE if EPI block is present, BFALSE if not
  *
  *  \return  None
  */
 static inline void CSL_udmapCppi5SetEpiDataPresent( void *pDesc, bool bEpiDataPresent )
 {
-    CSL_FINS( ((CSL_UdmapCppi5HMPD *)pDesc)->descInfo, UDMAP_CPPI5_PD_DESCINFO_EINFO, (bEpiDataPresent==(bool)true) ? (uint32_t)1U : (uint32_t)0U );
+    CSL_FINS( ((CSL_UdmapCppi5HMPD *)pDesc)->descInfo, UDMAP_CPPI5_PD_DESCINFO_EINFO, (BTRUE == bEpiDataPresent) ? (uint32_t)1U : (uint32_t)0U );
 }
 
 /**
@@ -661,11 +661,11 @@ static inline uint32_t *CSL_udmapCppi5GetEpiDataPtr( const void *pDesc )
 {
     uint32_t *pEpiData = NULL;
 
-    if( CSL_udmapCppi5IsEpiDataPresent(pDesc) == (bool)true )
+    if( BTRUE == CSL_udmapCppi5IsEpiDataPresent(pDesc) )
     {
         uint32_t descType = CSL_udmapCppi5GetDescType( pDesc );
 
-        if( descType == CSL_UDMAP_CPPI5_PD_DESCINFO_DTYPE_VAL_HOST )
+        if( CSL_UDMAP_CPPI5_PD_DESCINFO_DTYPE_VAL_HOST == descType )
         {
             pEpiData = (uint32_t *)((const uint8_t *)pDesc + sizeof(CSL_UdmapCppi5HMPD));
         }
@@ -700,7 +700,7 @@ static inline int32_t CSL_udmapCppi5RdEpiData( const void *pDesc, uint32_t *pTsI
     int32_t retVal = -1;
     uint32_t *pSrcEpiData = CSL_udmapCppi5GetEpiDataPtr(pDesc);
 
-    if( pSrcEpiData != (void *)0 )
+    if( (void *)0 != pSrcEpiData )
     {
         *pTsInfo  = *pSrcEpiData; pSrcEpiData++;
         *pSwInfo0 = *pSrcEpiData; pSrcEpiData++;
@@ -732,7 +732,7 @@ static inline void CSL_udmapCppi5WrEpiData( const void *pDesc, uint32_t tsInfo, 
 {
     uint32_t *pDstEpiData = CSL_udmapCppi5GetEpiDataPtr(pDesc);
 
-    if( pDstEpiData != (void *)0 )
+    if( (void *)0 != pDstEpiData )
     {
         *pDstEpiData = tsInfo;  pDstEpiData++;
         *pDstEpiData = swInfo0; pDstEpiData++;
@@ -823,16 +823,16 @@ static inline void CSL_udmapCppi5SetPsDataLen( void *pDesc, uint32_t psDataLen )
  *  This function returns the address of the protocol-specific data within the
  *  descriptor or SOP buffer.
  *
- *  If the protocol-specific data is in the descriptor (bInDesc is true),
+ *  If the protocol-specific data is in the descriptor (bInDesc is BTRUE),
  *  the address returned is a virtual address. If the protocol-specific data
- *  is in the SOP buffer (bInDesc is false), the address returned is a
+ *  is in the SOP buffer (bInDesc is BFALSE), the address returned is a
  *  physical address.
  *
  *  This function only operates on host-mode and mono-mode descriptors.
  *
  *  \param pDesc        [IN]    Pointer to the descriptor
- *  \param bInSopBuf    [IN]    true if ps data is in SOP buffer, false otherwise
- *  \param bEpiPresent  [IN]    true if EPI data is present, false otherwise
+ *  \param bInSopBuf    [IN]    BTRUE if ps data is in SOP buffer, BFALSE otherwise
+ *  \param bEpiPresent  [IN]    BTRUE if EPI data is present, BFALSE otherwise
  *
  *  \return Address of the protocol-specific data
  */
@@ -842,10 +842,10 @@ static inline uint64_t CSL_udmapCppi5GetPsDataAddr( const void *pDesc, bool bInS
     uint32_t descType = CSL_udmapCppi5GetDescType( pDesc );
     uint32_t epiDataSize;
 
-    epiDataSize = (bEpiPresent == (bool)false) ? (uint32_t)0U : (uint32_t)sizeof(CSL_UdmapCppi5Epi);
-    if( descType == CSL_UDMAP_CPPI5_PD_DESCINFO_DTYPE_VAL_HOST )
+    epiDataSize = (BFALSE == bEpiPresent) ? (uint32_t)0U : (uint32_t)sizeof(CSL_UdmapCppi5Epi);
+    if( CSL_UDMAP_CPPI5_PD_DESCINFO_DTYPE_VAL_HOST == descType )
     {
-        if( bInSopBuf == (bool)true )
+        if( BTRUE == bInSopBuf )
         {
             /* psData is in SOP buffer immediately prior to the data */
             psDataAddr = (uint64_t)((uintptr_t)(((const CSL_UdmapCppi5HMPD *)pDesc)->bufPtr));
@@ -871,16 +871,16 @@ static inline uint8_t *CSL_udmapCppi5GetPsDataPtr( const void *pDesc )
     uint32_t psDataLen;
 
     psDataLen = CSL_udmapCppi5GetPsDataLen( pDesc );
-    if( psDataLen != (uint32_t)0U )
+    if( (uint32_t)0U != psDataLen )
     {
         uint32_t descType = CSL_udmapCppi5GetDescType( pDesc );
         uint32_t epiDataSize;
 
-        epiDataSize = (CSL_udmapCppi5IsEpiDataPresent( pDesc ) == (bool)false) ? (uint32_t)0U : (uint32_t)sizeof(CSL_UdmapCppi5Epi);
+        epiDataSize = (BFALSE == CSL_udmapCppi5IsEpiDataPresent( pDesc )) ? (uint32_t)0U : (uint32_t)sizeof(CSL_UdmapCppi5Epi);
         if( descType == CSL_UDMAP_CPPI5_PD_DESCINFO_DTYPE_VAL_HOST )
         {
             uint32_t psLoc = CSL_FEXT( ((const CSL_UdmapCppi5HMPD *)pDesc)->descInfo, UDMAP_CPPI5_PD_DESCINFO_PSINFO );
-            if( psLoc == CSL_UDMAP_CPPI5_PD_DESCINFO_PSINFO_VAL_IN_DESC )
+            if( CSL_UDMAP_CPPI5_PD_DESCINFO_PSINFO_VAL_IN_DESC == psLoc )
             {
                 /* psData is in the descriptor */
                 pPsData = (uint8_t *)((const uint8_t *)pDesc + sizeof(CSL_UdmapCppi5HMPD) + epiDataSize);
@@ -1060,7 +1060,7 @@ static inline void CSL_udmapCppi5GetIds( const void *pDesc, uint32_t *pPktId, ui
 {
     uint32_t descType = CSL_udmapCppi5GetDescType( pDesc );
 
-    if( descType == CSL_UDMAP_CPPI5_PD_DESCINFO_DTYPE_VAL_TR )
+    if( CSL_UDMAP_CPPI5_PD_DESCINFO_DTYPE_VAL_TR == descType )
     {
         *pPktId     = CSL_FEXT( ((const CSL_UdmapCppi5TRPD *)pDesc)->pktInfo, UDMAP_CPPI5_TRPD_PKTINFO_PKTID );
         *pFlowId    = CSL_FEXT( ((const CSL_UdmapCppi5TRPD *)pDesc)->pktInfo, UDMAP_CPPI5_TRPD_PKTINFO_FLOWID );
@@ -1088,7 +1088,7 @@ static inline void CSL_udmapCppi5SetIds( void *pDesc, uint32_t descType, uint32_
 {
     uint32_t v;
 
-    if( descType == CSL_UDMAP_CPPI5_PD_DESCINFO_DTYPE_VAL_TR )
+    if( CSL_UDMAP_CPPI5_PD_DESCINFO_DTYPE_VAL_TR == descType )
     {
         v = ((CSL_UdmapCppi5TRPD *)pDesc)->pktInfo;
         v &= ~(CSL_UDMAP_CPPI5_TRPD_PKTINFO_PKTID_MASK | CSL_UDMAP_CPPI5_TRPD_PKTINFO_FLOWID_MASK);
@@ -1127,18 +1127,18 @@ static inline void CSL_udmapCppi5GetReturnPolicy( const void *pDesc, uint32_t *p
 {
     uint32_t descType = CSL_udmapCppi5GetDescType( pDesc );
 
-    if( descType == CSL_UDMAP_CPPI5_PD_DESCINFO_DTYPE_VAL_TR )
+    if( CSL_UDMAP_CPPI5_PD_DESCINFO_DTYPE_VAL_TR == descType )
     {
-        *pRetPolicy     = 0;
-        *pEarlyReturn   = 0;
+        *pRetPolicy     = 0U;
+        *pEarlyReturn   = 0U;
         *pRetPushPolicy = CSL_FEXT( ((const CSL_UdmapCppi5TRPD *)pDesc)->retInfo, UDMAP_CPPI5_TRPD_RETINFO_RETPOLICY );
         *pRetQnum       = CSL_FEXT( ((const CSL_UdmapCppi5TRPD *)pDesc)->retInfo, UDMAP_CPPI5_TRPD_RETINFO_RETQ );
     }
     else
     {
-        if( descType == CSL_UDMAP_CPPI5_PD_DESCINFO_DTYPE_VAL_MONO )
+        if( CSL_UDMAP_CPPI5_PD_DESCINFO_DTYPE_VAL_MONO == descType )
         {
-            *pRetPolicy     = 0;
+            *pRetPolicy     = 0U;
         }
         else
         {
@@ -1191,7 +1191,7 @@ static inline void CSL_udmapCppi5SetReturnPolicy( void *pDesc, uint32_t descType
 {
     uint32_t v;
 
-    if( descType == CSL_UDMAP_CPPI5_PD_DESCINFO_DTYPE_VAL_TR )
+    if( CSL_UDMAP_CPPI5_PD_DESCINFO_DTYPE_VAL_TR == descType )
     {
         ((CSL_UdmapCppi5TRPD *)pDesc)->retInfo =
             CSL_FMK( UDMAP_CPPI5_TRPD_RETINFO_RETPOLICY, retPushPolicy )    |

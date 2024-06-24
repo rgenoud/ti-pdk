@@ -122,21 +122,7 @@ static uint8_t MainApp_TaskStack[APP_TASK_STACK] __attribute__((aligned(32)));
 /* ========================================================================== */
 int main(void)
 {
-    int32_t ret = CSL_PASS;
-
     OS_init();
-
-    Board_init(BOARD_INIT_UART_STDIO);
-
-    Sciclient_init(NULL_PTR);
-    /* Initialize SCI Client Server */
-    ret = SetupSciServer();
-    if(ret != CSL_PASS)
-    {
-        OS_stop();
-    }
-
-    AppUtils_Printf(MSG_NORMAL, "\nMCU R5F App started at %d usecs\r\n", (uint32_t)TimerP_getTimeInUsecs());
 
     /* Initialize the task params */
     TaskP_Params_init(&mainAppTaskParams);
@@ -161,6 +147,19 @@ static void MainApp_TaskFxn(void* a0, void* a1)
     uint64_t timeBootAppStart, timeBootAppFinish;
     uint64_t timeMcuOnlyAppStart, timeMcuOnlyAppFinish;
     uint32_t i, numBoots=5;
+    int32_t ret = CSL_PASS;
+
+    Board_init(BOARD_INIT_UART_STDIO);
+
+    Sciclient_init(NULL_PTR);
+    /* Initialize SCI Client Server */
+    ret = SetupSciServer();
+    if(ret != CSL_PASS)
+    {
+        OS_stop();
+    }
+
+    AppUtils_Printf(MSG_NORMAL, "\nMCU R5F App started at %d usecs\r\n", (uint32_t)TimerP_getTimeInUsecs());
 
     Lpm_bootAppInit();
     Lpm_pmicInit();

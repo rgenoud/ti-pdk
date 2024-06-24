@@ -664,6 +664,12 @@ void ping_main(void *args)
 
     UNITY_END();
 
+#if defined LDRA_DYN_COVERAGE_EXIT
+    FREERTOS_log("\n LDRA ENTRY... \n");
+    upload_execution_history();
+    FREERTOS_log("\n LDRA EXIT... \n");
+#endif
+
     if (Unity.TestFailures == 0)
     {
         FREERTOS_log("\r\n");

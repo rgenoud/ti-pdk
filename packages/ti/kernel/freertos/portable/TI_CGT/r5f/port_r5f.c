@@ -107,7 +107,7 @@
  * a non zero value to ensure interrupts don't inadvertently become unmasked before
  * the scheduler starts.  As it is stored as part of the task context it will
  * automatically be set to 0 when the first task is started. */
-volatile uint32_t ulCriticalNesting = 9999UL;
+volatile uint32_t ulCriticalNesting = 9999U;
 
 /* Saved as part of the task context.  If ulPortTaskHasFPUContext is non-zero then
  * a floating point context must be saved and restored for the task. */
@@ -158,15 +158,30 @@ RunTimeTimerControl_t   gTimerCntrl;
  */
 extern void vPortRestoreTaskContext( void );
 
-uint32_t ulGetDataFaultStatusRegister( void );
-uint32_t ulGetDataFaultAddressRegister( void );
-uint32_t ulGetInstructionFaultStatusRegister( void );
-uint32_t ulGetInstructionFaultAddressRegister( void );
-uint32_t ulGetCPSR( void );
+extern uint32_t ulGetDataFaultStatusRegister( void );
+extern uint32_t ulGetDataFaultAddressRegister( void );
+extern uint32_t ulGetInstructionFaultStatusRegister( void );
+extern uint32_t ulGetInstructionFaultAddressRegister( void );
+extern uint32_t ulGetCPSR( void );
+extern uint32_t ulDoWFI( void );
+extern uint32_t ulDoCPSID( void );
+extern uint32_t ulDoCPSIE( void );
+
+void vPortDumpExceptionState( void );
+uint64_t getRunTimeCounterValue(void);
+uint64_t getRunTimeCounterValue64(void);
+void vApplicationGetTimerTaskMemory(StaticTask_t **ppxTimerTaskTCBBuffer,
+                                    StackType_t **ppxTimerTaskStackBuffer,
+                                    uint32_t *pulTimerTaskStackSize);
+int32_t _system_pre_init(void);
+void _system_post_cinit(void);
+void vApplicationIdleHook(void);
 
 BaseType_t xPortInIsrContext(void);
 
 uint64_t uxPortReadPmuCounter(void);
+
+uint64_t uiPortGetRunTimeCounterValue64(void);
 
 static void prvTaskExitError( void )
 {
@@ -179,138 +194,102 @@ static void prvTaskExitError( void )
     DebugP_assert(BFALSE);
 }
 
-uint32_t ulGetDataFaultStatusRegister( void )
-{
-    uint32_t DFSR;
-    __asm volatile("MRC     p15, #0, r0, c5, c0, #0\n");
-    __asm volatile ( "MOV %0, r0" : "=r" (DFSR) );
-    return DFSR;
-}
-
-uint32_t ulGetDataFaultAddressRegister( void )
-{
-    uint32_t DFAR;
-    __asm volatile("MRC     p15, #0, r0, c6, c0, #0\n");
-    __asm volatile ( "MOV %0, r0" : "=r" (DFAR) );
-    return DFAR;
-}
-
-uint32_t ulGetInstructionFaultStatusRegister( void )
-{
-    uint32_t IFSR;
-    __asm volatile("MRC     p15, #0, r0, c5, c0, #1\n");
-    __asm volatile ( "MOV %0, r0" : "=r" (IFSR) );
-    return IFSR;
-}
-
-uint32_t ulGetInstructionFaultAddressRegister( void )
-{
-    uint32_t IFAR;
-    __asm volatile("MRC     p15, #0, r0, c6, c0, #2\n");
-    __asm volatile ( "MOV %0, r0" : "=r" (IFAR) );
-    return IFAR;
-}
-
-uint32_t ulGetCPSR( void )
-{
-    volatile uint32_t CPSR;
-	__asm volatile ( "MRS %0, CPSR" : "=r" (CPSR) );
-    return CPSR;
-}
-
 StackType_t * pxPortInitialiseStack( StackType_t * pxTopOfStack,
                                      TaskFunction_t pxCode,
                                      void * pvParameters )
 {
+    StackType_t *pxTOS = pxTopOfStack;
+
     /* Setup the initial stack of the task.  The stack is set exactly as
      * expected by the portRESTORE_CONTEXT() macro.
      *
      * The fist real value on the stack is the status register, which is set for
      * system mode, with interrupts enabled.  A few NULLs are added first to ensure
      * GDB does not try decoding a non-existent return address. */
-    *pxTopOfStack = ( StackType_t ) NULL;
-    pxTopOfStack--;
-    *pxTopOfStack = ( StackType_t ) NULL;
-    pxTopOfStack--;
-    *pxTopOfStack = ( StackType_t ) NULL;
-    pxTopOfStack--;
-    *pxTopOfStack = ( StackType_t ) portINITIAL_SPSR;
+    *pxTOS = ( StackType_t ) NULL;
+    pxTOS--;
+    *pxTOS = ( StackType_t ) NULL;
+    pxTOS--;
+    *pxTOS = ( StackType_t ) NULL;
+    pxTOS--;
+    *pxTOS = ( StackType_t ) portINITIAL_SPSR;
 
     if( 0x00UL != ( ( uint32_t ) pxCode & portTHUMB_MODE_ADDRESS ) )
     {
         /* The task will start in THUMB mode. */
-        *pxTopOfStack |= portTHUMB_MODE_BIT;
+        *pxTOS |= portTHUMB_MODE_BIT;
     }
 
-    pxTopOfStack--;
+    pxTOS--;
 
     /* Next the return address, which in this case is the start of the task. */
-    *pxTopOfStack = ( StackType_t ) pxCode;
-    pxTopOfStack--;
+    *pxTOS = ( StackType_t ) pxCode;
+    pxTOS--;
 
     /* Next all the registers other than the stack pointer. */
-    *pxTopOfStack = ( StackType_t ) portTASK_RETURN_ADDRESS; /* R14 */
-    pxTopOfStack--;
-    *pxTopOfStack = ( StackType_t ) 0x12121212;              /* R12 */
-    pxTopOfStack--;
-    *pxTopOfStack = ( StackType_t ) 0x11111111;              /* R11 */
-    pxTopOfStack--;
-    *pxTopOfStack = ( StackType_t ) 0x10101010;              /* R10 */
-    pxTopOfStack--;
-    *pxTopOfStack = ( StackType_t ) 0x09090909;              /* R9 */
-    pxTopOfStack--;
-    *pxTopOfStack = ( StackType_t ) 0x08080808;              /* R8 */
-    pxTopOfStack--;
-    *pxTopOfStack = ( StackType_t ) 0x07070707;              /* R7 */
-    pxTopOfStack--;
-    *pxTopOfStack = ( StackType_t ) 0x06060606;              /* R6 */
-    pxTopOfStack--;
-    *pxTopOfStack = ( StackType_t ) 0x05050505;              /* R5 */
-    pxTopOfStack--;
-    *pxTopOfStack = ( StackType_t ) 0x04040404;              /* R4 */
-    pxTopOfStack--;
-    *pxTopOfStack = ( StackType_t ) 0x03030303;              /* R3 */
-    pxTopOfStack--;
-    *pxTopOfStack = ( StackType_t ) 0x02020202;              /* R2 */
-    pxTopOfStack--;
-    *pxTopOfStack = ( StackType_t ) 0x01010101;              /* R1 */
-    pxTopOfStack--;
-    *pxTopOfStack = ( StackType_t ) pvParameters;            /* R0 */
-    pxTopOfStack--;
+    *pxTOS = ( StackType_t ) portTASK_RETURN_ADDRESS; /* R14 */
+    pxTOS--;
+    *pxTOS = ( StackType_t ) 0x12121212;              /* R12 */
+    pxTOS--;
+    *pxTOS = ( StackType_t ) 0x11111111;              /* R11 */
+    pxTOS--;
+    *pxTOS = ( StackType_t ) 0x10101010;              /* R10 */
+    pxTOS--;
+    *pxTOS = ( StackType_t ) 0x09090909;              /* R9 */
+    pxTOS--;
+    *pxTOS = ( StackType_t ) 0x08080808;              /* R8 */
+    pxTOS--;
+    *pxTOS = ( StackType_t ) 0x07070707;              /* R7 */
+    pxTOS--;
+    *pxTOS = ( StackType_t ) 0x06060606;              /* R6 */
+    pxTOS--;
+    *pxTOS = ( StackType_t ) 0x05050505;              /* R5 */
+    pxTOS--;
+    *pxTOS = ( StackType_t ) 0x04040404;              /* R4 */
+    pxTOS--;
+    *pxTOS = ( StackType_t ) 0x03030303;              /* R3 */
+    pxTOS--;
+    *pxTOS = ( StackType_t ) 0x02020202;              /* R2 */
+    pxTOS--;
+    *pxTOS = ( StackType_t ) 0x01010101;              /* R1 */
+    pxTOS--;
+    *pxTOS = ( StackType_t ) pvParameters;            /* R0 */
+    pxTOS--;
 
     /* The task will start with a critical nesting count of 0 as interrupts are
      * enabled. */
-    *pxTopOfStack = portNO_CRITICAL_NESTING;
-    pxTopOfStack--;
+    *pxTOS = portNO_CRITICAL_NESTING;
+    pxTOS--;
 
 #if (configFLOATING_POINT_CONTEXT==0)
     /* The task will start without a floating point context.  A task that uses
      * the floating point hardware must call vPortTaskUsesFPU() before executing
      * any floating point instructions. */
-    *pxTopOfStack = portNO_FLOATING_POINT_CONTEXT;
+    *pxTOS = portNO_FLOATING_POINT_CONTEXT;
 #else
     /* The task will start with a floating point context. */
 
-    *pxTopOfStack = portINITIAL_FPSR;
-    pxTopOfStack--;
+    *pxTOS = portINITIAL_FPSR;
+    pxTOS--;
 
     /* Next all the FPU bank registers S0 to S31 */
     uint32_t ulNumFpuReg = portNUM_FPU_REGS;
-    while ( ulNumFpuReg -- )
+    while (ulNumFpuReg > 0U)
     {
-        *pxTopOfStack = ( StackType_t ) 0x00000000;     /* S0 to S31 */
-        pxTopOfStack--;
+        ulNumFpuReg--;
+        *pxTOS = ( StackType_t ) 0x00000000;     /* S0 to S31 */
+        pxTOS--;
     }
 
-    *pxTopOfStack = portFLOATING_POINT_CONTEXT;
+    *pxTOS = portFLOATING_POINT_CONTEXT;
 #endif
 
-    return pxTopOfStack;
+    return pxTOS;
 }
 
 static void prvPorttimerTickIsr(uintptr_t args)
 {
-    void vPortTimerTickHandler();
+    void vPortTimerTickHandler(void);
 
     /* increment the systick counter */
     gTimerCntrl.uxTicks++;
@@ -330,7 +309,7 @@ static void prvPortInitTickTimer(void)
     timerParams.runMode    = TimerP_RunMode_CONTINUOUS;
     timerParams.startMode  = TimerP_StartMode_USER;
     timerParams.periodType = TimerP_PeriodType_MICROSECS;
-    timerParams.period     = (portTICK_PERIOD_MS * 1000);
+    timerParams.period     = (portTICK_PERIOD_MS * 1000U);
 
     pTickTimerHandle = TimerP_create(configTIMER_ID, &prvPorttimerTickIsr, &timerParams);
 
@@ -338,8 +317,8 @@ static void prvPortInitTickTimer(void)
     DebugP_assert (NULL != pTickTimerHandle);
 
     /* init internal data structure */
-    gTimerCntrl.uxTicks             = 0;
-    gTimerCntrl.ulUSecPerTick       = (portTICK_PERIOD_MS * 1000);
+    gTimerCntrl.uxTicks             = 0U;
+    gTimerCntrl.ulUSecPerTick       = (portTICK_PERIOD_MS * 1000U);
     gTimerCntrl.pxTimerHandle       = pTickTimerHandle;
 }
 
@@ -394,7 +373,7 @@ void vPortYeildFromISR( uint32_t xSwitchRequired )
     }
 }
 
-void vPortTimerTickHandler()
+void vPortTimerTickHandler(void)
 {
     if( pdTRUE == ulPortSchedularRunning )
     {
@@ -423,12 +402,12 @@ void vPortTaskUsesFPU( void )
 void vPortEnterCritical( void )
 {
     /* Mask interrupts up to the max syscall interrupt priority. */
-    asm ( " CPSID	i");
+    ulDoCPSID();
 
     /* Now interrupts are disabled ulCriticalNesting can be accessed
      * directly.  Increment ulCriticalNesting to keep a count of how many times
      * portENTER_CRITICAL() has been called. */
-    ulCriticalNesting++;
+    ulCriticalNesting = ulCriticalNesting + 1U;
 
     #if (configOPTIMIZE_FOR_LATENCY==0)
     /* This API should NOT be called from within ISR context. Below logic checks for this.
@@ -455,7 +434,7 @@ void vPortExitCritical( void )
     {
         /* Decrement the nesting count as the critical section is being
          * exited. */
-        ulCriticalNesting--;
+        ulCriticalNesting = ulCriticalNesting - 1U;
 
         /* If the nesting level has reached zero then all interrupt
          * priorities must be re-enabled. */
@@ -463,7 +442,7 @@ void vPortExitCritical( void )
         {
             /* Critical nesting has reached zero so all interrupt priorities
              * should be unmasked. */
-            asm ( " CPSIE	i");
+            ulDoCPSIE();
         }
     }
 }
@@ -489,7 +468,7 @@ void vPortDumpExceptionState( void )
 }
 
 /* initialize high resolution timer for CPU and task load calculation */
-void vPortConfigTimerForRunTimeStats()
+void vPortConfigTimerForRunTimeStats(void)
 {
     /* Timer is initialized by prvPortInitTickTimer before the schedular is started */
 
@@ -498,7 +477,7 @@ void vPortConfigTimerForRunTimeStats()
     CSL_armR5PmuResetCntrs();         /* Set PMCR P-bit */
     CSL_armR5PmuResetCycleCnt();      /* Set PMCR C-bit */
     CSL_armR5PmuEnableCntr(CSL_ARM_R5_PMU_CYCLE_COUNTER_NUM, 1);     /* Set PMCNTENSET for event */
-    CSL_armR5PmuClearCntrOverflowStatus(0x80000007);
+    CSL_armR5PmuClearCntrOverflowStatus(0x80000007U);
     ulPmuTsOverFlowCount = 0U;
 }
 
@@ -526,11 +505,12 @@ uint64_t uxPortReadPmuCounter(void)
     return ts;
 }
 /* Return current counter value of high speed counter in usecs, or return 0 in case of an unexpected error. */
-uint64_t getRunTimeCounterValue()
+uint64_t getRunTimeCounterValue(void)
 {
     uint64_t uxDeltaTs, uxTimeInUsecs;
     volatile uint64_t uxTimeInMilliSecs, t1, t2, pmuCounterRead, pmuCounterReadHi, pmuCounterReadLow;
     uint32_t noBusyWaiting = 2U;
+    bool cond1, cond2;
     /* If there is a tick in between reading the micro seconds from last tick, then the differenfece will get corrupted.
      * We should keep looping to ensure that no tick happened during the miscrosecond offset measurement.
      * Worst case expectation is that the loop will execute 2 times, as the tick interrupt occurs in 
@@ -538,7 +518,7 @@ uint64_t getRunTimeCounterValue()
      */
     do
     {
-        --noBusyWaiting;
+        noBusyWaiting = noBusyWaiting - 1U;
         t1 = gTimerCntrl.uxTicks;
         /* PMU counter increments after last OS tick  */
         pmuCounterRead = uxPortReadPmuCounter();
@@ -549,31 +529,33 @@ uint64_t getRunTimeCounterValue()
         if (pmuCounterRead < ullPortLastTickPmuTs)
         {
             pmuCounterReadHi = pmuCounterRead >> 32U;
-            pmuCounterReadLow = pmuCounterRead & 0xFFFFFFFF;
+            pmuCounterReadLow = pmuCounterRead & 0xFFFFFFFFU;
             /* Increase the higher 32 bits by 1, as overflow has happened. Do not handle the overflow
              * as the tick timer will handle it. Just use the correct value here.
              */
-            pmuCounterReadHi++;
+            pmuCounterReadHi = pmuCounterReadHi + 1ULL;
             pmuCounterRead =  (pmuCounterReadHi << 32U) | pmuCounterReadLow;
         }
         uxDeltaTs = pmuCounterRead - ullPortLastTickPmuTs;
         t2 = gTimerCntrl.uxTicks;
-    } while ( (t1 != t2) && (0U != noBusyWaiting) );
+        cond1 = (t1 != t2);
+        cond2 = (0U != noBusyWaiting);
+    } while (cond1 && cond2);
 
     /* If t1 and t2 are not equal after 2 iterations of the while loop, then this is 
      * as unexpected situation and we should return an error, i.e., 0
      */
-    if ( ( 0U == noBusyWaiting ) && ( t1 != t2 ) )
+    if ( ( 0U == noBusyWaiting ) && cond1 )
     {
-        uxTimeInUsecs = (uint64_t)0;
+        uxTimeInUsecs = 0ULL;
     }
     else
     {
         /* time in milliseconds based on no. of OS ticks */
         uxTimeInMilliSecs = t2 * (uint64_t)portTICK_PERIOD_MS;
 
-        uxTimeInUsecs = (uxTimeInMilliSecs * 1000U) + 
-                            (uxDeltaTs * 1000000) / configCPU_CLOCK_HZ /* convert PMU timestamp to microseconds */;
+        uxTimeInUsecs = ((uxTimeInMilliSecs * 1000ULL) + 
+                            ((uxDeltaTs * 1000000ULL) / (uint64_t)configCPU_CLOCK_HZ)); /* convert PMU timestamp to microseconds */
 
         /* note, there is no overflow protection for this 32b value in FreeRTOS
         *
@@ -589,13 +571,13 @@ uint64_t getRunTimeCounterValue()
 }
 
 /* Return current counter value of high speed counter in usecs as uint32_t, or return 0 in case of an unexpected error. */
-uint32_t uiPortGetRunTimeCounterValue()
+uint32_t uiPortGetRunTimeCounterValue(void)
 {
     return (uint32_t)getRunTimeCounterValue();
 }
 
 /* Return current counter value of high speed counter in usecs as uint64_t, or return 0 in case of an unexpected error. */
-uint64_t uiPortGetRunTimeCounterValue64()
+uint64_t uiPortGetRunTimeCounterValue64(void)
 {
     return getRunTimeCounterValue();
 }
@@ -605,14 +587,14 @@ uint64_t uiPortGetRunTimeCounterValue64()
  * i.e FreeRTOS API should not be called from FIQ, however right now we dont enforce it by checking
  * if we are in FIQ when this API is called.
  */
-void vPortValidateInterruptPriority()
+void vPortValidateInterruptPriority(void)
 {
 }
 
 /* This is called as part of vTaskEndScheduler(), in our port, there is nothing to do here.
  * interrupt are disabled by FreeRTOS before calling this.
  */
-void vPortEndScheduler()
+void vPortEndScheduler(void)
 {
     /* nothing to do */
 }
@@ -701,7 +683,6 @@ BaseType_t xPortInIsrContext(void)
     return inISR;
 }
 
-
 /*****************************************************************************/
 /* _SYSTEM_PRE_INIT() - _system_pre_init() is called in the C/C++ startup    */
 /* routine (_c_int00()) and provides a mechanism for the user to             */
@@ -758,6 +739,6 @@ __attribute__((weak)) void vApplicationIdleHook( void )
     vApplicationLoadHook();
 #endif
 
-    asm ( " WFI " );
+    ulDoWFI();
 }
 

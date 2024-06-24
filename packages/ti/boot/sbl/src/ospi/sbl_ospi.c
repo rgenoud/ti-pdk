@@ -423,8 +423,12 @@ int32_t SBL_ospiInit(void *handle)
         ospi_cfg.funcClk = ospiFunClk;
         ospi_cfg.baudRateDiv = 8;
         OSPI_configClk(ospiFunClk);
-        ospi_cfg.phyEnable = true;
         ospi_cfg.cacheEnable = true;
+#if SBL_USE_DMA
+        ospi_cfg.phyEnable = true;
+#else
+        ospi_cfg.phyEnable = false;
+#endif
     }
 #endif
 

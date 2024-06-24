@@ -56,7 +56,7 @@
 /*                            Global Variables                                */
 /* ========================================================================== */
 
-uint32_t gInterruptRecieved;
+volatile uint32_t gInterruptRecieved;
 uint32_t gDmscGlbRegs = DMSC_FW_EXCP_LOG_REG;
 uint32_t gFwExcpExtInputRegAddr[FW_MAX_ISR_INPUTS] =
 {
@@ -89,28 +89,27 @@ uint32_t gFwExcpExtInputRegAddr[FW_MAX_ISR_INPUTS] =
     [26] = CMBN_FW_EXCP_LOG_REG_29,
     [27] = CMBN_FW_EXCP_LOG_REG_30,
     [28] = CMBN_FW_EXCP_LOG_REG_31,
-    [29] = CMBN_FW_EXCP_LOG_REG_32,
-    [30] = CMBN_FW_EXCP_LOG_REG_36,
-    [31] = CMBN_FW_EXCP_LOG_REG_37,
-    [32] = CMBN_FW_EXCP_LOG_REG_38,
-    [33] = CMBN_FW_EXCP_LOG_REG_39,
-    [34] = CMBN_FW_EXCP_LOG_REG_40,
-    [35] = CMBN_FW_EXCP_LOG_REG_41,
-    [36] = CMBN_FW_EXCP_LOG_REG_42,
-    [37] = CMBN_FW_EXCP_LOG_REG_43,
-    [38] = CMBN_FW_EXCP_LOG_REG_44,
-    [39] = CMBN_FW_EXCP_LOG_REG_45,
-    [40] = CMBN_FW_EXCP_LOG_REG_46,
-    [41] = CMBN_FW_EXCP_LOG_REG_47,
-    [42] = CMBN_FW_EXCP_LOG_REG_48,
-    [43] = CMBN_FW_EXCP_LOG_REG_50,
-    [44] = CMBN_FW_EXCP_LOG_REG_51,
-    [45] = CMBN_FW_EXCP_LOG_REG_52,
-    [46] = CMBN_FW_EXCP_LOG_REG_53,
-    [47] = CMBN_FW_EXCP_LOG_REG_54,
-    [48] = CMBN_FW_EXCP_LOG_REG_55,
-    [49] = CMBN_FW_EXCP_LOG_REG_56,
-    [50] = CMBN_FW_EXCP_LOG_REG_57,
+    [29] = CMBN_FW_EXCP_LOG_REG_36,
+    [30] = CMBN_FW_EXCP_LOG_REG_37,
+    [31] = CMBN_FW_EXCP_LOG_REG_38,
+    [32] = CMBN_FW_EXCP_LOG_REG_39,
+    [33] = CMBN_FW_EXCP_LOG_REG_40,
+    [34] = CMBN_FW_EXCP_LOG_REG_41,
+    [35] = CMBN_FW_EXCP_LOG_REG_42,
+    [36] = CMBN_FW_EXCP_LOG_REG_43,
+    [37] = CMBN_FW_EXCP_LOG_REG_44,
+    [38] = CMBN_FW_EXCP_LOG_REG_45,
+    [39] = CMBN_FW_EXCP_LOG_REG_46,
+    [40] = CMBN_FW_EXCP_LOG_REG_47,
+    [41] = CMBN_FW_EXCP_LOG_REG_48,
+    [42] = CMBN_FW_EXCP_LOG_REG_50,
+    [43] = CMBN_FW_EXCP_LOG_REG_51,
+    [44] = CMBN_FW_EXCP_LOG_REG_52,
+    [45] = CMBN_FW_EXCP_LOG_REG_53,
+    [46] = CMBN_FW_EXCP_LOG_REG_54,
+    [47] = CMBN_FW_EXCP_LOG_REG_55,
+    [48] = CMBN_FW_EXCP_LOG_REG_56,
+    [49] = CMBN_FW_EXCP_LOG_REG_57,
 };
 
 /* ========================================================================== */

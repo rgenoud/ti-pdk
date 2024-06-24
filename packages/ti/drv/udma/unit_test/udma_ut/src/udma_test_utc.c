@@ -121,6 +121,7 @@ int32_t UdmaTestChPauseDruNeg(UdmaTestTaskObj *taskObj)
     retVal           = Udma_chOpen(drvHandle, chHandle, chType, &chPrms);
     Udma_ChUtcPrms utcPrms;
     UdmaChUtcPrms_init(&utcPrms);
+    utcPrms.druOwner = CSL_DRU_OWNER_DIRECT_TR;
     if(UDMA_SOK == retVal)
     {
         retVal = Udma_chConfigUtc(chHandle, &utcPrms);
@@ -129,10 +130,9 @@ int32_t UdmaTestChPauseDruNeg(UdmaTestTaskObj *taskObj)
             retVal = Udma_chEnable(chHandle);
             if(UDMA_SOK == retVal)
             {
-                backUpChObj                = chObj;
-                chHandle->utcPrms.druOwner = CSL_DRU_OWNER_DIRECT_TR;
-                chHandle->extChNum         = CSL_DRU_NUM_CH;
-                retVal = Udma_chPause(chHandle);
+                backUpChObj        = chObj;
+                chHandle->extChNum = CSL_DRU_NUM_CH;
+                retVal             = Udma_chPause(chHandle);
                 if(UDMA_SOK == retVal)
                 {
                     GT_0trace(taskObj->traceMask, GT_ERR,
@@ -154,6 +154,18 @@ int32_t UdmaTestChPauseDruNeg(UdmaTestTaskObj *taskObj)
                     {
                         retVal = UDMA_SOK;
                         chObj  = backUpChObj;
+                        retVal = Udma_chPause(chHandle);
+                        if(UDMA_SOK == retVal)
+                        {
+                            retVal = Udma_chResume(chHandle);
+                            if(UDMA_SOK != retVal)
+                            {
+                                GT_0trace(taskObj->traceMask, GT_ERR,
+                                        " |TEST INFO|:: FAIL:: UDMA:: ChResume:: Pos::"
+                                        " Check when druOwner is CSL_DRU_OWNER_DIRECT_TR!!\n");
+                                retVal = UDMA_EFAIL;
+                            }
+                        }
                         Udma_chDisable(chHandle, timeout);
                         Udma_chClose(chHandle); 
                     }
@@ -195,6 +207,7 @@ int32_t UdmaTestChPauseDruNeg(UdmaTestTaskObj *taskObj)
                     chHandle->utcPrms.druOwner = CSL_DRU_OWNER_UDMAC_TR;
                     chHandle->peerThreadId     = UDMA_THREAD_ID_INVALID;
                     retVal                     = Udma_chEnable(chHandle); 
+                    retVal                    += Udma_chDisable(chHandle, timeout); 
                     if(UDMA_SOK == retVal)
                     {
                         GT_0trace(taskObj->traceMask, GT_ERR,
@@ -1113,6 +1126,18 @@ int32_t UdmaDruVhwaTestNeg(UdmaTestTaskObj *taskObj)
                         {
                             retVal = UDMA_SOK;
                             chHandle->drvHandle->devIdPsil = backUpDevIdPsil;
+                            retVal = Udma_chPause(chHandle);
+                            if(UDMA_SOK == retVal)
+                            {
+                                retVal = Udma_chResume(chHandle);
+                                if(UDMA_SOK != retVal)
+                                {
+                                    GT_0trace(taskObj->traceMask, GT_ERR,
+                                            " |TEST INFO|:: FAIL:: UDMA:: Udma_chResume:: Pos::"
+                                            " Check when utcId is not UDMA_UTC_ID_MSMC_DRU0!!\n");
+                                    retVal = UDMA_EFAIL;
+                                }
+                            }
                         }
                         Udma_chDisable(chHandle, timeout);
                     }

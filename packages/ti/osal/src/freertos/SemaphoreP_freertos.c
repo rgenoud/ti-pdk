@@ -60,8 +60,8 @@ typedef struct SemaphoreP_freertos_s {
 /* global pool of statically allocated semaphore pools */
 static SemaphoreP_freertos gOsalSemPfreertosPool[OSAL_FREERTOS_CONFIGNUM_SEMAPHORE];
 
-int32_t SemaphoreP_constructBinary(SemaphoreP_freertos *handle, uint32_t initCount);
-int32_t SemaphoreP_constructCounting(SemaphoreP_freertos *handle, uint32_t initCount, uint32_t maxCount);
+static int32_t SemaphoreP_constructBinary(SemaphoreP_freertos *handle, uint32_t initCount);
+static int32_t SemaphoreP_constructCounting(SemaphoreP_freertos *handle, uint32_t initCount, uint32_t maxCount);
 
 /*
  *  ======== SemaphoreP_create ========
@@ -168,30 +168,37 @@ SemaphoreP_Handle SemaphoreP_create(uint32_t count,
     return ret_handle;
 }
 
-int32_t SemaphoreP_constructBinary(SemaphoreP_freertos *handle, uint32_t initCount)
+static int32_t SemaphoreP_constructBinary(SemaphoreP_freertos *handle, uint32_t initCount)
 {
     int32_t status;
 
-    handle->semHndl = xSemaphoreCreateBinaryStatic(&handle->semObj);
-    if( NULL == handle->semHndl )
+    if ((NULL == handle) || (initCount > 1U))
     {
         status = SemaphoreP_FAILURE;
     }
     else
     {
-        vQueueAddToRegistry(handle->semHndl, "Binary Sem (OSAL)");
-        if(1U == initCount)
+        handle->semHndl = xSemaphoreCreateBinaryStatic(&handle->semObj);
+        if( NULL == handle->semHndl)
         {
-            /* post a semaphore to increment initial count to 1 */
-            (void)xSemaphoreGive(handle->semHndl);
+            status = SemaphoreP_FAILURE;
         }
-        status = SemaphoreP_OK;
+        else
+        {
+            vQueueAddToRegistry(handle->semHndl, "Binary Sem (OSAL)");
+            if(1U == initCount)
+            {
+                /* post a semaphore to increment initial count to 1 */
+                (void)xSemaphoreGive(handle->semHndl);
+            }
+            status = SemaphoreP_OK;
+        }
     }
 
     return status;
 }
 
-int32_t SemaphoreP_constructCounting(SemaphoreP_freertos *handle, uint32_t initCount, uint32_t maxCount)
+static int32_t SemaphoreP_constructCounting(SemaphoreP_freertos *handle, uint32_t initCount, uint32_t maxCount)
 {
     int32_t status;
 

@@ -380,7 +380,7 @@ extern int32_t CSL_intaggrEnableEventMulticast( CSL_IntaggrCfg *pCfg, uint32_t g
  *          CSL_EFAIL = INTAGGR does not support this feature
  *          CSL_EBADARGS = Invalid globalEventOutIdx parameter
  */
-extern int32_t CSL_intaggrMapUnmappedEventToEvent( CSL_IntaggrCfg *pCfg, uint32_t unmappedEventIdx, uint32_t globalEventOutIdx );
+extern int32_t CSL_intaggrMapUnmappedEventToEvent( const CSL_IntaggrCfg *pCfg, uint32_t unmappedEventIdx, uint32_t globalEventOutIdx );
 
 /**
  *  \brief Enable or disable a status interrupt
@@ -393,13 +393,13 @@ extern int32_t CSL_intaggrMapUnmappedEventToEvent( CSL_IntaggrCfg *pCfg, uint32_
  *
  *  \param pCfg             [IN]    Pointer to the #CSL_IntaggrCfg structure
  *  \param statusBitNum     [IN]    Status bit # (0..(virtIntrCnt*64)-1)
- *  \param bEnable          [IN]    If true, interrupt is enabled. If false,
+ *  \param bEnable          [IN]    If BTRUE, interrupt is enabled. If BFALSE,
  *                                  it is disabled.
  *
  *  \return CSL_PASS = success
  *          CSL_EBADARGS = Invalid statusBitNum parameter
  */
-extern int32_t CSL_intaggrSetIntrEnable( CSL_IntaggrCfg *pCfg, uint32_t statusBitNum, bool bEnable );
+extern int32_t CSL_intaggrSetIntrEnable( const CSL_IntaggrCfg *pCfg, uint32_t statusBitNum, bool bEnable );
 
 /**
  *  \brief Set the raw pending status of an interrupt
@@ -416,7 +416,7 @@ extern int32_t CSL_intaggrSetIntrEnable( CSL_IntaggrCfg *pCfg, uint32_t statusBi
  *  \return CSL_PASS = success
  *          CSL_EBADARGS = Invalid statusBitNum parameter
  */
-extern int32_t CSL_intaggrSetIntrPending( CSL_IntaggrCfg *pCfg, uint32_t statusBitNum );
+extern int32_t CSL_intaggrSetIntrPending( const CSL_IntaggrCfg *pCfg, uint32_t statusBitNum );
 
 /**
  *  \brief Determine if a status interrupt is pending
@@ -430,12 +430,12 @@ extern int32_t CSL_intaggrSetIntrPending( CSL_IntaggrCfg *pCfg, uint32_t statusB
  *
  *  \param pCfg             [IN]    Pointer to the #CSL_IntaggrCfg structure
  *  \param statusBitNum     [IN]    Status bit # (0..(virtIntrCnt*64)-1)
- *  \param bMaskedStatus    [IN]    If true, the masked pending status is
- *                                  returned. If false, the raw pending status
+ *  \param bMaskedStatus    [IN]    If BTRUE, the masked pending status is
+ *                                  returned. If BFALSE, the raw pending status
  *                                  is returned.
  *
- *  \return  true  = The interrupt is pending
- *           false = The interrupt is not pending or the statusBitNum
+ *  \return  BTRUE  = The interrupt is pending
+ *           BFALSE = The interrupt is not pending or the statusBitNum
  *                   is invalid
  */
 extern bool CSL_intaggrIsIntrPending( const CSL_IntaggrCfg *pCfg, uint32_t statusBitNum, bool bMaskedStatus );

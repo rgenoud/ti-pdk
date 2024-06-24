@@ -79,7 +79,9 @@ int32_t Ipc_Trace_printf(const char *format, ...)
     vsprintf(buffer, format, args);
     va_end(args);
 #if defined(ENABLE_UART_PRINT)
+#if defined(BUILD_MCU1_0)
     if(gBoardinit==1)
+#endif
     {
         UART_printf("%s\n",buffer);
     }

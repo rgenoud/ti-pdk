@@ -131,7 +131,7 @@ int32_t CSL_druQueueConfig(const CSL_DRU_t             *pRegs,
     int32_t     retVal = CSL_PASS;
     uint64_t    regVal;
 
-    if((queueId >= CSL_DRU_NUM_QUEUE) || (NULL == queueCfg))
+    if((CSL_DRU_NUM_QUEUE <= queueId) || (NULL == queueCfg))
     {
         retVal = CSL_EFAIL;
     }
@@ -156,9 +156,9 @@ int32_t CSL_druChConfig(const CSL_DRU_t        *pRegs,
     int32_t     retVal = CSL_PASS;
     uint64_t    regVal;
 
-    if((chId >= CSL_DRU_NUM_CH) ||
-       (NULL == chCfg) ||
-       (chCfg->queueId >= CSL_DRU_NUM_QUEUE))
+    if((CSL_DRU_NUM_CH    <= chId)  ||
+       (NULL              == chCfg) ||
+       (CSL_DRU_NUM_QUEUE <= chCfg->queueId))
     {
         retVal = CSL_EFAIL;
     }
@@ -186,7 +186,7 @@ int32_t CSL_druChSetEvent(const CSL_DRU_t *pRegs,
     int32_t     retVal = CSL_PASS;
     uint64_t    regVal;
 
-    if(chId >= CSL_DRU_NUM_CH)
+    if(CSL_DRU_NUM_CH <= chId)
     {
         retVal = CSL_EFAIL;
     }
@@ -203,7 +203,7 @@ int32_t CSL_druChEnable(const CSL_DRU_t *pRegs, uint32_t chId)
 {
     int32_t     retVal = CSL_PASS;
 
-    if(chId >= CSL_DRU_NUM_CH)
+    if(CSL_DRU_NUM_CH <= chId)
     {
         retVal = CSL_EFAIL;
     }
@@ -223,7 +223,7 @@ int32_t CSL_druChDisable(const CSL_DRU_t *pRegs, uint32_t chId)
 {
     int32_t     retVal = CSL_PASS;
 
-    if(chId >= CSL_DRU_NUM_CH)
+    if(CSL_DRU_NUM_CH <= chId)
     {
         retVal = CSL_EFAIL;
     }
@@ -243,7 +243,7 @@ int32_t CSL_druChTeardown(const CSL_DRU_t *pRegs, uint32_t chId)
 {
     int32_t     retVal = CSL_PASS;
 
-    if(chId >= CSL_DRU_NUM_CH)
+    if(CSL_DRU_NUM_CH <= chId)
     {
         retVal = CSL_EFAIL;
     }
@@ -261,16 +261,16 @@ int32_t CSL_druChTeardown(const CSL_DRU_t *pRegs, uint32_t chId)
 
 uint32_t CSL_druChIsTeardownComplete(const CSL_DRU_t *pRegs, uint32_t chId)
 {
-    uint32_t    status = FALSE;
+    uint32_t    status = UFALSE;
     uint64_t    regVal;
 
-    if(chId < CSL_DRU_NUM_CH)
+    if(CSL_DRU_NUM_CH > chId)
     {
         /* Channel enable clears when teardown completes */
         regVal = CSL_REG64_FEXT(&pRegs->CHRT[chId].CHRT_CTL, DRU_CHRT_CTL_ENABLE);
         if(0U == regVal)
         {
-            status = TRUE;
+            status = UTRUE;
         }
     }
 
@@ -281,7 +281,7 @@ int32_t CSL_druChPause(const CSL_DRU_t *pRegs, uint32_t chId)
 {
     int32_t     retVal = CSL_PASS;
 
-    if(chId >= CSL_DRU_NUM_CH)
+    if(CSL_DRU_NUM_CH <= chId)
     {
         retVal = CSL_EFAIL;
     }
@@ -301,7 +301,7 @@ int32_t CSL_druChResume(const CSL_DRU_t *pRegs, uint32_t chId)
 {
     int32_t     retVal = CSL_PASS;
 
-    if(chId >= CSL_DRU_NUM_CH)
+    if(CSL_DRU_NUM_CH <= chId)
     {
         retVal = CSL_EFAIL;
     }
@@ -321,7 +321,7 @@ volatile uint64_t *CSL_druChGetTriggerRegAddr(CSL_DRU_t *pRegs, uint32_t chId)
 {
     volatile uint64_t *regAddr = NULL;
 
-    if((chId < CSL_DRU_NUM_CH) && (pRegs != NULL))
+    if((CSL_DRU_NUM_CH > chId) && (NULL != pRegs))
     {
         regAddr = &pRegs->CHRT[chId].CHRT_SWTRIG;
     }
@@ -390,7 +390,7 @@ int32_t CSL_druGetQueueStatus(const CSL_DRU_t *pRegs,
     int32_t     retVal = CSL_PASS;
     uint64_t    regVal;
 
-    if((queueId >= CSL_DRU_NUM_QUEUE) || (NULL == status))
+    if((CSL_DRU_NUM_QUEUE <= queueId) || (NULL == status))
     {
         retVal = CSL_EFAIL;
     }

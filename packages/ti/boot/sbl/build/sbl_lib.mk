@@ -3,6 +3,13 @@
 #
 include $(PDK_INSTALL_PATH)/ti/build/Rules.make
 
+DMA_SUFFIX=
+ifeq ($(BOOTMODE), $(filter $(BOOTMODE),ospi cust))
+  ifeq ($(SBL_USE_DMA),no)
+    DMA_SUFFIX=_nondma
+  endif
+endif
+
 ifeq ($(SBL_USE_DMA),no)
   ifneq ($(BOOTMODE), cust)
     ifeq ($(HLOS_BOOT),yes)
@@ -11,7 +18,7 @@ ifeq ($(SBL_USE_DMA),no)
       BASE_NAME = sbl_lib_$(BOOTMODE)_nondma
     endif
   else
-    BASE_NAME = sbl_lib_$(BOOTMODE)
+    BASE_NAME = sbl_lib_$(BOOTMODE)$(DMA_SUFFIX)
   endif
 else
   ifeq ($(HLOS_BOOT),yes)

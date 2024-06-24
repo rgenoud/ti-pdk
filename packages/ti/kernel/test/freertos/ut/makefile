@@ -45,7 +45,7 @@ endif
 
 # Common source files and CFLAGS across all platforms and cores
 PACKAGE_SRCS_COMMON = . ../FREERTOS_log.h
-SRCS_COMMON += main.c test_freertos.c
+SRCS_COMMON += main_ut.c test_freertos.c
 
 SRCDIR += $(PDK_INSTALL_PATH)/ti/build/unit-test/Unity/src $(PDK_INSTALL_PATH)/ti/build/unit-test/config
 INCDIR += $(PDK_INSTALL_PATH)/ti/build/unit-test/Unity/src $(PDK_INSTALL_PATH)/ti/build/unit-test/config

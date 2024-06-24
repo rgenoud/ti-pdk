@@ -122,6 +122,7 @@ static void OsalApp_semaphoreISR(void *arg)
     gOsalAppsemISRisExecuted = BTRUE;
     SemaphoreP_post(gOsalAppsemhandle);
     SemaphoreP_pend(gOsalAppsemhandle, SemaphoreP_NO_WAIT);
+    SemaphoreP_post(gOsalAppsemhandle);
 }
 
 static int32_t OsalApp_isInISRsemaphoreTest(void)
@@ -319,33 +320,26 @@ static int32_t OsalApp_semaphoreNegativeTest(void)
     SemaphoreP_Params    semParams;
     SemaphoreP_Handle    semhandle;
     int32_t              result = osal_OK;
-    uint32_t             count = 0U, maxcnt = 2U;
 
     SemaphoreP_Params_init(&semParams);
     semhandle = SemaphoreP_create(0, &semParams);
-    uint32_t *handleAddr = (uint32_t *)semhandle;
     if((NULL_PTR == semhandle) || (SemaphoreP_OK != SemaphoreP_delete(semhandle)))
     {
         result = osal_FAILURE;
     }
-    else
+
+#if !defined (BARE_METAL)
+    if(osal_OK == result)
     {
-        /* This handle is already deleted, but we are setting the 
-         * isUsed parameter of offset to 1(forced corruption) and trying to delete twice
-         * to check the allocation count and to see how the driver reacts. */
-        for(count = 0U; count < maxcnt; count ++)
+        semParams.mode = SemaphoreP_Mode_BINARY;
+        /* Pass a non-binary count for a binary semaphore and see how OSAL reacts. */
+        semhandle = SemaphoreP_create(10, &semParams);
+        if(NULL_PTR != semhandle)
         {
-#if defined(SAFERTOS)
-            *(handleAddr+OSAL_APP_ISUSED_OFFSET) = 1U;
-#else
-            *handleAddr = 1U;
-#endif
-            if(SemaphoreP_OK != SemaphoreP_delete(semhandle))
-            {
-                result = osal_FAILURE;
-            }
+            result = osal_FAILURE;
         }
     }
+#endif
 
     if(osal_OK != result)
     {

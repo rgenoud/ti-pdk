@@ -359,7 +359,17 @@ int main(void)
 /* Loading before Task is created */
 #if defined(FREERTOS)
 LoadP_update();
+extern void vPortTimerTickHandler(void);
+vPortTimerTickHandler();
 OS_stop();
+#endif
+
+#if defined (SAFERTOS)
+OS_stop();
+#endif
+
+#if defined(BUILD_C7X)
+OsalCfgClecAccessCtrl(BFALSE);
 #endif
 
     TaskP_Params taskParams;

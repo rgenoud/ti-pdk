@@ -231,7 +231,7 @@ void InitMmu(void)
 #endif
 
 Uint32 readWriteTestFlag = 0;
-
+volatile uint32_t emuwait_board=1;
 
 /* ========================================================================== */
 /*                          Function Definitions                              */
@@ -663,13 +663,26 @@ void mmcsd_test()
 void mmcsd_test(void *arg0, void *arg1)
 #endif
 {
-    MMCSD_Error ret;
-    int32_t fatfstest_ret;
-    bool test_fail = BFALSE;
+
+  /* Call board init functions */
+  Board_initCfg boardCfg;
+  Board_STATUS board_status;
+
+  MMCSD_Error ret;
+  int32_t fatfstest_ret;
+  bool test_fail = BFALSE;
 	uint32_t num_tests_run=0,num_tests_passed=0,num_tests_failed=0;
 	uint32_t testprofile;
 	int32_t testID=0; /* Default */
 	mmcsdTestSDProfile_t *testProfilePtr;
+
+  boardCfg = BOARD_INIT_PINMUX_CONFIG |
+  BOARD_INIT_MODULE_CLOCK | BOARD_INIT_UART_STDIO;
+
+  board_status=Board_init(boardCfg);
+  if(board_status!=BOARD_SOK) {
+		while(emuwait_board);
+	}
 
 #if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4)
     MMCSD_v2_HwAttrs           hwAttrsConfig;
@@ -870,29 +883,17 @@ void mmcsd_test(void *arg0, void *arg1)
 
 }
 
-volatile uint32_t emuwait_board=1;
 /*
  *  ======== main ========
  */
 int main(void)
 {
-    Board_STATUS board_status;
 #ifdef RTOS_ENV
     TaskP_Handle task;
     TaskP_Params taskParams;
 
     OS_init();
-#endif
 
-    Board_initCfg boardCfg;
-    boardCfg = BOARD_INIT_PINMUX_CONFIG | BOARD_INIT_UART_STDIO | BOARD_INIT_MODULE_CLOCK;
-
-    board_status=Board_init(boardCfg);
-    if(board_status!=BOARD_SOK) {
-        while(emuwait_board);
-    }
-
-#ifdef RTOS_ENV
     TaskP_Params_init (&taskParams);
     taskParams.priority =2;
     taskParams.stack        = gAppTskStackMain;

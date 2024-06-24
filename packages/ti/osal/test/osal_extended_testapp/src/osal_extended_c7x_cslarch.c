@@ -87,14 +87,15 @@ int32_t OsalApp_c7xHwiTests(void)
     int32_t result = osal_OK;
 
 #if defined (BUILD_C7X)
+    bool          status;
     Hwi_StackInfo stkInfo;
     /* Pass invalid interrupt number to event map. It should return abruptly.
      * Does not return any value, hence nothing to check it against.
      */
     Hwi_eventMap( OSAL_APP_HWI_MAX_NUM, 0);
 
-    Hwi_getStackInfo(&stkInfo, false);
-    if(0 != stkInfo.hwiStackPeak)
+    status = Hwi_getStackInfo(&stkInfo, BTRUE);
+    if(0 == stkInfo.hwiStackPeak || status != BFALSE)
     {
         result = osal_FAILURE;
     }
