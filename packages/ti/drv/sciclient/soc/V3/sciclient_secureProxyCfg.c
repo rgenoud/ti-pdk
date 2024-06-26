@@ -40,7 +40,7 @@
 /* ========================================================================== */
 
 #include <ti/csl/soc.h>
-#include <ti/csl/csl_sec_proxy.h>
+#include <ti/drv/sciclient/src/sec_proxy/csl_sec_proxy.h>
 
 #if defined (BUILD_M4F)
 /** The offset is determined in CSL's m4 startup.c */

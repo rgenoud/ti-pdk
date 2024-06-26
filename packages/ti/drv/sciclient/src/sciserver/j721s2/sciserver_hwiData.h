@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Texas Instruments Incorporated
+ * Copyright (c) 2024, Texas Instruments Incorporated
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -42,7 +42,7 @@
 #include <string.h>
 #include <ti/csl/csl_types.h>
 #include <ti/csl/hw_types.h>
-#include <ti/csl/csl_sec_proxy.h>
+#include <ti/drv/sciclient/src/sec_proxy/csl_sec_proxy.h>
 #include <ti/drv/sciclient/sciserver.h>
 #include <sciserver_secproxyConfigData.h>
 
