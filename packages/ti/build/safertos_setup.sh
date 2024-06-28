@@ -36,7 +36,7 @@ declare -a j7200_board_list=("j7200_evm")
 declare -a j721s2_board_list=("j721s2_evm")
 declare -a j784s4_board_list=("j784s4_evm")
 
-declare -a enet_core_list=("mcu1_0" "mcu2_0" "mcu2_1")
+declare -a enet_core_list=("mcu1_0" "mcu2_0" "mcu2_1" "mcu3_0")
 
 #Get user input
 while [ $# -gt 0 ]; do
