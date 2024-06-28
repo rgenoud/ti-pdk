@@ -619,6 +619,7 @@ static int32_t Lpm_releaseStageCores(uint8_t stageNum)
 
 void Lpm_bootAppInit(void)
 {
+    bool isNandBootEnabled = BFALSE;
 #if defined(SOC_J721E)
     Board_STATUS status;
 
@@ -639,7 +640,7 @@ void Lpm_bootAppInit(void)
 
     Lpm_mainDomainBootSetup();
     SBL_SPI_init();
-    SBL_ospiInit(&boardHandle);
+    SBL_ospiInit(&boardHandle,isNandBootEnabled);
 }
 
 void Lpm_bootAppDeInit(void)

@@ -78,7 +78,7 @@
 #define CNTR_NUMBER 0x1F
 
 /* Initialize the OSPI driver and the controller. */
-static void SBL_OSPI_Initialize(void);
+static void SBL_OSPI_Initialize(bool isNandBootEnabled);
 
 void SBL_DCacheClean(void *addr, uint32_t size);
 
@@ -222,7 +222,7 @@ int32_t SBL_ReadSysfwImage(void **pBuffer, uint32_t num_bytes)
     }
     OSPI_socSetInitCfg(BOARD_OSPI_DOMAIN, BOARD_OSPI_NOR_INSTANCE, &ospi_cfg);
 
-#if defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)
+#if defined(SOC_J721S2) || defined(SOC_J784S4)
     if (gIsNandBootEnable == BTRUE)
     {
         flashHandle = Board_flashOpen(BOARD_FLASH_ID_W35N01JWTBAG,
@@ -233,6 +233,9 @@ int32_t SBL_ReadSysfwImage(void **pBuffer, uint32_t num_bytes)
         flashHandle = Board_flashOpen(BOARD_FLASH_ID_S28HS512T,
                             BOARD_OSPI_NOR_INSTANCE, NULL);
     }
+#elif defined(SOC_J7200)
+    flashHandle = Board_flashOpen(BOARD_FLASH_ID_S28HS512T,
+                        BOARD_OSPI_NOR_INSTANCE, NULL);
 #else
     flashHandle = Board_flashOpen(BOARD_FLASH_ID_MT35XU512ABA1G12,
                         BOARD_OSPI_NOR_INSTANCE, NULL);
@@ -244,7 +247,7 @@ int32_t SBL_ReadSysfwImage(void **pBuffer, uint32_t num_bytes)
         /* Disable PHY pipeline mode */
         CSL_ospiPipelinePhyEnable((const CSL_ospi_flash_cfgRegs *)(ospi_cfg.baseAddr), UFALSE);
 
-#if defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)
+#if defined(SOC_J721S2) || defined(SOC_J784S4)
         /* Until OSPI PHY + DMA is enabled at this early stage, the
          * ROM can more efficiently load the SYSFW directly from xSPI flash */
         if(pBuffer)
@@ -262,6 +265,12 @@ int32_t SBL_ReadSysfwImage(void **pBuffer, uint32_t num_bytes)
                 /* Set up ROM to load system firmware */
                 *pBuffer = (void *)(ospi_cfg.dataAddr + SBL_OSPI_OFFSET_SYSFW);
             }   /* (gIsNandBootEnable == BTRUE) && defined(SOC_J721S2) */
+        }
+#elif defined(SOC_J7200)
+        if(pBuffer)
+        {
+            /* Set up ROM to load system firmware */
+            *pBuffer = (void *)(ospi_cfg.dataAddr + SBL_OSPI_OFFSET_SYSFW);
         }
 #else
         /* Optimized CPU copy loop - can be removed once ROM load is working */
@@ -375,7 +384,7 @@ void OSPI_configClk(uint32_t freq)
 
 }
 
-int32_t SBL_ospiInit(void *handle)
+int32_t SBL_ospiInit(void *handle, bool isNandBootEnabled)
 {
 #if (!defined(SBL_BYPASS_OSPI_DRIVER) \
      /* In simulation, we must ALWAYS bypass the OSPI driver regardless of what */ \
@@ -439,7 +448,7 @@ int32_t SBL_ospiInit(void *handle)
 #endif
 
     /* Set the default SPI init configurations */
-    if (gIsNandBootEnable == BTRUE)
+    if (isNandBootEnabled == BTRUE)
     {
         ospi_cfg.blkSize = 16;
         ospi_cfg.dtrEnable = false;
@@ -456,8 +465,8 @@ int32_t SBL_ospiInit(void *handle)
 
     }
 
-#if defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)
-    if (gIsNandBootEnable == BTRUE)
+#if defined(SOC_J721S2) || defined(SOC_J784S4)
+    if (isNandBootEnabled == BTRUE)
     {
         flashHandle = Board_flashOpen(BOARD_FLASH_ID_W35N01JWTBAG,
                             BOARD_OSPI_NOR_INSTANCE, (void *)(enableTuning));
@@ -467,6 +476,9 @@ int32_t SBL_ospiInit(void *handle)
         flashHandle = Board_flashOpen(BOARD_FLASH_ID_S28HS512T,
                             BOARD_OSPI_NOR_INSTANCE, (void *)(enableTuning));
     }
+#elif defined(SOC_J7200)
+    flashHandle = Board_flashOpen(BOARD_FLASH_ID_S28HS512T,
+                            BOARD_OSPI_NOR_INSTANCE, (void *)(enableTuning));
 #else
     flashHandle = Board_flashOpen(BOARD_FLASH_ID_MT35XU512ABA1G12,
                             BOARD_OSPI_NOR_INSTANCE, (void *)(enableTuning));
@@ -600,7 +612,7 @@ int32_t SBL_ospiLeaveConfigSPI()
     /* Set the default SPI init configurations */
     OSPI_socSetInitCfg(BOARD_OSPI_DOMAIN, BOARD_OSPI_NOR_INSTANCE, &ospi_cfg);
 
-#if defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)
+#if defined(SOC_J721S2) || defined(SOC_J784S4)
     if (gIsNandBootEnable == BTRUE)
     {
         h = Board_flashOpen(BOARD_FLASH_ID_W35N01JWTBAG,
@@ -611,6 +623,9 @@ int32_t SBL_ospiLeaveConfigSPI()
         h = Board_flashOpen(BOARD_FLASH_ID_S28HS512T,
                             BOARD_OSPI_NOR_INSTANCE, NULL);
     }
+#elif defined(SOC_J7200)
+        h = Board_flashOpen(BOARD_FLASH_ID_S28HS512T,
+                            BOARD_OSPI_NOR_INSTANCE, NULL);
 #else
     h = Board_flashOpen(BOARD_FLASH_ID_MT35XU512ABA1G12,
                         BOARD_OSPI_NOR_INSTANCE, NULL);
@@ -639,10 +654,14 @@ int32_t SBL_OSPIBootImage(sblEntryPoint_t *pEntry)
 {
     int32_t retVal;
     uint32_t offset = SBL_OSPI_OFFSET_SI;
+    bool isNandBootEnabled = BFALSE;
     /* Profile point after Board init Clocks and before OSPI init */
     SBL_ADD_PROFILE_POINT;
+#if defined(OSPI_NAND_BOOT)
+    isNandBootEnabled = BTRUE;
+#endif
     /* Initialization of the driver. */
-    SBL_OSPI_Initialize();
+    SBL_OSPI_Initialize(isNandBootEnabled);
 
 #if defined(SBL_ENABLE_HLOS_BOOT) && (defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2))
     retVal =  SBL_MulticoreImageParse((void *) &offset, SBL_OSPI_OFFSET_SI, pEntry, SBL_SKIP_BOOT_AFTER_COPY);
@@ -701,7 +720,7 @@ int32_t SBL_ospiCopyHsmImage(uint8_t** dstAddr, uint32_t srcOffsetAddr, uint32_t
             ospi_cfg.cacheEnable = BTRUE;
         }
         OSPI_socSetInitCfg(BOARD_OSPI_DOMAIN, BOARD_OSPI_NOR_INSTANCE, &ospi_cfg);
-#if defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)
+#if defined(SOC_J721S2) || defined(SOC_J784S4)
         if (gIsNandBootEnable == BTRUE)
         {
             h = Board_flashOpen(BOARD_FLASH_ID_W35N01JWTBAG,
@@ -712,6 +731,9 @@ int32_t SBL_ospiCopyHsmImage(uint8_t** dstAddr, uint32_t srcOffsetAddr, uint32_t
             h = Board_flashOpen(BOARD_FLASH_ID_S28HS512T,
                                 BOARD_OSPI_NOR_INSTANCE, NULL);
         }
+#elif defined(SOC_J7200)
+        h = Board_flashOpen(BOARD_FLASH_ID_S28HS512T,
+                                BOARD_OSPI_NOR_INSTANCE, NULL);
 #else
         h = Board_flashOpen(BOARD_FLASH_ID_MT35XU512ABA1G12,
                             BOARD_OSPI_NOR_INSTANCE, NULL);
@@ -762,9 +784,9 @@ int32_t SBL_ospiCopyHsmImage(uint8_t** dstAddr, uint32_t srcOffsetAddr, uint32_t
     return retVal;
 }
 
-static void SBL_OSPI_Initialize(void)
+static void SBL_OSPI_Initialize(bool isNandBootEnabled)
 {
-    SBL_ospiInit(&boardHandle);
+    SBL_ospiInit(&boardHandle, isNandBootEnabled);
 
     /* Initialize the function pointers to parse through the RPRC format. */
     fp_readData = &SBL_OSPI_ReadSectors;

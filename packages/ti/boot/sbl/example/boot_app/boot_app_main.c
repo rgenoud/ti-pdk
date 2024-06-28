@@ -676,16 +676,20 @@ static uint32_t BootApp_loadImg(void)
     uint8_t        num_cores_to_boot;
     uint8_t        num_booted_cores = 0;
     uint64_t       time_boot_core_finish[DSP2_C7X_ID];
-
 #if defined(BOOT_OSPI)
+    bool           isNandBootEnabled = BFALSE;
+
 #if defined(CAN_RESP_TASK_ENABLED)
     /* To measure CAN response, sbl_boot_perf_cust_img is used which doesn't setup the Main Domain
      * and doesn't initialize DDR for faster Boot time.
      * Setting up Main Domain and initializing DDR before Booting cores */
     BootApp_mainDomainSetup();
 #endif
+#if defined(BOOT_OSPI_NAND)
+    isNandBootEnabled = BTRUE;
+#endif
     SBL_SPI_init();
-    SBL_ospiInit(&boardHandle);
+    SBL_ospiInit(&boardHandle,isNandBootEnabled);
 #endif
 
     /* Configure Muxes for Ethernet Firmware, if needed */
@@ -773,8 +777,7 @@ static uint32_t BootApp_loadImg(void)
 
 #if defined(BOOT_OSPI)
     SBL_ospiClose(&boardHandle);
-
-    BootApp_ospiLeaveConfigSPI();
+    BootApp_ospiLeaveConfigSPI(isNandBootEnabled);
 #endif
 
     /* Delay print out of boot log to avoid prints by other tasks */

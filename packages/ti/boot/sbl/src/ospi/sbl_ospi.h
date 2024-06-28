@@ -81,7 +81,7 @@ int32_t SBL_OSPIBootImage(sblEntryPoint_t *pEntry);
  *
  * @param
  *     handle = pointer to return QSPI handle
- *
+ *     isNandBootEnabled = flag to check if Nand Boot is enabled
  *
  * @return - int32t
  *      0 = Init completed successfully
@@ -89,7 +89,7 @@ int32_t SBL_OSPIBootImage(sblEntryPoint_t *pEntry);
  *
  *
  */
-int32_t SBL_ospiInit(void *handle);
+int32_t SBL_ospiInit(void *handle, bool isNandBootEnabled);
 
 /**
  * @brief - SBL_ospiFlashRead() - function to do flash QSPI

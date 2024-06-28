@@ -40,7 +40,7 @@
 #include "boot_app_priv.h"
 #include "boot_app_ospi.h"
 
-int32_t BootApp_ospiLeaveConfigSPI()
+int32_t BootApp_ospiLeaveConfigSPI(bool isNandBootEnabled)
 {
     int32_t retVal = E_PASS;
     Board_flashHandle flashHandle;
@@ -66,12 +66,23 @@ int32_t BootApp_ospiLeaveConfigSPI()
     /* Set the default SPI init configurations */
     OSPI_socSetInitCfg(BOARD_OSPI_DOMAIN, BOARD_OSPI_NOR_INSTANCE, &gOspiCfg);
 
-#if defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined (SOC_J742S2)
+#if defined(SOC_J721S2) || defined(SOC_J784S4)
+    if (isNandBootEnabled == BTRUE)
+    {
+        flashHandle = Board_flashOpen(BOARD_FLASH_ID_W35N01JWTBAG,
+                            BOARD_OSPI_NOR_INSTANCE, NULL);
+    }
+    else
+    {
         flashHandle = Board_flashOpen(BOARD_FLASH_ID_S28HS512T,
                             BOARD_OSPI_NOR_INSTANCE, NULL);
+    }
+#elif defined(SOC_J7200)
+    flashHandle = Board_flashOpen(BOARD_FLASH_ID_S28HS512T,
+                        BOARD_OSPI_NOR_INSTANCE, NULL);
 #else
-        flashHandle = Board_flashOpen(BOARD_FLASH_ID_MT35XU512ABA1G12,
-                            BOARD_OSPI_NOR_INSTANCE, NULL);
+    flashHandle = Board_flashOpen(BOARD_FLASH_ID_MT35XU512ABA1G12,
+                        BOARD_OSPI_NOR_INSTANCE, NULL);
 #endif
 
     if (flashHandle)

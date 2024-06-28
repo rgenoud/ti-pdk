@@ -72,7 +72,7 @@ extern void     SBL_DCacheClean(void *addr, uint32_t size);
 /*                          Function Declarations                             */
 /* ========================================================================== */
 
-int32_t BootApp_ospiLeaveConfigSPI();
+int32_t BootApp_ospiLeaveConfigSPI(bool isNandBootEnabled);
 int32_t BootApp_ospiBootStageImage(sblEntryPoint_t *, uint32_t);
 int32_t BootApp_OSPIBootImageLate(sblEntryPoint_t *, uint32_t);
 int32_t BootApp_XIPReadMem(void *, void *, uint32_t);

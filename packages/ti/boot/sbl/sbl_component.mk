@@ -1660,8 +1660,8 @@ export sbl_boot_perf_cust_nand_img_SOC_DEPENDENCY
 export sbl_boot_perf_cust_nand_img_CORE_DEPENDENCY
 sbl_boot_perf_cust_nand_img_PKG_LIST = sbl
 sbl_boot_perf_cust_nand_img_INCLUDE = $(sbl_boot_perf_cust_nand_img_PATH)
-sbl_boot_perf_cust_nand_img_SOCLIST = j721s2
-sbl_boot_perf_cust_nand_img_BOARDLIST = j721s2_evm
+sbl_boot_perf_cust_nand_img_SOCLIST = j721s2 j784s4
+sbl_boot_perf_cust_nand_img_BOARDLIST = j721s2_evm j784s4_evm
 export sbl_boot_perf_cust_nand_img_SOCLIST
 export sbl_boot_perf_cust_nand_img_BOARDLIST
 sbl_boot_perf_cust_nand_img_$(SOC)_CORELIST = mcu1_0
@@ -1796,6 +1796,32 @@ export boot_app_ospi_$(SOC)_CORELIST
 sbl_EXAMPLE_LIST += boot_app_ospi
 boot_app_ospi_SBL_APPIMAGEGEN = yes
 export boot_app_ospi_SBL_APPIMAGEGEN
+
+# Boot App OSPI NAND
+boot_app_ospi_nand_COMP_LIST = boot_app_ospi_nand
+boot_app_ospi_nand_RELPATH = ti/boot/sbl/example/boot_app
+boot_app_ospi_nand_CUSTOM_BINPATH = $(PDK_SBL_COMP_PATH)/example/boot_app/binary/$(BOARD)/ospi_nand
+boot_app_ospi_nand_PATH = $(PDK_SBL_COMP_PATH)/example/boot_app
+boot_app_ospi_nand_MAKEFILE = -f$(PDK_SBL_COMP_PATH)/build/boot_app.mk BOOTMODE=ospi_nand BOOT_OSPI_NAND=yes BUILD_HS=no HLOSBOOT=none CANRESP=disabled
+export boot_app_ospi_nand_MAKEFILE
+boot_app_ospi_nand_BOARD_DEPENDENCY = yes
+boot_app_ospi_nand_SOC_DEPENDENCY = yes
+boot_app_ospi_nand_CORE_DEPENDENCY = yes
+export boot_app_ospi_nand_COMP_LIST
+export boot_app_ospi_nand_BOARD_DEPENDENCY
+export boot_app_ospi_nand_SOC_DEPENDENCY
+export boot_app_ospi_nand_CORE_DEPENDENCY
+boot_app_ospi_nand_PKG_LIST = boot_app_ospi_nand
+boot_app_ospi_nand_INCLUDE = $(boot_app_ospi_nand_PATH)
+boot_app_ospi_nand_SOCLIST = $(sbl_SOCLIST)
+boot_app_ospi_nand_BOARDLIST = $(sbl_BOARDLIST)
+export boot_app_ospi_nand_SOCLIST
+export boot_app_ospi_nand_BOARDLIST
+boot_app_ospi_nand_$(SOC)_CORELIST = mcu1_0
+export boot_app_ospi_nand_$(SOC)_CORELIST
+sbl_EXAMPLE_LIST += boot_app_ospi_nand
+boot_app_ospi_nand_SBL_APPIMAGEGEN = yes
+export boot_app_ospi_nand_SBL_APPIMAGEGEN
 
 # Boot App OSPI to boot qnx
 boot_app_ospi_qnx_COMP_LIST = boot_app_ospi_qnx

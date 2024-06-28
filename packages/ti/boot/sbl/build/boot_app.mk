@@ -62,7 +62,7 @@ endif
 
 SRCS_COMMON = boot_app_main.c soc/$(SOC_DIR)/boot_core_defs.c r5_mpu_freertos.c
 
-ifeq ($(BOOTMODE), ospi)
+ifeq ($(BOOTMODE), $(filter $(BOOTMODE),ospi ospi_nand))
     SRCS_COMMON += boot_app_ospi.c
 else ifeq ($(BOOTMODE), mmcsd)
     SRCS_COMMON += boot_app_mmcsd.c
@@ -76,14 +76,16 @@ ifeq ($(BOOTMODE), mmcsd)
     endif
     CFLAGS_LOCAL_COMMON += -DBOOT_MMCSD
 endif
-
-ifeq ($(BOOTMODE), ospi)
+ifeq ($(BOOTMODE), $(filter $(BOOTMODE),ospi ospi_nand))
     ifeq ($(BUILD_HS), yes)
         COMP_LIST_COMMON += spi_dma sbl_lib_cust_hs
     else 
         COMP_LIST_COMMON += spi_dma sbl_lib_cust
     endif
     CFLAGS_LOCAL_COMMON += -DBOOT_OSPI
+    ifeq ($(BOOT_OSPI_NAND),yes)
+        CFLAGS_LOCAL_COMMON += -DBOOT_OSPI_NAND
+    endif
 endif
 ifeq ($(CANRESP), enabled)
     CFLAGS_LOCAL_COMMON += -DCAN_RESP_TASK_ENABLED
