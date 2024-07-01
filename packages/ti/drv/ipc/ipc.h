@@ -446,7 +446,8 @@ void RPMessage_unblock(RPMessage_Handle handle);
  *
  *  \return     - #IPC_SOK: Endpoint successfully returned
  *              - #IPC_ETIMEOUT: Time out occured
- *              - #IPC_EFAIL:    Invalid input
+ *              - #IPC_EFAIL: Invalid input
+ *              - #IPC_E_NO_ENDPOINT: End point not found
  */
 int32_t RPMessage_getRemoteEndPt(uint32_t currProcId, const char* name, uint32_t *remoteProcId,
                              uint32_t *remoteEndPt, uint32_t timeout);
@@ -480,6 +481,7 @@ int32_t RPMessage_getRemoteEndPt(uint32_t currProcId, const char* name, uint32_t
  *  \return     - #IPC_SOK: Endpoint successfully returned
  *              - #IPC_ETIMEOUT: Time out occured
  *              - #IPC_EFAIL:    Invalid input
+ *              - #IPC_E_NO_ENDPOINT: End point not found
  */
 int32_t RPMessage_getRemoteEndPtToken(uint32_t currProcId, const char* name, uint32_t *remoteProcId,
                              uint32_t *remoteEndPt, uint32_t timeout, uint32_t token);

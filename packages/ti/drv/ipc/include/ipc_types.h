@@ -89,6 +89,9 @@ extern "C" {
 /** \brief IPC is unblocked mode */
 #define IPC_E_UNBLOCKED                (-50)
 
+/** \brief API call returned with no end point found */
+#define IPC_E_NO_ENDPOINT              (-51)
+
 /** \brief Macro used to specify that interrupt number is invalid. */
 #define IPC_INTR_INVALID               (0xFFFF0000U)
 

@@ -769,7 +769,7 @@ int32_t RPMessage_getRemoteEndPtToken(uint32_t currProcId, const char* name, uin
 #ifndef IPC_EXCLUDE_CTRL_TASKS
             IpcUtils_Qput(&module.waitingTasks, &taskWaiter.elem);
 #else
-            rtnVal = IPC_EFAIL;
+            rtnVal = IPC_E_NO_ENDPOINT;
 #endif /* IPC_EXCLUDE_CTRL_TASKS */
         }
         pOsalPrms->unLockHIsrGate(module.gateSwi, key);
