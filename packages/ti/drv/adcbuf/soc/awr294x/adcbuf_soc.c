@@ -48,6 +48,7 @@
 #include <ti/drv/adcbuf/src/adcbuf_mmwave.h>
 
 #define RSS_ADCBUF_DFE_CQ_BASE  (0xA2060000U)
+#define RSS_CHIRP_INFO_READ     (0xA5010000U)
 
 #if defined (__TI_ARM_V7R4__)
 #define MSS_RSS_ADC_CAPTURE_COMPLETE  (159U)
@@ -91,7 +92,7 @@ ADCBuf_HwCfg gADCBufHwCfg[1] =
 		DSS_RSS_ADC_CAPTURE_COMPLETE,
         #endif
 		CSL_RSS_ADCBUF_READ_U_BASE,
-		RSS_ADCBUF_DFE_CQ_BASE
+		RSS_CHIRP_INFO_READ
     }
 };
 
