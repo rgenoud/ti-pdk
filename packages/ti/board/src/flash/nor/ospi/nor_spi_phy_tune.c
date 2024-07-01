@@ -749,7 +749,7 @@ NOR_STATUS Nor_spiPhyDdrTune(OSPI_Handle handle, uint32_t offset)
         * if either passing rxDLL is found or rdDelay reaches PHY_DDR_TUNE_RD_DELAY_START
         * break out of the loop else continue searching for rxDLL at next rdDelay
         */
-        searchPoint.rdDelay     = PHY_DDR_TUNE_RD_DELAY_START;
+        searchPoint.rdDelay     = PHY_DDR_TUNE_RD_DELAY_END;
         do
         {
             searchPoint.rxDLL = RX_DLL_HIGH_SEARCH_START;
