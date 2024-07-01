@@ -27,7 +27,7 @@ EXTERNAL_INTERFACES = safertos
 endif
 
 # SoCs which use split DM / TIFS can enable tests that use msg forwarding (mcu1_0 UT only)
-ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 j742s2))
     COMP_LIST_COMMON += sciserver_tirtos
 endif
 

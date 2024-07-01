@@ -55,9 +55,9 @@
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-#if defined(SOC_J721S2)
+#if defined(SOC_J721S2) || defined(SOC_J742S2)
     #define MSMC_SIZE   0x00400000U /* 4MB */
-#elif defined(SOC_J721E) || (SOC_J784S4)
+#elif defined(SOC_J721E) || defined(SOC_J784S4)
     #define MSMC_SIZE   0x00800000U /* 8MB */
 #endif
 
@@ -109,7 +109,7 @@ void IpcInitMmu(bool isSecure)
 
     /* IPC VRing Buffer - uncached */
     attrs.attrIndx =  Mmu_AttrIndx_MAIR4;
-#if defined(SOC_J784S4)
+#if defined(SOC_J784S4) || defined(SOC_J742S2)
     (void)Mmu_map(SHARED_DDR_SPACE_START, SHARED_DDR_SPACE_START, 0x04000000U, &attrs, isSecure); /* VRING DDR */
 #else
     (void)Mmu_map(SHARED_DDR_SPACE_START, SHARED_DDR_SPACE_START, 0x02000000U, &attrs, isSecure); /* VRING DDR */

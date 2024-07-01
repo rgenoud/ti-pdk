@@ -86,6 +86,7 @@ const sblSlaveCoreInfo_t sbl_late_slave_core_info[] =
     SBL_CLK_ID_MPU1_CPU3,
     SBL_MPU1_CPU3_FREQ_HZ,
     },
+#if defined (SOC_J784S4) /* MPU2_0 cluster is not present on J742S2 */
     /* MPU2_CPU0 info */
     {
     SBL_PROC_ID_MPU2_CPU0,
@@ -114,6 +115,7 @@ const sblSlaveCoreInfo_t sbl_late_slave_core_info[] =
     SBL_CLK_ID_MPU2_CPU3,
     SBL_MPU2_CPU3_FREQ_HZ,
     },
+#endif
     /* MCU1_CPU0 info */
     {
     SBL_PROC_ID_MCU1_CPU0,
@@ -191,6 +193,7 @@ const sblSlaveCoreInfo_t sbl_late_slave_core_info[] =
     SBL_CLK_ID_DSP3_C7X,
     SBL_DSP3_C7X_FREQ_HZ,
     },
+#if defined (SOC_J784S4) /* C7x_4 is not present on J742S2 */
     /* DSP4_C7X info */
     {
     SBL_PROC_ID_DSP4_C7X,
@@ -198,6 +201,7 @@ const sblSlaveCoreInfo_t sbl_late_slave_core_info[] =
     SBL_CLK_ID_DSP4_C7X,
     SBL_DSP4_C7X_FREQ_HZ,
     },
+#endif
 };
 
 const sblSlaveCoreInfo_t sbl_late_slave_core_stages_info[NUM_BOOT_STAGES][MAX_CORES_PER_STAGE] =
@@ -304,6 +308,7 @@ const sblSlaveCoreInfo_t sbl_late_slave_core_stages_info[NUM_BOOT_STAGES][MAX_CO
         SBL_CLK_ID_DSP3_C7X,
         SBL_DSP3_C7X_FREQ_HZ,
         },
+#if defined (SOC_J784S4)
         /* DSP4_C7X info */
         {
         SBL_PROC_ID_DSP4_C7X,
@@ -311,6 +316,14 @@ const sblSlaveCoreInfo_t sbl_late_slave_core_stages_info[NUM_BOOT_STAGES][MAX_CO
         SBL_CLK_ID_DSP4_C7X,
         SBL_DSP4_C7X_FREQ_HZ,
         },
+#else /* C7x_4 is not present on J742S2 */
+    {
+        SBL_INVALID_ID,
+        SBL_INVALID_ID,
+        SBL_INVALID_ID,
+        SBL_INVALID_ID
+    },
+#endif
     },
     {
         /* MPU1_CPU0 info */
@@ -412,7 +425,9 @@ cpu_core_id_t boot_order_second_stage[] =
     DSP1_C7X_ID,
     DSP2_C7X_ID,
     DSP3_C7X_ID,
+#if defined (SOC_J784S4)
     DSP4_C7X_ID
+#endif
 };
 
 /* Defines boot order for the third stage of the Main Domain

@@ -58,7 +58,7 @@ static int32_t mmcApp_setGTCClk(uint32_t moduleId,
 {
     int32_t retVal;
     uint64_t currClkFreqHz;
-#if defined(SOC_J784S4)
+#if defined(SOC_J784S4) || defined(SOC_J742S2)
     uint32_t origParent                 = 0U;
 #endif
 
@@ -72,7 +72,7 @@ static int32_t mmcApp_setGTCClk(uint32_t moduleId,
 /* PDK-13708 : Unable to set GTC clock frequency to 200 MHz on J784S4 
    As a workaround by changing the parent clock, set the GTC clock frequency 
    to 200 MHz */
-#if defined(SOC_J784S4)
+#if defined(SOC_J784S4) || defined(SOC_J742S2)
         retVal = Sciclient_pmGetModuleClkParent(moduleId, clkId, &origParent, SCICLIENT_SERVICE_WAIT_FOREVER);
         if (CSL_PASS != retVal)
         {

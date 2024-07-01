@@ -38,14 +38,18 @@ MODULE_NAME = osal_freertos
 MUXINTCP = src/nonos/muxintcp
 TIMER    = src/nonos/timer
 
+SOC_DIR=$(SOC)
+ifeq ($(SOC), j742s2)
+  SOC_DIR=j784s4
+endif
 
-ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 j742s2))
   SRCDIR += $(TIMER)/v1
   INCDIR += $(TIMER)/v1
   PACKAGE_SRCS_COMMON += $(TIMER)/v1
 endif
 
-ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 j742s2))
 SRCS_COMMON += TimerP_nonos.c
 endif
 
@@ -59,7 +63,7 @@ INCDIR += $(PDK_FREERTOS_COMP_PATH)/freertos/portable/TI_CGT/$(ISA)
 ifeq ($(ISA), c7x)
 INCDIR += $(PDK_CSL_COMP_PATH)/arch/c7x/
 endif
-INCDIR += $(PDK_FREERTOS_COMP_PATH)/freertos/config/$(SOC)/$(ISA)
+INCDIR += $(PDK_FREERTOS_COMP_PATH)/freertos/config/$(SOC_DIR)/$(ISA)
 
 CFLAGS_LOCAL_COMMON += $(PDK_CFLAGS)
 CFLAGS_LOCAL_COMMON += -DFREERTOS

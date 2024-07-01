@@ -99,7 +99,7 @@ void BootApp_canEnableTransceivers(void)
         /* Set MCU_MCAN0_STBz pin to LEVEL_High to exit CAN0 from Standby mode */
         GPIOSetDirMode_v0(CSL_WKUP_GPIO0_BASE, BOOT_APP_MCU_MCAN0_STBZ_PIN, GPIO_DIRECTION_OUTPUT);
         GPIOPinWrite_v0(CSL_WKUP_GPIO0_BASE, BOOT_APP_MCU_MCAN0_STBZ_PIN, GPIO_PIN_HIGH); 
-        #elif defined (SOC_J784S4)
+        #elif defined (SOC_J784S4) || defined (SOC_J742S2)
         /* Set MCU_MCAN0_STB pin to LEVEL_Low to exit CAN0 from Standby mode */
         GPIOSetDirMode_v0(CSL_WKUP_GPIO0_BASE, BOOT_APP_MCU_MCAN0_STB_PIN, GPIO_DIRECTION_OUTPUT);
         GPIOPinWrite_v0(CSL_WKUP_GPIO0_BASE, BOOT_APP_MCU_MCAN0_STB_PIN, GPIO_PIN_LOW);

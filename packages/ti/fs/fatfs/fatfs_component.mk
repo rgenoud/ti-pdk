@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016 - 2022, Texas Instruments Incorporated
+# Copyright (c) 2016 - 2024, Texas Instruments Incorporated
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -72,12 +72,13 @@ ifeq ($(fatfs_component_make_include), )
 drvfatfs_RTOS_LIST       = $(DEFAULT_RTOS_LIST)
 
 # under other list
-drvfatfs_BOARDLIST       = j721e_sim j721e_evm j7200_evm j721s2_evm j784s4_evm
-drvfatfs_SOCLIST         = j721e j7200 j721s2 j784s4
+drvfatfs_BOARDLIST       = j721e_sim j721e_evm j7200_evm j721s2_evm j784s4_evm j742s2_evm
+drvfatfs_SOCLIST         = j721e j7200 j721s2 j784s4 j742s2
 drvfatfs_j721e_CORELIST  = mpu1_0 mcu1_0 mcu2_0 mcu2_1 mcu3_0 mcu3_1
 drvfatfs_j7200_CORELIST  = mpu1_0 mcu1_0 mcu2_0 mcu2_1
 drvfatfs_j721s2_CORELIST = mpu1_0 mcu1_0 mcu2_0 mcu2_1 mcu3_0 mcu3_1
 drvfatfs_j784s4_CORELIST = mpu1_0 mcu1_0 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mcu4_0 mcu4_1
+drvfatfs_j742s2_CORELIST = mpu1_0 mcu1_0 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mcu4_0 mcu4_1
 
 # Define the rule to generate FATFS Drivers BOARDLIST for each rtos_type
 # Default BOARDLIST for each rtos_type is defined in 'ti/build/makerules/component.mk'
@@ -151,7 +152,7 @@ FATFS_Console_TestApp_$(1)_INCLUDE = $(FATFS_Console_TestApp_$(1)_PATH)
 export FATFS_Console_TestApp_$(1)_BOARDLIST = $(drvfatfs_$(1)_BOARDLIST)
 export FATFS_Console_TestApp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), $(drvfatfs_$(SOC)_CORELIST))
 
-ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 j742s2))
   export FATFS_Console_TestApp_$(1)_SBL_APPIMAGEGEN = yes
 endif
 

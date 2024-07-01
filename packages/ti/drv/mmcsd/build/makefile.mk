@@ -35,11 +35,12 @@ include $(PDK_MMCSD_COMP_PATH)/src/src_files_common.mk
 
 MODULE_NAME = mmcsd
 
-ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4))
 SOC_DIR=$(SOC)
+ifeq ($(SOC), j742s2)
+  SOC_DIR=j784s4
 endif
 
-ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 j742s2))
 SRCDIR += soc/$(SOC_DIR)
 INCDIR += soc
 SRCS_COMMON += MMCSD_soc.c
@@ -49,11 +50,11 @@ endif
 #  need to be included for this component
 INCLUDE_EXTERNAL_INTERFACES = pdk
 
-ifneq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4))
+ifneq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 j742s2))
 INCLUDE_EXTERNAL_INTERFACES += edma
 endif
 
-ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 j742s2))
 PACKAGE_SRCS_COMMON += soc/$(SOC_DIR)
 endif
 

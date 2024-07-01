@@ -1129,7 +1129,7 @@ static int32_t App_gets(char *str)
 }
 
 /* If there are any steps required before the initialization of I2C is done */
-#if defined (SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined (SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
 
 static int32_t App_i2cPreInt(void)
 {

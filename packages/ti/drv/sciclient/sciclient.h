@@ -276,7 +276,7 @@ typedef uint8_t devgrp_t;
 /** Aligned address at which the X509 header is placed. */
 #if defined(SOC_J721E) || defined(SOC_J7200)
 #define SCICLIENT_COMMON_X509_HEADER_ADDR (0x41cffb00)
-#elif defined(SOC_J721S2) || defined(SOC_J784S4)
+#elif defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)
 #define SCICLIENT_COMMON_X509_HEADER_ADDR (0x41cfdb00)
 #else
 #define SCICLIENT_COMMON_X509_HEADER_ADDR (0x41cffb00)
@@ -336,7 +336,7 @@ typedef uint8_t devgrp_t;
 #define TISCI_SEC_PROXY_DM2DMSC_READ_RESPONSE_THREAD_ID \
 	TISCI_SEC_PROXY_DM2TIFS_READ_RESPONSE_THREAD_ID
 #endif
-#if defined (SOC_J784S4)
+#if defined (SOC_J784S4) || defined(SOC_J742S2) /* Use same sysfw folder for J742S2 and J784S4 */
 #include <ti/drv/sciclient/soc/sysfw/include/j784s4/tisci_resasg_types.h>
 #include <ti/drv/sciclient/soc/sysfw/include/j784s4/tisci_hosts.h>
 #include <ti/drv/sciclient/soc/sysfw/include/j784s4/tisci_sec_proxy.h>

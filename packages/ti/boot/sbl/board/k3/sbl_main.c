@@ -121,7 +121,7 @@ const CSL_ArmR5MpuRegionCfg gCslR5MpuCfg[CSL_ARM_R5F_MPU_REGIONS_MAX] =
 #if defined (SOC_J7200)
         .size             = CSL_ARM_R5_MPU_REGION_SIZE_1MB,
 #endif
-#if defined (SOC_J721S2) 
+#if defined (SOC_J721S2) || defined (SOC_J742S2)
         .size             = CSL_ARM_R5_MPU_REGION_SIZE_4MB,
 #endif
         .subRegionEnable  = CSL_ARM_R5_MPU_SUB_REGION_ENABLE_ALL,
@@ -178,7 +178,7 @@ const CSL_ArmR5MpuRegionCfg gCslR5MpuCfg[CSL_ARM_R5F_MPU_REGIONS_MAX] =
         /* Region 14 configuration (Non-cached for PHY tuning data): Covers last 256KB of EVM Flash (FSS DAT0) */
         .regionId         = 7U,
         .enable           = 1U,
-#if defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4)
+#if defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined (SOC_J742S2)
         .baseAddr         = 0x53FC0000,
         .size             = CSL_ARM_R5_MPU_REGION_SIZE_256KB,
 #else
@@ -226,7 +226,7 @@ const CSL_ArmR5MpuRegionCfg gCslR5MpuCfg[CSL_ARM_R5F_MPU_REGIONS_MAX] =
         .memAttr          = 0U,
     },
 #endif
-#if defined(SBL_OCM_MAIN_DOMAIN_RAT) && (defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4))
+#if defined(SBL_OCM_MAIN_DOMAIN_RAT) && (defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4)) || defined (SOC_J742S2)
     {
         /* Region 10 configuration: 512KB Virtually Mapped Main OCMRAM */
         .regionId         = 10U,
@@ -255,7 +255,7 @@ int main()
         SBL_LogCycleCount(((uint8_t *)__func__), rblExecutionTime);
     #endif
 
-#if defined(SBL_ENABLE_HLOS_BOOT) && (defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4))
+#if defined(SBL_ENABLE_HLOS_BOOT) && (defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined (SOC_J742S2))
     cpu_core_id_t core_id;
 #endif
     uint32_t atcm_size;
@@ -358,20 +358,20 @@ int main()
 #endif
 
 #if !defined(SBL_USE_MCU_DOMAIN_ONLY)
-#if defined(SOC_J721S2) || defined(SOC_J784S4)
+#if defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)
 
     /* Change the GTC Parent to MAIN_PLL3_HSDIV1_CLKOUT 
        Reason :
         - for J721S2
             - MAIN_PLL3 default frequency is 2 GHz
             - MAIN_PLL3_HSDIV1_CLKOUT, MAIN_PLL3_HSDIV0_CLKOUT has the same divider value of 8
-        - for J784S4
+        - for J784S4/J742S2
             - MAIN_PLL3 default frequency is 2.5 GHz
             - MAIN_PLL3_HSDIV1_CLKOUT, MAIN_PLL3_HSDIV0_CLKOUT has the same divider value of 10
         - By defalult MAIN_PLL3_HSDIV1_CLKOUT (first input parent of the GTC mux) is given as an input to the GTC
         - MAIN_PLL3_HSDIV0_CLKOUT is given as input to the CPSW2G RGMI. CPSW2G RGMI needs 250MHz and GTC needs 200 MHz 
-        - It is not possible to have 250 MHz for MAIN_PLL3_HSDIV0_CLKOUT (divider of 8 in case of J721S2 and 10 incase of J784S4)
-          and 200 MHz for MAIN_PLL3_HSDIV1_CLKOUT (divider of 8 in case of J721S2 and 10 incase of J784S4) with the same MAIN_PLL3 frequency.
+        - It is not possible to have 250 MHz for MAIN_PLL3_HSDIV0_CLKOUT (divider of 8 in case of J721S2 and 10 incase of J784S4/J742S2)
+          and 200 MHz for MAIN_PLL3_HSDIV1_CLKOUT (divider of 8 in case of J721S2 and 10 incase of J784S4/J742S2) with the same MAIN_PLL3 frequency.
         - So change the parent of GTC clock to MAIN_PLL0_HSDIV6_CLKOUT */
     
     SBL_log(SBL_LOG_MAX, "Setting GTC clock parent frequency.... \n");
@@ -409,7 +409,7 @@ int main()
 #if defined(SBL_ENABLE_CLOCKS) && !defined(SBL_SKIP_SYSFW_INIT)
     SBL_log(SBL_LOG_MAX, "InitlialzingClocks ...");
 #if defined(SBL_ENABLE_HLOS_BOOT)
-#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4)
+#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined (SOC_J742S2)
     Board_initParams_t initParams;
     Board_getInitParams(&initParams);
     initParams.mainClkGrp = BOARD_MAIN_CLOCK_GROUP1;
@@ -472,7 +472,7 @@ int main()
 /* Defined separate target for sbl uart i.e sbl_hsm_boot_uart_img to boot HSM core 
    For MMCSD, OSPI NOR, OSPI NAND boot HSM core will be boot in with the normal sbl targets i.e 
    sbl_mmcsd_img_hs, sbl_ospi_img_hs and sbl_ospi_nand_img_hs if hsm.bin is present else SBL proceeds to boot appimage */
-#if ((defined(SOC_J721S2) || defined(SOC_J784S4)) && (defined(BOOT_OSPI) || defined(BOOT_MMCSD) || (defined(BOOT_UART) && defined(SECURE_HSM_BOOT))))
+#if ((defined(SOC_J721S2) || defined(SOC_J784S4) || defined (SOC_J742S2)) && (defined(BOOT_OSPI) || defined(BOOT_MMCSD) || (defined(BOOT_UART) && defined(SECURE_HSM_BOOT))))
     SBL_log(SBL_LOG_MAX, "Booting HSM core ... \n");
     if (SBL_loadAndAuthHsmBinary() == CSL_PASS)
     {
@@ -515,8 +515,8 @@ int main()
     sblProfileLogIndxAddr = &sblProfileLogIndx;
     sblProfileLogOvrFlwAddr = &sblProfileLogOvrFlw;
 
-#if defined(SBL_ENABLE_HLOS_BOOT) && (defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4))
-    /* For J721E/J7200/J721S2/J784S4 we have to manage all core boots at the end, to load mcu1_0 sciserver app */
+#if defined(SBL_ENABLE_HLOS_BOOT) && (defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined (SOC_J742S2))
+    /* For J721E/J7200/J721S2/J784S4/J742S2 we have to manage all core boots at the end, to load mcu1_0 sciserver app */
     for(core_id = MCU2_CPU0_ID; core_id <= SBL_LAST_CORE_ID; core_id ++)
     {
         /* Try booting all MAIN domain cores except the Cortex-A cores */

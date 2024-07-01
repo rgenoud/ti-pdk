@@ -10,8 +10,13 @@ INCDIR = .
 INCLUDE_EXTERNAL_INTERFACES += pdk
 INCLUDE_INTERNAL_INTERFACES = csl
 
+SOC_DIR=$(SOC)
+ifeq ($(SOC), j742s2)
+  SOC_DIR=j784s4
+endif
+
 # Common source files and CFLAGS across all platforms and cores
-SRCS_COMMON += app_utils_$(SOC).c
+SRCS_COMMON += app_utils_$(SOC_DIR).c
 
 PACKAGE_SRCS_COMMON = .
 CFLAGS_LOCAL_COMMON = $(PDK_CFLAGS) $(DSS_CFLAGS)

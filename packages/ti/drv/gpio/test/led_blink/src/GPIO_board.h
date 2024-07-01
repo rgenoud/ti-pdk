@@ -64,7 +64,7 @@ extern "C" {
 #define MAIN_GPIO_PIN_NUM (6U)
 #elif defined(SOC_J7200)
 #define MAIN_GPIO_PIN_NUM (0U)
-#elif defined(SOC_J721S2) || defined (SOC_J784S4)
+#elif defined(SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
 #define MAIN_GPIO_PIN_NUM (11U)
 #endif
 

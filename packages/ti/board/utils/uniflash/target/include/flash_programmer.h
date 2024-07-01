@@ -117,7 +117,7 @@ extern "C" {
 #define EMMC_FLASH
 #endif
 
-#if (defined(j721s2_evm) || defined(j784s4_evm))
+#if (defined(j721s2_evm) || defined(j784s4_evm) || defined(j742s2_evm))
 #define MAX_BAUDRATE_SUPPORTED          (UFP_BAUDRATE_6000000_ID)
 #define MAX_BAUDRATE_SUPPORTED_LINUX    (UFP_BAUDRATE_3000000_ID)
 
@@ -158,7 +158,7 @@ extern "C" {
 #else
 #define UFP_FLOW_CTRL_STS               (0x0U)
 
-#if (defined(j7200_evm) || defined(j721e_evm) || defined(am65xx_evm) || defined(am65xx_idk) || defined(j721s2_evm) || defined(j784s4_evm))
+#if (defined(j7200_evm) || defined(j721e_evm) || defined(am65xx_evm) || defined(am65xx_idk) || defined(j721s2_evm) || defined(j784s4_evm) || defined(j742s2_evm))
 #define MAX_BAUDRATE_SUPPORTED_FC       (MAX_BAUDRATE_SUPPORTED)
 #define MAX_BAUDRATE_SUPPORTED_LINUX_FC (MAX_BAUDRATE_SUPPORTED_LINUX)
 #else

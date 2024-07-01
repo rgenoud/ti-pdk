@@ -52,6 +52,8 @@
 #include <ti/board/src/j721s2_evm/include/board_utils.h>
 #elif defined(SOC_J784S4)
 #include <ti/board/src/j784s4_evm/include/board_utils.h>
+#elif defined(SOC_J742S2)
+#include <ti/board/src/j742s2_evm/include/board_utils.h>
 #endif
 
 #define UART_INPUT_CLK_48M              (48000000U)

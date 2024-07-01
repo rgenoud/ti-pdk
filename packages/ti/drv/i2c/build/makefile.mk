@@ -36,8 +36,13 @@ MODULE_NAME = i2c
 
 include $(PDK_I2C_COMP_PATH)/src/src_files_common.mk
 
-ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4))
-SRCDIR += soc/$(SOC)
+SOC_DIR=$(SOC)
+ifeq ($(SOC), j742s2)
+  SOC_DIR=j784s4
+endif
+
+ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 j742s2))
+SRCDIR += soc/$(SOC_DIR)
 INCDIR += soc
 # Common source files across all platforms and cores
 SRCS_COMMON += i2c_soc.c
@@ -47,8 +52,8 @@ endif
 # need to be included for this component
 INCLUDE_EXTERNAL_INTERFACES = pdk
 
-ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4))
-PACKAGE_SRCS_COMMON += soc/$(SOC) soc/i2c_soc.h
+ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 j742s2))
+PACKAGE_SRCS_COMMON += soc/$(SOC_DIR) soc/i2c_soc.h
 endif
 
 CFLAGS_LOCAL_COMMON = $(PDK_CFLAGS)

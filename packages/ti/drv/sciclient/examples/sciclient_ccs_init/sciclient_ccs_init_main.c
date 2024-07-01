@@ -71,11 +71,11 @@
 #define SCICLIENT_APP_CCS_DEVGRP1                (DEVGRP_01)
 #endif
 
-#if defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
 #define SCICLIENT_APP_CCS_DEVGRP0                (DEVGRP_ALL)
 #endif
 
-#if defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined(SOC_J742S2)
 /** \brief Aligned address at which the Board Config header is placed. */
 #define SCISERVER_APP_BOARDCONFIG_HEADER_ADDR    (0x41c80000U)
 
@@ -116,7 +116,7 @@ __attribute__(( aligned(128), section(".boardcfg_data") )) =
         /* Host-ID allowed to send SCI-message for main isolation.
          * If mismatch, SCI message will be rejected with NAK.
          */
-#if defined (SOC_J7200) || defined (SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined (SOC_J7200) || defined (SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined(SOC_J742S2)
         .main_isolation_hostid = TISCI_HOST_ID_MCU_0_R5_1,
 #else
         .main_isolation_hostid = TISCI_HOST_ID_R5_1,

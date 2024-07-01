@@ -65,7 +65,8 @@ CONFIG_RM_RA_DMSS_RING=y
 CONFIG_UDMAP_BCDMA=y
 endif
 
-ifeq ($(SOC),$(filter $(SOC), j784s4))
+# Use same rm_pm_hal files for j742s2 and j784s4
+ifeq ($(SOC),$(filter $(SOC), j784s4 j742s2))
 CONFIG_SOC_FOLDER_STRING="j784s4"
 CONFIG_CLK_PLL_16FFT_FRACF_CALIBRATION=y
 CONFIG_PSC_PD_MAX_COUNT_64=y
@@ -84,7 +85,7 @@ endif
 ifeq ($(SOC),$(filter $(SOC), j721s2))
   SCICLIENT_SOCVER = V4
 endif
-ifeq ($(SOC),$(filter $(SOC), j784s4))
+ifeq ($(SOC),$(filter $(SOC), j784s4 j742s2))
   SCICLIENT_SOCVER = V6
 endif
 

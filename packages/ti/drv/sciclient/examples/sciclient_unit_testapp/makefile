@@ -27,7 +27,7 @@ EXTERNAL_INTERFACES = safertos
 endif
 
 # SoCs which use split DM / TIFS can enable tests that use msg forwarding (mcu1_0 UT only)
-ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 j742s2))
   ifeq ($(CORE), mcu1_0)
     SCICLIENT_UT_CFLAGS = -DENABLE_MSG_FWD
   endif
@@ -42,7 +42,7 @@ SRCS_COMMON = sciclient_ut_main.c \
               sci_app_common.c uart_utils.c
 
 # SoCs which use firewall exception notification tests (mcu1_0 UT only)
-ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 j742s2))
   ifeq ($(CORE), mcu1_0)
     ifeq ($(BUILD_OS_TYPE), freertos)
       SCICLIENT_UT_CFLAGS += -DENABLE_FW_NOTIFICATION

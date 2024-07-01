@@ -128,28 +128,28 @@ FATFS_DrvFxnTable FATFS_drvFxnTable = {
 FATFS_HwAttrs FATFS_initCfg[_VOLUMES] =
 {
     {
-#if defined(j721e_evm) || defined(j7200_evm) || defined(j721s2_evm) || defined(j784s4_evm)
+#if defined(j721e_evm) || defined(j7200_evm) || defined(j721s2_evm) || defined(j784s4_evm) || defined(j742s2_evm)
         1U
 #else
         0U
 #endif
     },
     {
-#if defined(j721e_evm) || defined(j7200_evm) || defined(j721s2_evm) || defined(j784s4_evm)
+#if defined(j721e_evm) || defined(j7200_evm) || defined(j721s2_evm) || defined(j784s4_evm) || defined(j742s2_evm)
         0U
 #else
         1U
 #endif
     },
     {
-#if defined(j721e_evm) || defined(j7200_evm) || defined(j721s2_evm) || defined(j784s4_evm)
+#if defined(j721e_evm) || defined(j7200_evm) || defined(j721s2_evm) || defined(j784s4_evm) || defined(j742s2_evm)
         0U
 #else
         1U
 #endif
     },
     {
-#if defined(j721e_evm) || defined(j7200_evm) || defined(j721s2_evm) || defined(j784s4_evm)
+#if defined(j721e_evm) || defined(j7200_evm) || defined(j721s2_evm) || defined(j784s4_evm) || defined(j742s2_evm)
         0U
 #else
         1U
@@ -188,7 +188,7 @@ const FATFS_Config FATFS_config[_VOLUMES + 1] = {
     {NULL, NULL, NULL}
 };
 
-#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4)
+#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)
 #define SBL_WKUP_DEVSTAT_PRIMARY_BOOT_MASK      (0x78U)
 #define SBL_WKUP_DEVSTAT_PRIMARY_BOOT_MMCSD     (0x0U)
 #define SBL_MAIN_DEVSTAT_PRIMARY_BUS_WIDTH_MASK (0x20U)
@@ -209,7 +209,7 @@ __attribute((aligned(SBL_META_BUFF_ALIGN))) uint8_t metabuf[SBL_META_BUFF_LEN];
 int32_t SBL_ReadSysfwImage(void **pBuffer, uint32_t num_bytes)
 {
     int32_t retVal = CSL_PASS;
-#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4)
+#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)
     const TCHAR *fileName = "0:/tifs.bin";
 #else
     const TCHAR *fileName = "0:/sysfw.bin";
@@ -226,7 +226,7 @@ int32_t SBL_ReadSysfwImage(void **pBuffer, uint32_t num_bytes)
        retVal = E_FAIL;
      }
 
-#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4)
+#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)
     uint32_t wkupCtrlDevstat = SBL_getWkupCtrlDevStat();
     uint32_t mainCtrlDevstat = SBL_getMainCtrlDevStat();
 
@@ -278,7 +278,7 @@ int32_t SBL_ReadSysfwImage(void **pBuffer, uint32_t num_bytes)
     fresult = f_open(&fp, fileName, ((BYTE)FA_READ));
     if (fresult != FR_OK)
     {
-#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4)
+#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)
         UART_printf("\n SD Boot - tifs File open fails \n");
 #else
         UART_printf("\n SD Boot - sysfw File open fails \n");
@@ -290,7 +290,7 @@ int32_t SBL_ReadSysfwImage(void **pBuffer, uint32_t num_bytes)
         fresult  = f_read(&fp, sysfw_ptr, num_bytes, &bytes_read);
         if (fresult != FR_OK)
         {
-#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4)
+#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)
             UART_printf("\n SD Boot - tifs read fails \n");
 #else
             UART_printf("\n SD Boot - sysfw read fails \n");
@@ -424,7 +424,7 @@ int32_t SBL_MMCBootImage(sblEntryPoint_t *pEntry)
         fp_readData = &SBL_FileRead;
         fp_seek     = &SBL_FileSeek;
 
-#if defined(SBL_ENABLE_HLOS_BOOT) && (defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4))
+#if defined(SBL_ENABLE_HLOS_BOOT) && (defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2))
         retVal = SBL_MulticoreImageParse((void *) &fp, 0, pEntry, SBL_SKIP_BOOT_AFTER_COPY);
 #else
         retVal = SBL_MulticoreImageParse((void *) &fp, 0, pEntry, SBL_BOOT_AFTER_COPY);

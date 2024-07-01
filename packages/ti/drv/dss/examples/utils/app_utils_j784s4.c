@@ -41,7 +41,11 @@
 /*                             Include Files                                  */
 /* ========================================================================== */
 
+#if defined(SOC_J742S2)
+#include <ti/board/src/j742s2_evm/include/board_control.h>
+#elif defined(SOC_J784S4)
 #include <ti/board/src/j784s4_evm/include/board_control.h>
+#endif
 #include <ti/csl/soc/cslr_soc_ctrl_mmr.h>
 #include <ti/drv/sciclient/sciclient.h>
 #include <ti/drv/pm/pmlib.h>

@@ -49,7 +49,7 @@
 
 #if defined (SOC_J721E)
 #include <ti/drv/sciclient/src/sec_proxy/V0/V0_0/cslr_sec_proxy.h>
-#elif defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#elif defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
 #include <ti/drv/sciclient/src/sec_proxy/V0/V0_1/cslr_sec_proxy.h>
 #endif
 

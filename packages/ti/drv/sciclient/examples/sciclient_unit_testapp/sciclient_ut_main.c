@@ -47,14 +47,14 @@
 #include <ti/csl/soc.h>
 #include <ti/csl/arch/csl_arch.h>
 #include <ti/csl/hw_types.h>
-#if ((defined (SOC_J721S2) || defined (SOC_J784S4)) && defined(BUILD_MCU2_0))
+#if ((defined (SOC_J721S2) || defined (SOC_J784S4) || defined(SOC_J742S2)) && defined(BUILD_MCU2_0))
 #include <ti/csl/cslr_pvu.h>
 #endif
 #include <ti/osal/osal.h>
 #include <ti/osal/TimerP.h>
 #include <ti/osal/TaskP.h>
 #include <ti/board/board.h>
-#if ((defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)) && defined (BUILD_MCU1_0))
+#if ((defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined(SOC_J742S2)) && defined (BUILD_MCU1_0))
 #include <ti/drv/sciclient/examples/sciclient_unit_testapp/uart_utils.h>
 #endif
 #if defined(ENABLE_FW_NOTIFICATION)
@@ -91,7 +91,7 @@ static uint8_t  gSciclientAppTskStackMain[32*1024] __attribute__((aligned(8192))
  * - AND stack assigned for task context is "size - 8KB"
  *       - 8KB chunk for the stack area is used for interrupt handling in this task context
  */
-#if ((defined (SOC_J721S2) || defined (SOC_J784S4)) && defined(BUILD_MCU2_0))
+#if ((defined (SOC_J721S2) || defined (SOC_J784S4) || defined(SOC_J742S2)) && defined(BUILD_MCU2_0))
 static volatile int32_t gAppIsrExecNum = 0;
 #endif
 
@@ -116,7 +116,7 @@ static int32_t SciclientApp_getRevisionTestPol(void);
 static int32_t SciclientApp_getRevisionTestIntr(void);
 static int32_t SciclientApp_timeoutTest(void);
 static int32_t SciclientApp_invalidReqPrmTest(void);
-#if defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined(SOC_J742S2)
 static int32_t SciclientApp_msmcQueryTest(void);
 #endif
 #if defined(ENABLE_MSG_FWD)
@@ -125,12 +125,12 @@ static int32_t SciclientApp_tifs2dmMsgForwardingTest(void);
 #if defined(ENABLE_FW_NOTIFICATION)
 static int32_t SciclientApp_fwExcpNotificationTest(void);
 #endif
-#if ((defined (SOC_J721S2) || defined (SOC_J784S4)) && defined(BUILD_MCU2_0))
+#if ((defined (SOC_J721S2) || defined (SOC_J784S4) || defined(SOC_J742S2)) && defined(BUILD_MCU2_0))
 static int32_t SciclientApp_pvu2R5IntrTest(void);
 static void SciclientApp_pvu2R5IntrTestIsr(void);
 static int32_t SciclientApp_pvu2GICIntrTest(void);
 #endif
-#if ((defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (j784s4_evm)) && defined (BUILD_MCU1_0))
+#if ((defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined(SOC_J742S2) || defined (j784s4_evm) || defined(j742s2_evm)) && defined (BUILD_MCU1_0))
 static int32_t SciclientApp_mainUart2MCUR5IntrTest(void);
 #endif
 
@@ -185,7 +185,7 @@ int32_t SciApp_testMain(SciApp_TestParams_t *testParams)
         case 4:
             testParams->testResult = SciclientApp_timeoutTest();
             break;
-#if defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined(SOC_J742S2)
         case 5:
             testParams->testResult = SciclientApp_msmcQueryTest();
             break;
@@ -200,7 +200,7 @@ int32_t SciApp_testMain(SciApp_TestParams_t *testParams)
             testParams->testResult = SciclientApp_fwExcpNotificationTest();
             break;
 #endif
-#if ((defined (SOC_J721S2) || defined (SOC_J784S4)) && defined(BUILD_MCU2_0))
+#if ((defined (SOC_J721S2) || defined (SOC_J784S4) || defined(SOC_J742S2)) && defined(BUILD_MCU2_0))
         case 8:
             testParams->testResult = SciclientApp_pvu2R5IntrTest();
             break;
@@ -208,7 +208,7 @@ int32_t SciApp_testMain(SciApp_TestParams_t *testParams)
             testParams->testResult = SciclientApp_pvu2GICIntrTest();
             break;
 #endif
-#if ((defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)) && defined (BUILD_MCU1_0))
+#if ((defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined(SOC_J742S2)) && defined (BUILD_MCU1_0))
         case 10:
             testParams->testResult = SciclientApp_mainUart2MCUR5IntrTest();
             break;
@@ -520,7 +520,7 @@ static int32_t SciclientApp_timeoutTest(void)
     return status;
 }
 
-#if defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined(SOC_J742S2)
 static int32_t SciclientApp_msmcQueryTest(void)
 {
     int32_t status                = CSL_EFAIL;
@@ -699,7 +699,7 @@ static int32_t SciclientApp_fwExcpNotificationTest(void)
 }
 #endif
 
-#if ((defined (SOC_J721S2) || defined (SOC_J784S4)) && defined(BUILD_MCU2_0))
+#if ((defined (SOC_J721S2) || defined (SOC_J784S4) || defined(SOC_J742S2)) && defined(BUILD_MCU2_0))
 static void SciclientApp_pvu2R5IntrTestIsr(void)
 {
     gAppIsrExecNum++;
@@ -970,7 +970,7 @@ static int32_t SciclientApp_pvu2GICIntrTest(void)
 }
 #endif
 
-#if ((defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)) && defined (BUILD_MCU1_0))
+#if ((defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined(SOC_J742S2)) && defined (BUILD_MCU1_0))
 static int32_t SciclientApp_mainUart2MCUR5IntrTest(void)
 {
     int32_t  status                    = CSL_PASS;

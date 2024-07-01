@@ -81,7 +81,7 @@ static bool CSL_intaggrIsValidStatusBitNum( const CSL_IntaggrCfg *pCfg, uint32_t
 }
 
 
-#if defined (SOC_J784S4) || defined (SOC_J721S2)
+#if defined (SOC_J784S4) || defined (SOC_J742S2) || defined (SOC_J721S2)
 static bool CSL_intaggrIsModuleRevAtLeast( const CSL_IntaggrCfg *pCfg, uint32_t majorRev, uint32_t minorRev, uint32_t rtlRev );
 static uint32_t CSL_intaggrBuildMapIdxValue( uint32_t statusBitNum );
 
@@ -130,7 +130,7 @@ void CSL_intaggrGetCfg( CSL_IntaggrCfg *pCfg )
     pCfg->localEventCnt     = (uint32_t)CSL_FEXT( regVal, INTAGGR_CFG_AUXCAP_LEVI_CNT );
     pCfg->globalEventCnt    = (uint32_t)CSL_FEXT( regVal, INTAGGR_CFG_AUXCAP_GEVI_CNT );
     pCfg->mcastEventCnt     = (uint32_t)CSL_FEXT( regVal, INTAGGR_CFG_AUXCAP_MEVI_CNT );
-#if defined (SOC_J784S4) || defined (SOC_J721S2)
+#if defined (SOC_J784S4) || defined (SOC_J742S2) || defined (SOC_J721S2)
     pCfg->unmapEventCnt     = (uint32_t)CSL_FEXT( regVal, INTAGGR_CFG_AUXCAP_UNMAP_CNT );
 #else
     pCfg->unmapEventCnt     = 0U;
@@ -202,7 +202,7 @@ int32_t CSL_intaggrMapEventRxCntEvent( CSL_IntaggrCfg *pCfg, uint32_t globalEven
 
         if( CSL_intaggrIsIntrModeStatusBitNum( globalEventOutIdx ) )
         {
-#if defined (SOC_J784S4) || defined (SOC_J721S2)
+#if defined (SOC_J784S4) || defined (SOC_J742S2) || defined (SOC_J721S2)
             if( !CSL_intaggrIsModuleRevAtLeast(pCfg, 1U, 1U, 0U) )
             {
                 retVal = CSL_EFAIL;    /* INTAGGR does not support this feature */
@@ -299,7 +299,7 @@ int32_t CSL_intaggrEnableEventMulticast( CSL_IntaggrCfg *pCfg, uint32_t globalEv
 
         if( CSL_intaggrIsIntrModeStatusBitNum(globalEventOutIdx0) || CSL_intaggrIsIntrModeStatusBitNum(globalEventOutIdx1) )
         {
-#if defined (SOC_J784S4) || defined (SOC_J721S2)
+#if defined (SOC_J784S4) || defined (SOC_J742S2) || defined (SOC_J721S2)
             uint64_t idx0Val    = (uint64_t)globalEventOutIdx0;
             uint64_t mode0Val   = 0UL;
             uint64_t idx1Val    = (uint64_t)globalEventOutIdx1;
@@ -364,7 +364,7 @@ int32_t CSL_intaggrMapUnmappedEventToEvent( const CSL_IntaggrCfg *pCfg, uint32_t
 {
     int32_t  retVal;
 
-#if defined (SOC_J784S4) || defined (SOC_J721S2)
+#if defined (SOC_J784S4) || defined (SOC_J742S2) || defined (SOC_J721S2)
     if( (!CSL_intaggrIsModuleRevAtLeast(pCfg, 1U, 1U, 0U)) || (NULL == pCfg->pUnmapRegs) || (0U == pCfg->unmapEventCnt) )
     {
         retVal = CSL_EFAIL;    /* INTAGGR does not support this feature */

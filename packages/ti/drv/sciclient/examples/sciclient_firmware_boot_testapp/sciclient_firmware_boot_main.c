@@ -57,7 +57,7 @@
 /* ========================================================================== */
 
 #define SCICLIENT_APP_PRINT_UART
-#if defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
 #define CSL_MCU_ARMSS_ATCM_BASE (0x0U)
 #endif
 
@@ -97,7 +97,7 @@ static int32_t SciclientApp_getRevisionTestPol(void);
 int32_t main(void)
 {
     int32_t status;
-#if defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined(SOC_J742S2)
     /* Relocate CSL Vectors to ATCM*/
     memcpy((void *)CSL_MCU_ARMSS_ATCM_BASE, (void *)_resetvectors, 0x100);
 #else

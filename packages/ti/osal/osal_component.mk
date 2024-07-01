@@ -68,14 +68,14 @@ ifeq ($(osal_component_make_include), )
 
 libosal_RTOS_LIST = $(DEFAULT_RTOS_LIST)
 
-libosal_BOARDLIST  = j721e_evm j7200_evm j721s2_evm j784s4_evm
+libosal_BOARDLIST  = j721e_evm j7200_evm j721s2_evm j784s4_evm j742s2_evm
 
-libosal_SOCLIST   =  j721e j7200 j721s2 j784s4
+libosal_SOCLIST   =  j721e j7200 j721s2 j784s4 j742s2
 
-libosal_freertos_BOARDLIST  = j721e_evm j7200_evm j721s2_evm j784s4_evm
-libosal_freertos_SOCLIST    = j721e j7200 j721s2 j784s4
-libosal_safertos_BOARDLIST  = j721e_evm j7200_evm j721s2_evm j784s4_evm
-libosal_safertos_SOCLIST    = j721e j7200 j721s2 j784s4
+libosal_freertos_BOARDLIST  = j721e_evm j7200_evm j721s2_evm j784s4_evm j742s2_evm
+libosal_freertos_SOCLIST    = j721e j7200 j721s2 j784s4 j742s2
+libosal_safertos_BOARDLIST  = j721e_evm j7200_evm j721s2_evm j784s4_evm j742s2_evm
+libosal_safertos_SOCLIST    = j721e j7200 j721s2 j784s4 j742s2
 
 
 ifeq ($(SOC),$(filter $(SOC), $(libosal_SOCLIST)))
@@ -87,6 +87,7 @@ libosal_safertos_j721e_CORELIST   = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 c6
 libosal_safertos_j7200_CORELIST   = mcu1_0 mcu1_1 mcu2_0 mcu2_1
 libosal_safertos_j721s2_CORELIST   = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 c7x_1 c7x_2
 libosal_safertos_j784s4_CORELIST   = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mcu4_0 mcu4_1 c7x_1 c7x_2 c7x_3 c7x_4
+libosal_safertos_j742s2_CORELIST   = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mcu4_0 mcu4_1 c7x_1 c7x_2 c7x_3
 
 ############################
 # osal package
@@ -131,7 +132,7 @@ export osal_nonos_PKG_LIST = osal_nonos
 osal_nonos_INCLUDE = $(osal_nonos_PATH)
 export osal_nonos_SOCLIST = $(libosal_SOCLIST)
 osal_nonos_$(SOC)_CORELIST = $(libosal_$(SOC)_CORELIST)
-ifeq ($(SOC),$(filter $(SOC), j721e j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721e j721s2 j784s4 j742s2))
 osal_nonos_$(SOC)_CORELIST += c7x-hostemu
 endif
 export osal_nonos_$(SOC)_CORELIST
@@ -336,7 +337,17 @@ ifeq ($(SOC),$(filter $(SOC), j784s4))
  osal_extended_testapp_safertos_$(SOC)_CORELIST = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mcu4_0 mcu4_1 c7x_1 c7x_2 c7x_3 c7x_4
 endif
 
-export osal_baremetal_testapp_$(SOC)_CORELIST
+ifeq ($(SOC),$(filter $(SOC), j742s2))
+ OSAL_Baremetal_TestApp_$(SOC)_CORELIST = mpu1_0 mcu1_0 mcu2_0 mcu3_0 mcu4_0
+ osal_baremetal_cache_test_$(SOC)_CORELIST = mcu2_0 mcu2_1
+ OSAL_TestApp_freertos_$(SOC)_CORELIST = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mcu4_0 mcu4_1 c7x_1 c7x_2 c7x_3
+ OSAL_TestApp_safertos_$(SOC)_CORELIST = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mcu4_0 mcu4_1 c7x_1 c7x_2 c7x_3
+ osal_baremetal_extended_testapp_$(SOC)_CORELIST = mcu1_0 mcu2_0 mcu3_0 mcu4_0
+ osal_extended_testapp_freertos_$(SOC)_CORELIST = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mcu4_0 mcu4_1 c7x_1 c7x_2 c7x_3
+ osal_extended_testapp_safertos_$(SOC)_CORELIST = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mcu4_0 mcu4_1 c7x_1 c7x_2 c7x_3
+endif
+
+export OSAL_Baremetal_TestApp_$(SOC)_CORELIST
 export OSAL_freertos_TestApp_$(SOC)_CORELIST
 export osal_baremetal_cache_test_$(SOC)_CORELIST
 export osal_cache_test_multicore_$(SOC)_CORELIST

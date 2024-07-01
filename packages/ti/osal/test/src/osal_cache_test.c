@@ -95,7 +95,7 @@ extern const CSL_ArmR5MpuRegionCfg __attribute__((section(".startupData"))) gCsl
 #if defined (SOC_J7200)
         .size             = CSL_ARM_R5_MPU_REGION_SIZE_1MB,
 #endif
-#if defined (SOC_J721S2) 
+#if defined (SOC_J721S2) || defined(SOC_J742S2)
         .size             = CSL_ARM_R5_MPU_REGION_SIZE_4MB,
 #endif
         .subRegionEnable  = CSL_ARM_R5_MPU_SUB_REGION_ENABLE_ALL,

@@ -62,6 +62,9 @@
 #elif defined (SOC_J784S4)
 #include <ti/board/src/j784s4_evm/include/board_control.h>
 #include <ti/board/src/j784s4_evm/include/board_i2c_io_exp.h>
+#elif defined (SOC_J742S2)
+#include <ti/board/src/j742s2_evm/include/board_control.h>
+#include <ti/board/src/j742s2_evm/include/board_i2c_io_exp.h>
 #endif
 
 /* ========================================================================== */
@@ -207,7 +210,7 @@ void DispApp_enableDP2HDMI( void )
     /* DP0_PWR_SW_EN is connected to I2C1 on J721E. I2C1 is mapped to I2C4 on Quad devices. */
 #if defined (SOC_J721E)
     ioExpCfg.i2cInst     = 1U;
-#elif defined (SOC_J721S2) || defined (SOC_J784S4)
+#elif defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
     ioExpCfg.i2cInst     = 4U;
 #endif
     ioExpCfg.socDomain   = BOARD_SOC_DOMAIN_MAIN;
@@ -334,7 +337,7 @@ static int32_t DispApp_runTest(DispApp_Obj *appObj)
             break;
         }
     }
-#if (1==DISP_APP_TEST_DSI) && (defined (SOC_J721S2) || defined (SOC_J784S4))
+#if (1==DISP_APP_TEST_DSI) && (defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2))
     DispApp_ErrorRegRead();
 #endif
 

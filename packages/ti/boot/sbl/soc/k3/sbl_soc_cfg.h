@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2022 Texas Instruments Incorporated - http://www.ti.com/
+ * Copyright (C) 2018-2024 Texas Instruments Incorporated - http://www.ti.com/
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -60,7 +60,7 @@
 #include <ti/csl/soc/j721s2/src/cslr_mcu_pll_mmr.h>
 #endif
 
-#if defined (SOC_J784S4)
+#if defined (SOC_J784S4) || defined (SOC_J742S2)
 #include <ti/csl/soc/j784s4/src/cslr_wkup_ctrl_mmr.h>
 #include <ti/csl/soc/j784s4/src/cslr_mcu_pll_mmr.h>
 #endif
@@ -822,7 +822,7 @@ extern uint16_t sblMapOtpVidToMilliVolts[256];
 
 #endif /* if defined (SOC_J721S2) */
 
-#if defined (SOC_J784S4)
+#if defined (SOC_J784S4) || defined (SOC_J742S2)
 
 #define SBL_MCU_ATCM_BASE      (CSL_MCU_R5FSS0_ATCM_BASE)
 #define SBL_MCU_ATCM_SIZE      (CSL_MCU_R5FSS0_ATCM_SIZE)
@@ -962,25 +962,47 @@ extern uint16_t sblMapOtpVidToMilliVolts[256];
 #define SBL_CLK_ID_MPU1_CPU3        (TISCI_DEV_A72SS0_CORE3_ARM0_CLK_CLK)
 #define SBL_MPU1_CPU3_FREQ_HZ       (2000000000)
 
-#define SBL_PROC_ID_MPU2_CPU0       (SCICLIENT_PROC_ID_COMPUTE_CLUSTER_J7AHP0_A72SS1_CORE0_0)
-#define SBL_DEV_ID_MPU2_CPU0        (TISCI_DEV_A72SS1_CORE0)
-#define SBL_CLK_ID_MPU2_CPU0        (TISCI_DEV_A72SS1_CORE0_ARM1_CLK_CLK)
-#define SBL_MPU2_CPU0_FREQ_HZ       (2000000000)
+#if defined (SOC_J742S2)
+    #define SBL_PROC_ID_MPU2_CPU0       (SBL_INVALID_ID)
+    #define SBL_DEV_ID_MPU2_CPU0        (SBL_INVALID_ID)
+    #define SBL_CLK_ID_MPU2_CPU0        (SBL_INVALID_ID)
+    #define SBL_MPU2_CPU0_FREQ_HZ       (SBL_INVALID_ID)
 
-#define SBL_PROC_ID_MPU2_CPU1       (SCICLIENT_PROC_ID_COMPUTE_CLUSTER_J7AHP0_A72SS1_CORE1_0)
-#define SBL_DEV_ID_MPU2_CPU1        (TISCI_DEV_A72SS1_CORE1)
-#define SBL_CLK_ID_MPU2_CPU1        (TISCI_DEV_A72SS1_CORE1_ARM1_CLK_CLK)
-#define SBL_MPU2_CPU1_FREQ_HZ       (2000000000)
+    #define SBL_PROC_ID_MPU2_CPU1       (SBL_INVALID_ID)
+    #define SBL_DEV_ID_MPU2_CPU1        (SBL_INVALID_ID)
+    #define SBL_CLK_ID_MPU2_CPU1        (SBL_INVALID_ID)
+    #define SBL_MPU2_CPU1_FREQ_HZ       (SBL_INVALID_ID)
 
-#define SBL_PROC_ID_MPU2_CPU2       (SCICLIENT_PROC_ID_COMPUTE_CLUSTER_J7AHP0_A72SS1_CORE2_0)
-#define SBL_DEV_ID_MPU2_CPU2        (TISCI_DEV_A72SS1_CORE2)
-#define SBL_CLK_ID_MPU2_CPU2        (TISCI_DEV_A72SS1_CORE2_ARM1_CLK_CLK)
-#define SBL_MPU2_CPU2_FREQ_HZ       (2000000000)
+    #define SBL_PROC_ID_MPU2_CPU2       (SBL_INVALID_ID)
+    #define SBL_DEV_ID_MPU2_CPU2        (SBL_INVALID_ID)
+    #define SBL_CLK_ID_MPU2_CPU2        (SBL_INVALID_ID)
+    #define SBL_MPU2_CPU2_FREQ_HZ       (SBL_INVALID_ID)
 
-#define SBL_PROC_ID_MPU2_CPU3       (SCICLIENT_PROC_ID_COMPUTE_CLUSTER_J7AHP0_A72SS1_CORE3_0)
-#define SBL_DEV_ID_MPU2_CPU3        (TISCI_DEV_A72SS1_CORE3)
-#define SBL_CLK_ID_MPU2_CPU3        (TISCI_DEV_A72SS1_CORE3_ARM1_CLK_CLK)
-#define SBL_MPU2_CPU3_FREQ_HZ       (2000000000)
+    #define SBL_PROC_ID_MPU2_CPU3       (SBL_INVALID_ID)
+    #define SBL_DEV_ID_MPU2_CPU3        (SBL_INVALID_ID)
+    #define SBL_CLK_ID_MPU2_CPU3        (SBL_INVALID_ID)
+    #define SBL_MPU2_CPU3_FREQ_HZ       (SBL_INVALID_ID)
+#else
+    #define SBL_PROC_ID_MPU2_CPU0       (SCICLIENT_PROC_ID_COMPUTE_CLUSTER_J7AHP0_A72SS1_CORE0_0)
+    #define SBL_DEV_ID_MPU2_CPU0        (TISCI_DEV_A72SS1_CORE0)
+    #define SBL_CLK_ID_MPU2_CPU0        (TISCI_DEV_A72SS1_CORE0_ARM1_CLK_CLK)
+    #define SBL_MPU2_CPU0_FREQ_HZ       (2000000000)
+
+    #define SBL_PROC_ID_MPU2_CPU1       (SCICLIENT_PROC_ID_COMPUTE_CLUSTER_J7AHP0_A72SS1_CORE1_0)
+    #define SBL_DEV_ID_MPU2_CPU1        (TISCI_DEV_A72SS1_CORE1)
+    #define SBL_CLK_ID_MPU2_CPU1        (TISCI_DEV_A72SS1_CORE1_ARM1_CLK_CLK)
+    #define SBL_MPU2_CPU1_FREQ_HZ       (2000000000)
+
+    #define SBL_PROC_ID_MPU2_CPU2       (SCICLIENT_PROC_ID_COMPUTE_CLUSTER_J7AHP0_A72SS1_CORE2_0)
+    #define SBL_DEV_ID_MPU2_CPU2        (TISCI_DEV_A72SS1_CORE2)
+    #define SBL_CLK_ID_MPU2_CPU2        (TISCI_DEV_A72SS1_CORE2_ARM1_CLK_CLK)
+    #define SBL_MPU2_CPU2_FREQ_HZ       (2000000000)
+
+    #define SBL_PROC_ID_MPU2_CPU3       (SCICLIENT_PROC_ID_COMPUTE_CLUSTER_J7AHP0_A72SS1_CORE3_0)
+    #define SBL_DEV_ID_MPU2_CPU3        (TISCI_DEV_A72SS1_CORE3)
+    #define SBL_CLK_ID_MPU2_CPU3        (TISCI_DEV_A72SS1_CORE3_ARM1_CLK_CLK)
+    #define SBL_MPU2_CPU3_FREQ_HZ       (2000000000)
+#endif
 
 #define SBL_PROC_ID_MCU1_CPU0       (SCICLIENT_PROC_ID_MCU_R5FSS0_CORE0)
 #define SBL_DEV_ID_MCU1_CPU0        (TISCI_DEV_MCU_R5FSS0_CORE0)
@@ -1047,10 +1069,17 @@ extern uint16_t sblMapOtpVidToMilliVolts[256];
 #define SBL_CLK_ID_DSP3_C7X         (TISCI_DEV_COMPUTE_CLUSTER0_C71SS2_C7X_CLK)
 #define SBL_DSP3_C7X_FREQ_HZ        (1000000000)
 
-#define SBL_PROC_ID_DSP4_C7X        (SCICLIENT_PROC_ID_COMPUTE_CLUSTER_J7AHP0_C71SS3_CORE0_0)
-#define SBL_DEV_ID_DSP4_C7X         (TISCI_DEV_COMPUTE_CLUSTER0_C71SS3)
-#define SBL_CLK_ID_DSP4_C7X         (TISCI_DEV_COMPUTE_CLUSTER0_C71SS3_C7X_CLK)
-#define SBL_DSP4_C7X_FREQ_HZ        (1000000000)
+#if defined (SOC_J742S2)
+    #define SBL_PROC_ID_DSP4_C7X        (SBL_INVALID_ID)
+    #define SBL_DEV_ID_DSP4_C7X         (SBL_INVALID_ID)
+    #define SBL_CLK_ID_DSP4_C7X         (SBL_INVALID_ID)
+    #define SBL_DSP4_C7X_FREQ_HZ        (SBL_INVALID_ID)
+#else
+    #define SBL_PROC_ID_DSP4_C7X        (SCICLIENT_PROC_ID_COMPUTE_CLUSTER_J7AHP0_C71SS3_CORE0_0)
+    #define SBL_DEV_ID_DSP4_C7X         (TISCI_DEV_COMPUTE_CLUSTER0_C71SS3)
+    #define SBL_CLK_ID_DSP4_C7X         (TISCI_DEV_COMPUTE_CLUSTER0_C71SS3_C7X_CLK)
+    #define SBL_DSP4_C7X_FREQ_HZ        (1000000000)
+#endif
 
 #define SBL_PROC_ID_HSM_M4          (SCICLIENT_PROC_ID_WKUP_HSM0)
 #define SBL_DEV_ID_HSM_M4           (SBL_INVALID_ID)
@@ -1060,7 +1089,7 @@ extern uint16_t sblMapOtpVidToMilliVolts[256];
 #define SBL_HYPERFLASH_BASE_ADDRESS      (CSL_MCU_FSS0_DAT_REG1_BASE)
 #define SBL_HYPERFLASH_CTLR_BASE_ADDRESS (CSL_MCU_FSS0_HPB_CTRL_BASE)
 
-#endif /* if defined (SOC_J784S4) */
+#endif /* if defined (SOC_J784S4) || defined (SOC_J742S2) */
 
 /* ========================================================================== */
 /*                          Function Declarations                             */
@@ -1068,7 +1097,7 @@ extern uint16_t sblMapOtpVidToMilliVolts[256];
 void SBL_RAT_Config(sblRatCfgInfo_t *remap_list);
 void SBL_SocEarlyInit();
 void SBL_SocLateInit(void);
-#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J784S4)
+#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J784S4) || defined(SOC_J742S2)
 void SBL_ConfigureEthernet(void);
 #endif
 uint32_t sblAtcmSize(void);

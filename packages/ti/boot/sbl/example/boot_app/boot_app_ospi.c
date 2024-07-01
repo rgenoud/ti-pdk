@@ -66,7 +66,7 @@ int32_t BootApp_ospiLeaveConfigSPI()
     /* Set the default SPI init configurations */
     OSPI_socSetInitCfg(BOARD_OSPI_DOMAIN, BOARD_OSPI_NOR_INSTANCE, &gOspiCfg);
 
-#if defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4)
+#if defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined (SOC_J742S2)
         flashHandle = Board_flashOpen(BOARD_FLASH_ID_S28HS512T,
                             BOARD_OSPI_NOR_INSTANCE, NULL);
 #else

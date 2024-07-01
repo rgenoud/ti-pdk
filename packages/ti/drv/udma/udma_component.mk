@@ -39,15 +39,16 @@ ifeq ($(udma_component_make_include), )
 # This list will be used to generate RTOS app make rule for each rtos_type.
 drvudma_RTOS_LIST       = $(DEFAULT_RTOS_LIST)
 
-drvudma_SOCLIST         = am65xx j721e j7200 am64x j721s2 j784s4
-drvudma_BOARDLIST       = am65xx_evm am65xx_idk j721e_sim j721e_evm j7200_evm am64x_evm j721s2_evm j784s4_evm
-drvudma_dru_BOARDLIST   = am65xx_evm am65xx_idk j721e_evm j721s2_evm j784s4_evm
+drvudma_SOCLIST         = am65xx j721e j7200 am64x j721s2 j784s4 j742s2
+drvudma_BOARDLIST       = am65xx_evm am65xx_idk j721e_sim j721e_evm j7200_evm am64x_evm j721s2_evm j784s4_evm j742s2_evm
+drvudma_dru_BOARDLIST   = am65xx_evm am65xx_idk j721e_evm j721s2_evm j784s4_evm j742s2_evm
 drvudma_am65xx_CORELIST = mpu1_0 mcu1_0 mcu1_1
 drvudma_j721e_CORELIST  = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 c66xdsp_1 c66xdsp_2 c7x_1 c7x-hostemu
 drvudma_j7200_CORELIST  = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1
 drvudma_am64x_CORELIST  = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 m4f_0
 drvudma_j721s2_CORELIST  = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 c7x_1 c7x_2 c7x-hostemu
 drvudma_j784s4_CORELIST  = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mcu4_0 mcu4_1 c7x_1 c7x_2 c7x_3 c7x_4 c7x-hostemu
+drvudma_j742s2_CORELIST  = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mcu4_0 mcu4_1 c7x_1 c7x_2 c7x_3 c7x-hostemu
 
 # Define the rule to generate UDMA Drivers BOARDLIST for each rtos_type
 # Default BOARDLIST for each rtos_type is defined in 'ti/build/makerules/component.mk'
@@ -101,7 +102,7 @@ export udma_LIBNAME = udma
 export udma_LIBPATH = $(PDK_UDMA_COMP_PATH)/lib
 export udma_MAKEFILE = -fsrc/makefile
 export udma_BOARD_DEPENDENCY = no
-ifeq ($(BOARD),$(filter $(BOARD), j721e_ccqt j721e_loki j721e_hostemu j721s2_hostemu j784s4_hostemu))
+ifeq ($(BOARD),$(filter $(BOARD), j721e_ccqt j721e_loki j721e_hostemu j721s2_hostemu j784s4_hostemu j742s2_hostemu))
 export udma_BOARD_DEPENDENCY = yes
 endif
 export udma_CORE_DEPENDENCY = yes
@@ -122,13 +123,13 @@ export dmautils_LIBNAME = dmautils
 export dmautils_LIBPATH = $(PDK_UDMA_COMP_PATH)/lib
 export dmautils_MAKEFILE = -fmakefile
 export dmautils_BOARD_DEPENDENCY = no
-ifeq ($(BOARD),$(filter $(BOARD), j721e_ccqt j721e_loki j721e_hostemu j721s2_hostemu j784s4_hostemu))
+ifeq ($(BOARD),$(filter $(BOARD), j721e_ccqt j721e_loki j721e_hostemu j721s2_hostemu j784s4_hostemu j742s2_hostemu))
 export dmautils_BOARD_DEPENDENCY = yes
 endif
 export dmautils_CORE_DEPENDENCY = yes
 dmautils_PKG_LIST = dmautils
 dmautils_INCLUDE = $(dmautils_PATH)
-export dmautils_SOCLIST = j721e j721s2 j784s4
+export dmautils_SOCLIST = j721e j721s2 j784s4 j742s2
 export dmautils_$(SOC)_CORELIST = c7x_1 c7x_2 c7x_3 c7x_4 c7x-hostemu
 udma_LIB_LIST += dmautils
 
@@ -333,6 +334,9 @@ export udma_memcpy_testapp_$(1)_BOARDLIST = $(filter $(DEFAULT_BOARDLIST_$(1)), 
 ifeq ($(SOC),$(filter $(SOC), j784s4))
 export udma_memcpy_testapp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), mpu1_0 mcu1_0 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mcu4_0 mcu4_1 c7x_1 c7x_2 c7x_3 c7x_4)
 else
+ifeq ($(SOC),$(filter $(SOC), j742s2))
+export udma_memcpy_testapp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), mpu1_0 mcu1_0 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mcu4_0 mcu4_1 c7x_1 c7x_2 c7x_3)
+else
 ifeq ($(SOC),$(filter $(SOC), j721s2))
 export udma_memcpy_testapp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), mpu1_0 mcu1_0 mcu2_0 mcu2_1 mcu3_0 mcu3_1 c7x_1 c7x_2)
 else
@@ -340,6 +344,7 @@ ifeq ($(SOC),$(filter $(SOC), j721e))
 export udma_memcpy_testapp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), mpu1_0 mcu1_0 mcu2_0 mcu2_1 mcu3_0 mcu3_1 c66xdsp_1 c66xdsp_2 c7x_1)
 else
 export udma_memcpy_testapp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), $(drvudma_$(SOC)_example_CORELIST))
+endif
 endif
 endif
 endif
@@ -370,7 +375,7 @@ export udma_baremetal_memcpy_testapp_CORE_DEPENDENCY = yes
 udma_baremetal_memcpy_testapp_PKG_LIST = udma_baremetal_memcpy_testapp
 udma_baremetal_memcpy_testapp_INCLUDE = $(udma_baremetal_memcpy_testapp_PATH)
 export udma_baremetal_memcpy_testapp_BOARDLIST = $(drvudma_BOARDLIST)
-ifeq ($(SOC),$(filter $(SOC), j721e j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721e j721s2 j784s4 j742s2))
 export udma_baremetal_memcpy_testapp_$(SOC)_CORELIST = mpu1_0 mcu1_0 mcu2_0
 else
 export udma_baremetal_memcpy_testapp_$(SOC)_CORELIST = $(drvudma_$(SOC)_example_CORELIST)
@@ -459,6 +464,8 @@ export udma_dru_testapp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIS
 else
 ifeq ($(SOC),$(filter $(SOC), j784s4))
 export udma_dru_testapp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), mcu2_0 c7x_1 c7x_2 c7x_3 c7x_4)
+else ifeq ($(SOC),$(filter $(SOC), j742s2))
+export udma_dru_testapp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), mcu2_0 c7x_1 c7x_2 c7x_3)
 else
 export udma_dru_testapp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), $(drvudma_$(SOC)_example_CORELIST))
 endif
@@ -501,6 +508,8 @@ export udma_dru_direct_tr_testapp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SO
 else
 ifeq ($(SOC),$(filter $(SOC), j784s4))
 export udma_dru_direct_tr_testapp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), mcu2_0 c7x_1 c7x_2 c7x_3 c7x_4)
+else ifeq ($(SOC),$(filter $(SOC), j742s2))
+export udma_dru_direct_tr_testapp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), mcu2_0 c7x_1 c7x_2 c7x_3)
 else
 export udma_dru_direct_tr_testapp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), $(drvudma_$(SOC)_example_CORELIST))
 endif

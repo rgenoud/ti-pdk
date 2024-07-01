@@ -66,8 +66,8 @@
 #
 ifeq ($(sbl_component_make_include), )
 
-sbl_BOARDLIST = j721e_evm j7200_evm j721s2_evm j784s4_evm
-sbl_SOCLIST = j721e j7200 j721s2 j784s4
+sbl_BOARDLIST = j721e_evm j7200_evm j721s2_evm j784s4_evm j742s2_evm
+sbl_SOCLIST = j721e j7200 j721s2 j784s4 j742s2
 
 j721e_lockstep_CORELIST := mcu1_0 mcu2_0 mcu3_0
 sbl_j721e_CORELIST := mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 c66xdsp_1 c66xdsp_2 c7x_1 mpu1_0 mpu1_1
@@ -80,6 +80,9 @@ sbl_j721s2_CORELIST := mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 c7x_1 c7x_2 mpu
 
 j784s4_lockstep_CORELIST := mcu1_0 mcu2_0 mcu3_0 mcu4_0
 sbl_j784s4_CORELIST := mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mcu4_0 mcu4_1 c7x_1 c7x_2 c7x_3 c7x_4 mpu1_0 mpu1_1 mpu1_2 mpu1_3 mpu2_0 mpu2_1 mpu2_2 mpu2_3
+
+j742s2_lockstep_CORELIST := mcu1_0 mcu2_0 mcu3_0 mcu4_0
+sbl_j742s2_CORELIST := mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mcu4_0 mcu4_1 c7x_1 c7x_2 c7x_3 mpu1_0 mpu1_1 mpu1_2 mpu1_3
 
 $(SOC)_LASTCORE := $(word $(words $(sbl_$(SOC)_CORELIST)), $(sbl_$(SOC)_CORELIST))
 
@@ -104,7 +107,7 @@ sbl_DISABLE_PARALLEL_MAKE = yes
 # sbl_cust_img_hs, sbl_xip_img_hs uses sbl_lib_cust
 # sbl_mmcsd_img_hlos_hs uses sbl_lib_mmcsd_hlos_hs
 # sbl_ospi_img_hlos_hs uses sbl_lib_ospi_hlos_hs
-ifeq ($(SOC),$(filter $(SOC), j721s2 j784s4 j721e j7200))
+ifeq ($(SOC),$(filter $(SOC), j721s2 j784s4 j721e j7200 j742s2))
   sbl_LIB_LIST = sbl_lib_mmcsd sbl_lib_ospi sbl_lib_uart sbl_lib_cust sbl_lib_emmc
   sbl_LIB_LIST += sbl_lib_mmcsd_hlos sbl_lib_ospi_hlos sbl_lib_ospi_hlos_hs sbl_lib_mmcsd_hlos_hs
   sbl_LIB_LIST += sbl_lib_mmcsd_hs sbl_lib_ospi_hs sbl_lib_uart_hs sbl_lib_cust_hs
@@ -122,7 +125,7 @@ endif
 # All the tests mentioned in list are built when test target is called
 # List below all examples for allowed values
 ############################
-ifeq ($(SOC),$(filter $(SOC), j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721s2 j784s4 j742s2))
   sbl_EXAMPLE_LIST = sbl_uart_img sbl_ospi_img sbl_mmcsd_img sbl_emmc_boot0_img
   sbl_EXAMPLE_LIST += sbl_mmcsd_img_hlos sbl_ospi_img_hlos sbl_emmc_uda_img sbl_boot_perf_cust_img_combined
   sbl_EXAMPLE_LIST += sbl_mmcsd_img_hs sbl_ospi_img_hs sbl_uart_img_hs sbl_ospi_img_hlos_hs
@@ -621,7 +624,7 @@ export sbl_mmcsd_img_combined_SOC_DEPENDENCY
 export sbl_mmcsd_img_combined_CORE_DEPENDENCY
 sbl_mmcsd_img_combined_PKG_LIST = sbl
 sbl_mmcsd_img_combined_INCLUDE = $(sbl_mmcsd_img_combined_PATH)
-sbl_mmcsd_img_combined_BOARDLIST = j7200_evm j721s2_evm j784s4_evm
+sbl_mmcsd_img_combined_BOARDLIST = j7200_evm j721s2_evm j784s4_evm j742s2_evm
 export sbl_mmcsd_img_combined_BOARDLIST
 sbl_mmcsd_img_combined_$(SOC)_CORELIST = mcu1_0
 export sbl_mmcsd_img_combined_$(SOC)_CORELIST
@@ -645,7 +648,7 @@ export sbl_mmcsd_img_combined_hs_fs_SOC_DEPENDENCY
 export sbl_mmcsd_img_combined_hs_fs_CORE_DEPENDENCY
 sbl_mmcsd_img_combined_hs_fs_PKG_LIST = sbl
 sbl_mmcsd_img_combined_hs_fs_INCLUDE = $(sbl_mmcsd_img_combined_hs_fs_PATH)
-sbl_mmcsd_img_combined_hs_fs_BOARDLIST = j7200_evm j721s2_evm j784s4_evm
+sbl_mmcsd_img_combined_hs_fs_BOARDLIST = j7200_evm j721s2_evm j784s4_evm j742s2_evm
 export sbl_mmcsd_img_combined_hs_fs_BOARDLIST
 sbl_mmcsd_img_combined_hs_fs_$(SOC)_CORELIST = mcu1_0
 export sbl_mmcsd_img_combined_hs_fs_$(SOC)_CORELIST
@@ -704,7 +707,7 @@ export sbl_mmcsd_img_combined_hs_SOC_DEPENDENCY = yes
 export sbl_mmcsd_img_combined_hs_CORE_DEPENDENCY = no
 sbl_mmcsd_img_combined_hs_PKG_LIST = sbl
 sbl_mmcsd_img_combined_hs_INCLUDE = $(sbl_mmcsd_img_combined_hs_PATH)
-export sbl_mmcsd_img_combined_hs_BOARDLIST = j7200_evm j721s2_evm j784s4_evm
+export sbl_mmcsd_img_combined_hs_BOARDLIST = j7200_evm j721s2_evm j784s4_evm j742s2_evm
 export sbl_mmcsd_img_combined_hs_$(SOC)_CORELIST = mcu1_0
 export sbl_mmcsd_img_combined_hs_SBL_IMAGEGEN = yes
 
@@ -814,7 +817,7 @@ export sbl_ospi_nand_img_SOC_DEPENDENCY
 export sbl_ospi_nand_img_CORE_DEPENDENCY
 sbl_ospi_nand_img_PKG_LIST = sbl
 sbl_ospi_nand_img_INCLUDE = $(sbl_ospi_nand_img_PATH)
-sbl_ospi_nand_img_BOARDLIST = j721s2_evm j784s4_evm
+sbl_ospi_nand_img_BOARDLIST = j721s2_evm j784s4_evm j742s2_evm
 export sbl_ospi_nand_img_BOARDLIST
 sbl_ospi_nand_img_$(SOC)_CORELIST = mcu1_0
 export sbl_ospi_nand_img_$(SOC)_CORELIST
@@ -838,7 +841,7 @@ export sbl_ospi_img_combined_SOC_DEPENDENCY
 export sbl_ospi_img_combined_CORE_DEPENDENCY
 sbl_ospi_img_combined_PKG_LIST = sbl
 sbl_ospi_img_combined_INCLUDE = $(sbl_ospi_img_combined_PATH)
-sbl_ospi_img_combined_BOARDLIST = j7200_evm j721s2_evm j784s4_evm
+sbl_ospi_img_combined_BOARDLIST = j7200_evm j721s2_evm j784s4_evm j742s2_evm
 export sbl_ospi_img_combined_BOARDLIST
 sbl_ospi_img_combined_$(SOC)_CORELIST = mcu1_0
 export sbl_ospi_img_combined_$(SOC)_CORELIST
@@ -862,7 +865,7 @@ export sbl_ospi_img_combined_hs_fs_SOC_DEPENDENCY
 export sbl_ospi_img_combined_hs_fs_CORE_DEPENDENCY
 sbl_ospi_img_combined_hs_fs_PKG_LIST = sbl
 sbl_ospi_img_combined_hs_fs_INCLUDE = $(sbl_ospi_img_combined_hs_fs_PATH)
-sbl_ospi_img_combined_hs_fs_BOARDLIST = j7200_evm j721s2_evm j784s4_evm
+sbl_ospi_img_combined_hs_fs_BOARDLIST = j7200_evm j721s2_evm j784s4_evm j742s2_evm
 export sbl_ospi_img_combined_hs_fs_BOARDLIST
 sbl_ospi_img_combined_hs_fs_$(SOC)_CORELIST = mcu1_0
 export sbl_ospi_img_combined_hs_fs_$(SOC)_CORELIST
@@ -886,7 +889,7 @@ export sbl_boot_perf_cust_img_combined_SOC_DEPENDENCY
 export sbl_boot_perf_cust_img_combined_CORE_DEPENDENCY
 sbl_boot_perf_cust_img_combined_PKG_LIST = sbl
 sbl_boot_perf_cust_img_combined_INCLUDE = $(sbl_boot_perf_cust_img_combined_PATH)
-sbl_boot_perf_cust_img_combined_BOARDLIST = j7200_evm j721s2_evm j784s4_evm
+sbl_boot_perf_cust_img_combined_BOARDLIST = j7200_evm j721s2_evm j784s4_evm j742s2_evm
 export sbl_boot_perf_cust_img_combined_BOARDLIST
 sbl_boot_perf_cust_img_combined_$(SOC)_CORELIST = mcu1_0
 export sbl_boot_perf_cust_img_combined_$(SOC)_CORELIST
@@ -962,7 +965,7 @@ export sbl_ospi_img_combined_hs_SOC_DEPENDENCY = yes
 export sbl_ospi_img_combined_hs_CORE_DEPENDENCY = no
 sbl_ospi_img_combined_hs_PKG_LIST = sbl
 sbl_ospi_img_combined_hs_INCLUDE = $(sbl_ospi_img_combined_hs_PATH)
-export sbl_ospi_img_combined_hs_BOARDLIST = j7200_evm j721s2_evm j784s4_evm
+export sbl_ospi_img_combined_hs_BOARDLIST = j7200_evm j721s2_evm j784s4_evm j742s2_evm
 export sbl_ospi_img_combined_hs_$(SOC)_CORELIST = mcu1_0
 export sbl_ospi_img_combined_hs_SBL_IMAGEGEN = yes
 
@@ -1115,7 +1118,7 @@ export sbl_hsm_boot_uart_img_hs_SOC_DEPENDENCY = yes
 export sbl_hsm_boot_uart_img_hs_CORE_DEPENDENCY = no
 sbl_hsm_boot_uart_img_hs_PKG_LIST = sbl
 sbl_hsm_boot_uart_img_hs_INCLUDE = $(sbl_hsm_boot_uart_img_hs_PATH)
-export sbl_hsm_boot_uart_img_hs_BOARDLIST = j721s2_evm j784s4_evm
+export sbl_hsm_boot_uart_img_hs_BOARDLIST = j721s2_evm j784s4_evm j742s2_evm
 export sbl_hsm_boot_uart_img_hs_$(SOC)_CORELIST = mcu1_0
 export sbl_hsm_boot_uart_img_hs_SBL_IMAGEGEN = yes
 
@@ -1131,7 +1134,7 @@ export sbl_hsm_boot_uart_img_SOC_DEPENDENCY = yes
 export sbl_hsm_boot_uart_img_CORE_DEPENDENCY = no
 sbl_hsm_boot_uart_img_PKG_LIST = sbl
 sbl_hsm_boot_uart_img_INCLUDE = $(sbl_hsm_boot_uart_img_PATH)
-export sbl_hsm_boot_uart_img_BOARDLIST = j721s2_evm j784s4_evm
+export sbl_hsm_boot_uart_img_BOARDLIST = j721s2_evm j784s4_evm j742s2_evm
 export sbl_hsm_boot_uart_img_$(SOC)_CORELIST = mcu1_0
 export sbl_hsm_boot_uart_img_SBL_IMAGEGEN = yes
 
@@ -1347,7 +1350,7 @@ export sbl_boot_multicore_xip_entry_SBL_APPIMAGEGEN
 # SBL log level
 # no logs = 0, only errors =1, normal logs = 2, all logs = 3
 
-SBL_CFLAGS += -DSBL_LOG_LEVEL=2
+SBL_CFLAGS += -DSBL_LOG_LEVEL=3
 
 SBL_CFLAGS += -DSBL_ENABLE_PLL
 SBL_CFLAGS += -DSBL_ENABLE_CLOCKS
@@ -1443,9 +1446,9 @@ endif
 # Example - Building Custom SBL Images
 # Build and SBl with custom flags to change
 # different build configurations
-CUST_SBL_TEST_SOCS = j721e j7200 j721s2 j784s4
-CUST_SBL_TEST_BOARDS = j721e_evm j7200_evm j721s2_evm j784s4_evm
-ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4))
+CUST_SBL_TEST_SOCS = j721e j7200 j721s2 j784s4 j742s2
+CUST_SBL_TEST_BOARDS = j721e_evm j7200_evm j721s2_evm j784s4_evm j742s2_evm
+ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 j742s2))
 CUST_SBL_TEST_FLAGS =" -DSBL_LOG_LEVEL=1 -DSBL_SCRATCH_MEM_START=0xB8000000 -DSBL_SCRATCH_MEM_SIZE=0x4000000 -DSBL_ENABLE_PLL -DSBL_ENABLE_CLOCKS -DSBL_ENABLE_DDR -DSBL_SKIP_MCU_RESET -DBOOT_OSPI ${OCM_RAT_STRING}"
 CUST_SBL_BOOT_PERF_TEST_FLAGS =" -DSBL_LOG_LEVEL=1 -DSBL_SCRATCH_MEM_START=0x41cc0000 -DSBL_SCRATCH_MEM_SIZE=0x40000 -DSBL_ENABLE_PLL -DSBL_ENABLE_CLOCKS -DSBL_SKIP_MCU_RESET -DBOOT_OSPI -DSBL_HLOS_OWNS_FLASH -DSBL_SKIP_LATE_INIT -DSBL_USE_MCU_DOMAIN_ONLY"
 # NOTE: To measure Early CAN response uncomment below line and comment above line
@@ -1603,8 +1606,8 @@ export sbl_cust_rat_main_ocm_img_SOC_DEPENDENCY
 export sbl_cust_rat_main_ocm_img_CORE_DEPENDENCY
 sbl_cust_rat_main_ocm_img_PKG_LIST = sbl
 sbl_cust_rat_main_ocm_img_INCLUDE = $(sbl_cust_rat_main_ocm_img_PATH)
-sbl_cust_rat_main_ocm_img_SOCLIST = j7200 j721s2 j784s4
-sbl_cust_rat_main_ocm_img_BOARDLIST = j7200_evm j721s2_evm j784s4_evm
+sbl_cust_rat_main_ocm_img_SOCLIST = j7200 j721s2 j784s4 j742s2
+sbl_cust_rat_main_ocm_img_BOARDLIST = j7200_evm j721s2_evm j784s4_evm j742s2_evm
 export sbl_cust_rat_main_ocm_img_SOCLIST
 export sbl_cust_rat_main_ocm_img_BOARDLIST
 sbl_cust_rat_main_ocm_img_$(SOC)_CORELIST = mcu1_0
@@ -1757,7 +1760,9 @@ export sbl_combined_boot_perf_test_CORE_DEPENDENCY
 sbl_combined_boot_perf_test_PKG_LIST = sbl_combined_boot_perf_test
 sbl_combined_boot_perf_test_INCLUDE = $(sbl_combined_boot_perf_test_PATH)
 sbl_combined_boot_perf_test_SOCLIST = $(CUST_SBL_TEST_SOCS)
-sbl_combined_boot_perf_test_BOARDLIST = j7200_evm j721s2_evm j784s4_evm
+sbl_combined_boot_perf_test_BOARDLIST = j7200_evm j721s2_evm j784s4_evm j742s2_evm
+
+
 export sbl_combined_boot_perf_test_SOCLIST
 export sbl_combined_boot_perf_test_BOARDLIST
 sbl_combined_boot_perf_test_$(SOC)_CORELIST = mcu1_0

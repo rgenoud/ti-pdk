@@ -235,22 +235,22 @@ else
 endif
 
 ifeq ($(BUILD_OS_TYPE),freertos)
-  ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4))
+  ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 j742s2))
       CONFIG_BLD_LNK_r5f   = $(pdk_PATH)/ti/build/$(SOC)/linker_r5_freertos.lds
   endif
   ifeq ($(SOC),$(filter $(SOC), j721e))
       CONFIG_BLD_LNK_c66   = $(pdk_PATH)/ti/build/$(SOC)/linker_c66_freertos.cmd
   endif
-  ifeq ($(SOC),$(filter $(SOC), j721e j721s2 j784s4))
+  ifeq ($(SOC),$(filter $(SOC), j721e j721s2 j784s4 j742s2))
       CONFIG_BLD_LNK_c7x   = $(pdk_PATH)/ti/build/$(SOC)/linker_c7x_freertos.cmd
   endif
 endif
 
 ifeq ($(BUILD_OS_TYPE),safertos)
-  ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4))
+  ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 j742s2))
       CONFIG_BLD_LNK_r5f   = $(pdk_PATH)/ti/build/$(SOC)/linker_r5_safertos.lds
   endif
-  ifeq ($(SOC),$(filter $(SOC), j721e j721s2 j784s4))
+  ifeq ($(SOC),$(filter $(SOC), j721e j721s2 j784s4 j742s2))
       CONFIG_BLD_LNK_c7x   = $(pdk_PATH)/ti/build/$(SOC)/linker_c7x_safertos.cmd
   endif
   ifeq ($(SOC),$(filter $(SOC), j721e))
@@ -259,7 +259,7 @@ ifeq ($(BUILD_OS_TYPE),safertos)
 endif
 
 ifeq ($(BUILD_OS_TYPE),baremetal)
-  ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4))
+  ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 j742s2))
       CONFIG_BLD_LNK_r5f   = $(pdk_PATH)/ti/build/$(SOC)/linker_r5.lds
       CONFIG_BLD_LNK_a72   = $(pdk_PATH)/ti/build/$(SOC)/linker_a72_mpu1_0.lds
       CONFIG_BLD_LNK_c66   = $(pdk_PATH)/ti/build/$(SOC)/linker_c66.cmd

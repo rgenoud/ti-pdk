@@ -10,7 +10,7 @@ BUILD_OS_TYPE = baremetal
 #Name of the directory created under packages/ti/binary/
 APP_NAME = MMCSD_EMMC_Baremetal_Regression_TestApp
 
-ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 j742s2))
 SRCDIR = ../src ../../
 INCDIR = ../src ../include ../../
 # Common source files across all platforms and cores

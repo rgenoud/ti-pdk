@@ -112,7 +112,7 @@ uint32_t Ipc_isCacheCoherent(void);
 #include <ti/drv/ipc/soc/V3/ipc_soc.h>
 #endif
 
-#if defined (SOC_J784S4)
+#if defined (SOC_J784S4) || defined (SOC_J742S2)
 #include <ti/drv/ipc/soc/V4/ipc_soc.h>
 #endif
 

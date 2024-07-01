@@ -16,6 +16,11 @@ else
     HLOS_SUFFIX =
 endif
 
+SOC_DIR=$(SOC)
+ifeq ($(SOC), j742s2)
+  SOC_DIR=j784s4
+endif
+
 APP_NAME = boot_app_$(BOOTMODE)$(HLOS_SUFFIX)$(HS_SUFFIX)
 LOCAL_APP_NAME = sbl_boot_app_$(BOOTMODE)$(HLOS_SUFFIX)$(HS_SUFFIX)_$(BOARD)_$(CORE)_$(BUILD_OS_TYPE)_TestApp
 SRCDIR      = $(PDK_SBL_COMP_PATH)/example/boot_app
@@ -34,7 +39,7 @@ INCLUDE_EXTERNAL_INTERFACES = pdk
 # List all the components required by the application
 COMP_LIST_COMMON = $(PDK_COMMON_FREERTOS_COMP) sciserver_tirtos 
 
-SRCS_COMMON = boot_app_main.c soc/$(SOC)/boot_core_defs.c r5_mpu_freertos.c
+SRCS_COMMON = boot_app_main.c soc/$(SOC_DIR)/boot_core_defs.c r5_mpu_freertos.c
 
 ifeq ($(BOOTMODE), ospi)
     SRCS_COMMON += boot_app_ospi.c

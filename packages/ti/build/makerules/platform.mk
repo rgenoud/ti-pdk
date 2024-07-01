@@ -71,13 +71,16 @@ ifeq ($(BOARD),$(filter $(BOARD), j721s2_evm j721s2_hostemu))
 endif
 
 # J784S4
-ifeq ($(BOARD),$(filter $(BOARD), j784s4_evm j784s4_hostemu))
+ifeq ($(BOARD),$(filter $(BOARD), j784s4_evm j784s4_hostemu j742s2_evm j742s2_hostemu))
  SOC = j784s4
  SBL_RUN_ADDRESS=0x41C00100
  SYSFW_LOADADDR=0x40000
  COMBINED_TIFS_BRDCFG_LOADADDR=0x66800
  COMBINED_DM_BRDCFG_LOADADDR=0x41c80000
  SBL_DEV_ID=55
+ifeq ($(BOARD),$(filter $(BOARD), j742s2_evm j742s2_hostemu))
+ SOC = j742s2
+endif
 endif
 
 # SBL related macro
@@ -97,7 +100,7 @@ endif
 
 # MPU
 ifeq ($(CORE),$(filter $(CORE), mpu1_0 mpu1_1 mpu1_2 mpu1_3 mpu2_0 mpu2_1 mpu2_2 mpu2_3))
-  ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4))
+  ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 j742s2))
     ISA = a72
     ISA_EXT = a72
     ARCH = armv8a
@@ -112,7 +115,7 @@ ifeq ($(CORE),$(filter $(CORE), c7x_1 c7x_2 c7x_3 c7x_4))
  ifeq ($(SOC),$(filter $(SOC), j721e))
   SI_VER = 7100
  endif
- ifeq ($(SOC),$(filter $(SOC), j721s2 j784s4))
+ ifeq ($(SOC),$(filter $(SOC), j721s2 j784s4 j742s2))
   SI_VER = 7120
  endif
 endif
@@ -125,7 +128,7 @@ ifeq ($(CORE),$(filter $(CORE), c7x-hostemu))
  ifeq ($(SOC),$(filter $(SOC), j721e))
   SI_VER = 7100
  endif
- ifeq ($(SOC),$(filter $(SOC), j721s2 j784s4))
+ ifeq ($(SOC),$(filter $(SOC), j721s2 j784s4 j742s2))
   SI_VER = 7120
  endif
 endif
@@ -220,7 +223,7 @@ ifeq ($(ISA),c66)
   ASMEXT = s$(FORMAT_EXT)$(ISA_EXT)$(ENDIAN_EXT)
 endif
 
-ifeq ($(SOC),$(filter $(SOC), j7200 j721e j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j7200 j721e j721s2 j784s4 j742s2))
   SBL_CORE_ID_mpu1_0 = 0
   SBL_CORE_ID_mpu1_1 = 1
   SBL_CORE_ID_mpu1_2 = 2

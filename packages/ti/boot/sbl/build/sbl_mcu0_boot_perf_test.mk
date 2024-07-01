@@ -56,7 +56,7 @@ endif # ifeq ($(filter $(SBL_CFLAGS), -DBOOT_OSPI), -DBOOT_OSPI)
 SRCS_COMMON += sbl_mcu_0_boot_perf_benchmark.c sbl_printf.c
 SRCS_ASM_COMMON = sbl_smp_r5.asm
 
-ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 j742s2))
   EXTERNAL_LNKCMD_FILE_LOCAL =  $(PDK_SBL_COMP_PATH)/example/k3MulticoreApp/mcuBootPerfLinker_small.lds
 endif
 

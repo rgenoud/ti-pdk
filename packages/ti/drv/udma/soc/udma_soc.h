@@ -55,7 +55,7 @@
 #include <ti/drv/udma/soc/j721s2/udma_soc.h>
 #endif
 
-#if defined (SOC_J784S4)
+#if defined (SOC_J784S4) || defined (SOC_J742S2)
 #include <ti/drv/udma/soc/j784s4/udma_soc.h>
 #endif
 

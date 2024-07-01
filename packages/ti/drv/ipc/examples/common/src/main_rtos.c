@@ -69,7 +69,7 @@
 #include <ti/drv/sciclient/sciclient.h>
 #include <ti/board/board.h>
 
-#if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)))
+#if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)))
 #include <ti/drv/sciclient/src/sciclient/sciclient_priv.h>
 #include <ti/drv/sciclient/sciserver_tirtos.h>
 #endif
@@ -91,7 +91,7 @@
 #define APP_TSK_STACK_MAIN              (32U * 1024U)
 /**< Test application stack size */
 
-#if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)))
+#if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)))
 /**< SCI Server Init Task stack size */
 #define APP_SCISERVER_INIT_TSK_STACK        (32U * 1024U)
 /* SCI Server Init Task Priority - must be higher than High priority Sciserver task */
@@ -119,7 +119,7 @@
 
 static void taskFxn(void* a0, void* a1);
 
-#if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)))
+#if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)))
 void Ipc_setupSciServer(void *arg0, void *arg1);
 /**< Initialize SCI Server, to process RM/PM Requests by other cores */
 #endif
@@ -141,7 +141,7 @@ __attribute__ ((aligned(8192)));
 /* Variable to check if ipc_boardInit has completed or not*/
 uint8_t  gBoardinit=0;
 
-#if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)))
+#if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)))
 /* Sciserver Init TAsk stack */
 #if defined(SAFERTOS)
 static uint8_t  gSciserverInitTskStack[APP_SCISERVER_INIT_TSK_STACK]
@@ -170,7 +170,7 @@ void ipc_initSciclient()
         App_printf("Sciclient_configPrmsInit Failed\n");
     }
 
-#if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)))
+#if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)))
     if (ret == CSL_PASS)
     {
         ret = Sciclient_boardCfgParseHeader(
@@ -190,7 +190,7 @@ void ipc_initSciclient()
         {
             App_printf("Sciclient_init Failed\n");
         }
-#if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)))
+#if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)))
         if (gSciclientHandle.rmBoardConfigComplete == SCICLIENT_FT_PASS)
         {
             App_printf("Sciclient_boardCfgRm init Passed\n");
@@ -274,7 +274,7 @@ static void taskFxn(void* a0, void* a1)
     ipc_boardInit();
 #endif
 
-#if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)))
+#if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)))
     TaskP_Handle sciserverInitTask;
     TaskP_Params sciserverInitTaskParams;
 
@@ -325,7 +325,7 @@ void InitMmu(void)
 }
 #endif
 
-#if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)))
+#if (defined (BUILD_MCU1_0) && (defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)))
 void Ipc_setupSciServer(void *arg0, void *arg1)
 {
 

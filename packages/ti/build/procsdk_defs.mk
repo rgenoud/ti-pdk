@@ -16,13 +16,13 @@ ifneq ($(PDK_SOC),)
 ifeq ($(PDK_SOC),$(filter $(PDK_SOC), $(PROCSDK_SUPPORTED_PDK_SOCS)))
 
 # Filter out c7x-hostemu as Processor SDK does not build use it
-LIMIT_CORES_j7        = $(filter-out c7x-hostemu,$(sort $(CORE_LIST_j721e) $(CORE_LIST_j7200) $(CORE_LIST_j721s2) $(CORE_LIST_j784s4)))
-LIMIT_CORES_j7-hs     = $(filter-out c7x-hostemu,$(sort $(CORE_LIST_j721e) $(CORE_LIST_j7200) $(CORE_LIST_j721s2) $(CORE_LIST_j784s4)))
+LIMIT_CORES_j7        = $(filter-out c7x-hostemu,$(sort $(CORE_LIST_j721e) $(CORE_LIST_j7200) $(CORE_LIST_j721s2) $(CORE_LIST_j784s4) $(CORE_LIST_j742s2)))
+LIMIT_CORES_j7-hs     = $(filter-out c7x-hostemu,$(sort $(CORE_LIST_j721e) $(CORE_LIST_j7200) $(CORE_LIST_j721s2) $(CORE_LIST_j784s4) $(CORE_LIST_j742s2)))
 
 export LIMIT_CORES ?= $(LIMIT_CORES_$(PDK_SOC))
 
-LIMIT_SOCS_j7        = j721e j7200 j721s2 j784s4
-LIMIT_SOCS_j7-hs     = j721e j7200 j721s2 j784s4
+LIMIT_SOCS_j7        = j721e j7200 j721s2 j784s4 j742s2
+LIMIT_SOCS_j7-hs     = j721e j7200 j721s2 j784s4 j742s2
 
 export LIMIT_SOCS ?= $(LIMIT_SOCS_$(PDK_SOC))
 
@@ -32,8 +32,8 @@ else
 export BUILD_HS ?= no
 endif
 
-LIMIT_BOARDS_j7        = $(BOARD_LIST_j721e) $(BOARD_LIST_j7200) $(BOARD_LIST_j721s2) $(BOARD_LIST_j784s4)
-LIMIT_BOARDS_j7-hs     = $(BOARD_LIST_j721e) $(BOARD_LIST_j7200) $(BOARD_LIST_j721s2) $(BOARD_LIST_j784s4)
+LIMIT_BOARDS_j7        = $(BOARD_LIST_j721e) $(BOARD_LIST_j7200) $(BOARD_LIST_j721s2) $(BOARD_LIST_j784s4) $(BOARD_LIST_j742s2)
+LIMIT_BOARDS_j7-hs     = $(BOARD_LIST_j721e) $(BOARD_LIST_j7200) $(BOARD_LIST_j721s2) $(BOARD_LIST_j784s4) $(BOARD_LIST_j742s2)
 export LIMIT_BOARDS ?= $(LIMIT_BOARDS_$(PDK_SOC))
 
 endif

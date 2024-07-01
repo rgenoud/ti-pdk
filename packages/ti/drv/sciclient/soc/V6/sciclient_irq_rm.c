@@ -47,7 +47,7 @@
 /*                            Global Variables                                */
 /* ========================================================================== */
 
-#if defined (SOC_J784S4)
+#if defined (SOC_J784S4) || defined (SOC_J742S2)
 uint8_t vint_usage_count_NAVSS0_MODSS_INTA_0[64] = {0};
 uint8_t vint_usage_count_NAVSS0_MODSS_INTA_1[64] = {0};
 uint8_t vint_usage_count_NAVSS0_UDMASS_INTA_0[256] = {0};
@@ -211,7 +211,7 @@ struct Sciclient_rmIrInst gRmIrInstances[SCICLIENT_RM_IR_NUM_INST] =
 
 /* IRQ Tree definition */
 
-#if defined (SOC_J784S4)
+#if defined (SOC_J784S4) || defined (SOC_J742S2)
 const struct Sciclient_rmIrqIf GPIOMUX_INTRTR0_outp_0_7_to_ESM0_esm_pls_event0_664_671 = {
 	.lbase = 0,
 	.len = 8,

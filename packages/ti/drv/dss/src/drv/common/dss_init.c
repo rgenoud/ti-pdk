@@ -135,13 +135,13 @@ int32_t Dss_init(const Dss_InitParams *initParams)
             }
         }
 
-#if defined(SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined(SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
         dctrlInitParams.dpInitParams.isAvailable = initParams->socParams.dpInitParams.isAvailable;
         dctrlInitParams.dpInitParams.isHpdSupported = initParams->socParams.dpInitParams.isHpdSupported;
 #endif
 
         dctrlInitParams.dsiInitParams.isAvailable = UFALSE;
-#if defined(SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined(SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
         dctrlInitParams.dsiInitParams.isAvailable =
             initParams->socParams.dsiInitParams.isAvailable;
 	dctrlInitParams.dsiInitParams.isConnectedTo =

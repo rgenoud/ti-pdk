@@ -57,10 +57,10 @@ export BOARD ?= j721e_evm
 export SOC ?= j721e
 endif
 # Default to m4 build depending on BOARD selected!!
-ifeq ($(BOARD),$(filter $(BOARD),j721e_evm j7200_evm j721s2_evm j784s4_evm))
+ifeq ($(BOARD),$(filter $(BOARD),j721e_evm j7200_evm j721s2_evm j784s4_evm j742s2_evm))
   CORE ?= mcu1_0
 endif
-ifeq ($(BOARD),$(filter $(BOARD), j721e_hostemu j7200_hostemu j721s2_hostemu j784s4_hostemu))
+ifeq ($(BOARD),$(filter $(BOARD), j721e_hostemu j7200_hostemu j721s2_hostemu j784s4_hostemu j742s2_hostemu))
   CORE = c7x-hostemu
 endif
 
@@ -90,6 +90,7 @@ BOARD_LIST_J7_TDA = j721e_hostemu j721e_evm
 BOARD_LIST_J7_TDA += j7200_hostemu j7200_evm
 BOARD_LIST_J7_TDA += j721s2_evm j721s2_hostemu
 BOARD_LIST_J7_TDA += j784s4_evm j784s4_hostemu
+BOARD_LIST_J7_TDA += j742s2_evm j742s2_hostemu
 export BOARD_LIST_J7_TDA
 
 ################################################################################

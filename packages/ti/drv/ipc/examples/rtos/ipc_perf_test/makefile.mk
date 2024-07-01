@@ -12,7 +12,7 @@ INCLUDE_EXTERNAL_INTERFACES = pdk
 COMP_LIST_COMMON = ipc
 
 SRCS_COMMON += main.c
-ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 j742s2))
   ifeq ($(CORE),mcu1_0)
     COMP_LIST_COMMON += sciserver_tirtos
   endif

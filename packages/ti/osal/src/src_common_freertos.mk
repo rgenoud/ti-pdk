@@ -2,13 +2,18 @@
 SRCDIR = . src/freertos src/nonos arch/core
 INCDIR = . src/freertos src/nonos arch/core
 
+SOC_DIR=$(SOC)
+ifeq ($(SOC), j742s2)
+  SOC_DIR=j784s4
+endif
+
 SRCS_COMMON += SwiP_nonos.c DebugP_nonos.c RegisterIntr_nonos.c Core_utils.c TimerP_restrictedTimers.c
 SRCS_COMMON += SemaphoreP_freertos.c TaskP_freertos.c MemoryP_freertos.c Utils_freertos.c
 SRCS_COMMON += ClockP_freertos.c MailboxP_freertos.c MutexP_freertos.c QueueP_nonos.c StartuphooksP_freertos.c
 SRCS_COMMON += HeapP_freertos.c HeapP_freertos_internal.c EventP_freertos.c LoadP_freertos.c
 
 PACKAGE_SRCS_COMMON = makefile HwiP.h SwiP.h MuxIntcP.h osal.h osal_component.mk SemaphoreP.h MemoryP.h TaskP.h StartuphooksP.h \
-                      TimerP.h RegisterIntr.h EventCombinerP.h CycleprofilerP.h CacheP.h DebugP.h MailboxP.h MutexP.h ClockP.h QueueP.h soc/osal_soc.h soc/$(SOC) \
+                      TimerP.h RegisterIntr.h EventCombinerP.h CycleprofilerP.h CacheP.h DebugP.h MailboxP.h MutexP.h ClockP.h QueueP.h soc/osal_soc.h soc/$(SOC_DIR) \
                       src/nonos/Nonos_config.h src/nonos/SwiP_nonos.c src/nonos/CycleprofilerP_nonos.c \
                       src/nonos/RegisterIntr_nonos.c src/freertos/SemaphoreP_freertos.c src/freertos/TaskP_freertos.c src/freertos/Utils_freertos.c src/nonos/DebugP_nonos.c \
                       src/freertos/MemoryP_freertos.c src/freertos/ClockP_freertos.c src/freertos/MailboxP_freertos.c src/freertos/MutexP_freertos.c src/nonos/QueueP_nonos.c \
@@ -19,13 +24,13 @@ PACKAGE_SRCS_COMMON = makefile HwiP.h SwiP.h MuxIntcP.h osal.h osal_component.mk
                       build \
                       osalver.h
 
-ifeq ($(SOC),$(filter $(SOC), j721e j721s2 j784s4))
-  SRCDIR      += soc/$(SOC)
+ifeq ($(SOC),$(filter $(SOC), j721e j721s2 j784s4 j742s2))
+  SRCDIR      += soc/$(SOC_DIR)
   SRCS_COMMON += TimerP_default.c CycleprofilerP_nonos.c
 endif
 
 ifeq ($(SOC),$(filter $(SOC), j7200))
-  SRCDIR      += soc/$(SOC)
+  SRCDIR      += soc/$(SOC_DIR)
   SRCS_COMMON += TimerP_default_$(ISA).c CycleprofilerP_nonos.c
 endif
 

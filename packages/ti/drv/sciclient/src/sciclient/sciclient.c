@@ -44,7 +44,7 @@
 #include <ti/csl/soc.h>
 #include <ti/drv/sciclient/sciclient.h>
 #include <string.h> /*For memcpy*/
-#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined (SOC_J784S4)
+#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
 #include <ti/csl/arch/csl_arch.h>
 #endif
 #include <ti/csl/csl_rat.h>
@@ -216,7 +216,7 @@ int32_t Sciclient_configPrmsInit(Sciclient_ConfigPrms_t *pCfgPrms)
 
     if(NULL != pCfgPrms)
     {
-#if defined(BUILD_MCU1_0) && (defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined (SOC_J784S4))
+#if defined(BUILD_MCU1_0) && (defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2))
         Sciclient_DefaultBoardCfgInfo_t boardCfgInfo = {0};
 
         /* populate the default board configuration */
@@ -510,7 +510,7 @@ int32_t Sciclient_init(const Sciclient_ConfigPrms_t *pCfgPrms)
                 gSciclientHandle.isSecureMode = 0U;
             }
         }
-#if defined(BUILD_MCU1_0) && (defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined (SOC_J784S4))
+#if defined(BUILD_MCU1_0) && (defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2))
         if(status == CSL_PASS){
             if (pCfgPrms != NULL)
             {
@@ -588,7 +588,7 @@ int32_t Sciclient_serviceGetThreadIds (const Sciclient_ReqPrm_t *pReqPrm,
     }
     if(*contextId < SCICLIENT_CONTEXT_MAX_NUM)
     {
-#if defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
         /*
          * Derive the thread ID from the context. If the message is to be
          * forwarded, use the dedicated DM2DMSC queue. Otherwise, use the queue
@@ -626,7 +626,7 @@ int32_t Sciclient_serviceGetThreadIds (const Sciclient_ReqPrm_t *pReqPrm,
             *txThread = gSciclientMap[*contextId].reqHighPrioThreadId;
 #endif
             *rxThread = gSciclientMap[*contextId].respThreadId;
-#if defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
         }
 #endif
 
@@ -1003,7 +1003,7 @@ int32_t Sciclient_serviceSecureProxy(const Sciclient_ReqPrm_t *pReqPrm,
              */
             if (SCICLIENT_NON_SECURE_CONTEXT == gSciclientMap[contextId].context)
             {
-                #if defined (SOC_J721S2) || defined (SOC_J784S4)
+                #if defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
                 CSL_clecConfigEvent(regs, CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_NAVSS0_INTR_0_OUTL_INTR_189 + 992U, &evtCfg);
                 #else
                 CSL_clecConfigEvent(regs, CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_NAVSS0_INTR_ROUTER_0_OUTL_INTR_189 + 992U, &evtCfg);
@@ -1011,7 +1011,7 @@ int32_t Sciclient_serviceSecureProxy(const Sciclient_ReqPrm_t *pReqPrm,
             }
             else
             {
-                #if defined (SOC_J721S2) || defined (SOC_J784S4)
+                #if defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
                 CSL_clecConfigEvent(regs, CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_NAVSS0_INTR_0_OUTL_INTR_191 + 992U, &evtCfg);
                 #else
                 CSL_clecConfigEvent(regs, CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_NAVSS0_INTR_ROUTER_0_OUTL_INTR_191 + 992U, &evtCfg);
@@ -1196,7 +1196,7 @@ static void Sciclient_ISR(uintptr_t arg)
                  */
                 if (SCICLIENT_NON_SECURE_CONTEXT == gSciclientMap[contextId].context)
                 {
-                    #if defined (SOC_J721S2) || defined (SOC_J784S4)
+                    #if defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
                     CSL_clecConfigEvent(regs, CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_NAVSS0_INTR_0_OUTL_INTR_189 + 992U, &evtCfg);
                     #else
                     CSL_clecConfigEvent(regs, CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_NAVSS0_INTR_ROUTER_0_OUTL_INTR_189 + 992U, &evtCfg);
@@ -1204,7 +1204,7 @@ static void Sciclient_ISR(uintptr_t arg)
                 }
                 else
                 {
-                    #if defined (SOC_J721S2) || defined (SOC_J784S4)
+                    #if defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
                     CSL_clecConfigEvent(regs, CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_NAVSS0_INTR_0_OUTL_INTR_191 + 992U, &evtCfg);
                     #else
                     CSL_clecConfigEvent(regs, CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_NAVSS0_INTR_ROUTER_0_OUTL_INTR_191 + 992U, &evtCfg);

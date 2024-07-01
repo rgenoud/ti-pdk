@@ -72,7 +72,7 @@ all:
 
 # This target is used to build all configurations for a particular SBL_PLATFORM
 all_sbl_images:
-ifeq ($(SBL_PLATFORM),$(filter $(SBL_PLATFORM), j721e j7200 j721s2 j784s4))
+ifeq ($(SBL_PLATFORM),$(filter $(SBL_PLATFORM), j721e j7200 j721s2 j784s4 j742s2))
 	# All keystone 3
 	$(MAKE) -C $(PDK_INSTALL_PATH)/ti/boot/sbl/build all
 	$(MAKE) -C $(PDK_INSTALL_PATH)/ti/boot/sbl/build all
@@ -129,7 +129,7 @@ sbl_lib_clean:
 
 # This target is used to clean all images for a particular SBL_PLATFORM
 all_sbl_images_clean:
-ifeq ($(SBL_PLATFORM),$(filter $(SBL_PLATFORM), j721e j7200 j721s2 j784s4))
+ifeq ($(SBL_PLATFORM),$(filter $(SBL_PLATFORM), j721e j7200 j721s2 j784s4 j742s2))
 	# All keystone3
 	$(MAKE) -C $(PDK_INSTALL_PATH)/ti/boot/sbl/build clean
 	$(MAKE) -C $(PDK_INSTALL_PATH)/ti/boot/sbl/build clean

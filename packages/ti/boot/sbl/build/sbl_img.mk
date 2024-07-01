@@ -82,6 +82,11 @@ INCDIR      += $(PDK_SBL_COMP_PATH)
 INCDIR      += $(PDK_SBL_COMP_PATH)/soc
 INCDIR      += $(PDK_SBL_COMP_PATH)/soc/k3
 
+SOC_DIR=$(SOC)
+ifeq ($(SOC), j742s2)
+  SOC_DIR=j784s4
+endif
+
 # List all the external components/interfaces, whose interface header files
 #  need to be included for this component
 INCLUDE_EXTERNAL_INTERFACES = pdk
@@ -208,7 +213,7 @@ SBL_CFLAGS += -DEEPROM_DATA_DDR_ADDRESS=$(EEPROM_DATA_DDR_ADDRESS)
 
 SRCS_COMMON += sbl_main.c
 
-EXTERNAL_LNKCMD_FILE_LOCAL = $(PDK_SBL_COMP_PATH)/soc/k3/$(SOC)/linker.cmd
+EXTERNAL_LNKCMD_FILE_LOCAL = $(PDK_SBL_COMP_PATH)/soc/k3/$(SOC_DIR)/linker.cmd
 
 # Core/SoC/platform specific source files and CFLAGS
 # Example:

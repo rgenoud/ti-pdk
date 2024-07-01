@@ -78,7 +78,7 @@
 
 #if defined (SOC_J7200)
 #define PADCONFIG                       (0x0011C000)    /* PADCONFIG_0 */
-#elif defined (SOC_J721S2) || defined (SOC_J784S4)
+#elif defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
 #define PADCONFIG                       (0x0011C0C8)    /* PADCONFIG_11*/
 #endif
 
@@ -92,7 +92,7 @@ uint32_t gpioBaseAddr[MAX_GPIOS_USED_IN_APP] =
     CSL_WKUP_GPIO0_BASE,
 #if defined(SOC_J721E)
     CSL_GPIO1_BASE,
-#elif defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#elif defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
     /* J7200, J721S2 has no MAIN_GPIO_1 */
     CSL_GPIO0_BASE
 #endif
@@ -187,7 +187,7 @@ void InitMmu(void)
 
 void AppGPIOPadConfig()
 {
-#if defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
     Board_init(BOARD_INIT_UNLOCK_MMR);
     /* Set Ball number U6 to RX_ACTIVE on PADCONFIG0 in J7200 */
     /* Set Ball number AG24 to RX_ACTIVE on PADCONFIG0 in J721S2 */

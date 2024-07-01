@@ -177,7 +177,7 @@ static void appC7xClecInitDru(void)
     CSL_CLEC_EVTRegs   *clecBaseAddr = (CSL_CLEC_EVTRegs*) CSL_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
     uint32_t i;
     uint32_t dru_input_start = 192;
-    #if defined(SOC_J784S4)
+    #if defined(SOC_J784S4) || defined(SOC_J742S2)
     dru_input_start = DRU_LOCAL_EVENT_START_J784S4;
     #else
     dru_input_start = DRU_LOCAL_EVENT_START_DEFAULT;

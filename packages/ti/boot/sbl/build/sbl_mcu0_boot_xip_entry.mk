@@ -13,7 +13,10 @@ SRCDIR      += $(PDK_SBL_COMP_PATH)/example/k3MulticoreApp
 
 INCDIR      += $(PDK_SBL_COMP_PATH)/example/k3MulticoreApp
 
-
+SOC_DIR=$(SOC)
+ifeq ($(SOC), j742s2)
+  SOC_DIR=j784s4
+endif
 
 CFLAGS_LOCAL_COMMON = $(PDK_CFLAGS)
 PACKAGE_SRCS_COMMON = .
@@ -28,7 +31,7 @@ COMP_LIST_COMMON =
 SRCS_COMMON += xip_stub.c
 
 SRCS_ASM_COMMON = xip_entry.asm
-EXTERNAL_LNKCMD_FILE_LOCAL =  $(PDK_SBL_COMP_PATH)/example/k3MulticoreApp/$(SOC)/xip_entry.lds
+EXTERNAL_LNKCMD_FILE_LOCAL =  $(PDK_SBL_COMP_PATH)/example/k3MulticoreApp/$(SOC_DIR)/xip_entry.lds
 
 # Core/SoC/platform specific source files and CFLAGS
 # Example:

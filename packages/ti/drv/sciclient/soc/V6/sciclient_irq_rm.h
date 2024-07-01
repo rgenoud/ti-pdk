@@ -49,7 +49,7 @@
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-#if defined (SOC_J784S4)
+#if defined (SOC_J784S4) || defined (SOC_J742S2)
 #define SCICLIENT_RM_IA_NUM_INST 4
 
 #define SCICLIENT_RM_IR_NUM_INST 8

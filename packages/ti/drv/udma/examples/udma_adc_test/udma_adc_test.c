@@ -63,7 +63,7 @@
 #define APP_ADC_MODULE                  (CSL_ADC0_BASE)
 #define APP_ADC_RX_PDMA_CH              (UDMA_PDMA_CH_MAIN1_ADC0_CH0_RX)
 #else
-#if defined(SOC_J784S4)
+#if defined(SOC_J784S4) || defined(SOC_J742S2)
 #define APP_ADC_MODULE                  (CSL_MCU_ADC12FCC0_ADC_BASE)
 #else
 #define APP_ADC_MODULE                  (CSL_MCU_ADC0_BASE)

@@ -143,28 +143,28 @@ FATFS_DrvFxnTable FATFS_drvFxnTable = {
 FATFS_HwAttrs FATFS_initCfg[_VOLUMES] =
 {
     {
-#if defined(j721e_evm) || defined(j7200_evm) || defined(j721s2_evm) || defined(j784s4_evm)
+#if defined(j721e_evm) || defined(j7200_evm) || defined(j721s2_evm) || defined(j784s4_evm) || defined(j742s2_evm)
         0U
 #else
         1U
 #endif
     },
     {
-#if defined(j721e_evm) || defined(j7200_evm) || defined(j721s2_evm) || defined(j784s4_evm)
+#if defined(j721e_evm) || defined(j7200_evm) || defined(j721s2_evm) || defined(j784s4_evm) || defined(j742s2_evm)
         0U
 #else
         1U
 #endif
     },
     {
-#if defined(j721e_evm) || defined(j7200_evm) || defined(j721s2_evm) || defined(j784s4_evm)
+#if defined(j721e_evm) || defined(j7200_evm) || defined(j721s2_evm) || defined(j784s4_evm) || defined(j742s2_evm)
         0U
 #else
         1U
 #endif
     },
     {
-#if defined(j721e_evm) || defined(j7200_evm) || defined(j721s2_evm) || defined(j784s4_evm)
+#if defined(j721e_evm) || defined(j7200_evm) || defined(j721s2_evm) || defined(j784s4_evm) || defined(j742s2_evm)
         0U
 #else
         1U
@@ -203,7 +203,7 @@ const FATFS_Config FATFS_config[_VOLUMES + 1] = {
     {NULL, NULL, NULL}
 };
 
-#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4)
+#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)
 #define SBL_WKUP_DEVSTAT_PRIMARY_BOOT_MASK      (0x78U)
 #define SBL_WKUP_DEVSTAT_PRIMARY_BOOT_MMCSD     (0x1U)
 #define SBL_MAIN_DEVSTAT_PRIMARY_BUS_WIDTH_MASK (0x20U)
@@ -236,7 +236,7 @@ int32_t SBL_ReadSysfwImage(void **pBuffer, uint32_t num_bytes)
        retVal = E_FAIL;
      }
 
-#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4)
+#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)
     uint32_t wkupCtrlDevstat = (*((volatile uint32_t *)(CSL_WKUP_CTRL_MMR0_CFG0_BASE + CSL_WKUP_CTRL_MMR_CFG0_WKUP_DEVSTAT)));
     uint32_t mainCtrlDevstat = (*((volatile uint32_t *)(CSL_CTRL_MMR0_CFG0_BASE + CSL_MAIN_CTRL_MMR_CFG0_MAIN_DEVSTAT)));
 
@@ -374,7 +374,7 @@ int32_t SBL_eMMCBootImage(sblEntryPoint_t *pEntry)
         fp_readData = &SBL_emmcRead;
         fp_seek     = &SBL_emmcSeek;
 
-#if defined(SBL_ENABLE_HLOS_BOOT) && (defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4))
+#if defined(SBL_ENABLE_HLOS_BOOT) && (defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2))
         retVal = SBL_MulticoreImageParse((void *) &sbl_scratch_mem, SBL_SCRATCH_MEM_START, pEntry, SBL_SKIP_BOOT_AFTER_COPY);
 #else
         retVal = SBL_MulticoreImageParse((void *) &sbl_scratch_mem, SBL_SCRATCH_MEM_START, pEntry, SBL_BOOT_AFTER_COPY);
@@ -399,7 +399,7 @@ int32_t SBL_eMMCBootImage(sblEntryPoint_t *pEntry)
             fp_readData = &SBL_FileRead;
             fp_seek     = &SBL_FileSeek;
 
-#if defined(SBL_ENABLE_HLOS_BOOT) && (defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4))
+#if defined(SBL_ENABLE_HLOS_BOOT) && (defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2))
             retVal = SBL_MulticoreImageParse((void *) &fp, 0, pEntry, SBL_SKIP_BOOT_AFTER_COPY);
 #else
             retVal = SBL_MulticoreImageParse((void *) &fp, 0, pEntry, SBL_BOOT_AFTER_COPY);

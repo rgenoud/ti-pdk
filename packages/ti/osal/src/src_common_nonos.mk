@@ -2,10 +2,15 @@
 SRCDIR = . src/nonos arch/core
 INCDIR = . src/nonos arch/core
 
+SOC_DIR=$(SOC)
+ifeq ($(SOC), j742s2)
+  SOC_DIR=j784s4
+endif
+
 SRCS_COMMON += HwiP_nonos.c SwiP_nonos.c Utils_nonos.c SemaphoreP_nonos.c DebugP_nonos.c RegisterIntr_nonos.c Core_utils.c MutexP_nonos.c TimerP_restrictedTimers.c StartuphooksP_nonos.c
 
 PACKAGE_SRCS_COMMON = makefile HwiP.h SwiP.h MuxIntcP.h osal.h osal_component.mk SemaphoreP.h StartuphooksP.h \
-                      TimerP.h RegisterIntr.h EventCombinerP.h CycleprofilerP.h CacheP.h DebugP.h soc/osal_soc.h soc/$(SOC) \
+                      TimerP.h RegisterIntr.h EventCombinerP.h CycleprofilerP.h CacheP.h DebugP.h soc/osal_soc.h soc/$(SOC_DIR) \
                       src/nonos/Nonos_config.h src/nonos/HwiP_nonos.c src/nonos/SwiP_nonos.c src/nonos/CycleprofilerP_nonos.c src/nonos/StartuphooksP_nonos.c \
                       src/nonos/RegisterIntr_nonos.c src/nonos/SemaphoreP_nonos.c src/nonos/Utils_nonos.c src/nonos/DebugP_nonos.c \
                       src/nonos/MutexP_nonos.c TimerP_restrictedTimers.c src/src_common_nonos.mk \
@@ -13,14 +18,13 @@ PACKAGE_SRCS_COMMON = makefile HwiP.h SwiP.h MuxIntcP.h osal.h osal_component.mk
                       build \
                       osalver.h
 
-
-ifeq ($(SOC),$(filter $(SOC),j721e j721s2 j784s4))
-  SRCDIR      += soc/$(SOC)
+ifeq ($(SOC),$(filter $(SOC),j721e j721s2 j784s4 j742s2))
+  SRCDIR      += soc/$(SOC_DIR)
   SRCS_COMMON += TimerP_default.c CycleprofilerP_nonos.c
 endif
 
 ifeq ($(SOC),$(filter $(SOC), j7200))
-  SRCDIR      += soc/$(SOC)
+  SRCDIR      += soc/$(SOC_DIR)
   SRCS_COMMON += TimerP_default_$(ISA).c CycleprofilerP_nonos.c
 endif
 

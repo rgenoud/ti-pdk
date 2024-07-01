@@ -38,7 +38,12 @@ ifeq ($(SOC),$(filter $(SOC), dra72x dra75x dra78x am571x am572x am574x k2h k2k 
 include $(PDK_UART_COMP_PATH)/src/src_files_uart_console.mk
 endif
 
-SRCDIR += soc/$(SOC)
+SOC_DIR=$(SOC)
+ifeq ($(SOC), j742s2)
+  SOC_DIR=j784s4
+endif
+
+SRCDIR += soc/$(SOC_DIR)
 INCDIR += soc
 # Common source files across all platforms and cores
 SRCS_COMMON += UART_soc.c
@@ -47,7 +52,7 @@ SRCS_COMMON += UART_soc.c
 #  need to be included for this component
 INCLUDE_EXTERNAL_INTERFACES = pdk edma
 
-PACKAGE_SRCS_COMMON += soc/$(SOC) soc/UART_soc.h
+PACKAGE_SRCS_COMMON += soc/$(SOC_DIR) soc/UART_soc.h
 
 ifeq ($(CORE),$(filter $(CORE), mpu1_0 a15_0 a9host a8host))
 CFLAGS_LOCAL_COMMON = $(PDK_CFLAGS) -finstrument-functions -gdwarf-3 -g -D_ENABLE_BM

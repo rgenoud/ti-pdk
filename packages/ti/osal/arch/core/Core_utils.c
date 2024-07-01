@@ -66,7 +66,7 @@ uint32_t Osal_getCoreId(void)
                                     OSAL_MCU2_0:
                                         OSAL_MCU2_1;
     }
-#if defined (SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined (SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
     else if (CSL_ARM_R5_CLUSTER_GROUP_ID_2 == info.grpId)
     {
         /* MAIN SS Pulsar R5 SS1 */
@@ -74,7 +74,7 @@ uint32_t Osal_getCoreId(void)
                                     OSAL_MCU3_0:
                                         OSAL_MCU3_1;
     }
-#if defined (SOC_J784S4)
+#if defined (SOC_J784S4) || defined (SOC_J742S2)
 	else if (CSL_ARM_R5_CLUSTER_GROUP_ID_3 == info.grpId)
     {
         /* MAIN SS Pulsar R5 SS1 */
@@ -82,8 +82,8 @@ uint32_t Osal_getCoreId(void)
                                     OSAL_MCU4_0:
                                         OSAL_MCU4_1;
     }
-#endif /* #if defined (SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4) */
-#endif /* #if defined (SOC_J784S4) */
+#endif /* #if defined (SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2) */
+#endif /* #if defined (SOC_J784S4) || defined (SOC_J742S2) */
 	else
 	{
 		coreId = OSAL_INVALID_CORE_ID;
@@ -96,22 +96,24 @@ uint32_t Osal_getCoreId(void)
 	{
 		coreId = OSAL_C7X_1;
 	}
-#if defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
 	else if(CSL_CLEC_RTMAP_CPU_5 == rtmapCpuId)
 	{
 		coreId = OSAL_C7X_2;
 	}
-#if defined (SOC_J784S4)
+#if defined (SOC_J784S4) || defined (SOC_J742S2)
 	else if (CSL_CLEC_RTMAP_CPU_6 == rtmapCpuId)
 	{
 		coreId = OSAL_C7X_3;
 	}
+#endif /* #if defined (SOC_J784S4) || defined (SOC_J742S2) */
+#if defined (SOC_J784S4)
 	else if (CSL_CLEC_RTMAP_CPU_7 == rtmapCpuId)
 	{
 		coreId = OSAL_C7X_4;
 	}
-#endif /* #if defined (SOC_J784S4) */
-#endif /* #if defined (SOC_J721S2) || defined (SOC_J784S4) */
+#endif /* if defined (SOC_J784S4) */
+#endif /* #if defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2) */
 	else
 	{
 		coreId = OSAL_INVALID_CORE_ID;

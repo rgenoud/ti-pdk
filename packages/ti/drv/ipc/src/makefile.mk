@@ -9,9 +9,10 @@ endif
 ifeq ($(SOC),$(filter $(SOC), j721s2))
   SRCDIR += soc/V3
 endif
-ifeq ($(SOC),$(filter $(SOC), j784s4))
+ifeq ($(SOC),$(filter $(SOC), j784s4 j742s2))
   SRCDIR += soc/V4
 endif
+
 SRCDIR += src/mailbox/V0/priv
 INCDIR += src/mailbox
 

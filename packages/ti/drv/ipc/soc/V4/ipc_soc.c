@@ -34,7 +34,7 @@
 /**
  *  \file ipc_soc.c
  *
- *  \brief File containing the IPC driver - J784S4 SOC specific implementation.
+ *  \brief File containing the IPC driver - J784S4/J742S2 SOC specific implementation.
  *
  */
 
@@ -101,7 +101,9 @@ static Ipc_ProcInfo g_Ipc_mp_procInfo[IPC_MAX_PROCS] =
     {IPC_C7X_1,       "c7x_1"},       /**< DSP C7x - core0 */
     {IPC_C7X_2,       "c7x_2"},       /**< DSP C7x - core1 */
     {IPC_C7X_3,       "c7x_3"},       /**< DSP C7x - core2 */
+#if defined (SOC_J784S4)
     {IPC_C7X_4,       "c7x_4"},       /**< DSP C7x - core3 */
+#endif
     {IPC_MPU1_1,      "mpu1_1"}       /**< ARM A72 - VM1 */
 };
 
@@ -152,7 +154,9 @@ static Ipc_MailboxInfo   g_IPC_MailboxInfo[IPC_MAX_PROCS][IPC_MAX_PROCS] =
         { {    4U,    0U,  0U}, {    4U,    0U,    1U} },  /* C7x-1 */
         { {    4U,    0U,  2U}, {    4U,    0U,    3U} },  /* C7x-2 */
         { {    5U,    0U,  0U}, {    5U,    0U,    1U} },  /* C7x-3 */
+#if defined (SOC_J784S4)
         { {    5U,    0U,  2U}, {    5U,    0U,    3U} },  /* C7x-4 */
+#endif
         { {    0U,    0U, 10U}, {    0U,    0U,   11U} }   /* A72-vm1 */
     },
     /* Host Processor - mcu1_0 	*/
@@ -169,7 +173,9 @@ static Ipc_MailboxInfo   g_IPC_MailboxInfo[IPC_MAX_PROCS][IPC_MAX_PROCS] =
         { {   12U,    1U,  6U }, {   14U, 0xFFU,  6U} },  /* C7x-1 */
         { {   12U,    1U,  7U }, {   15U, 0xFFU,  6U} },  /* C7x-2 */
         { {   12U,    1U,  8U }, {   16U, 0xFFU,  6U} },  /* C7x-3 */
+#if defined (SOC_J784S4)
         { {   12U,    1U,  9U }, {   17U, 0xFFU,  6U} },  /* C7x-4 */
+#endif
         { {    0U,    1U,  7U }, {    0U,    1U,  6U} }   /* A72-vm1 */
     },
     /* Host Processor - mcu1_1 */
@@ -186,7 +192,9 @@ static Ipc_MailboxInfo   g_IPC_MailboxInfo[IPC_MAX_PROCS][IPC_MAX_PROCS] =
         { {   13U,    1U,  6U }, {   14U, 0xFFU,  7U} },  /* C7x-1 */
         { {   13U,    1U,  7U }, {   15U, 0xFFU,  7U} },  /* C7x-2 */
         { {   13U,    1U,  8U }, {   16U, 0xFFU,  7U} },  /* C7x-3 */
+#if defined (SOC_J784S4)
         { {   13U,    1U,  9U }, {   17U, 0xFFU,  7U} },  /* C7x-4 */
+#endif
         { {    0U,    2U,  9U }, {    0U,    2U,  8U} }   /* A72-vm1 */
     },
     /* Host Processor - mcu2_0  */
@@ -203,7 +211,9 @@ static Ipc_MailboxInfo   g_IPC_MailboxInfo[IPC_MAX_PROCS][IPC_MAX_PROCS] =
         { {    6U,    1U,  6U}, {   14U, 0xFFU, 0U} },  /* C7x-1 */
         { {    6U,    1U,  7U}, {   15U, 0xFFU, 0U} },  /* C7x-2 */
         { {    6U,    1U,  8U}, {   16U, 0xFFU, 0U} },  /* C7x-3 */
+#if defined (SOC_J784S4)
         { {    6U,    1U,  9U}, {   17U, 0xFFU, 0U} },  /* C7x-4 */
+#endif
         { {    1U,    1U,  7U}, {    1U,    1U, 6U} }   /* A72-vm1 */
     },
     /* Host Processor - mcu2_1 */
@@ -220,7 +230,9 @@ static Ipc_MailboxInfo   g_IPC_MailboxInfo[IPC_MAX_PROCS][IPC_MAX_PROCS] =
         { {    7U,    1U,  6U }, {   14U, 0xFFU, 1U} },  /* C7x-1 */
         { {    7U,    1U,  7U }, {   15U, 0xFFU, 1U} },  /* C7x-2 */
         { {    7U,    1U,  8U }, {   16U, 0xFFU, 1U} },  /* C7x-3 */
+#if defined (SOC_J784S4)
         { {    7U,    1U,  9U }, {   17U, 0xFFU, 1U} },  /* C7x-4 */
+#endif
         { {    1U,    2U,  9U }, {    1U,    2U, 8U} }   /* A72-vm1 */
     },
     /* Host Processor - mcu3_0 */
@@ -237,7 +249,9 @@ static Ipc_MailboxInfo   g_IPC_MailboxInfo[IPC_MAX_PROCS][IPC_MAX_PROCS] =
         { {    8U,    1U,  6U }, {   14U, 0xFFU,  2U} },  /* C7x-1 */
         { {    8U,    1U,  7U }, {   15U, 0xFFU,  2U} },  /* C7x-2 */
         { {    8U,    1U,  8U }, {   16U, 0xFFU,  2U} },  /* C7x-3 */
+#if defined (SOC_J784S4)
         { {    8U,    1U,  9U }, {   17U, 0xFFU,  2U} },  /* C7x-4 */
+#endif
         { {    2U,    1U,  7U }, {    2U,    1U,  6U} }   /* A72-vm1 */
     },
     /* Host Processor - mcu3_1	*/
@@ -254,7 +268,9 @@ static Ipc_MailboxInfo   g_IPC_MailboxInfo[IPC_MAX_PROCS][IPC_MAX_PROCS] =
         { {    9U,    1U,  6U }, {   14U, 0xFFU,  3U} },  /* C7x-1 */
         { {    9U,    1U,  7U }, {   15U, 0xFFU,  3U} },  /* C7x-2 */
         { {    9U,    1U,  8U }, {   16U, 0xFFU,  3U} },  /* C7x-3 */
+#if defined (SOC_J784S4)
         { {    9U,    1U,  9U }, {   17U, 0xFFU,  3U} },  /* C7x-4 */
+#endif
         { {    2U,    2U,  9U }, {    2U,    2U,  8U} }   /* A72-vm1 */
     },
     /* Host Processor - mcu4_0 */
@@ -271,7 +287,9 @@ static Ipc_MailboxInfo   g_IPC_MailboxInfo[IPC_MAX_PROCS][IPC_MAX_PROCS] =
         { {   10U,    1U,  6U }, {   14U, 0xFFU,  4U} },  /* C7x-1 */
         { {   10U,    1U,  7U }, {   15U, 0xFFU,  4U} },  /* C7x-2 */
         { {   10U,    1U,  8U }, {   16U, 0xFFU,  4U} },  /* C7x-3 */
+#if defined (SOC_J784S4)
         { {   10U,    1U,  9U }, {   17U, 0xFFU,  4U} },  /* C7x-4 */
+#endif
         { {    3U,    1U,  7U }, {    3U,    1U,  6U} }   /* A72-vm1 */
     },
     /* Host Processor - mcu4_1	*/
@@ -288,7 +306,9 @@ static Ipc_MailboxInfo   g_IPC_MailboxInfo[IPC_MAX_PROCS][IPC_MAX_PROCS] =
         { {   11U,    1U,  6U }, {   14U, 0xFFU,  5U} },  /* C7x-1 */
         { {   11U,    1U,  7U }, {   15U, 0xFFU,  5U} },  /* C7x-2 */
         { {   11U,    1U,  8U }, {   16U, 0xFFU,  5U} },  /* C7x-3 */
+#if defined (SOC_J784S4)
         { {   11U,    1U,  9U }, {   17U, 0xFFU,  5U} },  /* C7x-4 */
+#endif
         { {    3U,    2U,  9U }, {    3U,    2U,  8U} }   /* A72-vm1 */
     },
     /* Host Processor - c7x_1	*/
@@ -305,7 +325,9 @@ static Ipc_MailboxInfo   g_IPC_MailboxInfo[IPC_MAX_PROCS][IPC_MAX_PROCS] =
         { { 0xFFU, 0xFFU,  0U}, { 0xFFU, 0xFFU,  0U} },  /* Self - C7x-1 */
         { {    4U,    1U,  4U}, {    4U,    1U,  5U} },  /* C7x-2 */
         { {   14U,    1U,  8U}, {   16U, 0xFFU,  8U} },  /* C7x-3 */
+#if defined (SOC_J784S4)
         { {   14U,    1U,  9U}, {   17U, 0xFFU,  8U} },  /* C7x-4 */
+#endif
         { {    4U,    1U,  7U}, {    4U,    1U,  6U} }   /* A72-vm1 */
     },
     /* Host Processor - c7x_2	*/
@@ -322,7 +344,9 @@ static Ipc_MailboxInfo   g_IPC_MailboxInfo[IPC_MAX_PROCS][IPC_MAX_PROCS] =
         { {    4U,    2U,  5U}, {    4U,    2U,  4U} },  /* C7x-1 */
         { { 0xFFU, 0xFFU,  0U}, { 0xFFU, 0xFFU,  0U} },  /* Self - C7x-2 */
         { {   15U,    1U,  8U}, {   16U, 0xFFU,  9U} },  /* C7x-3 */
+#if defined (SOC_J784S4)
         { {   15U,    1U,  9U}, {   17U, 0xFFU,  9U} },  /* C7x-4 */
+#endif
         { {    4U,    2U,  9U}, {    4U,    2U,  8U} }   /* A72-vm1 */
     },
     /* Host Processor - c7x_3	*/
@@ -339,9 +363,12 @@ static Ipc_MailboxInfo   g_IPC_MailboxInfo[IPC_MAX_PROCS][IPC_MAX_PROCS] =
         { {   16U,    1U,  8U}, {   14U, 0xFFU,  8U} },  /* C7x-1 */
         { {   16U,    1U,  9U}, {   15U, 0xFFU,  8U} },  /* C7x-2 */
         { { 0xFFU, 0xFFU,  0U}, { 0xFFU, 0xFFU,  0U} },  /* Self - C7x-3 */
+#if defined (SOC_J784S4)
         { {    5U,    1U,  4U}, {    5U,    1U,  5U} },  /* C7x-4 */
+#endif
         { {    5U,    1U,  7U}, {    5U,    1U,  6U} }   /* A72-vm1 */
     },
+#if defined (SOC_J784S4)
     /* Host Processor - c7x_4	*/
     {
         { {    5U,    2U,  3U}, {    5U,    2U,  2U} },  /* A72-vm0 */
@@ -359,6 +386,7 @@ static Ipc_MailboxInfo   g_IPC_MailboxInfo[IPC_MAX_PROCS][IPC_MAX_PROCS] =
         { { 0xFFU, 0xFFU,  0U}, { 0xFFU, 0xFFU,  0U} },  /* Self - C7x-4 */
         { {    5U,    2U,  9U}, {    5U,    2U,  8U} }   /* A72-vm1 */
     },
+#endif
     /* Host Processor - A72-vm1	*/
     {
         { {    0U,    3U, 11U}, {    0U,    3U, 10U} },  /* A72-vm0 */
@@ -373,7 +401,9 @@ static Ipc_MailboxInfo   g_IPC_MailboxInfo[IPC_MAX_PROCS][IPC_MAX_PROCS] =
         { {    4U,    3U,  6U}, {    4U,    3U,  7U} },  /* C7x-1 */
         { {    4U,    3U,  8U}, {    4U,    3U,  9U} },  /* C7x-2 */
         { {    5U,    3U,  6U}, {    5U,    3U,  7U} },  /* C7x-3 */
+#if defined (SOC_J784S4)
         { {    5U,    3U,  8U}, {    5U,    3U,  9U} },  /* C7x-4 */
+#endif
         { { 0xFFU, 0xFFU,  0U}, { 0xFFU, 0xFFU,  0U} }   /* Self - A72-vm1 */
     }
 };

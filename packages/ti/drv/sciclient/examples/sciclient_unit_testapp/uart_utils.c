@@ -136,7 +136,7 @@ void App_setMainUartHwAttrs(uint32_t uartInst, struct UART_HWAttrs *uartHwAttrs)
 }
 #endif
 
-#if defined(SOC_J784S4)
+#if defined(SOC_J784S4) || defined(SOC_J742S2)
 uint32_t App_getMainUartTestInstance()
 {
     uint32_t mainUartPinmuxData[]={9,8,6,5,3,2};

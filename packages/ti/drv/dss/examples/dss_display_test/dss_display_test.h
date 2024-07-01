@@ -116,7 +116,7 @@ extern "C" {
 /* Set this flag to 1U to use the DP to HDMI converter. */
 #define ENABLE_DP_TO_HDMI_CONVERTER       (0U)
 
-#if defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
 #define DISP_APP_TEST_EDP                 (1U)
 #else
 #define DISP_APP_TEST_EDP                 (0U)
@@ -147,7 +147,7 @@ extern "C" {
 
 #ifndef CIO_CONSOLE
 
-#if defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
 #define DSS_log                printf
 #else
 #define DSS_log                UART_printf
@@ -365,7 +365,7 @@ static const DispApp_TestParams gDispAppTestParams=
     /* Invalid Pipe Id */
     {
         CSL_DSS_VID_PIPE_ID_VIDL1,
-#if defined (SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined (SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
         CSL_DSS_VID_PIPE_ID_VID2,
         CSL_DSS_VID_PIPE_ID_VIDL2
 #endif
@@ -447,7 +447,7 @@ static const DispApp_TestParams gDispAppTestParams=
     /* Invalid Pipe Id */
     {
         CSL_DSS_VID_PIPE_ID_VIDL1,
-#if defined (SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined (SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
         CSL_DSS_VID_PIPE_ID_VID2,
         CSL_DSS_VID_PIPE_ID_VIDL2
 #endif
@@ -529,7 +529,7 @@ static const DispApp_TestParams gDispAppTestParams=
     /* Invalid Pipe Id */
     {
         CSL_DSS_VID_PIPE_ID_VIDL1,
-#if defined (SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined (SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
         CSL_DSS_VID_PIPE_ID_VID2,
         CSL_DSS_VID_PIPE_ID_VIDL2
 #endif
@@ -611,7 +611,7 @@ static const DispApp_TestParams gDispAppTestParams=
     /* Invalid Pipe Id */
     {
         CSL_DSS_VID_PIPE_ID_VIDL1,
-#if defined (SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined (SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
         CSL_DSS_VID_PIPE_ID_VID2,
         CSL_DSS_VID_PIPE_ID_VIDL2
 #endif
@@ -693,7 +693,7 @@ static const DispApp_TestParams gDispAppTestParams=
     /* Invalid Pipe Id */
     {
         CSL_DSS_VID_PIPE_ID_VIDL1,
-#if defined (SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined (SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
         CSL_DSS_VID_PIPE_ID_VID2,
         CSL_DSS_VID_PIPE_ID_VIDL2
 #endif
@@ -775,7 +775,7 @@ static const DispApp_TestParams gDispAppTestParams=
     /* Invalid Pipe Id */
     {
         CSL_DSS_VID_PIPE_ID_VIDL1,
-#if defined (SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined (SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
         CSL_DSS_VID_PIPE_ID_VID2,
         CSL_DSS_VID_PIPE_ID_VIDL2
 #endif
@@ -857,7 +857,7 @@ static const DispApp_TestParams gDispAppTestParams=
     /* Invalid Pipe Id */
     {
         CSL_DSS_VID_PIPE_ID_VIDL1,
-#if defined (SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined (SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
         CSL_DSS_VID_PIPE_ID_VID2,
         CSL_DSS_VID_PIPE_ID_VIDL2
 #endif
@@ -939,7 +939,7 @@ static const DispApp_TestParams gDispAppTestParams=
     /* Invalid Pipe Id */
     {
         CSL_DSS_VID_PIPE_ID_VIDL1,
-#if defined (SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined (SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
         CSL_DSS_VID_PIPE_ID_VID2,
         CSL_DSS_VID_PIPE_ID_VIDL2
 #endif
@@ -1021,7 +1021,7 @@ static const DispApp_TestParams gDispAppTestParams=
     /* Invalid Pipe Id */
     {
         CSL_DSS_VID_PIPE_ID_VIDL1,
-#if defined (SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined (SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
         CSL_DSS_VID_PIPE_ID_VID2,
         CSL_DSS_VID_PIPE_ID_VIDL2
 #endif
@@ -1103,7 +1103,7 @@ static const DispApp_TestParams gDispAppTestParams=
     /* Invalid Pipe Id */
     {
         CSL_DSS_VID_PIPE_ID_VIDL1,
-#if defined (SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined (SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
         CSL_DSS_VID_PIPE_ID_VID2,
         CSL_DSS_VID_PIPE_ID_VIDL2
 #endif
@@ -1185,7 +1185,7 @@ static const DispApp_TestParams gDispAppTestParams=
     /* Invalid Pipe Id */
     {
         CSL_DSS_VID_PIPE_ID_VIDL1,
-#if defined (SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined (SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
         CSL_DSS_VID_PIPE_ID_VID2,
         CSL_DSS_VID_PIPE_ID_VIDL2
 #endif
@@ -1267,7 +1267,7 @@ static const DispApp_TestParams gDispAppTestParams=
     /* Invalid Pipe Id */
     {
         CSL_DSS_VID_PIPE_ID_VIDL1,
-#if defined (SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined (SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
         CSL_DSS_VID_PIPE_ID_VID2,
         CSL_DSS_VID_PIPE_ID_VIDL2
 #endif
@@ -1495,7 +1495,7 @@ static const DispApp_TestParams gDispAppTestParams=
 #endif
     },
 #endif
-#if defined (SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined (SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
     /* Invalid Pipe Id */
     {
         CSL_DSS_VID_PIPE_ID_VID2,

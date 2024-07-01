@@ -13,7 +13,7 @@ ifeq ($(BUILD_OS_TYPE),freertos)
 	COMP_LIST_COMMON = $(PDK_COMMON_FREERTOS_COMP)
 endif
 
-ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 j742s2))
 SRCDIR = ./src ../
 INCDIR = ./src
 # Common source files across all platforms and cores

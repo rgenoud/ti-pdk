@@ -12,7 +12,7 @@ APP_NAME = MMCSD_Baremetal_EMMC_DMA_TestApp
 
 BUILD_OS_TYPE = baremetal
 
-ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 j742s2))
 SRCDIR = ../src ../../
 INCDIR = ../src ../include ../../
 # Common source files across all platforms and cores

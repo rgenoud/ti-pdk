@@ -34,7 +34,7 @@
 /**
  *  \ingroup DRV_IPC_MODULE
  *  \defgroup DRV_IPC_SOC_MODULE IPC SoC Config
- *            This is IPC documentation specific to J784S4 SoC
+ *            This is IPC documentation specific to J784S4/J742S2 SoC
  *
  *  @{
  */
@@ -42,7 +42,7 @@
 /**
  *  \file V4/ipc_soc.h
  *
- *  \brief IPC Low Level Driver J784S4 SOC specific file.
+ *  \brief IPC Low Level Driver J784S4/J742S2 SOC specific file.
  */
 #ifndef IPC_SOC_V4_H_
 #define IPC_SOC_V4_H_
@@ -71,9 +71,14 @@ extern "C" {
 #define    IPC_C7X_1            (9U)    /**< DSP C7x - core0 */
 #define    IPC_C7X_2           (10U)    /**< DSP C7x - core1 */
 #define    IPC_C7X_3           (11U)    /**< DSP C7x - core2 */
+#if defined (SOC_J784S4)
 #define    IPC_C7X_4           (12U)    /**< DSP C7x - core3 */
 #define    IPC_MPU1_1          (13U)    /**< ARM A72 - VM1 */
 #define    IPC_MAX_PROCS       (14U)    /**< Maximum Processors */
+#elif defined (SOC_J742S2)
+#define    IPC_MPU1_1          (12U)    /**< ARM A72 - VM1 */
+#define    IPC_MAX_PROCS       (13U)    /**< Maximum Processors */ 
+#endif
 
 #define    IPC_MAILBOX_CLUSTER_CNT              (18U)
 #define    IPC_MAILBOX_USER_CNT                  (4U)

@@ -67,7 +67,7 @@
 #define TISCI_DEV_MCU_NAVSS0_INTR         TISCI_DEV_MCU_NAVSS0_INTR_0
 #define TISCI_DEV_NAVSS0_MODSS_INTAGG1    TISCI_DEV_NAVSS0_MODSS_INTA_1 
 #define TISCI_DEV_NAVSS0_UDMASS_INTAGG    TISCI_DEV_NAVSS0_UDMASS_INTA_0
-#elif defined (SOC_J721S2) || defined (SOC_J784S4)
+#elif defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
 #define TISCI_DEV_NAVSS0_MODSS_INTAGG     TISCI_DEV_NAVSS0_MODSS_INTA_0
 #define TISCI_DEV_NAVSS0_INTR             TISCI_DEV_NAVSS0_INTR_0
 #define TISCI_DEV_NAVSS0_MAILBOX          TISCI_DEV_NAVSS0_MAILBOX1_0
@@ -174,7 +174,7 @@ static int32_t SciclientApp_msmcQueryNegTest(void);
 static int32_t SciclientApp_otpProcessKeyCfgNegTest(void);
 static int32_t SciclientApp_firewallNegTest(void);
 static int32_t SciclientApp_prepareHeaderNegTest(void);
-#if defined (SOC_J784S4)
+#if defined (SOC_J784S4) || defined(SOC_J742S2)
 static int32_t SciclientApp_contextNegTest(void);
 #endif
 static int32_t SciclientApp_initTest(void);
@@ -265,7 +265,7 @@ int32_t SciApp_testMain(SciApp_TestParams_t *testParams)
         case 6:
             testParams->testResult =  SciclientApp_prepareHeaderNegTest();
             break;
-#if defined (SOC_J784S4)
+#if defined (SOC_J784S4) || defined(SOC_J742S2)
         case 7:
             testParams->testResult =  SciclientApp_contextNegTest();
             break;
@@ -404,7 +404,7 @@ static int32_t SciclientApp_pmMessageTest(void)
     uint64_t  reqFreq              = 164UL;
     uint64_t  respFreq             = 0UL;
     uint32_t  clockStatus          = 1U;
-#if defined(SOC_J721S2) || defined(SOC_J784S4)
+#if defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)
     uint32_t  parentStatus         = 0U;
     uint32_t  numParents           = 0U;
 #endif
@@ -479,7 +479,7 @@ static int32_t SciclientApp_pmMessageTest(void)
             SciApp_printf("Sciclient_pmModuleClkRequest Test Failed.\n");
         }
 
-#if defined(SOC_J721S2) || defined(SOC_J784S4)
+#if defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)
        status = Sciclient_pmSetModuleClkParent(TISCI_DEV_MCSPI1,
                                                TISCI_DEV_MCSPI1_IO_CLKSPII_CLK,
                                                TISCI_DEV_MCSPI1_IO_CLKSPII_CLK_PARENT_BOARD_0_SPI1_CLK_OUT,
@@ -1147,7 +1147,7 @@ static int32_t SciclientApp_prepareHeaderNegTest(void)
     return sciclientTestStatus;
 }
 
-#if defined (SOC_J784S4)
+#if defined (SOC_J784S4) || defined(SOC_J742S2)
 static int32_t SciclientApp_contextNegTest(void)
 {
     int32_t  status              = CSL_PASS;
@@ -1816,7 +1816,7 @@ static int32_t SciclientApp_pmMessageNegTest(void)
     uint64_t reqFreq                = 164UL;
     uint64_t respFreq               = 0UL;
     uint32_t clockStatus            = 1U;
-#if defined(SOC_J721S2) || defined(SOC_J784S4)
+#if defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)
     uint32_t parentStatus           = 0U;
     uint32_t numParents             = 0U;
 #endif
@@ -1932,7 +1932,7 @@ static int32_t SciclientApp_pmMessageNegTest(void)
             SciApp_printf ("Sciclient_pmModuleGetClkStatus Negative Test Failed.\n");
         }
 
-    #if defined(SOC_J721S2) || defined(SOC_J784S4)
+    #if defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)
        status = Sciclient_pmSetModuleClkParent(invalidModuleId,
                                                 256U,
                                                 256U,
@@ -2026,7 +2026,7 @@ static int32_t SciclientApp_pmMessageNegTest(void)
             SciApp_printf ("Sciclient_pmGetModuleClkFreq Negative Test Failed.\n");
         }
 
-#if defined(SOC_J784S4)
+#if defined(SOC_J784S4) || defined(SOC_J742S2)
         status = Sciclient_pmEnableWdt(SCICLIENT_SERVICE_WAIT_FOREVER);
         if (status == CSL_EFAIL)
         {

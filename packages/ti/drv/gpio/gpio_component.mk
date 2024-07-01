@@ -68,9 +68,9 @@ ifeq ($(gpio_component_make_include), )
 
 drvgpio_RTOS_LIST = $(DEFAULT_RTOS_LIST)
 # under other list
-drvgpio_BOARDLIST       = j721e_sim j721e_evm j7200_evm j721s2_evm j784s4_evm
+drvgpio_BOARDLIST       = j721e_sim j721e_evm j7200_evm j721s2_evm j784s4_evm j742s2_evm
 
-drvgpio_SOCLIST        += j721e j7200 j721s2 j784s4
+drvgpio_SOCLIST        += j721e j7200 j721s2 j784s4 j742s2
 
 drvgpio_j721e_CORELIST     = $(DEFAULT_j721e_CORELIST)
 drvgpio_j721e_CORELISTARM  = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1
@@ -80,6 +80,8 @@ drvgpio_j721s2_CORELIST    = $(DEFAULT_j721s2_CORELIST)
 drvgpio_j721s2_CORELISTARM = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1
 drvgpio_j784s4_CORELIST    = $(DEFAULT_j784s4_CORELIST)
 drvgpio_j784s4_CORELISTARM = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mcu4_0 mcu4_1
+drvgpio_j742s2_CORELIST    = $(DEFAULT_j742s2_CORELIST)
+drvgpio_j742s2_CORELISTARM = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mcu4_0 mcu4_1
 
 ############################
 # gpio package
@@ -142,11 +144,11 @@ export GPIO_Baremetal_LedBlink_TestApp_$(SOC)_CORELIST = $(filter $(drvgpio_$(SO
 else ifeq ($(SOC),$(filter $(SOC), j721s2))
 # J721S2:- There is no IR path from WKUP_GPIO to mcu3_0/mcu3_1 (no WKUP_GPIO IR allocations)
 export GPIO_Baremetal_LedBlink_TestApp_$(SOC)_CORELIST = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1
-else ifeq ($(SOC),$(filter $(SOC), j784s4))
+else ifeq ($(SOC),$(filter $(SOC), j784s4 j742s2))
 # J784S4:- There is no IR path from WKUP_GPIO to mcu3_0/mcu3_1/mcu4_0/mcu4_1 (no WKUP_GPIO IR allocations)
 export GPIO_Baremetal_LedBlink_TestApp_$(SOC)_CORELIST = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1
 endif
-ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 j742s2))
 export GPIO_Baremetal_LedBlink_TestApp_SBL_APPIMAGEGEN = yes
 endif
 
@@ -167,7 +169,7 @@ export GPIO_LedBlink_TestApp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CO
 ifeq ($(SOC),$(filter $(SOC), j721e))
     # J721e:- There are no IR path from WKUP_GPIO to mcu3_0/mcu3_1/c66 cores.
     export GPIO_LedBlink_TestApp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), mcu1_0 mcu1_1 mcu2_0 mcu2_1)
-else ifeq ($(SOC),$(filter $(SOC), j721s2 j784s4))
+else ifeq ($(SOC),$(filter $(SOC), j721s2 j784s4 j742s2))
     # J721S2:- There is not IR path from WKUP_GPIO to mcu3_0/mcu3_1/c7x_1/c7x_2 (no WKUP_GPIO IR allocations)
     export GPIO_LedBlink_TestApp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1)
 else ifeq ($(SOC),$(filter $(SOC), j7200))

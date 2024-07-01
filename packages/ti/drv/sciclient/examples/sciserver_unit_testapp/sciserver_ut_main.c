@@ -54,7 +54,7 @@
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-#if defined(SOC_J784S4) || defined(SOC_J721S2) || defined(SOC_J721E)
+#if defined(SOC_J784S4) || defined(SOC_J742S2) || defined(SOC_J721S2) || defined(SOC_J721E)
 #define MAX_SEMAPHORE    360U
 #elif defined(SOC_J7200)
 #define MAX_SEMAPHORE    150U

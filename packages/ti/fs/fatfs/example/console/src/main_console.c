@@ -59,7 +59,7 @@
  * SDCD. Hence this feature , i.e using GPIO to check the SD card insert
  * is disabled. Same is the case with J7 and Simulator (J7). Here the demo
  * assumes that the SD card is inserted */
-#if !(defined(SOC_J721E) || defined(SIMULATOR) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4))
+#if !(defined(SOC_J721E) || defined(SIMULATOR) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2))
 #define FATFS_GPIO_ENABLED 1
 
 #ifndef SIMULATOR
@@ -132,7 +132,7 @@ GPIO_CallbackFxn gpioCallbackFunctions[] = {
     NULL,
 };
 
-#if (defined(SOC_J721E) || defined (SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4))
+#if (defined(SOC_J721E) || defined (SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2))
 GPIO_v0_Config GPIO_v0_config = {
     gpioPinConfigs,
     gpioCallbackFunctions,
@@ -165,7 +165,7 @@ FATFS_DrvFxnTable FATFS_drvFxnTable = {
 /* FATFS configuration structure */
 FATFS_HwAttrs FATFS_initCfg[_VOLUMES] =
 {
-#if defined (SOC_J721E) || defined (SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4)
+#if defined (SOC_J721E) || defined (SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)
     { 
         1U
     },
@@ -355,7 +355,7 @@ void fatfs_console(void* a0, void* a1)
 
 
 #ifndef BARE_METAL
-#if (defined(SOC_J721E) || defined (SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4)) && (defined(BUILD_MPU) || defined (BUILD_C7X))
+#if (defined(SOC_J721E) || defined (SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)) && (defined(BUILD_MPU) || defined (BUILD_C7X))
 extern void Osal_initMmuDefault(void);
 void InitMmu(void)
 {

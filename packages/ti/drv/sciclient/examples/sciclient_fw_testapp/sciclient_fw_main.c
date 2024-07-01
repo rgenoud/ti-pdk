@@ -75,7 +75,7 @@
 #define SCICLIENT_APP_NONSEC_USER_CACHEABLE_MASK  (0x00004000U)
 #define SCICLIENT_APP_NONSEC_USER_DEBUG_MASK      (0x00008000U)
 
-#if defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
 #define SCICLIENT_APP_MCU_1_0_PRIVID              (96)
 #define SCICLIENT_APP_MCU_SRAM_FWL_ID             (1050)
 #define SCICLIENT_APP_MSMC_SRAM_FWL_ID            (5140)

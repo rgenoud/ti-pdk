@@ -28,7 +28,7 @@ SBL_OUT2RPRC_GEN_TOOL_PATH=${PDK_INSTALL_PATH}/packages/ti/boot/sbl/tools/out2rp
 BOOTAPP_BIN_PATH=${PDK_INSTALL_PATH}/packages/ti/boot/sbl/tools/BootApp_binaries
 
 INPUT_ARGS=$@
-BOARD_LIST_ALL="j721e_evm j7200_evm j721s2_evm j784s4_evm"
+BOARD_LIST_ALL="j721e_evm j7200_evm j721s2_evm j784s4_evm j742s2_evm"
 BOARD_LIST=
 
 # for each of the cores, ensure that the image was properly created
@@ -39,6 +39,7 @@ core_list_j721e_evm="mpu1_0 mcu2_0 mcu2_1 mcu3_0 mcu3_1 c66xdsp_1 c66xdsp_2 c7x_
 core_list_j7200_evm="mpu1_0 mcu2_0 mcu2_1"
 core_list_j721s2_evm="mpu1_0 mcu2_0 mcu2_1 mcu3_0 mcu3_1 c7x_1 c7x_2"
 core_list_j784s4_evm="mpu1_0 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mcu4_0 mcu4_1 c7x_1 c7x_2 c7x_3 c7x_4"
+core_list_j742s2_evm="mpu1_0 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mcu4_0 mcu4_1 c7x_1 c7x_2 c7x_3"
 
 # Core extension names
 declare -A core_extension=( ["mcu2_0"]="xer5f" ["mcu2_1"]="xer5f" ["mcu3_0"]="xer5f" \
@@ -66,7 +67,7 @@ usage()
     echo "       * Generate appimages for all the boards"
     echo "  ./generate_appimage_hlos.sh <list_of_boards>"
     echo "       * Generate appimages for the above listed boards"
-	echo "       * available board_name's: j721e-evm, j7200-evm, j721s2_evm, j784s4_evm"
+	echo "       * available board_name's: j721e_evm, j7200_evm, j721s2_evm, j784s4_evm, j742s2_evm"
     echo "  ./generate_appimage_hlos.sh --help"
     echo "       * Print usage of the script"
 }
@@ -101,7 +102,7 @@ get_appimage_names()
         appImageName1=multicore_MCU2_0_MCU2_1_stage1.appimage
         appImageName2=multicore_DSP_1_2_C7x_MCU3_0_MCU3_1_stage2.appimage
         appImageName3=multicore_MPU1_0_stage3.appimage
-    elif [ "$1" = "j784s4_evm" ]
+    elif [ "$1" = "j784s4_evm" ] || [ "$1" = "j742s2_evm" ]
     then
         appImageName1=multicore_MCU2_0_MCU2_1_stage1.appimage
         appImageName2=multicore_DSPs_MCU3_0_MCU3_1_MCU4_0_MCU4_1_stage2.appimage
@@ -268,6 +269,35 @@ generate_lateapps()
                 core_ids_stage1_j784s4_evm=(10 11)
                 core_ids_stage2_j784s4_evm=(12 13 14 15 18 19 20 21)
                 core_ids_stage3_j784s4_evm=(0)
+            elif [ $BOARD_NAME == "j742s2_evm" ]
+            then
+                # elf images list per stage
+                elf_images_list_stage1_j742s2_evm=("bootapp_boot_test_j742s2_evm_mcu2_0TestApp_release.xer5f" \
+                                                  "bootapp_boot_test_j742s2_evm_mcu2_1TestApp_release.xer5f" )
+                elf_images_list_stage2_j742s2_evm=("bootapp_boot_test_j742s2_evm_mcu3_0TestApp_release.xer5f" \
+                                                "bootapp_boot_test_j742s2_evm_mcu3_1TestApp_release.xer5f" \
+                                                "bootapp_boot_test_j742s2_evm_mcu4_0TestApp_release.xer5f" \
+                                                "bootapp_boot_test_j742s2_evm_mcu4_1TestApp_release.xer5f" \
+                                                "bootapp_boot_test_j742s2_evm_c7x_1TestApp_release.xe71" \
+                                                "bootapp_boot_test_j742s2_evm_c7x_2TestApp_release.xe71" \
+                                                "bootapp_boot_test_j742s2_evm_c7x_3TestApp_release.xe71")
+                elf_images_list_stage3_j742s2_evm=("bootapp_boot_test_j742s2_evm_mpu1_0TestApp_release.xa72fg")
+
+                # RPRC files list per stage
+                rprc_file_list_stage1_j742s2_evm=("bootapp_boot_test_j742s2_evm_mcu2_0TestApp_release.xer5f.rprc" \
+                                                "bootapp_boot_test_j742s2_evm_mcu2_1TestApp_release.xer5f.rprc")
+                rprc_file_list_stage2_j742s2_evm=("bootapp_boot_test_j742s2_evm_mcu3_0TestApp_release.xer5f.rprc" \
+                                                "bootapp_boot_test_j742s2_evm_mcu3_1TestApp_release.xer5f.rprc" \
+                                                "bootapp_boot_test_j742s2_evm_mcu4_0TestApp_release.xer5f.rprc" \
+                                                "bootapp_boot_test_j742s2_evm_mcu4_1TestApp_release.xer5f.rprc" \
+                                                "bootapp_boot_test_j742s2_evm_c7x_1TestApp_release.xe71.rprc" \
+                                                "bootapp_boot_test_j742s2_evm_c7x_2TestApp_release.xe71.rprc" \
+                                                "bootapp_boot_test_j742s2_evm_c7x_3TestApp_release.xe71.rprc")
+                rprc_file_list_stage3_j742s2_evm=("bootapp_boot_test_j742s2_evm_mpu1_0TestApp_release.xa72fg.rprc")
+
+                core_ids_stage1_j742s2_evm=(10 11)
+                core_ids_stage2_j742s2_evm=(12 13 14 15 18 19 20)
+                core_ids_stage3_j742s2_evm=(0)
             fi
         done
         

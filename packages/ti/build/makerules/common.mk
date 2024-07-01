@@ -398,7 +398,7 @@ else
   SBL_IMAGE_NAME=$(LOCAL_APP_NAME)_$(BUILD_PROFILE_$(CORE))
 endif
 
-ifeq ($(SOC),$(filter $(SOC),j721e j7200 j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC),j721e j7200 j721s2 j784s4 j742s2))
 SBL_BIN_PATH=$(BINDIR)/$(SBL_IMAGE_NAME).bin
 SBL_TIIMAGE_PATH=$(BINDIR)/$(SBL_IMAGE_NAME).tiimage
 else
@@ -433,7 +433,7 @@ endif
 # Not required when running apps on MCU1_0.
 # Please refer the user guide for more details on sciclient server
 
-ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 j742s2))
   ifneq ($(BUILD_OS_TYPE),baremetal)
     MULTI_CORE_APP_PARAMS = $(SBL_CORE_ID_mcu1_0) $(PDK_INSTALL_PATH)/ti/drv/sciclient/tools/ccsLoadDmsc/$(SOC)/sciserver_testapp_$(BUILD_OS_TYPE)_mcu1_0_release.rprc
   else
@@ -451,7 +451,7 @@ endif
 # MCUx_1 cores requires a dummy application to run from MCUx_0 core
 # as MCUx_1 core cannot be at a higher power state than MCUx_0 core.
 # In case of J7 devices mcu1_0 would always host the server, so dummy app is not needed for MCU1_0
-ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 j742s2))
   ifeq ($(CORE),$(filter $(CORE), mcu2_1))
   MULTI_CORE_APP_PARAMS += $(SBL_CORE_ID_mcu2_0) $(PDK_INSTALL_PATH)/ti/build/$(SOC)/sbl_mcux_0_dummy_app.rprc
   endif
@@ -519,33 +519,40 @@ ifeq ($(SBL_IMAGE_TYPE),combined)
   # SoC Specific source files
   ifeq ($(SOC),$(filter $(SOC), j7200))
     SCICLIENT_SOCVER = V2
+    SOC_NAME = j7200
   endif
   ifeq ($(SOC),$(filter $(SOC), j721s2))
     SCICLIENT_SOCVER = V4
+    SOC_NAME = j721s2
   endif
   ifeq ($(SOC),$(filter $(SOC), j784s4))
     SCICLIENT_SOCVER = V6
+    SOC_NAME = j784s4
+  endif
+  ifeq ($(SOC),$(filter $(SOC), j742s2))
+    SCICLIENT_SOCVER = V6
+    SOC_NAME = j784s4
   endif
   COMBINED_TIFS_BRDCFG=$(PDK_INSTALL_PATH)/ti/drv/sciclient/soc/$(SCICLIENT_SOCVER)/combined-tifs-cfg.bin
   COMBINED_DM_BRDCFG=$(PDK_INSTALL_PATH)/ti/drv/sciclient/soc/$(SCICLIENT_SOCVER)/combined-dm-cfg.bin
   ifeq ($(BUILD_HS),yes)
     ifeq ($(SOC),$(filter $(SOC), j7200))
-      SYSFW_PATH=$(PDK_INSTALL_PATH)/ti/drv/sciclient/soc/sysfw/binaries/ti-fs-firmware-$(SOC)_sr2-hs-enc.bin
-      SYSFW_INNER_CERT=$(PDK_INSTALL_PATH)/ti/drv/sciclient/soc/sysfw/binaries/ti-fs-firmware-$(SOC)_sr2-hs-cert.bin
+      SYSFW_PATH=$(PDK_INSTALL_PATH)/ti/drv/sciclient/soc/sysfw/binaries/ti-fs-firmware-$(SOC_NAME)_sr2-hs-enc.bin
+      SYSFW_INNER_CERT=$(PDK_INSTALL_PATH)/ti/drv/sciclient/soc/sysfw/binaries/ti-fs-firmware-$(SOC_NAME)_sr2-hs-cert.bin
     else
-      SYSFW_PATH=$(PDK_INSTALL_PATH)/ti/drv/sciclient/soc/sysfw/binaries/ti-fs-firmware-$(SOC)-hs-enc.bin
-      SYSFW_INNER_CERT=$(PDK_INSTALL_PATH)/ti/drv/sciclient/soc/sysfw/binaries/ti-fs-firmware-$(SOC)-hs-cert.bin
+      SYSFW_PATH=$(PDK_INSTALL_PATH)/ti/drv/sciclient/soc/sysfw/binaries/ti-fs-firmware-$(SOC_NAME)-hs-enc.bin
+      SYSFW_INNER_CERT=$(PDK_INSTALL_PATH)/ti/drv/sciclient/soc/sysfw/binaries/ti-fs-firmware-$(SOC_NAME)-hs-cert.bin
     endif
   else ifeq ($(BUILD_HS_FS), yes)
       ifeq ($(SOC),$(filter $(SOC), j7200))
-        SYSFW_PATH=$(PDK_INSTALL_PATH)/ti/drv/sciclient/soc/sysfw/binaries/ti-fs-firmware-$(SOC)_sr2-hs-fs-enc.bin
-        SYSFW_INNER_CERT=$(PDK_INSTALL_PATH)/ti/drv/sciclient/soc/sysfw/binaries/ti-fs-firmware-$(SOC)_sr2-hs-fs-cert.bin
+        SYSFW_PATH=$(PDK_INSTALL_PATH)/ti/drv/sciclient/soc/sysfw/binaries/ti-fs-firmware-$(SOC_NAME)_sr2-hs-fs-enc.bin
+        SYSFW_INNER_CERT=$(PDK_INSTALL_PATH)/ti/drv/sciclient/soc/sysfw/binaries/ti-fs-firmware-$(SOC_NAME)_sr2-hs-fs-cert.bin
       else
-        SYSFW_PATH=$(PDK_INSTALL_PATH)/ti/drv/sciclient/soc/sysfw/binaries/ti-fs-firmware-$(SOC)-hs-fs-enc.bin
-        SYSFW_INNER_CERT=$(PDK_INSTALL_PATH)/ti/drv/sciclient/soc/sysfw/binaries/ti-fs-firmware-$(SOC)-hs-fs-cert.bin
+        SYSFW_PATH=$(PDK_INSTALL_PATH)/ti/drv/sciclient/soc/sysfw/binaries/ti-fs-firmware-$(SOC_NAME)-hs-fs-enc.bin
+        SYSFW_INNER_CERT=$(PDK_INSTALL_PATH)/ti/drv/sciclient/soc/sysfw/binaries/ti-fs-firmware-$(SOC_NAME)-hs-fs-cert.bin
       endif
   else
-    SYSFW_PATH=$(PDK_INSTALL_PATH)/ti/drv/sciclient/soc/sysfw/binaries/ti-fs-firmware-$(SOC)-gp.bin
+    SYSFW_PATH=$(PDK_INSTALL_PATH)/ti/drv/sciclient/soc/sysfw/binaries/ti-fs-firmware-$(SOC_NAME)-gp.bin
     SYSFW_INNER_CERT=""
   endif
 endif
@@ -573,7 +580,7 @@ endif
 
 
 $(SBL_IMAGE_PATH): $(SBL_BIN_FILE)
-ifeq ($(SOC),$(filter $(SOC),j721e j7200 j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC),j721e j7200 j721s2 j784s4 j742s2))
 ifneq ($(OS),Windows_NT)
 	$(CHMOD) a+x $(SBL_CERT_GEN)
 endif
@@ -597,7 +604,7 @@ endif
 ifeq ($(BUILD_HS),yes)
 $(SBL_IMAGE_PATH_SIGNED): $(SBL_IMAGE_PATH)
   # K3 build does not support the "secure_sign_sbl" target
-  ifneq ($(SOC), $(filter $(SOC),j721e j7200 j721s2 j784s4))
+  ifneq ($(SOC), $(filter $(SOC),j721e j7200 j721s2 j784s4 j742s2))
 	$(MAKE) secure_sign_sbl
   endif
 endif
@@ -634,7 +641,7 @@ $(SBL_APPIMAGE_PATH): sbl_appimagerprc
 	$(SBL_IMAGE_GEN) LE $(SBL_DEV_ID) $@                      $(MULTI_CORE_APP_PARAMS) >> $(SBL_STDOUT_FILE)
 	$(SBL_IMAGE_GEN) BE $(SBL_DEV_ID) $(SBL_APPIMAGE_PATH_BE) $(MULTI_CORE_APP_PARAMS) >> $(SBL_STDOUT_FILE)
   endif
- ifeq ($(SOC),$(filter $(SOC),j721e j7200 j721s2 j784s4))
+ ifeq ($(SOC),$(filter $(SOC),j721e j7200 j721s2 j784s4 j742s2))
    ifneq ($(OS),Windows_NT)
 	$(CHMOD) a+x $(SBL_CERT_GEN)
    endif

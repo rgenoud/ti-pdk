@@ -9,15 +9,20 @@ endif
 
 MODULE_NAME = udma
 
+SOC_DIR=$(SOC)
+ifeq ($(SOC), j742s2)
+  SOC_DIR=j784s4
+endif
+
 SRCDIR = src
-SRCDIR += soc/$(SOC)
+SRCDIR += soc/$(SOC_DIR)
 INCDIR =
 
 # List all the external components/interfaces, whose interface header files
 # need to be included for this component
 INCLUDE_EXTERNAL_INTERFACES = pdk
 
-PACKAGE_SRCS_COMMON = udma.h src/udma_priv.h udma_component.mk makefile src/makefile .gitignore docs soc/$(SOC) 
+PACKAGE_SRCS_COMMON = udma.h src/udma_priv.h udma_component.mk makefile src/makefile .gitignore docs soc/$(SOC_DIR) 
 PACKAGE_SRCS_COMMON += include/udma_cfg.h
 PACKAGE_SRCS_COMMON += include/udma_ch.h
 PACKAGE_SRCS_COMMON += include/udma_event.h
@@ -47,14 +52,14 @@ PACKAGE_SRCS_COMMON += udma_soc.c
 PACKAGE_SRCS_COMMON += src/udma_ring_normal.c
 
 #DRU is not present in all SOC
-ifeq ($(SOC),$(filter $(SOC), j721e j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721e j721s2 j784s4 j742s2))
 SRCS_COMMON += udma_dru.c
 PACKAGE_SRCS_COMMON += src/udma_dru.c 
 PACKAGE_SRCS_COMMON += include/udma_dru.h
 include $(PDK_INSTALL_PATH)/ti/drv/udma/src/dru/makefile
 endif
 
-ifeq ($(SOC),$(filter $(SOC), j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721s2 j784s4 j742s2))
 include $(PDK_INSTALL_PATH)/ti/drv/udma/src/bcdma/makefile
 include $(PDK_INSTALL_PATH)/ti/drv/udma/src/lcdma_ringacc/makefile
 SRCS_COMMON += udma_ring_lcdma.c 

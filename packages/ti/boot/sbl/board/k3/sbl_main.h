@@ -70,6 +70,8 @@
 #include <ti/board/src/j721s2_evm/include/board_info_ddr.h>
 #elif defined(SOC_J784S4)
 #include <ti/board/src/j784s4_evm/include/board_info_ddr.h>
+#elif defined(SOC_J742S2)
+#include <ti/board/src/j742s2_evm/include/board_info_ddr.h>
 #endif
 #endif
 
@@ -82,6 +84,8 @@
 #include <ti/board/src/j721s2_evm/include/board_utils.h>
 #elif defined(SOC_J784S4)
 #include <ti/board/src/j784s4_evm/include/board_utils.h>
+#elif defined(SOC_J742S2)
+#include <ti/board/src/j742s2_evm/include/board_utils.h>
 #endif
 #endif
 

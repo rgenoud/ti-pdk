@@ -53,7 +53,7 @@
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-#if defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
 #if defined (BUILD_MCU2_0)
 #define REGION_ID (0x0)
 #define MAIN_OCM_VIRT_BASE (0xD0000000U)
@@ -82,7 +82,7 @@
 /*                          Function Definitions                              */
 /* ========================================================================== */
 
-#if defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
 #if defined (BUILD_MCU2_0)
 static uint32_t logBase2(uint32_t value)
 {
@@ -161,7 +161,7 @@ uint64_t Udma_appVirtToPhyFxn(const void *virtAddr, uint32_t chNum, void *appDat
     uint64_t    atcmSizeLocal = 0U;
     uint64_t    atcmBaseGlobal = 0U;
 
-#if defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
 #if defined (BUILD_MCU2_0)
     uint64_t    mainOcmcBaseLocal   = MAIN_OCM_VIRT_BASE;
     uint64_t    mainOcmcBaseGlobal  = CSL_MSRAM_512K0_RAM_BASE;
@@ -197,7 +197,7 @@ uint64_t Udma_appVirtToPhyFxn(const void *virtAddr, uint32_t chNum, void *appDat
 #endif
 #endif
 
-#if defined (SOC_J721E)  || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined (SOC_J721E)  || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
 #if defined (BUILD_MCU1_0)
 #if defined (SOC_J721E)
     atcmSizeLocal = CSL_MCU_ARMSS_ATCM_SIZE;
@@ -274,7 +274,7 @@ uint64_t Udma_appVirtToPhyFxn(const void *virtAddr, uint32_t chNum, void *appDat
     }
 
 
-#if defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
 #if defined (BUILD_MCU2_0)
     if((phyAddr >= mainOcmcBaseLocal) && (phyAddr < mainOcmcBaseLocal + mainOcmcSize))
     {
@@ -298,7 +298,7 @@ void *Udma_appPhyToVirtFxn(uint64_t phyAddr, uint32_t chNum, void *appData)
     uint64_t    atcmBaseGlobal = 0U;
     uint64_t    atcmSizeGlobal = 0U;
 
-#if defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
 #if defined (BUILD_MCU2_0)
     uint64_t    mainOcmcBaseLocal   = MAIN_OCM_VIRT_BASE;
     uint64_t    mainOcmcBaseGlobal  = CSL_MSRAM_512K0_RAM_BASE;
@@ -336,7 +336,7 @@ void *Udma_appPhyToVirtFxn(uint64_t phyAddr, uint32_t chNum, void *appData)
 #endif
 #endif
 
-#if defined (SOC_J721E)  || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined (SOC_J721E)  || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
 #if defined (BUILD_MCU1_0)
     atcmSizeGlobal = CSL_MCU_R5FSS0_CORE0_ATCM_SIZE;
     atcmBaseGlobal = CSL_MCU_R5FSS0_CORE0_ATCM_BASE;
@@ -393,7 +393,7 @@ void *Udma_appPhyToVirtFxn(uint64_t phyAddr, uint32_t chNum, void *appData)
     temp = (uint32_t) phyAddr;
     virtAddr = (void *) temp;
 
-#if defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
 #if defined (BUILD_MCU2_0)
     if((phyAddr >= mainOcmcBaseGlobal) && (phyAddr < mainOcmcBaseGlobal + mainOcmcSize))
     {

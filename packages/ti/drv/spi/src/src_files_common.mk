@@ -29,7 +29,7 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 # EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-SOC_DEP_LIB_SOCS=j721e j7200 j721s2 j784s4
+SOC_DEP_LIB_SOCS=j721e j7200 j721s2 j784s4 j742s2
 
 PACKAGE_SRCS_COMMON = makefile SPI.h MCSPI.h spi_component.mk .gitignore ospi_modes.md \
                       docs/ReleaseNotes_SPI_LLD.pdf docs/ESPI_FW_DESIGN_GUIDE.docx \
@@ -43,7 +43,7 @@ ifeq ($(SOC),$(filter $(SOC),$(SOC_DEP_LIB_SOCS) ))
   SRCS_COMMON += SPI_drv.c SPI_v1.c
   PACKAGE_SRCS_COMMON += src/v1/SPI_v1.c soc/SPI_v1.h
 
-  ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4))
+  ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 j742s2))
     SRCDIR += src/v0
     INCDIR += src/v0
     SRCS_COMMON += OSPI_v0.c

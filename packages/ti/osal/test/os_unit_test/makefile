@@ -7,7 +7,7 @@ APP_NAME = osal_testapp_$(BUILD_OS_TYPE)
 
 PACKAGE_SRCS_COMMON = . ../src
 
-ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 j742s2))
 SRCDIR = . ../src ../
 INCDIR = . ../src ../
 # Common source files across all platforms and cores
@@ -26,7 +26,7 @@ EXTERNAL_INTERFACES = safertos
 COMP_LIST_COMMON    = $(PDK_COMMON_SAFERTOS_COMP)
 endif
 
-ifeq ($(SOC),$(filter $(SOC),j721e j7200 j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC),j721e j7200 j721s2 j784s4 j742s2))
   CFLAGS_OSAL_UT += -DENABLE_TIMER_TEST
 endif
 

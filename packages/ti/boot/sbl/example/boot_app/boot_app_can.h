@@ -55,7 +55,7 @@ extern "C" {
 #define BOOT_APP_MCU_MCAN0_STBZ_PIN                   (0x3A)
 #elif defined (SOC_J721S2)
 #define BOOT_APP_MCU_MCAN0_STBZ_PIN                   (0x45)
-#elif defined (SOC_J784S4)
+#elif defined (SOC_J784S4) || defined (SOC_J742S2)
 #define BOOT_APP_MCU_MCAN0_STB_PIN                    (0x45)
 #endif
 #define BOOT_APP_MCAN_STD_ID_FILT_NUM                 (0U)

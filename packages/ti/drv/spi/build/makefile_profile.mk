@@ -35,8 +35,13 @@ include $(PDK_SPI_COMP_PATH)/src/src_files_common.mk
 
 MODULE_NAME = spi_profile
 
+SOC_DIR=$(SOC)
+ifeq ($(SOC), j742s2)
+  SOC_DIR=j784s4
+endif
+
 ifeq ($(SOC),$(filter $(SOC), tda2xx tda2px dra72x dra75x tda2ex am571x am572x am574x tda3xx dra78x k2h k2k k2l k2e k2g c6678 c6657 am437x am335x omapl137 omapl138 am65xx am64x))
-SRCDIR += soc/$(SOC)
+SRCDIR += soc/$(SOC_DIR)
 INCDIR += soc
 # Common source files across all platforms and cores
 SRCS_COMMON += SPI_soc.c
@@ -47,7 +52,7 @@ endif
 INCLUDE_EXTERNAL_INTERFACES = pdk edma
 
 ifeq ($(SOC),$(filter $(SOC), tda2xx tda2px dra72x dra75x tda2ex am571x am572x am574x tda3xx dra78x k2h k2k k2l k2e k2g c6678 c6657 am437x am335x omapl137 omapl138 am64x))
-PACKAGE_SRCS_COMMON += soc/$(SOC) soc/SPI_soc.h
+PACKAGE_SRCS_COMMON += soc/$(SOC_DIR) soc/SPI_soc.h
 endif
 
 ifeq ($(BUILDTYPE),$(filter $(BUILDTYPE), profile profiledma))

@@ -204,11 +204,11 @@ int32_t SBL_ReadSysfwImage(void **pBuffer, uint32_t num_bytes)
 
     ospi_cfg.funcClk = OSPI_MODULE_CLK_200M;
 
-    /* OSPI clock is set to 200MHz by RBL on J7200, J721S2 & J784S4 platforms.
+    /* OSPI clock is set to 200MHz by RBL on J7200, J721S2, J784S4 & J742S2 platforms.
      * PHY mode cannot be used until sysfw is loaded and OSPI clock is
      * configured to 133MHz.
      */
-#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4)
+#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)
     ospi_cfg.phyEnable = BFALSE;
     ospi_cfg.baudRateDiv = 8;
 #endif
@@ -222,7 +222,7 @@ int32_t SBL_ReadSysfwImage(void **pBuffer, uint32_t num_bytes)
     }
     OSPI_socSetInitCfg(BOARD_OSPI_DOMAIN, BOARD_OSPI_NOR_INSTANCE, &ospi_cfg);
 
-#if defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4)
+#if defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)
     if (gIsNandBootEnable == BTRUE)
     {
         flashHandle = Board_flashOpen(BOARD_FLASH_ID_W35N01JWTBAG,
@@ -244,7 +244,7 @@ int32_t SBL_ReadSysfwImage(void **pBuffer, uint32_t num_bytes)
         /* Disable PHY pipeline mode */
         CSL_ospiPipelinePhyEnable((const CSL_ospi_flash_cfgRegs *)(ospi_cfg.baseAddr), UFALSE);
 
-#if defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4)
+#if defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)
         /* Until OSPI PHY + DMA is enabled at this early stage, the
          * ROM can more efficiently load the SYSFW directly from xSPI flash */
         if(pBuffer)
@@ -414,7 +414,7 @@ int32_t SBL_ospiInit(void *handle)
         }
         else
         {
-            #if defined(SOC_J721E) || defined(SOC_J721S2) || defined(SOC_J784S4)
+            #if defined(SOC_J721E) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)
                     ospiFunClk = (uint64_t)(OSPI_MODULE_CLK_166M);
             #else
                     ospiFunClk = (uint64_t)(OSPI_MODULE_CLK_133M);
@@ -456,7 +456,7 @@ int32_t SBL_ospiInit(void *handle)
 
     }
 
-#if defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4)
+#if defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)
     if (gIsNandBootEnable == BTRUE)
     {
         flashHandle = Board_flashOpen(BOARD_FLASH_ID_W35N01JWTBAG,
@@ -600,7 +600,7 @@ int32_t SBL_ospiLeaveConfigSPI()
     /* Set the default SPI init configurations */
     OSPI_socSetInitCfg(BOARD_OSPI_DOMAIN, BOARD_OSPI_NOR_INSTANCE, &ospi_cfg);
 
-#if defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4)
+#if defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)
     if (gIsNandBootEnable == BTRUE)
     {
         h = Board_flashOpen(BOARD_FLASH_ID_W35N01JWTBAG,
@@ -644,7 +644,7 @@ int32_t SBL_OSPIBootImage(sblEntryPoint_t *pEntry)
     /* Initialization of the driver. */
     SBL_OSPI_Initialize();
 
-#if defined(SBL_ENABLE_HLOS_BOOT) && (defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4))
+#if defined(SBL_ENABLE_HLOS_BOOT) && (defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2))
     retVal =  SBL_MulticoreImageParse((void *) &offset, SBL_OSPI_OFFSET_SI, pEntry, SBL_SKIP_BOOT_AFTER_COPY);
 #else
     /* Profile point after OSPI init and before phy tuning */
@@ -656,7 +656,7 @@ int32_t SBL_OSPIBootImage(sblEntryPoint_t *pEntry)
 
 if(isXIPEnable == BTRUE)
 {
-    #if (defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4))
+    #if (defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2))
         /* These fields are reset by Nor_xspiClose but are required for XIP */
 
         const CSL_ospi_flash_cfgRegs *pRegs = (const CSL_ospi_flash_cfgRegs *)(ospi_cfg.baseAddr);
@@ -701,7 +701,7 @@ int32_t SBL_ospiCopyHsmImage(uint8_t** dstAddr, uint32_t srcOffsetAddr, uint32_t
             ospi_cfg.cacheEnable = BTRUE;
         }
         OSPI_socSetInitCfg(BOARD_OSPI_DOMAIN, BOARD_OSPI_NOR_INSTANCE, &ospi_cfg);
-#if defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4)
+#if defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)
         if (gIsNandBootEnable == BTRUE)
         {
             h = Board_flashOpen(BOARD_FLASH_ID_W35N01JWTBAG,

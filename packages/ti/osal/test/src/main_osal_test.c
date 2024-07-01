@@ -41,7 +41,7 @@
 #if defined(USE_BIOS)
 /* XDCtools Header files */
 #include <xdc/std.h>
-#if defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
 // workaround for A72 does not supported in SYS/BIOS yet
 #if defined (BUILD_C7X)
 #ifndef BARE_METAL
@@ -86,7 +86,7 @@
 
 #include "OSAL_board.h"
 
-#if defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
 #include <ti/drv/sciclient/sciclient.h>
 #endif
 /**********************************************************************
@@ -170,7 +170,7 @@ void C66xTimerInterruptInit(void);
 
 #ifdef BUILD_C7X
 
-/* To set C7x interrupts of DMTimers used for OSAL Timer Test on J721E/J721S2/J784S4 */
+/* To set C7x interrupts of DMTimers used for OSAL Timer Test on J721E/J721S2/J784S4/J742S2 */
 void C7x_ConfigureTimerOutput(void);
 
     /* DMTimers used for OSAL Timer Test */ 
@@ -235,11 +235,40 @@ void C7x_ConfigureTimerOutput(void);
             #endif
         #endif
     #endif
+    #if defined(SOC_J742S2)
+        #if defined(FREERTOS)
+            #define OSAL_TEST_CLEC_BASE_ADDRESS             (CSL_COMPUTE_CLUSTER0_CLEC_REGS_BASE)
+            /* DMTimer 0/1/2/3 and Interrupt num 14(configTIMER_INT_NUM) 
+            * is used by FreeRTOS by default for C7x_1/C7x_2/C7x_3 respectively, 
+            * so we need to use a different one here */
+            /* 15 for C7x_1 - DMTimer 1; 15 for C7x_2 - DMTimer 2 */
+            /* 15 for C7x_3 - DMTimer 3 */
+            #define OSAL_TEST_TIMER_INT_NUM                 (configTIMER_INT_NUM + 1U) 
+            #define OSAL_TEST_TIMER_EVENT_NUM               (CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_TIMER0_INTR_PEND_0 + 992U + configTIMER_ID + 1U)
+        #elif defined(SAFERTOS)
+            #define OSAL_TEST_CLEC_BASE_ADDRESS             (CSL_COMPUTE_CLUSTER0_CLEC_REGS_BASE)
+            /* DMTimer 0/1/2/3 and Interrupt num 14 is used by SafeRTOS 
+             * by default for C7x_1/C7x_2/C7x_3 respectively, 
+             * So we need to use a different one here */
+            /* 15 for C7x_1 - DMTimer 1; 15 for C7x_2 - DMTimer 2 */
+            /* 15 for C7x_3 - DMTimer 3 */
+            #if defined (BUILD_C7X_1)
+                #define OSAL_TEST_TIMER_INT_NUM                 (OSAL_SAFERTOS_OS_TIMER_INT_NUM_C7X_1+1U)
+                #define OSAL_TEST_TIMER_EVENT_NUM               (CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_TIMER0_INTR_PEND_0 + 992U + OSAL_SAFERTOS_OS_TIMER_ID_C7X_1 + 1U)
+            #elif defined (BUILD_C7X_2)
+                #define OSAL_TEST_TIMER_INT_NUM                 (OSAL_SAFERTOS_OS_TIMER_INT_NUM_C7X_2+1U)
+                #define OSAL_TEST_TIMER_EVENT_NUM               (CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_TIMER0_INTR_PEND_0 + 992U + OSAL_SAFERTOS_OS_TIMER_ID_C7X_2 + 1U)
+            #elif defined (BUILD_C7X_3)
+                #define OSAL_TEST_TIMER_INT_NUM                 (OSAL_SAFERTOS_OS_TIMER_INT_NUM_C7X_3+1U)
+                #define OSAL_TEST_TIMER_EVENT_NUM               (CSLR_COMPUTE_CLUSTER0_CLEC_SOC_EVENTS_IN_TIMER0_INTR_PEND_0 + 992U + OSAL_SAFERTOS_OS_TIMER_ID_C7X_3 + 1U)           
+            #endif
+        #endif
+    #endif
 
 #endif
 
 #undef  ENABLE_GET_TIME_TEST
-#if defined (SOC_AM65XX) || defined (SOC_J721E) || defined (SOC_AM572x) || defined (SOC_K2G) || defined (SOC_AM335x) || defined (SOC_AM437x) || defined (SOC_J7200)|| defined (SOC_TPR12) || defined (SOC_AWR294X) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined (SOC_AM65XX) || defined (SOC_J721E) || defined (SOC_AM572x) || defined (SOC_K2G) || defined (SOC_AM335x) || defined (SOC_AM437x) || defined (SOC_J7200)|| defined (SOC_TPR12) || defined (SOC_AWR294X) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
 #define ENABLE_GET_TIME_TEST     1
 #endif
 
@@ -458,7 +487,7 @@ bool OSAL_floating_point_test()
  */
 volatile   uint64_t gTestlocalTimeout = 0x300000U;
 
-#if (defined (SOC_AM65XX) || defined (SOC_AM64X) || defined(SOC_J721E) || defined(SOC_J7200) || defined (SOC_TPR12) || defined (SOC_AWR294X) || defined (SOC_J721S2) || defined(SOC_J784S4)) && (!defined(BUILD_C66X))&&(!defined(BUILD_C7X))
+#if (defined (SOC_AM65XX) || defined (SOC_AM64X) || defined(SOC_J721E) || defined(SOC_J7200) || defined (SOC_TPR12) || defined (SOC_AWR294X) || defined (SOC_J721S2) || defined(SOC_J784S4) || defined (SOC_J742S2)) && (!defined(BUILD_C66X))&&(!defined(BUILD_C7X))
 #define INT_NUM_IRQ 32U
 #define LOOP_CNT    100
 volatile uint64_t gFlagIRQ = 0U;
@@ -538,7 +567,7 @@ bool  OSAL_core_hwi_test()
 bool OSAL_hwi_test()
 {
   bool pass = BTRUE;
-#if (defined (SOC_AM65XX) || defined (SOC_AM64X) || defined(SOC_J721E) || defined(SOC_J7200) || defined (SOC_TPR12) || defined (SOC_AWR294X) || defined (SOC_J721S2) || defined(SOC_J784S4)) && (!defined(BUILD_C66X))&&(!defined(BUILD_C7X))
+#if (defined (SOC_AM65XX) || defined (SOC_AM64X) || defined(SOC_J721E) || defined(SOC_J7200) || defined (SOC_TPR12) || defined (SOC_AWR294X) || defined (SOC_J721S2) || defined(SOC_J784S4) || defined (SOC_J742S2)) && (!defined(BUILD_C66X))&&(!defined(BUILD_C7X))
   pass = OSAL_core_hwi_test();
 #endif
   return pass;
@@ -679,6 +708,27 @@ UT_Timer_Type_t  timer_type =             UT_Timer_TIMER64;
     #define OSAL_TEST_TIMER_PERIOD            (5000U)
   #elif defined (BUILD_C7X_4)
     #define OSAL_TEST_TIMER_ID                (4U)
+    #define OSAL_TEST_TIMER_PERIOD            (5000U)
+  #else
+    #define OSAL_TEST_TIMER_ID                (6U)
+    #define OSAL_TEST_TIMER_PERIOD            (5000U)
+  #endif
+#elif defined(SOC_J742S2)
+  UT_Timer_Type_t  timer_type    =          UT_Timer_DMTIMER;
+  #if defined (BUILD_MCU1_0)
+    #define OSAL_TEST_TIMER_ID                (2U)
+    #define OSAL_TEST_TIMER_PERIOD            (5000U)
+  #elif (__ARM_ARCH == 7) && (__ARM_ARCH_PROFILE == 'R') 
+    #define OSAL_TEST_TIMER_ID                (1U)
+    #define OSAL_TEST_TIMER_PERIOD            (5000U)
+  #elif defined (BUILD_C7X_1)
+    #define OSAL_TEST_TIMER_ID                (1U)
+    #define OSAL_TEST_TIMER_PERIOD            (5000U)
+  #elif defined (BUILD_C7X_2)
+    #define OSAL_TEST_TIMER_ID                (2U)
+    #define OSAL_TEST_TIMER_PERIOD            (5000U)
+  #elif defined (BUILD_C7X_3)
+    #define OSAL_TEST_TIMER_ID                (3U)
     #define OSAL_TEST_TIMER_PERIOD            (5000U)
   #else
     #define OSAL_TEST_TIMER_ID                (6U)
@@ -858,7 +908,7 @@ bool OSAL_timer_test()
     id                  = OSAL_TEST_TIMER_ID;
 #endif
 
-#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4)
+#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)
 #if !(defined(BARE_METAL) || defined(FREERTOS))
 #if defined(BUILD_C66X) || defined(BUILD_C7X) || defined(BUILD_MCU1_0)
     id                  = OSAL_TEST_TIMER_ID;
@@ -872,7 +922,7 @@ bool OSAL_timer_test()
 #endif
 #endif
 #endif
-#if defined(SOC_J721E) || defined(SOC_J721S2) || defined(SOC_J784S4)
+#if defined(SOC_J721E) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)
 #if defined(BUILD_C7X)
     id                  = OSAL_TEST_TIMER_ID;
 #endif
@@ -928,7 +978,7 @@ bool OSAL_timer_test()
     timerParams.periodType = TimerP_PeriodType_MICROSECS;
     timerParams.period     = OSAL_TEST_TIMER_PERIOD;
 
-#if defined(SOC_J721E) || defined(SOC_J721S2) || defined(SOC_J784S4)
+#if defined(SOC_J721E) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)
 #if defined(_TMS320C6X)
 	  timerParams.eventId    = OSAL_TEST_TIMER_EVENT_NUM;
     timerParams.intNum     = OSAL_TEST_TIMER_INT_NUM;
@@ -936,7 +986,7 @@ bool OSAL_timer_test()
 #endif
 #endif
 
-#if defined(SOC_J721E) || defined(SOC_J721S2) || defined(SOC_J784S4)
+#if defined(SOC_J721E) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)
 #if defined(BUILD_C7X)
     timerParams.intNum     = OSAL_TEST_TIMER_INT_NUM;
     OSAL_log("\n set intNum=%d, id=%d,  \n", timerParams.intNum, id);
@@ -2670,7 +2720,7 @@ int main(void)
      * For AM65XX TPR12 and J7 the common RTSC cfg file is used and hence there is
      * no test application specific task is created in teh RTSC cfg file
      */
-#if defined (SOC_AM65XX) || defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_TPR12) || defined (SOC_AWR294X)|| defined (SOC_AM64X) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined (SOC_AM65XX) || defined (SOC_J721E) || defined (SOC_J7200) || defined (SOC_TPR12) || defined (SOC_AWR294X)|| defined (SOC_AM64X) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined(SOC_J742S2)
     TaskP_Params taskParams;
 
 #if defined(USE_BIOS)

@@ -260,7 +260,7 @@ SciApp_TestParams_t gSciApp_TestcaseParams[] =
         /** testType **/
         (SCI_APP_TEST_TYPE_SANITY)
     },
-#if defined (SOC_J784S4)
+#if defined (SOC_J784S4) || defined(SOC_J742S2)
     {
         /** enableTest **/
         SCI_APP_TEST_ENABLE,

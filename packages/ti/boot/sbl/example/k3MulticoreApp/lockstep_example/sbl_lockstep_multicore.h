@@ -50,7 +50,7 @@
 #define SBL_LOCKSTEP_TEST_NUM_BOOT_CORES (1)
 #elif defined (SOC_J721S2) || defined (SOC_J721E)
 #define SBL_LOCKSTEP_TEST_NUM_BOOT_CORES (2)
-#elif defined (SOC_J784S4)
+#elif defined (SOC_J784S4) || defined (SOC_J742S2)
 #define SBL_LOCKSTEP_TEST_NUM_BOOT_CORES (3)
 #endif
 

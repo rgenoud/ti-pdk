@@ -188,6 +188,25 @@ NOR_Config Nor_config[BOARD_FLASH_NOR_INTF_MAX] =
         NULL
     }
 };
+#elif defined(j742s2_evm)
+NOR_Config Nor_config[BOARD_FLASH_NOR_INTF_MAX] =
+{
+    {
+        NULL
+    },
+    {
+        &Nor_qspiFxnTable
+    },
+    {
+        NULL
+    },
+    {
+        &Nor_xspiFxnTable
+    },
+    {
+        NULL
+    }
+};
 #elif defined(am64x_evm)
 NOR_Config Nor_config[BOARD_FLASH_NOR_INTF_MAX] =
 {

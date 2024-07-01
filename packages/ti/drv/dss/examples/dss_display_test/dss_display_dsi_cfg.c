@@ -60,6 +60,9 @@
 #if defined (SOC_J784S4)
 #include <ti/board/src/j784s4_evm/include/board_control.h>
 #endif
+#if defined (SOC_J742S2)
+#include <ti/board/src/j742s2_evm/include/board_control.h>
+#endif
 #include <dss_display_test.h>
 
 /* ========================================================================== */
@@ -382,7 +385,7 @@ int32_t DispApp_InitI2c()
         App_print("\nI2C Open failed!\n");
         status = FVID2_EFAIL;
     }
-#elif defined (SOC_J721S2) || defined(SOC_J784S4)
+#elif defined (SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)
     I2C_Params i2cParams;
 
     /* Enable the DSI to eDP bridge. */
@@ -440,7 +443,7 @@ int32_t DispApp_cfgAdditionalDsiPeripherals()
             }
         }
     }
-#elif defined (SOC_J721S2) || defined (SOC_J784S4)
+#elif defined (SOC_J721S2) || defined (SOC_J784S4) || defined(SOC_J742S2)
     uint8_t readVal, wrVal = 0xFF, i;
     for(i = 0xF0; i < 0xF9; i++)
     {

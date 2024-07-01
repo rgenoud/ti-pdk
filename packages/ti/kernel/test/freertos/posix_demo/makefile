@@ -12,12 +12,16 @@ APP_NAME = freertos_test_posix
 BUILD_OS_TYPE=freertos
 CFLAGS_TEST_DEFINES =
 
+SOC_DIR=$(SOC)
+ifeq ($(SOC), j742s2)
+  SOC_DIR=j784s4
+endif
 
 SRCDIR = .
 INCDIR = ../
 INCDIR +=  ${FREERTOS_KERNEL_INSTALL_PATH}/FreeRTOS-Kernel/include
 INCDIR += $(PDK_FREERTOS_COMP_PATH)/freertos/portable/TI_CGT/$(ISA)
-INCDIR += $(PDK_FREERTOS_COMP_PATH)/freertos/config/$(SOC)/$(ISA)
+INCDIR += $(PDK_FREERTOS_COMP_PATH)/freertos/config/$(SOC_DIR)/$(ISA)
 INCDIR += $(PDK_FREERTOS_COMP_PATH)/freertos/dpl/common
 INCDIR += ${FREERTOS_LABS_INSTALL_PATH}/FreeRTOS-POSIX/include
 INCDIR += ${FREERTOS_LABS_INSTALL_PATH}/FreeRTOS-POSIX/include/private

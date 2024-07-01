@@ -58,7 +58,7 @@
 #include <ti/osal/soc/j7200/osal_soc.h>
 #elif defined (SOC_J721S2)
 #include <ti/osal/soc/j721s2/osal_soc.h>
-#elif defined (SOC_J784S4)
+#elif defined (SOC_J784S4) || defined(SOC_J742S2)
 #include <ti/osal/soc/j784s4/osal_soc.h>
 #else
 /* No known Soc is defined, have below defaults */

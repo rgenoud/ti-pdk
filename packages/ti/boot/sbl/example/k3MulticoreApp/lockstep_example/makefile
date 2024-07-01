@@ -18,6 +18,11 @@ SRCDIR      += $(PDK_SBL_COMP_PATH)/example/k3MulticoreApp/lockstep_example
 
 INCDIR      += $(PDK_SBL_COMP_PATH)/example/k3MulticoreApp
 
+SOC_DIR=$(SOC)
+ifeq ($(SOC), j742s2)
+  SOC_DIR=j784s4
+endif
+
 CFLAGS_LOCAL_COMMON = $(PDK_CFLAGS)
 PACKAGE_SRCS_COMMON = .
 
@@ -35,8 +40,8 @@ SRCS_COMMON += sbl_lockstep_multicore.c sbl_printf.c
 # asm files and linker scripts change due to different tool chains for R5 and A53
 ifeq ($(CORE),$(filter $(CORE), mcu2_0 mcu3_0 mcu4_0))
   SRCS_ASM_COMMON = sbl_multicore_r5.asm
-  EXTERNAL_LNKCMD_FILE_LOCAL =  $(PDK_SBL_COMP_PATH)/example/k3MulticoreApp/$(SOC)/mcuAmplinker.lds
-  APPEND_LNKCMD_FILE = $(PDK_SBL_COMP_PATH)/example/k3MulticoreApp/$(SOC)/mcuAmplinker_$(CORE).lds
+  EXTERNAL_LNKCMD_FILE_LOCAL =  $(PDK_SBL_COMP_PATH)/example/k3MulticoreApp/$(SOC_DIR)/mcuAmplinker.lds
+  APPEND_LNKCMD_FILE = $(PDK_SBL_COMP_PATH)/example/k3MulticoreApp/$(SOC_DIR)/mcuAmplinker_$(CORE).lds
 endif
 
 ifeq ($(CORE),$(filter $(CORE), mcu1_0))

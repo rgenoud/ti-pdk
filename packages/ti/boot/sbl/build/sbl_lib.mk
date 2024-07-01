@@ -35,8 +35,13 @@ endif
 
 MODULE_NAME = $(BASE_NAME)$(HS_SUFFIX)
 
+SOC_DIR=$(SOC)
+ifeq ($(SOC), j742s2)
+  SOC_DIR=j784s4
+endif
+
 INCDIR	+= $(PDK_INSTALL_PATH)
-INCDIR	+= $(PDK_INSTALL_PATH)/ti/drv/uart/soc/$(SOC)
+INCDIR	+= $(PDK_INSTALL_PATH)/ti/drv/uart/soc/$(SOC_DIR)
 
 INCDIR	+= $(PDK_SBL_COMP_PATH)
 INCDIR	+= $(PDK_SBL_COMP_PATH)/soc
@@ -57,7 +62,7 @@ SRCDIR	+=$(PDK_SBL_COMP_PATH)/src/mmcsd
 SRCDIR	+=$(PDK_SBL_COMP_PATH)/src/emmc
 SRCDIR	+=$(PDK_SBL_COMP_PATH)/src/uart
 SRCDIR	+= $(PDK_SBL_COMP_PATH)/soc/k3
-SRCDIR	+= $(PDK_INSTALL_PATH)/ti/drv/uart/soc/$(SOC)
+SRCDIR	+= $(PDK_INSTALL_PATH)/ti/drv/uart/soc/$(SOC_DIR)
 
 # List all the external components/interfaces, whose interface header files
 # need to be included for this component
@@ -167,6 +172,7 @@ endif # ifeq ($(filter $(SBL_CFLAGS), -DBOOT_QSPI), -DBOOT_QSPI)
 SRCS_j721e += j721e_qos_data.c
 SRCS_j721s2 += j721s2_qos_data.c
 SRCS_j784s4 += j784s4_qos_data.c
+SRCS_j742s2 += j784s4_qos_data.c
 
 # User needs to change below macro to boot app with size more than 500 KB.
 # E.g. If app is x KB then give MAX_APP_SIZE_EMMC as (x * 1024) in hexadecimal

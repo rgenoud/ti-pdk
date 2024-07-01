@@ -169,7 +169,7 @@ uint32_t mmcsd_test_sizes[MMCSD_TEST_NUM_SIZES]={(1024*32)};
 #define GPIO_PIN_MMC_SDCD_ACTIVE_STATE 0
 #endif
 
-#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4)
+#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)
 #define MMCSD_INSTANCE_SDCARD  1
 #else
   #define MMCSD_INSTANCE_SDCARD  0
@@ -181,7 +181,7 @@ uint32_t mmcsd_test_sizes[MMCSD_TEST_NUM_SIZES]={(1024*32)};
 /*                         Structures and Enums                               */
 /* ========================================================================== */
 
-#if !defined(SOC_J721E) && !defined(SOC_J7200) && !defined(SOC_J721S2) && !defined(SOC_J784S4)
+#if !defined(SOC_J721E) && !defined(SOC_J7200) && !defined(SOC_J721S2) && !defined(SOC_J784S4) && !defined(SOC_J742S2)
 typedef CSL_control_core_pad_ioRegs *CSL_padRegsOvly;
 #endif
 
@@ -221,7 +221,7 @@ uint8_t rx[MMCSD_TEST_MAX_BUFSIZE] __attribute__((aligned(DATA_BUF_ALIGN))) __at
 
 #ifndef BARE_METAL
 
-#if (defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4)) && (defined(BUILD_MPU) || defined (BUILD_C7X))
+#if (defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)) && (defined(BUILD_MPU) || defined (BUILD_C7X))
 extern void Osal_initMmuDefault(void);
 void InitMmu(void)
 {
@@ -571,7 +571,7 @@ mmcsdTestSDProfile_t * mmcsdTestProfiles[] = {
 	&SDProfiles_1p8V_SDR50,
 	&SDProfiles_1p8V_DDR50,
 
-#if !defined(SOC_J721E) && !defined(SOC_J7200) && !defined(SOC_J721S2) && !defined(SOC_J784S4)
+#if !defined(SOC_J721E) && !defined(SOC_J7200) && !defined(SOC_J721S2) && !defined(SOC_J784S4) && !defined(SOC_J742S2)
 	&SDProfiles_1p8V_SDR104,
 #endif
 #endif
@@ -652,7 +652,7 @@ static int32_t HSMMCSDReadWriteTest_RAW(mmcsdTestSDProfile_t *testProfilePtr);
 static int32_t HSMMCSDReadWriteTest_FATFS(mmcsdTestSDProfile_t *testProfilePtr);
 #endif
 
-#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4)
+#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)
 MMCSD_v2_HwAttrs           hwAttrsConfigDefault;
 #endif
 uint32_t hwAttrsConfigDefaultSaved=0;
@@ -684,7 +684,7 @@ void mmcsd_test(void *arg0, void *arg1)
 		while(emuwait_board);
 	}
 
-#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4)
+#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)
     MMCSD_v2_HwAttrs           hwAttrsConfig;
 #endif
 
@@ -766,7 +766,7 @@ void mmcsd_test(void *arg0, void *arg1)
 
       hwAttrsConfig.enableInterrupt = testProfilePtr->intr;
       hwAttrsConfig.supportedBusVoltages = testProfilePtr->busVoltage;
-#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4)
+#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)
       hwAttrsConfig.supportedModes = testProfilePtr->mode;
       hwAttrsConfig.supportedBusWidth = testProfilePtr->busWidth;
 #endif

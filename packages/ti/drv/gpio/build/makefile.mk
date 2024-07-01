@@ -35,7 +35,12 @@ include $(PDK_GPIO_COMP_PATH)/src/src_files_common.mk
 
 MODULE_NAME = gpio
 
-SRCDIR += soc/$(SOC)
+SOC_DIR=$(SOC)
+ifeq ($(SOC), j742s2)
+  SOC_DIR=j784s4
+endif
+
+SRCDIR += soc/$(SOC_DIR)
 INCDIR += soc
 # Common source files across all platforms and cores
 SRCS_COMMON += GPIO_soc.c
@@ -44,7 +49,7 @@ SRCS_COMMON += GPIO_soc.c
 #  need to be included for this component
 INCLUDE_EXTERNAL_INTERFACES = pdk
 
-PACKAGE_SRCS_COMMON += soc/$(SOC)/GPIO_soc.c soc/GPIO_soc.h
+PACKAGE_SRCS_COMMON += soc/$(SOC_DIR)/GPIO_soc.c soc/GPIO_soc.h
 
 CFLAGS_LOCAL_COMMON = $(PDK_CFLAGS)
 

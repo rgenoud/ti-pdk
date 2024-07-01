@@ -65,13 +65,13 @@ static uint32_t sbl_scratch_sz = SBL_SCRATCH_MEM_SIZE;
 /******************************************************************************
  ***                     SBL Multicore RPRC parse functions                 ***
 *******************************************************************************/
-#if defined (SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4)
+#if defined (SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)
 #if defined(BUILD_MCU1_0)
 extern void SBL_DCacheClean(void *addr, uint32_t size);
 #endif
 #endif
 
-#if (SBL_USE_DMA && defined(BOOT_OSPI) && (defined (SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4)))
+#if (SBL_USE_DMA && defined(BOOT_OSPI) && (defined (SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)))
 extern int32_t SBL_OSPI_ReadSectors(void *dstAddr, void *srcOffsetAddr, uint32_t length);
 #endif
 
@@ -207,7 +207,7 @@ void SBL_BootCore(uint32_t entry, uint32_t CoreID, sblEntryPoint_t *pAppEntry, u
 {
     switch (CoreID)
     {
-#if defined (SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4)
+#if defined (SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)
         case ONLY_LOAD_ID:
             /* Only loading, ignore entry point*/
             SBL_log(SBL_LOG_MAX, "Only load (not execute) image @0x%x\n", entry);
@@ -261,7 +261,7 @@ void SBL_BootCore(uint32_t entry, uint32_t CoreID, sblEntryPoint_t *pAppEntry, u
             SBL_log(SBL_LOG_MAX, "Setting SMP entry point for MPU1 @0x%x\n", entry);
             pAppEntry->CpuEntryPoint[MPU1_CPU0_ID] = entry;
             pAppEntry->CpuEntryPoint[MPU1_CPU1_ID] = entry;
-            #if defined(SOC_J784S4)
+            #if defined(SOC_J784S4) || defined(SOC_J742S2)
                 pAppEntry->CpuEntryPoint[MPU1_CPU2_ID] = entry;
                 pAppEntry->CpuEntryPoint[MPU1_CPU3_ID] = entry;
             #endif
@@ -272,7 +272,7 @@ void SBL_BootCore(uint32_t entry, uint32_t CoreID, sblEntryPoint_t *pAppEntry, u
             {
                 SBL_SlaveCoreBoot(MPU1_CPU0_ID, 0, pAppEntry, SBL_DONT_REQUEST_CORE);
                 SBL_SlaveCoreBoot(MPU1_CPU1_ID, 0, pAppEntry, SBL_DONT_REQUEST_CORE);
-                #if defined(SOC_J784S4)
+                #if defined(SOC_J784S4) || defined(SOC_J742S2)
                     SBL_SlaveCoreBoot(MPU1_CPU2_ID, 0, pAppEntry, SBL_DONT_REQUEST_CORE);
                     SBL_SlaveCoreBoot(MPU1_CPU3_ID, 0, pAppEntry, SBL_DONT_REQUEST_CORE);
                 #endif
@@ -284,6 +284,7 @@ void SBL_BootCore(uint32_t entry, uint32_t CoreID, sblEntryPoint_t *pAppEntry, u
             SBL_log(SBL_LOG_MAX, "Setting SMP entry point for MPU2 @0x%x\n", entry);
             pAppEntry->CpuEntryPoint[MPU2_CPU0_ID] = entry;
             pAppEntry->CpuEntryPoint[MPU2_CPU1_ID] = entry;
+            /* Not needed for J742S2 since mpu2_2, mpu2_3 is not present in the SOC */
             #if defined(SOC_J784S4)
                 pAppEntry->CpuEntryPoint[MPU2_CPU2_ID] = entry;
                 pAppEntry->CpuEntryPoint[MPU2_CPU3_ID] = entry;
@@ -295,6 +296,7 @@ void SBL_BootCore(uint32_t entry, uint32_t CoreID, sblEntryPoint_t *pAppEntry, u
             {
                 SBL_SlaveCoreBoot(MPU2_CPU0_ID, 0, pAppEntry, SBL_DONT_REQUEST_CORE);
                 SBL_SlaveCoreBoot(MPU2_CPU1_ID, 0, pAppEntry, SBL_DONT_REQUEST_CORE);
+                /* Not needed for J742S2 since mpu2_2, mpu2_3 is not present in the SOC */
                 #if defined(SOC_J784S4)
                     SBL_SlaveCoreBoot(MPU2_CPU2_ID, 0, pAppEntry, SBL_DONT_REQUEST_CORE);
                     SBL_SlaveCoreBoot(MPU2_CPU3_ID, 0, pAppEntry, SBL_DONT_REQUEST_CORE);
@@ -309,11 +311,15 @@ void SBL_BootCore(uint32_t entry, uint32_t CoreID, sblEntryPoint_t *pAppEntry, u
             pAppEntry->CpuEntryPoint[MPU1_CPU1_ID] = entry;
             pAppEntry->CpuEntryPoint[MPU2_CPU0_ID] = entry;
             pAppEntry->CpuEntryPoint[MPU2_CPU1_ID] = entry;
+            /* Not needed for J742S2 since mpu2_2, mpu2_3 is not present in the SOC */
             #if defined(SOC_J784S4)
                 pAppEntry->CpuEntryPoint[MPU1_CPU2_ID] = entry;
                 pAppEntry->CpuEntryPoint[MPU1_CPU3_ID] = entry;
                 pAppEntry->CpuEntryPoint[MPU2_CPU2_ID] = entry;
                 pAppEntry->CpuEntryPoint[MPU2_CPU3_ID] = entry;
+            #elif defined(SOC_J742S2)
+                pAppEntry->CpuEntryPoint[MPU1_CPU2_ID] = entry;
+                pAppEntry->CpuEntryPoint[MPU1_CPU3_ID] = entry;
             #endif
             pAppEntry->CpuEntryPoint[CoreID] = SBL_INVALID_ENTRY_ADDR;
 
@@ -324,11 +330,15 @@ void SBL_BootCore(uint32_t entry, uint32_t CoreID, sblEntryPoint_t *pAppEntry, u
                 SBL_SlaveCoreBoot(MPU1_CPU1_ID, 0, pAppEntry, SBL_DONT_REQUEST_CORE);
                 SBL_SlaveCoreBoot(MPU2_CPU0_ID, 0, pAppEntry, SBL_DONT_REQUEST_CORE);
                 SBL_SlaveCoreBoot(MPU2_CPU1_ID, 0, pAppEntry, SBL_DONT_REQUEST_CORE);
+                /* Not needed for J742S2 since mpu2_2, mpu2_3 is not present in the SOC */
                 #if defined(SOC_J784S4)
                     SBL_SlaveCoreBoot(MPU1_CPU2_ID, 0, pAppEntry, SBL_DONT_REQUEST_CORE);
                     SBL_SlaveCoreBoot(MPU1_CPU3_ID, 0, pAppEntry, SBL_DONT_REQUEST_CORE);
                     SBL_SlaveCoreBoot(MPU2_CPU2_ID, 0, pAppEntry, SBL_DONT_REQUEST_CORE);
                     SBL_SlaveCoreBoot(MPU2_CPU3_ID, 0, pAppEntry, SBL_DONT_REQUEST_CORE);
+                #elif defined(SOC_J742S2)
+                    SBL_SlaveCoreBoot(MPU1_CPU2_ID, 0, pAppEntry, SBL_DONT_REQUEST_CORE);
+                    SBL_SlaveCoreBoot(MPU1_CPU3_ID, 0, pAppEntry, SBL_DONT_REQUEST_CORE);
                 #endif
             }
 
@@ -395,7 +405,7 @@ void SBL_BootCore(uint32_t entry, uint32_t CoreID, sblEntryPoint_t *pAppEntry, u
     }
 }
 
-#if defined (SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4)
+#if defined (SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)
 /* */
 
 __attribute__((weak)) void SBL_SetupCoreMem(uint32_t CoreID);
@@ -419,7 +429,7 @@ static int32_t SBL_RprcImageParse(void *srcAddr,
 
     const uint32_t SocAtcmAddr[] =
     {
-#if (SBL_USE_DMA && (defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4)))
+#if (SBL_USE_DMA && (defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)))
     /* Use SoC level address of MCU1_0 ATCM for non-CPU writes to this TCM. */
     SBL_MCU1_CPU0_ATCM_BASE_ADDR_SOC,
 #else
@@ -436,7 +446,7 @@ static int32_t SBL_RprcImageParse(void *srcAddr,
 
     const uint32_t SocBtcmAddr[] =
     {
-#if (SBL_USE_DMA && (defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4)))
+#if (SBL_USE_DMA && (defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)))
     /* Use SoC level address of MCU1_0 BTCM for non-CPU writes to this TCM. */
     SBL_MCU1_CPU0_BTCM_BASE_ADDR_SOC,
 #else
@@ -524,7 +534,7 @@ static int32_t SBL_RprcImageParse(void *srcAddr,
 
             switch (CoreId)
             {
-#if (SBL_USE_DMA && defined(BOOT_OSPI) && (defined (SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4)))
+#if (SBL_USE_DMA && defined(BOOT_OSPI) && (defined (SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)))
                 /* Need address translation to SoC level addresses of MCU1_0 TCMs, when trying to copy to local addresses */
                 case MCU1_CPU0_ID:
                     atcmSize = SBL_getAtcmSize(CoreId);

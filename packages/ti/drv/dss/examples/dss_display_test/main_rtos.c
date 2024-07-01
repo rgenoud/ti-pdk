@@ -210,7 +210,7 @@ static void taskFxn(void* a0, void* a1)
                                    TISCI_MSG_VALUE_DEVICE_SW_STATE_ON,
                                    TISCI_MSG_FLAG_AOP,
                                    SCICLIENT_SERVICE_WAIT_FOREVER);
-#if defined (SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined (SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
 #if (1U == DISP_APP_TEST_EDP)    
     retVal += Sciclient_pmSetModuleState(TISCI_DEV_DSS_EDP0,
                                    TISCI_MSG_VALUE_DEVICE_SW_STATE_ON,

@@ -8968,7 +8968,7 @@ static UdmaTestParams gUdmaTestCases[] =
         .ringPrmId  = UDMA_TEST_RING_PRMID_EVENT_POLLED,
     },
     #endif
-#if defined (SOC_J784S4)
+#if defined (SOC_J784S4) || defined (SOC_J742S2)
     {
         .enableTest = TEST_ENABLE,
         .tcId       = 14364U,

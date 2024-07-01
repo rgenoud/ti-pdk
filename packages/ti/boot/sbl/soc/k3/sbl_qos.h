@@ -42,7 +42,7 @@
 #if defined(SOC_J721S2)
 #include "j721s2_qos.h"
 #endif
-#if defined(SOC_J784S4)
+#if defined(SOC_J784S4) || defined(SOC_J742S2)
 #include "j784s4_qos.h"
 #endif
 

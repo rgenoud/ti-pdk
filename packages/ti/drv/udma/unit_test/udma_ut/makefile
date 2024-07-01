@@ -16,11 +16,16 @@ APP_NAME = udma_dynamic_unit_testapp
 BUILD_OS_TYPE=baremetal
 endif
 
+SOC_DIR=$(SOC)
+ifeq ($(SOC), j742s2)
+  SOC_DIR=j784s4
+endif
+
 #
 # This file is common makefile for building UDMA unit test app for RTOS
 #
-SRCDIR = . ./src ./src/soc/$(SOC) ./rtos
-INCDIR = . ./src ./src/soc/$(SOC) ./rtos
+SRCDIR = . ./src ./src/soc/$(SOC_DIR) ./rtos
+INCDIR = . ./src ./src/soc/$(SOC_DIR) ./rtos
 
 # List all the external components/interfaces, whose interface header files
 #  need to be included for this component
@@ -62,19 +67,19 @@ SRCS_COMMON += udma_test_proxy_neg.c
 SRCS_COMMON += udma_test_event_neg.c
 SRCS_COMMON += udma_test_ring_monitor_neg.c
 SRCS_COMMON += udma_test_osal_neg.c
-ifeq ($(SOC),$(filter $(SOC), j784s4))
+ifeq ($(SOC),$(filter $(SOC), j784s4 j742s2))
 SRCS_COMMON += udma_test_csl_ringacc.c udma_test_csl_udmap.c udma_test_csl_lcdma_ringacc.c udma_test_csl_dru.c udma_test_csl_proxy.c udma_test_csl_bcdma.c udma_test_csl_intaggr.c
 ifeq ($(ISA), c7x)
 SRCS_COMMON += udma_test_csl_clec.c
 endif
 endif
-ifeq ($(SOC),$(filter $(SOC), j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721s2 j784s4 j742s2))
 SRCS_COMMON += udma_test_ring_lcdma.c
 endif
-ifeq ($(SOC),$(filter $(SOC), j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721s2 j784s4 j742s2))
 SRCS_COMMON += udma_test_ring_lcdma_neg.c
 endif
-ifeq ($(SOC),$(filter $(SOC), j721e j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721e j721s2 j784s4 j742s2))
 SRCS_COMMON += udma_test_utc.c
 endif
 

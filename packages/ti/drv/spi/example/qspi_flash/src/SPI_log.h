@@ -51,7 +51,6 @@ extern "C" {
 /* UART Header files */
 #include <ti/drv/uart/UART.h>
 #include <ti/drv/uart/UART_stdio.h>
-#include <ti/csl/soc/am572x/src/cslr_control_core_pad_io.h>
 
 /**********************************************************************
  ************************** Global Variables **************************

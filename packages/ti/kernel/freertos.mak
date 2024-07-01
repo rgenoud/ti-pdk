@@ -8,8 +8,13 @@ MODULE_NAME = freertos
 SRCDIR = freertos/portable/TI_CGT/$(ISA)
 SRCDIR += ${FREERTOS_KERNEL_INSTALL_PATH}/FreeRTOS-Kernel/ \
           ${FREERTOS_KERNEL_INSTALL_PATH}/FreeRTOS-Kernel/portable/MemMang \
-	
-INCDIR = freertos/config/$(SOC)/$(ISA)
+
+SOC_DIR=$(SOC)
+ifeq ($(SOC), j742s2)
+  SOC_DIR=j784s4
+endif
+
+INCDIR = freertos/config/$(SOC_DIR)/$(ISA)
 INCDIR += ${FREERTOS_KERNEL_INSTALL_PATH}/FreeRTOS-Kernel/include \
           freertos/portable/TI_CGT/$(ISA) \
           $(PDK_CSL_COMP_PATH)/arch/$(ISA)

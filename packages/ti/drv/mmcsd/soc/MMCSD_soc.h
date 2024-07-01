@@ -57,7 +57,7 @@ extern "C" {
 #include <ti/csl/soc.h>
 #include <ti/osal/osal.h>
 
-#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4)
+#if defined(SOC_J721E) || defined(SOC_J7200) || defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_J742S2)
 #include <ti/drv/mmcsd/soc/MMCSD_v2.h>
 #endif
 
@@ -68,6 +68,8 @@ extern "C" {
 #elif defined(SOC_J721S2)
     #define MMCSD_CNT 2
 #elif defined(SOC_J784S4)
+    #define MMCSD_CNT 2
+#elif defined(SOC_J742S2)
     #define MMCSD_CNT 2
 #endif
 #ifdef __cplusplus

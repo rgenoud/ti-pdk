@@ -33,20 +33,24 @@
 /* SBL_AMP_TEST_NUM_BOOT_CORES indicates number of cores in SOC */
 /* BOOTAPP_NUM_BOOT_CORES indicates number of cores booted from lateapps */
 #if defined (SOC_J7200)
-#define SBL_AMP_TEST_NUM_BOOT_CORES (6)
-#define BOOTAPP_NUM_BOOT_CORES (3)
+#define SBL_AMP_TEST_NUM_BOOT_CORES (6)    /* Total number of R5 cores + A72 cores */
+#define BOOTAPP_NUM_BOOT_CORES (3)         /* Total number of R5 cores (except mcu1_0 cluster) + mpu1_0 */
 #endif
 #if defined (SOC_J721S2)
-#define SBL_AMP_TEST_NUM_BOOT_CORES (10)
-#define BOOTAPP_NUM_BOOT_CORES (7)
+#define SBL_AMP_TEST_NUM_BOOT_CORES (10)   /* Total number of R5 cores + DSP cores + A72 cores */
+#define BOOTAPP_NUM_BOOT_CORES (7)         /* Total number of R5 cores (except mcu1_0 cluster) + DSP cores + mpu1_0 */
 #endif
 #if defined (SOC_J784S4)
-#define SBL_AMP_TEST_NUM_BOOT_CORES (20)
-#define BOOTAPP_NUM_BOOT_CORES (11)
+#define SBL_AMP_TEST_NUM_BOOT_CORES (20)   /* Total number of R5 cores + DSP cores + A72 cores */
+#define BOOTAPP_NUM_BOOT_CORES (11)        /* Total number of R5 cores (except mcu1_0 cluster) + DSP cores + mpu1_0 */
+#endif
+#if defined (SOC_J742S2)
+#define SBL_AMP_TEST_NUM_BOOT_CORES (15)   /* Total number of R5 cores + DSP cores + A72 cores */
+#define BOOTAPP_NUM_BOOT_CORES (10)         /* Total number of R5 cores (except mcu1_0 cluster) + DSP cores + mpu1_0 */
 #endif
 #if defined (SOC_J721E)
-#define SBL_AMP_TEST_NUM_BOOT_CORES (11)
-#define BOOTAPP_NUM_BOOT_CORES (8)
+#define SBL_AMP_TEST_NUM_BOOT_CORES (11)   /* Total number of R5 cores + DSP cores + A72 cores */
+#define BOOTAPP_NUM_BOOT_CORES (8)         /* Total number of R5 cores (except mcu1_0 cluster) + DSP cores + mpu1_0 */
 #endif
 
 #define POKE_MEM_ADDR_MCU1_0 0x41CE1FFC

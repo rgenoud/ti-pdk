@@ -423,7 +423,7 @@ uint32_t TaskP_getTaskStackHighWatermark(TaskP_Handle handle)
 static int32_t prvSetupTimerPSC( void )
 {
     int32_t xStatus = CSL_PASS;
-#if defined (SOC_J784S4) && defined (BUILD_MCU)
+#if (defined (SOC_J784S4) || defined (SOC_J742S2)) && defined (BUILD_MCU)
     CSL_ArmR5CPUInfo info = {0U, 0U, 0U};
 
     CSL_armR5GetCpuID(&info);

@@ -67,9 +67,9 @@
 ifeq ($(spi_component_make_include), )
 
 drvspi_RTOS_LIST       = $(DEFAULT_RTOS_LIST)
-drvspi_BOARDLIST       = j721e_sim j721e_evm j7200_evm j721s2_evm j784s4_evm
-drvspi_SOCLIST         = j721e j7200 j721s2 j784s4
-drvspi_dma_SOCLIST     = j721e j7200 j721s2 j784s4
+drvspi_BOARDLIST       = j721e_sim j721e_evm j7200_evm j721s2_evm j784s4_evm j742s2_evm
+drvspi_SOCLIST         = j721e j7200 j721s2 j784s4 j742s2
+drvspi_dma_SOCLIST     = j721e j7200 j721s2 j784s4 j742s2
 drvspi_j721e_CORELIST              = $(DEFAULT_j721e_CORELIST)
 drvspi_j721e_CORELISTARM           = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1
 drvspi_j721e_CORELIST_DMA          = mpu1_0 mcu1_0 mcu2_0 mcu2_1 mcu3_0 mcu3_1
@@ -85,6 +85,10 @@ drvspi_j784s4_CORELIST             = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 m
 drvspi_j784s4_CORELIST_CACHE       = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mcu4_0 mcu4_1
 drvspi_j784s4_CORELIST_DMA         = mpu1_0 mcu1_0 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mcu4_0 mcu4_1
 drvspi_j784s4_CORELIST_DMA_CACHE   = mcu1_0 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mcu4_0 mcu4_1
+drvspi_j742s2_CORELIST             = mpu1_0 mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mcu4_0 mcu4_1
+drvspi_j742s2_CORELIST_CACHE       = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mcu4_0 mcu4_1
+drvspi_j742s2_CORELIST_DMA         = mpu1_0 mcu1_0 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mcu4_0 mcu4_1
+drvspi_j742s2_CORELIST_DMA_CACHE   = mcu1_0 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mcu4_0 mcu4_1
 
 ospi_RTOS_LIST       = $(DEFAULT_RTOS_LIST)
 define DRV_OSPI_RTOS_BOARDLIST_RULE
@@ -174,7 +178,7 @@ export spi_dma_PKG_LIST
 spi_dma_INCLUDE = $(spi_dma_PATH)
 spi_dma_SOCLIST = $(drvspi_dma_SOCLIST)
 export spi_dma_SOCLIST
-ifeq ($(SOC),$(filter $(SOC), j721e j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721e j721s2 j784s4 j742s2))
 spi_dma_$(SOC)_CORELIST = $(drvspi_$(SOC)_CORELIST_DMA)
 else
 spi_dma_$(SOC)_CORELIST = $(drvspi_$(SOC)_CORELIST)
@@ -254,7 +258,7 @@ else
 mcspi_baremetal_master_testapp_$(SOC)_CORELIST = mcu2_0
 endif
 export mcspi_baremetal_master_testapp_$(SOC)_CORELIST
-ifeq ($(SOC),$(filter $(SOC), j721e am65xx j7200 am64x j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721e am65xx j7200 am64x j721s2 j784s4 j742s2))
 export mcspi_baremetal_master_testapp_SBL_APPIMAGEGEN = yes
 endif
 
@@ -271,7 +275,7 @@ export mcspi_baremetal_slave_testapp_CORE_DEPENDENCY
 export mcspi_baremetal_slave_testapp_MAKEFILE
 mcspi_baremetal_slave_testapp_PKG_LIST = mcspi_baremetal_slave_testapp
 mcspi_baremetal_slave_testapp_INCLUDE = $(mcspi_baremetal_slave_testapp_PATH)
-mcspi_baremetal_slave_testapp_BOARDLIST = am65xx_evm am65xx_idk j721e_evm j7200_evm j721s2_evm j784s4_evm
+mcspi_baremetal_slave_testapp_BOARDLIST = am65xx_evm am65xx_idk j721e_evm j7200_evm j721s2_evm j784s4_evm j742s2_evm
 export mcspi_baremetal_slave_testapp_BOARDLIST
 ifeq ($(SOC),$(filter $(SOC), am65xx))
 mcspi_baremetal_slave_testapp_$(SOC)_CORELIST = mcu1_1
@@ -279,7 +283,7 @@ else
 mcspi_baremetal_slave_testapp_$(SOC)_CORELIST = mcu2_1
 endif
 export mcspi_baremetal_slave_testapp_$(SOC)_CORELIST
-ifeq ($(SOC),$(filter $(SOC), j721e am65xx j7200 j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721e am65xx j7200 j721s2 j784s4 j742s2))
 export mcspi_baremetal_slave_testapp_SBL_APPIMAGEGEN = yes
 endif
 
@@ -321,7 +325,7 @@ else
 mcspi_baremetal_master_dma_testapp_$(SOC)_CORELIST = mcu2_0
 endif
 export mcspi_baremetal_master_dma_testapp_$(SOC)_CORELIST
-ifeq ($(SOC),$(filter $(SOC), j721e am65xx j7200 am64x j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721e am65xx j7200 am64x j721s2 j784s4 j742s2))
 export mcspi_baremetal_master_dma_testapp_SBL_APPIMAGEGEN = yes
 endif
 
@@ -338,7 +342,7 @@ export mcspi_baremetal_slave_dma_testapp_CORE_DEPENDENCY
 export mcspi_baremetal_slave_dma_testapp_MAKEFILE
 mcspi_baremetal_slave_dma_testapp_PKG_LIST = mcspi_baremetal_slave_dma_testapp
 mcspi_baremetal_slave_dma_testapp_INCLUDE = $(mcspi_baremetal_slave_dma_testapp_PATH)
-mcspi_baremetal_slave_dma_testapp_BOARDLIST = am65xx_evm am65xx_idk j721e_evm j7200_evm j721s2_evm j784s4_evm
+mcspi_baremetal_slave_dma_testapp_BOARDLIST = am65xx_evm am65xx_idk j721e_evm j7200_evm j721s2_evm j784s4_evm j742s2_evm
 export mcspi_baremetal_slave_dma_testapp_BOARDLIST
 ifeq ($(SOC),$(filter $(SOC), am65xx))
 mcspi_baremetal_slave_dma_testapp_$(SOC)_CORELIST = mcu1_1
@@ -346,7 +350,7 @@ else
 mcspi_baremetal_slave_dma_testapp_$(SOC)_CORELIST = mcu2_1
 endif
 export mcspi_baremetal_slave_dma_testapp_$(SOC)_CORELIST
-ifeq ($(SOC),$(filter $(SOC), j721e am65xx j7200 j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721e am65xx j7200 j721s2 j784s4 j742s2))
 export mcspi_baremetal_slave_dma_testapp_SBL_APPIMAGEGEN = yes
 endif
 
@@ -387,7 +391,7 @@ define mcspi_master_testapp_RULE
     export mcspi_master_testapp_$(1)_$(SOC)_CORELIST = mcu2_0
     endif
 
-    ifeq ($(SOC),$(filter $(SOC), j721e am65xx j7200 am64x j721s2 j784s4))
+    ifeq ($(SOC),$(filter $(SOC), j721e am65xx j7200 am64x j721s2 j784s4 j742s2))
         export mcspi_master_testapp_$(1)_SBL_APPIMAGEGEN = yes
     endif
 
@@ -418,7 +422,7 @@ define mcspi_slave_testapp_RULE
 
     mcspi_slave_testapp_$(1)_PKG_LIST = mcspi_slave_testapp_$(1)
     mcspi_slave_testapp_$(1)_INCLUDE = $(mcspi_slave_testapp_$(1)_PATH)
-    export mcspi_slave_testapp_$(1)_BOARDLIST = $(filter $(DEFAULT_BOARDLIST_$(1)), j721e_evm j7200_evm am64x_evm am65xx_evm am65xx_idk j784s4_evm j721s2_evm)
+    export mcspi_slave_testapp_$(1)_BOARDLIST = $(filter $(DEFAULT_BOARDLIST_$(1)), j721e_evm j7200_evm am64x_evm am65xx_evm am65xx_idk j784s4_evm j742s2_evm j721s2_evm)
 
     ifeq ($(SOC),$(filter $(SOC), am65xx))
     export mcspi_slave_testapp_$(1)_$(SOC)_CORELIST = mcu1_1
@@ -426,7 +430,7 @@ define mcspi_slave_testapp_RULE
     export mcspi_slave_testapp_$(1)_$(SOC)_CORELIST = mcu2_1
     endif
 
-    ifeq ($(SOC),$(filter $(SOC), j721e am65xx j7200 am64x j721s2 j784s4))
+    ifeq ($(SOC),$(filter $(SOC), j721e am65xx j7200 am64x j721s2 j784s4 j742s2))
         export mcspi_slave_testapp_$(1)_SBL_APPIMAGEGEN = yes
     endif
 
@@ -457,7 +461,7 @@ export mcspi_masterslave_testapp_$(1)_MAKEFILE =  -f$(PDK_SPI_COMP_PATH)/example
 export mcspi_masterslave_testapp_$(1)_DEPENDS_ON=mcspi_master_testapp_$(1) mcspi_slave_testapp_$(1)
 mcspi_masterslave_testapp_$(1)_PKG_LIST = mcspi_masterslave_testapp_$(1)
 mcspi_masterslave_testapp_$(1)_INCLUDE = $(mcspi_masterslave_testapp_$(1)_PATH)
-export mcspi_masterslave_testapp_$(1)_BOARDLIST = $(filter $(DEFAULT_BOARDLIST_$(1)), j721s2_evm j721e_evm j7200_evm j784s4_evm)
+export mcspi_masterslave_testapp_$(1)_BOARDLIST = $(filter $(DEFAULT_BOARDLIST_$(1)), j721s2_evm j721e_evm j7200_evm j784s4_evm j742s2_evm)
 export mcspi_masterslave_testapp_$(1)_$(SOC)_CORELIST := mcu2_1
 export mcspi_masterslave_testapp_SBL_APPIMAGEGEN = no
 ifneq ($(1),$(filter $(1), safertos))
@@ -493,7 +497,7 @@ define mcspi_master_dma_testapp_RULE
     export mcspi_master_dma_testapp_$(1)_$(SOC)_CORELIST = mcu2_0
     endif
 
-    ifeq ($(SOC),$(filter $(SOC), j721e am65xx j7200 am64x j721s2 j784s4))
+    ifeq ($(SOC),$(filter $(SOC), j721e am65xx j7200 am64x j721s2 j784s4 j742s2))
         export mcspi_master_dma_testapp_$(1)_SBL_APPIMAGEGEN = yes
     endif
 
@@ -523,7 +527,7 @@ define mcspi_slave_dma_testapp_RULE
 
     mcspi_slave_dma_testapp_$(1)_PKG_LIST = mcspi_slave_dma_testapp_$(1)
     mcspi_slave_dma_testapp_$(1)_INCLUDE = $(mcspi_slave_dma_testapp_$(1)_PATH)
-    export mcspi_slave_dma_testapp_$(1)_BOARDLIST = $(filter $(DEFAULT_BOARDLIST_$(1)), j721e_evm j7200_evm am64x_evm am65xx_evm am65xx_idk j784s4_evm j721s2_evm)
+    export mcspi_slave_dma_testapp_$(1)_BOARDLIST = $(filter $(DEFAULT_BOARDLIST_$(1)), j721e_evm j7200_evm am64x_evm am65xx_evm am65xx_idk j784s4_evm j742s2_evm j721s2_evm)
 
     ifeq ($(SOC),$(filter $(SOC), am65xx))
     export mcspi_slave_dma_testapp_$(1)_$(SOC)_CORELIST = mcu1_1
@@ -531,7 +535,7 @@ define mcspi_slave_dma_testapp_RULE
     export mcspi_slave_dma_testapp_$(1)_$(SOC)_CORELIST = mcu2_1
     endif
 
-    ifeq ($(SOC),$(filter $(SOC), j721e am65xx j7200 am64x j721s2 j784s4))
+    ifeq ($(SOC),$(filter $(SOC), j721e am65xx j7200 am64x j721s2 j784s4 j742s2))
         export mcspi_slave_dma_testapp_$(1)_SBL_APPIMAGEGEN = yes
     endif
 
@@ -600,7 +604,7 @@ OSPI_Baremetal_Flash_TestApp_$(SOC)_CORELIST = $(drvspi_$(SOC)_CORELIST)
 endif
 export OSPI_Baremetal_Flash_TestApp_$(SOC)_CORELIST
 
-ifeq ($(SOC),$(filter $(SOC), j721e am65xx j7200 am64x j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721e am65xx j7200 am64x j721s2 j784s4 j742s2))
 OSPI_Baremetal_Flash_TestApp_SBL_APPIMAGEGEN = yes
 export OSPI_Baremetal_Flash_TestApp_SBL_APPIMAGEGEN
 endif
@@ -623,7 +627,7 @@ export OSPI_Baremetal_Flash_Dma_TestApp_BOARDLIST
 ifeq ($(SOC),$(filter $(SOC), am64x))
 OSPI_Baremetal_Flash_Dma_TestApp_$(SOC)_CORELIST = $(drvspi_$(SOC)_CORELISTARM)
 else
-ifeq ($(SOC),$(filter $(SOC), j721e j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721e j721s2 j784s4 j742s2))
 OSPI_Baremetal_Flash_Dma_TestApp_$(SOC)_CORELIST = $(drvspi_$(SOC)_CORELIST_DMA)
 else
 OSPI_Baremetal_Flash_Dma_TestApp_$(SOC)_CORELIST = $(drvspi_$(SOC)_CORELIST)
@@ -631,7 +635,7 @@ endif
 endif
 export OSPI_Baremetal_Flash_Dma_TestApp_$(SOC)_CORELIST
 
-ifeq ($(SOC),$(filter $(SOC), j721e am65xx j7200 am64x j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721e am65xx j7200 am64x j721s2 j784s4 j742s2))
 OSPI_Baremetal_Flash_Dma_TestApp_SBL_APPIMAGEGEN = yes
 export OSPI_Baremetal_Flash_Dma_TestApp_SBL_APPIMAGEGEN
 endif
@@ -684,7 +688,7 @@ export OSPI_Flash_Dma_TestApp_$(1)_BOARDLIST = $(filter $(DEFAULT_BOARDLIST_$(1)
 ifeq ($(SOC),$(filter $(SOC), am64x))
 OSPI_Flash_Dma_TestApp_$(1)_$(SOC)_CORELIST =  $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), $(drvspi_$(SOC)_CORELISTARM))
 else
-ifeq ($(SOC),$(filter $(SOC), j721e j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721e j721s2 j784s4 j742s2))
 OSPI_Flash_Dma_TestApp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), $(drvspi_$(SOC)_CORELIST_DMA))
 else
 OSPI_Flash_Dma_TestApp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), $(drvspi_$(SOC)_CORELIST))
@@ -728,7 +732,7 @@ OSPI_Baremetal_Flash_Cache_TestApp_$(SOC)_CORELIST = $(drvspi_$(SOC)_CORELIST_CA
 endif
 export OSPI_Baremetal_Flash_Cache_TestApp_$(SOC)_CORELIST
 
-ifeq ($(SOC),$(filter $(SOC), j721e am65xx j7200 am64x j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721e am65xx j7200 am64x j721s2 j784s4 j742s2))
 OSPI_Baremetal_Flash_Cache_TestApp_SBL_APPIMAGEGEN = yes
 export OSPI_Baremetal_Flash_Cache_TestApp_SBL_APPIMAGEGEN
 endif
@@ -751,7 +755,7 @@ export OSPI_Baremetal_Flash_Dma_Cache_TestApp_BOARDLIST
 ifeq ($(SOC),$(filter $(SOC), am64x))
 OSPI_Baremetal_Flash_Dma_Cache_TestApp_$(SOC)_CORELIST = $(drvspi_$(SOC)_CORELISTARM_CACHE)
 else
-ifeq ($(SOC),$(filter $(SOC), j721e j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721e j721s2 j784s4 j742s2))
 OSPI_Baremetal_Flash_Dma_Cache_TestApp_$(SOC)_CORELIST = $(drvspi_$(SOC)_CORELIST_DMA_CACHE)
 else
 OSPI_Baremetal_Flash_Dma_Cache_TestApp_$(SOC)_CORELIST = $(drvspi_$(SOC)_CORELIST_CACHE)
@@ -759,7 +763,7 @@ endif
 endif
 export OSPI_Baremetal_Flash_Dma_Cache_TestApp_$(SOC)_CORELIST
 
-ifeq ($(SOC),$(filter $(SOC), j721e am65xx j7200 am64x j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721e am65xx j7200 am64x j721s2 j784s4 j742s2))
 OSPI_Baremetal_Flash_Dma_Cache_TestApp_SBL_APPIMAGEGEN = yes
 export OSPI_Baremetal_Flash_Dma_Cache_TestApp_SBL_APPIMAGEGEN
 endif
@@ -812,7 +816,7 @@ export OSPI_Flash_Dma_Cache_TestApp_$(1)_BOARDLIST = $(filter $(DEFAULT_BOARDLIS
 ifeq ($(SOC),$(filter $(SOC), am64x))
 OSPI_Flash_Dma_Cache_TestApp_$(1)_$(SOC)_CORELIST =  $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), $(drvspi_$(SOC)_CORELISTARM))
 else
-ifeq ($(SOC),$(filter $(SOC), j721e j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721e j721s2 j784s4 j742s2))
 OSPI_Flash_Dma_Cache_TestApp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), $(drvspi_$(SOC)_CORELIST_DMA_CACHE))
 else
 OSPI_Flash_Dma_Cache_TestApp_$(1)_$(SOC)_CORELIST = $(filter $(DEFAULT_$(SOC)_CORELIST_$(1)), $(drvspi_$(SOC)_CORELIST))

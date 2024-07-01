@@ -56,6 +56,10 @@
 #include <ti/board/src/j784s4_evm/include/board_control.h>
 #include <ti/board/src/j784s4_evm/include/board_ethernet_config.h>
 #endif
+#if defined(SOC_J742S2)
+#include <ti/board/src/j742s2_evm/include/board_control.h>
+#include <ti/board/src/j742s2_evm/include/board_ethernet_config.h>
+#endif
 #if defined(BOOT_OSPI)
 #include <ti/boot/sbl/src/ospi/sbl_ospi.h>
 #elif defined(BOOT_MMCSD)
@@ -650,7 +654,7 @@ void SBL_ConfigureEthernet(void)
     }
 #endif
 
-#if defined(SOC_J784S4)
+#if defined(SOC_J784S4) || defined(SOC_J742S2)
     /* Set MUX2 A <-> B2, needed for MDIO clock */
     status = Board_control(BOARD_CTRL_CMD_SET_IO_MUX_PORTB2, NULL);
     if (status != BOARD_SOK)
@@ -877,6 +881,33 @@ static void J784S4_UART_InitPwrClk(void)
 void SBL_SocEarlyInit()
 {
     J784S4_UART_InitPwrClk();
+}
+
+void SBL_SocLateInit(void)
+{
+#if !defined(SBL_USE_MCU_DOMAIN_ONLY)
+    SBL_SetQoS();
+#endif
+}
+#endif
+
+#if defined(SOC_J742S2)
+#include <ti/board/src/j742s2_evm/include/board_internal.h>
+
+static void J742S2_UART_InitPwrClk(void)
+{
+    HW_WR_REG32(SBL_UART_PLL_BASE + SBL_UART_PLL_KICK0_OFFSET, SBL_UART_PLL_KICK0_UNLOCK_VAL);
+    HW_WR_REG32(SBL_UART_PLL_BASE + SBL_UART_PLL_KICK1_OFFSET, SBL_UART_PLL_KICK1_UNLOCK_VAL);
+
+    HW_WR_REG32(SBL_UART_PLL_BASE + SBL_UART_PLL_DIV_OFFSET, SBL_UART_PLL_DIV_VAL);
+
+    HW_WR_REG32(SBL_UART_PLL_BASE + SBL_UART_PLL_KICK0_OFFSET, SBL_UART_PLL_KICK_LOCK_VAL);
+    HW_WR_REG32(SBL_UART_PLL_BASE + SBL_UART_PLL_KICK1_OFFSET, SBL_UART_PLL_KICK_LOCK_VAL);
+}
+
+void SBL_SocEarlyInit()
+{
+    J742S2_UART_InitPwrClk();
 }
 
 void SBL_SocLateInit(void)

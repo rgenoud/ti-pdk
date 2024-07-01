@@ -135,7 +135,7 @@ static NOR_STATUS Nor_qspiEnableDDR(OSPI_Handle handle)
 
     hwAttrs = (OSPI_v0_HwAttrs const *)handle->hwAttrs;
 
-#if defined (j721e_evm) || defined (j7200_evm) || defined (am64x_svb) || defined (am640x_svb) || defined (j721s2_evm) || defined(j784s4_evm)
+#if defined (j721e_evm) || defined (j7200_evm) || defined (am64x_svb) || defined (am640x_svb) || defined (j721s2_evm) || defined(j784s4_evm) || defined(j742s2_evm)
     /* Send Write Enable command */
     if (Nor_qspiCmdWrite(handle, &cmdWren, 1, 0))
     {
@@ -215,7 +215,7 @@ static NOR_STATUS Nor_qspiEnableSDR(OSPI_Handle handle)
 
     hwAttrs = (OSPI_v0_HwAttrs const *)handle->hwAttrs;
 
-#if defined (j721e_evm) || defined (j7200_evm) || defined (am64x_svb) || defined (am640x_svb) || defined (j721s2_evm) || defined(j784s4_evm)
+#if defined (j721e_evm) || defined (j7200_evm) || defined (am64x_svb) || defined (am640x_svb) || defined (j721s2_evm) || defined(j784s4_evm) || defined(j742s2_evm)
     /* Send Write Enable command */
     if (Nor_qspiCmdWrite(handle, &cmdWren, 1, 0))
     {

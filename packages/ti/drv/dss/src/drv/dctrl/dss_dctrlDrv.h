@@ -79,7 +79,7 @@ typedef struct
     /**< Number of video ports available to driver */
     uint32_t availablePortId[CSL_DSS_VP_ID_MAX];
     /**< Id of available video ports */
-#if defined(SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4)
+#if defined(SOC_J721E) || defined (SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
     Dss_DpInitParams dpInitParams;
     /**< DP init parameters */
 #endif

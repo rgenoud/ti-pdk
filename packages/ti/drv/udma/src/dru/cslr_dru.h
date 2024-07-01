@@ -38,7 +38,7 @@
 
 #if defined (SOC_J721E)
 #include <ti/drv/udma/src/dru/V0/V0_1/cslr_dru.h>
-#elif defined(SOC_J721S2) || defined (SOC_J784S4)
+#elif defined(SOC_J721S2) || defined (SOC_J784S4) || defined (SOC_J742S2)
 #include <ti/drv/udma/src/dru/V0/V0_2/cslr_dru.h>
 #endif
 

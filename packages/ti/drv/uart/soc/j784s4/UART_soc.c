@@ -44,7 +44,11 @@
 #include <ti/drv/uart/UART.h>
 #include <ti/drv/uart/soc/UART_soc.h>
 #include <ti/drv/sciclient/sciclient.h>
+#if defined(SOC_J784S4)
 #include <ti/board/src/j784s4_evm/include/board_cfg.h>
+#elif defined(SOC_J742S2)
+#include <ti/board/src/j742s2_evm/include/board_cfg.h>
+#endif
 
 #define MCU_UART_INSTANCE               (BOARD_UART_INSTANCE)
 

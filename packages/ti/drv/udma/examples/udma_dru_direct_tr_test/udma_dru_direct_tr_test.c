@@ -537,7 +537,7 @@ static uint32_t App_getUtcId()
 {
     uint32_t utcId;
 
-#if defined (SOC_J784S4) && defined (BUILD_C7X)
+#if (defined (SOC_J784S4) || defined (SOC_J742S2)) && defined (BUILD_C7X)
 /*
  * In J784S4 there are additional DRUs local to C7X cores
  * All the cores except C7X cores can use only global DRU

@@ -66,8 +66,8 @@
 #
 ifeq ($(freertos_component_make_include), )
 
-freertos_BOARDLIST       = tpr12_evm j721e_evm j7200_evm am65xx_evm am65xx_idk awr294x_evm j721s2_evm j784s4_evm
-freertos_SOCLIST         = tpr12 j721e j7200 am65xx awr294x j721s2 j784s4
+freertos_BOARDLIST       = tpr12_evm j721e_evm j7200_evm am65xx_evm am65xx_idk awr294x_evm j721s2_evm j784s4_evm j742s2_evm
+freertos_SOCLIST         = tpr12 j721e j7200 am65xx awr294x j721s2 j784s4 j742s2
 freertos_tpr12_CORELIST   = c66xdsp_1 mcu1_0 mcu1_1
 freertos_awr294x_CORELIST   = c66xdsp_1 mcu1_0 mcu1_1
 freertos_j721e_CORELIST   = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 c66xdsp_1 c66xdsp_2 c7x_1
@@ -75,6 +75,7 @@ freertos_j7200_CORELIST   = mcu1_0 mcu1_1 mcu2_0 mcu2_1
 freertos_am65xx_CORELIST   = mcu1_0 mcu1_1
 freertos_j721s2_CORELIST   = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 c7x_1 c7x_2
 freertos_j784s4_CORELIST   = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mcu4_0 mcu4_1 c7x_1 c7x_2 c7x_3 c7x_4
+freertos_j742s2_CORELIST   = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mcu4_0 mcu4_1 c7x_1 c7x_2 c7x_3
 
 ############################
 # freertos package
@@ -105,6 +106,10 @@ endif
 endif
 endif
 
+SOC_DIR=$(SOC)
+ifeq ($(SOC), j742s2)
+  SOC_DIR=j784s4
+endif
 
 #
 # freertos Modules
@@ -137,7 +142,7 @@ freertos_INCLUDE += $(PDK_FREERTOS_COMP_PATH)/freertos/portable/TI_CGT/$(ISA)
 ifeq ($(ISA), c7x)
 freertos_INCLUDE += $(PDK_CSL_COMP_PATH)/arch/c7x
 endif
-freertos_INCLUDE += $(PDK_FREERTOS_COMP_PATH)/freertos/config/$(SOC)/$(ISA)
+freertos_INCLUDE += $(PDK_FREERTOS_COMP_PATH)/freertos/config/$(SOC_DIR)/$(ISA)
 
 export freertos_SOCLIST
 export freertos_$(SOC)_CORELIST
@@ -211,13 +216,17 @@ export freertos_test_posix_PKG_LIST
 freertos_test_posix_INCLUDE = $(freertos_test_posix_PATH)
 freertos_test_posix_BOARDLIST = $(freertos_BOARDLIST)
 export freertos_test_posix_BOARDLIST
-ifneq ($(SOC),$(filter $(SOC), j721s2 j784s4))
+ifneq ($(SOC),$(filter $(SOC), j721s2 j784s4 j742s2))
 freertos_test_posix_$(SOC)_CORELIST = $(freertos_$(SOC)_CORELIST)
 else
 ifeq ($(SOC),$(filter $(SOC), j784s4))
 # Temporarily disable  FreeRTOS POSIX Demo for J784s4 on c7x_1 C7x_2 c7x_3 c7x_4 cores,
 # since UNITY related build failures are observed for these cores
 freertos_test_posix_$(SOC)_CORELIST = $(filter-out c7x_1 c7x_2 c7x_3 c7x_4, $(freertos_$(SOC)_CORELIST))
+else ifeq ($(SOC),$(filter $(SOC), j742s2))
+# Temporarily disable  FreeRTOS POSIX Demo for J742S2 on c7x_1 C7x_2 c7x_3 cores,
+# since UNITY related build failures are observed for these cores
+freertos_test_posix_$(SOC)_CORELIST = $(filter-out c7x_1 c7x_2 c7x_3, $(freertos_$(SOC)_CORELIST))
 else
 # Temp disable FreeRTOS POSIX Demo for J721S2 C7x cores, 
 # Since build failures are seen with silicon_version 7120 on C7x CGT 2.0.0A21260 

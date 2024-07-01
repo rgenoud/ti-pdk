@@ -25,6 +25,9 @@ ifeq ($(LIMIT_CORES),)
   ifeq ($(BOARD),$(filter $(BOARD), j784s4_evm))
     CORE_LIST_ALL = $(CORE_LIST_j784s4)
   endif
+  ifeq ($(BOARD),$(filter $(BOARD), j742s2_evm))
+    CORE_LIST_ALL = $(CORE_LIST_j742s2)
+  endif
   ifeq ($(BOARD),$(filter $(BOARD), $(BOARD_LIST_J6_TDA)))
     CORE_LIST_ALL =c66xdsp_1 c66xdsp_2
     CORE_LIST_ALL += mcu1_0 mcu1_1 mpu1_0 mpu1_1

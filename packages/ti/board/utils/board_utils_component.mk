@@ -1,5 +1,5 @@
 #  ============================================================================
-#  (C) Copyright 2019-2022 Texas Instruments, Inc.
+#  (C) Copyright 2019-2024 Texas Instruments, Inc.
 #
 #  Redistribution and use in source and binary forms, with or without
 #  modification, are permitted provided that the following conditions
@@ -86,8 +86,10 @@ board_utils_j7200_BOARDLIST = j7200_evm
 board_utils_j7200_CORELIST = mcu1_0
 board_utils_j721s2_BOARDLIST = j721s2_evm
 board_utils_j784s4_BOARDLIST = j784s4_evm
+board_utils_j742s2_BOARDLIST = j742s2_evm
 board_utils_j721s2_CORELIST = mcu1_0
 board_utils_j784s4_CORELIST = mcu1_0
+board_utils_j742s2_CORELIST = mcu1_0
 board_utils_tpr12_BOARDLIST = tpr12_evm
 board_utils_tpr12_CORELIST = mcu1_0
 board_utils_awr294x_BOARDLIST = awr294x_evm

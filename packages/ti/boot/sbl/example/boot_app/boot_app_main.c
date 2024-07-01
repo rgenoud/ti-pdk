@@ -392,24 +392,24 @@ static void BootApp_mainDomainSetup()
     boardCfg = BOARD_INIT_PLL_MAIN | BOARD_INIT_MODULE_CLOCK_MAIN | BOARD_INIT_DDR;
     Board_init(boardCfg);
 
-    /* SBL implements the SBL_SetQoS only for J721S2, J721E, J784S4. */
+    /* SBL implements the SBL_SetQoS only for J721S2, J721E, J784S4, J742S2. */
     #if !defined (SOC_J7200)
     SBL_SetQoS();
     #endif
 
-    #if defined(SOC_J721S2) || defined(SOC_J784S4)
+    #if defined(SOC_J721S2) || defined(SOC_J784S4) || defined (SOC_J742S2)
     /* Change the GTC Parent to MAIN_PLL3_HSDIV1_CLKOUT
        Reason :
         - for J721S2
             - MAIN_PLL3 default frequency is 2 GHz
             - MAIN_PLL3_HSDIV1_CLKOUT, MAIN_PLL3_HSDIV0_CLKOUT has the same divider value of 8
-        - for J784S4
+        - for J784S4/J742S2
             - MAIN_PLL3 default frequency is 2.5 GHz
             - MAIN_PLL3_HSDIV1_CLKOUT, MAIN_PLL3_HSDIV0_CLKOUT has the same divider value of 10
         - By defalult MAIN_PLL3_HSDIV1_CLKOUT (first input parent of the GTC mux) is given as an input to the GTC
         - MAIN_PLL3_HSDIV0_CLKOUT is given as input to the CPSW2G RGMI. CPSW2G RGMI needs 250MHz and GTC needs 200 MHz
-        - It is not possible to have 250 MHz for MAIN_PLL3_HSDIV0_CLKOUT (divider of 8 in case of J721S2 and 10 incase of J784S4)
-          and 200 MHz for MAIN_PLL3_HSDIV1_CLKOUT (divider of 8 in case of J721S2 and 10 incase of J784S4) with the same MAIN_PLL3 frequency.
+        - It is not possible to have 250 MHz for MAIN_PLL3_HSDIV0_CLKOUT (divider of 8 in case of J721S2 and 10 incase of J784S4/J742S2)
+          and 200 MHz for MAIN_PLL3_HSDIV1_CLKOUT (divider of 8 in case of J721S2 and 10 incase of J784S4/J742S2) with the same MAIN_PLL3 frequency.
         - So change the parent of GTC clock to MAIN_PLL0_HSDIV6_CLKOUT */
 
     UART_printf("Setting GTC clock parent frequency.... \r\n");
@@ -677,3 +677,4 @@ static int32_t BootApp_releaseCores(uint8_t stageNum)
 
     return (status);
 }
+

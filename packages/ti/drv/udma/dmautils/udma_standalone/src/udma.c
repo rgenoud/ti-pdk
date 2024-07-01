@@ -56,7 +56,7 @@ CSL_DRU_t                gHost_DRU_t;
 #define UDMA_UTC_BASE_DRU0              (&gHost_DRU_t)
 #else
 //:TODO:
-#if defined (SOC_J721S2) || defined (SOC_AM62A) || defined (SOC_J784S4)
+#if defined (SOC_J721S2) || defined (SOC_AM62A) || defined (SOC_J784S4) || defined (SOC_J742S2)
   #include <ti/csl/soc/j784s4/src/cslr_soc_baseaddress.h>
   #define UDMA_UTC_BASE_DRU0   (CSL_COMPUTE_CLUSTER0_MMR_DRU4_MMR_CFG_DRU_BASE)
 #else
@@ -118,7 +118,7 @@ int32_t Udma_init(Udma_DrvHandle drvHandle, const Udma_InitPrms *initPrms)
       {
         if(UDMA_UTC_ID_MSMC_DRU0 == utcId)
           drvHandle->utcInfo[utcId].druRegs = ((CSL_DRU_t *) UDMA_UTC_BASE_DRU0);
-        #if defined (SOC_J784S4)
+        #if defined (SOC_J784S4) || defined (SOC_J742S2)
         if(UDMA_UTC_ID_C7X_MSMC_DRU4 == utcId)
           drvHandle->utcInfo[utcId].druRegs = ((CSL_DRU_t *) CSL_COMPUTE_CLUSTER0_MMR_DRU4_MMR_CFG_DRU_BASE);
         else if(UDMA_UTC_ID_C7X_MSMC_DRU5 == utcId)

@@ -170,7 +170,7 @@ static int32_t CSL_bcdmaChanOpCfgChan( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanTy
         uint32_t regVal;
         switch( chanType )
         {
-#if defined (SOC_J784S4) || defined (SOC_J721S2)
+#if defined (SOC_J784S4) || defined (SOC_J742S2) || defined (SOC_J721S2)
             case CSL_BCDMA_CHAN_TYPE_BLOCK_COPY:
                 {
                     CSL_BcdmaTxChanCfg *pChanCfg = (CSL_BcdmaTxChanCfg *)pOpData;
@@ -194,7 +194,7 @@ static int32_t CSL_bcdmaChanOpCfgChan( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanTy
                         CSL_REG32_WR( &pCfg->pBcChanCfgRegs->CHAN[chanIdx].PRI_CTRL, regVal );
                         /* TST_SCHED */
                         CSL_REG32_WR( &pCfg->pBcChanCfgRegs->CHAN[chanIdx].TST_SCHED, CSL_FMK(BCDMA_BCCFG_CHAN_TST_SCHED_PRIORITY, pChanCfg->dmaPriority) );
-#if defined (SOC_J784S4) || defined (SOC_J721S2)
+#if defined (SOC_J784S4) || defined (SOC_J742S2) || defined (SOC_J721S2)
                         /* VIRT_CTRL */
                         CSL_REG32_WR( &pCfg->pBcChanCfgRegs->CHAN[chanIdx].VIRT_CTRL, CSL_FMK(BCDMA_BCCFG_CHAN_VIRT_CTRL_VIRTID, pChanCfg->virtId) );
 #endif
@@ -227,7 +227,7 @@ static int32_t CSL_bcdmaChanOpCfgChan( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanTy
                         {
                             CSL_FINS( regVal, BCDMA_TXCCFG_CHAN_TCFG_NOTDPKT, 0U);
                         }
-#if defined (SOC_J784S4) || defined (SOC_J721S2)
+#if defined (SOC_J784S4) || defined (SOC_J742S2) || defined (SOC_J721S2)
                         CSL_FINS( regVal, BCDMA_TXCCFG_CHAN_TCFG_ATYPE, pChanCfg->addrType );
 #endif
                         CSL_REG32_WR( &pCfg->pTxChanCfgRegs->CHAN[chanIdx].TCFG, regVal );
@@ -239,7 +239,7 @@ static int32_t CSL_bcdmaChanOpCfgChan( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanTy
                         CSL_REG32_WR( &pCfg->pTxChanCfgRegs->CHAN[chanIdx].THREAD, CSL_FMK(BCDMA_TXCCFG_CHAN_THREAD_ID, pChanCfg->threadId) );
                         /* TST_SCHED */
                         CSL_REG32_WR( &pCfg->pTxChanCfgRegs->CHAN[chanIdx].TST_SCHED, CSL_FMK(BCDMA_TXCCFG_CHAN_TST_SCHED_PRIORITY, pChanCfg->dmaPriority) );
-#if defined (SOC_J784S4) || defined (SOC_J721S2)
+#if defined (SOC_J784S4) || defined (SOC_J742S2) || defined (SOC_J721S2)
                         /* TVIRT_CTRL */
                         CSL_REG32_WR( &pCfg->pTxChanCfgRegs->CHAN[chanIdx].TVIRT_CTRL, CSL_FMK(BCDMA_TXCCFG_CHAN_TVIRT_CTRL_VIRTID, pChanCfg->virtId) );
 #endif
@@ -262,10 +262,10 @@ static int32_t CSL_bcdmaChanOpCfgChan( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanTy
                         regVal = CSL_REG32_RD( &pCfg->pRxChanCfgRegs->CHAN[chanIdx].RCFG );
                         CSL_FINS( regVal, BCDMA_RXCCFG_CHAN_RCFG_PAUSE_ON_ERR, pChanCfg->pauseOnError);
                         CSL_FINS( regVal, BCDMA_RXCCFG_CHAN_RCFG_BURST_SIZE, pChanCfg->burstSize );
-#if defined (SOC_J784S4) || defined (SOC_J721S2)
+#if defined (SOC_J784S4) || defined (SOC_J742S2) || defined (SOC_J721S2)
                         CSL_FINS( regVal, BCDMA_RXCCFG_CHAN_RCFG_IGNORE_LONG, pChanCfg->bIgnoreLongPkts ? (uint32_t)1U : (uint32_t)0U );
 #endif
-#if defined (SOC_J784S4) || defined (SOC_J721S2)
+#if defined (SOC_J784S4) || defined (SOC_J742S2) || defined (SOC_J721S2)
                         CSL_FINS( regVal, BCDMA_RXCCFG_CHAN_RCFG_ATYPE, pChanCfg->addrType );
 #endif
                         CSL_REG32_WR( &pCfg->pRxChanCfgRegs->CHAN[chanIdx].RCFG, regVal );
@@ -277,7 +277,7 @@ static int32_t CSL_bcdmaChanOpCfgChan( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChanTy
                         CSL_REG32_WR( &pCfg->pRxChanCfgRegs->CHAN[chanIdx].THREAD, CSL_FMK(BCDMA_RXCCFG_CHAN_THREAD_ID, pChanCfg->threadId) );
                         /* RST_SCHED */
                         CSL_REG32_WR( &pCfg->pRxChanCfgRegs->CHAN[chanIdx].RST_SCHED, CSL_FMK(BCDMA_RXCCFG_CHAN_RST_SCHED_PRIORITY, pChanCfg->dmaPriority) );
-#if defined (SOC_J784S4) || defined (SOC_J721S2)
+#if defined (SOC_J784S4) || defined (SOC_J742S2) || defined (SOC_J721S2)
                         /* RVIRT_CTRL */
                         CSL_REG32_WR( &pCfg->pRxChanCfgRegs->CHAN[chanIdx].RVIRT_CTRL, CSL_FMK(BCDMA_RXCCFG_CHAN_RVIRT_CTRL_VIRTID, pChanCfg->virtId) );
 #endif
@@ -299,7 +299,7 @@ static bool CSL_bcdmaChanOpIsChanEnabled( const CSL_BcdmaCfg *pCfg, CSL_BcdmaCha
     switch( chanType )
     {
         case CSL_BCDMA_CHAN_TYPE_BLOCK_COPY:
-#if defined (SOC_J784S4) || defined (SOC_J721S2)
+#if defined (SOC_J784S4) || defined (SOC_J742S2) || defined (SOC_J721S2)
             regVal = CSL_REG32_FEXT( &pCfg->pBcChanRtRegs->CHAN[chanIdx].CTL, BCDMA_BCRT_CHAN_CTL_EN );
 #endif
             break;
@@ -323,7 +323,7 @@ static int32_t CSL_bcdmaChanOpSetChanEnable( const CSL_BcdmaCfg *pCfg, CSL_Bcdma
     switch( chanType )
     {
         case CSL_BCDMA_CHAN_TYPE_BLOCK_COPY:
-#if defined (SOC_J784S4) || defined (SOC_J721S2)
+#if defined (SOC_J784S4) || defined (SOC_J742S2) || defined (SOC_J721S2)
             CSL_REG32_WR(&pCfg->pBcChanRtRegs->CHAN[chanIdx].CTL, CSL_FMK(BCDMA_BCRT_CHAN_CTL_EN,(bEnable ? (uint32_t)1U : (uint32_t)0U)) );
 #endif
             break;
@@ -353,7 +353,7 @@ static int32_t CSL_bcdmaChanOpSetChanPause( const CSL_BcdmaCfg *pCfg, CSL_BcdmaC
     {
         switch( chanType )
         {
-#if defined (SOC_J784S4) || defined (SOC_J721S2)
+#if defined (SOC_J784S4) || defined (SOC_J742S2) || defined (SOC_J721S2)
             case CSL_BCDMA_CHAN_TYPE_BLOCK_COPY:
                 if(BFALSE == bPause)
                 {
@@ -419,7 +419,7 @@ static int32_t CSL_bcdmaChanOpTeardownChan( const CSL_BcdmaCfg *pCfg, CSL_BcdmaC
         }
         switch( chanType )
         {
-#if defined (SOC_J784S4) || defined (SOC_J721S2)
+#if defined (SOC_J784S4) || defined (SOC_J742S2) || defined (SOC_J721S2)
             case CSL_BCDMA_CHAN_TYPE_BLOCK_COPY:
                 regVal = CSL_REG32_RD( &pCfg->pBcChanRtRegs->CHAN[chanIdx].CTL );
                 CSL_FINS( regVal, BCDMA_BCRT_CHAN_CTL_TDOWN, (uint32_t)1U );
@@ -463,7 +463,7 @@ static int32_t CSL_bcdmaChanOpTriggerChan( const CSL_BcdmaCfg *pCfg, CSL_BcdmaCh
 {
     int32_t retVal = CSL_PASS;
 
-#if defined (SOC_J784S4) || defined (SOC_J721S2)
+#if defined (SOC_J784S4) || defined (SOC_J742S2) || defined (SOC_J721S2)
     if( CSL_BCDMA_CHAN_TYPE_BLOCK_COPY == chanType )
     {
         CSL_REG32_WR(&pCfg->pBcChanRtRegs->CHAN[chanIdx].SWTRIG, CSL_FMK(BCDMA_BCRT_CHAN_SWTRIG_TRIGGER, (uint32_t)1U));
@@ -472,7 +472,7 @@ static int32_t CSL_bcdmaChanOpTriggerChan( const CSL_BcdmaCfg *pCfg, CSL_BcdmaCh
 #endif
     if( CSL_BCDMA_CHAN_TYPE_SPLIT_TX == chanType )
     {
-#if defined (SOC_J784S4) || defined (SOC_J721S2)
+#if defined (SOC_J784S4) || defined (SOC_J742S2) || defined (SOC_J721S2)
         CSL_REG32_WR(&pCfg->pTxChanRtRegs->CHAN[chanIdx].SWTRIG, CSL_FMK(BCDMA_TXCRT_CHAN_SWTRIG_TRIGGER, (uint32_t)1U));
 #else
         retVal = CSL_EFAIL;
@@ -480,7 +480,7 @@ static int32_t CSL_bcdmaChanOpTriggerChan( const CSL_BcdmaCfg *pCfg, CSL_BcdmaCh
     }
     else if( CSL_BCDMA_CHAN_TYPE_SPLIT_RX == chanType )
     {
-#if defined (SOC_J784S4) || defined (SOC_J721S2)
+#if defined (SOC_J784S4) || defined (SOC_J742S2) || defined (SOC_J721S2)
         CSL_REG32_WR(&pCfg->pRxChanRtRegs->CHAN[chanIdx].SWTRIG, CSL_FMK(BCDMA_RXCRT_CHAN_SWTRIG_TRIGGER, (uint32_t)1U));
 #else
         retVal = CSL_EFAIL;
@@ -506,7 +506,7 @@ static int32_t CSL_bcdmaChanOpGetChanRT( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChan
         uint32_t val;
         switch( chanType )
         {
-#if defined (SOC_J784S4) || defined (SOC_J721S2)
+#if defined (SOC_J784S4) || defined (SOC_J742S2) || defined (SOC_J721S2)
             case CSL_BCDMA_CHAN_TYPE_BLOCK_COPY:
                 val = CSL_REG32_RD( &pCfg->pBcChanRtRegs->CHAN[chanIdx].CTL );
                 break;
@@ -530,7 +530,7 @@ static int32_t CSL_bcdmaChanOpGetChanRT( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChan
             pRT->forcedTeardown = CSL_FEXT( val, BCDMA_TXCRT_CHAN_CTL_FTDOWN );
             pRT->pause          = CSL_FEXT( val, BCDMA_TXCRT_CHAN_CTL_PAUSE );
             pRT->error          = CSL_FEXT( val, BCDMA_TXCRT_CHAN_CTL_ERROR );
-#if defined (SOC_J784S4) || defined (SOC_J721S2)
+#if defined (SOC_J784S4) || defined (SOC_J742S2) || defined (SOC_J721S2)
             if( CSL_BCDMA_CHAN_TYPE_SPLIT_RX == chanType )
             {
                 pRT->starvation = CSL_FEXT( val, BCDMA_RXCRT_CHAN_CTL_STARVATION );
@@ -564,7 +564,7 @@ static int32_t CSL_bcdmaChanOpSetChanRT( const CSL_BcdmaCfg *pCfg, CSL_BcdmaChan
                 CSL_FMK(BCDMA_TXCRT_CHAN_CTL_PAUSE,        pRT->pause);
         switch( chanType )
         {
-#if defined (SOC_J784S4) || defined (SOC_J721S2)
+#if defined (SOC_J784S4) || defined (SOC_J742S2) || defined (SOC_J721S2)
             case CSL_BCDMA_CHAN_TYPE_BLOCK_COPY:
                 CSL_REG32_WR( &pCfg->pBcChanRtRegs->CHAN[chanIdx].CTL, val );
                 break;
@@ -597,7 +597,7 @@ static int32_t CSL_bcdmaChanOpGetChanStats( const CSL_BcdmaCfg *pCfg, CSL_BcdmaC
 
         switch( chanType )
         {
-#if defined (SOC_J784S4) || defined (SOC_J721S2)
+#if defined (SOC_J784S4) || defined (SOC_J742S2) || defined (SOC_J721S2)
             case CSL_BCDMA_CHAN_TYPE_BLOCK_COPY:
                 pChanStats->packetCnt        = CSL_REG32_RD( &pCfg->pBcChanRtRegs->CHAN[chanIdx].PCNT );
                 pChanStats->txPayloadByteCnt = CSL_REG32_RD( &pCfg->pBcChanRtRegs->CHAN[chanIdx].BCNT );
@@ -648,7 +648,7 @@ static int32_t CSL_bcdmaChanOpDecChanStats( const CSL_BcdmaCfg *pCfg, CSL_BcdmaC
 
         switch( chanType )
         {
-#if defined (SOC_J784S4) || defined (SOC_J721S2)
+#if defined (SOC_J784S4) || defined (SOC_J742S2) || defined (SOC_J721S2)
             case CSL_BCDMA_CHAN_TYPE_BLOCK_COPY:
                 CSL_REG32_WR( &pCfg->pBcChanRtRegs->CHAN[chanIdx].PCNT,   pChanStats->packetCnt );
                 CSL_REG32_WR( &pCfg->pBcChanRtRegs->CHAN[chanIdx].BCNT,   pChanStats->txPayloadByteCnt );
@@ -733,7 +733,7 @@ static int32_t CSL_bcdmaChanOpSetBurstSize( const CSL_BcdmaCfg *pCfg, CSL_BcdmaC
         CSL_BcdmaChanBurstSize burstSize = *(CSL_BcdmaChanBurstSize *)pOpData;
         switch( chanType )
         {
-#if defined (SOC_J784S4) || defined (SOC_J721S2)
+#if defined (SOC_J784S4) || defined (SOC_J742S2) || defined (SOC_J721S2)
             case CSL_BCDMA_CHAN_TYPE_BLOCK_COPY:
                 if( burstSize > CSL_BCDMA_CHAN_BURST_SIZE_128_BYTES )   /* Block-copy supports 32, 64, and 128-byte bursts */
                 {
@@ -779,7 +779,7 @@ static int32_t CSL_bcdmaChanOpClearError( const CSL_BcdmaCfg *pCfg, CSL_BcdmaCha
 
     switch( chanType )
     {
-#if defined (SOC_J784S4) || defined (SOC_J721S2)
+#if defined (SOC_J784S4) || defined (SOC_J742S2) || defined (SOC_J721S2)
         case CSL_BCDMA_CHAN_TYPE_BLOCK_COPY:
             CSL_REG32_FINS( &pCfg->pBcChanRtRegs->CHAN[chanIdx].CTL, BCDMA_BCRT_CHAN_CTL_ERROR, (uint32_t)0U );
             break;

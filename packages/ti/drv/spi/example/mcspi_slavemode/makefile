@@ -1,6 +1,10 @@
 # Makefile for SPI master/slave test app
 include $(PDK_INSTALL_PATH)/ti/build/Rules.make
 
+SOC_DIR=$(SOC)
+ifeq ($(SOC), j742s2)
+  SOC_DIR=j784s4
+endif
 
 #Baremetal Specifics
 ifeq ($(BUILD_OS_TYPE), baremetal)
@@ -38,23 +42,23 @@ SRCS_COMMON += main_mcspi_slave_mode.c SPI_log.c
 INCLUDE_EXTERNAL_INTERFACES = pdk $(EXTERNAL_INTERFACES)
 
 ifeq ($(BUILD_OS_TYPE), baremetal)
-    EXTERNAL_LNKCMD_FILE_LOCAL =  $(PDK_INSTALL_PATH)/ti/drv/spi/example/mcspi_slavemode/$(SOC)/linker_mcu.lds
+    EXTERNAL_LNKCMD_FILE_LOCAL =  $(PDK_INSTALL_PATH)/ti/drv/spi/example/mcspi_slavemode/$(SOC_DIR)/linker_mcu.lds
 endif
 ifeq ($(BUILD_OS_TYPE), freertos)
-    EXTERNAL_LNKCMD_FILE_LOCAL =  $(PDK_INSTALL_PATH)/ti/drv/spi/example/mcspi_slavemode/$(SOC)/linker_mcu_freertos.lds
+    EXTERNAL_LNKCMD_FILE_LOCAL =  $(PDK_INSTALL_PATH)/ti/drv/spi/example/mcspi_slavemode/$(SOC_DIR)/linker_mcu_freertos.lds
 endif
 
-ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200 j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), am65xx j721e j7200 j721s2 j784s4 j742s2))
     ifeq ($(CORE), mcu2_1)
         # Slave running on mcu2_1 core
         CFLAGS_SPI_MS     = -DMCSPI_SLAVE_TASK
         APP_MASTER_SLAVE  = slave
-        APPEND_LNKCMD_FILE = $(PDK_INSTALL_PATH)/ti/drv/spi/example/mcspi_slavemode/$(SOC)/slave_linker_append_r5f.cmd
+        APPEND_LNKCMD_FILE = $(PDK_INSTALL_PATH)/ti/drv/spi/example/mcspi_slavemode/$(SOC_DIR)/slave_linker_append_r5f.cmd
     else
         # Master running on mcu2_0 core, use the common linker command file in build
         CFLAGS_SPI_MS     = -DMCSPI_MASTER_TASK
         APP_MASTER_SLAVE  = master
-        APPEND_LNKCMD_FILE = $(PDK_INSTALL_PATH)/ti/drv/spi/example/mcspi_slavemode/$(SOC)/master_linker_append_r5f.cmd
+        APPEND_LNKCMD_FILE = $(PDK_INSTALL_PATH)/ti/drv/spi/example/mcspi_slavemode/$(SOC_DIR)/master_linker_append_r5f.cmd
     endif
 endif
 
@@ -103,11 +107,15 @@ ifeq ($(SOC),$(filter $(SOC), j784s4))
 CFLAGS_SPI_MS    += -Dj784s4_evm=j784s4_evm
 endif
 
-ifeq ($(BOARD),$(filter $(BOARD), am65xx_evm am65xx_idk j721e_sim j721e_evm j7200_evm am64x_evm j721s2_evm j784s4_evm))
+ifeq ($(SOC),$(filter $(SOC), j742s2))
+CFLAGS_SPI_MS    += -Dj742s2_evm=j742s2_evm
+endif
+
+ifeq ($(BOARD),$(filter $(BOARD), am65xx_evm am65xx_idk j721e_sim j721e_evm j7200_evm am64x_evm j721s2_evm j784s4_evm j742s2_evm))
 CFLAGS_SPI_UT    = -DMCSPI_MULT_CHANNEL
 endif
 
-ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4))
+ifeq ($(SOC),$(filter $(SOC), j721e j7200 j721s2 j784s4 j742s2))
   ifeq ($(CORE),mcu1_0)
     COMP_LIST_COMMON += sciserver_tirtos
   endif

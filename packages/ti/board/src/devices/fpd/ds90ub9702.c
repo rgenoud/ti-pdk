@@ -2442,7 +2442,7 @@ void Board_fpdUb9702GetI2CAddr(uint8_t hubInstance,
 #if defined (SOC_J721E)
         *chNum = 6U;
 #endif
-#if defined (SOC_J784S4)
+#if defined (SOC_J784S4) || defined (SOC_J742S2)
         *chNum = BOARD_CSI2RX_CTRL_I2C_INSTANCE;
 #endif
 
