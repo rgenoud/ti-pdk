@@ -3028,7 +3028,7 @@ static int32_t Udma_chDisableBlkCpyChan(Udma_ChHandle chHandle, uint32_t timeout
            break;
         }
 
-        if(currTimeout > timeout)
+        if(currTimeout >= timeout)
         {
             retVal = UDMA_ETIMEOUT;
         }
@@ -3112,7 +3112,7 @@ static int32_t Udma_chDisableBlkCpyChan(Udma_ChHandle chHandle, uint32_t timeout
                break;
             }
 
-            if(currTimeout > timeout)
+            if(currTimeout >= timeout)
             {
                 retVal = UDMA_ETIMEOUT;
                 Udma_printf(drvHandle, "[Error] Blockcpy ch teardown timed out!!!\n");
@@ -3254,7 +3254,7 @@ static int32_t Udma_chDisableTxChan(Udma_ChHandle chHandle, uint32_t timeout)
           break;
         }
 
-        if(currTimeout > timeout)
+        if(currTimeout >= timeout)
         {
             retVal = UDMA_ETIMEOUT;
         }
@@ -3416,7 +3416,7 @@ static int32_t Udma_chDisableTxChan(Udma_ChHandle chHandle, uint32_t timeout)
               break;
             }
 
-            if(currTimeout > timeout)
+            if(currTimeout >= timeout)
             {
                 retVal = UDMA_ETIMEOUT;
                 Udma_printf(drvHandle, "[Error] TX ch teardown timed out!!!\n");
@@ -3618,7 +3618,7 @@ static int32_t Udma_chDisableRxChan(Udma_ChHandle chHandle, uint32_t timeout)
           break;
         }
 
-        if(currTimeout > timeout)
+        if(currTimeout >= timeout)
         {
             retVal = UDMA_ETIMEOUT;
         }
@@ -3721,7 +3721,7 @@ static int32_t Udma_chDisableRxChan(Udma_ChHandle chHandle, uint32_t timeout)
               break;
             }
 
-            if(currTimeout > timeout)
+            if(currTimeout >= timeout)
             {
                 retVal = UDMA_ETIMEOUT;
                 Udma_printf(drvHandle, "[Error] RX ch teardown timed out!!!\n");
@@ -3833,7 +3833,7 @@ static int32_t Udma_chDisableExtChan(Udma_ChHandle chHandle, uint32_t timeout)
                     break;
                 }
 
-                if(currTimeout > timeout)
+                if(currTimeout >= timeout)
                 {
                     retVal = UDMA_ETIMEOUT;
                     Udma_printf(drvHandle, "[Error] DRU ch teardown timed out!!!\n");
@@ -3876,7 +3876,7 @@ static int32_t Udma_chDisableExtChan(Udma_ChHandle chHandle, uint32_t timeout)
                     break;
                 }
 
-                if(currTimeout > timeout)
+                if(currTimeout >= timeout)
                 {
                     retVal = UDMA_ETIMEOUT;
                     Udma_printf(drvHandle, "[Error] DRU ch teardown timed out!!!\n");
