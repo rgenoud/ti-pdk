@@ -51,7 +51,7 @@
 #include <soc/j7200/safety_checkers_regcfg.h>
 #elif defined(SOC_J721S2)
 #include <soc/j721s2/safety_checkers_regcfg.h>
-#elif defined(SOC_J784S4)
+#elif defined(SOC_J784S4) || defined (SOC_J742S2)
 #include <soc/j784s4/safety_checkers_regcfg.h>
 #endif
 #endif

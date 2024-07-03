@@ -45,8 +45,8 @@ INCDIR      += $(PDK_SBL_COMP_PATH)/example/boot_app
 
 ifeq ($(SAFETY_LOOP), yes)
     INCDIR      += $(SAFETY_CHECKERS_COMP_PATH)/src $(SAFETY_CHECKERS_COMP_PATH)/src/soc
-    INCDIR      += $(SAFETY_CHECKERS_COMP_PATH)/src/soc/$(SOC)/
-    INCDIR      += $(PDK_INSTALL_PATH)/ti/csl/soc/$(SOC)/src/
+    INCDIR      += $(SAFETY_CHECKERS_COMP_PATH)/src/soc/$(SOC_DIR)/
+    INCDIR      += $(PDK_INSTALL_PATH)/ti/csl/soc/$(SOC_DIR)/src/
 endif
 
 # List all the external components/interfaces, whose interface header files
