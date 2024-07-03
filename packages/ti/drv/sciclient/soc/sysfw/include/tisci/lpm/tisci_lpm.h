@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2017-2024 Texas Instruments Incorporated
+ *  Copyright (C) 2021-2024 Texas Instruments Incorporated
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -55,11 +55,45 @@
 #define TISCI_LPM_H
 
 
+/**
+ * Sleep mode in which complete SOC except the wakeup domain is turned off.
+ */
+#define TISCI_MSG_VALUE_SLEEP_MODE_DEEP_SLEEP           0x0U
 
-#define TISCI_MSG_VALUE_SLEEP_MODE_DEEP_SLEEP          0x0U
-#define TISCI_MSG_VALUE_SLEEP_MODE_MCU_ONLY            0x1U
-#define TISCI_MSG_VALUE_SLEEP_MODE_STANDBY             0x2U
-#define TISCI_MSG_VALUE_SLEEP_MODE_PARTIAL_IO          0x3U
+/**
+ * Sleep mode in which complete SOC except the wakeup and MCU domain is turned off.
+ */
+#define TISCI_MSG_VALUE_SLEEP_MODE_MCU_ONLY             0x1U
+
+/**
+ * Sleep mode in which complete SOC except the DDR memory and CAN IOs is turned off.
+ */
+#define TISCI_MSG_VALUE_SLEEP_MODE_IO_ONLY_PLUS_DDR     0x2U
+
+/**
+ * Sleep mode in which complete SOC except the CAN IOs is turned off.
+ */
+#define TISCI_MSG_VALUE_SLEEP_MODE_PARTIAL_IO           0x3U
+
+/**
+ * Sleep mode in which software is in low power mode but the hardware remains on.
+ */
+#define TISCI_MSG_VALUE_SLEEP_MODE_STANDBY              0x4U
+
+/**
+ * Value passed to request device manager for low power mode selection.
+ */
+#define TISCI_MSG_VALUE_SLEEP_MODE_DM_MANAGED           0xFDU
+
+/**
+ * Value returned if device manager has not yet selected the low power mode.
+ */
+#define TISCI_MSG_VALUE_SLEEP_MODE_NOT_SELECTED         0xFEU
+
+/**
+ * Value returned if low power mode entered is invalid.
+ */
+#define TISCI_MSG_VALUE_SLEEP_MODE_INVALID              0xFFU
 
 #define MSG_FLAG_CERT_AUTH_PASS                        0x555555U
 #define MSG_FLAG_CERT_AUTH_FAIL                        0xffffffU
@@ -113,10 +147,25 @@
 #define TISCI_MSG_VALUE_LPM_WAKE_SOURCE_MCU_IPC                         0x90U
 #define TISCI_MSG_VALUE_LPM_WAKE_SOURCE_INVALID                         0xFFU
 
+/** Used by TISCI_MSG_LPM_WAKE_REASON to return wake pin number as invalid */
+#define TISCI_MSG_VALUE_LPM_WAKE_PIN_INVALID                            0xFFU
+
+/** Used by TISCI_MSG_GET_NEXT_HOST_STATE to return remote core's state as on */
+#define TISCI_MSG_VALUE_HOST_STATE_ON                                   1U
+/** Used by TISCI_MSG_GET_NEXT_HOST_STATE to return remote core's state as off */
+#define TISCI_MSG_VALUE_HOST_STATE_OFF                                  0U
+/** Used by TISCI_MSG_GET_NEXT_HOST_STATE to return remote core's state as invalid */
+#define TISCI_MSG_VALUE_HOST_STATE_INVALID                              0xFFU
+
 /** Used by TISCI_MSG_SET_IO_ISOLATION to enable IO isolation */
 #define TISCI_MSG_VALUE_IO_ENABLE 1U
 /** Used by TISCI_MSG_SET_IO_ISOLATION to disable IO isolation */
 #define TISCI_MSG_VALUE_IO_DISABLE 0U
+
+/** Used by set and get constraints APIs to set/get constraint for device/latency */
+#define TISCI_MSG_VALUE_STATE_SET       1U
+/** Used by set and get constraints APIs to clear/get constraint for device/latency */
+#define TISCI_MSG_VALUE_STATE_CLEAR     0U
 
 /**
  * \brief Request for TISCI_MSG_PREPARE_SLEEP.
@@ -135,10 +184,16 @@
  *
  * Notes:
  *  * Mode is defined as one of TISCI_MSG_VALUE_SLEEP_MODE_x macros.
- *  * ctx_lo and ctx_hi are to be a reserved memory region as decided on by
- *    the HLOS. This region should be a carve out in DDR and valid for use
- *    with DMA. Otherwise there are no constraints on this memory. An
- *    encrypted blob will be placed here and only a valid blob can be
+ *  * Mode parameter should be equal to partial IO low power mode for partial IO
+ *    mode entry. In this mode, ctx_lo and ctx_hi are unused. There is no requirement
+ *    of "carve out" in DDR.
+ *  * Mode parameter should be equal to intermediate value "DM managed" if
+ *    mode selection logic has to be applied. In this case, ctx_lo and ctx_hi are
+ *    reserved for internal use (DM application should allocate "carve out" for LPM)
+ *  * For mode value not equal to "DM managed" or partial IO, ctx_lo and ctx_hi should
+ *    be a reserved memory region as decided on by the HLOS. This region should be a
+ *    carve out in DDR and valid for use with DMA. Otherwise there are no constraints
+ *    on this memory. An encrypted blob will be placed here and only a valid blob can be
  *    decrypted and authenticated, which eliminates risk of tampering.
  */
 struct tisci_msg_prepare_sleep_req {
@@ -164,12 +219,14 @@ struct tisci_msg_prepare_sleep_resp {
  * \param hdr TISCI header to provide ACK/NAK flags to the host.
  * \param mode Low power mode to enter.
  * \param proc_id Processor id to be used for restoring boot vector and debug
- *                status upon resume
- * \param core_resume_lo Low 32-bits of physical pointer to address for core to begin execution upon resume.
- * \param core_resume_hi High 32-bits of physical pointer to address for core to begin execution upon resume.
+ *                status upon resume.
+ * \param core_resume_lo Low 32-bits of physical pointer to address for core to
+ *                       begin execution upon resume.
+ * \param core_resume_hi High 32-bits of physical pointer to address for core to
+ *                       begin execution upon resume.
  *
- * This message is to be sent after TISCI_MSG_PREPARE_SLEEP and actually triggers entry into the specified
- * low power mode.
+ * This message is to be sent after TISCI_MSG_PREPARE_SLEEP and actually triggers
+ * entry into the previously selected low power mode.
  *
  */
 struct tisci_msg_enter_sleep_req {
@@ -184,7 +241,7 @@ struct tisci_msg_enter_sleep_req {
  * \brief Response for TISCI_MSG_ENTER_SLEEP.
  *
  * \param hdr TISCI header to provide ACK/NAK flags to the host.
- * \param status Value that gives information about what happened during LPM cycle
+ * \param status Value that gives information about what happened during LPM cycle.
  */
 struct tisci_msg_enter_sleep_resp {
     struct tisci_header    hdr;
@@ -302,7 +359,7 @@ struct tisci_msg_core_resume_resp {
  * suspend sequence to indicate that DM was not able to successfully suspend
  * the SOC and DM is aborting the sleep cycle. On receiving this message TIFS
  * will wake from WFI and the same message will be forwarded to the power
- * master to wake it from WFI
+ * master to wake it from WFI.
  */
 struct tisci_msg_abort_enter_sleep_req {
     struct tisci_header hdr;
@@ -336,12 +393,20 @@ struct tisci_msg_lpm_wake_reason_req {
  * \param hdr TISCI header to provide ACK/NAK flags to the host.
  * \param wake_source The wake up source that woke soc from LPM.
  * \param wake_timestamp Timestamp at which soc woke.
+ * \param wake_pin The pin that has triggered wake up.
+ * \param mode The last entered low power mode.
+ * \param rsvd_0 Reserved for future use.
+ * \param rsvd_1 Reserved for future use.
  *
  */
 struct tisci_msg_lpm_wake_reason_resp {
     struct tisci_header    hdr;
     uint32_t            wake_source;
     uint64_t            wake_timestamp;
+    uint8_t            wake_pin;
+    uint8_t            mode;
+    uint32_t            rsvd_0;
+    uint32_t            rsvd_1;
 } __attribute__((__packed__));
 
 /**
@@ -366,6 +431,216 @@ struct tisci_msg_set_io_isolation_req {
  */
 struct tisci_msg_set_io_isolation_resp {
     struct tisci_header hdr;
+} __attribute__((__packed__));
+
+/**
+ * \brief Request for TISCI_MSG_MIN_CONTEXT_RESTORE.
+ *
+ * \param hdr TISCI header to provide ACK/NAK flags to the host.
+ * \param ctx_lo Low 32-bits of physical pointer to address to use for context restore.
+ * \param ctx_hi High 32-bits of physical pointer to address to use for context restore.
+ *
+ * This message is sent from R5 SPL to TIFS to indicate that DDR is active and
+ * TIFS can restore the minimal context from the address provided in the ctx_lo and
+ * ctx_hi parameters. This response assumes DDR has been fully restored by R5 SPL before
+ * it is sent.
+ *
+ */
+struct tisci_msg_min_context_restore_req {
+    struct tisci_header    hdr;
+    uint32_t            ctx_lo;
+    uint32_t            ctx_hi;
+} __attribute__((__packed__));
+
+/**
+ * \brief Response for TISCI_MSG_MIN_CONTEXT_RESTORE.
+ *
+ * \param hdr TISCI header to provide ACK/NAK flags to the host.
+ *
+ * This response is sent from the TIFS to the R5 SPL to indicate that now standard
+ * firmware can be executed. This response is sent after DDR firewalls have been fully
+ * restored by TIFS.
+ *
+ */
+struct tisci_msg_min_context_restore_resp {
+    struct tisci_header hdr;
+} __attribute__((__packed__));
+
+/**
+ * \brief Request for TISCI_MSG_LPM_SET_DEVICE_CONSTRAINT.
+ *
+ * \param hdr TISCI header to provide ACK/NAK flags to the host.
+ * \param id Device ID of device on which constraint has to be set/cleared.
+ * \param state The desired state of constraint: set or clear.
+ * \param rsvd_0 Reserved for future use.
+ * \param rsvd_1 Reserved for future use.
+ *
+ * This message is used by host to set constraint on a device. This can be
+ * sent anytime after boot before prepare sleep message and after current low
+ * power mode is exited. Any device can set a constraint on the low power mode
+ * that the SoC can enter. It allows configurable information to be easily shared
+ * from the application, as this is a non-secure message and therefore can be sent
+ * by anyone. By setting a constraint, the device ensures that it will not be
+ * powered off or reset in the selected mode.
+ *
+ * Notes:
+ * * Access Restriction: Exclusivity flag of Device will be honored for setting
+ *   constraint. If some other host has exclusive rights on this device, NAK will
+ *   be returned.
+ * * Clearing of constraints can be done irrespective of exclusivity.
+ */
+struct tisci_msg_lpm_set_device_constraint_req {
+    struct tisci_header    hdr;
+    uint32_t            id;
+    uint8_t            state;
+    uint32_t            rsvd_0;
+    uint32_t            rsvd_1;
+} __attribute__((__packed__));
+
+/**
+ * \brief Response for TISCI_MSG_LPM_SET_DEVICE_CONSTRAINT.
+ *
+ * \param hdr TISCI header to provide ACK/NAK flags to the host.
+ */
+struct tisci_msg_lpm_set_device_constraint_resp {
+    struct tisci_header hdr;
+} __attribute__((__packed__));
+
+/**
+ * \brief Request for TISCI_MSG_LPM_GET_DEVICE_CONSTRAINT.
+ *
+ * \param hdr TISCI header to provide ACK/NAK flags to the host.
+ * \param id Device ID of device for which constraint value is requested.
+ *
+ * This message is used by host to get constraints that it has put on a
+ * device.
+ *
+ */
+struct tisci_msg_lpm_get_device_constraint_req {
+    struct tisci_header    hdr;
+    uint32_t            id;
+} __attribute__((__packed__));
+
+/**
+ * \brief Response for TISCI_MSG_LPM_GET_DEVICE_CONSTRAINT.
+ *
+ * \param hdr TISCI header to provide ACK/NAK flags to the host.
+ * \param state The returned state of constraint: set or clear.
+ */
+struct tisci_msg_lpm_get_device_constraint_resp {
+    struct tisci_header    hdr;
+    uint8_t            state;
+} __attribute__((__packed__));
+
+/**
+ * \brief Request for TISCI_MSG_LPM_SET_LATENCY_CONSTRAINT.
+ *
+ * \param hdr TISCI header to provide ACK/NAK flags to the host.
+ * \param resume_latency The maximum acceptable latency to wake up from low power mode
+ *                       in milliseconds. The deeper the state, the higher the latency.
+ * \param state The desired state of constraint: set or clear.
+ * \param rsvd Reserved for future use.
+ *
+ * This message is used by host to set latency for waking up from low power mode. This can
+ * be sent anytime after boot before prepare sleep message and after current low power
+ * mode is exited. Any host can set a constraint on the low power mode that the SoC can
+ * enter. It allows configurable information to be easily shared from the application, as
+ * this is a non-secure message and therefore can be sent by anyone. By setting a wakeup
+ * latency constraint, the host ensures that the resume time from selected low power mode
+ * will be less than the constraint value.
+ */
+struct tisci_msg_lpm_set_latency_constraint_req {
+    struct tisci_header    hdr;
+    uint16_t            resume_latency;
+    uint8_t            state;
+    uint32_t            rsvd;
+} __attribute__((__packed__));
+
+/**
+ * \brief Response for TISCI_MSG_LPM_SET_LATENCY_CONSTRAINT.
+ *
+ * \param hdr TISCI header to provide ACK/NAK flags to the host.
+ */
+struct tisci_msg_lpm_set_latency_constraint_resp {
+    struct tisci_header hdr;
+} __attribute__((__packed__));
+
+/**
+ * \brief Request for TISCI_MSG_LPM_GET_LATENCY_CONSTRAINT.
+ *
+ * \param hdr TISCI header to provide ACK/NAK flags to the host.
+ *
+ * This message is used by the host to get the resume latency it set for waking up from low
+ * power mode.
+ *
+ */
+struct tisci_msg_lpm_get_latency_constraint_req {
+    struct tisci_header hdr;
+} __attribute__((__packed__));
+
+/**
+ * \brief Response for TISCI_MSG_LPM_GET_LATENCY_CONSTRAINT.
+ *
+ * \param hdr TISCI header to provide ACK/NAK flags to the host.
+ * \param resume_latency The maximum acceptable latency for waking up from low power mode
+ *                       in milliseconds. The deeper the state, the higher the latency.
+ * \param state The returned state of constraint: set or clear.
+ */
+struct tisci_msg_lpm_get_latency_constraint_resp {
+    struct tisci_header    hdr;
+    uint16_t            resume_latency;
+    uint8_t            state;
+} __attribute__((__packed__));
+
+/**
+ * \brief Request for TISCI_MSG_LPM_GET_NEXT_SYS_MODE.
+ *
+ * \param hdr TISCI header to provide ACK/NAK flags to the host.
+ *
+ * This message is used to enquire DM for selected system wide low power mode.
+ *
+ */
+struct tisci_msg_lpm_get_next_sys_mode_req {
+    struct tisci_header hdr;
+} __attribute__((__packed__));
+
+/**
+ * \brief Response for TISCI_MSG_LPM_GET_NEXT_SYS_MODE.
+ *
+ * \param hdr TISCI header to provide ACK/NAK flags to the host.
+ * \param mode The selected system wide low power mode.
+ *
+ * Note: If the mode selection is not yet locked, this API returns "not selected" mode.
+ */
+struct tisci_msg_lpm_get_next_sys_mode_resp {
+    struct tisci_header    hdr;
+    uint8_t            mode;
+} __attribute__((__packed__));
+
+/**
+ * \brief Request for TISCI_MSG_GET_LPM_NEXT_HOST_STATE.
+ *
+ * \param hdr TISCI header to provide ACK/NAK flags to the host.
+ *
+ * This message is used by host to enquire DM for its expected state
+ * in current low power mode selection - ON or OFF.
+ *
+ */
+struct tisci_msg_lpm_get_next_host_state_req {
+    struct tisci_header hdr;
+} __attribute__((__packed__));
+
+/**
+ * \brief Response for TISCI_MSG_LPM_GET_NEXT_HOST_STATE.
+ *
+ * \param hdr TISCI header to provide ACK/NAK flags to the host.
+ * \param state The expected state of host in selected low power mode.
+ *
+ * Note: If the mode selection is not yet locked, this API returns invalid state.
+ */
+struct tisci_msg_lpm_get_next_host_state_resp {
+    struct tisci_header    hdr;
+    uint8_t            state;
 } __attribute__((__packed__));
 
 #endif

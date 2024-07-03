@@ -79,7 +79,7 @@
             
             
               <div class="version">
-                10.00.01
+                10.00.05
               </div>
             
           
@@ -115,6 +115,13 @@
 <li class="toctree-l4"><a class="reference internal" href="#tisci-msg-enter-sleep">TISCI_MSG_ENTER_SLEEP</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#tisci-msg-lpm-wake-reason">TISCI_MSG_LPM_WAKE_REASON</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#tisci-msg-set-io-isolation">TISCI_MSG_SET_IO_ISOLATION</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tisci-msg-min-context-restore">TISCI_MSG_MIN_CONTEXT_RESTORE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tisci-msg-lpm-set-device-constraint">TISCI_MSG_LPM_SET_DEVICE_CONSTRAINT</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tisci-msg-lpm-set-latency-constraint">TISCI_MSG_LPM_SET_LATENCY_CONSTRAINT</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tisci-msg-lpm-get-device-constraint">TISCI_MSG_LPM_GET_DEVICE_CONSTRAINT</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tisci-msg-lpm-get-latency-constraint">TISCI_MSG_LPM_GET_LATENCY_CONSTRAINT</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tisci-msg-lpm-get-next-sys-mode">TISCI_MSG_LPM_GET_NEXT_SYS_MODE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tisci-msg-lpm-get-next-host-state">TISCI_MSG_LPM_GET_NEXT_HOST_STATE</a></li>
 </ul>
 </li>
 </ul>
@@ -175,7 +182,7 @@
 <h1>TISCI PM Low Power Mode API Documentation<a class="headerlink" href="#tisci-pm-low-power-mode-api-documentation" title="Permalink to this headline">¶</a></h1>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">This document is only applicable to AM62x and AM62Ax devices.</p>
+<p class="last">This document is applicable to AM62x, AM62Ax and AM62Px devices.</p>
 </div>
 <div class="section" id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
@@ -183,23 +190,25 @@
 supported by the SOC.</p>
 <div class="section" id="supported-low-power-modes">
 <h3>Supported low power modes<a class="headerlink" href="#supported-low-power-modes" title="Permalink to this headline">¶</a></h3>
-<p><p><code class="docutils literal"><span class="pre">TISCI_MSG_VALUE_SLEEP_MODE_DEEP_SLEEP</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0x0</span></code></p>
+<p><p><code class="docutils literal"><span class="pre">TISCI_MSG_VALUE_SLEEP_MODE_DEEP_SLEEP</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0x0U</span></code></p>
 <p>Sleep mode in which complete SOC except the wakeup domain is turned off.</p>
 </p>
-<p><p><code class="docutils literal"><span class="pre">TISCI_MSG_VALUE_SLEEP_MODE_MCU_ONLY</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0x1</span></code></p>
+<p><p><code class="docutils literal"><span class="pre">TISCI_MSG_VALUE_SLEEP_MODE_MCU_ONLY</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0x1U</span></code></p>
 <p>Sleep mode in which complete SOC except the wakeup and MCU domain is turned off.</p>
 </p>
-<p><p><code class="docutils literal"><span class="pre">TISCI_MSG_VALUE_SLEEP_MODE_STANDBY</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0x2</span></code></p>
-<p>Sleep mode in which software is in low power mode but the hardware remains
- on.</p>
+<p><p><code class="docutils literal"><span class="pre">TISCI_MSG_VALUE_SLEEP_MODE_IO_ONLY_PLUS_DDR</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0x2U</span></code></p>
+<p>Sleep mode in which complete SOC except the DDR memory and CAN IOs is turned off.</p>
 </p>
 <p><p><code class="docutils literal"><span class="pre">TISCI_MSG_VALUE_SLEEP_MODE_PARTIAL_IO</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0x3U</span></code></p>
 <p>Sleep mode in which complete SOC except the CAN IOs is turned off.</p>
 </p>
+<p><p><code class="docutils literal"><span class="pre">TISCI_MSG_VALUE_SLEEP_MODE_STANDBY</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0x4U</span></code></p>
+<p>Sleep mode in which software is in low power mode but the hardware remains on.</p>
+</p>
 <table border="1" class="docutils">
 <colgroup>
-<col width="46%" />
-<col width="54%" />
+<col width="44%" />
+<col width="56%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Low power mode</th>
@@ -208,19 +217,34 @@ supported by the SOC.</p>
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td>DEEP_SLEEP</td>
-<td>am62x, am62ax</td>
+<td>am62x, am62ax, am62px</td>
 </tr>
 <tr class="row-odd"><td>MCU_ONLY</td>
-<td>am62x</td>
+<td>am62x, am62ax, am62px</td>
+</tr>
+<tr class="row-even"><td>IO_ONLY_PLUS_DDR</td>
+<td>None</td>
+</tr>
+<tr class="row-odd"><td>PARTIAL_IO</td>
+<td>am62x, am62ax, am62px</td>
 </tr>
 <tr class="row-even"><td>STANDBY</td>
 <td>None</td>
 </tr>
-<tr class="row-odd"><td>PARTIAL_IO</td>
-<td>am62x</td>
-</tr>
 </tbody>
 </table>
+</div>
+<div class="section" id="intermediate-mode-values">
+<h3>Intermediate mode values<a class="headerlink" href="#intermediate-mode-values" title="Permalink to this headline">¶</a></h3>
+<p><p><code class="docutils literal"><span class="pre">TISCI_MSG_VALUE_SLEEP_MODE_DM_MANAGED</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0xFDU</span></code></p>
+<p>Value passed to request device manager for low power mode selection.</p>
+</p>
+<p><p><code class="docutils literal"><span class="pre">TISCI_MSG_VALUE_SLEEP_MODE_NOT_SELECTED</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0xFEU</span></code></p>
+<p>Value returned if device manager has not yet selected the low power mode.</p>
+</p>
+<p><p><code class="docutils literal"><span class="pre">TISCI_MSG_VALUE_SLEEP_MODE_INVALID</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0xFFU</span></code></p>
+<p>Value returned if low power mode entered is invalid.</p>
+</p>
 </div>
 <div class="section" id="device-configuration-and-control-apis">
 <h3>Device configuration and control APIs<a class="headerlink" href="#device-configuration-and-control-apis" title="Permalink to this headline">¶</a></h3>
@@ -247,8 +271,56 @@ supported by the SOC.</p>
 <tr class="row-odd"><td>0x0307</td>
 <td><a class="reference internal" href="#pm-lpm-msg-set-io-isolation"><span class="std std-ref">TISCI_MSG_SET_IO_ISOLATION</span></a></td>
 </tr>
+<tr class="row-even"><td>0x0308</td>
+<td><a class="reference internal" href="#pm-lpm-msg-min-context-restore"><span class="std std-ref">TISCI_MSG_MIN_CONTEXT_RESTORE</span></a></td>
+</tr>
+<tr class="row-odd"><td>0x0309</td>
+<td><a class="reference internal" href="#pm-lpm-msg-set-device-constraint"><span class="std std-ref">TISCI_MSG_LPM_SET_DEVICE_CONSTRAINT</span></a></td>
+</tr>
+<tr class="row-even"><td>0x030A</td>
+<td><a class="reference internal" href="#pm-lpm-msg-set-latency-constraint"><span class="std std-ref">TISCI_MSG_LPM_SET_LATENCY_CONSTRAINT</span></a></td>
+</tr>
+<tr class="row-odd"><td>0x030B</td>
+<td><a class="reference internal" href="#pm-lpm-msg-get-device-constraint"><span class="std std-ref">TISCI_MSG_LPM_GET_DEVICE_CONSTRAINT</span></a></td>
+</tr>
+<tr class="row-even"><td>0x030C</td>
+<td><a class="reference internal" href="#pm-lpm-msg-get-latency-constraint"><span class="std std-ref">TISCI_MSG_LPM_GET_LATENCY_CONSTRAINT</span></a></td>
+</tr>
+<tr class="row-odd"><td>0x030D</td>
+<td><a class="reference internal" href="#pm-lpm-msg-get-next-sys-mode"><span class="std std-ref">TISCI_MSG_LPM_GET_NEXT_SYS_MODE</span></a></td>
+</tr>
+<tr class="row-even"><td>0x030E</td>
+<td><a class="reference internal" href="#pm-lpm-msg-get-next-host-state"><span class="std std-ref">TISCI_MSG_LPM_GET_NEXT_HOST_STATE</span></a></td>
+</tr>
 </tbody>
 </table>
+</div>
+<div class="section" id="macros-used-in-this-document">
+<h3>Macros Used in this Document<a class="headerlink" href="#macros-used-in-this-document" title="Permalink to this headline">¶</a></h3>
+<p><p><code class="docutils literal"><span class="pre">TISCI_MSG_VALUE_IO_ENABLE</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">1U</span></code></p>
+<p>Used by TISCI_MSG_SET_IO_ISOLATION to enable IO isolation</p>
+</p>
+<p><p><code class="docutils literal"><span class="pre">TISCI_MSG_VALUE_IO_DISABLE</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0U</span></code></p>
+<p>Used by TISCI_MSG_SET_IO_ISOLATION to disable IO isolation</p>
+</p>
+<p><p><code class="docutils literal"><span class="pre">TISCI_MSG_VALUE_HOST_STATE_ON</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">1U</span></code></p>
+<p>Used by TISCI_MSG_GET_NEXT_HOST_STATE to return remote core’s state as on</p>
+</p>
+<p><p><code class="docutils literal"><span class="pre">TISCI_MSG_VALUE_HOST_STATE_OFF</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0U</span></code></p>
+<p>Used by TISCI_MSG_GET_NEXT_HOST_STATE to return remote core’s state as off</p>
+</p>
+<p><p><code class="docutils literal"><span class="pre">TISCI_MSG_VALUE_HOST_STATE_INVALID</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0xFFU</span></code></p>
+<p>Used by TISCI_MSG_GET_NEXT_HOST_STATE to return remote core’s state as invalid</p>
+</p>
+<p><p><code class="docutils literal"><span class="pre">TISCI_MSG_VALUE_STATE_SET</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">1U</span></code></p>
+<p>Used by set and get constraints APIs to set/get constraint for device/latency</p>
+</p>
+<p><p><code class="docutils literal"><span class="pre">TISCI_MSG_VALUE_STATE_CLEAR</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0U</span></code></p>
+<p>Used by set and get constraints APIs to clear/get constraint for device/latency</p>
+</p>
+<p><p><code class="docutils literal"><span class="pre">TISCI_MSG_VALUE_LPM_WAKE_PIN_INVALID</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0xFFU</span></code></p>
+<p>Used by TISCI_MSG_LPM_WAKE_REASON to return wake pin number as invalid</p>
+</p>
 </div>
 </div>
 <div class="section" id="tisci-msg-prepare-sleep">
@@ -323,10 +395,16 @@ supported by the SOC.</p>
  therefore can be sent by anyone.
  Notes:
  Mode is defined as one of TISCI_MSG_VALUE_SLEEP_MODE_x macros.
- ctx_lo and ctx_hi are to be a reserved memory region as decided on by
- the HLOS. This region should be a carve out in DDR and valid for use
- with DMA. Otherwise there are no constraints on this memory. An
- encrypted blob will be placed here and only a valid blob can be
+ Mode parameter should be equal to partial IO low power mode for partial IO
+ mode entry. In this mode, ctx_lo and ctx_hi are unused. There is no requirement
+ of “carve out” in DDR.
+ Mode parameter should be equal to intermediate value “DM managed” if
+ mode selection logic has to be applied. In this case, ctx_lo and ctx_hi are
+ reserved for internal use (DM application should allocate “carve out” for LPM)
+ For mode value not equal to “DM managed” or partial IO, ctx_lo and ctx_hi should
+ be a reserved memory region as decided on by the HLOS. This region should be a
+ carve out in DDR and valid for use with DMA. Otherwise there are no constraints
+ on this memory. An encrypted blob will be placed here and only a valid blob can be
  decrypted and authenticated, which eliminates risk of tampering.</p>
 </p>
 <p><p><strong>struct tisci_msg_prepare_sleep_resp</strong></p>
@@ -412,7 +490,7 @@ called to prepare for the low power mode.</p>
 </tr>
 <tr class="row-even"><td>proc_id</td>
 <td>u8</td>
-<td>Processor id to be used for restoring boot vector and debug status upon resume</td>
+<td>Processor id to be used for restoring boot vector and debug status upon resume.</td>
 </tr>
 <tr class="row-odd"><td>core_resume_lo</td>
 <td>u32</td>
@@ -424,8 +502,8 @@ called to prepare for the low power mode.</p>
 </tr>
 </tbody>
 </table>
-<p>This message is to be sent after TISCI_MSG_PREPARE_SLEEP and actually triggers entry into the specified
- low power mode.</p>
+<p>This message is to be sent after TISCI_MSG_PREPARE_SLEEP and actually triggers
+ entry into the previously selected low power mode.</p>
 </p>
 <p><p><strong>struct tisci_msg_enter_sleep_resp</strong></p>
 <p>Response for TISCI_MSG_ENTER_SLEEP.</p>
@@ -433,7 +511,7 @@ called to prepare for the low power mode.</p>
 <colgroup>
 <col width="13%" />
 <col width="21%" />
-<col width="66%" />
+<col width="67%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Parameter</th>
@@ -448,7 +526,7 @@ called to prepare for the low power mode.</p>
 </tr>
 <tr class="row-odd"><td>status</td>
 <td>u32</td>
-<td>Value that gives information about what happened during LPM cycle</td>
+<td>Value that gives information about what happened during LPM cycle.</td>
 </tr>
 </tbody>
 </table>
@@ -459,7 +537,8 @@ called to prepare for the low power mode.</p>
 <span id="pm-lpm-msg-wake-reason"></span><h2>TISCI_MSG_LPM_WAKE_REASON<a class="headerlink" href="#tisci-msg-lpm-wake-reason" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="id5">
 <h3>Objective<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
-<p>Get which wake up source woke the soc from low power mode.</p>
+<p>Get the last entered low power mode, wake up source and pin (if
+applicable) that woke the soc.</p>
 </div>
 <div class="section" id="wake-up-sources">
 <h3>Wake up sources<a class="headerlink" href="#wake-up-sources" title="Permalink to this headline">¶</a></h3>
@@ -521,6 +600,16 @@ called to prepare for the low power mode.</p>
 </tr>
 </tbody>
 </table>
+</div>
+<div class="section" id="wake-up-pin">
+<h3>Wake up pin<a class="headerlink" href="#wake-up-pin" title="Permalink to this headline">¶</a></h3>
+<p>Refer to the Pad Configuration PADCONFIG Registers in Registers chapter in
+the TRM to get information about pad number.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">In case of wakeup event on multiple pins simultaneously/concurrently, the
+smaller padcfg number will be returned.</p>
+</div>
 </div>
 <div class="section" id="id6">
 <h3>Usage<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
@@ -594,6 +683,22 @@ called to prepare for the low power mode.</p>
 <tr class="row-even"><td>wake_timestamp</td>
 <td>u64</td>
 <td>Timestamp at which soc woke.</td>
+</tr>
+<tr class="row-odd"><td>wake_pin</td>
+<td>u8</td>
+<td>The pin that has triggered wake up.</td>
+</tr>
+<tr class="row-even"><td>mode</td>
+<td>u8</td>
+<td>The last entered low power mode.</td>
+</tr>
+<tr class="row-odd"><td>rsvd_0</td>
+<td>u32</td>
+<td>Reserved for future use.</td>
+</tr>
+<tr class="row-even"><td>rsvd_1</td>
+<td>u32</td>
+<td>Reserved for future use.</td>
 </tr>
 </tbody>
 </table>
@@ -680,6 +785,734 @@ called to prepare for the low power mode.</p>
 </p>
 </div>
 </div>
+<div class="section" id="tisci-msg-min-context-restore">
+<span id="pm-lpm-msg-min-context-restore"></span><h2>TISCI_MSG_MIN_CONTEXT_RESTORE<a class="headerlink" href="#tisci-msg-min-context-restore" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id13">
+<h3>Objective<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
+<p>Restore the minimal context saved during lpm entry.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This message is registered only if IO Plus DDR low power mode
+exit is detected from MMR read.</p>
+</div>
+</div>
+<div class="section" id="id14">
+<h3>Usage<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="75%" />
+<col width="25%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><strong>Message Type</strong></td>
+<td>Normal</td>
+</tr>
+<tr class="row-even"><td><strong>Secure Queue Only?</strong></td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="id15">
+<h3>TISCI Message ID<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal"><span class="pre">TISCI_MSG_MIN_CONTEXT_RESTORE</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">(0x0308U)</span></code></p>
+</div>
+<div class="section" id="id16">
+<h3>Message Data Structures<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h3>
+<p><p><strong>struct tisci_msg_min_context_restore_req</strong></p>
+<p>Request for TISCI_MSG_MIN_CONTEXT_RESTORE.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="12%" />
+<col width="20%" />
+<col width="68%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Parameter</th>
+<th class="head">Type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>hdr</td>
+<td>struct tisci_header</td>
+<td>TISCI header to provide ACK/NAK flags to the host.</td>
+</tr>
+<tr class="row-odd"><td>ctx_lo</td>
+<td>u32</td>
+<td>Low 32-bits of physical pointer to address to use for context restore.</td>
+</tr>
+<tr class="row-even"><td>ctx_hi</td>
+<td>u32</td>
+<td>High 32-bits of physical pointer to address to use for context restore.</td>
+</tr>
+</tbody>
+</table>
+<p>This message is sent from R5 SPL to TIFS to indicate that DDR is active and
+ TIFS can restore the minimal context from the address provided in the ctx_lo and
+ ctx_hi parameters. This response assumes DDR has been fully restored by R5 SPL before
+ it is sent.</p>
+</p>
+<p><p><strong>struct tisci_msg_min_context_restore_resp</strong></p>
+<p>Response for TISCI_MSG_MIN_CONTEXT_RESTORE.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="15%" />
+<col width="24%" />
+<col width="60%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Parameter</th>
+<th class="head">Type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>hdr</td>
+<td>struct tisci_header</td>
+<td>TISCI header to provide ACK/NAK flags to the host.</td>
+</tr>
+</tbody>
+</table>
+<p>This response is sent from the TIFS to the R5 SPL to indicate that now standard
+ firmware can be executed. This response is sent after DDR firewalls have been fully
+ restored by TIFS.</p>
+</p>
+</div>
+</div>
+<div class="section" id="tisci-msg-lpm-set-device-constraint">
+<span id="pm-lpm-msg-set-device-constraint"></span><h2>TISCI_MSG_LPM_SET_DEVICE_CONSTRAINT<a class="headerlink" href="#tisci-msg-lpm-set-device-constraint" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id17">
+<h3>Objective<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h3>
+<p>Any device can set a constraint on the low power mode that the SoC can enter.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">By setting a constraint, the device ensures that it will not be powered off
+or reset in the selected mode. Setting constraint on a device does not
+ensure that the device will be functional in the selected low power mode.
+Exception: Setting constraint on DDR ensures that DDR will be functional in
+the selected low power mode.
+All constraints will be auto cleared at every resume cycle.</p>
+</div>
+</div>
+<div class="section" id="id18">
+<h3>Usage<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="75%" />
+<col width="25%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><strong>Message Type</strong></td>
+<td>Normal</td>
+</tr>
+<tr class="row-even"><td><strong>Secure Queue Only?</strong></td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="id19">
+<h3>TISCI Message ID<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal"><span class="pre">TISCI_MSG_LPM_SET_DEVICE_CONSTRAINT</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">(0x0309U)</span></code></p>
+</div>
+<div class="section" id="id20">
+<h3>Message Data Structures<a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h3>
+<p><p><strong>struct tisci_msg_lpm_set_device_constraint_req</strong></p>
+<p>Request for TISCI_MSG_LPM_SET_DEVICE_CONSTRAINT.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="13%" />
+<col width="21%" />
+<col width="65%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Parameter</th>
+<th class="head">Type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>hdr</td>
+<td>struct tisci_header</td>
+<td>TISCI header to provide ACK/NAK flags to the host.</td>
+</tr>
+<tr class="row-odd"><td>id</td>
+<td>u32</td>
+<td>Device ID of device on which constraint has to be set/cleared.</td>
+</tr>
+<tr class="row-even"><td>state</td>
+<td>u8</td>
+<td>The desired state of constraint: set or clear.</td>
+</tr>
+<tr class="row-odd"><td>rsvd_0</td>
+<td>u32</td>
+<td>Reserved for future use.</td>
+</tr>
+<tr class="row-even"><td>rsvd_1</td>
+<td>u32</td>
+<td>Reserved for future use.</td>
+</tr>
+</tbody>
+</table>
+<p>This message is used by host to set constraint on a device. This can be
+ sent anytime after boot before prepare sleep message and after current low
+ power mode is exited. Any device can set a constraint on the low power mode
+ that the SoC can enter. It allows configurable information to be easily shared
+ from the application, as this is a non-secure message and therefore can be sent
+ by anyone. By setting a constraint, the device ensures that it will not be
+ powered off or reset in the selected mode.
+ Notes:
+ Access Restriction: Exclusivity flag of Device will be honored for setting
+ constraint. If some other host has exclusive rights on this device, NAK will
+ be returned.
+ Clearing of constraints can be done irrespective of exclusivity.</p>
+</p>
+<p><p><strong>struct tisci_msg_lpm_set_device_constraint_resp</strong></p>
+<p>Response for TISCI_MSG_LPM_SET_DEVICE_CONSTRAINT.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="15%" />
+<col width="24%" />
+<col width="60%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Parameter</th>
+<th class="head">Type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>hdr</td>
+<td>struct tisci_header</td>
+<td>TISCI header to provide ACK/NAK flags to the host.</td>
+</tr>
+</tbody>
+</table>
+</p>
+</div>
+</div>
+<div class="section" id="tisci-msg-lpm-set-latency-constraint">
+<span id="pm-lpm-msg-set-latency-constraint"></span><h2>TISCI_MSG_LPM_SET_LATENCY_CONSTRAINT<a class="headerlink" href="#tisci-msg-lpm-set-latency-constraint" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id21">
+<h3>Objective<a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h3>
+<p>Any host can set a constraint on the low power mode that the SoC can enter.</p>
+</div>
+<div class="section" id="latency-table">
+<h3>Latency Table<a class="headerlink" href="#latency-table" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="36%" />
+<col width="32%" />
+<col width="32%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Low power mode</th>
+<th class="head">Minimum (ms)</th>
+<th class="head">Maximum (ms)</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>DEEP_SLEEP</td>
+<td>101</td>
+<td>X</td>
+</tr>
+<tr class="row-odd"><td>MCU_ONLY</td>
+<td>10</td>
+<td>100</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">By setting a wakeup latency constraint, the host ensures that the resume
+time from selected low power mode will be less than the constraint value.
+For deepest low power mode, there is no upper limit (maximum value) for
+latency.
+All constraints will be auto cleared at every resume cycle.</p>
+</div>
+</div>
+<div class="section" id="id22">
+<h3>Usage<a class="headerlink" href="#id22" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="75%" />
+<col width="25%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><strong>Message Type</strong></td>
+<td>Normal</td>
+</tr>
+<tr class="row-even"><td><strong>Secure Queue Only?</strong></td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="id23">
+<h3>TISCI Message ID<a class="headerlink" href="#id23" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal"><span class="pre">TISCI_MSG_LPM_SET_LATENCY_CONSTRAINT</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">(0x030AU)</span></code></p>
+</div>
+<div class="section" id="id24">
+<h3>Message Data Structures<a class="headerlink" href="#id24" title="Permalink to this headline">¶</a></h3>
+<p><p><strong>struct tisci_msg_lpm_set_latency_constraint_req</strong></p>
+<p>Request for TISCI_MSG_LPM_SET_LATENCY_CONSTRAINT.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="13%" />
+<col width="77%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Parameter</th>
+<th class="head">Type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>hdr</td>
+<td>struct tisci_header</td>
+<td>TISCI header to provide ACK/NAK flags to the host.</td>
+</tr>
+<tr class="row-odd"><td>resume_latency</td>
+<td>u16</td>
+<td>The maximum acceptable latency to wake up from low power mode in milliseconds. The deeper the state, the higher the latency.</td>
+</tr>
+<tr class="row-even"><td>state</td>
+<td>u8</td>
+<td>The desired state of constraint: set or clear.</td>
+</tr>
+<tr class="row-odd"><td>rsvd</td>
+<td>u32</td>
+<td>Reserved for future use.</td>
+</tr>
+</tbody>
+</table>
+<p>This message is used by host to set latency for waking up from low power mode. This can
+ be sent anytime after boot before prepare sleep message and after current low power
+ mode is exited. Any host can set a constraint on the low power mode that the SoC can
+ enter. It allows configurable information to be easily shared from the application, as
+ this is a non-secure message and therefore can be sent by anyone. By setting a wakeup
+ latency constraint, the host ensures that the resume time from selected low power mode
+ will be less than the constraint value.</p>
+</p>
+<p><p><strong>struct tisci_msg_lpm_set_latency_constraint_resp</strong></p>
+<p>Response for TISCI_MSG_LPM_SET_LATENCY_CONSTRAINT.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="15%" />
+<col width="24%" />
+<col width="60%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Parameter</th>
+<th class="head">Type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>hdr</td>
+<td>struct tisci_header</td>
+<td>TISCI header to provide ACK/NAK flags to the host.</td>
+</tr>
+</tbody>
+</table>
+</p>
+</div>
+</div>
+<div class="section" id="tisci-msg-lpm-get-device-constraint">
+<span id="pm-lpm-msg-get-device-constraint"></span><h2>TISCI_MSG_LPM_GET_DEVICE_CONSTRAINT<a class="headerlink" href="#tisci-msg-lpm-get-device-constraint" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id25">
+<h3>Objective<a class="headerlink" href="#id25" title="Permalink to this headline">¶</a></h3>
+<p>Get the constraints set by a host on a device.</p>
+</div>
+<div class="section" id="id26">
+<h3>Usage<a class="headerlink" href="#id26" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="75%" />
+<col width="25%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><strong>Message Type</strong></td>
+<td>Normal</td>
+</tr>
+<tr class="row-even"><td><strong>Secure Queue Only?</strong></td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="id27">
+<h3>TISCI Message ID<a class="headerlink" href="#id27" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal"><span class="pre">TISCI_MSG_LPM_GET_DEVICE_CONSTRAINT</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">(0x030BU)</span></code></p>
+</div>
+<div class="section" id="id28">
+<h3>Message Data Structures<a class="headerlink" href="#id28" title="Permalink to this headline">¶</a></h3>
+<p><p><strong>struct tisci_msg_lpm_get_device_constraint_req</strong></p>
+<p>Request for TISCI_MSG_LPM_GET_DEVICE_CONSTRAINT.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="14%" />
+<col width="22%" />
+<col width="65%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Parameter</th>
+<th class="head">Type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>hdr</td>
+<td>struct tisci_header</td>
+<td>TISCI header to provide ACK/NAK flags to the host.</td>
+</tr>
+<tr class="row-odd"><td>id</td>
+<td>u32</td>
+<td>Device ID of device for which constraint value is requested.</td>
+</tr>
+</tbody>
+</table>
+<p>This message is used by host to get constraints that it has put on a
+ device.</p>
+</p>
+<p><p><strong>struct tisci_msg_lpm_get_device_constraint_resp</strong></p>
+<p>Response for TISCI_MSG_LPM_GET_DEVICE_CONSTRAINT.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="15%" />
+<col width="24%" />
+<col width="60%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Parameter</th>
+<th class="head">Type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>hdr</td>
+<td>struct tisci_header</td>
+<td>TISCI header to provide ACK/NAK flags to the host.</td>
+</tr>
+<tr class="row-odd"><td>state</td>
+<td>u8</td>
+<td>The returned state of constraint: set or clear.</td>
+</tr>
+</tbody>
+</table>
+</p>
+</div>
+</div>
+<div class="section" id="tisci-msg-lpm-get-latency-constraint">
+<span id="pm-lpm-msg-get-latency-constraint"></span><h2>TISCI_MSG_LPM_GET_LATENCY_CONSTRAINT<a class="headerlink" href="#tisci-msg-lpm-get-latency-constraint" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id29">
+<h3>Objective<a class="headerlink" href="#id29" title="Permalink to this headline">¶</a></h3>
+<p>Get the low power mode resume latency value set by a host.</p>
+</div>
+<div class="section" id="id30">
+<h3>Usage<a class="headerlink" href="#id30" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="75%" />
+<col width="25%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><strong>Message Type</strong></td>
+<td>Normal</td>
+</tr>
+<tr class="row-even"><td><strong>Secure Queue Only?</strong></td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="id31">
+<h3>TISCI Message ID<a class="headerlink" href="#id31" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal"><span class="pre">TISCI_MSG_LPM_GET_LATENCY_CONSTRAINT</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">(0x030CU)</span></code></p>
+</div>
+<div class="section" id="id32">
+<h3>Message Data Structures<a class="headerlink" href="#id32" title="Permalink to this headline">¶</a></h3>
+<p><p><strong>struct tisci_msg_lpm_get_latency_constraint_req</strong></p>
+<p>Request for TISCI_MSG_LPM_GET_LATENCY_CONSTRAINT.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="15%" />
+<col width="24%" />
+<col width="60%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Parameter</th>
+<th class="head">Type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>hdr</td>
+<td>struct tisci_header</td>
+<td>TISCI header to provide ACK/NAK flags to the host.</td>
+</tr>
+</tbody>
+</table>
+<p>This message is used by the host to get the resume latency it set for waking up from low
+ power mode.</p>
+</p>
+<p><p><strong>struct tisci_msg_lpm_get_latency_constraint_resp</strong></p>
+<p>Response for TISCI_MSG_LPM_GET_LATENCY_CONSTRAINT.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="13%" />
+<col width="78%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Parameter</th>
+<th class="head">Type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>hdr</td>
+<td>struct tisci_header</td>
+<td>TISCI header to provide ACK/NAK flags to the host.</td>
+</tr>
+<tr class="row-odd"><td>resume_latency</td>
+<td>u16</td>
+<td>The maximum acceptable latency for waking up from low power mode in milliseconds. The deeper the state, the higher the latency.</td>
+</tr>
+<tr class="row-even"><td>state</td>
+<td>u8</td>
+<td>The returned state of constraint: set or clear.</td>
+</tr>
+</tbody>
+</table>
+</p>
+</div>
+</div>
+<div class="section" id="tisci-msg-lpm-get-next-sys-mode">
+<span id="pm-lpm-msg-get-next-sys-mode"></span><h2>TISCI_MSG_LPM_GET_NEXT_SYS_MODE<a class="headerlink" href="#tisci-msg-lpm-get-next-sys-mode" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id33">
+<h3>Objective<a class="headerlink" href="#id33" title="Permalink to this headline">¶</a></h3>
+<p>Return the next (upcoming) power state of the system. It can be
+one of the following system modes.</p>
+</div>
+<div class="section" id="system-modes">
+<h3>System modes<a class="headerlink" href="#system-modes" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="60%" />
+<col width="40%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">System mode</th>
+<th class="head">Mode ID</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>DEEP_SLEEP</td>
+<td>0x00</td>
+</tr>
+<tr class="row-odd"><td>MCU_ONLY</td>
+<td>0x01</td>
+</tr>
+<tr class="row-even"><td>IO_ONLY_PLUS_DDR</td>
+<td>0x02</td>
+</tr>
+<tr class="row-odd"><td>PARTIAL_IO</td>
+<td>0x03</td>
+</tr>
+<tr class="row-even"><td>STANDBY</td>
+<td>0x04</td>
+</tr>
+<tr class="row-odd"><td>NOT_SELECTED</td>
+<td>0xFE</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="id34">
+<h3>Usage<a class="headerlink" href="#id34" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="75%" />
+<col width="25%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><strong>Message Type</strong></td>
+<td>Normal</td>
+</tr>
+<tr class="row-even"><td><strong>Secure Queue Only?</strong></td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="id35">
+<h3>TISCI Message ID<a class="headerlink" href="#id35" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal"><span class="pre">TISCI_MSG_LPM_GET_NEXT_SYS_MODE</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">(0x030DU)</span></code></p>
+</div>
+<div class="section" id="id36">
+<h3>Message Data Structures<a class="headerlink" href="#id36" title="Permalink to this headline">¶</a></h3>
+<p><p><strong>struct tisci_msg_lpm_get_next_sys_mode_req</strong></p>
+<p>Request for TISCI_MSG_LPM_GET_NEXT_SYS_MODE.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="15%" />
+<col width="24%" />
+<col width="60%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Parameter</th>
+<th class="head">Type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>hdr</td>
+<td>struct tisci_header</td>
+<td>TISCI header to provide ACK/NAK flags to the host.</td>
+</tr>
+</tbody>
+</table>
+<p>This message is used to enquire DM for selected system wide low power mode.</p>
+</p>
+<p><p><strong>struct tisci_msg_lpm_get_next_sys_mode_resp</strong></p>
+<p>Response for TISCI_MSG_LPM_GET_NEXT_SYS_MODE.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="15%" />
+<col width="24%" />
+<col width="60%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Parameter</th>
+<th class="head">Type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>hdr</td>
+<td>struct tisci_header</td>
+<td>TISCI header to provide ACK/NAK flags to the host.</td>
+</tr>
+<tr class="row-odd"><td>mode</td>
+<td>u8</td>
+<td>The selected system wide low power mode.</td>
+</tr>
+</tbody>
+</table>
+<p>Note: If the mode selection is not yet locked, this API returns “not selected” mode.</p>
+</p>
+</div>
+</div>
+<div class="section" id="tisci-msg-lpm-get-next-host-state">
+<span id="pm-lpm-msg-get-next-host-state"></span><h2>TISCI_MSG_LPM_GET_NEXT_HOST_STATE<a class="headerlink" href="#tisci-msg-lpm-get-next-host-state" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id37">
+<h3>Objective<a class="headerlink" href="#id37" title="Permalink to this headline">¶</a></h3>
+<p>Return the next (upcoming) power state of the requesting host.</p>
+</div>
+<div class="section" id="host-states">
+<h3>Host states<a class="headerlink" href="#host-states" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="54%" />
+<col width="46%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Host state</th>
+<th class="head">State ID</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>OFF</td>
+<td>0x00</td>
+</tr>
+<tr class="row-odd"><td>ON</td>
+<td>0x01</td>
+</tr>
+<tr class="row-even"><td>INVALID</td>
+<td>0xFF</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="id38">
+<h3>Usage<a class="headerlink" href="#id38" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="75%" />
+<col width="25%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><strong>Message Type</strong></td>
+<td>Normal</td>
+</tr>
+<tr class="row-even"><td><strong>Secure Queue Only?</strong></td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="id39">
+<h3>TISCI Message ID<a class="headerlink" href="#id39" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal"><span class="pre">TISCI_MSG_LPM_GET_NEXT_HOST_STATE</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">(0x030EU)</span></code></p>
+</div>
+<div class="section" id="id40">
+<h3>Message Data Structures<a class="headerlink" href="#id40" title="Permalink to this headline">¶</a></h3>
+<p><p><strong>struct tisci_msg_lpm_get_next_host_state_req</strong></p>
+<p>Request for TISCI_MSG_GET_LPM_NEXT_HOST_STATE.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="15%" />
+<col width="24%" />
+<col width="60%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Parameter</th>
+<th class="head">Type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>hdr</td>
+<td>struct tisci_header</td>
+<td>TISCI header to provide ACK/NAK flags to the host.</td>
+</tr>
+</tbody>
+</table>
+<p>This message is used by host to enquire DM for its expected state
+ in current low power mode selection - ON or OFF.</p>
+</p>
+<p><p><strong>struct tisci_msg_lpm_get_next_host_state_resp</strong></p>
+<p>Response for TISCI_MSG_LPM_GET_NEXT_HOST_STATE.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="14%" />
+<col width="23%" />
+<col width="62%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Parameter</th>
+<th class="head">Type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>hdr</td>
+<td>struct tisci_header</td>
+<td>TISCI header to provide ACK/NAK flags to the host.</td>
+</tr>
+<tr class="row-odd"><td>state</td>
+<td>u8</td>
+<td>The expected state of host in selected low power mode.</td>
+</tr>
+</tbody>
+</table>
+<p>Note: If the mode selection is not yet locked, this API returns invalid state.</p>
+</p>
+</div>
+</div>
 </div>
 
 
@@ -723,7 +1556,7 @@ called to prepare for the low power mode.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'10.00.01',
+            VERSION:'10.00.05',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

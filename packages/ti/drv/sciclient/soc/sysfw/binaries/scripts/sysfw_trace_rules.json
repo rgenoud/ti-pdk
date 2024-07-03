@@ -4718,6 +4718,9 @@
                                 "0x36":{
                                     "msg": "Ungated clock of legacy peripherals"
                                 },
+                                "0x37":{
+                                    "msg": "Unload CAN magic words in MMR"
+                                },
                                 "0x51":{
                                     "msg": "Enabling main LPSC"
                                 }

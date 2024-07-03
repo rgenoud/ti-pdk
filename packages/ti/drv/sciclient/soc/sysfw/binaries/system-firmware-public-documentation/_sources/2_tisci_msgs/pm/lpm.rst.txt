@@ -3,7 +3,7 @@ TISCI PM Low Power Mode API Documentation
 =========================================
 .. note::
 
-  This document is only applicable to AM62x and AM62Ax devices.
+  This document is applicable to AM62x, AM62Ax and AM62Px devices.
 
 Introduction
 ============
@@ -18,22 +18,34 @@ Supported low power modes
 
 .. sysfwapimacro:: TISCI_MSG_VALUE_SLEEP_MODE_MCU_ONLY
 
-.. sysfwapimacro:: TISCI_MSG_VALUE_SLEEP_MODE_STANDBY
+.. sysfwapimacro:: TISCI_MSG_VALUE_SLEEP_MODE_IO_ONLY_PLUS_DDR
 
 .. sysfwapimacro:: TISCI_MSG_VALUE_SLEEP_MODE_PARTIAL_IO
 
-+----------------+-------------------+
-| Low power mode |  Supported by     | 
-+================+===================+
-| DEEP_SLEEP     | am62x, am62ax     | 
-+----------------+-------------------+
-| MCU_ONLY       | am62x             | 
-+----------------+-------------------+
-| STANDBY        | None              | 
-+----------------+-------------------+
-| PARTIAL_IO     | am62x             | 
-+----------------+-------------------+
+.. sysfwapimacro:: TISCI_MSG_VALUE_SLEEP_MODE_STANDBY
 
++------------------+-----------------------+
+| Low power mode   |  Supported by         | 
++==================+=======================+
+| DEEP_SLEEP       | am62x, am62ax, am62px | 
++------------------+-----------------------+
+| MCU_ONLY         | am62x, am62ax, am62px | 
++------------------+-----------------------+
+| IO_ONLY_PLUS_DDR | None                  | 
++------------------+-----------------------+
+| PARTIAL_IO       | am62x, am62ax, am62px | 
++------------------+-----------------------+
+| STANDBY          | None                  | 
++------------------+-----------------------+
+
+Intermediate mode values
+------------------------
+
+.. sysfwapimacro:: TISCI_MSG_VALUE_SLEEP_MODE_DM_MANAGED
+
+.. sysfwapimacro:: TISCI_MSG_VALUE_SLEEP_MODE_NOT_SELECTED
+
+.. sysfwapimacro:: TISCI_MSG_VALUE_SLEEP_MODE_INVALID
 
 Device configuration and control APIs
 -------------------------------------
@@ -49,7 +61,32 @@ Device configuration and control APIs
 +------------------+--------------------------------------------+
 | 0x0307           | :ref:`pm_lpm_msg_set_io_isolation`         |
 +------------------+--------------------------------------------+
+| 0x0308           | :ref:`pm_lpm_msg_min_context_restore`      |
++------------------+--------------------------------------------+
+| 0x0309           | :ref:`pm_lpm_msg_set_device_constraint`    |
++------------------+--------------------------------------------+
+| 0x030A           | :ref:`pm_lpm_msg_set_latency_constraint`   |
++------------------+--------------------------------------------+
+| 0x030B           | :ref:`pm_lpm_msg_get_device_constraint`    |
++------------------+--------------------------------------------+
+| 0x030C           | :ref:`pm_lpm_msg_get_latency_constraint`   |
++------------------+--------------------------------------------+
+| 0x030D           | :ref:`pm_lpm_msg_get_next_sys_mode`        |
++------------------+--------------------------------------------+
+| 0x030E           | :ref:`pm_lpm_msg_get_next_host_state`      |
++------------------+--------------------------------------------+
 
+Macros Used in this Document
+----------------------------
+
+.. sysfwapimacro:: TISCI_MSG_VALUE_IO_ENABLE
+.. sysfwapimacro:: TISCI_MSG_VALUE_IO_DISABLE
+.. sysfwapimacro:: TISCI_MSG_VALUE_HOST_STATE_ON
+.. sysfwapimacro:: TISCI_MSG_VALUE_HOST_STATE_OFF
+.. sysfwapimacro:: TISCI_MSG_VALUE_HOST_STATE_INVALID
+.. sysfwapimacro:: TISCI_MSG_VALUE_STATE_SET
+.. sysfwapimacro:: TISCI_MSG_VALUE_STATE_CLEAR
+.. sysfwapimacro:: TISCI_MSG_VALUE_LPM_WAKE_PIN_INVALID
 
 .. _pm_lpm_msg_prepare_sleep:
 
@@ -128,7 +165,8 @@ TISCI_MSG_LPM_WAKE_REASON
 Objective
 ----------
 
-Get which wake up source woke the soc from low power mode.
+Get the last entered low power mode, wake up source and pin (if 
+applicable) that woke the soc.
 
 Wake up sources
 ---------------
@@ -166,6 +204,16 @@ Wake up sources
 +------------------+------------+
 | INVALID          | 0xFF       |
 +------------------+------------+
+
+Wake up pin
+-----------
+
+Refer to the Pad Configuration PADCONFIG Registers in Registers chapter in 
+the TRM to get information about pad number.
+
+.. note::
+  In case of wakeup event on multiple pins simultaneously/concurrently, the 
+  smaller padcfg number will be returned.
 
 Usage
 -----
@@ -219,3 +267,284 @@ Message Data Structures
 .. sysfwapistruct:: tisci_msg_set_io_isolation_req
 
 .. sysfwapistruct:: tisci_msg_set_io_isolation_resp
+
+.. _pm_lpm_msg_min_context_restore:
+
+TISCI_MSG_MIN_CONTEXT_RESTORE
+=============================
+
+Objective
+----------
+
+Restore the minimal context saved during lpm entry.
+
+.. note::
+  This message is registered only if IO Plus DDR low power mode 
+  exit is detected from MMR read.
+
+Usage
+-----
+
++------------------------+--------+
+| **Message Type**       | Normal |
++------------------------+--------+
+| **Secure Queue Only?** | Yes    |
++------------------------+--------+
+
+TISCI Message ID
+----------------
+
+.. sysfwapimacro:: TISCI_MSG_MIN_CONTEXT_RESTORE
+
+Message Data Structures
+-----------------------
+
+.. sysfwapistruct:: tisci_msg_min_context_restore_req
+
+.. sysfwapistruct:: tisci_msg_min_context_restore_resp
+
+.. _pm_lpm_msg_set_device_constraint:
+
+TISCI_MSG_LPM_SET_DEVICE_CONSTRAINT
+===================================
+
+Objective
+----------
+
+Any device can set a constraint on the low power mode that the SoC can enter.
+
+.. note::
+  By setting a constraint, the device ensures that it will not be powered off
+  or reset in the selected mode. Setting constraint on a device does not 
+  ensure that the device will be functional in the selected low power mode.
+  Exception: Setting constraint on DDR ensures that DDR will be functional in 
+  the selected low power mode.
+  All constraints will be auto cleared at every resume cycle.
+
+Usage
+-----
+
++------------------------+--------+
+| **Message Type**       | Normal |
++------------------------+--------+
+| **Secure Queue Only?** | No     |
++------------------------+--------+
+
+TISCI Message ID
+----------------
+
+.. sysfwapimacro:: TISCI_MSG_LPM_SET_DEVICE_CONSTRAINT
+
+Message Data Structures
+-----------------------
+
+.. sysfwapistruct:: tisci_msg_lpm_set_device_constraint_req
+
+.. sysfwapistruct:: tisci_msg_lpm_set_device_constraint_resp
+
+.. _pm_lpm_msg_set_latency_constraint:
+
+TISCI_MSG_LPM_SET_LATENCY_CONSTRAINT
+====================================
+
+Objective
+----------
+
+Any host can set a constraint on the low power mode that the SoC can enter.
+
+Latency Table
+-------------
+
++----------------+--------------+--------------+
+| Low power mode | Minimum (ms) | Maximum (ms) |
++================+==============+==============+
+| DEEP_SLEEP     | 101          | X            |
++----------------+--------------+--------------+
+| MCU_ONLY       | 10           | 100          |
++----------------+--------------+--------------+
+
+
+.. note::
+  By setting a wakeup latency constraint, the host ensures that the resume
+  time from selected low power mode will be less than the constraint value.
+  For deepest low power mode, there is no upper limit (maximum value) for 
+  latency.
+  All constraints will be auto cleared at every resume cycle.
+
+Usage
+-----
+
++------------------------+--------+
+| **Message Type**       | Normal |
++------------------------+--------+
+| **Secure Queue Only?** | No     |
++------------------------+--------+
+
+TISCI Message ID
+----------------
+
+.. sysfwapimacro:: TISCI_MSG_LPM_SET_LATENCY_CONSTRAINT
+
+Message Data Structures
+-----------------------
+
+.. sysfwapistruct:: tisci_msg_lpm_set_latency_constraint_req
+
+.. sysfwapistruct:: tisci_msg_lpm_set_latency_constraint_resp
+
+.. _pm_lpm_msg_get_device_constraint:
+
+TISCI_MSG_LPM_GET_DEVICE_CONSTRAINT
+===================================
+
+Objective
+----------
+
+Get the constraints set by a host on a device.
+
+Usage
+-----
+
++------------------------+--------+
+| **Message Type**       | Normal |
++------------------------+--------+
+| **Secure Queue Only?** | No     |
++------------------------+--------+
+
+TISCI Message ID
+----------------
+
+.. sysfwapimacro:: TISCI_MSG_LPM_GET_DEVICE_CONSTRAINT
+
+Message Data Structures
+-----------------------
+
+.. sysfwapistruct:: tisci_msg_lpm_get_device_constraint_req
+
+.. sysfwapistruct:: tisci_msg_lpm_get_device_constraint_resp
+
+.. _pm_lpm_msg_get_latency_constraint:
+
+TISCI_MSG_LPM_GET_LATENCY_CONSTRAINT
+====================================
+
+Objective
+----------
+
+Get the low power mode resume latency value set by a host.
+
+Usage
+-----
+
++------------------------+--------+
+| **Message Type**       | Normal |
++------------------------+--------+
+| **Secure Queue Only?** | No     |
++------------------------+--------+
+
+TISCI Message ID
+----------------
+
+.. sysfwapimacro:: TISCI_MSG_LPM_GET_LATENCY_CONSTRAINT
+
+Message Data Structures
+-----------------------
+
+.. sysfwapistruct:: tisci_msg_lpm_get_latency_constraint_req
+
+.. sysfwapistruct:: tisci_msg_lpm_get_latency_constraint_resp
+
+.. _pm_lpm_msg_get_next_sys_mode:
+
+TISCI_MSG_LPM_GET_NEXT_SYS_MODE
+===============================
+
+Objective
+----------
+
+Return the next (upcoming) power state of the system. It can be 
+one of the following system modes.
+
+System modes
+------------
+
++------------------+------------+
+| System mode      | Mode ID    |
++==================+============+
+| DEEP_SLEEP       | 0x00       |
++------------------+------------+
+| MCU_ONLY         | 0x01       |
++------------------+------------+
+| IO_ONLY_PLUS_DDR | 0x02       |
++------------------+------------+
+| PARTIAL_IO       | 0x03       |
++------------------+------------+
+| STANDBY          | 0x04       |
++------------------+------------+
+| NOT_SELECTED     | 0xFE       |
++------------------+------------+
+
+Usage
+-----
+
++------------------------+--------+
+| **Message Type**       | Normal |
++------------------------+--------+
+| **Secure Queue Only?** | No     |
++------------------------+--------+
+
+TISCI Message ID
+----------------
+
+.. sysfwapimacro:: TISCI_MSG_LPM_GET_NEXT_SYS_MODE
+
+Message Data Structures
+-----------------------
+
+.. sysfwapistruct:: tisci_msg_lpm_get_next_sys_mode_req
+
+.. sysfwapistruct:: tisci_msg_lpm_get_next_sys_mode_resp
+
+.. _pm_lpm_msg_get_next_host_state:
+
+TISCI_MSG_LPM_GET_NEXT_HOST_STATE
+=================================
+
+Objective
+----------
+
+Return the next (upcoming) power state of the requesting host.
+
+Host states
+-----------
+
++--------------+------------+
+| Host state   | State ID   |
++==============+============+
+| OFF          | 0x00       |
++--------------+------------+
+| ON           | 0x01       |
++--------------+------------+
+| INVALID      | 0xFF       |
++--------------+------------+
+
+Usage
+-----
+
++------------------------+--------+
+| **Message Type**       | Normal |
++------------------------+--------+
+| **Secure Queue Only?** | No     |
++------------------------+--------+
+
+TISCI Message ID
+----------------
+
+.. sysfwapimacro:: TISCI_MSG_LPM_GET_NEXT_HOST_STATE
+
+Message Data Structures
+-----------------------
+
+.. sysfwapistruct:: tisci_msg_lpm_get_next_host_state_req
+
+.. sysfwapistruct:: tisci_msg_lpm_get_next_host_state_resp

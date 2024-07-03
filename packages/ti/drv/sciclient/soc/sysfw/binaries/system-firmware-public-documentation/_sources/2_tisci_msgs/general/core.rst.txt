@@ -248,7 +248,9 @@ Each bit in the response indicating a certain functionality is present or not.
 +----------------------------------+-------------------+
 | Partial IO on low power mode     | 4                 |
 +----------------------------------+-------------------+
-| Reserved                         | 5-63              |
+| DM Managed low power mode        | 5                 |
++----------------------------------+-------------------+
+| Reserved                         | 6-63              |
 +----------------------------------+-------------------+
 
 TISCI Message ID
