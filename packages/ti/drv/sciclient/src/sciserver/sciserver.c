@@ -596,7 +596,7 @@ static int32_t Sciserver_UserProcessMsg(uint32_t *msg_recv,
     uint32_t respMsgSize;
 
     Sciserver_printf("type = 0x%x, host = %d\n", hdr->type, hw_host_id);
-    Lpm_debugFullPrintf("Msg type = %s(0x%x), host = 0x%x\n", get_msg_type(hdr->type),hdr->type, hw_host_id);
+//    Lpm_debugFullPrintf("Msg type = %s(0x%x), host = 0x%x\n", get_msg_type(hdr->type),hdr->type, hw_host_id);
 //    Lpm_debugFullPrintf("Msg type = (0x%x), host = 0x%x\n", hdr->type, hw_host_id);
 
     switch (hdr->type)
