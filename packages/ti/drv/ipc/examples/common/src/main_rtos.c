@@ -257,6 +257,7 @@ int main(void)
     /*  This should be called before any other OS calls (like Task creation, OS_start, etc..) */
     OS_init();
 
+    Lpm_debugFullPrintf("TRACE : %s\n", mcu_str);
     /* Initialize the task params */
     TaskP_Params_init(&taskParams);
     /* Set the task priority higher than the default priority (1) */
